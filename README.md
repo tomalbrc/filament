@@ -3,20 +3,18 @@ The usage part of this readme is outdated
 
 ## Description
 
-This mod enhances the Minecraft gameplay experience by allowing you to add custom items, blocks, and decorations to the game. 
-Please be aware that using a resource pack is necessary!
+Add custom items, blocks, and decorations to your server. 
+Uses polymer autohost to host the resourcepack, no 3rd party server needed!
 
 ## Features
 
 - **Custom Items:** Add unique items to the game with various behaviors, including armor, shooting, dyeing, and more.
-- **Custom Blocks:** Introduce new blocks with different hitboxes and properties to enrich your world's visual and gameplay aspects.
+- **Custom Blocks:** Introduce new blocks with different properties
 - **Custom Decorations:** Introduce your own decorations such as furniture, complete with customizable placement and various behaviors for player interaction.
 
 ## Installation
 
-1. Install [Minecraft Fabric](https://fabricmc.net/use/) and [Fabric API](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
-2. Download the latest version of the mod from [Releases](https://github.com/tomalbrc/filament/releases).
-3. Place the downloaded `.jar` file into the `mods` folder of your server's installation directory.
+Needs fabric api and polymer
 
 ## Usage
 
@@ -27,20 +25,19 @@ Here's an example of an item configuration:
 
 ```json
 {
-  "id": "myIdentifier:amethyst_helmet",
-  "vanillaItem": "minecraft:leather_helmet",
+  "id": "tsa:clown_horn",
+  "vanillaItem": "minecraft:paper",
+  "models": {
+    "default": "minecraft:custom/misc/clown_horn"
+  },
   "properties": {
-    "durability": 10,
     "stackSize": 1
   },
   "behaviour": {
-    "armor": {
-      "attributes": {
-        "name": "attribute.maxhealth",
-        "value": 1
-      },
-      "slot": "head",
-      "texture": "minecraft:amethyst"
+    "instrument": {
+      "sound": "tsa:misc.honk",
+      "range": 64,
+      "useDuration": 60
     }
   }
 }
@@ -54,18 +51,16 @@ Here's an example of a block configuration:
 
 ```
 {
-  "id": "myIdentifier:crystalite",
+  "id": "tsa:buttercup",
   "models": {
-    "default": "minecraft:custom/block/crystalite/crystalite"
+    "default": "minecraft:custom/block/plants/buttercup"
   },
-  "itemModel": "minecraft:custom/block/crystalite/crystalite",
-  "type": "transparent_flat",
+  "itemModel": "minecraft:custom/block/plants/buttercup",
+  "type": "plant_block",
   "properties": {
-    "blockBase": "minecraft:amethyst_cluster",
-    "itemBase": "minecraft:paper",
     "destroyTime": 0,
-    "explosionResistance": 0,
-    "lightEmission": 15
+    "blockBase": "minecraft:dandelion",
+    "itemBase": "minecraft:paper"
   }
 }
 ```
@@ -76,14 +71,29 @@ Here's an example of a decoration configuration:
 
 ```
 {
-  "id": "myIdentifier:gravestone",
-  "model": "minecraft:custom/furniture/gravestone",
-  "itemModel": "minecraft:custom/furniture/gravestone",
+  "id": "tsa:darkoak_bench",
+  "model": "minecraft:custom/furniture/benches/darkoak_bench",
+  "itemModel": "minecraft:custom/furniture/benches/darkoak_bench",
   "properties": {
-    "rotate": true,
-    "rotateSmooth": true
+      "rotate": true,
+      "rotateSmooth": true
   },
-  "barriers": [[0, 0, 0]]
+  "behaviour": {
+    "seat": [
+      {
+        "offset": [0, 0.42, 0]
+      },
+      {
+        "offset": [1, 0.42, 0]
+      }
+    ]
+  },
+  "blocks": [
+    {
+      "origin": [0,0,0],
+      "size": [2,1,1]
+    }
+  ]
 }
 ```
 
@@ -92,6 +102,4 @@ Here's an example of a decoration configuration:
 `rotateSmooth`: Enables rotation in 45° intervals.
 
 `model`: Path to the model in the resource pack.
-
-When `barriers` are specified, collision blocks (barrier blocks) will be placed at the specified location.
 
