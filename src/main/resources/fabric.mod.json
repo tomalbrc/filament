@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "filament",
+  "version": "${version}",
+  "name": "filament",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "de.tomalbrc.filament.Filament"
+    ]
+  },
+  "mixins": [
+    "filament.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
