@@ -1,5 +1,6 @@
 # filament
 The usage part of this readme is outdated
+[Checkout the discord for more up to date info](https://discord.gg/9X6w2kfy89)
 
 ## Description
 
