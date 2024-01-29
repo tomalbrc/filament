@@ -62,7 +62,13 @@ public class DecorationRegistry {
 
     private static void preloadModels() {
         String path = String.format("%s/ajmodels/", Constants.CONFIG_DIR);
-        Collection<File> files = FileUtils.listFiles(new File(path), new String[]{"json"}, true);
+        File modelDir = new File(path);
+        if (!modelDir.exists() || !modelDir.isDirectory()) {
+            modelDir.mkdirs();
+            return;
+        }
+
+        Collection<File> files = FileUtils.listFiles(modelDir, new String[]{"json"}, true);
 
         if (files != null) {
             for (File file : files) {
