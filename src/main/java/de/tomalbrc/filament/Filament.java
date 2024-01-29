@@ -6,6 +6,8 @@ import de.tomalbrc.filament.command.PickCommand;
 import de.tomalbrc.filament.decoration.DecorationBlock;
 import de.tomalbrc.filament.decoration.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.*;
+import de.tomalbrc.filament.util.Constants;
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -21,6 +23,9 @@ public class Filament implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        PolymerResourcePackUtils.addModAssets(Constants.MOD_ID);
+        PolymerResourcePackUtils.markAsRequired();
+
         BlockRegistry.register();
         ItemRegistry.register();
         EntityRegistry.register();
