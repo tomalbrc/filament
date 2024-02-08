@@ -27,6 +27,7 @@ dependencies {
     modImplementation ("eu.pb4:polymer-resource-pack:${project.polymer_version}")
     modImplementation ("eu.pb4:polymer-virtual-entity:${project.polymer_version}")
     modImplementation ("eu.pb4:polymer-networking:${project.polymer_version}")
+    modRuntimeOnly("eu.pb4:polymer-autohost:${project.polymer_version}")
 
     // Nylon
     modImplementation include("maven.modrinth:nylon:${project.nylon_version}")
