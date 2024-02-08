@@ -25,30 +25,36 @@ public class AnimatedElementHolder extends PositionedHolder {
 
         this.updateCullingBox();
 
-        if (decorationBlockEntity.getDecorationData().hasAnimation())
-            this.setAnimationData(Objects.requireNonNull(decorationBlockEntity.getDecorationData().behaviour()).animation);
+        if (this.decorationBlockEntity.getDecorationData().hasAnimation()) {
+            this.setAnimationData(decorationBlockEntity.getDecorationData().behaviour().animation);
+        }
+
+        this.getElements().forEach(x -> {
+            if (x instanceof ItemDisplayElement itemDisplayElement) {
+                itemDisplayElement.setYaw(this.decorationBlockEntity.getVisualRotationYInDegrees());
+            }
+        });
     }
 
     @Override
-        public void applyPose(AjPose pose, DisplayWrapper display) {
-            super.applyPose(pose, display);
-            display.setTranslation(pose.translation().get(new Vector3f()).sub(0, 0.028f, 0));
-        }
+    public void applyPose(AjPose pose, DisplayWrapper display) {
+        super.applyPose(pose, display);
+        display.setTranslation(pose.translation().get(new Vector3f()).sub(0, 0.5f, 0));
+    }
 
-        protected void updateCullingBox() {
-            if (decorationBlockEntity.getDecorationData() != null && decorationBlockEntity.getDecorationData().size() != null) {
-                for (Bone bone : this.bones) {
-                    bone.element().setDisplaySize(decorationBlockEntity.getDecorationData().size().get(0) * 1.5f, decorationBlockEntity.getDecorationData().size().get(1) * 1.5f);
-                }
+    protected void updateCullingBox() {
+        if (this.decorationBlockEntity.getDecorationData() != null && this.decorationBlockEntity.getDecorationData().size() != null) {
+            for (Bone bone : this.bones) {
+                bone.element().setDisplaySize(this.decorationBlockEntity.getDecorationData().size().get(0) * 1.5f, this.decorationBlockEntity.getDecorationData().size().get(1) * 1.5f);
             }
         }
+    }
 
     public void setAnimationData(@NotNull Animation animationData) {
         if (animationData.model != null) {
             if (model == null) {
                 Filament.LOGGER.error("No AnimatedJava model named '" + animationData.model + "' was found!");
             } else {
-
                 if (animationData.autoplay != null) {
                     this.getAnimator().playAnimation(animationData.autoplay);
                 }

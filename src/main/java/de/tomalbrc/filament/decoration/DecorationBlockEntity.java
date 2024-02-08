@@ -133,19 +133,18 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
     @Override
     public ElementHolder makeHolder() {
-        if (this.getDecorationData().hasAnimation() && this.animatedElementHolder == null) {
-            assert this.getDecorationData().behaviour() != null;
+        if (this.level != null && this.getDecorationData() != null && this.getDecorationData().hasAnimation() && this.animatedElementHolder == null) {
             AjModel model = DecorationRegistry.getModel(this.getDecorationData().behaviour().animation.model + ".json");
             if (model == null) {
-                Filament.LOGGER.error("No AnimatedJava model named '" + this.getDecorationData().behaviour().animation.model + "' was found!");
+                Filament.LOGGER.error("No Animated-Java model named '" + this.getDecorationData().behaviour().animation.model + "' was found!");
             } else {
                 this.animatedElementHolder = new AnimatedElementHolder(this, model);
-                this.setupBehaviour(this.getDecorationData());
+
             }
-        } else if (this.decorationElementHolder == null && this.animatedElementHolder == null) {
+        }
+        else if (this.decorationElementHolder == null && this.animatedElementHolder == null) {
             this.decorationElementHolder = new DecorationElementHolder();
             this.decorationElementHolder.setBlockEntity(this);
-            this.setupBehaviour(this.getDecorationData());
         }
 
         return this.animatedElementHolder != null ? this.animatedElementHolder : this.decorationElementHolder;
@@ -157,23 +156,14 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         if (this.isMain()) {
             ElementHolder elementHolder = this.makeHolder();
             if (elementHolder.getAttachment() == null) {
-                new BlockBoundAttachment(elementHolder, chunk, this.getBlockState(), this.getBlockPos(), this.getBlockPos().getCenter(), true);
+                new BlockBoundAttachment(elementHolder, chunk, this.getBlockState(), this.getBlockPos(), this.getBlockPos().getCenter(), this.animatedElementHolder != null);
             }
         }
     }
 
     @Override
     public void attach(ServerLevel level) {
-        if (this.isMain()) {
-            ElementHolder elementHolder = this.makeHolder();
-            if (elementHolder.getAttachment() == null) {
-                if (elementHolder == this.animatedElementHolder) {
-                    BlockBoundAttachment.ofTicking(elementHolder, level, this.getBlockPos());
-                } else {
-                    BlockBoundAttachment.of(elementHolder, level, this.getBlockPos());
-                }
-            }
-        }
+        this.attach((LevelChunk)level.getChunk(this.getBlockPos()));
     }
 
     @Override
@@ -182,10 +172,6 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
         // When placed, decorationId is not yet set?
         if (this.isMain()) {
-            if (this.decorationElementHolder == null) {
-                this.makeHolder();
-            }
-
             assert decorationData.behaviour() != null;
 
             if (decorationData.isContainer()) {
@@ -201,6 +187,10 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
                 this.setLockData(decorationData.behaviour().lock);
             }
 
+            if (this.decorationElementHolder == null && this.animatedElementHolder == null) {
+                this.makeHolder();
+            }
+
             if (decorationData.hasAnimation()) {
                 this.setAnimationData(decorationData.behaviour().animation);
             }
@@ -213,7 +203,6 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             AjModel model = DecorationRegistry.getModel(animationData.model + ".json");
             if (model == null) {
                 Filament.LOGGER.error("No AnimatedJava model named '" + animationData.model + "' was found!");
-            } else {
             }
         }
     }
@@ -385,10 +374,15 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             });
         }
 
-        if (this.decorationElementHolder != null && this.decorationElementHolder.getAttachment() != null)
-            this.decorationElementHolder.getAttachment().destroy();
+        this.removeHolder(this.decorationElementHolder);
+        this.removeHolder(this.animatedElementHolder);
 
         this.destroyBlocks();
+    }
+
+    private void removeHolder(ElementHolder holder) {
+        if (holder != null && holder.getAttachment() != null)
+            holder.getAttachment().destroy();
     }
 
     @Override
