@@ -117,7 +117,7 @@ public class Util {
 
             @Override
             public void attack(ServerPlayer player) {
-                blockEntity.destroyStructure(true);
+                blockEntity.destroyStructure(player != null && !player.isCreative());
             }
         });
 
@@ -125,11 +125,10 @@ public class Util {
             if (!(blockEntity.getDirection().equals(Direction.DOWN) || blockEntity.getDirection().equals(Direction.UP))) {
                 element.setSize(blockEntity.getDecorationData().size().y, blockEntity.getDecorationData().size().x);
             } else {
-                element.setSize(blockEntity.getDecorationData().size().x, (blockEntity.getDirection().equals(Direction.DOWN) ? -1.f : 1.f) * blockEntity.getDecorationData().size().y);
+                element.setSize(blockEntity.getDecorationData().size().x, blockEntity.getDecorationData().size().y);
             }
         } else {
-            // shouldn't really happen
-            element.setSize(1.f, blockEntity.getDirection().equals(Direction.DOWN) ? -0.5f : 0.5f);
+            element.setSize(1.f, blockEntity.getDirection().equals(Direction.DOWN) ? 1.f : .5f);
         }
 
         element.setOffset(new Vec3(0, -0.49f, 0));
@@ -161,21 +160,19 @@ public class Util {
             double angleRadians = Mth.atan2(-Mth.sin(ang), Mth.cos(ang));
             matrix4f.rotate(Axis.YP.rotation((float) angleRadians).normalize());
             matrix4f.rotate(Axis.XP.rotationDegrees(-90));
+            if (entity.getDirection() == Direction.DOWN) {
+                matrix4f.rotate(Axis.XP.rotationDegrees(180));
+                matrix4f.setTranslation(0, 0.5f, 0);
+            }
         } else {
-            matrix4f.setTranslation(0, 0, -0.5f);
+            double angleRadians = Mth.DEG_TO_RAD * entity.getDirection().toYRot();
+            Quaternionf rot = Axis.YP.rotation((float) angleRadians).conjugate().normalize();
+            matrix4f.rotate(rot);
+            matrix4f.setTranslation(new Vector3f(0.f, 0.f, -0.5f).rotate(rot));
 
-            Vector3f e = entity.getDirection().getRotation().getEulerAnglesYXZ(new Vector3f());
-            matrix4f.rotate(Axis.YP.rotation(e.y).normalize());
         }
 
-        DecorationData fd = entity.getDecorationData();
-        if (fd != null && fd.size() != null) {
-            itemDisplayElement.setDisplayWidth(fd.size().get(0)*1.5f);
-            itemDisplayElement.setDisplayHeight(fd.size().get(1)*1.5f);
-        } else {
-            itemDisplayElement.setDisplayWidth(Math.min(size.x, 1.f)*2);
-            itemDisplayElement.setDisplayHeight(Math.min(size.y, 1.f)*2);
-        }
+        itemDisplayElement.setDisplayWidth(size.x*2.f);
 
         itemDisplayElement.setTransformation(matrix4f);
         itemDisplayElement.setModelTransformation(ItemDisplayContext.FIXED);

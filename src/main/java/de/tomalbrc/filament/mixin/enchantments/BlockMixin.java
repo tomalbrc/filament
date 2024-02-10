@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.mixin;
+package de.tomalbrc.filament.mixin.enchantments;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;

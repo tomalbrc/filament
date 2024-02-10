@@ -111,9 +111,9 @@ public class DecorationElementHolder extends ElementHolder {
     }
 
     private Vector3f showcaseTranslation(Showcase showcase) {
-        return new Vector3f(showcase.offset).sub(0, 0.475f, 0).rotate(Axis.YN.rotation(Mth.DEG_TO_RAD * (this.parent.getVisualRotationYInDegrees())));
+        return new Vector3f(showcase.offset).sub(0, 0.475f, 0).rotate(Axis.YN.rotation(Mth.DEG_TO_RAD * this.parent.getVisualRotationYInDegrees()));
     }
-    private DisplayElement element(BlockItem blockItem) {
+    private BlockDisplayElement element(BlockItem blockItem) {
         BlockDisplayElement displayElement = new BlockDisplayElement();
         displayElement.setBlockState(blockItem.getBlock().defaultBlockState());
         return displayElement;
@@ -143,13 +143,17 @@ public class DecorationElementHolder extends ElementHolder {
         }
 
         if (element != null) {
+            element.setScale(showcase.scale);
+            element.setLeftRotation(showcase.rotation);
+            Quaternionf rot = Axis.YN.rotationDegrees(this.parent.getVisualRotationYInDegrees()+180).normalize();
             if (element instanceof BlockDisplayElement) {
-                element.setTranslation(this.showcaseTranslation(showcase).add(new Vector3f(.5f, -.5f, -.5f).mul(showcase.scale)));
+                element.setTranslation(this.showcaseTranslation(showcase).add(new Vector3f(-.5f, -.5f, -.5f).rotate(rot).mul(showcase.scale)));
             } else {
                 element.setTranslation(this.showcaseTranslation(showcase));
             }
-            element.setScale(showcase.scale);
-            element.setLeftRotation(showcase.rotation);
+
+            element.setRightRotation(rot);
+
             this.showcases.put(showcase, element);
         } else {
             Filament.LOGGER.error("In valid showcase type for " + itemStack.getItem().getDescriptionId());
@@ -195,7 +199,7 @@ public class DecorationElementHolder extends ElementHolder {
         boolean hasElement = this.showcases.containsKey(showcase);
 
         DisplayElement element = this.showcases.get(showcase);
-        DisplayElement newElement = null;
+        DisplayElement newElement;
 
         boolean dynNeedsUpdate = showcase.type == Showcase.ShowcaseType.dynamic && hasElement && !(element instanceof BlockDisplayElement && isBlockItem);
 
@@ -215,11 +219,7 @@ public class DecorationElementHolder extends ElementHolder {
             }
         }
 
-        Quaternionf rot = Axis.YN.rotationDegrees(this.parent.getVisualRotationYInDegrees()+180).normalize();
-        if (newElement != null)
-            newElement.setRightRotation(rot);
-        else
-            element.setRightRotation(rot);
+        this.tick();
     }
 
     public ItemStack getShowcaseItemStack(Showcase showcase) {

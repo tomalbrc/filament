@@ -14,7 +14,7 @@ public abstract class LevelChunkMixin {
             method = "setBlockEntity",
             at = @At("TAIL")
     )
-    private void polymer$polymerBlocksInit(BlockEntity blockEntity, CallbackInfo ci) {
+    private void filament$filamentDecorationInit(BlockEntity blockEntity, CallbackInfo ci) {
         if (blockEntity instanceof BlockEntityWithElementHolder decorationBlockEntity)
             decorationBlockEntity.attach((LevelChunk)(Object) this);
     }

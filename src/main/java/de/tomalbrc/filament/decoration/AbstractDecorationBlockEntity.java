@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.decoration;
 
+import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.registry.EntityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -59,6 +60,12 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
 
     protected void saveAdditional(CompoundTag compoundTag) {
         super.saveAdditional(compoundTag);
+
+        if (this.itemStack == null) {
+            Filament.LOGGER.error("No item for decoration! Removing decoration block entity at " + this.getBlockPos().toShortString());
+            this.setRemoved();
+            return;
+        }
 
         compoundTag.put("Item", this.itemStack.save(new CompoundTag()));
 

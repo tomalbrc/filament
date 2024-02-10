@@ -7,8 +7,9 @@
     "ItemFrameAccessor",
     "MobMixin",
     "BlockItemMixin",
-    "BlockMixin",
-    "LevelChunkMixin"
+    "enchantments.BlockMixin",
+    "LevelChunkMixin",
+    "FlowingFluidMixin"
   ],
   "injectors": {
     "defaultRequire": 1

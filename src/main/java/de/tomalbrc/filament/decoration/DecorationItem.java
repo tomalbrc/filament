@@ -18,9 +18,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -84,33 +87,35 @@ public class DecorationItem extends Item implements PolymerItem {
         int rotation = 0;
         if (decorationData.properties() != null && decorationData.properties().rotate) {
             if (decorationData.properties().rotateSmooth) {
-                rotation = Util.SEGMENTED_ANGLE8.fromDegrees(useOnContext.getRotation());
+                rotation = Util.SEGMENTED_ANGLE8.fromDegrees(useOnContext.getRotation()-180);
             } else {
-                rotation = Util.SEGMENTED_ANGLE8.fromDirection(useOnContext.getHorizontalDirection());
+                rotation = Util.SEGMENTED_ANGLE8.fromDirection(useOnContext.getHorizontalDirection().getOpposite());
             }
         }
 
-        boolean propertyPlaceCheck = false;
+        boolean propertyPlaceCheck = true;
         if (decorationData.properties() != null) {
-            propertyPlaceCheck = decorationData.properties().wallExclusive && (useOnContext.getClickedFace().equals(Direction.UP) || useOnContext.getClickedFace().equals(Direction.DOWN));
-            if (!decorationData.properties().wallExclusive)
-                propertyPlaceCheck |= decorationData.properties().groundExclusive && (!useOnContext.getClickedFace().equals(Direction.UP) && !useOnContext.getClickedFace().equals(Direction.DOWN));
+            propertyPlaceCheck = decorationData.properties().placement.canPlace(direction);
         }
 
         if (player == null || !this.mayPlace(player, direction, itemStack, relativeBlockPos)) {
             return InteractionResult.FAIL;
-        } else if (propertyPlaceCheck) {
+        } else if (!propertyPlaceCheck) {
             return InteractionResult.FAIL;
         } else if (this.canPlaceAt(level, relativeBlockPos, useOnContext.getHorizontalDirection(), useOnContext.getClickedFace()) && itemStack.getItem() instanceof DecorationItem) {
+            BlockPlaceContext blockPlaceContext = new BlockPlaceContext(player, useOnContext.getHand(), itemStack, new BlockHitResult(useOnContext.getClickLocation(), useOnContext.getClickedFace(), useOnContext.getClickedPos(), useOnContext.isInside()));
+
             if (decorationData.blocks() != null) {
                 int finalRotation = rotation;
                 Util.forEachRotated(decorationData.blocks(), relativeBlockPos, this.getVisualRotationYInDegrees(direction, rotation), blockPos2 -> {
+                    boolean w = level.getBlockState(blockPos2).is(Blocks.WATER);
                     level.destroyBlock(blockPos2, true);
 
-                    BlockState blockState = BlockRegistry.DECORATION_BLOCK.defaultBlockState();
+                    BlockState blockState = BlockRegistry.DECORATION_BLOCK.getStateForPlacement(blockPlaceContext);
                     if (decorationData.properties() != null && decorationData.properties().isLightSource()) {
                         blockState = blockState.setValue(DecorationBlock.LIGHT_LEVEL, decorationData.properties().lightEmission);
                     }
+                    blockState = blockState.setValue(DecorationBlock.WATERLOGGED, w);
 
                     level.setBlockAndUpdate(blockPos2, blockState);
                     if (level.getBlockEntity(blockPos2) instanceof DecorationBlockEntity decorationBlockEntity) {
@@ -123,7 +128,9 @@ public class DecorationItem extends Item implements PolymerItem {
                     }
                 });
             } else {
-                BlockState blockState = BlockRegistry.DECORATION_BLOCK.defaultBlockState().setValue(DecorationBlock.PASSTHROUGH, true);
+                BlockState blockState = BlockRegistry.DECORATION_BLOCK.getStateForPlacement(blockPlaceContext);
+                blockState = blockState.setValue(DecorationBlock.PASSTHROUGH, true);
+
                 if (decorationData.properties() != null && decorationData.properties().isLightSource()) {
                     blockState = blockState.setValue(DecorationBlock.LIGHT_LEVEL, decorationData.properties().lightEmission);
                 }
@@ -162,11 +169,7 @@ public class DecorationItem extends Item implements PolymerItem {
 
         if (decorationData.blocks() != null) {
             float angle;
-            if (clickedFace == Direction.UP || clickedFace == Direction.DOWN) {
-                angle = Util.SEGMENTED_ANGLE8.toDegrees(Util.SEGMENTED_ANGLE8.fromDirection(direction.getOpposite()));
-            } else {
-                angle = Util.SEGMENTED_ANGLE8.toDegrees(Util.SEGMENTED_ANGLE8.fromDirection(direction.getOpposite()));
-            }
+            angle = Util.SEGMENTED_ANGLE8.toDegrees(Util.SEGMENTED_ANGLE8.fromDirection(direction.getOpposite()));
 
             // :concern:
             AtomicBoolean canPlace = new AtomicBoolean(true);

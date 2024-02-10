@@ -26,7 +26,7 @@ import java.io.Reader;
 import java.util.Collection;
 
 public class ItemRegistry {
-    public static final File DIR = Constants.CONFIG_DIR.resolve("items").toFile();
+    public static final File DIR = Constants.CONFIG_DIR.resolve("item").toFile();
 
     public static final Object2ObjectLinkedOpenHashMap<ResourceLocation, Item> CUSTOM_ITEMS = new Object2ObjectLinkedOpenHashMap<>();
     public static final Object2ObjectLinkedOpenHashMap<ResourceLocation, Item> CUSTOM_BLOCK_ITEMS = new Object2ObjectLinkedOpenHashMap<>();
@@ -51,8 +51,8 @@ public class ItemRegistry {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void register() {
-        PolymerItemGroupUtils.registerPolymerItemGroup(new ResourceLocation(Constants.MOD_ID, "items"), ITEM_GROUP);
-        PolymerItemGroupUtils.registerPolymerItemGroup(new ResourceLocation(Constants.MOD_ID, "blocks"), BLOCK_ITEM_GROUP);
+        PolymerItemGroupUtils.registerPolymerItemGroup(new ResourceLocation(Constants.MOD_ID, "item"), ITEM_GROUP);
+        PolymerItemGroupUtils.registerPolymerItemGroup(new ResourceLocation(Constants.MOD_ID, "block"), BLOCK_ITEM_GROUP);
         PolymerItemGroupUtils.registerPolymerItemGroup(new ResourceLocation(Constants.MOD_ID, "decoration"), DECORATION_ITEM_GROUP);
 
         if (!DIR.exists() || !DIR.isDirectory()) {

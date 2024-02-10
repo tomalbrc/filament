@@ -29,7 +29,6 @@ import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.HopperMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec3;
@@ -74,7 +73,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     public void loadMain(CompoundTag compoundTag) {
         DecorationData decorationData = this.getDecorationData();
         if (decorationData == null) {
-            Filament.LOGGER.error("No decoration data for " + this.decorationId == null ? "(null)" : this.decorationId.toString() + "!");
+            Filament.LOGGER.error("No decoration data for " + (this.decorationId == null ? "(null)" : this.decorationId.toString()) + "!");
         } else if (this.decorationElementHolder == null) {
             this.makeHolder();
             this.setupBehaviour(decorationData);
@@ -159,6 +158,9 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
                 new BlockBoundAttachment(elementHolder, chunk, this.getBlockState(), this.getBlockPos(), this.getBlockPos().getCenter(), this.animatedElementHolder != null);
             }
         }
+
+        if (this.animatedElementHolder != null)
+            this.animatedElementHolder.setRotation(this.getVisualRotationYInDegrees());
     }
 
     @Override
@@ -177,18 +179,21 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             if (decorationData.isContainer()) {
                 this.setContainerData(decorationData.behaviour().container);
             }
-            if (decorationData.isSeat()) {
-                this.setSeatData(decorationData.behaviour().seat);
-            }
-            if (decorationData.isShowcase()) {
-                this.setShowcaseData(decorationData.behaviour().showcase);
-            }
+
             if (decorationData.isLock()) {
                 this.setLockData(decorationData.behaviour().lock);
             }
 
             if (this.decorationElementHolder == null && this.animatedElementHolder == null) {
                 this.makeHolder();
+            }
+
+            if (decorationData.isSeat()) {
+                this.setSeatData(decorationData.behaviour().seat);
+            }
+
+            if (decorationData.isShowcase()) {
+                this.setShowcaseData(decorationData.behaviour().showcase);
             }
 
             if (decorationData.hasAnimation()) {
@@ -307,26 +312,6 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         return InteractionResult.PASS;
     }
 
-    public void setupBlockEntities() {
-        boolean hasBlocksConfig = this.getDecorationData().blocks() != null;
-        if (hasBlocksConfig && this.isMain()) {
-            Util.forEachRotated(this.getDecorationData().blocks(), this.getBlockPos(), this.getVisualRotationYInDegrees(), blockPos -> {
-                BlockState blockState = this.getLevel().getBlockState(blockPos);
-
-                boolean fb = blockState.is(BlockRegistry.DECORATION_BLOCK);
-                if (!fb && blockState.isAir()) { // Force replace air
-                    this.getLevel().setBlockAndUpdate(blockPos, BlockRegistry.DECORATION_BLOCK.defaultBlockState());
-                } else if (fb) {
-                    DecorationBlockEntity decorationBlockEntity = (DecorationBlockEntity) this.getLevel().getBlockEntity(blockPos);
-                    if (decorationBlockEntity != null) {
-                        decorationBlockEntity.setMain(this.getBlockPos());
-                        decorationBlockEntity.setupBehaviour(this.getDecorationData());
-                    }
-                }
-            });
-        }
-    }
-
     @Override
     protected void destroyBlocks() {
         BlockState decorationBlockState = this.getLevel().getBlockState(this.getBlockPos());
@@ -334,7 +319,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             if (this.getDecorationData().blocks() != null) {
                 Util.forEachRotated(this.getDecorationData().blocks(), this.main, this.getVisualRotationYInDegrees(), blockPos -> {
                     if (this.getLevel().getBlockState(blockPos).is(BlockRegistry.DECORATION_BLOCK)) {
-                        this.getLevel().setBlockAndUpdate(blockPos, Blocks.AIR.defaultBlockState());
+                        this.getLevel().destroyBlock(blockPos, true);
                     }
                 });
             } else {
@@ -346,7 +331,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     @Override
     public void destroyStructure(boolean dropItem) {
         if (!this.isMain()) {
-            if (this.getLevel().getBlockEntity(this.main) instanceof DecorationBlockEntity mainBlockEntity) {
+            if (this.main != null && this.getLevel().getBlockEntity(this.main) instanceof DecorationBlockEntity mainBlockEntity) {
                 mainBlockEntity.destroyStructure(dropItem);
             }
             return;
@@ -400,5 +385,11 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
     public DecorationData getDecorationData() {
         return DecorationRegistry.getDecorationDefinition(decorationId);
+    }
+
+    public void setRemoved() {
+        super.setRemoved();
+
+        //this.destroyStructure(true);
     }
 }

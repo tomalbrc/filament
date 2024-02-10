@@ -3,19 +3,18 @@ package de.tomalbrc.filament.registry;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.config.data.DecorationData;
 import de.tomalbrc.filament.decoration.DecorationItem;
+import de.tomalbrc.filament.util.Constants;
+import de.tomalbrc.filament.util.Json;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.io.FileUtils;
 import org.provim.nylon.data.AjLoader;
 import org.provim.nylon.model.AjModel;
-import de.tomalbrc.filament.util.Constants;
-import de.tomalbrc.filament.util.Json;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.Collection;
-import java.util.Map;
 
 public class DecorationRegistry {
     public static final File DIR = Constants.CONFIG_DIR.resolve("decoration").toFile();
@@ -48,12 +47,7 @@ public class DecorationRegistry {
     }
 
     public static DecorationData getDecorationDefinition(ResourceLocation resourceLocation) {
-        for (Map.Entry<ResourceLocation, DecorationData> entry : decorations.entrySet()) {
-            if (entry.getKey().equals(resourceLocation)) {
-                return entry.getValue();
-            }
-        }
-        return null;
+        return decorations.get(resourceLocation);
     }
 
     public static AjModel getModel(String name) {
@@ -61,7 +55,7 @@ public class DecorationRegistry {
     }
 
     private static void preloadModels() {
-        String path = String.format("%s/ajmodels/", Constants.CONFIG_DIR);
+        String path = String.format("%s/ajmodel/", Constants.CONFIG_DIR);
         File modelDir = new File(path);
         if (!modelDir.exists() || !modelDir.isDirectory()) {
             modelDir.mkdirs();

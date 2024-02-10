@@ -2,31 +2,39 @@ package de.tomalbrc.filament.decoration;
 
 import eu.pb4.polymer.core.api.block.PolymerBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class DecorationBlock extends Block implements PolymerBlock, EntityBlock {
+public class DecorationBlock extends Block implements PolymerBlock, EntityBlock, SimpleWaterloggedBlock {
     public static final IntegerProperty LIGHT_LEVEL = BlockStateProperties.LEVEL;
+
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty PASSTHROUGH = BooleanProperty.create("passthrough");
 
     public DecorationBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(LIGHT_LEVEL, 0).setValue(PASSTHROUGH, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(LIGHT_LEVEL, 0).setValue(PASSTHROUGH, false).setValue(WATERLOGGED, false));
     }
 
     @Override
@@ -34,17 +42,19 @@ public class DecorationBlock extends Block implements PolymerBlock, EntityBlock 
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(LIGHT_LEVEL, PASSTHROUGH);
+        builder.add(LIGHT_LEVEL, PASSTHROUGH, WATERLOGGED);
     }
 
     @Override
     public Block getPolymerBlock(BlockState state) {
-        return state.getValue(DecorationBlock.PASSTHROUGH) ? Blocks.AIR : Blocks.BARRIER;
+        return state.getValue(DecorationBlock.PASSTHROUGH) ? state.getValue(DecorationBlock.WATERLOGGED) ? Blocks.WATER : Blocks.AIR : Blocks.BARRIER;
     }
 
     @Override
     public BlockState getPolymerBlockState(BlockState state) {
-        return this.getPolymerBlock(state).defaultBlockState();
+        return state.getValue(DecorationBlock.WATERLOGGED) && !state.getValue(DecorationBlock.PASSTHROUGH) ?
+                this.getPolymerBlock(state).defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, true) :
+                this.getPolymerBlock(state).defaultBlockState();
     }
 
     @Override
@@ -82,4 +92,36 @@ public class DecorationBlock extends Block implements PolymerBlock, EntityBlock 
             return Shapes.block();
         }
     }
+
+    public FluidState getFluidState(BlockState blockState) {
+        return blockState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(blockState);
+    }
+
+    @Override
+    public BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) {
+        if (blockState.getValue(WATERLOGGED).booleanValue()) {
+            levelAccessor.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
+        }
+
+        return super.updateShape(blockState, direction, blockState2, levelAccessor, blockPos, blockPos2);
+    }
+
+    @Override
+    @Nullable
+    public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {
+        FluidState fluidState = blockPlaceContext.getLevel().getFluidState(blockPlaceContext.getClickedPos());
+        boolean bl = fluidState.getType() == Fluids.WATER;
+        return super.getStateForPlacement(blockPlaceContext).setValue(WATERLOGGED, bl);
+    }
+
+    /**
+     *
+     * @Override
+     *     public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
+     *         if (!blockState.is(blockState2.getBlock()) && level.getBlockEntity(blockPos) instanceof DecorationBlockEntity decorationBlockEntity) {
+     *             decorationBlockEntity.destroyStructure(true);
+     *         }
+     *     }
+     *
+     */
 }

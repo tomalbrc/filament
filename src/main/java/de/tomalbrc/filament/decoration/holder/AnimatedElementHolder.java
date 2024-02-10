@@ -2,6 +2,9 @@ package de.tomalbrc.filament.decoration.holder;
 
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.config.behaviours.decoration.Animation;
+import de.tomalbrc.filament.config.data.DecorationData;
+import de.tomalbrc.filament.decoration.DecorationBlockEntity;
+import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.NotNull;
@@ -11,8 +14,6 @@ import org.provim.nylon.holders.wrappers.Bone;
 import org.provim.nylon.holders.wrappers.DisplayWrapper;
 import org.provim.nylon.model.AjModel;
 import org.provim.nylon.model.AjPose;
-import de.tomalbrc.filament.config.data.DecorationData;
-import de.tomalbrc.filament.decoration.DecorationBlockEntity;
 
 import java.util.Objects;
 
@@ -28,10 +29,13 @@ public class AnimatedElementHolder extends PositionedHolder {
         if (this.decorationBlockEntity.getDecorationData().hasAnimation()) {
             this.setAnimationData(decorationBlockEntity.getDecorationData().behaviour().animation);
         }
+    }
 
+    public void setRotation(float rotation) {
         this.getElements().forEach(x -> {
-            if (x instanceof ItemDisplayElement itemDisplayElement) {
-                itemDisplayElement.setYaw(this.decorationBlockEntity.getVisualRotationYInDegrees());
+            if (x instanceof DisplayElement displayElement) {
+                displayElement.setTeleportDuration(0);
+                displayElement.setYaw(rotation);
             }
         });
     }
