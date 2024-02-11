@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.item;
 
-import de.tomalbrc.filament.config.behaviours.item.Shoot;
-import de.tomalbrc.filament.config.data.ItemData;
+import de.tomalbrc.filament.data.behaviours.item.Shoot;
+import de.tomalbrc.filament.data.ItemData;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;

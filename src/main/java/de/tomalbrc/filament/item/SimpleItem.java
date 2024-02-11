@@ -11,7 +11,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-import de.tomalbrc.filament.config.data.ItemData;
+import de.tomalbrc.filament.data.ItemData;
 
 import java.util.List;
 

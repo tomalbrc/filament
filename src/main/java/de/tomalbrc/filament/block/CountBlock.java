@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.block;
 
-import de.tomalbrc.filament.config.data.BlockData;
+import de.tomalbrc.filament.data.BlockData;
 import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.context.BlockPlaceContext;

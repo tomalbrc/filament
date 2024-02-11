@@ -2,14 +2,15 @@ package de.tomalbrc.filament.util;
 
 import com.mojang.math.Axis;
 import de.tomalbrc.filament.Filament;
-import de.tomalbrc.filament.config.data.DecorationData;
-import de.tomalbrc.filament.decoration.DecorationBlockEntity;
+import de.tomalbrc.filament.data.DecorationData;
+import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -67,7 +68,7 @@ public class Util {
             int intValue = Integer.parseInt(hexDigits, 16);
             return Optional.of(intValue);
         } else {
-            Filament.LOGGER.warn("Invalid hex color format");
+            Filament.LOGGER.warn("Invalid hex color formats");
             return Optional.empty();
         }
     }
@@ -136,36 +137,60 @@ public class Util {
         return element;
     }
 
-    public static ItemDisplayElement decorationItemDisplay(DecorationBlockEntity entity) {
-        ItemDisplayElement itemDisplayElement = new ItemDisplayElement(entity.getItem());
+    public static InteractionElement decorationInteraction(BlockPos blockPos) {
+        InteractionElement element = new InteractionElement();
+        element.setHandler(new VirtualElement.InteractionHandler() {
+            @Override
+            public void interactAt(ServerPlayer player, InteractionHand hand, Vec3 pos) {
 
-        if (entity.getDecorationData() != null && entity.getDecorationData().properties() != null && entity.getDecorationData().properties().glow) {
+            }
+
+            @Override
+            public void attack(ServerPlayer player) {
+                element.getHolder().getAttachment().getWorld().destroyBlock(blockPos, false);
+            }
+        });
+        element.setSize(1.f, 1.f);
+
+        element.setOffset(new Vec3(0, -0.5f, 0));
+
+        return element;
+    }
+
+    public static ItemDisplayElement decorationItemDisplay(DecorationBlockEntity blockEntity) {
+        return decorationItemDisplay(blockEntity.getDecorationData(), blockEntity.getDirection(), blockEntity.getVisualRotationYInDegrees());
+    }
+
+    public static ItemDisplayElement decorationItemDisplay(DecorationData data, Direction direction, float rotation) {
+        ItemDisplayElement itemDisplayElement = new ItemDisplayElement(BuiltInRegistries.ITEM.get(data.id()));
+
+        if (data != null && data.properties() != null && data.properties().glow) {
             itemDisplayElement.setBrightness(Brightness.FULL_BRIGHT);
         }
 
         Vector2f size = new Vector2f(1);
-        if (entity.getDecorationData().blocks() != null) {
-            size = Util.barrierDimensions(entity.getDecorationData().blocks(), entity.getVisualRotationYInDegrees());
-        } else if (entity.getDecorationData().size() != null) {
-            size = entity.getDecorationData().size();
+        if (data.hasBlocks()) {
+            size = Util.barrierDimensions(data.blocks(), rotation);
+        } else if (data.size() != null) {
+            size = data.size();
         }
 
         Matrix4f matrix4f = new Matrix4f().identity();
         matrix4f.scale(0.5f);
 
-        if (entity.getDirection() == Direction.DOWN || entity.getDirection() == Direction.UP) {
+        if (direction == Direction.DOWN || direction == Direction.UP) {
             matrix4f.setTranslation(0, -0.5f, 0);
 
-            float ang = (float) java.lang.Math.toRadians(entity.getVisualRotationYInDegrees()+180);
+            float ang = (float) java.lang.Math.toRadians(rotation+180);
             double angleRadians = Mth.atan2(-Mth.sin(ang), Mth.cos(ang));
             matrix4f.rotate(Axis.YP.rotation((float) angleRadians).normalize());
             matrix4f.rotate(Axis.XP.rotationDegrees(-90));
-            if (entity.getDirection() == Direction.DOWN) {
+            if (direction == Direction.DOWN) {
                 matrix4f.rotate(Axis.XP.rotationDegrees(180));
                 matrix4f.setTranslation(0, 0.5f, 0);
             }
         } else {
-            double angleRadians = Mth.DEG_TO_RAD * entity.getDirection().toYRot();
+            double angleRadians = Mth.DEG_TO_RAD * direction.toYRot();
             Quaternionf rot = Axis.YP.rotation((float) angleRadians).conjugate().normalize();
             matrix4f.rotate(rot);
             matrix4f.setTranslation(new Vector3f(0.f, 0.f, -0.5f).rotate(rot));

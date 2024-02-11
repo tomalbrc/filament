@@ -2,19 +2,16 @@ package de.tomalbrc.filament.registry;
 
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.block.*;
-import de.tomalbrc.filament.config.data.BlockData;
-import de.tomalbrc.filament.config.data.properties.BlockProperties;
-import de.tomalbrc.filament.decoration.DecorationBlock;
+import de.tomalbrc.filament.data.BlockData;
+import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.PushReaction;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -23,16 +20,11 @@ import java.io.Reader;
 import java.util.Collection;
 
 public class BlockRegistry {
-    public static final Block DECORATION_BLOCK = new DecorationBlock(FabricBlockSettings.create().nonOpaque().luminance(blockState ->
-            blockState.getValue(DecorationBlock.LIGHT_LEVEL)
-    ).instabreak().noLootTable().dynamicShape().isValidSpawn((x, y, z, w) -> false).pushReaction(PushReaction.BLOCK));
-
+    public static int REGISTERED_BLOCKS = 0;
 
     public static final File DIR = Constants.CONFIG_DIR.resolve("block").toFile();
 
     public static void register() {
-        BlockRegistry.registerBlock(new ResourceLocation(Constants.MOD_ID, "decoration_block"), DECORATION_BLOCK);
-
         if (!DIR.exists() || !DIR.isDirectory()) {
             DIR.mkdirs();
             return;
@@ -62,6 +54,8 @@ public class BlockRegistry {
                     SimpleBlockItem item = new SimpleBlockItem(new Item.Properties(), block, data);
                     BlockRegistry.registerBlock(data.id(), block);
                     ItemRegistry.registerItem(data.id(), item, ItemRegistry.CUSTOM_BLOCK_ITEMS);
+
+                    REGISTERED_BLOCKS++;
                 } catch (Throwable throwable) {
                     Filament.LOGGER.error("Error reading block JSON file: {}", file.getAbsolutePath(), throwable);
                 }

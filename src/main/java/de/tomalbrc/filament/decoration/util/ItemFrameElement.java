@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.decoration.util;
 
-import de.tomalbrc.filament.decoration.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.mixin.ItemFrameAccessor;
 import eu.pb4.polymer.core.mixin.entity.ItemFrameEntityAccessor;
 import eu.pb4.polymer.virtualentity.api.elements.GenericEntityElement;

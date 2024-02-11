@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.block;
 
-import de.tomalbrc.filament.config.data.BlockData;
+import de.tomalbrc.filament.data.BlockData;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;

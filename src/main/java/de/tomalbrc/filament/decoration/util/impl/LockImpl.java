@@ -1,13 +1,13 @@
 package de.tomalbrc.filament.decoration.util.impl;
 
-import de.tomalbrc.filament.config.behaviours.decoration.Lock;
+import de.tomalbrc.filament.data.behaviours.decoration.Lock;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import de.tomalbrc.filament.decoration.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 
 public class LockImpl {
     public Lock lock;

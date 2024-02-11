@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.item;
 
-import de.tomalbrc.filament.config.behaviours.item.Trap;
-import de.tomalbrc.filament.config.data.ItemData;
+import de.tomalbrc.filament.data.behaviours.item.Trap;
+import de.tomalbrc.filament.data.ItemData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;

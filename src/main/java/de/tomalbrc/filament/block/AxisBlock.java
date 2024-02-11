@@ -6,7 +6,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import de.tomalbrc.filament.config.data.BlockData;
+import de.tomalbrc.filament.data.BlockData;
 
 import java.util.HashMap;
 

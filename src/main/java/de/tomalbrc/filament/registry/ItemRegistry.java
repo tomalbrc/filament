@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.registry;
 
 import de.tomalbrc.filament.Filament;
-import de.tomalbrc.filament.config.data.ItemData;
+import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.item.InstrumentItem;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.item.ThrowingItem;
@@ -26,6 +26,8 @@ import java.io.Reader;
 import java.util.Collection;
 
 public class ItemRegistry {
+    public static int REGISTERED_ITEMS = 0;
+
     public static final File DIR = Constants.CONFIG_DIR.resolve("item").toFile();
 
     public static final Object2ObjectLinkedOpenHashMap<ResourceLocation, Item> CUSTOM_ITEMS = new Object2ObjectLinkedOpenHashMap<>();
@@ -79,6 +81,8 @@ public class ItemRegistry {
                     }
 
                     ItemRegistry.registerItem(data.id(), item, CUSTOM_ITEMS);
+                    REGISTERED_ITEMS++;
+
                 } catch (Throwable throwable) {
                     Filament.LOGGER.error("Error reading item JSON file: {}", file.getAbsolutePath(), throwable);
                 }

@@ -3,8 +3,8 @@ package de.tomalbrc.filament;
 import com.mojang.logging.LogUtils;
 import de.tomalbrc.filament.command.DyeCommand;
 import de.tomalbrc.filament.command.PickCommand;
-import de.tomalbrc.filament.decoration.DecorationBlock;
-import de.tomalbrc.filament.decoration.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.block.DecorationBlock;
+import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.*;
 import de.tomalbrc.filament.util.Constants;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
@@ -48,5 +48,12 @@ public class Filament implements ModInitializer {
 
             return InteractionResult.PASS;
         });
+
+        LOGGER.info("---------------------");
+        LOGGER.info("Items registered: " + ItemRegistry.REGISTERED_ITEMS);
+        LOGGER.info("Blocks registered: " + BlockRegistry.REGISTERED_BLOCKS);
+        LOGGER.info("Decorations registered: " + DecorationRegistry.REGISTERED_DECORATIONS);
+        LOGGER.info("Decoration block entities registered: " + DecorationRegistry.REGISTERED_BLOCK_ENTITIES);
+        LOGGER.info("---------------------");
     }
 }
