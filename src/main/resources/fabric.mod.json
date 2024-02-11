@@ -4,8 +4,10 @@
   "version": "${version}",
   "name": "filament",
   "description": "",
-  "authors": [],
-  "contact": {},
+  "authors": ["tomalbrc"],
+  "contact": {
+    "repo": "https://github.com/tomalbrc/filament"
+  },
   "license": "All-Rights-Reserved",
   "environment": "*",
   "entrypoints": {
@@ -18,7 +20,7 @@
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",
-    "fabric": "*",
+    "fabric-api": "*",
     "minecraft": "${minecraft_version}"
   }
 }
