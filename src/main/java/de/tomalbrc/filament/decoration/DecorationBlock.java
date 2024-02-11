@@ -23,9 +23,6 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -41,6 +38,8 @@ public class DecorationBlock extends Block implements PolymerBlock, EntityBlock,
 
     public DecorationBlock(Properties properties) {
         super(properties);
+        // todo
+        //FlammableBlockRegistry.getDefaultInstance().add(this, 5, 10);
         this.registerDefaultState(this.stateDefinition.any().setValue(LIGHT_LEVEL, 0).setValue(PASSTHROUGH, false).setValue(WATERLOGGED, false));
     }
 

@@ -102,7 +102,7 @@ public class DecorationItem extends Item implements PolymerItem {
             return InteractionResult.FAIL;
         } else if (!propertyPlaceCheck) {
             return InteractionResult.FAIL;
-        } else if (this.canPlaceAt(level, relativeBlockPos, useOnContext.getHorizontalDirection(), useOnContext.getClickedFace()) && itemStack.getItem() instanceof DecorationItem) {
+        } else if (this.canPlaceAt(level, relativeBlockPos, useOnContext.getHorizontalDirection().getOpposite(), useOnContext.getClickedFace()) && itemStack.getItem() instanceof DecorationItem) {
             if (decorationData.blocks() != null) {
                 int finalRotation = rotation;
                 Util.forEachRotated(decorationData.blocks(), relativeBlockPos, this.getVisualRotationYInDegrees(direction, rotation), blockPos2 -> {
