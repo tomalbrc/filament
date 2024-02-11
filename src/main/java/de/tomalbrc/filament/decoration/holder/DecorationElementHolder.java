@@ -106,7 +106,7 @@ public class DecorationElementHolder extends ElementHolder {
     }
 
     public Vec3 seatTranslation(Seat seat) {
-        Vec3 v3 = new Vec3(seat.offset).subtract(0, 0.35, 0).yRot((float) Math.toRadians(this.parent.getVisualRotationYInDegrees()+180));
+        Vec3 v3 = new Vec3(seat.offset).subtract(0, 0.3, 0).yRot((float) Math.toRadians(this.parent.getVisualRotationYInDegrees()+180));
         return new Vec3(-v3.x, v3.y, v3.z);
     }
 

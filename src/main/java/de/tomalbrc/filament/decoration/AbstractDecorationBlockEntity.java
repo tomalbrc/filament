@@ -63,6 +63,7 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
 
         if (this.itemStack == null) {
             Filament.LOGGER.error("No item for decoration! Removing decoration block entity at " + this.getBlockPos().toShortString());
+            this.level.destroyBlock(this.getBlockPos(), false);
             this.setRemoved();
             return;
         }

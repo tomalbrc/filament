@@ -103,19 +103,19 @@ public class DecorationItem extends Item implements PolymerItem {
         } else if (!propertyPlaceCheck) {
             return InteractionResult.FAIL;
         } else if (this.canPlaceAt(level, relativeBlockPos, useOnContext.getHorizontalDirection(), useOnContext.getClickedFace()) && itemStack.getItem() instanceof DecorationItem) {
-            BlockPlaceContext blockPlaceContext = new BlockPlaceContext(player, useOnContext.getHand(), itemStack, new BlockHitResult(useOnContext.getClickLocation(), useOnContext.getClickedFace(), useOnContext.getClickedPos(), useOnContext.isInside()));
-
             if (decorationData.blocks() != null) {
                 int finalRotation = rotation;
                 Util.forEachRotated(decorationData.blocks(), relativeBlockPos, this.getVisualRotationYInDegrees(direction, rotation), blockPos2 -> {
-                    boolean w = level.getBlockState(blockPos2).is(Blocks.WATER);
                     level.destroyBlock(blockPos2, true);
 
+                    BlockPlaceContext blockPlaceContext = new BlockPlaceContext(player, useOnContext.getHand(), itemStack, new BlockHitResult(useOnContext.getClickLocation(), useOnContext.getClickedFace(), blockPos2, useOnContext.isInside()));
                     BlockState blockState = BlockRegistry.DECORATION_BLOCK.getStateForPlacement(blockPlaceContext);
                     if (decorationData.properties() != null && decorationData.properties().isLightSource()) {
                         blockState = blockState.setValue(DecorationBlock.LIGHT_LEVEL, decorationData.properties().lightEmission);
                     }
-                    blockState = blockState.setValue(DecorationBlock.WATERLOGGED, w);
+
+                    if (!decorationData.properties().waterloggable)
+                        blockState = blockState.setValue(DecorationBlock.WATERLOGGED, false);
 
                     level.setBlockAndUpdate(blockPos2, blockState);
                     if (level.getBlockEntity(blockPos2) instanceof DecorationBlockEntity decorationBlockEntity) {
@@ -128,8 +128,14 @@ public class DecorationItem extends Item implements PolymerItem {
                     }
                 });
             } else {
+                BlockPlaceContext blockPlaceContext = new BlockPlaceContext(player, useOnContext.getHand(), itemStack, new BlockHitResult(useOnContext.getClickLocation(), useOnContext.getClickedFace(), useOnContext.getClickedPos(), useOnContext.isInside()));
+
                 BlockState blockState = BlockRegistry.DECORATION_BLOCK.getStateForPlacement(blockPlaceContext);
                 blockState = blockState.setValue(DecorationBlock.PASSTHROUGH, true);
+
+                if (!decorationData.properties().waterloggable) {
+                    blockState = blockState.setValue(DecorationBlock.WATERLOGGED, false);
+                }
 
                 if (decorationData.properties() != null && decorationData.properties().isLightSource()) {
                     blockState = blockState.setValue(DecorationBlock.LIGHT_LEVEL, decorationData.properties().lightEmission);

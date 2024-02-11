@@ -4,6 +4,7 @@ import eu.pb4.polymer.core.api.block.PolymerBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
@@ -19,12 +20,18 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.BiConsumer;
 
 public class DecorationBlock extends Block implements PolymerBlock, EntityBlock, SimpleWaterloggedBlock {
     public static final IntegerProperty LIGHT_LEVEL = BlockStateProperties.LEVEL;
@@ -58,10 +65,10 @@ public class DecorationBlock extends Block implements PolymerBlock, EntityBlock,
     }
 
     @Override
-    public void wasExploded(Level level, BlockPos blockPos, Explosion explosion) {
-        super.wasExploded(level, blockPos, explosion);
-
-        this.removeDecoration(level, blockPos, null);
+    public void onExplosionHit(BlockState blockState, Level level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
+        if (!blockState.isAir() && explosion.getBlockInteraction() != Explosion.BlockInteraction.TRIGGER_BLOCK) {
+            this.removeDecoration(level, blockPos, null);
+        }
     }
 
     @Override
@@ -93,6 +100,30 @@ public class DecorationBlock extends Block implements PolymerBlock, EntityBlock,
         }
     }
 
+    @Override
+    public boolean canPlaceLiquid(@Nullable Player player, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
+        if (blockGetter.getBlockEntity(blockPos) instanceof DecorationBlockEntity decorationBlockEntity &&
+            decorationBlockEntity.getDecorationData() != null &&
+            decorationBlockEntity.getDecorationData().properties() != null &&
+            decorationBlockEntity.getDecorationData().properties().waterloggable)
+        {
+            return SimpleWaterloggedBlock.super.canPlaceLiquid(player, blockGetter, blockPos, blockState, fluid);
+        }
+        return false;
+    }
+
+    public boolean placeLiquid(LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState, FluidState fluidState) {
+        if (levelAccessor.getBlockEntity(blockPos) instanceof DecorationBlockEntity decorationBlockEntity && decorationBlockEntity.getDecorationData() != null && decorationBlockEntity.getDecorationData().properties() != null) {
+            if (decorationBlockEntity.getDecorationData().properties().waterloggable) {
+                return SimpleWaterloggedBlock.super.placeLiquid(levelAccessor, blockPos, blockState, fluidState);
+            } else {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
     public FluidState getFluidState(BlockState blockState) {
         return blockState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(blockState);
     }
@@ -110,18 +141,7 @@ public class DecorationBlock extends Block implements PolymerBlock, EntityBlock,
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {
         FluidState fluidState = blockPlaceContext.getLevel().getFluidState(blockPlaceContext.getClickedPos());
-        boolean bl = fluidState.getType() == Fluids.WATER;
+        boolean bl = fluidState.isSource() && fluidState.getType() == Fluids.WATER;
         return super.getStateForPlacement(blockPlaceContext).setValue(WATERLOGGED, bl);
     }
-
-    /**
-     *
-     * @Override
-     *     public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
-     *         if (!blockState.is(blockState2.getBlock()) && level.getBlockEntity(blockPos) instanceof DecorationBlockEntity decorationBlockEntity) {
-     *             decorationBlockEntity.destroyStructure(true);
-     *         }
-     *     }
-     *
-     */
 }

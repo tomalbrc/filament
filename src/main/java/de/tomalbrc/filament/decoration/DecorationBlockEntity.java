@@ -29,6 +29,7 @@ import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.HopperMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec3;
@@ -319,7 +320,8 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             if (this.getDecorationData().blocks() != null) {
                 Util.forEachRotated(this.getDecorationData().blocks(), this.main, this.getVisualRotationYInDegrees(), blockPos -> {
                     if (this.getLevel().getBlockState(blockPos).is(BlockRegistry.DECORATION_BLOCK)) {
-                        this.getLevel().destroyBlock(blockPos, true);
+                        this.getLevel().destroyBlock(blockPos, false);
+                        this.getLevel().removeBlockEntity(blockPos);
                     }
                 });
             } else {
@@ -385,11 +387,5 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
     public DecorationData getDecorationData() {
         return DecorationRegistry.getDecorationDefinition(decorationId);
-    }
-
-    public void setRemoved() {
-        super.setRemoved();
-
-        //this.destroyStructure(true);
     }
 }
