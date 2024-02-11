@@ -28,8 +28,8 @@ public class FlowingFluidMixin {
     @Inject(method = "canSpreadTo", locals = LocalCapture.CAPTURE_FAILHARD, at = @At("TAIL"), cancellable = true)
     private void canSpreadTo(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Direction direction, BlockPos blockPos2, BlockState blockState2, FluidState fluidState, Fluid fluid, CallbackInfoReturnable<Boolean> cir) {
         if (blockState2.is(BlockRegistry.DECORATION_BLOCK)) {
-            boolean isWaterloggable = this.isWaterloggable(blockGetter, blockPos2, blockState2);
-            boolean isSolid = this.isSolid(blockGetter, blockPos2, blockState2);
+            boolean isWaterloggable = this.isWaterloggable(blockGetter, blockPos2, blockState2) && direction != Direction.DOWN;
+            boolean isSolid = this.isSolid(blockGetter, blockPos2, blockState2) && direction != Direction.DOWN;
             cir.setReturnValue(isWaterloggable || !isSolid);
         }
     }
