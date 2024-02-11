@@ -34,7 +34,7 @@ public class DecorationRegistry {
 
     private static final Object2ObjectOpenHashMap<ResourceLocation, DecorationData> decorations = new Object2ObjectOpenHashMap<>();
 
-    private static final Object2ObjectOpenHashMap<ResourceLocation, DecorationBlock> decorationBlocks = new Object2ObjectOpenHashMap<>();
+    private static final Object2ObjectOpenHashMap<ResourceLocation, Block> decorationBlocks = new Object2ObjectOpenHashMap<>();
     private static final Object2ObjectOpenHashMap<Block, BlockEntityType<DecorationBlockEntity>> decorationBlockEntities = new Object2ObjectOpenHashMap<>();
 
     private static final Object2ObjectOpenHashMap<String, AjModel> ajmodels = new Object2ObjectOpenHashMap<>();
@@ -98,7 +98,7 @@ public class DecorationRegistry {
     }
 
     public static DecorationBlock getDecorationBlock(ResourceLocation resourceLocation) {
-        return decorationBlocks.get(resourceLocation);
+        return (DecorationBlock) decorationBlocks.get(resourceLocation);
     }
 
     public static BlockEntityType<DecorationBlockEntity> getBlockEntityType(BlockState blockState) {

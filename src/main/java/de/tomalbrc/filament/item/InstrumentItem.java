@@ -11,13 +11,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import de.tomalbrc.filament.data.behaviours.item.Instrument;
+import org.jetbrains.annotations.NotNull;
 
 public class InstrumentItem extends SimpleItem {
     public InstrumentItem(Properties properties, ItemData itemData) {
         super(properties, itemData);
     }
 
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
         ItemStack itemStack = player.getItemInHand(interactionHand);
 
         if (itemData.isInstrument()) {

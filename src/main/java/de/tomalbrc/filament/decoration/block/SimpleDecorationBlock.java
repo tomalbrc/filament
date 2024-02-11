@@ -1,7 +1,6 @@
 package de.tomalbrc.filament.decoration.block;
 
 import de.tomalbrc.filament.decoration.holder.SimpleHolder;
-import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
 import eu.pb4.polymer.virtualentity.api.BlockWithMovingElementHolder;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import net.minecraft.core.BlockPos;

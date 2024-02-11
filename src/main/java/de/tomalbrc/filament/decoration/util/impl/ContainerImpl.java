@@ -27,7 +27,7 @@ public record ContainerImpl(
 
     public void read(CompoundTag compoundTag) {
         CompoundTag compoundTag2 = compoundTag.getCompound("Container");
-        if (compoundTag2 != null && !compoundTag2.isEmpty()) {
+        if (!compoundTag2.isEmpty()) {
             ContainerHelper.loadAllItems(compoundTag2, container.items);
         }
     }

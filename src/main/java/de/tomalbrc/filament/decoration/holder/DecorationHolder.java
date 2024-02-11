@@ -234,10 +234,6 @@ public class DecorationHolder extends ElementHolder {
         this.seatDataList = seatData;
     }
 
-    public List<Seat> getSeatData() {
-        return this.seatDataList;
-    }
-
     public void seatPlayer(Seat seat, ServerPlayer player) {
         SeatEntity seatEntity = new SeatEntity(EntityRegistry.SEAT_ENTITY, player.level());
         seatEntity.setPos(this.seatTranslation(seat).add(this.getPos()));

@@ -24,7 +24,7 @@ public class LockImpl {
 
         Item key = this.lock.key == null ? null : BuiltInRegistries.ITEM.get(this.lock.key);
         ItemStack mainHandItem = player.getItemInHand(InteractionHand.MAIN_HAND);
-        boolean hasHandItem = mainHandItem != null && !mainHandItem.isEmpty();
+        boolean hasHandItem = !mainHandItem.isEmpty();
         boolean holdsKeyAndIsValid = hasHandItem && key != null && mainHandItem.is(key);
         boolean noItemNoKey = !hasHandItem && (key == null);
         if (holdsKeyAndIsValid || noItemNoKey) {
