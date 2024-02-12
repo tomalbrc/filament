@@ -147,7 +147,7 @@ public class Util {
 
             @Override
             public void attack(ServerPlayer player) {
-                element.getHolder().getAttachment().getWorld().destroyBlock(blockPos, false);
+                element.getHolder().getAttachment().getWorld().destroyBlock(BlockPos.containing(element.getHolder().getAttachment().getPos()), false);
             }
         });
         element.setSize(1.f, 1.f);
