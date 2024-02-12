@@ -3,9 +3,13 @@ package de.tomalbrc.filament.decoration.block;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.DecorationRegistry;
+import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
+import net.minecraft.client.model.ModelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.data.models.BlockModelGenerators;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -111,19 +115,18 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
 
     @Override
     public boolean canPlaceLiquid(@Nullable Player player, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
-        if (blockGetter.getBlockEntity(blockPos) instanceof DecorationBlockEntity decorationBlockEntity &&
-            decorationBlockEntity.getDecorationData() != null &&
-            decorationBlockEntity.getDecorationData().properties() != null &&
-            decorationBlockEntity.getDecorationData().properties().waterloggable)
-        {
+        if (DecorationRegistry.isDecoration(blockState) &&
+                ((DecorationBlock) blockState.getBlock()).getDecorationData() != null &&
+                ((DecorationBlock) blockState.getBlock()).getDecorationData().properties() != null &&
+                ((DecorationBlock) blockState.getBlock()).getDecorationData().properties().waterloggable) {
             return SimpleWaterloggedBlock.super.canPlaceLiquid(player, blockGetter, blockPos, blockState, fluid);
         }
         return false;
     }
 
     public boolean placeLiquid(LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState, FluidState fluidState) {
-        if (levelAccessor.getBlockEntity(blockPos) instanceof DecorationBlockEntity decorationBlockEntity && decorationBlockEntity.getDecorationData() != null && decorationBlockEntity.getDecorationData().properties() != null) {
-            if (decorationBlockEntity.getDecorationData().properties().waterloggable) {
+        if (DecorationRegistry.isDecoration(blockState) && ((DecorationBlock)blockState.getBlock()).getDecorationData() != null && ((DecorationBlock)blockState.getBlock()).getDecorationData().properties() != null) {
+            if (((DecorationBlock)blockState.getBlock()).getDecorationData().properties().waterloggable) {
                 return SimpleWaterloggedBlock.super.placeLiquid(levelAccessor, blockPos, blockState, fluidState);
             } else {
                 return false;

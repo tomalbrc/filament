@@ -3,6 +3,7 @@ package de.tomalbrc.filament;
 import com.mojang.logging.LogUtils;
 import de.tomalbrc.filament.command.DyeCommand;
 import de.tomalbrc.filament.command.PickCommand;
+import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.*;
@@ -12,11 +13,15 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.core.BlockPos;
+import net.minecraft.data.models.BlockModelGenerators;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.state.BlockState;
 import org.slf4j.Logger;
+
+import java.nio.charset.StandardCharsets;
 
 public class Filament implements ModInitializer {
     public static final Logger LOGGER = LogUtils.getLogger();
@@ -55,5 +60,12 @@ public class Filament implements ModInitializer {
         LOGGER.info("Decorations registered: " + DecorationRegistry.REGISTERED_DECORATIONS);
         LOGGER.info("Decoration block entities registered: " + DecorationRegistry.REGISTERED_BLOCK_ENTITIES);
         LOGGER.info("---------------------");
+
+        /*
+        PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder -> {
+        PoymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder -> {
+            resourcePackBuilder.addData( d.id().getNamespace() +"/model/block/", BlockModelGenerators.createPillarBlockUVLocked(null, null, null).get().toString().getBytes(StandardCharsets.UTF_8));
+
+        });*/
     }
 }

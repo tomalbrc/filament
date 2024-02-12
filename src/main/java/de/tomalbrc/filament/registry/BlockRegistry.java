@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.Collection;
+import java.util.Objects;
 
 public class BlockRegistry {
     public static int REGISTERED_BLOCKS = 0;
@@ -38,24 +39,26 @@ public class BlockRegistry {
                     BlockProperties properties = data.properties();
                     BlockBehaviour.Properties blockProperties = properties.toBlockProperties();
 
-                    Block block;
-                    if (data.hasState("axis")) {
-                        block = new AxisBlock(blockProperties, data);
-                    } else if (data.hasState("count")) {
-                        block = new CountBlock(blockProperties, data);
-                    } else if (data.hasState("powerlevel")) {
-                        block = new PowerlevelBlock(blockProperties, data);
-                    } else if (data.hasState("powereddirection")) {
-                        block = new PoweredDirectionBlock(blockProperties, data);
+                    Objects.requireNonNull(data.type(), String.format("Could not read type for block config %s", file.getAbsolutePath()));
+
+                    Block customBlock = switch (data.type()) {
+                        case block -> new SimpleBlock(blockProperties, data);
+                        case column -> new AxisBlock(blockProperties, data);
+                        case count -> new CountBlock(blockProperties, data);
+                        case powerlevel -> new PowerlevelBlock(blockProperties, data);
+                        case powered_directional -> new PoweredDirectionBlock(blockProperties, data);
+                        case directional, horizontal_directional -> throw new UnsupportedOperationException("Not implemented");
+                    };
+
+                    if (customBlock != null) {
+                        SimpleBlockItem item = new SimpleBlockItem(new Item.Properties(), customBlock, data);
+                        BlockRegistry.registerBlock(data.id(), customBlock);
+                        ItemRegistry.registerItem(data.id(), item, ItemRegistry.CUSTOM_BLOCK_ITEMS);
+
+                        REGISTERED_BLOCKS++;
                     } else {
-                        block = new SimpleBlock(blockProperties, data);
+                        Filament.LOGGER.error("Could not read block type {} from {}", data.type(), file.getAbsolutePath());
                     }
-
-                    SimpleBlockItem item = new SimpleBlockItem(new Item.Properties(), block, data);
-                    BlockRegistry.registerBlock(data.id(), block);
-                    ItemRegistry.registerItem(data.id(), item, ItemRegistry.CUSTOM_BLOCK_ITEMS);
-
-                    REGISTERED_BLOCKS++;
                 } catch (Throwable throwable) {
                     Filament.LOGGER.error("Error reading block JSON file: {}", file.getAbsolutePath(), throwable);
                 }

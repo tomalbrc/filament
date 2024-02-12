@@ -1,6 +1,9 @@
 package de.tomalbrc.filament.data;
 
 import de.tomalbrc.filament.data.behaviours.block.BlockBehaviourList;
+import de.tomalbrc.filament.data.resource.BlockResource;
+import de.tomalbrc.filament.data.resource.ItemResource;
+import de.tomalbrc.filament.gen.BlockModelGenerator;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
@@ -15,24 +18,32 @@ import java.util.HashMap;
 
 public record BlockData(
         @NotNull ResourceLocation id,
-        @NotNull HashMap<String, ResourceLocation> models,
-        @NotNull ResourceLocation itemModel,
-        @NotNull BlockModelType type,
+        @NotNull BlockResource blockResource,
+        @NotNull ItemResource itemResource,
+        @NotNull BlockModelType blockModel,
         @NotNull BlockProperties properties,
-        @Nullable String states,
+        @Nullable BlockType type,
         @Nullable BlockBehaviourList behaviour
         ) {
     public HashMap<String, BlockState> createStateMap() {
         HashMap<String, BlockState> val = new HashMap<>();
-        for (HashMap.Entry<String, ResourceLocation> entry : this.models.entrySet()) {
-            PolymerBlockModel blockModel = PolymerBlockModel.of(entry.getValue());
-            val.put(entry.getKey(), PolymerBlockResourceUtils.requestBlock(this.type, blockModel));
+
+        if (blockResource.couldGenerate()) {
+            //val = BlockModelGenerator.generate(blockResource);
+            throw new UnsupportedOperationException("Not implemented");
         }
+        else if (blockResource.models() != null) {
+            for (HashMap.Entry<String, ResourceLocation> entry : this.blockResource.models().entrySet()) {
+                PolymerBlockModel blockModel = PolymerBlockModel.of(entry.getValue());
+                val.put(entry.getKey(), PolymerBlockResourceUtils.requestBlock(this.blockModel, blockModel));
+            }
+        }
+
         return val;
     }
 
-    public boolean hasState(String stateName) {
-        return this.states() != null && this.states().contains(stateName);
+    public boolean hasState(BlockType blockType) {
+        return this.type != null && this.type == blockType;
     }
 
     public boolean isPowersource() {
@@ -41,5 +52,15 @@ public record BlockData(
 
     public boolean isRepeater() {
         return this.behaviour != null && this.behaviour.repeater != null;
+    }
+
+    public enum BlockType {
+        block,
+        column,
+        count,
+        powerlevel,
+        powered_directional,
+        directional, // not supported yet
+        horizontal_directional; // not supported yet
     }
 }

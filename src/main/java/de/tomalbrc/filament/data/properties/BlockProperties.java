@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("FieldCanBeLocal")
+@SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})
 public class BlockProperties extends ItemProperties {
     @NotNull
     public Block blockBase = Blocks.STONE;

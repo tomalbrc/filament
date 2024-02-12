@@ -16,7 +16,7 @@ public class SimpleBlockItem extends CustomBlockItem implements PolymerItem {
         super(block, properties);
         this.polymerModel = PolymerResourcePackUtils.requestModel(
                 data.properties().itemBase,
-                data.itemModel()
+                data.itemResource().model()
         );
     }
 
