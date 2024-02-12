@@ -3,7 +3,6 @@ package de.tomalbrc.filament.data;
 import de.tomalbrc.filament.data.behaviours.block.BlockBehaviourList;
 import de.tomalbrc.filament.data.resource.BlockResource;
 import de.tomalbrc.filament.data.resource.ItemResource;
-import de.tomalbrc.filament.gen.BlockModelGenerator;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
