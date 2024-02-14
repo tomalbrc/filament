@@ -6,12 +6,18 @@ import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.impl.datagen.FabricTagBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagEntry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -39,9 +45,7 @@ public class BlockRegistry {
                     BlockProperties properties = data.properties();
                     BlockBehaviour.Properties blockProperties = properties.toBlockProperties();
 
-                    Objects.requireNonNull(data.type(), String.format("Could not read type for block config %s", file.getAbsolutePath()));
-
-                    Block customBlock = switch (data.type()) {
+                    Block customBlock = switch (data.type() == null ? BlockData.BlockType.block : data.type()) {
                         case block -> new SimpleBlock(blockProperties, data);
                         case column -> new AxisBlock(blockProperties, data);
                         case count -> new CountBlock(blockProperties, data);

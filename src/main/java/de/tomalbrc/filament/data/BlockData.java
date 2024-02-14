@@ -19,7 +19,7 @@ public record BlockData(
         @NotNull ResourceLocation id,
         @NotNull BlockResource blockResource,
         @NotNull ItemResource itemResource,
-        @NotNull BlockModelType blockModel,
+        @NotNull BlockModelType blockModelType,
         @NotNull BlockProperties properties,
         @Nullable BlockType type,
         @Nullable BlockBehaviourList behaviour
@@ -34,7 +34,7 @@ public record BlockData(
         else if (blockResource.models() != null) {
             for (HashMap.Entry<String, ResourceLocation> entry : this.blockResource.models().entrySet()) {
                 PolymerBlockModel blockModel = PolymerBlockModel.of(entry.getValue());
-                val.put(entry.getKey(), PolymerBlockResourceUtils.requestBlock(this.blockModel, blockModel));
+                val.put(entry.getKey(), PolymerBlockResourceUtils.requestBlock(this.blockModelType, blockModel));
             }
         }
 

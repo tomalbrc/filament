@@ -12,7 +12,7 @@ public class BlockProperties extends ItemProperties {
     @NotNull
     public Block blockBase = Blocks.STONE;
     @NotNull
-    public Item itemBase = Items.STONE;
+    public Item itemBase = Items.PAPER;
 
     private boolean requiresTool = false;
     private float explosionResistance = Integer.MIN_VALUE;
