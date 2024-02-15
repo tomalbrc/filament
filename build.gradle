@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.4-SNAPSHOT'
+    id 'fabric-loom' version '1.5-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -7,7 +7,7 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
-    maven { url "https://api.modrinth.com/maven" }
+    maven { url 'https://maven.tomalbrc.de' }
     maven { url 'https://maven.nucleoid.xyz' }
     mavenLocal()
 }
@@ -27,8 +27,8 @@ dependencies {
     modImplementation ("eu.pb4:polymer-networking:${project.polymer_version}")
     modRuntimeOnly("eu.pb4:polymer-autohost:${project.polymer_version}")
 
-    // Nylon
-    modImplementation include("maven.modrinth:nylon:${project.nylon_version}")
+    // resin
+    modImplementation include("de.tomalbrc:resin:${project.resin_version}")
 }
 
 processResources {

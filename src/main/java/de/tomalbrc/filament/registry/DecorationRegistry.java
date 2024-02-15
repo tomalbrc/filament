@@ -18,8 +18,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import org.apache.commons.io.FileUtils;
-import org.provim.nylon.data.AjLoader;
-import org.provim.nylon.model.AjModel;
+import de.tomalbrc.resin.data.AjLoader;
+import de.tomalbrc.resin.model.AjModel;
 
 import java.io.File;
 import java.io.FileReader;

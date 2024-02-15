@@ -9,11 +9,11 @@ import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
-import org.provim.nylon.holders.positioned.PositionedHolder;
-import org.provim.nylon.holders.wrappers.Bone;
-import org.provim.nylon.holders.wrappers.DisplayWrapper;
-import org.provim.nylon.model.AjModel;
-import org.provim.nylon.model.AjPose;
+import de.tomalbrc.resin.holders.positioned.PositionedHolder;
+import de.tomalbrc.resin.holders.wrappers.Bone;
+import de.tomalbrc.resin.holders.wrappers.DisplayWrapper;
+import de.tomalbrc.resin.model.AjModel;
+import de.tomalbrc.resin.model.AjPose;
 
 import java.util.Objects;
 
