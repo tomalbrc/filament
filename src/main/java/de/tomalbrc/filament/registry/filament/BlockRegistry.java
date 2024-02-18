@@ -4,7 +4,6 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.block.*;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
-import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
@@ -15,10 +14,8 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import org.apache.commons.io.FileUtils;
 
 import java.io.*;
-import java.util.Collection;
 import java.util.Map;
 
 public class BlockRegistry {

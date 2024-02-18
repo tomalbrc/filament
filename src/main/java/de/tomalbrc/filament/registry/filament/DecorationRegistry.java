@@ -7,7 +7,6 @@ import de.tomalbrc.filament.decoration.block.ComplexDecorationBlock;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.DecorationItem;
 import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
-import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
