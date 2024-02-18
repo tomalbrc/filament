@@ -13,6 +13,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
 import org.joml.Quaternionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -21,6 +22,7 @@ import java.lang.reflect.Type;
 
 public class Json {
     public static final Gson GSON = new GsonBuilder()
+            .setPrettyPrinting()
             .registerTypeHierarchyAdapter(BlockState.class, new BlockStateDeserializer())
             .registerTypeHierarchyAdapter(EquipmentSlot.class, new EquipmentSlotDeserializer())
             .registerTypeHierarchyAdapter(Vector3f.class, new Vector3fDeserializer())
@@ -28,6 +30,7 @@ public class Json {
             .registerTypeHierarchyAdapter(Quaternionf.class, new QuaternionfDeserializer())
             .registerTypeHierarchyAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
             .registerTypeHierarchyAdapter(BlockModelType.class, new BlockModelTypeDeserializer())
+            .registerTypeHierarchyAdapter(PushReaction.class, new PushReactionDeserializer())
             .registerTypeHierarchyAdapter(Block.class, new RegistryDeserializer<>(BuiltInRegistries.BLOCK))
             .registerTypeHierarchyAdapter(Item.class, new RegistryDeserializer<>(BuiltInRegistries.ITEM))
             .registerTypeAdapter(SoundEvent.class, new RegistryDeserializer<>(BuiltInRegistries.SOUND_EVENT))
@@ -124,6 +127,22 @@ public class Json {
             String value = element.getAsString().toUpperCase();
             try {
                 return BlockModelType.valueOf(value);
+            } catch (IllegalArgumentException e) {
+                throw new JsonParseException("Invalid BlockModelType value: " + value, e);
+            }
+        }
+    }
+
+    private static class PushReactionDeserializer implements JsonDeserializer<PushReaction> {
+        @Override
+        public PushReaction deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
+            if (!element.isJsonPrimitive() || !element.getAsJsonPrimitive().isString()) {
+                throw new JsonParseException("Expected string, got " + element);
+            }
+
+            String value = element.getAsString().toUpperCase();
+            try {
+                return PushReaction.valueOf(value);
             } catch (IllegalArgumentException e) {
                 throw new JsonParseException("Invalid BlockModelType value: " + value, e);
             }

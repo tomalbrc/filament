@@ -6,5 +6,5 @@ import java.nio.file.Path;
 
 public class Constants {
     public static final String MOD_ID = "filament";
-    public static final Path CONFIG_DIR = FabricLoader.getInstance().getConfigDir().resolve(MOD_ID);
+    public static final Path CONFIG_DIR = FabricLoader.getInstance().getConfigDir();
 }
