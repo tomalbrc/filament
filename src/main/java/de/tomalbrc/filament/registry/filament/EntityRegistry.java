@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.registry;
+package de.tomalbrc.filament.registry.filament;
 
 import de.tomalbrc.filament.decoration.util.SeatEntity;
 import de.tomalbrc.filament.item.BaseProjectileEntity;
@@ -16,7 +16,6 @@ public class EntityRegistry {
     public static final EntityType<BaseProjectileEntity> BASE_PROJECTILE = EntityType.Builder.of(BaseProjectileEntity::new, MobCategory.MISC).sized(2.f, 3.3f).build("base_projectile");
 
     public static final EntityType<SeatEntity> SEAT_ENTITY =  EntityType.Builder.of(SeatEntity::new, MobCategory.MISC).noSummon().noSave().build("seat");
-
 
     public static void register() {
         registerEntity(new ResourceLocation(Constants.MOD_ID, "projectile"), BASE_PROJECTILE);

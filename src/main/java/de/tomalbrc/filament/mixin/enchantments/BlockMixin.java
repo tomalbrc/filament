@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.mixin.enchantments;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.SimpleContainer;
@@ -11,13 +12,12 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import de.tomalbrc.filament.registry.EnchantmentRegistry;
+import de.tomalbrc.filament.registry.filament.EnchantmentRegistry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 // For enchantments
@@ -29,7 +29,7 @@ public class BlockMixin {
     private static void dropLoot(BlockState state, ServerLevel level, BlockPos pos, BlockEntity blockEntity, Entity entity, ItemStack tool, CallbackInfoReturnable<List<ItemStack>> ci) {
         if (EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.INFERNAL_TOUCH, tool) != 0) {
             if (entity instanceof Player) {
-                ArrayList<ItemStack> newDropList = new ArrayList<>();
+                List<ItemStack> newDropList = new ObjectArrayList<>();
                 ci.getReturnValue().forEach(x ->
                         newDropList.add(level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(x), level)
                                 .map(smeltingRecipe -> smeltingRecipe.value().getResultItem(level.registryAccess()))
@@ -47,7 +47,7 @@ public class BlockMixin {
 
         if (EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.MAGNETIZED, tool) != 0) {
             if (entity instanceof Player playerEntity) {
-                ArrayList<ItemStack> newDropList = new ArrayList<>(ci.getReturnValue());
+                List<ItemStack> newDropList = new ObjectArrayList<>(ci.getReturnValue());
                 newDropList.removeIf(playerEntity::addItem);
                 ci.setReturnValue(newDropList);
             }

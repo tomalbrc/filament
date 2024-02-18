@@ -3,10 +3,12 @@ package de.tomalbrc.filament;
 import com.mojang.logging.LogUtils;
 import de.tomalbrc.filament.command.DyeCommand;
 import de.tomalbrc.filament.command.PickCommand;
-import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import de.tomalbrc.filament.registry.*;
+import de.tomalbrc.filament.registry.filament.*;
 import de.tomalbrc.filament.util.Constants;
+import de.tomalbrc.filament.util.FilamentAssetReloadListener;
+import de.tomalbrc.filament.util.FilamentRPUtil;
+import de.tomalbrc.filament.util.FilamentReloadUtil;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -26,10 +28,7 @@ public class Filament implements ModInitializer {
         PolymerResourcePackUtils.addModAssets(Constants.MOD_ID);
         PolymerResourcePackUtils.markAsRequired();
 
-        BlockRegistry.register();
-        ItemRegistry.register();
         EntityRegistry.register();
-        DecorationRegistry.register();
         EnchantmentRegistry.register();
 
         CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> {
@@ -41,7 +40,7 @@ public class Filament implements ModInitializer {
             if (!world.isClientSide() && hand == InteractionHand.MAIN_HAND) {
                 BlockPos pos = hitResult.getBlockPos();
                 BlockState blockState = world.getBlockState(pos);
-                if (blockState.getBlock() instanceof DecorationBlock && world.getBlockEntity(pos) instanceof DecorationBlockEntity decorationBlockEntity) {
+                if (DecorationRegistry.isDecoration(blockState) && world.getBlockEntity(pos) instanceof DecorationBlockEntity decorationBlockEntity) {
                     return decorationBlockEntity.decorationInteract((ServerPlayer) player, hand, hitResult.getLocation());
                 }
             }
@@ -49,18 +48,12 @@ public class Filament implements ModInitializer {
             return InteractionResult.PASS;
         });
 
-        LOGGER.info("---------------------");
-        LOGGER.info("Items registered: " + ItemRegistry.REGISTERED_ITEMS);
-        LOGGER.info("Blocks registered: " + BlockRegistry.REGISTERED_BLOCKS);
-        LOGGER.info("Decorations registered: " + DecorationRegistry.REGISTERED_DECORATIONS);
-        LOGGER.info("Decoration block entities registered: " + DecorationRegistry.REGISTERED_BLOCK_ENTITIES);
-        LOGGER.info("---------------------");
+        FilamentReloadUtil.registerEarlyReloadListener(new FilamentAssetReloadListener());
+        FilamentReloadUtil.registerEarlyReloadListener(new AjModelRegistry.AjModelReloadListener());
+        FilamentReloadUtil.registerEarlyReloadListener(new BlockRegistry.BlockDataReloadListener());
+        FilamentReloadUtil.registerEarlyReloadListener(new DecorationRegistry.DecorationDataReloadListener());
+        FilamentReloadUtil.registerEarlyReloadListener(new ItemRegistry.ItemDataReloadListener());
 
-        /*
-        PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder -> {
-        PoymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder -> {
-            resourcePackBuilder.addData( d.id().getNamespace() +"/model/block/", BlockModelGenerators.createPillarBlockUVLocked(null, null, null).get().toString().getBytes(StandardCharsets.UTF_8));
-
-        });*/
+        FilamentRPUtil.registerCallback();
     }
 }

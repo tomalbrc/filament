@@ -10,7 +10,8 @@ import de.tomalbrc.filament.decoration.util.BlockEntityWithElementHolder;
 import de.tomalbrc.filament.decoration.util.FunctionalDecoration;
 import de.tomalbrc.filament.decoration.util.impl.ContainerImpl;
 import de.tomalbrc.filament.decoration.util.impl.LockImpl;
-import de.tomalbrc.filament.registry.DecorationRegistry;
+import de.tomalbrc.filament.registry.filament.AjModelRegistry;
+import de.tomalbrc.filament.registry.filament.DecorationRegistry;
 import de.tomalbrc.filament.util.FilamentContainer;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
@@ -133,7 +134,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     @Override
     public ElementHolder makeHolder() {
         if (this.level != null && this.getDecorationData() != null && this.getDecorationData().hasAnimation() && this.animatedHolder == null) {
-            AjModel model = DecorationRegistry.getModel(this.getDecorationData().behaviour().animation.model + ".json");
+            AjModel model = AjModelRegistry.getModel(this.getDecorationData().behaviour().animation.model + ".json");
             if (model == null) {
                 Filament.LOGGER.error("No Animated-Java model named '" + this.getDecorationData().behaviour().animation.model + "' was found!");
             } else {
@@ -205,7 +206,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     @Override
     public void setAnimationData(@NotNull Animation animationData) {
         if (animationData.model != null) {
-            AjModel model = DecorationRegistry.getModel(animationData.model + ".json");
+            AjModel model = AjModelRegistry.getModel(animationData.model + ".json");
             if (model == null) {
                 Filament.LOGGER.error("No AnimatedJava model named '" + animationData.model + "' was found!");
             }

@@ -6,7 +6,7 @@ import de.tomalbrc.filament.data.behaviours.decoration.Seat;
 import de.tomalbrc.filament.data.behaviours.decoration.Showcase;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.decoration.util.SeatEntity;
-import de.tomalbrc.filament.registry.EntityRegistry;
+import de.tomalbrc.filament.registry.filament.EntityRegistry;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.elements.BlockDisplayElement;

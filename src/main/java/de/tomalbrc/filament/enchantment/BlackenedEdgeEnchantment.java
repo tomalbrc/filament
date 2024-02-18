@@ -10,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.item.enchantment.Enchantments;
-import de.tomalbrc.filament.registry.EnchantmentRegistry;
+import de.tomalbrc.filament.registry.filament.EnchantmentRegistry;
 
 public class BlackenedEdgeEnchantment extends Enchantment implements PolymerEnchantment {
     public BlackenedEdgeEnchantment() {

@@ -7,6 +7,7 @@ import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -29,7 +30,6 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
 import org.joml.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -96,7 +96,7 @@ public class Util {
 
     public static Vector2f barrierDimensions(List<DecorationData.BlockConfig> blockConfigs, float rotation) {
         if (!blockConfigs.isEmpty()) {
-            List<BlockPos> posList = new ArrayList<>();
+            List<BlockPos> posList = new ObjectArrayList<>();
             Util.forEachRotated(blockConfigs, BlockPos.ZERO, rotation, blockPos2 -> {
                 posList.add(blockPos2);
             });

@@ -9,7 +9,9 @@
     "BlockItemMixin",
     "enchantments.BlockMixin",
     "LevelChunkMixin",
-    "FlowingFluidMixin"
+    "FlowingFluidMixin",
+    "ReloadableServerResourcesMixin",
+    "MappedRegistryMixin"
   ],
   "injectors": {
     "defaultRequire": 1

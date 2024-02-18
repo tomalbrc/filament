@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.registry;
+package de.tomalbrc.filament.registry.filament;
 
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.ItemData;
@@ -8,11 +8,14 @@ import de.tomalbrc.filament.item.ThrowingItem;
 import de.tomalbrc.filament.item.TrapItem;
 import eu.pb4.polymer.core.api.item.PolymerItemGroupUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -20,10 +23,9 @@ import org.apache.commons.io.FileUtils;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.Reader;
+import java.io.*;
 import java.util.Collection;
+import java.util.Map;
 
 public class ItemRegistry {
     public static int REGISTERED_ITEMS = 0;
@@ -67,22 +69,7 @@ public class ItemRegistry {
             for (File file : files) {
                 try (Reader reader = new FileReader(file)) {
                     ItemData data = Json.GSON.fromJson(reader, ItemData.class);
-
-                    Item.Properties properties = data.properties() != null ? data.properties().toItemProperties(data.vanillaItem(), data.behaviour()) : new Item.Properties();
-                    Item item;
-                    if (data.canShoot()) {
-                        item = new ThrowingItem(properties, data);
-                    } else if (data.isInstrument()) {
-                        item = new InstrumentItem(properties, data);
-                    } else if (data.isTrap()) {
-                        item = new TrapItem(properties, data);
-                    } else {
-                        item = new SimpleItem(properties, data);
-                    }
-
-                    ItemRegistry.registerItem(data.id(), item, CUSTOM_ITEMS);
-                    REGISTERED_ITEMS++;
-
+                    register(data);
                 } catch (Throwable throwable) {
                     Filament.LOGGER.error("Error reading item JSON file: {}", file.getAbsolutePath(), throwable);
                 }
@@ -90,8 +77,49 @@ public class ItemRegistry {
         }
     }
 
+    static public void register(ItemData data) {
+        if (BuiltInRegistries.ITEM.containsKey(data.id())) return;
+
+        Item.Properties properties = data.properties() != null ? data.properties().toItemProperties(data.vanillaItem(), data.behaviour()) : new Item.Properties();
+        Item item;
+        if (data.canShoot()) {
+            item = new ThrowingItem(properties, data);
+        } else if (data.isInstrument()) {
+            item = new InstrumentItem(properties, data);
+        } else if (data.isTrap()) {
+            item = new TrapItem(properties, data);
+        } else {
+            item = new SimpleItem(properties, data);
+        }
+
+        ItemRegistry.registerItem(data.id(), item, CUSTOM_ITEMS);
+        REGISTERED_ITEMS++;
+    }
+
     public static void registerItem(ResourceLocation identifier, Item item, Object2ObjectLinkedOpenHashMap<ResourceLocation, Item> CAT) {
         Registry.register(BuiltInRegistries.ITEM, identifier, item);
         CAT.putIfAbsent(identifier, item);
+    }
+
+    public static class ItemDataReloadListener implements SimpleSynchronousResourceReloadListener {
+        @Override
+        public ResourceLocation getFabricId() {
+            return new ResourceLocation("filament:items");
+        }
+
+        @Override
+        public void onResourceManagerReload(ResourceManager resourceManager) {
+            var resources = resourceManager.listResources("filament/item", path -> path.getPath().endsWith(".json"));
+            for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
+                try (var reader = new InputStreamReader(entry.getValue().open())) {
+                    ItemData data = Json.GSON.fromJson(reader, ItemData.class);
+                    ItemRegistry.register(data);
+                } catch (IOException | IllegalStateException e) {
+                    Filament.LOGGER.error("Failed to load item resource \"" + entry.getKey() + "\".");
+                }
+            }
+
+            Filament.LOGGER.info("filament items registered: " + ItemRegistry.REGISTERED_ITEMS);
+        }
     }
 }

@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.decoration.holder;
 
 import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
-import de.tomalbrc.filament.registry.DecorationRegistry;
+import de.tomalbrc.filament.registry.filament.DecorationRegistry;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;

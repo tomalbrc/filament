@@ -2,7 +2,7 @@ package de.tomalbrc.filament.decoration.block;
 
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import de.tomalbrc.filament.registry.DecorationRegistry;
+import de.tomalbrc.filament.registry.filament.DecorationRegistry;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

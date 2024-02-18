@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.decoration.block.entity;
 
 import de.tomalbrc.filament.Filament;
-import de.tomalbrc.filament.registry.DecorationRegistry;
+import de.tomalbrc.filament.registry.filament.DecorationRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

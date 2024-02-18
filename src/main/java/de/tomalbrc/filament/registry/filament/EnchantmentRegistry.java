@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.registry;
+package de.tomalbrc.filament.registry.filament;
 
 import de.tomalbrc.filament.enchantment.*;
 import de.tomalbrc.filament.util.Constants;

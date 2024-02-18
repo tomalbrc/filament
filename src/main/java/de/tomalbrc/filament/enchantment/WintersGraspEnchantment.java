@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.enchantment;
 
-import de.tomalbrc.filament.registry.EnchantmentRegistry;
+import de.tomalbrc.filament.registry.filament.EnchantmentRegistry;
 import eu.pb4.polymer.core.api.other.PolymerEnchantment;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
