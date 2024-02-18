@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.data.properties;
 
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.material.PushReaction;
 
 public class DecorationProperties extends ItemProperties {
     public boolean rotate = false;
@@ -8,6 +9,8 @@ public class DecorationProperties extends ItemProperties {
 
     public Placement placement = Placement.DEFAULT;
     public boolean glow = false;
+
+    public PushReaction pushReaction = PushReaction.NORMAL;
 
     public boolean waterloggable = true;
     public boolean solid = false;

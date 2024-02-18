@@ -52,7 +52,7 @@ public class DecorationRegistry {
         } else {
             block = new SimpleDecorationBlock(FabricBlockSettings.create().nonOpaque().luminance(blockState ->
                     blockState.getValue(DecorationBlock.LIGHT_LEVEL)
-            ).breakInstantly().dropsNothing().dynamicBounds().allowsSpawning((x, y, z, w) -> false).pistonBehavior(PushReaction.NORMAL), data.id());
+            ).breakInstantly().dropsNothing().dynamicBounds().allowsSpawning((x, y, z, w) -> false).pistonBehavior(data.properties() != null ? data.properties().pushReaction : PushReaction.NORMAL), data.id());
         }
 
         decorationBlocks.put(data.id(), block);
