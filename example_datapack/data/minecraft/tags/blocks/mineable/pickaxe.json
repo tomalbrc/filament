@@ -1,0 +1,24 @@
+{
+  "replace": false,
+  "values": [
+    "mynamespace:relay_block",
+    "mynamespace:amethyst_bricks",
+
+    "mynamespace:pink_concrete_bricks",
+    "mynamespace:light_blue_concrete_bricks",
+    "mynamespace:gray_concrete_bricks",
+    "mynamespace:orange_concrete_bricks",
+    "mynamespace:lime_concrete_bricks",
+    "mynamespace:red_concrete_bricks",
+    "mynamespace:green_concrete_bricks",
+    "mynamespace:blue_concrete_bricks",
+    "mynamespace:white_concrete_bricks",
+    "mynamespace:light_gray_concrete_bricks",
+    "mynamespace:magenta_concrete_bricks",
+    "mynamespace:black_concrete_bricks",
+    "mynamespace:brown_concrete_bricks",
+    "mynamespace:yellow_concrete_bricks",
+    "mynamespace:cyan_concrete_bricks",
+    "mynamespace:purple_concrete_bricks"
+  ]
+}

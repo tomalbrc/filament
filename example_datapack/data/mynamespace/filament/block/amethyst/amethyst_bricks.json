@@ -1,0 +1,13 @@
+{
+  "id": "mynamespace:amethyst_bricks",
+  "blockModelType": "full_block",
+  "blockResource": {
+    "models": {
+      "default": "minecraft:custom/block/arcanery/amethyst_bricks"
+    }
+  },
+  "properties": {
+    "blockBase": "minecraft:amethyst_block",
+    "itemBase": "minecraft:paper"
+  }
+}

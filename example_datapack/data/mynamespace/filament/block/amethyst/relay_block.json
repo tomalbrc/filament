@@ -1,0 +1,35 @@
+{
+  "id": "mynamespace:relay_block",
+  "blockResource": {
+    "models": {
+      "up,powered=false": "minecraft:custom/block/arcanery/relay/relay_up_off",
+      "down,powered=false": "minecraft:custom/block/arcanery/relay/relay_down_off",
+      "north,powered=false": "minecraft:custom/block/arcanery/relay/relay_north_off",
+      "south,powered=false": "minecraft:custom/block/arcanery/relay/relay_south_off",
+      "east,powered=false": "minecraft:custom/block/arcanery/relay/relay_east_off",
+      "west,powered=false": "minecraft:custom/block/arcanery/relay/relay_west_off",
+      "up,powered=true": "minecraft:custom/block/arcanery/relay/relay_up_on",
+      "down,powered=true": "minecraft:custom/block/arcanery/relay/relay_down_on",
+      "north,powered=true": "minecraft:custom/block/arcanery/relay/relay_north_on",
+      "south,powered=true": "minecraft:custom/block/arcanery/relay/relay_south_on",
+      "east,powered=true": "minecraft:custom/block/arcanery/relay/relay_east_on",
+      "west,powered=true": "minecraft:custom/block/arcanery/relay/relay_west_on"
+    }
+  },
+  "itemResource": {
+    "model": "minecraft:custom/block/arcanery/relay/relay_north_off"
+  },
+  "type": "powered_directional",
+  "blockModelType": "full_block",
+  "properties": {
+    "redstoneConductor": false,
+    "blockBase": "minecraft:amethyst_block",
+    "itemBase": "minecraft:paper"
+  },
+  "behaviour": {
+    "repeater": {
+      "delay": 1,
+      "loss": 0
+    }
+  }
+}

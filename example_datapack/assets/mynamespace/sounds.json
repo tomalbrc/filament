@@ -1,0 +1,27 @@
+{
+    "door.locked": {
+      "sounds": [
+        "mynamespace:locked_door"
+      ],
+      "subtitle": "subtitles.door.locked"
+    },
+    "door.unlocked": {
+      "sounds": [
+        "mynamespace:unlocked_door"
+      ],
+      "subtitle": "subtitles.door.unlocked"
+    },
+    
+    "misc.honk": {
+      "sounds": [
+        "mynamespace:honk"
+      ],
+      "subtitle": "subtitles.misc.honk"
+    },
+    "misc.stone.slide": {
+      "sounds": [
+        "mynamespace:stone_slide"
+      ],
+      "subtitle": "subtitles.misc.stone.slide"
+    }
+}

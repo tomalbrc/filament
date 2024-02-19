@@ -1,0 +1,13 @@
+{
+   "id" : "mynamespace:white_concrete_bricks",
+   "blockResource": {
+      "models" : {
+         "default" : "minecraft:custom/block/concrete/white_concrete_bricks"
+      }
+   },
+   "properties" : {
+      "blockBase" : "minecraft:white_concrete",
+      "itemBase" : "minecraft:paper"
+   },
+   "blockModelType" : "full_block"
+}

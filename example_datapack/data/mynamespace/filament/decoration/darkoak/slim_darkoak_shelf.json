@@ -1,0 +1,26 @@
+{
+  "id": "mynamespace:slim_darkoak_shelf",
+  "model": "minecraft:custom/furniture/shelves/slim_darkoak_shelf",
+  "itemModel": "minecraft:custom/furniture/shelves/slim_darkoak_shelf",
+  "properties": {
+    "rotate": true
+  },
+  "blocks": [
+    {
+      "origin": [0,0,0],
+      "size": [1,2,1]
+    }
+  ],
+  "behaviour": {
+    "showcase": [
+      {
+        "offset": [0, 0.725, 0],
+        "scale": [0.5, 0.5, 0.5]
+      },
+      {
+        "offset": [0, 1.475, 0],
+        "scale": [0.5, 0.5, 0.5]
+      }
+    ]
+  }
+}

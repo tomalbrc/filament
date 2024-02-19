@@ -1,0 +1,19 @@
+{
+  "id": "mynamespace:amethyst_chestplate",
+  "vanillaItem": "minecraft:leather_chestplate",
+  "properties": {
+    "durability": 10,
+    "stackSize": 1,
+    "lore": ["Amethyst-tastic", "line 2"]
+  },
+  "behaviour": {
+    "armor": {
+      "attributes": {
+        "name": "attribute.maxhealth",
+        "value": 1
+      },
+      "slot": "chest",
+      "texture": "minecraft:amethyst"
+    }
+  }
+}

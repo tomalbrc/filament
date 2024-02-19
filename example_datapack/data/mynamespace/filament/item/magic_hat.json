@@ -1,0 +1,11 @@
+{
+  "id": "mynamespace:magic_hat",
+  "vanillaItem": "minecraft:paper",
+  "models": {
+    "default": "minecraft:custom/hats/magic_hat"
+  },
+  "properties": {
+    "durability": 1,
+    "stackSize": 1
+  }
+}

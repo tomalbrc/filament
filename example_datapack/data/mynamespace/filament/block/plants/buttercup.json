@@ -1,0 +1,14 @@
+{
+  "id": "mynamespace:buttercup",
+  "blockResource": {
+    "models" : {
+      "default": "minecraft:custom/block/plants/buttercup"
+    }
+  },
+  "blockModelType": "plant_block",
+  "properties": {
+    "destroyTime": 0,
+    "blockBase": "minecraft:dandelion",
+    "itemBase": "minecraft:paper"
+  }
+}

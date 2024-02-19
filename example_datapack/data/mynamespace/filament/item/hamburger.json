@@ -1,0 +1,18 @@
+{
+  "id": "mynamespace:hamburger",
+  "vanillaItem": "minecraft:bread",
+  "models": {
+    "default": "minecraft:custom/food/hamburger"
+  },
+  "properties": {
+    "durability": 1,
+    "stackSize": 1
+  },
+  "behaviour": {
+      "food": {
+          "hunger": 1,
+          "saturation": 0.2,
+          "meat": true
+      }
+  }
+}

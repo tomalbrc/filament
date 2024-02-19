@@ -1,0 +1,18 @@
+{
+  "id": "mynamespace:amethyst_boots",
+  "vanillaItem": "minecraft:leather_boots",
+  "properties": {
+    "durability": 10,
+    "stackSize": 1
+  },
+  "behaviour": {
+    "armor": {
+      "attributes": {
+        "name": "attribute.maxhealth",
+        "value": 1
+      },
+      "slot": "feet",
+      "texture": "minecraft:amethyst"
+    }
+  }
+}

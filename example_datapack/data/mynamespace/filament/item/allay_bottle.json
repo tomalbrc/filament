@@ -1,0 +1,18 @@
+{
+  "id": "mynamespace:allay_bottle",
+  "vanillaItem": "minecraft:carrot_on_a_stick",
+  "models": {
+    "default": "minecraft:custom/traps/allay_bottle",
+    "trapped": "minecraft:custom/traps/allay_bottle_trapped"
+  },
+  "properties": {
+    "durability": 20,
+    "stackSize": 1
+  },
+  "behaviour": {
+    "trap": {
+      "types": ["minecraft:allay"],
+      "useDuration": 120
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+ "parent": "item/brush",
+ "textures": {
+ "layer0": "item/misc/clown_horn"
+ }
+}

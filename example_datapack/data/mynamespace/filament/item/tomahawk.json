@@ -1,0 +1,15 @@
+{
+  "id": "mynamespace:tomahawk",
+  "vanillaItem": "minecraft:iron_axe",
+  "properties": {
+    "durability": 10,
+    "stackSize": 1
+  },
+  "behaviour": {
+    "shoot": {
+      "consumes": true,
+      "baseDamage": 4.0,
+      "speed": 2.0
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+   "id" : "mynamespace:yellow_concrete_bricks",
+   "blockResource": {
+      "models" : {
+         "default" : "minecraft:custom/block/concrete/yellow_concrete_bricks"
+      }
+   },
+   "properties" : {
+      "blockBase" : "minecraft:yellow_concrete",
+      "itemBase" : "minecraft:paper"
+   },
+   "blockModelType" : "full_block"
+}

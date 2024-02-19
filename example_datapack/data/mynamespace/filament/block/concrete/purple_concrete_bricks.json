@@ -1,0 +1,13 @@
+{
+   "id" : "mynamespace:purple_concrete_bricks",
+   "blockResource": {
+      "models" : {
+         "default" : "minecraft:custom/block/concrete/purple_concrete_bricks"
+      }
+   },
+   "properties" : {
+      "blockBase" : "minecraft:purple_concrete",
+      "itemBase" : "minecraft:paper"
+   },
+   "blockModelType" : "full_block"
+}

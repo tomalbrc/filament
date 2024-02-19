@@ -1,0 +1,13 @@
+{
+   "id" : "mynamespace:gray_concrete_bricks",
+   "blockResource": {
+      "models" : {
+         "default" : "minecraft:custom/block/concrete/gray_concrete_bricks"
+      }
+   },
+   "properties" : {
+      "blockBase" : "minecraft:gray_concrete",
+      "itemBase" : "minecraft:paper"
+   },
+   "blockModelType" : "full_block"
+}

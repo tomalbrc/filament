@@ -1,0 +1,84 @@
+{
+	"textures": {
+		"0": "animated_java:item/example_chest/texture"
+	},
+	"elements": [
+		{
+			"from": [
+				-3,
+				8,
+				1
+			],
+			"to": [
+				19,
+				16,
+				17
+			],
+			"faces": {
+				"north": {
+					"uv": [
+						0,
+						8,
+						5.5,
+						10
+					],
+					"texture": "#0"
+				},
+				"east": {
+					"uv": [
+						11,
+						0,
+						15,
+						2
+					],
+					"texture": "#0"
+				},
+				"south": {
+					"uv": [
+						5.5,
+						8,
+						11,
+						10
+					],
+					"texture": "#0"
+				},
+				"west": {
+					"uv": [
+						11,
+						2,
+						15,
+						4
+					],
+					"texture": "#0"
+				},
+				"up": {
+					"uv": [
+						5.5,
+						4,
+						0,
+						0
+					],
+					"texture": "#0"
+				},
+				"down": {
+					"uv": [
+						5.5,
+						4,
+						0,
+						8
+					],
+					"texture": "#0"
+				}
+			}
+		}
+	],
+	"display": {
+		"head": {
+			"rotation": [
+				0,
+				180,
+				0
+			]
+		}
+	}
+}

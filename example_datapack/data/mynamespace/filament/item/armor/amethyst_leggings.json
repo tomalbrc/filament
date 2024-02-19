@@ -1,0 +1,18 @@
+{
+  "id": "mynamespace:amethyst_leggings",
+  "vanillaItem": "minecraft:leather_leggings",
+  "properties": {
+    "durability": 10,
+    "stackSize": 1
+  },
+  "behaviour": {
+    "armor": {
+      "attributes": {
+        "name": "attribute.maxhealth",
+        "value": 1
+      },
+      "slot": "legs",
+      "texture": "minecraft:amethyst"
+    }
+  }
+}

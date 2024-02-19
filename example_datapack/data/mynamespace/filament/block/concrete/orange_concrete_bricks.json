@@ -1,0 +1,13 @@
+{
+   "id" : "mynamespace:orange_concrete_bricks",
+   "blockResource": {
+      "models" : {
+         "default" : "minecraft:custom/block/concrete/orange_concrete_bricks"
+      }
+   },
+   "properties" : {
+      "blockBase" : "minecraft:orange_concrete",
+      "itemBase" : "minecraft:paper"
+   },
+   "blockModelType" : "full_block"
+}

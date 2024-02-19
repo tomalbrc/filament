@@ -15,6 +15,9 @@ Uses polymer autohost to host the resourcepack, no 3rd party server needed!
 
 Needs fabric api and polymer
 
+Use one of the releases on github and drop the example_datapack into your server's worlds' datapack folder.
+filament uses polymers resource-pack generation to generate the RP and autohost features to automatically create a http server to serve the RP to your players! 
+
 ## Usage
 
 [Checkout the documentation!](https://tomalbrc.de/projects/filament/docs)
