@@ -7,6 +7,7 @@ import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.item.ThrowingItem;
 import de.tomalbrc.filament.item.TrapItem;
 import eu.pb4.polymer.core.api.item.PolymerItemGroupUtils;
+import eu.pb4.polymer.core.impl.ui.CreativeTabUi;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.ChatFormatting;
@@ -55,9 +56,6 @@ public class ItemRegistry {
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void register() {
-        PolymerItemGroupUtils.registerPolymerItemGroup(new ResourceLocation(Constants.MOD_ID, "item"), ITEM_GROUP);
-        PolymerItemGroupUtils.registerPolymerItemGroup(new ResourceLocation(Constants.MOD_ID, "block"), BLOCK_ITEM_GROUP);
-        PolymerItemGroupUtils.registerPolymerItemGroup(new ResourceLocation(Constants.MOD_ID, "decoration"), DECORATION_ITEM_GROUP);
 
         if (!DIR.exists() || !DIR.isDirectory()) {
             DIR.mkdirs();
@@ -120,6 +118,11 @@ public class ItemRegistry {
             }
 
             Filament.LOGGER.info("filament items registered: " + ItemRegistry.REGISTERED_ITEMS);
+
+            PolymerItemGroupUtils.registerPolymerItemGroup(new ResourceLocation(Constants.MOD_ID, "item"), ITEM_GROUP);
+            PolymerItemGroupUtils.registerPolymerItemGroup(new ResourceLocation(Constants.MOD_ID, "block"), BLOCK_ITEM_GROUP);
+            PolymerItemGroupUtils.registerPolymerItemGroup(new ResourceLocation(Constants.MOD_ID, "decoration"), DECORATION_ITEM_GROUP);
+
         }
     }
 }

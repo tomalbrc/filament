@@ -2,6 +2,7 @@ package de.tomalbrc.filament.mixin;
 
 import de.tomalbrc.filament.registry.*;
 import de.tomalbrc.filament.util.FilamentReloadUtil;
+import eu.pb4.polymer.core.api.item.PolymerItemGroupUtils;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.RegistryAccess;
@@ -24,9 +25,12 @@ public class ReloadableServerResourcesMixin {
         ((RegistryUnfreezer)BuiltInRegistries.BLOCK).filament$unfreeze();
         ((RegistryUnfreezer)BuiltInRegistries.ITEM).filament$unfreeze();
         ((RegistryUnfreezer)BuiltInRegistries.BLOCK_ENTITY_TYPE).filament$unfreeze();
+        ((RegistryUnfreezer)BuiltInRegistries.CREATIVE_MODE_TAB).filament$unfreeze();
 
         for (SimpleSynchronousResourceReloadListener listener : FilamentReloadUtil.getReloadListeners()) {
             listener.onResourceManagerReload(resourceManager);
         }
+
+        PolymerItemGroupUtils.invalidateItemGroupCache();
     }
 }
