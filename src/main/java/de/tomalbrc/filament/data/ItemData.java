@@ -2,6 +2,7 @@ package de.tomalbrc.filament.data;
 
 import de.tomalbrc.filament.data.behaviours.item.ItemBehaviourList;
 import de.tomalbrc.filament.data.properties.ItemProperties;
+import de.tomalbrc.filament.data.resource.ItemResource;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -16,7 +17,7 @@ import java.util.Map;
 public record ItemData(
         @NotNull ResourceLocation id,
         @Nullable Item vanillaItem,
-        @Nullable Map<String, ResourceLocation> models,
+        @Nullable ItemResource itemResource,
         @Nullable ItemBehaviourList behaviour,
         @Nullable ItemProperties properties
 ) {
@@ -24,7 +25,9 @@ public record ItemData(
 
     public Object2ObjectOpenHashMap<String, PolymerModelData> requestModels() {
         Object2ObjectOpenHashMap<String, PolymerModelData> map = new Object2ObjectOpenHashMap<>();
-        if (models != null) models.forEach((key, value) -> map.put(key, PolymerResourcePackUtils.requestModel(vanillaItem, value)));
+        if (itemResource != null) {
+            itemResource.models().forEach((key, value) -> map.put(key, PolymerResourcePackUtils.requestModel(vanillaItem, value)));
+        }
         return map.isEmpty() ? null : map;
     }
 

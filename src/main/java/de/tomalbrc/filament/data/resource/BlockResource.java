@@ -10,7 +10,7 @@ import java.util.Map;
 
 public record BlockResource(Map<String, ResourceLocation> models,
                            Map<String, ResourceLocation> textures,
-                           Map<String, ResourceLocation> blocks) {
+                           Map<String, ResourceLocation> vanilla) {
 
     public boolean couldGenerate() {
         return this.textures != null;
