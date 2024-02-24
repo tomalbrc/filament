@@ -134,12 +134,11 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     @Override
     public ElementHolder makeHolder() {
         if (this.level != null && this.getDecorationData() != null && this.getDecorationData().hasAnimation() && this.animatedHolder == null) {
-            AjModel model = AjModelRegistry.getModel(this.getDecorationData().behaviour().animation.model + ".json");
+            AjModel model = AjModelRegistry.getModel(this.getDecorationData().behaviour().animation.model);
             if (model == null) {
                 Filament.LOGGER.error("No Animated-Java model named '" + this.getDecorationData().behaviour().animation.model + "' was found!");
             } else {
                 this.animatedHolder = new AnimatedHolder(this, model);
-
             }
         }
         else if (this.decorationHolder == null && this.animatedHolder == null) {
@@ -206,7 +205,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     @Override
     public void setAnimationData(@NotNull Animation animationData) {
         if (animationData.model != null) {
-            AjModel model = AjModelRegistry.getModel(animationData.model + ".json");
+            AjModel model = AjModelRegistry.getModel(animationData.model);
             if (model == null) {
                 Filament.LOGGER.error("No AnimatedJava model named '" + animationData.model + "' was found!");
             }
