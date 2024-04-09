@@ -1,10 +1,8 @@
 package de.tomalbrc.filament.registry.filament;
 
+import de.tomalbrc.bil.core.model.Model;
+import de.tomalbrc.bil.file.loader.AjModelLoader;
 import de.tomalbrc.filament.Filament;
-import de.tomalbrc.resin.data.AjLoader;
-import de.tomalbrc.resin.model.AjModel;
-import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -16,9 +14,9 @@ import java.io.IOException;
 import java.util.Map;
 
 public class AjModelRegistry {
-    private static final Object2ReferenceMap<ResourceLocation, AjModel> ajmodels = new Object2ReferenceArrayMap<>();
+    private static final Object2ReferenceMap<ResourceLocation, Model> ajmodels = new Object2ReferenceArrayMap<>();
 
-    public static AjModel getModel(ResourceLocation model) {
+    public static Model getModel(ResourceLocation model) {
         return ajmodels.get(model);
     }
 
@@ -30,11 +28,11 @@ public class AjModelRegistry {
 
         @Override
         public void onResourceManagerReload(ResourceManager resourceManager) {
-            var resources = resourceManager.listResources("filament/ajmodel", path -> path.getPath().endsWith(".json"));
+            var resources = resourceManager.listResources("filament/model", path -> path.getPath().endsWith(".ajmodel"));
 
             for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
                 try (var inputStream = entry.getValue().open()) {
-                    AjModel model = AjLoader.load(entry.getKey().toString(), inputStream);
+                    Model model = new AjModelLoader().load(inputStream, entry.getKey().getPath().toString());
                     String path = entry.getKey().getPath();
                     String customPath = path.substring(path.contains("/") ? path.lastIndexOf('/')+1 : 0, path.lastIndexOf('.'));
                     ajmodels.put(new ResourceLocation(entry.getKey().getNamespace(), customPath), model);

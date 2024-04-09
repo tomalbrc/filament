@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.decoration.block.entity;
 
+import de.tomalbrc.bil.core.model.Model;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.behaviours.decoration.*;
 import de.tomalbrc.filament.data.DecorationData;
@@ -35,7 +36,6 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import de.tomalbrc.resin.model.AjModel;
 
 import java.util.List;
 
@@ -134,7 +134,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     @Override
     public ElementHolder makeHolder() {
         if (this.level != null && this.getDecorationData() != null && this.getDecorationData().hasAnimation() && this.animatedHolder == null) {
-            AjModel model = AjModelRegistry.getModel(this.getDecorationData().behaviour().animation.model);
+            Model model = AjModelRegistry.getModel(this.getDecorationData().behaviour().animation.model);
             if (model == null) {
                 Filament.LOGGER.error("No Animated-Java model named '" + this.getDecorationData().behaviour().animation.model + "' was found!");
             } else {
@@ -205,7 +205,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     @Override
     public void setAnimationData(@NotNull Animation animationData) {
         if (animationData.model != null) {
-            AjModel model = AjModelRegistry.getModel(animationData.model);
+            Model model = AjModelRegistry.getModel(animationData.model);
             if (model == null) {
                 Filament.LOGGER.error("No AnimatedJava model named '" + animationData.model + "' was found!");
             }

@@ -28,7 +28,7 @@ dependencies {
     modRuntimeOnly("eu.pb4:polymer-autohost:${project.polymer_version}")
 
     // resin
-    modImplementation include("de.tomalbrc:resin:${project.resin_version}")
+    modImplementation include("de.tomalbrc:blockbench-import-library:${project.bil_version}")
 }
 
 processResources {

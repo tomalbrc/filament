@@ -1,5 +1,10 @@
 package de.tomalbrc.filament.decoration.holder;
 
+import de.tomalbrc.bil.core.holder.positioned.PositionedHolder;
+import de.tomalbrc.bil.core.holder.wrapper.Bone;
+import de.tomalbrc.bil.core.holder.wrapper.DisplayWrapper;
+import de.tomalbrc.bil.core.model.Model;
+import de.tomalbrc.bil.core.model.Pose;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.behaviours.decoration.Animation;
 import de.tomalbrc.filament.data.DecorationData;
@@ -9,18 +14,13 @@ import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
-import de.tomalbrc.resin.holders.positioned.PositionedHolder;
-import de.tomalbrc.resin.holders.wrappers.Bone;
-import de.tomalbrc.resin.holders.wrappers.DisplayWrapper;
-import de.tomalbrc.resin.model.AjModel;
-import de.tomalbrc.resin.model.AjPose;
 
 import java.util.Objects;
 
 public class AnimatedHolder extends PositionedHolder {
     private final DecorationBlockEntity decorationBlockEntity;
 
-    public AnimatedHolder(DecorationBlockEntity blockEntity, AjModel model) {
+    public AnimatedHolder(DecorationBlockEntity blockEntity, Model model) {
         super((ServerLevel) blockEntity.getLevel(), blockEntity.getBlockPos().getCenter(), model);
         this.decorationBlockEntity = blockEntity;
 
@@ -41,9 +41,9 @@ public class AnimatedHolder extends PositionedHolder {
     }
 
     @Override
-    public void applyPose(AjPose pose, DisplayWrapper display) {
+    public void applyPose(Pose pose, DisplayWrapper display) {
         super.applyPose(pose, display);
-        display.setTranslation(pose.translation().get(new Vector3f()).sub(0, 0.5f, 0));
+        display.element().setTranslation(pose.translation().get(new Vector3f()).sub(0, 0.5f, 0));
     }
 
     protected void updateCullingBox() {
