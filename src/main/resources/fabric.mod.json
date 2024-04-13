@@ -5,10 +5,11 @@
   "name": "filament",
   "description": "",
   "authors": ["tomalbrc"],
+  "icon": "filament-icon@256.png",
   "contact": {
     "repo": "https://github.com/tomalbrc/filament"
   },
-  "license": "All-Rights-Reserved",
+  "license": "LGPL-3.0-or-later",
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -21,6 +22,11 @@
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric-api": "*",
-    "minecraft": "${minecraft_version}"
+    "minecraft": "${minecraft_version}",
+    "polymer-core": "*",
+    "polymer-resource-pack": "*",
+    "polymer-networking": "*",
+    "polymer-virtual-entity": "*",
+    "bil": ">=1.1.6"
   }
 }

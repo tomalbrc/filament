@@ -2,7 +2,8 @@
 
 ## Description
 
-Add custom items, blocks, and decorations to your server. 
+This mod allows you to add custom items, blocks, and decorations to your server, without having to write code.
+Everything is handled via json files, just configure a block, item, decoration or armor and you are ready to go!
 Uses polymer autohost to host the resourcepack, no 3rd party server needed!
 
 ## Features
@@ -13,12 +14,15 @@ Uses polymer autohost to host the resourcepack, no 3rd party server needed!
 
 ## Installation
 
-Needs fabric api and polymer
+Requires fabric api and polymer
 
 Use one of the releases on github and drop the `example_datapack` into your server's worlds' `datapacks` folder.
 filament uses polymers resource-pack generation to generate the RP and autohost features to automatically create a http server to serve the RP to your players! 
 
+
 ## Usage
+
+There is an example datapack, drop that into your worlds datapacks folder.
 
 [Checkout the documentation!](https://tomalbrc.de/projects/filament/docs)
 

@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.mixin.enchantments;
 
+import de.tomalbrc.filament.util.FilamentConfig;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -27,6 +28,10 @@ public class BlockMixin {
             method = "getDrops(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;",
             cancellable = true)
     private static void dropLoot(BlockState state, ServerLevel level, BlockPos pos, BlockEntity blockEntity, Entity entity, ItemStack tool, CallbackInfoReturnable<List<ItemStack>> ci) {
+        if (!FilamentConfig.getInstance().enchantments) {
+            return;
+        }
+
         if (EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.INFERNAL_TOUCH, tool) != 0) {
             if (entity instanceof Player) {
                 List<ItemStack> newDropList = new ObjectArrayList<>();
