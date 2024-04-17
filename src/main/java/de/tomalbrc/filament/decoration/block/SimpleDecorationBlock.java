@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.decoration.block;
 
 import de.tomalbrc.filament.decoration.holder.SimpleHolder;
-import eu.pb4.polymer.virtualentity.api.BlockWithMovingElementHolder;
+import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
 import org.jetbrains.annotations.Nullable;
 
-public class SimpleDecorationBlock extends DecorationBlock implements BlockWithMovingElementHolder {
+public class SimpleDecorationBlock extends DecorationBlock implements BlockWithElementHolder {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final IntegerProperty ROTATION = IntegerProperty.create("rotation", 0, 7);
 

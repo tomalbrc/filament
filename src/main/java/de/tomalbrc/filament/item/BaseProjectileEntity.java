@@ -71,7 +71,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     }
 
     public BaseProjectileEntity(EntityType<? extends AbstractArrow> entityType, Level world) {
-        super(entityType, world, ItemStack.EMPTY); // use empty for now, if the future should use the pickupItem of AbstractArrow added in 1.20.3
+        super(entityType, world); // use empty for now, if the future should use the pickupItem of AbstractArrow added in 1.20.3
 
         EntityAttachment.of(this.holder, this);
 

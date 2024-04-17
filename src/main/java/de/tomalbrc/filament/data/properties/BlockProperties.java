@@ -20,7 +20,7 @@ public class BlockProperties extends ItemProperties {
     private boolean redstoneConductor = true;
 
     public BlockBehaviour.Properties toBlockProperties() {
-        BlockBehaviour.Properties props = BlockBehaviour.Properties.ofFullCopy(this.blockBase);
+        BlockBehaviour.Properties props = BlockBehaviour.Properties.copy(this.blockBase);
 
         if (this.destroyTime != Integer.MIN_VALUE) props.destroyTime(this.destroyTime);
         if (this.explosionResistance != Integer.MIN_VALUE) props.explosionResistance(this.explosionResistance);

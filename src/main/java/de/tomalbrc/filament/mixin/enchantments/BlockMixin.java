@@ -37,7 +37,7 @@ public class BlockMixin {
                 List<ItemStack> newDropList = new ObjectArrayList<>();
                 ci.getReturnValue().forEach(x ->
                         newDropList.add(level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(x), level)
-                                .map(smeltingRecipe -> smeltingRecipe.value().getResultItem(level.registryAccess()))
+                                .map(smeltingRecipe -> smeltingRecipe.getResultItem(level.registryAccess()))
                                 .filter(itemStack -> !itemStack.isEmpty())
                                 .map(itemStack -> {
                                     ItemStack copy = itemStack.copy();

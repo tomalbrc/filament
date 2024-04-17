@@ -79,18 +79,18 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
                 this.getPolymerBlock(state).defaultBlockState();
     }
 
+    /*
     @Override
     public void onExplosionHit(BlockState blockState, Level level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
         if (!blockState.isAir() && explosion.getBlockInteraction() != Explosion.BlockInteraction.TRIGGER_BLOCK) {
             this.removeDecoration(level, blockPos, null);
         }
     }
+    */
 
     @Override
-    public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
-        BlockState returnVal = super.playerWillDestroy(level, blockPos, blockState, player);
+    public void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
         this.removeDecoration(level, blockPos, player);
-        return returnVal;
     }
 
     private void removeDecoration(Level level, BlockPos blockPos, Player player) {
@@ -110,12 +110,12 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
     }
 
     @Override
-    public boolean canPlaceLiquid(@Nullable Player player, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
+    public boolean canPlaceLiquid(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
         if (DecorationRegistry.isDecoration(blockState) &&
                 ((DecorationBlock) blockState.getBlock()).getDecorationData() != null &&
                 ((DecorationBlock) blockState.getBlock()).getDecorationData().properties() != null &&
                 ((DecorationBlock) blockState.getBlock()).getDecorationData().properties().waterloggable) {
-            return SimpleWaterloggedBlock.super.canPlaceLiquid(player, blockGetter, blockPos, blockState, fluid);
+            return SimpleWaterloggedBlock.super.canPlaceLiquid(blockGetter, blockPos, blockState, fluid);
         }
         return false;
     }

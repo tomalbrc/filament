@@ -66,6 +66,7 @@ public class BlockRegistry {
                     BlockData data = Json.GSON.fromJson(reader, BlockData.class);
                     BlockRegistry.register(data);
                 } catch (IOException | IllegalStateException e) {
+                    e.printStackTrace();
                     Filament.LOGGER.error("Failed to load block resource \"" + entry.getKey() + "\".");
                 }
             }

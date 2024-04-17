@@ -34,7 +34,6 @@ public class AnimatedHolder extends PositionedHolder {
     public void setRotation(float rotation) {
         this.getElements().forEach(x -> {
             if (x instanceof DisplayElement displayElement) {
-                displayElement.setTeleportDuration(0);
                 displayElement.setYaw(rotation);
             }
         });

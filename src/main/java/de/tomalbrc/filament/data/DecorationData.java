@@ -59,7 +59,7 @@ public record DecorationData(
     }
 
     public boolean isSimple() {
-        return (!this.hasBlocks() || Util.barrierDimensions(this.blocks(), 0).equals(1, 1)) && this.behaviour() == null;
+        return false;
     }
 
     public record BlockConfig(Vector3f origin,

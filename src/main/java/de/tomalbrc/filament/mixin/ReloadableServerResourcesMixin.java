@@ -2,6 +2,7 @@ package de.tomalbrc.filament.mixin;
 
 import de.tomalbrc.filament.registry.*;
 import de.tomalbrc.filament.util.FilamentReloadUtil;
+import eu.pb4.polymer.autohost.impl.AutoHost;
 import eu.pb4.polymer.core.api.item.PolymerItemGroupUtils;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.commands.Commands;
