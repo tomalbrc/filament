@@ -120,4 +120,12 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     public int getRotation() {
         return this.rotation;
     }
+
+    @Override
+    public void setRemoved() {
+        if (this.level != null) {
+            destroyStructure(true);
+        }
+        super.setRemoved();
+    }
 }
