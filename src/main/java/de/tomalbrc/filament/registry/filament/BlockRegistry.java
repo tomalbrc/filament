@@ -16,10 +16,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class BlockRegistry {
     public static int REGISTERED_BLOCKS = 0;
+
+    public static void register(InputStream inputStream) throws IOException {
+        register(Json.GSON.fromJson(new InputStreamReader(inputStream, StandardCharsets.UTF_8), BlockData.class));
+    }
 
     public static void register(BlockData data) throws IOException {
         BlockProperties properties = data.properties();

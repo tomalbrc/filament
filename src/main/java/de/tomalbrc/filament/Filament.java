@@ -65,7 +65,7 @@ public class Filament implements ModInitializer {
         });
 
         FilamentReloadUtil.registerEarlyReloadListener(new FilamentAssetReloadListener());
-        FilamentReloadUtil.registerEarlyReloadListener(new AjModelRegistry.AjModelReloadListener());
+        FilamentReloadUtil.registerEarlyReloadListener(new ModelRegistry.AjModelReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new BlockRegistry.BlockDataReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new DecorationRegistry.DecorationDataReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new ItemRegistry.ItemDataReloadListener());

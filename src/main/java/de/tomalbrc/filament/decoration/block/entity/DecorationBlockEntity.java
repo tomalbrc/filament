@@ -11,7 +11,7 @@ import de.tomalbrc.filament.decoration.util.BlockEntityWithElementHolder;
 import de.tomalbrc.filament.decoration.util.FunctionalDecoration;
 import de.tomalbrc.filament.decoration.util.impl.ContainerImpl;
 import de.tomalbrc.filament.decoration.util.impl.LockImpl;
-import de.tomalbrc.filament.registry.filament.AjModelRegistry;
+import de.tomalbrc.filament.registry.filament.ModelRegistry;
 import de.tomalbrc.filament.registry.filament.DecorationRegistry;
 import de.tomalbrc.filament.util.FilamentContainer;
 import de.tomalbrc.filament.util.Util;
@@ -134,7 +134,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     @Override
     public ElementHolder makeHolder() {
         if (this.level != null && this.getDecorationData() != null && this.getDecorationData().hasAnimation() && this.animatedHolder == null) {
-            Model model = AjModelRegistry.getModel(this.getDecorationData().behaviour().animation.model);
+            Model model = ModelRegistry.getModel(this.getDecorationData().behaviour().animation.model);
             if (model == null) {
                 Filament.LOGGER.error("No Animated-Java model named '" + this.getDecorationData().behaviour().animation.model + "' was found!");
             } else {
@@ -205,7 +205,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     @Override
     public void setAnimationData(@NotNull Animation animationData) {
         if (animationData.model != null) {
-            Model model = AjModelRegistry.getModel(animationData.model);
+            Model model = ModelRegistry.getModel(animationData.model);
             if (model == null) {
                 Filament.LOGGER.error("No AnimatedJava model named '" + animationData.model + "' was found!");
             }
