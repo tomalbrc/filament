@@ -10,16 +10,16 @@ data/
 |-- <namespace>/
 |   |-- filament/
 |   |   |-- item/
-|   |   |   |-- <item_advancement_file>.json
+|   |   |   |-- <item_config>.json
 |   |
 |   |   |-- block/
-|   |   |   |-- <block_advancement_file>.json
+|   |   |   |-- <block_config>.json
 |   |
 |   |   |-- decoration/
 |   |   |   |-- <decoration_configs>.json
 |   |
-|   |   |-- ajmodel/
-|   |       |-- <decoration_advancement_file>.json
+|   |   |-- model/
+|   |       |-- <blockbench_model>.json
 |
 pack.mcmeta
 ```
@@ -30,4 +30,4 @@ So a configuration file path for a new block could look like this:
 The files can also be located in subfolders for better organization:
 `MyDatapack/data/<namespace>/filament/block/stone_like/myblock.json`
 
-Animated-Java models for decorations are supported using Animated-Java's JSON exporter and the [resin](https://github.com/tomalbrc/resin) library
+Blockbench and Animated-Java models for decorations are supported using the [blockbench import library](https://github.com/tomalbrc/blockbench-import-library)
