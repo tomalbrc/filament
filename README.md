@@ -28,6 +28,6 @@ There is an example datapack, drop that into your worlds datapacks folder.
 
 ---
 
-[The project page](https://tomalbrc.de/projects/filament)
-
-[Discord](https://discord.gg/9X6w2kfy89)
+- [Modrinth](https://modrinth.com/mod/filament)
+- [GitHub](https://github.com/tomalbrc/filament)
+- [Discord](https://discord.gg/9X6w2kfy89)
