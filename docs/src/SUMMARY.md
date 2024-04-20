@@ -1,0 +1,22 @@
+# Summary
+
+[Introduction](README.md)
+
+- [Using filament](usage.md)
+- [Creating content](content/README.md)
+    - [Items](content/items.md)
+        - [Properties](content/item-properties.md)
+        - [Behaviours](content/item-behaviours.md)
+        - [Item Examples](content/item-examples.md)
+    - [Blocks](content/blocks.md)
+        - [Types](content/block-types.md)
+        - [Block model types](content/block-model-types.md)
+        - [Properties](content/block-properties.md)
+        - [Behaviours](content/block-behaviours.md)
+        - [Block Examples](content/block-examples.md)
+    - [Decorations](content/decorations.md)
+        - [Properties](content/decoration-properties.md)
+        - [Behaviours](content/decoration-behaviours.md)
+        - [Blocks](content/decoration-blocks.md)
+        - [Simple and complex decorations](content/decoration-complex.md)
+        - [Decoration Examples](content/decoration-examples.md)
