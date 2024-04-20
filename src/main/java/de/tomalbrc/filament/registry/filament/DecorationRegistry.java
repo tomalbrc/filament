@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class DecorationRegistry {
@@ -31,6 +32,10 @@ public class DecorationRegistry {
 
     private static final Object2ObjectOpenHashMap<ResourceLocation, Block> decorationBlocks = new Object2ObjectOpenHashMap<>();
     private static final Object2ObjectOpenHashMap<Block, BlockEntityType<DecorationBlockEntity>> decorationBlockEntities = new Object2ObjectOpenHashMap<>();
+
+    public static void register(InputStream inputStream) throws IOException {
+        register(Json.GSON.fromJson(new InputStreamReader(inputStream, StandardCharsets.UTF_8), DecorationData.class));
+    }
 
     static public void register(DecorationData data) {
         if (decorations.containsKey(data.id())) return;
