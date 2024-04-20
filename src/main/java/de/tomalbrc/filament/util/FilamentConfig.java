@@ -12,6 +12,7 @@ public class FilamentConfig {
     public boolean emissive_shader = true;
 
     public boolean commands = true;
+    public boolean forceAutohost = true;
 
     public static FilamentConfig getInstance() {
         return instance;
