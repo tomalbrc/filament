@@ -1,8 +1,10 @@
 {
   "id": "mynamespace:clown_horn",
   "vanillaItem": "minecraft:paper",
-  "models": {
-    "default": "minecraft:custom/misc/clown_horn"
+  "itemResource":{
+    "models": {
+      "default": "minecraft:custom/misc/clown_horn"
+    }
   },
   "properties": {
     "stackSize": 1

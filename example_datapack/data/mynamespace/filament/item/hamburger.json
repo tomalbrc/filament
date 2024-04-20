@@ -1,8 +1,10 @@
 {
   "id": "mynamespace:hamburger",
   "vanillaItem": "minecraft:bread",
-  "models": {
-    "default": "minecraft:custom/food/hamburger"
+  "itemResource": {
+    "models": {
+      "default": "minecraft:custom/food/hamburger"
+    }
   },
   "properties": {
     "durability": 1,
