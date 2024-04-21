@@ -27,7 +27,7 @@ dependencies {
     modImplementation ("eu.pb4:polymer-networking:${project.polymer_version}")
     modImplementation ("eu.pb4:polymer-autohost:${project.polymer_version}")
 
-    // resin
+    // BIL
     modImplementation include("de.tomalbrc:blockbench-import-library:${project.bil_version}")
 }
 
