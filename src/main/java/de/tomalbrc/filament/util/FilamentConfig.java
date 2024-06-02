@@ -15,6 +15,9 @@ public class FilamentConfig {
     public boolean forceAutohost = true;
 
     public static FilamentConfig getInstance() {
+        if (instance == null) {
+            load();
+        }
         return instance;
     }
     public static void load() {
