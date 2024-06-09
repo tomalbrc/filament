@@ -2,29 +2,23 @@ package de.tomalbrc.filament.enchantment;
 
 import eu.pb4.polymer.core.api.other.PolymerEnchantment;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.item.enchantment.Enchantments;
 import de.tomalbrc.filament.registry.filament.EnchantmentRegistry;
 
+import java.util.Optional;
+
 public class BlackenedEdgeEnchantment extends Enchantment implements PolymerEnchantment {
     public BlackenedEdgeEnchantment() {
-        super(Rarity.VERY_RARE, EnchantmentCategory.WEAPON, new EquipmentSlot[] {EquipmentSlot.MAINHAND});
-    }
-
-    @Override
-    public int getMinCost(int level) {
-        return 26 * level;
-    }
-
-    @Override
-    public int getMaxLevel() {
-        return 2;
+        super(new EnchantmentDefinition(ItemTags.WEAPON_ENCHANTABLE, Optional.empty(), 1, 2, Enchantment.dynamicCost(0, 26), Enchantment.dynamicCost(10, 26), 3, FeatureFlagSet.of(), new EquipmentSlot[]{EquipmentSlot.MAINHAND}));
     }
 
     @Override

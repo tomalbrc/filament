@@ -3,28 +3,21 @@ package de.tomalbrc.filament.enchantment;
 import de.tomalbrc.filament.registry.filament.EnchantmentRegistry;
 import eu.pb4.polymer.core.api.other.PolymerEnchantment;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.item.enchantment.Enchantments;
+
+import java.util.Optional;
 
 public class WintersGraspEnchantment extends Enchantment implements PolymerEnchantment {
     public WintersGraspEnchantment() {
-        super(Rarity.RARE, EnchantmentCategory.WEAPON, new EquipmentSlot[] {EquipmentSlot.MAINHAND});
-    }
-
-    @Override
-    public int getMinCost(int level) {
-        return level*20;
-    }
-
-    @Override
-    public int getMaxLevel() {
-        return 3;
+        super(new EnchantmentDefinition(ItemTags.WEAPON_ENCHANTABLE, Optional.empty(), 2, 3, Enchantment.dynamicCost(8, 20), Enchantment.dynamicCost(58, 20), 3, FeatureFlagSet.of(), new EquipmentSlot[]{EquipmentSlot.MAINHAND}));
     }
 
     @Override
