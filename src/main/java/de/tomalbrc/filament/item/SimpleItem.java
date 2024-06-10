@@ -34,9 +34,9 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
         if (itemData.properties() != null)
-            itemData.properties().appendHoverText(tooltip);
+            itemData.properties().appendHoverText(list);
     }
 
     @Override

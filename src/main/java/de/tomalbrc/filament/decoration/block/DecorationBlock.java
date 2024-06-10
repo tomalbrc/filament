@@ -68,15 +68,11 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
     }
 
     @Override
-    public Block getPolymerBlock(BlockState state) {
-        return state.getValue(DecorationBlock.PASSTHROUGH) ? state.getValue(DecorationBlock.WATERLOGGED) ? Blocks.WATER : Blocks.AIR : Blocks.BARRIER;
-    }
-
-    @Override
     public BlockState getPolymerBlockState(BlockState state) {
+        var block = state.getValue(DecorationBlock.PASSTHROUGH) ? state.getValue(DecorationBlock.WATERLOGGED) ? Blocks.WATER : Blocks.AIR : Blocks.BARRIER;
         return state.getValue(DecorationBlock.WATERLOGGED) && !state.getValue(DecorationBlock.PASSTHROUGH) ?
-                this.getPolymerBlock(state).defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, true) :
-                this.getPolymerBlock(state).defaultBlockState();
+                block.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, true) :
+                block.defaultBlockState();
     }
 
     @Override

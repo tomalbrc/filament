@@ -65,11 +65,6 @@ public class PowerlevelBlock extends SimpleBlock implements PolymerTexturedBlock
     }
 
     @Override
-    public Block getPolymerBlock(BlockState state) {
-        return this.getPolymerBlockState(state).getBlock();
-    }
-
-    @Override
     public BlockState getPolymerBreakEventBlockState(BlockState state, ServerPlayer player) {
         return this.breakEventState;
     }

@@ -1,5 +1,7 @@
 package de.tomalbrc.filament.data.behaviours.item;
 
+import net.minecraft.world.food.FoodProperties;
+
 /**
  * Food behaviours for edible items
  */
@@ -15,7 +17,12 @@ public class Food {
     public float saturation = 0.6f;
 
     /**
-     * Indicates whether the food is classified as meat.
+     * Indicates wether the item can be eaten when the hunger bar is full
      */
-    public boolean meat = false;
+    public boolean canAlwaysEat = false;
+
+    /**
+     * Fast food, 0.8 secs, default is 1.6f
+     */
+    public boolean fastfood = false;
 }

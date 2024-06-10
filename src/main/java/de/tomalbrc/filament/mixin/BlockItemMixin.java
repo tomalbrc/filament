@@ -31,7 +31,7 @@ public class BlockItemMixin {
             BlockPos clickedPos = pos.relative(context.getClickedFace().getOpposite());
             BlockState clickedState = context.getLevel().getBlockState(clickedPos);
 
-            if (clickedState.getBlock() instanceof PolymerBlock polymerBlock && polymerBlock.getPolymerBlock(clickedState, player) instanceof NoteBlock) {
+            if (clickedState.getBlock() instanceof PolymerBlock polymerBlock && polymerBlock.getPolymerBlockState(clickedState, player).getBlock() instanceof NoteBlock) {
                 Util.playBlockPlaceSound(player, pos, placementState.getSoundType());
             }
         }

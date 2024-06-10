@@ -8,6 +8,7 @@ import eu.pb4.polymer.virtualentity.api.attachment.EntityAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.tracker.EntityTrackedData;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -129,6 +130,11 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     }
 
     @Override
+    protected ItemStack getDefaultPickupItem() {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
     public boolean canChangeDimensions() {
         return true;
     }
@@ -138,7 +144,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
         if (entityHitResult.getEntity() instanceof LivingEntity target) {
             this.dealtDamage = true;
 
-            float damage = (float) this.getBaseDamage() + EnchantmentHelper.getDamageBonus(this.projectileStack, target.getMobType());
+            float damage = (float) this.getBaseDamage() + EnchantmentHelper.getDamageBonus(this.projectileStack, target.getType());
             Entity owner = this.getOwner();
 
             if (target.hurt(this.damageSources().trident(this, owner), damage)) {
@@ -178,8 +184,8 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
         super.readAdditionalSaveData(nbt);
 
         if (nbt.contains("Item", 10) && nbt.contains("PickupItem", 10)) {
-            this.projectileStack = ItemStack.of(nbt.getCompound("Item"));
-            this.pickupStack = ItemStack.of(nbt.getCompound("PickupItem"));
+            this.projectileStack = ItemStack.parseOptional(null, nbt.getCompound("Item"));
+            this.pickupStack = ItemStack.parseOptional(null, nbt.getCompound("PickupItem"));
             this.createMainDisplayElement();
         }
 
@@ -191,8 +197,8 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
         super.addAdditionalSaveData(nbt);
 
         if (this.projectileStack != null && this.pickupStack != null) {
-            nbt.put("Item", this.projectileStack.save(new CompoundTag()));
-            nbt.put("PickupItem", this.pickupStack.save(new CompoundTag()));
+            nbt.put("Item", this.projectileStack.save(null));
+            nbt.put("PickupItem", this.pickupStack.save(null));
         }
 
         nbt.putBoolean("DealtDamage", this.dealtDamage);

@@ -3,6 +3,7 @@ package de.tomalbrc.filament.decoration.util;
 import eu.pb4.polymer.core.api.entity.PolymerEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -42,7 +43,9 @@ public class SeatEntity extends Entity implements PolymerEntity {
     }
 
     @Override
-    protected void defineSynchedData() {}
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+
+    }
 
     @Override
     protected void readAdditionalSaveData(CompoundTag compoundTag) {}

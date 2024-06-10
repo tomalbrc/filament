@@ -26,11 +26,6 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock {
     }
 
     @Override
-    public Block getPolymerBlock(BlockState state) {
-        return this.getPolymerBlockState(state).getBlock();
-    }
-
-    @Override
     public BlockState getPolymerBlockState(BlockState state) {
         return this.stateMap.get("default");
     }

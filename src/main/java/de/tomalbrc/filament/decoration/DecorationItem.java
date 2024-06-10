@@ -42,13 +42,13 @@ public class DecorationItem extends Item implements PolymerItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
         if (this.decorationData.vanillaItem() == Items.LEATHER_HORSE_ARMOR) {
-            tooltip.add(Component.literal("§9Dyeable"));
+            list.add(Component.literal("§9Dyeable"));
         }
 
         if (this.decorationData.properties() != null) {
-            this.decorationData.properties().appendHoverText(tooltip);
+            this.decorationData.properties().appendHoverText(list);
         }
     }
 
@@ -60,11 +60,6 @@ public class DecorationItem extends Item implements PolymerItem {
     @Override
     public int getPolymerCustomModelData(ItemStack itemStack, @Nullable ServerPlayer player) {
         return modelData.value();
-    }
-
-    @Override
-    public boolean showDefaultNameInItemFrames() {
-        return false;
     }
 
     public static float getVisualRotationYInDegrees(Direction direction, int rotation) {

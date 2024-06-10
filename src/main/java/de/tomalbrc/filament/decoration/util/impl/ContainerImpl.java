@@ -2,6 +2,8 @@ package de.tomalbrc.filament.decoration.util.impl;
 
 import de.tomalbrc.filament.data.behaviours.decoration.Container;
 import de.tomalbrc.filament.util.FilamentContainer;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.inventory.MenuType;
@@ -21,14 +23,14 @@ public record ContainerImpl(
 
         boolean purge
 ) {
-    public void write(CompoundTag compoundTag) {
-        compoundTag.put("Container", new CompoundTag().merge(ContainerHelper.saveAllItems(new CompoundTag(), this.container.items)));
+    public void write(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        compoundTag.put("Container", new CompoundTag().merge(ContainerHelper.saveAllItems(new CompoundTag(), this.container.items, provider)));
     }
 
-    public void read(CompoundTag compoundTag) {
+    public void read(CompoundTag compoundTag, HolderLookup.Provider provider) {
         CompoundTag compoundTag2 = compoundTag.getCompound("Container");
         if (!compoundTag2.isEmpty()) {
-            ContainerHelper.loadAllItems(compoundTag2, container.items);
+            ContainerHelper.loadAllItems(compoundTag2, container.items, provider);
         }
     }
 

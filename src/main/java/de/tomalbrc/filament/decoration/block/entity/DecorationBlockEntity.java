@@ -18,6 +18,7 @@ import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -63,15 +64,15 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     }
 
     @Override
-    public void load(CompoundTag compoundTag) {
-        super.load(compoundTag);
+    protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        super.loadAdditional(compoundTag, provider);
 
         this.decorationId = new ResourceLocation(compoundTag.getString(DECORATION_KEY));
 
-        if (this.isMain()) this.loadMain(compoundTag);
+        if (this.isMain()) this.loadMain(compoundTag, provider);
     }
 
-    public void loadMain(CompoundTag compoundTag) {
+    public void loadMain(CompoundTag compoundTag, HolderLookup.Provider provider) {
         DecorationData decorationData = this.getDecorationData();
         if (decorationData == null) {
             Filament.LOGGER.error("No decoration formats for " + (this.decorationId == null ? "(null)" : this.decorationId.toString()) + "!");
@@ -82,7 +83,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
 
         if (this.containerImpl != null) {
-            this.containerImpl.read(compoundTag);
+            this.containerImpl.read(compoundTag, provider);
         }
 
         if (compoundTag.contains(SHOWCASE_KEY) && this.decorationHolder != null) {
@@ -92,7 +93,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
                 Showcase showcase = this.decorationHolder.getShowcaseData().get(i);
                 String key = ITEM_KEY + i;
                 if (showcase != null) {
-                    this.decorationHolder.setShowcaseItemStack(showcase, ItemStack.of(showcaseTag.getCompound(key)));
+                    this.decorationHolder.setShowcaseItemStack(showcase, ItemStack.parseOptional(provider, showcaseTag.getCompound(key)));
                 }
             }
         }
@@ -103,15 +104,15 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compoundTag) {
-        super.saveAdditional(compoundTag);
+    protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        super.saveAdditional(compoundTag, provider);
 
         if (decorationId != null) {
             compoundTag.putString(DECORATION_KEY, decorationId.toString());
         }
 
         if (this.containerImpl != null) {
-            this.containerImpl.write(compoundTag);
+            this.containerImpl.write(compoundTag, provider);
         }
 
         if (this.lockImpl != null) {
@@ -124,7 +125,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             for (int i = 0; i < decorationHolder.getShowcaseData().size(); i++) {
                 Showcase showcase = decorationHolder.getShowcaseData().get(i);
                 if (showcase != null && !decorationHolder.getShowcaseItemStack(showcase).isEmpty())
-                    showcaseTag.put(ITEM_KEY + i, decorationHolder.getShowcaseItemStack(showcase).save(new CompoundTag()));
+                    showcaseTag.put(ITEM_KEY + i, decorationHolder.getShowcaseItemStack(showcase).save(provider));
             }
 
             compoundTag.put(SHOWCASE_KEY, showcaseTag);

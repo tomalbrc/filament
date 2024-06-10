@@ -3,6 +3,7 @@ package de.tomalbrc.filament.item;
 import de.tomalbrc.filament.data.behaviours.item.Trap;
 import de.tomalbrc.filament.data.ItemData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -14,14 +15,12 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -34,12 +33,12 @@ public class TrapItem extends SimpleItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
-        if (itemStack.getOrCreateTag().contains("Type")) {
-            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation(itemStack.getOrCreateTag().getString("Type")));
-            tooltip.add(Component.literal("Contains ").append(Component.translatable(type.getDescriptionId()))); // todo: make "Contains " translateable?
+    public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
+        if (itemStack.get(DataComponents.ENTITY_DATA).contains("Type")) {
+            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation(itemStack.get(DataComponents.ENTITY_DATA).copyTag().getString("Type")));
+            list.add(Component.literal("Contains ").append(Component.translatable(type.getDescriptionId()))); // todo: make "Contains " translateable?
         }
-        super.appendHoverText(itemStack, level, tooltip, tooltipFlag);
+        super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
     }
 
     @Override
@@ -59,7 +58,7 @@ public class TrapItem extends SimpleItem {
 
     public void use(Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
-        itemStack.hurtAndBreak(1, player, o -> player.broadcastBreakEvent(hand));
+        itemStack.hurtAndBreak(1, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND:EquipmentSlot.OFFHAND);
 
         Trap trap = this.itemData.behaviour().trap;
         player.startUsingItem(hand);
@@ -80,18 +79,20 @@ public class TrapItem extends SimpleItem {
     }
 
     private static boolean canSpawn(ItemStack useOnContext) {
-        return useOnContext.getOrCreateTag().contains("Type");
+        return useOnContext.get(DataComponents.ENTITY_DATA).contains("Type");
     }
 
     private void spawn(ServerLevel serverLevel, ItemStack itemStack, BlockPos blockPos) {
-        EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation(itemStack.getOrCreateTag().getString("Type")));
+        var compoundTag = itemStack.get(DataComponents.ENTITY_DATA).copyTag();
+
+        EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation(compoundTag.getString("Type")));
         Entity entity = entityType.spawn(serverLevel, blockPos.above(1), MobSpawnType.BUCKET);
         if (entity instanceof Mob mob) {
-            this.loadFromTag(mob, itemStack.getOrCreateTag());
+            this.loadFromTag(mob, compoundTag);
         }
 
         int damage = itemStack.getDamageValue();
-        itemStack.setTag(null);
+        itemStack.remove(DataComponents.ENTITY_DATA);
         itemStack.setDamageValue(damage);
     }
 
@@ -114,7 +115,10 @@ public class TrapItem extends SimpleItem {
         Bucketable.saveDefaultDataToBucketTag(mob, itemStack);
 
         ResourceLocation resourceLocation = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
-        itemStack.getOrCreateTag().putString("Type", resourceLocation.toString());
+
+        CompoundTag compoundTag = new CompoundTag();
+        compoundTag.putString("Type", resourceLocation.toString());
+        itemStack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.of(compoundTag));
     }
 
     public void loadFromTag(Mob mob, CompoundTag compoundTag) {

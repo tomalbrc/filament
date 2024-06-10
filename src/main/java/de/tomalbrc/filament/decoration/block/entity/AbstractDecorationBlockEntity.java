@@ -4,6 +4,7 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.registry.filament.DecorationRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.util.Mth;
@@ -40,11 +41,13 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
         return (DecorationBlockEntity)this.level.getBlockEntity(this.main);
     }
 
-    public void load(CompoundTag compoundTag) {
-        super.load(compoundTag);
+    @Override
+    protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        super.loadAdditional(compoundTag, provider);
 
-        this.main = NbtUtils.readBlockPos(compoundTag.getCompound("Main"));
-        this.itemStack = ItemStack.of(compoundTag.getCompound("Item"));
+        // TODO: safely unwrap optional
+        this.main = NbtUtils.readBlockPos(compoundTag, "Main").get();
+        this.itemStack = ItemStack.parse(provider, compoundTag.getCompound("Item")).get();
 
         if (compoundTag.contains("Passthrough")) {
             this.passthrough = compoundTag.getBoolean("Passthrough");
@@ -58,8 +61,8 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
         this.direction = Direction.from3DDataValue(compoundTag.getInt("Direction"));
     }
 
-    protected void saveAdditional(CompoundTag compoundTag) {
-        super.saveAdditional(compoundTag);
+    protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        super.saveAdditional(compoundTag, provider);
 
         if (this.itemStack == null) {
             Filament.LOGGER.error("No item for decoration! Removing decoration block entity at " + this.getBlockPos().toShortString());
@@ -68,7 +71,7 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
             return;
         }
 
-        compoundTag.put("Item", this.itemStack.save(new CompoundTag()));
+        compoundTag.put("Item", this.itemStack.save(provider));
 
         compoundTag.put("Main", NbtUtils.writeBlockPos(this.main));
         if (this.passthrough) compoundTag.putBoolean("Passthrough", this.passthrough);
