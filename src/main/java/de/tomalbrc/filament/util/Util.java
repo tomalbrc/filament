@@ -163,6 +163,7 @@ public class Util {
 
     public static ItemDisplayElement decorationItemDisplay(DecorationData data, Direction direction, float rotation) {
         ItemDisplayElement itemDisplayElement = new ItemDisplayElement(BuiltInRegistries.ITEM.get(data.id()));
+        itemDisplayElement.setTeleportDuration(1);
 
         if (data != null && data.properties() != null && data.properties().glow) {
             itemDisplayElement.setBrightness(Brightness.FULL_BRIGHT);

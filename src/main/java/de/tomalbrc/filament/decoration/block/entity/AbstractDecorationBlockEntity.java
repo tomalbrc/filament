@@ -61,6 +61,7 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
         this.direction = Direction.from3DDataValue(compoundTag.getInt("Direction"));
     }
 
+    @Override
     protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
         super.saveAdditional(compoundTag, provider);
 

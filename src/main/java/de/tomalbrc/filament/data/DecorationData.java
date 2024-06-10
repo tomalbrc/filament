@@ -59,7 +59,10 @@ public record DecorationData(
     }
 
     public boolean isSimple() {
-        return (!this.hasBlocks() || Util.barrierDimensions(this.blocks(), 0).equals(1, 1)) && this.behaviour() == null;
+        return false;
+        // TODO: itemStack is not correct/missing data since we get in from the decoration data id...
+        // so dyed color will be missing from the displayed item
+        //return ((!this.hasBlocks() || Util.barrierDimensions(this.blocks(), 0).equals(1, 1)) && this.behaviour() == null) || this.size != null;
     }
 
     public record BlockConfig(Vector3f origin,

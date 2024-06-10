@@ -17,6 +17,7 @@ import de.tomalbrc.filament.util.FilamentContainer;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
+import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -92,7 +93,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             for (int i = 0; i < this.decorationHolder.getShowcaseData().size(); i++) {
                 Showcase showcase = this.decorationHolder.getShowcaseData().get(i);
                 String key = ITEM_KEY + i;
-                if (showcase != null) {
+                if (showcase != null && showcaseTag.contains(key)) {
                     this.decorationHolder.setShowcaseItemStack(showcase, ItemStack.parseOptional(provider, showcaseTag.getCompound(key)));
                 }
             }
@@ -145,6 +146,9 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         else if (this.decorationHolder == null && this.animatedHolder == null) {
             this.decorationHolder = new DecorationHolder();
             this.decorationHolder.setBlockEntity(this);
+            if (this.decorationHolder.getElements().get(0) instanceof ItemDisplayElement itemDisplayElement) {
+                itemDisplayElement.setItem(this.itemStack);
+            }
         }
 
         return this.animatedHolder != null ? this.animatedHolder : this.decorationHolder;
