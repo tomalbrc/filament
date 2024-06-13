@@ -91,7 +91,7 @@ public class DecorationRegistry {
     public static class DecorationDataReloadListener implements SimpleSynchronousResourceReloadListener {
         @Override
         public ResourceLocation getFabricId() {
-            return new ResourceLocation("filament:decorations");
+            return ResourceLocation.fromNamespaceAndPath("filament", "decorations");
         }
 
         @Override

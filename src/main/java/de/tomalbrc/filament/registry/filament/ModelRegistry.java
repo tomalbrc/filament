@@ -25,7 +25,7 @@ public class ModelRegistry {
     public static class AjModelReloadListener implements SimpleSynchronousResourceReloadListener {
         @Override
         public ResourceLocation getFabricId() {
-            return new ResourceLocation("filament:ajmodel");
+            return ResourceLocation.fromNamespaceAndPath("filament", "ajmodel");
         }
 
         @Override
@@ -49,7 +49,7 @@ public class ModelRegistry {
     public static ResourceLocation sanitize(ResourceLocation resourceLocation) {
         String path = resourceLocation.getPath();
         String customPath = path.substring(path.contains("/") ? path.lastIndexOf('/')+1 : 0, path.lastIndexOf('.'));
-        return new ResourceLocation(resourceLocation.getNamespace(), customPath);
+        return ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), customPath);
     }
 
     public static void registerAjModel(InputStream inputStream, ResourceLocation resourceLocation) throws IOException {

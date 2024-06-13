@@ -18,8 +18,8 @@ public class EntityRegistry {
     public static final EntityType<SeatEntity> SEAT_ENTITY =  EntityType.Builder.of(SeatEntity::new, MobCategory.MISC).noSummon().noSave().build("seat");
 
     public static void register() {
-        registerEntity(new ResourceLocation(Constants.MOD_ID, "projectile"), BASE_PROJECTILE);
-        registerEntity(new ResourceLocation(Constants.MOD_ID, "decoration_seat"), SEAT_ENTITY);
+        registerEntity(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "projectile"), BASE_PROJECTILE);
+        registerEntity(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "decoration_seat"), SEAT_ENTITY);
     }
 
     private static void registerEntity(ResourceLocation id, EntityType<?> type) {

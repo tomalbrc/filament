@@ -68,7 +68,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
         super.loadAdditional(compoundTag, provider);
 
-        this.decorationId = new ResourceLocation(compoundTag.getString(DECORATION_KEY));
+        this.decorationId = ResourceLocation.parse(compoundTag.getString(DECORATION_KEY));
 
         if (this.isMain()) this.loadMain(compoundTag, provider);
     }

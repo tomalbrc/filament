@@ -35,7 +35,7 @@ public class TrapItem extends SimpleItem {
     @Override
     public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
         if (itemStack.get(DataComponents.ENTITY_DATA).contains("Type")) {
-            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation(itemStack.get(DataComponents.ENTITY_DATA).copyTag().getString("Type")));
+            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(itemStack.get(DataComponents.ENTITY_DATA).copyTag().getString("Type")));
             list.add(Component.literal("Contains ").append(Component.translatable(type.getDescriptionId()))); // todo: make "Contains " translateable?
         }
         super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
@@ -85,7 +85,7 @@ public class TrapItem extends SimpleItem {
     private void spawn(ServerLevel serverLevel, ItemStack itemStack, BlockPos blockPos) {
         var compoundTag = itemStack.get(DataComponents.ENTITY_DATA).copyTag();
 
-        EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation(compoundTag.getString("Type")));
+        EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(compoundTag.getString("Type")));
         Entity entity = entityType.spawn(serverLevel, blockPos.above(1), MobSpawnType.BUCKET);
         if (entity instanceof Mob mob) {
             this.loadFromTag(mob, compoundTag);

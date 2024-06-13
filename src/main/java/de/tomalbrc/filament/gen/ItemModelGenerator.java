@@ -5,6 +5,6 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ItemModelGenerator {
     public static ResourceLocation generate(ItemResource itemResource) {
-        return new ResourceLocation("");
+        return null;
     }
 }

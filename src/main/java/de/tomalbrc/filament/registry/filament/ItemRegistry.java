@@ -107,7 +107,7 @@ public class ItemRegistry {
     public static class ItemDataReloadListener implements SimpleSynchronousResourceReloadListener {
         @Override
         public ResourceLocation getFabricId() {
-            return new ResourceLocation("filament:items");
+            return ResourceLocation.fromNamespaceAndPath("filament", "items");
         }
 
         @Override
@@ -124,9 +124,9 @@ public class ItemRegistry {
 
             Filament.LOGGER.info("filament items registered: " + ItemRegistry.REGISTERED_ITEMS);
 
-            PolymerItemGroupUtils.registerPolymerItemGroup(new ResourceLocation(Constants.MOD_ID, "item"), ITEM_GROUP);
-            PolymerItemGroupUtils.registerPolymerItemGroup(new ResourceLocation(Constants.MOD_ID, "block"), BLOCK_ITEM_GROUP);
-            PolymerItemGroupUtils.registerPolymerItemGroup(new ResourceLocation(Constants.MOD_ID, "decoration"), DECORATION_ITEM_GROUP);
+            PolymerItemGroupUtils.registerPolymerItemGroup(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "item"), ITEM_GROUP);
+            PolymerItemGroupUtils.registerPolymerItemGroup(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "block"), BLOCK_ITEM_GROUP);
+            PolymerItemGroupUtils.registerPolymerItemGroup(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "decoration"), DECORATION_ITEM_GROUP);
 
         }
     }

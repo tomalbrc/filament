@@ -14,6 +14,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.sounds.SoundEvent;
@@ -24,6 +25,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -72,7 +74,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     }
 
     public BaseProjectileEntity(EntityType<? extends AbstractArrow> entityType, Level world) {
-        super(entityType, world, ItemStack.EMPTY); // use empty for now, if the future should use the pickupItem of AbstractArrow added in 1.20.3
+        super(entityType, world); // use empty for now, if the future should use the pickupItem of AbstractArrow added in 1.20.3
 
         EntityAttachment.of(this.holder, this);
 
@@ -135,22 +137,16 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     }
 
     @Override
-    public boolean canChangeDimensions() {
-        return true;
-    }
-
-    @Override
     protected void onHitEntity(EntityHitResult entityHitResult) {
         if (entityHitResult.getEntity() instanceof LivingEntity target) {
             this.dealtDamage = true;
-
-            float damage = (float) this.getBaseDamage() + EnchantmentHelper.getDamageBonus(this.projectileStack, target.getType());
             Entity owner = this.getOwner();
+            var damageSource = this.damageSources().trident(this, owner);
 
-            if (target.hurt(this.damageSources().trident(this, owner), damage)) {
+            float damage = (float) this.getBaseDamage();
+            if (target.hurt(damageSource, damage)) {
                 if (target.getType() != EntityType.ENDERMAN && this.getOwner() instanceof LivingEntity livingOwner) {
-                    EnchantmentHelper.doPostHurtEffects(target, owner);
-                    EnchantmentHelper.doPostDamageEffects(livingOwner, target);
+                    EnchantmentHelper.doPostAttackEffectsWithItemSource((ServerLevel) target.level(), livingOwner, damageSource, this.getWeaponItem());
                     this.doPostHurtEffects(target);
                 }
             }

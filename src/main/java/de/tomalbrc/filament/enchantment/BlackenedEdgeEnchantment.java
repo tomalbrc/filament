@@ -1,6 +1,5 @@
 package de.tomalbrc.filament.enchantment;
 
-import eu.pb4.polymer.core.api.other.PolymerEnchantment;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -15,6 +14,7 @@ import de.tomalbrc.filament.registry.filament.EnchantmentRegistry;
 
 import java.util.Optional;
 
+/*
 public class BlackenedEdgeEnchantment extends Enchantment implements PolymerEnchantment {
     public BlackenedEdgeEnchantment() {
         super(new EnchantmentDefinition(ItemTags.WEAPON_ENCHANTABLE, Optional.empty(), 1, 2, Enchantment.dynamicCost(0, 26), Enchantment.dynamicCost(10, 26), 3, FeatureFlagSet.of(), new EquipmentSlot[]{EquipmentSlot.MAINHAND}));
@@ -38,3 +38,4 @@ public class BlackenedEdgeEnchantment extends Enchantment implements PolymerEnch
         return null;
     }
 }
+*/

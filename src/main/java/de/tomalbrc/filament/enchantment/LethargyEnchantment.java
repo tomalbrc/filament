@@ -1,6 +1,5 @@
 package de.tomalbrc.filament.enchantment;
 
-import eu.pb4.polymer.core.api.other.PolymerEnchantment;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -13,6 +12,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 
 import java.util.Optional;
 
+/*
 public class LethargyEnchantment extends Enchantment implements PolymerEnchantment {
     public LethargyEnchantment() {
         super(new EnchantmentDefinition(ItemTags.WEAPON_ENCHANTABLE, Optional.empty(), 10, 4, Enchantment.dynamicCost(1, 10), Enchantment.dynamicCost(51, 10), 3, FeatureFlagSet.of(), new EquipmentSlot[]{EquipmentSlot.MAINHAND}));
@@ -32,3 +32,4 @@ public class LethargyEnchantment extends Enchantment implements PolymerEnchantme
         return null;
     }
 }
+ */

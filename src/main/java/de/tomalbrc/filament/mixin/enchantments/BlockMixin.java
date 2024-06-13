@@ -24,6 +24,7 @@ import java.util.List;
 // For enchantments
 @Mixin(Block.class)
 public class BlockMixin {
+    /*
     @Inject(at = @At("RETURN"),
             method = "getDrops(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;",
             cancellable = true)
@@ -58,4 +59,5 @@ public class BlockMixin {
             }
         }
     }
+    */
 }

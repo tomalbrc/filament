@@ -59,7 +59,7 @@ public class BlockRegistry {
     public static class BlockDataReloadListener implements SimpleSynchronousResourceReloadListener {
         @Override
         public ResourceLocation getFabricId() {
-            return new ResourceLocation("filament:filament");
+            return ResourceLocation.fromNamespaceAndPath("filament", "filament");
         }
 
         @Override
