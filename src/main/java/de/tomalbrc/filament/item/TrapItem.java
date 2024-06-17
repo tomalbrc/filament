@@ -34,7 +34,7 @@ public class TrapItem extends SimpleItem {
 
     @Override
     public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
-        if (itemStack.get(DataComponents.ENTITY_DATA).contains("Type")) {
+        if (itemStack.get(DataComponents.ENTITY_DATA) != null && itemStack.get(DataComponents.ENTITY_DATA).contains("Type")) {
             EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(itemStack.get(DataComponents.ENTITY_DATA).copyTag().getString("Type")));
             list.add(Component.literal("Contains ").append(Component.translatable(type.getDescriptionId()))); // todo: make "Contains " translateable?
         }
@@ -79,7 +79,7 @@ public class TrapItem extends SimpleItem {
     }
 
     private static boolean canSpawn(ItemStack useOnContext) {
-        return useOnContext.get(DataComponents.ENTITY_DATA).contains("Type");
+        return useOnContext.get(DataComponents.ENTITY_DATA) == null ? false : useOnContext.get(DataComponents.ENTITY_DATA).contains("Type");
     }
 
     private void spawn(ServerLevel serverLevel, ItemStack itemStack, BlockPos blockPos) {
