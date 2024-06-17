@@ -15,4 +15,6 @@ public class ItemBehaviourList {
     public Fuel fuel = null;
 
     public Food food = null;
+
+    public Execute execute;
 }

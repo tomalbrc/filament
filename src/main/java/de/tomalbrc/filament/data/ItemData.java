@@ -49,4 +49,8 @@ public record ItemData(
     public boolean isTrap() {
         return this.behaviour != null && this.behaviour.trap != null && this.behaviour.trap.types != null;
     }
+
+    public boolean canExecute() {
+        return this.behaviour != null && this.behaviour.execute != null;
+    }
 }
