@@ -48,6 +48,8 @@ public class TrapItem extends SimpleItem {
     }
 
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
+        super.use(level, player, interactionHand);
+
         ItemStack itemStack = player.getItemInHand(interactionHand);
         if (this.itemData.isTrap()) {
             this.use(player, interactionHand);

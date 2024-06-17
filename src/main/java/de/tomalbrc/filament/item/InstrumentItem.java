@@ -5,6 +5,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -19,6 +20,8 @@ public class InstrumentItem extends SimpleItem {
     }
 
     public @NotNull InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
+        var res = super.use(level, player, interactionHand);
+
         ItemStack itemStack = player.getItemInHand(interactionHand);
 
         if (itemData.isInstrument()) {
@@ -27,7 +30,7 @@ public class InstrumentItem extends SimpleItem {
             player.startUsingItem(interactionHand);
             play(level, player, instrument);
             if (instrument.useDuration > 0) player.getCooldowns().addCooldown(this, instrument.useDuration);
-            player.awardStat(Stats.ITEM_USED.get(this));
+            if (res.getResult() == InteractionResult.CONSUME) player.awardStat(Stats.ITEM_USED.get(this));
             return InteractionResultHolder.consume(itemStack);
         } else {
             return InteractionResultHolder.fail(itemStack);
