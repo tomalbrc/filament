@@ -9,6 +9,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -33,6 +34,8 @@ public class ThrowingItem extends SimpleItem implements PolymerItem {
     @Override
     @NotNull
     public InteractionResultHolder<ItemStack> use(Level level, Player user, InteractionHand hand) {
+        var res = super.use(level, user, hand);
+
         user.getCooldowns().addCooldown(this, 10);
         ItemStack itemStack = user.getItemInHand(hand);
 
@@ -72,7 +75,7 @@ public class ThrowingItem extends SimpleItem implements PolymerItem {
             }
         }
 
-        user.awardStat(Stats.ITEM_USED.get(this));
+        if (res.getResult() == InteractionResult.CONSUME) user.awardStat(Stats.ITEM_USED.get(this));
         return InteractionResultHolder.consume(itemStack);
     }
 }
