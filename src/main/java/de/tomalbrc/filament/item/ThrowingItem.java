@@ -9,6 +9,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -32,6 +33,8 @@ public class ThrowingItem extends SimpleItem implements PolymerItem {
     @Override
     @NotNull
     public InteractionResultHolder<ItemStack> use(Level level, Player user, InteractionHand hand) {
+        var res = super.use(level, user, hand);
+
         user.getCooldowns().addCooldown(this, 10);
         ItemStack itemStack = user.getItemInHand(hand);
 
@@ -65,13 +68,13 @@ public class ThrowingItem extends SimpleItem implements PolymerItem {
             }
 
             level.addFreshEntity(projectile);
-            level.playSound(null, projectile, this.shootBehaviour.sound != null ? BuiltInRegistries.SOUND_EVENT.get(this.shootBehaviour.sound) : SoundEvents.TRIDENT_THROW.value(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            level.playSound(null, projectile, this.shootBehaviour.sound != null ? BuiltInRegistries.SOUND_EVENT.get(this.shootBehaviour.sound) : SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS, 1.0F, 1.0F);
             if (!user.isCreative() && this.shootBehaviour.consumes) {
                 user.getInventory().removeItem(itemStack);
             }
         }
 
-        user.awardStat(Stats.ITEM_USED.get(this));
+        if (res.getResult() == InteractionResult.CONSUME) user.awardStat(Stats.ITEM_USED.get(this));
         return InteractionResultHolder.consume(itemStack);
     }
 }
