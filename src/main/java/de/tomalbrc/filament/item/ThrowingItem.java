@@ -3,6 +3,8 @@ package de.tomalbrc.filament.item;
 import de.tomalbrc.filament.data.behaviours.item.Shoot;
 import de.tomalbrc.filament.data.ItemData;
 import eu.pb4.polymer.core.api.item.PolymerItem;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -63,7 +65,7 @@ public class ThrowingItem extends SimpleItem implements PolymerItem {
             }
 
             level.addFreshEntity(projectile);
-            level.playSound(null, projectile, SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS, 1.0F, 1.0F);
+            level.playSound(null, projectile, this.shootBehaviour.sound != null ? BuiltInRegistries.SOUND_EVENT.get(this.shootBehaviour.sound) : SoundEvents.TRIDENT_THROW.value(), SoundSource.PLAYERS, 1.0F, 1.0F);
             if (!user.isCreative() && this.shootBehaviour.consumes) {
                 user.getInventory().removeItem(itemStack);
             }
