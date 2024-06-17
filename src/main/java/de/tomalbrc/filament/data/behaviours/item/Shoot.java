@@ -25,4 +25,9 @@ public class Shoot {
      * The identifier for the projectile item
      */
     public ResourceLocation projectile;
+
+    /**
+     * Sound effect to play when shooting
+     */
+    public ResourceLocation sound;
 }
