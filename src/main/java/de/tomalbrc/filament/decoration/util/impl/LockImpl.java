@@ -42,7 +42,7 @@ public class LockImpl {
             boolean validCommand = this.command != null && !this.command.isEmpty();
             boolean validLockCommand = this.lock.command != null && !this.lock.command.isEmpty();
             if ((validCommand || validLockCommand) && player.getServer() != null) {
-                player.getServer().getCommands().performPrefixedCommand(player.getServer().createCommandSourceStack().withPosition(decorationBlockEntity.getBlockPos().getCenter()), validCommand ? this.command : this.lock.command);
+                player.getServer().getCommands().performPrefixedCommand(player.createCommandSourceStack(), validCommand ? this.command : this.lock.command);
             }
 
             if (this.lock.discard) {
