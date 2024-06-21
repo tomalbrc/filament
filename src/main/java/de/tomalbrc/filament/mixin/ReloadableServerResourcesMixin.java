@@ -2,6 +2,7 @@ package de.tomalbrc.filament.mixin;
 
 import de.tomalbrc.filament.registry.*;
 import de.tomalbrc.filament.util.FilamentReloadUtil;
+import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItemGroupUtils;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.commands.Commands;
@@ -24,15 +25,7 @@ import java.util.concurrent.Executor;
 public class ReloadableServerResourcesMixin {
     @Inject(at = @At("HEAD"), method = "loadResources")
     private static void filament$loadResources(ResourceManager resourceManager, LayeredRegistryAccess<RegistryLayer> layeredRegistryAccess, FeatureFlagSet featureFlagSet, Commands.CommandSelection commandSelection, int i, Executor executor, Executor executor2, CallbackInfoReturnable<CompletableFuture<ReloadableServerResources>> cir) {
-        ((RegistryUnfreezer)BuiltInRegistries.BLOCK).filament$unfreeze();
-        ((RegistryUnfreezer)BuiltInRegistries.ITEM).filament$unfreeze();
-        ((RegistryUnfreezer)BuiltInRegistries.BLOCK_ENTITY_TYPE).filament$unfreeze();
-        ((RegistryUnfreezer)BuiltInRegistries.CREATIVE_MODE_TAB).filament$unfreeze();
-
-        for (SimpleSynchronousResourceReloadListener listener : FilamentReloadUtil.getReloadListeners()) {
-            listener.onResourceManagerReload(resourceManager);
-        }
-
+        Util.loadDatapackContents(resourceManager);
         PolymerItemGroupUtils.invalidateItemGroupCache();
     }
 }
