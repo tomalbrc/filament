@@ -4,16 +4,19 @@ import com.mojang.math.Axis;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.registry.RegistryUnfreezer;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Brightness;
 import net.minecraft.util.Mth;
@@ -216,6 +219,17 @@ public class Util {
             itemEntity.setDefaultPickUpDelay();
             level.addFreshEntity(itemEntity);
             return itemEntity;
+        }
+    }
+
+    public static void loadDatapackContents(ResourceManager resourceManager) {
+        ((RegistryUnfreezer)BuiltInRegistries.BLOCK).filament$unfreeze();
+        ((RegistryUnfreezer)BuiltInRegistries.ITEM).filament$unfreeze();
+        ((RegistryUnfreezer)BuiltInRegistries.BLOCK_ENTITY_TYPE).filament$unfreeze();
+        ((RegistryUnfreezer)BuiltInRegistries.CREATIVE_MODE_TAB).filament$unfreeze();
+
+        for (SimpleSynchronousResourceReloadListener listener : FilamentReloadUtil.getReloadListeners()) {
+            listener.onResourceManagerReload(resourceManager);
         }
     }
 }
