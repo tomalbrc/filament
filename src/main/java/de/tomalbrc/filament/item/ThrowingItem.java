@@ -35,7 +35,7 @@ public class ThrowingItem extends SimpleItem implements PolymerItem {
     public InteractionResultHolder<ItemStack> use(Level level, Player user, InteractionHand hand) {
         var res = super.use(level, user, hand);
 
-        user.getCooldowns().addCooldown(this, 10);
+        user.getCooldowns().addCooldown(this, 8);
         ItemStack itemStack = user.getItemInHand(hand);
 
         if (!level.isClientSide) {
@@ -57,8 +57,10 @@ public class ThrowingItem extends SimpleItem implements PolymerItem {
                 projectile.setYRot(user.getYRot());
                 projectile.setXRot(user.getXRot());
                 projectile.setDeltaMovement(deltaMovement.x, deltaMovement.y, deltaMovement.z);
-                projectile.setProjectileStack(Items.IRON_AXE.getDefaultInstance());
-                projectile.setPickupStack(itemStack);
+
+                var projItem = this.shootBehaviour.projectile != null ? BuiltInRegistries.ITEM.get(this.shootBehaviour.projectile).getDefaultInstance() : itemStack.copyWithCount(1);
+                projectile.setProjectileStack(projItem);
+                projectile.setPickupStack(projItem);
                 projectile.setOwner(user);
                 projectile.setBaseDamage(this.shootBehaviour.baseDamage);
 
@@ -70,7 +72,7 @@ public class ThrowingItem extends SimpleItem implements PolymerItem {
             level.addFreshEntity(projectile);
             level.playSound(null, projectile, this.shootBehaviour.sound != null ? BuiltInRegistries.SOUND_EVENT.get(this.shootBehaviour.sound) : SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS, 1.0F, 1.0F);
             if (!user.isCreative() && this.shootBehaviour.consumes) {
-                user.getInventory().removeItem(itemStack);
+                itemStack.shrink(1);
             }
         }
 
