@@ -39,7 +39,7 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
         this.modelData = this.itemData.requestModels();
 
         // For armor
-        if (this.itemData.behaviour() != null && this.itemData.behaviour().armor != null && this.itemData.behaviour().armor.texture != null) {
+        if (this.itemData.isArmor() && this.itemData.behaviour().armor.texture != null) {
             this.armorModel = PolymerResourcePackUtils.requestArmor(this.itemData.behaviour().armor.texture);
         }
     }
