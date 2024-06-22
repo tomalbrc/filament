@@ -34,8 +34,8 @@ public class TrapItem extends SimpleItem {
 
     @Override
     public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
-        if (itemStack.get(DataComponents.ENTITY_DATA) != null && itemStack.get(DataComponents.ENTITY_DATA).contains("Type")) {
-            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(itemStack.get(DataComponents.ENTITY_DATA).copyTag().getString("Type")));
+        if (itemStack.get(DataComponents.BUCKET_ENTITY_DATA) != null && itemStack.get(DataComponents.BUCKET_ENTITY_DATA).contains("Type")) {
+            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(itemStack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag().getString("Type")));
             list.add(Component.literal("Contains ").append(Component.translatable(type.getDescriptionId()))); // todo: make "Contains " translateable?
         }
         super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
@@ -81,11 +81,11 @@ public class TrapItem extends SimpleItem {
     }
 
     private static boolean canSpawn(ItemStack useOnContext) {
-        return useOnContext.get(DataComponents.ENTITY_DATA) == null ? false : useOnContext.get(DataComponents.ENTITY_DATA).contains("Type");
+        return useOnContext.get(DataComponents.BUCKET_ENTITY_DATA) == null ? false : useOnContext.get(DataComponents.BUCKET_ENTITY_DATA).contains("Type");
     }
 
     private void spawn(ServerLevel serverLevel, ItemStack itemStack, BlockPos blockPos) {
-        var compoundTag = itemStack.get(DataComponents.ENTITY_DATA).copyTag();
+        var compoundTag = itemStack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag();
 
         EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(compoundTag.getString("Type")));
         Entity entity = entityType.spawn(serverLevel, blockPos.above(1), MobSpawnType.BUCKET);
@@ -94,7 +94,7 @@ public class TrapItem extends SimpleItem {
         }
 
         int damage = itemStack.getDamageValue();
-        itemStack.remove(DataComponents.ENTITY_DATA);
+        itemStack.remove(DataComponents.BUCKET_ENTITY_DATA);
         itemStack.setDamageValue(damage);
     }
 
@@ -118,9 +118,9 @@ public class TrapItem extends SimpleItem {
 
         ResourceLocation resourceLocation = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
 
-        CompoundTag compoundTag = new CompoundTag();
-        compoundTag.putString("Type", resourceLocation.toString());
-        itemStack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.of(compoundTag));
+        CustomData.update(DataComponents.BUCKET_ENTITY_DATA, itemStack, (tag) -> {
+            tag.putString("Type", resourceLocation.toString());
+        });
     }
 
     public void loadFromTag(Mob mob, CompoundTag compoundTag) {
