@@ -35,6 +35,10 @@ public record ItemData(
         return this.behaviour != null && this.behaviour.food != null;
     }
 
+    public boolean isArmor() {
+        return this.behaviour != null && this.behaviour.armor != null;
+    }
+
     public boolean isFuel() {
         return this.behaviour != null && this.behaviour.fuel != null;
     }
