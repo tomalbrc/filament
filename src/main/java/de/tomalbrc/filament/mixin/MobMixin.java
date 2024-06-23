@@ -20,7 +20,7 @@ public class MobMixin {
         ItemStack itemStack = player.getItemInHand(interactionHand);
 
         Mob mob = (Mob)(Object)this;
-        if (itemStack.getItem() instanceof TrapItem trapItem) {
+        if (itemStack.getItem() instanceof TrapItem trapItem && !player.getCooldowns().isOnCooldown(trapItem)) {
             boolean canUse = trapItem.canUseOn(mob);
 
             if (itemStack.getMaxDamage() - itemStack.getDamageValue() > 1 && canUse && trapItem.canSave(mob)) {
