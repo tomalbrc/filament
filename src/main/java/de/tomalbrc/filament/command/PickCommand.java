@@ -4,6 +4,7 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
@@ -18,7 +19,7 @@ import de.tomalbrc.filament.decoration.block.DecorationBlock;
 public class PickCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralCommandNode<CommandSourceStack> pickNode = Commands
-                .literal("pick")
+                .literal("pick").requires(Permissions.require("filament.command.pick", 2))
                 .executes(PickCommand::execute)
                 .build();
 
