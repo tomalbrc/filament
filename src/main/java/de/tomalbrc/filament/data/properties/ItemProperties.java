@@ -19,8 +19,8 @@ public class ItemProperties {
     public int lightEmission = Integer.MIN_VALUE;
 
     public void appendHoverText(List<Component> tooltip) {
-        if (lore != null)
-            lore.forEach(line -> tooltip.add(Component.literal(line)));
+        if (this.lore != null)
+            this.lore.forEach(line -> tooltip.add(Component.literal(line)));
     }
 
     public Item.Properties toItemProperties() {
@@ -40,7 +40,6 @@ public class ItemProperties {
 
         if (behaviour != null && behaviour.food != null) {
             FoodProperties.Builder builder = new FoodProperties.Builder();
-
             if (behaviour.food.canAlwaysEat) builder.alwaysEdible();
             if (behaviour.food.fastfood) builder.fast();
             builder.saturationModifier(behaviour.food.saturation);
