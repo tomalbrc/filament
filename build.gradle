@@ -9,7 +9,6 @@ group = project.maven_group
 repositories {
     maven { url 'https://maven.tomalbrc.de' }
     maven { url 'https://maven.nucleoid.xyz' }
-    mavenLocal()
 }
 
 dependencies {
@@ -29,6 +28,8 @@ dependencies {
 
     // BIL
     modImplementation include("de.tomalbrc:blockbench-import-library:${project.bil_version}")
+
+    modImplementation include('me.lucko:fabric-permissions-api:0.3.1')
 }
 
 processResources {
