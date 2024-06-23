@@ -1,0 +1,112 @@
+package de.tomalbrc.filament.mixin.cosmetic;
+
+import com.llamalad7.mixinextras.sugar.Local;
+import de.tomalbrc.bil.core.holder.base.AbstractAnimationHolder;
+import de.tomalbrc.bil.core.holder.entity.EntityHolder;
+import de.tomalbrc.bil.core.holder.entity.living.LivingEntityHolder;
+import de.tomalbrc.bil.file.loader.BbModelLoader;
+import de.tomalbrc.filament.cosmetic.AnimatedCosmeticHolder;
+import de.tomalbrc.filament.cosmetic.CosmeticHolder;
+import de.tomalbrc.filament.cosmetic.CosmeticInterface;
+import de.tomalbrc.filament.decoration.holder.SimpleHolder;
+import de.tomalbrc.filament.item.SimpleItem;
+import de.tomalbrc.filament.registry.filament.ModelRegistry;
+import eu.pb4.polymer.virtualentity.api.attachment.EntityAttachment;
+import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ItemStack;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+
+@Mixin(value = LivingEntity.class)
+public class LivingEntityMixin implements CosmeticInterface {
+    @Unique
+    private CosmeticHolder filamentCosmeticHolder;
+
+    @Unique
+    private AnimatedCosmeticHolder filamentAnimatedCosmeticHolder;
+
+    @Inject(method = "getEquipmentSlotForItem", at = @At(value = "HEAD"), cancellable = true)
+    private void filament$customGetEquipmentSlotForItem(ItemStack itemStack, CallbackInfoReturnable<EquipmentSlot> cir) {
+        if (itemStack.getItem() instanceof SimpleItem simpleItem) {
+            if (simpleItem.getItemData().isArmor() || simpleItem.getItemData().isCosmetic()) {
+                var slot = simpleItem.getItemData().isArmor() ?
+                        simpleItem.getItemData().behaviour().armor.slot:
+                        simpleItem.getItemData().behaviour().cosmetic.slot;
+                cir.setReturnValue(slot);
+            }
+        }
+    }
+
+    @Inject(method = "onEquipItem", at = @At(value = "HEAD"))
+    private void filament$customOnEquipItem(EquipmentSlot equipmentSlot, ItemStack itemStack, ItemStack itemStack2, CallbackInfo ci) {
+        if (equipmentSlot == EquipmentSlot.CHEST && (filamentCosmeticHolder != null || filamentAnimatedCosmeticHolder != null)) {
+            filament$destroyHolder();
+        }
+
+        if (equipmentSlot == EquipmentSlot.CHEST && !itemStack2.isEmpty() && itemStack2.getItem() instanceof SimpleItem simpleItem && simpleItem.getItemData().isCosmetic() && (Object)this instanceof ServerPlayer serverPlayer) {
+            filament$addHolder(serverPlayer, simpleItem, itemStack2);
+        }
+    }
+
+    @Inject(method = "doHurtEquipment", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/entity/LivingEntity;getItemBySlot(Lnet/minecraft/world/entity/EquipmentSlot;)Lnet/minecraft/world/item/ItemStack;", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
+    private void filament$customOnDoHurtEquipment(DamageSource damageSource, float f, EquipmentSlot[] equipmentSlots, CallbackInfo ci, @Local ItemStack itemStack, @Local EquipmentSlot equipmentSlot) {
+        if (!(itemStack.getItem() instanceof ArmorItem) && itemStack.getItem() instanceof SimpleItem simpleItem && itemStack.canBeHurtBy(damageSource)) {
+            int i = (int)Math.max(1.0F, f / 4.0F);
+            itemStack.hurtAndBreak(i, (LivingEntity)(Object)this, equipmentSlot);
+        }
+    }
+
+    @Inject(method = "remove", at = @At(value = "HEAD"))
+    private void filament$onRemove(Entity.RemovalReason removalReason, CallbackInfo ci) {
+        filament$destroyHolder();
+    }
+
+    @Unique public void filament$addHolder(ServerPlayer serverPlayer, SimpleItem simpleItem, ItemStack itemStack) {
+        if (simpleItem.getItemData().behaviour().cosmetic.model != null) {
+            if (filamentAnimatedCosmeticHolder == null) {
+                filamentAnimatedCosmeticHolder = new AnimatedCosmeticHolder(serverPlayer, ModelRegistry.getModel(simpleItem.getItemData().behaviour().cosmetic.model)){};
+                EntityAttachment.ofTicking(filamentAnimatedCosmeticHolder, serverPlayer);
+
+                filamentAnimatedCosmeticHolder.startWatching(serverPlayer);
+
+                if (simpleItem.getItemData().behaviour().cosmetic.autoplay != null) {
+                    filamentAnimatedCosmeticHolder.getAnimator().playAnimation(simpleItem.getItemData().behaviour().cosmetic.autoplay);
+                }
+            }
+        }
+        else {
+            if (filamentCosmeticHolder == null) {
+                filamentCosmeticHolder = new CosmeticHolder(serverPlayer, itemStack);
+                EntityAttachment.ofTicking(filamentCosmeticHolder, serverPlayer);
+
+                filamentCosmeticHolder.startWatching(serverPlayer);
+            }
+        }
+    }
+
+    @Unique
+    public void filament$destroyHolder() {
+        if (filamentAnimatedCosmeticHolder != null) {
+            filamentAnimatedCosmeticHolder.getAttachment().destroy();
+            filamentAnimatedCosmeticHolder.destroy();
+            filamentAnimatedCosmeticHolder = null;
+        }
+        if (filamentCosmeticHolder != null) {
+            filamentCosmeticHolder.getAttachment().destroy();
+            filamentCosmeticHolder.destroy();
+            filamentCosmeticHolder = null;
+        }
+    }
+}
