@@ -9,6 +9,7 @@
     "BlockItemMixin",
     "enchantments.BlockMixin",
     "LevelChunkMixin",
+    "LivingEntityMixin",
     "FlowingFluidMixin",
     "ReloadableServerResourcesMixin",
     "MappedRegistryMixin",
