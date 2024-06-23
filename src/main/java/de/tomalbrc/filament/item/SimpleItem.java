@@ -1,31 +1,25 @@
 package de.tomalbrc.filament.item;
 
-import de.tomalbrc.filament.registry.filament.EntityRegistry;
 import eu.pb4.polymer.core.api.item.PolymerItem;
-import eu.pb4.polymer.core.api.item.PolymerItemUtils;
 import eu.pb4.polymer.resourcepack.api.PolymerArmorModel;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import de.tomalbrc.filament.data.ItemData;
-import org.joml.Vector3f;
 
 import java.util.List;
 
@@ -44,6 +38,10 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
         // For armor
         if (this.itemData.isArmor() && this.itemData.behaviour().armor.texture != null) {
             this.armorModel = PolymerResourcePackUtils.requestArmor(this.itemData.behaviour().armor.texture);
+        }
+
+        if (this.itemData.isCosmetic() || this.itemData.isArmor()) {
+            DispenserBlock.registerBehavior(this, ArmorItem.DISPENSE_ITEM_BEHAVIOR);
         }
     }
 
@@ -96,10 +94,14 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
 
             if (this.itemData.behaviour().execute.consumes) {
                 user.getItemInHand(hand).shrink(1);
-                return InteractionResultHolder.consume(user.getItemInHand(hand));
+                res = InteractionResultHolder.consume(user.getItemInHand(hand));
             }
+            else
+                res = InteractionResultHolder.consume(user.getItemInHand(hand));
+        }
 
-            return InteractionResultHolder.consume(user.getItemInHand(hand));
+        if (this.itemData.isArmor() || this.itemData.isCosmetic()) {
+            res = this.swapWithEquipmentSlot(this, level, user, hand);
         }
 
         return res;
