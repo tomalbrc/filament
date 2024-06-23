@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(FlowingFluid.class)
 public class FlowingFluidMixin {
 
-    @Inject(method = "canSpreadTo", locals = LocalCapture.CAPTURE_FAILHARD, at = @At("TAIL"), cancellable = true)
+    @Inject(method = "canSpreadTo", at = @At("TAIL"), cancellable = true)
     private void filament$canSpreadTo(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Direction direction, BlockPos blockPos2, BlockState blockState2, FluidState fluidState, Fluid fluid, CallbackInfoReturnable<Boolean> cir) {
         if (DecorationRegistry.isDecoration(blockState2)) {
             boolean isWaterloggable = this.isWaterloggable((DecorationBlock) blockState2.getBlock()) && direction != Direction.DOWN;
@@ -34,7 +34,7 @@ public class FlowingFluidMixin {
         }
     }
 
-    @Inject(method = "spreadTo", locals = LocalCapture.CAPTURE_FAILHARD, at = @At("TAIL"))
+    @Inject(method = "spreadTo", at = @At("TAIL"))
     protected void filament$spreadTo(LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState, Direction direction, FluidState fluidState, CallbackInfo ci) {
         if (DecorationRegistry.isDecoration(blockState) && !isWaterloggable((DecorationBlock) blockState.getBlock()) && !isSolid((DecorationBlock) blockState.getBlock())) {
             if (levelAccessor.getBlockEntity(blockPos) instanceof DecorationBlockEntity decorationBlockEntity) {
@@ -46,7 +46,7 @@ public class FlowingFluidMixin {
         }
     }
 
-    @Inject(method = "canPassThrough", locals = LocalCapture.CAPTURE_FAILHARD, at = @At("TAIL"), cancellable = true)
+    @Inject(method = "canPassThrough", at = @At("TAIL"), cancellable = true)
     private void filament$canPassThrough(BlockGetter blockGetter, Fluid fluid, BlockPos blockPos, BlockState blockState, Direction direction, BlockPos blockPos2, BlockState blockState2, FluidState fluidState, CallbackInfoReturnable<Boolean> cir) {
         // pass-thu but only non-waterloggable blocks and non-solid
         if (DecorationRegistry.isDecoration(blockState2) && !isWaterloggable((DecorationBlock) blockState2.getBlock()) && !isSolid((DecorationBlock) blockState2.getBlock()))
