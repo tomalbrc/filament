@@ -24,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -31,6 +32,11 @@ import java.util.List;
 public class TrapItem extends SimpleItem {
     public TrapItem(Properties properties, ItemData itemData) {
         super(properties, itemData);
+    }
+
+    private Trap trapData() {
+        Trap trap = this.itemData.behaviour().trap;
+        return trap;
     }
 
     @Override
@@ -98,17 +104,25 @@ public class TrapItem extends SimpleItem {
     }
 
     public boolean canUseOn(Mob mob) {
-        Trap trap = this.itemData.behaviour().trap;
+        Trap trap = this.trapData();
         ResourceLocation mobType = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
         return trap.types.contains(mobType);
     }
 
     public boolean canSave(Mob mob) {
-        if (mob.hasEffect(MobEffects.POISON) || mob.hasEffect(MobEffects.WEAKNESS) || mob.hasEffect(MobEffects.MOVEMENT_SLOWDOWN)) {
-            return mob.getRandom().nextInt(100) > 75;
+        boolean hasEffects = true;
+        if (this.trapData().requiredEffects != null) {
+            hasEffects = false;
+            for (int i = 0; i < this.trapData().requiredEffects.size(); i++) {
+                var effectId = this.trapData().requiredEffects.get(i);
+                var optional = BuiltInRegistries.MOB_EFFECT.get(effectId);
+                if (optional.isPresent() && mob.hasEffect(optional)) {
+                    hasEffects = true;
+                }
+            }
         }
 
-        return mob.getRandom().nextInt(10_000) == 420;
+        return hasEffects && mob.getRandom().nextInt(100) <= this.trapData().chance;
     }
 
     public void saveToTag(Mob mob, ItemStack itemStack) {
