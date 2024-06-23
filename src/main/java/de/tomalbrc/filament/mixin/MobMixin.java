@@ -20,7 +20,6 @@ public class MobMixin {
         ItemStack itemStack = player.getItemInHand(interactionHand);
 
         Mob mob = (Mob)(Object)this;
-        System.out.println("trap trigger" + itemStack);
         if (itemStack.getItem() instanceof TrapItem trapItem) {
             boolean canUse = trapItem.canUseOn(mob);
 
