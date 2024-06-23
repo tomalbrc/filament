@@ -52,7 +52,7 @@ public class FlowingFluidMixin {
         if (DecorationRegistry.isDecoration(blockState2) && !isWaterloggable((DecorationBlock) blockState2.getBlock()) && !isSolid((DecorationBlock) blockState2.getBlock()))
             cir.setReturnValue(this.canFlowThrough(blockState2));
     }
-    @Inject(method = "canPassThroughWall", locals = LocalCapture.CAPTURE_FAILHARD, at = @At("TAIL"), cancellable = true)
+    @Inject(method = "canPassThroughWall", locals = LocalCapture.CAPTURE_FAILSOFT, at = @At("TAIL"), cancellable = true)
     private void filament$canPassThroughWall(Direction direction, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, BlockPos blockPos2, BlockState blockState2, CallbackInfoReturnable<Boolean> cir, Object2ByteLinkedOpenHashMap object2ByteLinkedOpenHashMap, Block.BlockStatePairKey blockStatePairKey, VoxelShape voxelShape, VoxelShape voxelShape2, boolean bl) {
         if (DecorationRegistry.isDecoration(blockState) || DecorationRegistry.isDecoration(blockState2))
             cir.setReturnValue(true);
