@@ -2,6 +2,7 @@ package de.tomalbrc.filament.item;
 
 import de.tomalbrc.filament.data.behaviours.item.Trap;
 import de.tomalbrc.filament.data.ItemData;
+import de.tomalbrc.filament.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -44,6 +45,17 @@ public class TrapItem extends SimpleItem {
             EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(itemStack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag().getString("Type")));
             list.add(Component.literal("Contains ").append(Component.translatable(type.getDescriptionId()))); // todo: make "Contains " translateable?
         }
+        else {
+            if (this.trapData().requiredEffects != null) {
+                list.add(Component.literal("Requires effects: "));
+                for (int i = 0; i < this.trapData().requiredEffects.size(); i++) {
+                    var e = this.trapData().requiredEffects.get(i);
+                    list.add(Component.literal("› ").append(Component.translatable(BuiltInRegistries.MOB_EFFECT.get(e).getDescriptionId()))); // todo: make "Contains " translateable?
+                }
+            }
+            list.add(Component.literal("Chance: " + this.trapData().chance));
+        }
+
         super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
     }
 
@@ -66,7 +78,6 @@ public class TrapItem extends SimpleItem {
 
     public void use(Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
-        itemStack.hurtAndBreak(1, player, hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
 
         Trap trap = this.itemData.behaviour().trap;
         player.startUsingItem(hand);
@@ -74,12 +85,14 @@ public class TrapItem extends SimpleItem {
         if (trap.useDuration > 0) player.getCooldowns().addCooldown(this, trap.useDuration);
 
         player.awardStat(Stats.ITEM_USED.get(this));
+
+        Util.damageAndBreak(1, itemStack, player, Player.getSlotForHand(hand));
     }
 
     public InteractionResult useOn(UseOnContext useOnContext) {
         // TODO: maybe check for lava / safe ground?
         if (useOnContext.getPlayer() != null && canSpawn(useOnContext.getItemInHand()) && useOnContext.getLevel() instanceof ServerLevel serverLevel) {
-            this.spawn(serverLevel, useOnContext.getItemInHand(), useOnContext.getClickedPos());
+            this.spawn(serverLevel, useOnContext.getPlayer(), useOnContext.getHand(), useOnContext.getItemInHand(), useOnContext.getClickedPos());
             use(useOnContext.getPlayer(), useOnContext.getHand());
         }
 
@@ -90,7 +103,7 @@ public class TrapItem extends SimpleItem {
         return useOnContext.get(DataComponents.BUCKET_ENTITY_DATA) == null ? false : useOnContext.get(DataComponents.BUCKET_ENTITY_DATA).contains("Type");
     }
 
-    private void spawn(ServerLevel serverLevel, ItemStack itemStack, BlockPos blockPos) {
+    private void spawn(ServerLevel serverLevel, Player player, InteractionHand hand, ItemStack itemStack, BlockPos blockPos) {
         var compoundTag = itemStack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag();
 
         EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(compoundTag.getString("Type")));
@@ -99,9 +112,7 @@ public class TrapItem extends SimpleItem {
             this.loadFromTag(mob, compoundTag);
         }
 
-        int damage = itemStack.getDamageValue();
         itemStack.remove(DataComponents.BUCKET_ENTITY_DATA);
-        itemStack.setDamageValue(damage);
     }
 
     public boolean canUseOn(Mob mob) {
