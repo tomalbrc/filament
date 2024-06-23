@@ -1,27 +1,17 @@
 package de.tomalbrc.filament.command;
 
-import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import de.tomalbrc.filament.util.Util;
-import net.minecraft.client.main.Main;
+import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.DyedItemColor;
-
-import java.util.Optional;
-
-import static com.mojang.brigadier.arguments.StringArgumentType.getString;
 
 public class HatCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         var hatNode = Commands
-                .literal("hat");
+                .literal("hat").requires(Permissions.require("filament.command.hat", 1));
 
         dispatcher.register(hatNode.executes(HatCommand::execute));
     }
