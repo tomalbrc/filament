@@ -1,0 +1,25 @@
+{
+  "id": "provim:example_chest",
+  "model": "minecraft:custom/furniture/chests/example_chest",
+  "properties": {
+    "rotate": true
+  },
+  "behaviour": {
+    "animation": {
+      "model": "mynamespace:example_chest"
+    },
+    "container": {
+      "name": "Example Chest",
+      "size": 36,
+      "purge": false,
+      "openAnimation": "open",
+      "closeAnimation": "close"
+    }
+  },
+  "blocks": [
+    {
+      "origin": [0,0,0],
+      "size": [1,1,1]
+    }
+  ]
+}
