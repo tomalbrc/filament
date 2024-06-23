@@ -2,9 +2,9 @@ package de.tomalbrc.filament.item;
 
 import de.tomalbrc.filament.data.behaviours.item.Shoot;
 import de.tomalbrc.filament.data.ItemData;
+import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -42,7 +42,7 @@ public class ThrowingItem extends SimpleItem implements PolymerItem {
             BaseProjectileEntity projectile = EntityRegistry.BASE_PROJECTILE.create(level);
             if (projectile != null) {
                 projectile.setPos(user.position().add(0, user.getEyeHeight(), 0));
-                itemStack.setDamageValue(itemStack.getDamageValue()+1);
+                Util.damageAndBreak(1, itemStack, user, Player.getSlotForHand(hand));
 
                 float pitch = user.getXRot();
                 float yaw = user.getYRot();
