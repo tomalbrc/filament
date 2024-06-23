@@ -8,6 +8,8 @@ public class ItemBehaviourList {
 
     public Armor armor = null;
 
+    public Cosmetic cosmetic = null;
+
     public Instrument instrument = null;
 
     public Trap trap = null;
