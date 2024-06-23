@@ -2,6 +2,7 @@ package de.tomalbrc.filament.item;
 
 import de.tomalbrc.filament.data.behaviours.item.Trap;
 import de.tomalbrc.filament.data.ItemData;
+import de.tomalbrc.filament.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -45,6 +46,17 @@ public class TrapItem extends SimpleItem {
             EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation(itemStack.getOrCreateTag().getString("Type")));
             tooltip.add(Component.literal("Contains ").append(Component.translatable(type.getDescriptionId()))); // todo: make "Contains " translateable?
         }
+        else {
+            if (this.trapData().requiredEffects != null) {
+                tooltip.add(Component.literal("Requires effects: "));
+                for (int i = 0; i < this.trapData().requiredEffects.size(); i++) {
+                    var e = this.trapData().requiredEffects.get(i);
+                    tooltip.add(Component.literal("› ").append(Component.translatable(BuiltInRegistries.MOB_EFFECT.get(e).getDescriptionId()))); // todo: make "Contains " translateable?
+                }
+            }
+            tooltip.add(Component.literal("Chance: " + this.trapData().chance));
+        }
+
         super.appendHoverText(itemStack, level, tooltip, tooltipFlag);
     }
 
@@ -75,6 +87,8 @@ public class TrapItem extends SimpleItem {
         if (trap.useDuration > 0) player.getCooldowns().addCooldown(this, trap.useDuration);
 
         player.awardStat(Stats.ITEM_USED.get(this));
+
+        Util.damageAndBreak(1, itemStack, player, Player.getSlotForHand(hand));
     }
 
     public InteractionResult useOn(UseOnContext useOnContext) {
@@ -116,7 +130,7 @@ public class TrapItem extends SimpleItem {
             for (int i = 0; i < this.trapData().requiredEffects.size(); i++) {
                 var effectId = this.trapData().requiredEffects.get(i);
                 var optional = BuiltInRegistries.MOB_EFFECT.get(effectId);
-                if (optional.isPresent() && mob.hasEffect(optional)) {
+                if (optional != null && mob.hasEffect(optional)) {
                     hasEffects = true;
                 }
             }
