@@ -39,6 +39,10 @@ public record ItemData(
         return this.behaviour != null && this.behaviour.armor != null;
     }
 
+    public boolean isCosmetic() {
+        return this.behaviour != null && this.behaviour.cosmetic != null;
+    }
+
     public boolean isFuel() {
         return this.behaviour != null && this.behaviour.fuel != null;
     }
