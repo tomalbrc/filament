@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(BlockItem.class)
 public class BlockItemMixin {
-    @Inject(method = "place", locals = LocalCapture.CAPTURE_FAILHARD, at = @At("TAIL"))
+    @Inject(method = "place", locals = LocalCapture.CAPTURE_FAILSOFT, at = @At("TAIL"))
     private void onPlaceBlock(BlockPlaceContext context, CallbackInfoReturnable<InteractionResult> cir, BlockPlaceContext context2, BlockState placementState, BlockPos blockPos, Level level) {
         BlockItem blockItem = (BlockItem) (Object) this;
 
