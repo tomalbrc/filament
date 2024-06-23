@@ -1,17 +1,17 @@
 {
   "id": "mynamespace:hamburger",
-  "vanillaItem": "minecraft:bread",
+  "vanillaItem": "minecraft:diamond",
   "itemResource": {
     "models": {
       "default": "minecraft:custom/food/hamburger"
     }
   },
   "properties": {
-    "durability": 1,
     "stackSize": 1
   },
   "behaviour": {
       "food": {
+          "fastfood": true,
           "hunger": 1,
           "saturation": 0.2,
           "meat": true
