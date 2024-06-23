@@ -22,7 +22,10 @@ import net.minecraft.util.Brightness;
 import net.minecraft.util.Mth;
 import net.minecraft.util.SegmentedAnglePrecision;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -231,6 +234,17 @@ public class Util {
 
         for (SimpleSynchronousResourceReloadListener listener : FilamentReloadUtil.getReloadListeners()) {
             listener.onResourceManagerReload(resourceManager);
+        }
+    }
+
+    public static void damageAndBreak(int i, ItemStack itemStack, LivingEntity livingEntity, EquipmentSlot slot) {
+        int newDamage = itemStack.getDamageValue() + i;
+        itemStack.setDamageValue(newDamage);
+
+        if (newDamage >= itemStack.getMaxDamage()) {
+            Item item = itemStack.getItem();
+            itemStack.shrink(1);
+            livingEntity.onEquippedItemBroken(item, slot);
         }
     }
 }
