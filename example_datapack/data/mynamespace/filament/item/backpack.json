@@ -1,14 +1,16 @@
 {
-  "id": "mynamespace:magic_hat",
+  "id": "mynamespace:backpack",
   "vanillaItem": "minecraft:paper",
   "itemResource": {
     "models": {
-      "default": "minecraft:custom/hats/magic_hat"
+      "default": "minecraft:custom/hats/backpack"
     }
   },
   "behaviour":  {
     "cosmetic": {
-      "slot": "head"
+      "slot": "chest",
+      "translation":[0, -0.38, -0.28],
+      "scale":[1.5, 1.5, 1.5]
     }
   },
   "properties": {

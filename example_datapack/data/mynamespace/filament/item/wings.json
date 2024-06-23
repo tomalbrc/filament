@@ -1,0 +1,21 @@
+{
+  "id": "mynamespace:wings",
+  "vanillaItem": "minecraft:paper",
+  "itemResource": {
+    "models": {
+      "default": "minecraft:custom/hats/backpack"
+    }
+  },
+  "behaviour":  {
+    "cosmetic": {
+      "slot": "chest",
+      "model": "mynamespace:wings",
+      "autoplay": "animation",
+      "translation":[0, -0.38, -0.28],
+      "scale":[1.5, 1.5, 1.5]
+    }
+  },
+  "properties": {
+    "stackSize": 1
+  }
+}
