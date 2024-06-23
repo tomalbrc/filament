@@ -15,7 +15,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Mob.class)
 public class MobMixin {
-
     @Inject(at= @At("HEAD"), method = "interact", cancellable = true)
     public void filament$trapItemInteract(Player player, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResult> cir) {
         ItemStack itemStack = player.getItemInHand(interactionHand);
@@ -37,7 +36,7 @@ public class MobMixin {
 
             trapItem.use(player, interactionHand);
 
-            cir.setReturnValue(InteractionResult.sidedSuccess(player.level().isClientSide));
+            cir.setReturnValue(InteractionResult.CONSUME);
             cir.cancel();
         }
     }
