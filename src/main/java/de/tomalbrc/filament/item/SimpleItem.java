@@ -2,10 +2,13 @@ package de.tomalbrc.filament.item;
 
 import de.tomalbrc.filament.registry.filament.EntityRegistry;
 import eu.pb4.polymer.core.api.item.PolymerItem;
+import eu.pb4.polymer.core.api.item.PolymerItemUtils;
 import eu.pb4.polymer.resourcepack.api.PolymerArmorModel;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -65,9 +68,13 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
         return armorModel != null ? this.armorModel.color() : -1;
     }
 
+    @Override
+    @NotNull
     public EquipmentSlot getEquipmentSlot() {
-        if (itemData.behaviour() != null && itemData.behaviour().armor != null && itemData.behaviour().armor.slot != null) {
-            return itemData.behaviour().armor.slot;
+        boolean armor = itemData.isArmor() && itemData.behaviour().armor.slot != null;
+        boolean cosmetic = itemData.isCosmetic() && itemData.behaviour().cosmetic.slot != null;
+        if (armor || cosmetic) {
+            return armor ? itemData.behaviour().armor.slot : itemData.behaviour().cosmetic.slot;
         }
         return EquipmentSlot.MAINHAND;
     }
@@ -75,6 +82,8 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
     @Override
     @NotNull
     public InteractionResultHolder<ItemStack> use(Level level, Player user, InteractionHand hand) {
+        var res = super.use(level, user, hand);
+
         if (this.itemData.canExecute() && this.itemData.behaviour().execute.command != null) {
             user.getServer().getCommands().performPrefixedCommand(user.createCommandSourceStack(), this.itemData.behaviour().execute.command);
 
@@ -93,6 +102,10 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
             return InteractionResultHolder.consume(user.getItemInHand(hand));
         }
 
-        return InteractionResultHolder.fail(user.getItemInHand(hand));
+        return res;
+    }
+
+    public ItemData getItemData() {
+        return this.itemData;
     }
 }
