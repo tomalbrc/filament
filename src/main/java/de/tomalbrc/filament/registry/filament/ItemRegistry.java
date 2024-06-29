@@ -11,6 +11,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -22,7 +23,6 @@ import net.minecraft.world.item.Items;
 import org.apache.commons.io.FileUtils;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
-import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -84,6 +84,15 @@ public class ItemRegistry {
         if (BuiltInRegistries.ITEM.containsKey(data.id())) return;
 
         Item.Properties properties = data.properties() != null ? data.properties().toItemProperties(data.vanillaItem(), data.behaviour()) : new Item.Properties();
+
+        if (data.attributeModifiers() != null) {
+            properties.attributes(data.attributeModifiers());
+        }
+
+        if (data.isTool()) {
+            properties.component(DataComponents.TOOL, data.behaviour().tool);
+        }
+
         Item item;
         if (data.canShoot()) {
             item = new ThrowingItem(properties, data);
