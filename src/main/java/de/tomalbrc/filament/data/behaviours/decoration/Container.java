@@ -28,4 +28,9 @@ public class Container {
          * The name of the animation to play when the container is closed (if applicable).
          */
         public String closeAnimation = null;
+
+        /**
+         * Flag to indicate wether the container can be picked up like shulker boxes.
+         */
+        public boolean canPickup = false;
 }
