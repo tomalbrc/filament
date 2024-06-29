@@ -31,6 +31,7 @@ import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.HopperMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec3;
@@ -38,6 +39,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 public class DecorationBlockEntity extends AbstractDecorationBlockEntity implements BlockEntityWithElementHolder, FunctionalDecoration {
     public static final String DECORATION_KEY = "Decoration";
@@ -79,7 +81,6 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             this.makeHolder();
             this.setupBehaviour(decorationData);
         }
-
 
         if (this.containerImpl != null) {
             this.containerImpl.read(compoundTag);
@@ -144,6 +145,9 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         else if (this.decorationHolder == null && this.animatedHolder == null) {
             this.decorationHolder = new DecorationHolder();
             this.decorationHolder.setBlockEntity(this);
+            if (this.decorationHolder.getElements().get(0) instanceof ItemDisplayElement itemDisplayElement) {
+                itemDisplayElement.setItem(this.itemStack);
+            }
         }
 
         return this.animatedHolder != null ? this.animatedHolder : this.decorationHolder;
@@ -200,6 +204,10 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
                 this.setAnimationData(decorationData.behaviour().animation);
             }
         }
+
+        if (this.getDecorationData().isContainer() && this.getDecorationData().behaviour().container.canPickup && this.getItem().has(DataComponents.CONTAINER)) {
+            Objects.requireNonNull(this.itemStack.get(DataComponents.CONTAINER)).copyInto(containerImpl.container().items);
+        }
     }
 
     @Override
@@ -214,12 +222,16 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
     @Override
     public void setSeatData(@NotNull List<Seat> seatData) {
-        this.decorationHolder.setSeatData(seatData);
+        if (this.decorationHolder != null) {
+            this.decorationHolder.setSeatData(seatData);
+        }
     }
 
     @Override
     public void setShowcaseData(@NotNull List<Showcase> showcaseData) {
-        this.decorationHolder.setShowcaseData(showcaseData);
+        if (this.decorationHolder != null) {
+            this.decorationHolder.setShowcaseData(showcaseData);
+        }
     }
 
     @Override
@@ -250,6 +262,9 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     }
 
     public InteractionResult decorationInteract(ServerPlayer player, InteractionHand interactionHand, Vec3 location) {
+        if (player.gameMode.getGameModeForPlayer() == GameType.ADVENTURE)
+            return InteractionResult.PASS;
+
         if (!this.isMain()) {
             return this.getMainBlockEntity().decorationInteract(player, interactionHand, location);
         }
@@ -339,10 +354,15 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         }
 
         if (dropItem) {
-            Util.spawnAtLocation(this.getLevel(), this.getBlockPos().getCenter(), this.getItem());
+            ItemStack itemStack = this.getItem();
+            if (this.getDecorationData().isContainer() && this.getDecorationData().behaviour().container.canPickup) {
+                itemStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(this.containerImpl.container().getItems()));
+            }
+
+            Util.spawnAtLocation(this.getLevel(), this.getBlockPos().getCenter(), itemStack);
         }
 
-        if (this.containerImpl != null) {
+        if (this.containerImpl != null && this.getDecorationData().isContainer() && !this.getDecorationData().behaviour().container.canPickup) {
             this.containerImpl.container().setValid(false);
             for (ItemStack itemStack : this.containerImpl.container().items) {
                 if (itemStack.isEmpty()) continue;
