@@ -12,9 +12,12 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -62,7 +65,13 @@ public class DecorationRegistry {
 
         decorationBlocks.put(data.id(), block);
         BlockRegistry.registerBlock(data.id(), block);
-        ItemRegistry.registerItem(data.id(), new DecorationItem(data), ItemRegistry.CUSTOM_DECORATIONS);
+
+        var properties = data.properties() != null ? data.properties().toItemProperties() : new Item.Properties().stacksTo(16);
+        if (data.isContainer() && data.behaviour().container.canPickup) {
+            properties.component(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
+        }
+
+        ItemRegistry.registerItem(data.id(), new DecorationItem(data, properties), ItemRegistry.CUSTOM_DECORATIONS);
 
         REGISTERED_DECORATIONS++;
     }
