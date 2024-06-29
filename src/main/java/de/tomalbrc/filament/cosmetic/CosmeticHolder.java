@@ -1,18 +1,15 @@
 package de.tomalbrc.filament.cosmetic;
 
-import de.tomalbrc.filament.item.SimpleItem;
+import de.tomalbrc.filament.data.behaviours.item.Cosmetic;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.VirtualEntityUtils;
-import eu.pb4.polymer.virtualentity.api.elements.BlockDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3f;
 
 public class CosmeticHolder extends ElementHolder {
     private final ServerPlayer player;
@@ -29,10 +26,13 @@ public class CosmeticHolder extends ElementHolder {
         this.player = player;
 
         this.displayElement = new ItemDisplayElement(itemStack);
-        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.getItemData().isCosmetic()) {
-            this.displayElement.setTranslation(simpleItem.getItemData().behaviour().cosmetic.translation);
-            this.displayElement.setScale(simpleItem.getItemData().behaviour().cosmetic.scale);
+
+        Cosmetic cosmeticData = CosmeticUtil.getCosmeticData(itemStack);
+        if (cosmeticData != null) {
+            this.displayElement.setTranslation(cosmeticData.translation);
+            this.displayElement.setScale(cosmeticData.scale);
         }
+
         this.displayElement.setTeleportDuration(1);
 
         this.addElement(this.displayElement);

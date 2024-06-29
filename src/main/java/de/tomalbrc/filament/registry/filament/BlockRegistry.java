@@ -11,7 +11,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
@@ -42,7 +41,7 @@ public class BlockRegistry {
         };
 
         if (customBlock != null) {
-            SimpleBlockItem item = new SimpleBlockItem(new Item.Properties(), customBlock, data);
+            SimpleBlockItem item = new SimpleBlockItem(data.properties().toItemProperties(), customBlock, data);
             BlockRegistry.registerBlock(data.id(), customBlock);
             ItemRegistry.registerItem(data.id(), item, ItemRegistry.CUSTOM_BLOCK_ITEMS);
 
