@@ -6,39 +6,53 @@ import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.filament.DecorationRegistry;
+import de.tomalbrc.filament.registry.filament.FuelRegistry;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class DecorationItem extends Item implements PolymerItem {
+public class DecorationItem extends Item implements PolymerItem, Equipable {
     final private DecorationData decorationData;
     final private PolymerModelData modelData;
 
-    public DecorationItem(DecorationData decorationData) {
-        super(decorationData.properties() != null ? decorationData.properties().toItemProperties() : new Item.Properties().stacksTo(16));
+    public DecorationItem(DecorationData decorationData, Item.Properties properties) {
+        super(properties);
         this.decorationData = decorationData;
         this.modelData = this.decorationData.requestModel();
+
+        if (this.decorationData.isFuel()) {
+            FuelRegistry.add(this, this.decorationData.behaviour().fuel.value);
+        }
+    }
+
+    public DecorationData getDecorationData() {
+        return this.decorationData;
     }
 
     @Override
@@ -49,6 +63,23 @@ public class DecorationItem extends Item implements PolymerItem {
 
         if (this.decorationData.properties() != null) {
             this.decorationData.properties().appendHoverText(list);
+        }
+
+        if (itemStack.has(DataComponents.CONTAINER)) {
+            Iterator<ItemStack> itemStackIterator = itemStack.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).nonEmptyItems().iterator();
+            int i = 0;
+            int j = 0;
+            while(itemStackIterator.hasNext()) {
+                ItemStack itemStack2 = itemStackIterator.next();
+                j++;
+                if (i <= 4) {
+                    i++;
+                    list.add(Component.translatable("container.shulkerBox.itemCount", itemStack2.getHoverName(), itemStack2.getCount()));
+                }
+            }
+            if (j - i > 0) {
+                list.add(Component.translatable("container.shulkerBox.more", j - i).withStyle(ChatFormatting.ITALIC));
+            }
         }
     }
 
@@ -196,5 +227,27 @@ public class DecorationItem extends Item implements PolymerItem {
         }
 
         return true;
+    }
+
+    @Override
+    @NotNull
+    public InteractionResultHolder<ItemStack> use(Level level, Player user, InteractionHand hand) {
+        var res = super.use(level, user, hand);
+
+        if (res.getResult() != InteractionResult.CONSUME && this.decorationData.isCosmetic()) {
+            res = this.swapWithEquipmentSlot(this, level, user, hand);
+        }
+
+        return res;
+    }
+
+    @Override
+    @NotNull
+    public EquipmentSlot getEquipmentSlot() {
+        boolean cosmetic = decorationData.isCosmetic() && decorationData.behaviour().cosmetic.slot != null;
+        if (cosmetic) {
+            return decorationData.behaviour().cosmetic.slot;
+        }
+        return EquipmentSlot.MAINHAND;
     }
 }

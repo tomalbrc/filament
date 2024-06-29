@@ -8,10 +8,9 @@ import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Map;
 
 @SuppressWarnings("unused")
 public record ItemData(
@@ -19,7 +18,8 @@ public record ItemData(
         @Nullable Item vanillaItem,
         @Nullable ItemResource itemResource,
         @Nullable ItemBehaviourList behaviour,
-        @Nullable ItemProperties properties
+        @Nullable ItemProperties properties,
+        @Nullable ItemAttributeModifiers attributeModifiers
 ) {
     @SuppressWarnings({"FieldCanBeLocal"})
 
@@ -56,6 +56,10 @@ public record ItemData(
 
     public boolean isTrap() {
         return this.behaviour != null && this.behaviour.trap != null && this.behaviour.trap.types != null;
+    }
+
+    public boolean isTool() {
+        return this.behaviour != null && this.behaviour.tool != null;
     }
 
     public boolean canExecute() {

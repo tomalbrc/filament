@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "package": "de.tomalbrc.filament.mixin",
   "mixins": [
+    "AbstractFurnaceBlockEntityMixin",
     "AutoHostMixin",
     "ItemFrameAccessor",
     "MobMixin",
@@ -12,6 +13,7 @@
     "cosmetic.LivingEntityMixin",
     "cosmetic.ServerPlayerMixin",
     "FlowingFluidMixin",
+    "PlayerMixin",
     "ReloadableServerResourcesMixin",
     "MappedRegistryMixin",
     "WorldLoaderMixin"

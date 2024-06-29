@@ -53,6 +53,14 @@ public record BlockData(
         return this.behaviour != null && this.behaviour.repeater != null;
     }
 
+    public boolean isFuel() {
+        return this.behaviour != null && this.behaviour.fuel != null;
+    }
+
+    public boolean isCosmetic() {
+        return this.behaviour != null && this.behaviour.cosmetic != null;
+    }
+
     public enum BlockType {
         block,
         column,
@@ -60,6 +68,6 @@ public record BlockData(
         powerlevel,
         powered_directional,
         directional, // not supported yet
-        horizontal_directional; // not supported yet
+        horizontal_directional // not supported yet
     }
 }
