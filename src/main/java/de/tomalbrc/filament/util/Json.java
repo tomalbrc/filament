@@ -2,15 +2,21 @@ package de.tomalbrc.filament.util;
 
 import com.google.gson.*;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
@@ -23,6 +29,8 @@ import java.lang.reflect.Type;
 public class Json {
     public static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
+            .registerTypeHierarchyAdapter(ItemAttributeModifiers.class, new ItemAttributeModifiersDeserializer())
+            .registerTypeHierarchyAdapter(Tool.class, new ToolComponentDeserializer())
             .registerTypeHierarchyAdapter(BlockState.class, new BlockStateDeserializer())
             .registerTypeHierarchyAdapter(EquipmentSlot.class, new EquipmentSlotDeserializer())
             .registerTypeHierarchyAdapter(Vector3f.class, new Vector3fDeserializer())
@@ -153,6 +161,32 @@ public class Json {
         @Override
         public T deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
             return this.registry.get(ResourceLocation.parse(element.getAsString()));
+        }
+    }
+
+    public static class ItemAttributeModifiersDeserializer implements JsonDeserializer<ItemAttributeModifiers> {
+        @Override
+        public ItemAttributeModifiers deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+            DataResult<Pair<ItemAttributeModifiers, JsonElement>> result = ItemAttributeModifiers.CODEC.decode(JsonOps.INSTANCE, jsonElement);
+
+            if (!result.result().isPresent()) {
+                return null;
+            }
+
+            return result.result().get().getFirst();
+        }
+    }
+
+    public static class ToolComponentDeserializer implements JsonDeserializer<Tool> {
+        @Override
+        public Tool deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+            DataResult<Pair<Tool, JsonElement>> result = DataComponents.TOOL.codec().decode(JsonOps.INSTANCE, jsonElement);
+
+            if (!result.result().isPresent()) {
+                return null;
+            }
+
+            return result.result().get().getFirst();
         }
     }
 }
