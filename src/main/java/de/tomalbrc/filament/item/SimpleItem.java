@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.item;
 
+import de.tomalbrc.filament.registry.filament.FuelRegistry;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.resourcepack.api.PolymerArmorModel;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
@@ -13,6 +14,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
@@ -43,6 +45,21 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
         if (this.itemData.isCosmetic() || this.itemData.isArmor()) {
             DispenserBlock.registerBehavior(this, ArmorItem.DISPENSE_ITEM_BEHAVIOR);
         }
+
+        if (this.itemData.isFuel()) {
+            FuelRegistry.add(this, this.itemData.behaviour().fuel.value);
+        }
+    }
+
+    @Override
+    public boolean hurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
+        return this.itemData.isTool();
+    }
+
+    @Override
+    public void postHurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
+        if (this.itemData.isTool())
+            itemStack.hurtAndBreak(1, livingEntity2, EquipmentSlot.MAINHAND);
     }
 
     @Override

@@ -28,6 +28,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -119,12 +120,14 @@ public class Util {
         element.setHandler(new VirtualElement.InteractionHandler() {
             @Override
             public void interactAt(ServerPlayer player, InteractionHand hand, Vec3 pos) {
-                blockEntity.interact(player, hand, blockEntity.getBlockPos().getCenter().subtract(0, 0.5f, 0).add(pos));
+                if (player.gameMode.getGameModeForPlayer() != GameType.ADVENTURE)
+                    blockEntity.interact(player, hand, blockEntity.getBlockPos().getCenter().subtract(0, 0.5f, 0).add(pos));
             }
 
             @Override
             public void attack(ServerPlayer player) {
-                blockEntity.destroyStructure(player != null && !player.isCreative());
+                if (player.gameMode.getGameModeForPlayer() != GameType.ADVENTURE)
+                    blockEntity.destroyStructure(player != null && !player.isCreative());
             }
         });
 
@@ -153,7 +156,8 @@ public class Util {
 
             @Override
             public void attack(ServerPlayer player) {
-                element.getHolder().getAttachment().getWorld().destroyBlock(BlockPos.containing(element.getHolder().getAttachment().getPos()), false);
+                if (player.gameMode.getGameModeForPlayer() != GameType.ADVENTURE)
+                    element.getHolder().getAttachment().getWorld().destroyBlock(BlockPos.containing(element.getHolder().getAttachment().getPos()), false);
             }
         });
         element.setSize(1.f, 1.f);

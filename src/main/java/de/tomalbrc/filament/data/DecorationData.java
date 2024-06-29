@@ -1,7 +1,6 @@
 package de.tomalbrc.filament.data;
 
 import de.tomalbrc.filament.data.properties.DecorationProperties;
-import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -58,8 +57,16 @@ public record DecorationData(
         return this.behaviour != null && this.behaviour.lock != null;
     }
 
+    public boolean isFuel() {
+        return this.behaviour != null && this.behaviour.fuel != null;
+    }
+
     public boolean isSimple() {
         return (!this.hasBlocks() || Util.barrierDimensions(this.blocks(), 0).equals(1, 1)) && this.behaviour() == null;
+    }
+
+    public boolean isCosmetic() {
+        return this.behaviour != null && this.behaviour.cosmetic != null;
     }
 
     public record BlockConfig(Vector3f origin,
