@@ -7,24 +7,17 @@ import de.tomalbrc.filament.command.PickCommand;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.filament.*;
 import de.tomalbrc.filament.util.*;
-import eu.pb4.polymer.autohost.impl.AutoHost;
-import eu.pb4.polymer.autohost.impl.AutoHostConfig;
+import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.state.BlockState;
 import org.slf4j.Logger;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class Filament implements ModInitializer {
     public static final Logger LOGGER = LogUtils.getLogger();
@@ -73,5 +66,9 @@ public class Filament implements ModInitializer {
         FilamentReloadUtil.registerEarlyReloadListener(new ItemRegistry.ItemDataReloadListener());
 
         FilamentRPUtil.registerCallback();
+
+        for (var e: BlockModelType.values()) {
+            //System.out.println("Blocks left: " + e + " = " + PolymerBlockResourceUtils.getBlocksLeft(e));
+        }
     }
 }

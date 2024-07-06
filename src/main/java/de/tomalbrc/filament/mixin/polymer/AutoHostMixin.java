@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.mixin;
+package de.tomalbrc.filament.mixin.polymer;
 
 import de.tomalbrc.filament.util.FilamentConfig;
 import eu.pb4.polymer.autohost.impl.AutoHost;
