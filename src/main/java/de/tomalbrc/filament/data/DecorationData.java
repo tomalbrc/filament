@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.data;
 
+import de.tomalbrc.filament.data.behaviours.decoration.DecorationBehaviourList;
 import de.tomalbrc.filament.data.properties.DecorationProperties;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
@@ -12,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import de.tomalbrc.filament.data.behaviours.decoration.DecorationBehaviourList;
 
 import java.util.List;
 

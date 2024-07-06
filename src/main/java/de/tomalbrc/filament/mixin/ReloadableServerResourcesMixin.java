@@ -1,14 +1,9 @@
 package de.tomalbrc.filament.mixin;
 
-import de.tomalbrc.filament.registry.*;
-import de.tomalbrc.filament.util.FilamentReloadUtil;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItemGroupUtils;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.LayeredRegistryAccess;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.RegistryLayer;
 import net.minecraft.server.ReloadableServerResources;
 import net.minecraft.server.packs.resources.ResourceManager;

@@ -1,28 +1,24 @@
 package de.tomalbrc.filament.item;
 
-import de.tomalbrc.filament.data.behaviours.item.Shoot;
 import de.tomalbrc.filament.data.ItemData;
+import de.tomalbrc.filament.data.behaviours.item.Shoot;
+import de.tomalbrc.filament.registry.filament.EntityRegistry;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
-import de.tomalbrc.filament.registry.filament.EntityRegistry;
 
 public class ThrowingItem extends SimpleItem implements PolymerItem {
     private final Shoot shootBehaviour;

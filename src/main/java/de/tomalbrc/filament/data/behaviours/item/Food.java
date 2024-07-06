@@ -1,7 +1,5 @@
 package de.tomalbrc.filament.data.behaviours.item;
 
-import net.minecraft.world.food.FoodProperties;
-
 /**
  * Food behaviours for edible items
  */

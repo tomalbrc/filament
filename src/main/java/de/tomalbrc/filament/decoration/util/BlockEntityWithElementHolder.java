@@ -2,7 +2,6 @@ package de.tomalbrc.filament.decoration.util;
 
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.chunk.LevelChunk;
 
 public interface BlockEntityWithElementHolder {

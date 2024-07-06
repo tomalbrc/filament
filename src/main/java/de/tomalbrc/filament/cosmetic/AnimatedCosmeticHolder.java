@@ -1,28 +1,13 @@
 package de.tomalbrc.filament.cosmetic;
 
-import de.tomalbrc.bil.core.holder.base.AbstractAnimationHolder;
 import de.tomalbrc.bil.core.holder.entity.EntityHolder;
-import de.tomalbrc.bil.core.holder.entity.living.LivingEntityHolder;
-import de.tomalbrc.bil.core.holder.positioned.PositionedHolder;
 import de.tomalbrc.bil.core.holder.wrapper.DisplayWrapper;
 import de.tomalbrc.bil.core.model.Model;
-import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.VirtualEntityUtils;
-import eu.pb4.polymer.virtualentity.api.elements.BlockDisplayElement;
-import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.ints.IntList;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3f;
-
-import java.util.List;
 
 public class AnimatedCosmeticHolder extends EntityHolder {
     private final ServerPlayer player;

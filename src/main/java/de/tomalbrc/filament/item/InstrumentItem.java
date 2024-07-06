@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.item;
 
 import de.tomalbrc.filament.data.ItemData;
+import de.tomalbrc.filament.data.behaviours.item.Instrument;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -11,7 +12,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
-import de.tomalbrc.filament.data.behaviours.item.Instrument;
 import org.jetbrains.annotations.NotNull;
 
 public class InstrumentItem extends SimpleItem {
