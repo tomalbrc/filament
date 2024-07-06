@@ -6,6 +6,8 @@ import de.tomalbrc.filament.item.InstrumentItem;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.item.ThrowingItem;
 import de.tomalbrc.filament.item.TrapItem;
+import de.tomalbrc.filament.util.Constants;
+import de.tomalbrc.filament.util.Json;
 import eu.pb4.polymer.core.api.item.PolymerItemGroupUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -20,9 +22,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import org.apache.commons.io.FileUtils;
-import de.tomalbrc.filament.util.Constants;
-import de.tomalbrc.filament.util.Json;
-import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

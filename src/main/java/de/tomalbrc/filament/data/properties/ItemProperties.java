@@ -1,10 +1,10 @@
 package de.tomalbrc.filament.data.properties;
 
+import de.tomalbrc.filament.data.behaviours.item.ItemBehaviourList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
-import de.tomalbrc.filament.data.behaviours.item.ItemBehaviourList;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.decoration.util;
 
-import de.tomalbrc.filament.data.behaviours.decoration.*;
 import de.tomalbrc.filament.data.DecorationData;
+import de.tomalbrc.filament.data.behaviours.decoration.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

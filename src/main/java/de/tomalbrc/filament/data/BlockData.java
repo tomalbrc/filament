@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.data;
 
 import de.tomalbrc.filament.data.behaviours.block.BlockBehaviourList;
+import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.data.resource.BlockResource;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import eu.pb4.polymer.blocks.api.BlockModelType;
@@ -8,13 +9,10 @@ import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.SlabType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import de.tomalbrc.filament.data.properties.BlockProperties;
 
 import java.util.HashMap;
 
@@ -50,10 +48,6 @@ public record BlockData(
         }
 
         return val;
-    }
-
-    public boolean hasState(BlockType blockType) {
-        return this.type != null && this.type == blockType;
     }
 
     public boolean isPowersource() {

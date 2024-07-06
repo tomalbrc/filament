@@ -18,7 +18,7 @@ import static com.mojang.brigadier.arguments.StringArgumentType.getString;
 public class DyeCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         var dyeNode = Commands
-                .literal("dye");
+                .literal("dye").requires(Permissions.require("filament.command.dye", 1));
 
         var colorArg = Commands.argument("color", StringArgumentType
                 .string());

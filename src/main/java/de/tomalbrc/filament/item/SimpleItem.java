@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.item;
 
+import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.registry.filament.FuelRegistry;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.resourcepack.api.PolymerArmorModel;
@@ -21,7 +22,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import de.tomalbrc.filament.data.ItemData;
 
 import java.util.List;
 

@@ -1,11 +1,11 @@
 package de.tomalbrc.filament.block;
 
+import de.tomalbrc.filament.util.Util;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import de.tomalbrc.filament.util.Util;
 
 public class CustomBlockItem extends BlockItem {
     public CustomBlockItem(Block block, Properties properties) {
