@@ -3,8 +3,6 @@ package de.tomalbrc.filament.data.behaviours.item;
 
 // TODO: document all "mechanics" a.k.a. "behaviours"
 
-import net.minecraft.world.item.component.Tool;
-
 public class ItemBehaviourList {
     public Shoot shoot = null;
 

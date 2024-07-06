@@ -4,20 +4,19 @@
   "package": "de.tomalbrc.filament.mixin",
   "mixins": [
     "AbstractFurnaceBlockEntityMixin",
-    "polymer.AutoHostMixin",
-    "polymer.DefaultModelDataMixin",
-    "ItemFrameAccessor",
-    "MobMixin",
     "BlockItemMixin",
-    "enchantments.BlockMixin",
-    "LevelChunkMixin",
-    "cosmetic.LivingEntityMixin",
-    "cosmetic.ServerPlayerMixin",
     "FlowingFluidMixin",
+    "ItemFrameAccessor",
+    "LevelChunkMixin",
+    "MappedRegistryMixin",
+    "MobMixin",
     "PlayerMixin",
     "ReloadableServerResourcesMixin",
-    "MappedRegistryMixin",
-    "WorldLoaderMixin"
+    "WorldLoaderMixin",
+    "cosmetic.LivingEntityMixin",
+    "cosmetic.ServerPlayerMixin",
+    "polymer.AutoHostMixin",
+    "polymer.DefaultModelDataMixin"
   ],
   "injectors": {
     "defaultRequire": 1

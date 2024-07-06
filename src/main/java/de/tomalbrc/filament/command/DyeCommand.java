@@ -4,12 +4,12 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import de.tomalbrc.filament.util.Util;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
-import de.tomalbrc.filament.util.Util;
 import net.minecraft.world.item.component.DyedItemColor;
 
 import java.util.Optional;

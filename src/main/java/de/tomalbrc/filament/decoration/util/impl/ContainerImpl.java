@@ -3,7 +3,6 @@ package de.tomalbrc.filament.decoration.util.impl;
 import de.tomalbrc.filament.data.behaviours.decoration.Container;
 import de.tomalbrc.filament.util.FilamentContainer;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.inventory.MenuType;

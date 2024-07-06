@@ -3,7 +3,6 @@ package de.tomalbrc.filament.block;
 import de.tomalbrc.filament.data.BlockData;
 import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
 

@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.item;
 
-import de.tomalbrc.filament.data.behaviours.item.Trap;
 import de.tomalbrc.filament.data.ItemData;
+import de.tomalbrc.filament.data.behaviours.item.Trap;
 import de.tomalbrc.filament.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
@@ -15,8 +15,10 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
