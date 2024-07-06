@@ -36,7 +36,7 @@ dependencies {
 
     modImplementation include('me.lucko:fabric-permissions-api:0.3.1')
 
-    implementation 'com.github.Chocohead:Fabric-ASM:v2.3'
+    implementation include('com.github.Chocohead:Fabric-ASM:v2.3')
 }
 
 processResources {
