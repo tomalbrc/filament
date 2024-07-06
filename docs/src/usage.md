@@ -2,9 +2,10 @@
 
 Requires [fabric api](https://modrinth.com/mod/fabric-api) and [polymer](https://modrinth.com/mod/polymer) by patbox
 
-filament loads additional content using datapacks.
+filament mainly loads additional content using datapacks; 
+It also loads any assets from the assets folder in datapacks, if present.
 
-The datapack file structure should look something like this:
+The datapack structure should look something like this:
 ```
 data/
 |-- <namespace>/
@@ -19,7 +20,8 @@ data/
 |   |   |   |-- <decoration_configs>.json
 |   |
 |   |   |-- model/
-|   |       |-- <blockbench_model>.json
+|   |       |-- <blockbench_model>.bbmodel
+|   |       |-- <animated-java_model>.ajmodel
 |
 pack.mcmeta
 ```
