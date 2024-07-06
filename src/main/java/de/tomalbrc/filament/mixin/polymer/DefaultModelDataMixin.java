@@ -27,14 +27,6 @@ public class DefaultModelDataMixin {
 
     @Unique
     private static void addPetriSlab(BlockModelType modelType) {
-        var slab = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.parse("minecraft:block/oak_slab"), 0, 0)};
-        var slab_top = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.parse("minecraft:block/oak_slab_top"), 0, 0)};
-        var slab_double = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.parse("minecraft:block/oak_planks"), 0, 0)};
-
-        DefaultModelData.MODELS.put(Blocks.PETRIFIED_OAK_SLAB.defaultBlockState().setValue(SlabBlock.TYPE, SlabType.BOTTOM), slab);
-        DefaultModelData.MODELS.put(Blocks.PETRIFIED_OAK_SLAB.defaultBlockState().setValue(SlabBlock.TYPE, SlabType.TOP), slab_top);
-        DefaultModelData.MODELS.put(Blocks.PETRIFIED_OAK_SLAB.defaultBlockState().setValue(SlabBlock.TYPE, SlabType.DOUBLE), slab_double);
-
         ObjectArrayList<BlockState> list = new ObjectArrayList<>();
 
         // Generate all permutations
@@ -43,6 +35,12 @@ public class DefaultModelDataMixin {
             BlockState state = Blocks.PETRIFIED_OAK_SLAB.defaultBlockState().setValue(SlabBlock.TYPE, s);
             list.add(state);
             DefaultModelData.SPECIAL_REMAPS.put(state, Blocks.OAK_SLAB.defaultBlockState().setValue(SlabBlock.TYPE, s));
+
+            {
+                BlockState state2 = Blocks.PETRIFIED_OAK_SLAB.defaultBlockState().setValue(SlabBlock.WATERLOGGED, true).setValue(SlabBlock.TYPE, s);
+                list.add(state2);
+                DefaultModelData.SPECIAL_REMAPS.put(state2, Blocks.OAK_SLAB.defaultBlockState().setValue(SlabBlock.WATERLOGGED, true).setValue(SlabBlock.TYPE, s));
+            }
         }
 
         DefaultModelData.USABLE_STATES.put(modelType, list);
