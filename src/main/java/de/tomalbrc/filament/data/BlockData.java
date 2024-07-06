@@ -67,6 +67,7 @@ public record BlockData(
         count,
         powerlevel,
         powered_directional,
+        slab,
         directional, // not supported yet
         horizontal_directional // not supported yet
     }
