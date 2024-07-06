@@ -1,8 +1,8 @@
 # Introduction
 
-filament allows for a data driven way to add items, blocks and descorations to your farbic minecraft server.
+filament allows for a data driven way to add items, blocks and decorations to your farbic-based minecraft server.
 
-Checkout [usage](usage.md) or [creating content](content/) to get started!
+Checkout [usage](USAGE.md) or [creating content](content/) to get started!
 
 ---
 
