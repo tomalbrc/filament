@@ -1,12 +1,11 @@
 package de.tomalbrc.filament.block;
 
 import com.mojang.serialization.MapCodec;
+import de.tomalbrc.filament.data.BlockData;
 import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import de.tomalbrc.filament.data.BlockData;
 
 import java.util.HashMap;
 

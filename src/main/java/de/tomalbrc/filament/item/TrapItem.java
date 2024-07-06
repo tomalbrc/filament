@@ -79,7 +79,6 @@ public class TrapItem extends SimpleItem {
 
     public void use(Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
-        itemStack.hurtAndBreak(1, player, o -> player.broadcastBreakEvent(hand));
 
         Trap trap = this.itemData.behaviour().trap;
         player.startUsingItem(hand);
