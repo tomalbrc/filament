@@ -9,6 +9,11 @@ group = project.maven_group
 repositories {
     maven { url 'https://maven.tomalbrc.de' }
     maven { url 'https://maven.nucleoid.xyz' }
+    //enum extend - fabric-asm
+    maven {
+        name = "Jitpack"
+        url 'https://jitpack.io/'
+    }
 }
 
 dependencies {
@@ -30,6 +35,8 @@ dependencies {
     modImplementation include("de.tomalbrc:blockbench-import-library:${project.bil_version}")
 
     modImplementation include('me.lucko:fabric-permissions-api:0.3.1')
+
+    implementation 'com.github.Chocohead:Fabric-ASM:v2.3'
 }
 
 processResources {
