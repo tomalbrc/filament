@@ -6,9 +6,9 @@ import de.tomalbrc.filament.data.resource.ItemResource;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.component.ItemAttributeModifiers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,7 +19,7 @@ public record ItemData(
         @Nullable ItemResource itemResource,
         @Nullable ItemBehaviourList behaviour,
         @Nullable ItemProperties properties,
-        @Nullable ItemAttributeModifiers attributeModifiers
+        @Nullable DataComponentMap components
 ) {
     @SuppressWarnings({"FieldCanBeLocal"})
 
@@ -56,10 +56,6 @@ public record ItemData(
 
     public boolean isTrap() {
         return this.behaviour != null && this.behaviour.trap != null && this.behaviour.trap.types != null;
-    }
-
-    public boolean isTool() {
-        return this.behaviour != null && this.behaviour.tool != null;
     }
 
     public boolean canExecute() {

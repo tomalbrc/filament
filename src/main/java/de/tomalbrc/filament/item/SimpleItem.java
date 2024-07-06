@@ -6,6 +6,7 @@ import eu.pb4.polymer.resourcepack.api.PolymerArmorModel;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -53,12 +54,12 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
 
     @Override
     public boolean hurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
-        return this.itemData.isTool();
+        return this.itemData.components().has(DataComponents.TOOL);
     }
 
     @Override
     public void postHurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
-        if (this.itemData.isTool())
+        if (this.itemData.components().has(DataComponents.TOOL))
             itemStack.hurtAndBreak(1, livingEntity2, EquipmentSlot.MAINHAND);
     }
 

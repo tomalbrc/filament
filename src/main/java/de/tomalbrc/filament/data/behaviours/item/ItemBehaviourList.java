@@ -10,8 +10,6 @@ public class ItemBehaviourList {
 
     public Armor armor = null;
 
-    public Tool tool = null;
-
     public Cosmetic cosmetic = null;
 
     public Instrument instrument = null;
