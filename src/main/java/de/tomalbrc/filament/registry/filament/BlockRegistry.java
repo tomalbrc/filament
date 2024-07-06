@@ -5,6 +5,7 @@ import de.tomalbrc.filament.block.*;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.Json;
+import eu.pb4.polymer.blocks.api.BlockModelType;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -37,6 +38,7 @@ public class BlockRegistry {
             case count -> new CountBlock(blockProperties, data);
             case powerlevel -> new PowerlevelBlock(blockProperties, data);
             case powered_directional -> new PoweredDirectionBlock(blockProperties, data);
+            case slab -> new SimpleSlabBlock(blockProperties, data);
             case directional, horizontal_directional -> throw new UnsupportedOperationException("Not implemented");
         };
 
