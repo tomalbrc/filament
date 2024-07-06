@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.mixin;
+package de.tomalbrc.filament.mixin.polymer;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import de.tomalbrc.filament.util.FilamentConfig;
@@ -9,7 +9,6 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AutoHost.class)

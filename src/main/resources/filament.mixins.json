@@ -4,7 +4,8 @@
   "package": "de.tomalbrc.filament.mixin",
   "mixins": [
     "AbstractFurnaceBlockEntityMixin",
-    "AutoHostMixin",
+    "polymer.AutoHostMixin",
+    "polymer.DefaultModelDataMixin",
     "ItemFrameAccessor",
     "MobMixin",
     "BlockItemMixin",

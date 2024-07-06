@@ -7,6 +7,7 @@ import de.tomalbrc.filament.command.PickCommand;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.filament.*;
 import de.tomalbrc.filament.util.*;
+import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -65,5 +66,9 @@ public class Filament implements ModInitializer {
         FilamentReloadUtil.registerEarlyReloadListener(new ItemRegistry.ItemDataReloadListener());
 
         FilamentRPUtil.registerCallback();
+
+        for (var e: BlockModelType.values()) {
+            //System.out.println("Blocks left: " + e + " = " + PolymerBlockResourceUtils.getBlocksLeft(e));
+        }
     }
 }
