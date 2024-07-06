@@ -53,9 +53,8 @@ public class CosmeticHolder extends ElementHolder {
         float yaw = this.player.getYRot();
         double i = player.getX() - this.prevX;
         double d = player.getZ() - this.prevZ;
-        float f = (float)(i * i + d * d);
-        float g = this.bodyYaw;
-        if (f > 0.0025f) {
+        float g;
+        {
             // Using internal Mojang math utils here
             float l = (float) Mth.atan2(d, i) * Mth.RAD_TO_DEG - 90.0F;
             float m = Mth.abs(Mth.wrapDegrees(yaw) - l);
