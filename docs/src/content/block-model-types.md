@@ -25,7 +25,7 @@ flat_tripwire_block | 16
 tripwire_block | 16
 slab_block | 5
 
-*It's important to set the `slab` property in the block config to `slab` when using `slab_block` as `blockModelType`, see [block types](block-types.md) for more information*
+*It's important to set the `type` property in the block config to `slab` when using `slab_block` as `blockModelType`, see [block types](block-types.md) for more information*
 
 
 When choosing blocks that break instantly on the client, like plant blocks, the destroyTime property in the block config has to be 0 as well
