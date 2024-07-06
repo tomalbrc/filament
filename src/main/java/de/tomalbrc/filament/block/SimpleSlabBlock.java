@@ -26,10 +26,11 @@ public class SimpleSlabBlock extends SlabBlock implements PolymerTexturedBlock {
 
     @Override
     public BlockState getPolymerBlockState(BlockState state) {
-        return switch (state.getValue(TYPE)) {
+        var newState = switch (state.getValue(TYPE)) {
             case TOP -> this.stateMap.get("top");
             case BOTTOM -> this.stateMap.get("bottom");
             case DOUBLE -> this.stateMap.get("double");
         };
+        return newState.setValue(SlabBlock.WATERLOGGED, state.getValue(SlabBlock.WATERLOGGED));
     }
 }
