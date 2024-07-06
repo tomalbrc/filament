@@ -32,7 +32,6 @@ public class Filament implements ModInitializer {
 
         if (FilamentConfig.getInstance().enchantments) {
             PolymerResourcePackUtils.addModAssets(Constants.MOD_ID); // for translations
-            EnchantmentRegistry.register();
         }
 
         if (FilamentConfig.getInstance().commands) {
