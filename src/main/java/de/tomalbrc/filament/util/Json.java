@@ -8,6 +8,7 @@ import com.mojang.serialization.JsonOps;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -29,8 +30,6 @@ import java.lang.reflect.Type;
 public class Json {
     public static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
-            .registerTypeHierarchyAdapter(ItemAttributeModifiers.class, new ItemAttributeModifiersDeserializer())
-            .registerTypeHierarchyAdapter(Tool.class, new ToolComponentDeserializer())
             .registerTypeHierarchyAdapter(BlockState.class, new BlockStateDeserializer())
             .registerTypeHierarchyAdapter(EquipmentSlot.class, new EquipmentSlotDeserializer())
             .registerTypeHierarchyAdapter(Vector3f.class, new Vector3fDeserializer())
@@ -164,23 +163,10 @@ public class Json {
         }
     }
 
-    public static class ItemAttributeModifiersDeserializer implements JsonDeserializer<ItemAttributeModifiers> {
+    public static class DataComponentsDeserializer implements JsonDeserializer<DataComponentMap> {
         @Override
-        public ItemAttributeModifiers deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-            DataResult<Pair<ItemAttributeModifiers, JsonElement>> result = ItemAttributeModifiers.CODEC.decode(JsonOps.INSTANCE, jsonElement);
-
-            if (!result.result().isPresent()) {
-                return null;
-            }
-
-            return result.result().get().getFirst();
-        }
-    }
-
-    public static class ToolComponentDeserializer implements JsonDeserializer<Tool> {
-        @Override
-        public Tool deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-            DataResult<Pair<Tool, JsonElement>> result = DataComponents.TOOL.codec().decode(JsonOps.INSTANCE, jsonElement);
+        public DataComponentMap deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+            DataResult<Pair<DataComponentMap, JsonElement>> result = DataComponentMap.CODEC.decode(JsonOps.INSTANCE, jsonElement);
 
             if (!result.result().isPresent()) {
                 return null;

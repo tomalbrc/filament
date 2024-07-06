@@ -11,7 +11,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -85,12 +85,10 @@ public class ItemRegistry {
 
         Item.Properties properties = data.properties() != null ? data.properties().toItemProperties(data.vanillaItem(), data.behaviour()) : new Item.Properties();
 
-        if (data.attributeModifiers() != null) {
-            properties.attributes(data.attributeModifiers());
-        }
-
-        if (data.isTool()) {
-            properties.component(DataComponents.TOOL, data.behaviour().tool);
+        if (data.components() != null) {
+            for (TypedDataComponent component : data.components()) {
+                properties.component(component.type(), component.value());
+            }
         }
 
         Item item;
