@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.mixin;
+package de.tomalbrc.filament.mixin.polymer;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import de.tomalbrc.filament.util.FilamentConfig;
