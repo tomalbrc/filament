@@ -29,7 +29,6 @@ public class ItemProperties {
 
     public Item.Properties toItemProperties(@Nullable Item vanillaItem, @Nullable ItemBehaviourList behaviour) {
         Item.Properties props = new Item.Properties();
-
         props.stacksTo(stackSize);
 
         if (durability != Integer.MIN_VALUE)

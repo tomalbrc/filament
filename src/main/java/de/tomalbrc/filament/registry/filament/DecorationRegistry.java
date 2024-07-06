@@ -13,6 +13,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -67,6 +68,13 @@ public class DecorationRegistry {
         BlockRegistry.registerBlock(data.id(), block);
 
         var properties = data.properties() != null ? data.properties().toItemProperties() : new Item.Properties().stacksTo(16);
+
+        if (data.components() != null) {
+            for (TypedDataComponent component : data.components()) {
+                properties.component(component.type(), component.value());
+            }
+        }
+
         if (data.isContainer() && data.behaviour().container.canPickup) {
             properties.component(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
         }
