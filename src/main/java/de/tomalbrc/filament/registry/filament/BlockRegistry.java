@@ -8,6 +8,7 @@ import de.tomalbrc.filament.util.Json;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -43,7 +44,14 @@ public class BlockRegistry {
         };
 
         if (customBlock != null) {
-            SimpleBlockItem item = new SimpleBlockItem(data.properties().toItemProperties(), customBlock, data);
+            var itemProperties = data.properties().toItemProperties();
+            if (data.components() != null) {
+                for (TypedDataComponent component : data.components()) {
+                    itemProperties.component(component.type(), component.value());
+                }
+            }
+
+            SimpleBlockItem item = new SimpleBlockItem(itemProperties, customBlock, data);
             BlockRegistry.registerBlock(data.id(), customBlock);
             ItemRegistry.registerItem(data.id(), item, ItemRegistry.CUSTOM_BLOCK_ITEMS);
 

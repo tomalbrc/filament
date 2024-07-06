@@ -6,8 +6,12 @@ import de.tomalbrc.filament.data.resource.ItemResource;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.SlabType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import de.tomalbrc.filament.data.properties.BlockProperties;
@@ -22,7 +26,8 @@ public record BlockData(
         @NotNull BlockModelType blockModelType,
         @NotNull BlockProperties properties,
         @Nullable BlockType type,
-        @Nullable BlockBehaviourList behaviour
+        @Nullable BlockBehaviourList behaviour,
+        @Nullable DataComponentMap components
         ) {
     public HashMap<String, BlockState> createStateMap() {
         HashMap<String, BlockState> val = new HashMap<>();
@@ -34,7 +39,13 @@ public record BlockData(
         else if (blockResource.models() != null) {
             for (HashMap.Entry<String, ResourceLocation> entry : this.blockResource.models().entrySet()) {
                 PolymerBlockModel blockModel = PolymerBlockModel.of(entry.getValue());
-                val.put(entry.getKey(), PolymerBlockResourceUtils.requestBlock(this.blockModelType, blockModel));
+
+                var requestedState = PolymerBlockResourceUtils.requestBlock(this.blockModelType, blockModel);
+                val.put(entry.getKey(), requestedState);
+
+                if (requestedState.hasProperty(SlabBlock.WATERLOGGED) && requestedState.hasProperty(SlabBlock.TYPE)) {
+                    PolymerBlockResourceUtils.requestBlock(this.blockModelType, blockModel);
+                }
             }
         }
 
