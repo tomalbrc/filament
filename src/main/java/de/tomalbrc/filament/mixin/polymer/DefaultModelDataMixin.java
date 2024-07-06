@@ -5,6 +5,7 @@ import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import eu.pb4.polymer.blocks.impl.DefaultModelData;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.TripWireBlock;
@@ -43,7 +44,29 @@ public class DefaultModelDataMixin {
             }
         }
 
+        addCopperSlab(Blocks.CUT_COPPER_SLAB, Blocks.WAXED_CUT_COPPER_SLAB, list);
+        addCopperSlab(Blocks.EXPOSED_CUT_COPPER_SLAB, Blocks.WAXED_EXPOSED_CUT_COPPER_SLAB, list);
+        addCopperSlab(Blocks.WEATHERED_CUT_COPPER_SLAB, Blocks.WAXED_WEATHERED_CUT_COPPER_SLAB, list);
+        addCopperSlab(Blocks.OXIDIZED_CUT_COPPER_SLAB, Blocks.WAXED_OXIDIZED_CUT_COPPER_SLAB, list);
+
         DefaultModelData.USABLE_STATES.put(modelType, list);
+    }
+
+    @Unique
+    private static void addCopperSlab(Block to, Block from, ObjectArrayList<BlockState> list) {
+        // Generate all permutations
+        var b = new SlabType[]{SlabType.TOP, SlabType.BOTTOM, SlabType.DOUBLE};
+        for (var s : b) {
+            BlockState state = from.defaultBlockState().setValue(SlabBlock.TYPE, s);
+            list.add(state);
+            DefaultModelData.SPECIAL_REMAPS.put(state, to.defaultBlockState().setValue(SlabBlock.TYPE, s));
+
+            {
+                BlockState state2 = from.defaultBlockState().setValue(SlabBlock.WATERLOGGED, true).setValue(SlabBlock.TYPE, s);
+                list.add(state2);
+                DefaultModelData.SPECIAL_REMAPS.put(state2, to.defaultBlockState().setValue(SlabBlock.WATERLOGGED, true).setValue(SlabBlock.TYPE, s));
+            }
+        }
     }
 
     @Unique
