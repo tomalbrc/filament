@@ -1,4 +1,6 @@
-# Behaviours
+# Block Behaviours
+
+Block behaviours can be customized to add unique properties to blocks.
 
 There are currently only 2 block specific behaviours
 
@@ -28,7 +30,6 @@ Example of a normal plant block with the behaviours set:
   }
 }
 ```
-
 
 ### `powersource`:
 

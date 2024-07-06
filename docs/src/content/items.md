@@ -1,39 +1,63 @@
+Absolutely, here is the updated documentation with a basic example:
+
 # Items
 
-## File
+## File Location
 
-Item configuration files are to be placed in `MyDatapack/data/<namespace>/filament/item/myitem.json` 
+Item configuration files should be placed in the following directory:
+```
+MyDatapack/data/<namespace>/filament/item/myitem.json
+```
 
 ## Contents
 
-Item configurations only have 2 required fields: `id` and `vanillaItem`
-### `id`: 
+Item configurations have two required fields: `id` and `vanillaItem`.
 
-Your custom id in the format "namespace:item_name", as it will show up in-game
+### `id`
 
-### `vanillaItem`: 
+- **Type**: `Identifier`
+- **Description**: Your custom ID in the format `"namespace:item_name"`, as it will show up in-game.
 
-The item to "overwrite". filament (through polymer) will create custom_model_data id's for the generated resource-pack. Your custom item will not inherit any other properties serverside from it other than appearance, if the `models` field is not set. For interaction purposes on client however, it is important to choose the right item to use here. 
+### `vanillaItem`
 
----
+- **Type**: `Item`
+- **Description**: The vanilla item to "overwrite". Filament (through Polymer) will create `custom_model_data` IDs for the generated resource pack. Your custom item will not inherit any other properties server-side from the vanilla item other than appearance, if the `itemResource` field is not set. For interaction purposes on the client, it is important to choose the appropriate vanilla item to use here.
 
-The fields `models`, `properties` and `behaviour` are optional.
+## Optional Fields
 
-`models` only has a "default" field for the model, depending on the behaviour(s) of the item, it may use additional keys/fields in `models`.
+The fields `itemResource`, `properties`, and `behaviour` are optional.
 
-The "trap" item behaviour for example requires a "trapped" model.
+### `itemResource`
 
-`models` is soon to be replaced with an `itemResource` field/structure to allow for model generation by only providing a texture
+- **Description**: Specifies the resource(s) for the item model. Depending on the item's behaviour(s), it may use additional keys/fields in `itemResource`.
+- **Fields**:
+  - `models`: An object containing model definitions.
+    - `default`: The default model for the item.
+    - Additional keys may be required depending on the item's behaviour (e.g., `trapped` for a trap behaviour).
+  - `textures` (upcoming in future versions): An object containing texture definitions.
+    - `default`: The default texture for the item.
+    - Additional keys may be required depending on the item's behaviour.
 
----
+### `properties`
 
-Basic example:
+- **Description**: Defines various properties for the item. The structure and contents of this field will depend on the specific properties being set.
+
+### `behaviour`
+
+- **Description**: Defines specific behaviours or interactions for the item. The structure and contents of this field will depend on the specific behaviours being set.
+
+## Example
+
+Here is a basic example of an item configuration:
+
 ```json
 {
   "id": "mynamespace:clown_horn",
   "vanillaItem": "minecraft:paper",
-  "models": {
-    "default": "mynamespace:custom/misc/clown_horn"
+  "itemResource": {
+    "models": {
+      "default": "mynamespace:custom/misc/clown_horn"
+    }
   },
   "properties": {
     ...
@@ -43,3 +67,9 @@ Basic example:
   }
 }
 ```
+
+In this example:
+- The item has a custom ID of `mynamespace:clown_horn`.
+- The item overwrites the appearance of `minecraft:paper`.
+- The `itemResource` field specifies a default model located at `mynamespace:custom/misc/clown_horn`.
+- The `properties` and `behaviour` fields can be customized as needed to define additional properties and behaviours for the item.
