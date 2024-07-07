@@ -34,7 +34,7 @@ public class LivingEntityMixin implements CosmeticInterface {
     private AnimatedCosmeticHolder filamentAnimatedCosmeticHolder;
 
     @Inject(method = "getEquipmentSlotForItem", at = @At(value = "HEAD"), cancellable = true)
-    private void filament$customGetEquipmentSlotForItem(ItemStack itemStack, CallbackInfoReturnable<EquipmentSlot> cir) {
+    private static void filament$customGetEquipmentSlotForItem(ItemStack itemStack, CallbackInfoReturnable<EquipmentSlot> cir) {
         Cosmetic cosmetic = CosmeticUtil.getCosmeticData(itemStack);
         if (cosmetic != null) {
             cir.setReturnValue(cosmetic.slot);

@@ -58,12 +58,6 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
     }
 
     @Override
-    public void postHurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
-        if (this.itemData.components().has(DataComponents.TOOL))
-            itemStack.hurtAndBreak(1, livingEntity2, EquipmentSlot.MAINHAND);
-    }
-
-    @Override
     public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
         if (itemData.properties() != null)
             itemData.properties().appendHoverText(list);

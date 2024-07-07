@@ -44,7 +44,7 @@ public class TrapItem extends SimpleItem {
     @Override
     public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
         if (itemStack.get(DataComponents.BUCKET_ENTITY_DATA) != null && itemStack.get(DataComponents.BUCKET_ENTITY_DATA).contains("Type")) {
-            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(itemStack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag().getString("Type")));
+            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.tryParse(itemStack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag().getString("Type")));
             list.add(Component.literal("Contains ").append(Component.translatable(type.getDescriptionId()))); // todo: make "Contains " translateable?
         }
         else {

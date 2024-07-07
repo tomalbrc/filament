@@ -248,7 +248,7 @@ public class Util {
         if (newDamage >= itemStack.getMaxDamage()) {
             Item item = itemStack.getItem();
             itemStack.shrink(1);
-            livingEntity.onEquippedItemBroken(item, slot);
+            livingEntity.broadcastBreakEvent(slot);
         }
     }
 }
