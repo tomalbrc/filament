@@ -1,5 +1,3 @@
-Certainly! Here’s the updated documentation incorporating the new and existing behaviours for blocks:
-
 # Block Behaviours
 
 Block behaviours can be customized to add unique properties to blocks. All behaviours are optional, and some can be applied to both items and blocks.
