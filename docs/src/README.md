@@ -4,6 +4,8 @@ filament allows for a data driven way to add items, blocks and decorations/furni
 
 Checkout [usage](USAGE.md) or [creating content](content/) to get started!
 
+- #### [Old documentation for 0.4 and below](https://tomalbrc.de/projects/filament/docs-0.4/)
+
 ---
 
 - ### [Modrinth](https://modrinth.com/mod/filament)
