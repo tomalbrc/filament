@@ -43,7 +43,7 @@
 }
 ```
 
-### Hat (can only be equipped using commands or 3rd party mods)
+### Hat (can be put into inventory/swapped like normal helmets)
 ```json
 {
   "id": "mynamespace:magic_hat",

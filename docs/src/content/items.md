@@ -46,6 +46,11 @@ The fields `itemResource`, `properties`, and `behaviour` are optional.
 
 - **Description**: Defines specific behaviours or interactions for the item. The structure and contents of this field will depend on the specific behaviours being set.
 
+### `components`
+
+- **Description**: Defines a set of vanilla minecraft components like `minecraft:food`, `minecraft:tool`, etc. The format is the same that is used in datapacks. This is only supported in minecraft version 1.20.5 and later
+
+
 ## Example
 
 Here is a basic example of an item configuration:
@@ -67,9 +72,3 @@ Here is a basic example of an item configuration:
   }
 }
 ```
-
-In this example:
-- The item has a custom ID of `mynamespace:clown_horn`.
-- The item overwrites the appearance of `minecraft:paper`.
-- The `itemResource` field specifies a default model located at `mynamespace:custom/misc/clown_horn`.
-- The `properties` and `behaviour` fields can be customized as needed to define additional properties and behaviours for the item.
