@@ -6,10 +6,11 @@ Checkout [usage](USAGE.md) or [creating content](content/) to get started!
 
 ---
 
-- ##[Modrinth](https://modrinth.com/mod/filament)
-- ##[GitHub](https://github.com/tomalbrc/filament)
-- ##[Support Discord](https://discord.gg/9X6w2kfy89)
+- ### [Modrinth](https://modrinth.com/mod/filament)
+- ### [GitHub](https://github.com/tomalbrc/filament)
+- ### [Support Discord](https://discord.gg/9X6w2kfy89)
 
+---
 
 There is also a test server that you can join with 1.20.5-1.21 clients to get a gimple of what is possible at
 mc.tomalbrc.de, default minecraft java port

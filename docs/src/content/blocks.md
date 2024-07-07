@@ -4,6 +4,9 @@
 
 Block configuration files are to be placed in `MyDatapack/data/<namespace>/filament/block/myblock.json` 
 
+Item behaviours such as `food`, `fuel` and `cosmetic` are supported by decorations.
+You can also set components similar to item configurations using the `components` field
+
 ## Contents
 
 Blocks like candles or turtle eggs, with mutiple blocks in 1:
@@ -27,6 +30,9 @@ Blocks like candles or turtle eggs, with mutiple blocks in 1:
     "destroyTime": 0,
     "blockBase": "minecraft:stone",
     "itemBase": "minecraft:paper"
+  },
+  "components": {
+    ...
   }
 }
 ```
