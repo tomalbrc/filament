@@ -7,6 +7,9 @@ import de.tomalbrc.filament.data.behaviours.item.Fuel;
 public class BlockBehaviourList {
     public Powersource powersource;
     public Repeater repeater;
+
+    public Strippable strippable;
+
     public Fuel fuel;
     public Cosmetic cosmetic;
 }

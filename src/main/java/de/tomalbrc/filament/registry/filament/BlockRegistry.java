@@ -52,6 +52,10 @@ public class BlockRegistry {
                 }
             }
 
+            if (data.isStrippable()) {
+                StrippableRegistry.add(customBlock.defaultBlockState(), data.behaviour().strippable.replacement);
+            }
+
             SimpleBlockItem item = new SimpleBlockItem(itemProperties, customBlock, data);
             BlockRegistry.registerBlock(data.id(), customBlock);
             ItemRegistry.registerItem(data.id(), item, ItemRegistry.CUSTOM_BLOCK_ITEMS);
