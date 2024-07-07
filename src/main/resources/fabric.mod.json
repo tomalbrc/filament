@@ -30,6 +30,6 @@
     "polymer-resource-pack": "*",
     "polymer-networking": "*",
     "polymer-virtual-entity": "*",
-    "bil": ">=1.1.6"
+    "bil": "*"
   }
 }

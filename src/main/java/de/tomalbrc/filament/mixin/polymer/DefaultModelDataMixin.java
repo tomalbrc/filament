@@ -71,24 +71,24 @@ public class DefaultModelDataMixin {
 
     @Unique
     private static void addTripwire(boolean attached, BlockModelType modelType) {
-        var tripwire_normal = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.parse("minecraft:block/tripwire"+(attached?"_attached":"")+"_ns"), 0, 0)};
+        var tripwire_normal = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.tryParse("minecraft:block/tripwire"+(attached?"_attached":"")+"_ns"), 0, 0)};
 
-        var tripwire_west = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.parse("minecraft:block/tripwire"+(attached?"_attached":"")+"_n"), 0, 270)};
-        var tripwire_south = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.parse("minecraft:block/tripwire"+(attached?"_attached":"")+"_n"), 0, 180)};
-        var tripwire_east = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.parse("minecraft:block/tripwire"+(attached?"_attached":"")+"_n"), 0, 90)};
-        var tripwire_north = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.parse("minecraft:block/tripwire"+(attached?"_attached":"")+"_n"), 0, 0)};
+        var tripwire_west = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.tryParse("minecraft:block/tripwire"+(attached?"_attached":"")+"_n"), 0, 270)};
+        var tripwire_south = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.tryParse("minecraft:block/tripwire"+(attached?"_attached":"")+"_n"), 0, 180)};
+        var tripwire_east = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.tryParse("minecraft:block/tripwire"+(attached?"_attached":"")+"_n"), 0, 90)};
+        var tripwire_north = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.tryParse("minecraft:block/tripwire"+(attached?"_attached":"")+"_n"), 0, 0)};
 
-        var tripwire_sw = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.parse("minecraft:block/tripwire"+(attached?"_attached":"")+"_ne"), 0, 180)};
-        var tripwire_nw = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.parse("minecraft:block/tripwire"+(attached?"_attached":"")+"_ne"), 0, 270)};
-        var tripwire_ew = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.parse("minecraft:block/tripwire"+(attached?"_attached":"")+"_ns"), 0, 90)};
-        var tripwire_es = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.parse("minecraft:block/tripwire"+(attached?"_attached":"")+"_ne"), 0, 90)};
-        var tripwire_en = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.parse("minecraft:block/tripwire"+(attached?"_attached":"")+"_ne"), 0, 0)};
-        var tripwire_nsw = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.parse("minecraft:block/tripwire"+(attached?"_attached":"")+"_nse"), 0, 180)};
-        var tripwire_esw = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.parse("minecraft:block/tripwire"+(attached?"_attached":"")+"_nse"), 0, 90)};
-        var tripwire_enw = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.parse("minecraft:block/tripwire"+(attached?"_attached":"")+"_nse"), 0, 270)};
-        var tripwire_ens = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.parse("minecraft:block/tripwire"+(attached?"_attached":"")+"_nse"), 0, 0)};
+        var tripwire_sw = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.tryParse("minecraft:block/tripwire"+(attached?"_attached":"")+"_ne"), 0, 180)};
+        var tripwire_nw = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.tryParse("minecraft:block/tripwire"+(attached?"_attached":"")+"_ne"), 0, 270)};
+        var tripwire_ew = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.tryParse("minecraft:block/tripwire"+(attached?"_attached":"")+"_ns"), 0, 90)};
+        var tripwire_es = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.tryParse("minecraft:block/tripwire"+(attached?"_attached":"")+"_ne"), 0, 90)};
+        var tripwire_en = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.tryParse("minecraft:block/tripwire"+(attached?"_attached":"")+"_ne"), 0, 0)};
+        var tripwire_nsw = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.tryParse("minecraft:block/tripwire"+(attached?"_attached":"")+"_nse"), 0, 180)};
+        var tripwire_esw = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.tryParse("minecraft:block/tripwire"+(attached?"_attached":"")+"_nse"), 0, 90)};
+        var tripwire_enw = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.tryParse("minecraft:block/tripwire"+(attached?"_attached":"")+"_nse"), 0, 270)};
+        var tripwire_ens = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.tryParse("minecraft:block/tripwire"+(attached?"_attached":"")+"_nse"), 0, 0)};
 
-        var tripwire_all = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.parse("minecraft:block/tripwire"+(attached?"_attached":"")+"_nsew"), 0, 0)};
+        var tripwire_all = new PolymerBlockModel[]{PolymerBlockModel.of(ResourceLocation.tryParse("minecraft:block/tripwire"+(attached?"_attached":"")+"_nsew"), 0, 0)};
 
         DefaultModelData.MODELS.put(Blocks.TRIPWIRE.defaultBlockState().setValue(TripWireBlock.ATTACHED, attached).setValue(TripWireBlock.DISARMED, true).setValue(TripWireBlock.WEST, true), tripwire_west);
         DefaultModelData.MODELS.put(Blocks.TRIPWIRE.defaultBlockState().setValue(TripWireBlock.ATTACHED, attached).setValue(TripWireBlock.DISARMED, true).setValue(TripWireBlock.SOUTH, true), tripwire_south);

@@ -41,7 +41,7 @@ public class ThrowingItem extends SimpleItem implements PolymerItem {
             BaseProjectileEntity projectile = EntityRegistry.BASE_PROJECTILE.create(level);
             if (projectile != null) {
                 projectile.setPos(user.position().add(0, user.getEyeHeight(), 0));
-                Util.damageAndBreak(1, itemStack, user, Player.getSlotForHand(hand));
+                Util.damageAndBreak(1, itemStack, user, Player.getEquipmentSlotForItem(user.getItemInHand(hand)));
 
                 float pitch = user.getXRot();
                 float yaw = user.getYRot();

@@ -13,18 +13,18 @@ import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -65,8 +65,10 @@ public class DecorationItem extends Item implements PolymerItem, Equipable {
             this.decorationData.properties().appendHoverText(tooltip);
         }
 
-        if (itemStack.has(DataComponents.CONTAINER)) {
-            Iterator<ItemStack> itemStackIterator = itemStack.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).nonEmptyItems().iterator();
+        if (itemStack.getOrCreateTag().contains("Container")) {
+            NonNullList<ItemStack> list = NonNullList.create();
+            ContainerHelper.loadAllItems(itemStack.getOrCreateTagElement("Container"), list);
+            Iterator<ItemStack> itemStackIterator = list.iterator();
             int i = 0;
             int j = 0;
             while(itemStackIterator.hasNext()) {
@@ -74,11 +76,11 @@ public class DecorationItem extends Item implements PolymerItem, Equipable {
                 j++;
                 if (i <= 4) {
                     i++;
-                    list.add(Component.translatable("container.shulkerBox.itemCount", itemStack2.getHoverName(), itemStack2.getCount()));
+                    tooltip.add(Component.translatable("container.shulkerBox.itemCount", itemStack2.getHoverName(), itemStack2.getCount()));
                 }
             }
             if (j - i > 0) {
-                list.add(Component.translatable("container.shulkerBox.more", j - i).withStyle(ChatFormatting.ITALIC));
+                tooltip.add(Component.translatable("container.shulkerBox.more", j - i).withStyle(ChatFormatting.ITALIC));
             }
         }
     }

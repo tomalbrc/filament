@@ -17,12 +17,15 @@ import de.tomalbrc.filament.util.FilamentContainer;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
+import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
@@ -39,7 +42,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 
 public class DecorationBlockEntity extends AbstractDecorationBlockEntity implements BlockEntityWithElementHolder, FunctionalDecoration {
     public static final String DECORATION_KEY = "Decoration";
@@ -205,8 +207,9 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             }
         }
 
-        if (this.getDecorationData().isContainer() && this.getDecorationData().behaviour().container.canPickup && this.getItem().has(DataComponents.CONTAINER)) {
-            Objects.requireNonNull(this.itemStack.get(DataComponents.CONTAINER)).copyInto(containerImpl.container().items);
+        if (this.getDecorationData().isContainer() && this.getDecorationData().behaviour().container.canPickup) {
+            ListTag list = this.itemStack.getOrCreateTagElement("Container").getList("Items", 10);
+            containerImpl.container().fromTag(list);
         }
     }
 
@@ -356,7 +359,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         if (dropItem) {
             ItemStack itemStack = this.getItem();
             if (this.getDecorationData().isContainer() && this.getDecorationData().behaviour().container.canPickup) {
-                itemStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(this.containerImpl.container().getItems()));
+                ContainerHelper.saveAllItems(itemStack.getOrCreateTagElement("Container"), this.containerImpl.container().items);
             }
 
             Util.spawnAtLocation(this.getLevel(), this.getBlockPos().getCenter(), itemStack);
