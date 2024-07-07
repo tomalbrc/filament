@@ -21,6 +21,7 @@ plant_block | 6
 filament adds a few more block model types for tripwire and slabs:
 
 blockModelType | Amount of blocks
+---|---
 flat_tripwire_block | 16
 tripwire_block | 16
 slab_block | 5

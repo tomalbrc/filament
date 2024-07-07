@@ -3,4 +3,4 @@ authors = ["tomalbrc"]
 language = "en"
 multilingual = false
 src = "src"
-title = "filament-docs"
+title = "filament 0.5 docs"
