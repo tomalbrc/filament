@@ -25,11 +25,11 @@
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric-api": "*",
-    "minecraft": "${minecraft_version}",
+    "minecraft": "1.20.5-1.20.6",
     "polymer-core": "*",
     "polymer-resource-pack": "*",
     "polymer-networking": "*",
     "polymer-virtual-entity": "*",
-    "bil": ">=1.1.6"
+    "bil": ">=1.1.9"
   }
 }
