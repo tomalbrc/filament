@@ -55,6 +55,9 @@ public record BlockData(
     public boolean isRepeater() {
         return this.behaviour != null && this.behaviour.repeater != null;
     }
+    public boolean isStrippable() {
+        return this.behaviour != null && this.behaviour.strippable != null && this.behaviour.strippable.replacement != null;
+    }
 
     public boolean isFuel() {
         return this.behaviour != null && this.behaviour.fuel != null;

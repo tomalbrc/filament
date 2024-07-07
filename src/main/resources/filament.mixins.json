@@ -4,6 +4,7 @@
   "package": "de.tomalbrc.filament.mixin",
   "mixins": [
     "AbstractFurnaceBlockEntityMixin",
+    "AxeItemMixin",
     "BlockItemMixin",
     "FlowingFluidMixin",
     "ItemFrameAccessor",
