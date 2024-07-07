@@ -33,6 +33,8 @@ public class CosmeticHolder extends ElementHolder {
             this.displayElement.setScale(cosmeticData.scale);
         }
 
+        this.displayElement.setTeleportDuration(1);
+
         this.addElement(this.displayElement);
     }
 

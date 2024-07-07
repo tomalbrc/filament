@@ -62,7 +62,8 @@ public record DecorationData(
     }
 
     public boolean isSimple() {
-        return (!this.hasBlocks() || Util.barrierDimensions(this.blocks(), 0).equals(1, 1)) && this.behaviour() == null;
+        return false;
+        //return (!this.hasBlocks() || Util.barrierDimensions(this.blocks(), 0).equals(1, 1)) && this.behaviour() == null;
     }
 
     public boolean isCosmetic() {
