@@ -4,7 +4,6 @@ import de.tomalbrc.filament.data.behaviours.decoration.DecorationBehaviourList;
 import de.tomalbrc.filament.data.properties.DecorationProperties;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
-import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -28,9 +27,8 @@ public record DecorationData(
 
         @Nullable DecorationProperties properties,
 
-        @Nullable DecorationBehaviourList behaviour,
-        @Nullable DataComponentMap components
-) {
+        @Nullable DecorationBehaviourList behaviour
+    ) {
     public PolymerModelData requestModel() {
         return PolymerResourcePackUtils.requestModel(vanillaItem != null ? vanillaItem : Items.GUNPOWDER, model);
     }

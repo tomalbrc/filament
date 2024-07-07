@@ -7,7 +7,6 @@ import de.tomalbrc.filament.data.resource.ItemResource;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
-import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,8 +23,7 @@ public record BlockData(
         @NotNull BlockModelType blockModelType,
         @NotNull BlockProperties properties,
         @Nullable BlockType type,
-        @Nullable BlockBehaviourList behaviour,
-        @Nullable DataComponentMap components
+        @Nullable BlockBehaviourList behaviour
         ) {
     public HashMap<String, BlockState> createStateMap() {
         HashMap<String, BlockState> val = new HashMap<>();

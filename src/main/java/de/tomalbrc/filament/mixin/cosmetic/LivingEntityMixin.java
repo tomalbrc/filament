@@ -1,6 +1,5 @@
 package de.tomalbrc.filament.mixin.cosmetic;
 
-import com.llamalad7.mixinextras.sugar.Local;
 import de.tomalbrc.filament.cosmetic.AnimatedCosmeticHolder;
 import de.tomalbrc.filament.cosmetic.CosmeticHolder;
 import de.tomalbrc.filament.cosmetic.CosmeticInterface;
@@ -10,11 +9,9 @@ import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.registry.filament.ModelRegistry;
 import eu.pb4.polymer.virtualentity.api.attachment.EntityAttachment;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,7 +20,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(value = LivingEntity.class)
 public class LivingEntityMixin implements CosmeticInterface {
@@ -34,7 +30,7 @@ public class LivingEntityMixin implements CosmeticInterface {
     private AnimatedCosmeticHolder filamentAnimatedCosmeticHolder;
 
     @Inject(method = "getEquipmentSlotForItem", at = @At(value = "HEAD"), cancellable = true)
-    private void filament$customGetEquipmentSlotForItem(ItemStack itemStack, CallbackInfoReturnable<EquipmentSlot> cir) {
+    private static void filament$customGetEquipmentSlotForItem(ItemStack itemStack, CallbackInfoReturnable<EquipmentSlot> cir) {
         Cosmetic cosmetic = CosmeticUtil.getCosmeticData(itemStack);
         if (cosmetic != null) {
             cir.setReturnValue(cosmetic.slot);
@@ -52,14 +48,6 @@ public class LivingEntityMixin implements CosmeticInterface {
 
         if (equipmentSlot == EquipmentSlot.CHEST && !itemStack2.isEmpty() && CosmeticUtil.isCosmetic(itemStack2) && (Object)this instanceof ServerPlayer serverPlayer) {
             filament$addHolder(serverPlayer, itemStack2.getItem(), itemStack2);
-        }
-    }
-
-    @Inject(method = "doHurtEquipment", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/entity/LivingEntity;getItemBySlot(Lnet/minecraft/world/entity/EquipmentSlot;)Lnet/minecraft/world/item/ItemStack;", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void filament$customOnDoHurtEquipment(DamageSource damageSource, float f, EquipmentSlot[] equipmentSlots, CallbackInfo ci, @Local ItemStack itemStack, @Local EquipmentSlot equipmentSlot) {
-        if (!(itemStack.getItem() instanceof ArmorItem) && itemStack.getItem() instanceof SimpleItem && itemStack.canBeHurtBy(damageSource)) {
-            int i = (int)Math.max(1.0F, f / 4.0F);
-            itemStack.hurtAndBreak(i, (LivingEntity)(Object)this, equipmentSlot);
         }
     }
 

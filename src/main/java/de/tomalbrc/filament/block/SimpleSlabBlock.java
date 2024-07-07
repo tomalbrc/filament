@@ -3,6 +3,7 @@ package de.tomalbrc.filament.block;
 import de.tomalbrc.filament.data.BlockData;
 import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -31,5 +32,10 @@ public class SimpleSlabBlock extends SlabBlock implements PolymerTexturedBlock {
             case DOUBLE -> this.stateMap.get("double");
         };
         return newState.setValue(SlabBlock.WATERLOGGED, state.getValue(SlabBlock.WATERLOGGED));
+    }
+
+    @Override
+    public Block getPolymerBlock(BlockState state) {
+        return this.getPolymerBlockState(state).getBlock();
     }
 }

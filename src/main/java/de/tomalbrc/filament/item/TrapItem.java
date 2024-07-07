@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.item;
 
-import de.tomalbrc.filament.data.behaviours.item.Trap;
 import de.tomalbrc.filament.data.ItemData;
+import de.tomalbrc.filament.data.behaviours.item.Trap;
 import de.tomalbrc.filament.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -14,7 +14,6 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -25,7 +24,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -87,7 +85,7 @@ public class TrapItem extends SimpleItem {
 
         player.awardStat(Stats.ITEM_USED.get(this));
 
-        Util.damageAndBreak(1, itemStack, player, Player.getSlotForHand(hand));
+        Util.damageAndBreak(1, itemStack, player, Player.getEquipmentSlotForItem(player.getItemInHand(hand)));
     }
 
     public InteractionResult useOn(UseOnContext useOnContext) {

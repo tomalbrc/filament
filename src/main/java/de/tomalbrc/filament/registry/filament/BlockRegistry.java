@@ -7,7 +7,6 @@ import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.Json;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -46,11 +45,6 @@ public class BlockRegistry {
 
         if (customBlock != null) {
             var itemProperties = data.properties().toItemProperties();
-            if (data.components() != null) {
-                for (TypedDataComponent component : data.components()) {
-                    itemProperties.component(component.type(), component.value());
-                }
-            }
 
             SimpleBlockItem item = new SimpleBlockItem(itemProperties, customBlock, data);
             BlockRegistry.registerBlock(data.id(), customBlock);

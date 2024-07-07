@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.Locale;
 import java.util.function.Consumer;
 
 public class FilamentLoader {
@@ -49,7 +48,7 @@ public class FilamentLoader {
     public static void loadModels(String modid, String namespace) {
         search(modid, f -> {
             try {
-                ModelRegistry.registerAjModel(f, ResourceLocation.fromNamespaceAndPath(namespace, f.toString()));
+                ModelRegistry.registerAjModel(f, ResourceLocation.tryBuild(namespace, f.toString()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -57,7 +56,7 @@ public class FilamentLoader {
 
         search(modid, f -> {
             try {
-                ModelRegistry.registerBbModel(f, ResourceLocation.fromNamespaceAndPath(namespace, f.toString()));
+                ModelRegistry.registerBbModel(f, ResourceLocation.tryBuild(namespace, f.toString()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

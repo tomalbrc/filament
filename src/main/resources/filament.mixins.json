@@ -10,7 +10,6 @@
     "LevelChunkMixin",
     "MappedRegistryMixin",
     "MobMixin",
-    "PlayerMixin",
     "ReloadableServerResourcesMixin",
     "WorldLoaderMixin",
     "cosmetic.LivingEntityMixin",
