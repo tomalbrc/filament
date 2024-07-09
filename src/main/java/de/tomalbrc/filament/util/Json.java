@@ -34,6 +34,7 @@ public class Json {
             .registerTypeHierarchyAdapter(Quaternionf.class, new QuaternionfDeserializer())
             .registerTypeHierarchyAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
             .registerTypeHierarchyAdapter(BlockModelType.class, new BlockModelTypeDeserializer())
+            .registerTypeHierarchyAdapter(DataComponentMap.class, new DataComponentsDeserializer())
             .registerTypeHierarchyAdapter(PushReaction.class, new PushReactionDeserializer())
             .registerTypeHierarchyAdapter(Block.class, new RegistryDeserializer<>(BuiltInRegistries.BLOCK))
             .registerTypeHierarchyAdapter(Item.class, new RegistryDeserializer<>(BuiltInRegistries.ITEM))
@@ -165,7 +166,7 @@ public class Json {
         public DataComponentMap deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
             DataResult<Pair<DataComponentMap, JsonElement>> result = DataComponentMap.CODEC.decode(JsonOps.INSTANCE, jsonElement);
 
-            if (!result.result().isPresent()) {
+            if (result.result().isEmpty()) {
                 return null;
             }
 
