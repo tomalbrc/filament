@@ -130,7 +130,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     }
 
     @Override
-    protected ItemStack getDefaultPickupItem() {
+    protected @NotNull ItemStack getDefaultPickupItem() {
         return ItemStack.EMPTY;
     }
 
@@ -178,8 +178,8 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
         super.readAdditionalSaveData(nbt);
 
         if (nbt.contains("Item", 10) && nbt.contains("PickupItem", 10)) {
-            this.projectileStack = ItemStack.parseOptional(null, nbt.getCompound("Item"));
-            this.pickupStack = ItemStack.parseOptional(null, nbt.getCompound("PickupItem"));
+            this.projectileStack = ItemStack.parseOptional(this.registryAccess(), nbt.getCompound("Item"));
+            this.pickupStack = ItemStack.parseOptional(this.registryAccess(), nbt.getCompound("PickupItem"));
             this.createMainDisplayElement();
         }
 
@@ -191,8 +191,8 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
         super.addAdditionalSaveData(nbt);
 
         if (this.projectileStack != null && this.pickupStack != null) {
-            nbt.put("Item", this.projectileStack.save(null));
-            nbt.put("PickupItem", this.pickupStack.save(null));
+            nbt.put("Item", this.projectileStack.save(this.registryAccess()));
+            nbt.put("PickupItem", this.pickupStack.save(this.registryAccess()));
         }
 
         nbt.putBoolean("DealtDamage", this.dealtDamage);
