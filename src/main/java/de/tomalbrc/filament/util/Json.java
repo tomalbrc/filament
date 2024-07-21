@@ -8,8 +8,11 @@ import com.mojang.serialization.JsonOps;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.RegistryOps;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
@@ -21,8 +24,10 @@ import net.minecraft.world.level.material.PushReaction;
 import org.joml.Quaternionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.spongepowered.include.com.google.common.collect.ImmutableList;
 
 import java.lang.reflect.Type;
+import java.util.*;
 
 public class Json {
     public static final Gson GSON = new GsonBuilder()
@@ -164,13 +169,30 @@ public class Json {
     public static class DataComponentsDeserializer implements JsonDeserializer<DataComponentMap> {
         @Override
         public DataComponentMap deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-            DataResult<Pair<DataComponentMap, JsonElement>> result = DataComponentMap.CODEC.decode(JsonOps.INSTANCE, jsonElement);
+            RegistryOps.RegistryInfoLookup registryInfoLookup = createContext(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
+            DataResult<Pair<DataComponentMap, JsonElement>> result = DataComponentMap.CODEC.decode(RegistryOps.create(JsonOps.INSTANCE, registryInfoLookup), jsonElement);
 
-            if (result.result().isEmpty()) {
+            if (result.resultOrPartial().isEmpty()) {
                 return null;
             }
 
-            return result.result().get().getFirst();
+            return result.resultOrPartial().get().getFirst();
+        }
+
+        private static RegistryOps.RegistryInfoLookup createContext(RegistryAccess registryAccess) {
+            final Map<ResourceKey<? extends Registry<?>>, RegistryOps.RegistryInfo<?>> map = new HashMap();
+            registryAccess.registries().forEach((registryEntry) -> {
+                map.put(registryEntry.key(), createInfoForContextRegistry(registryEntry.value()));
+            });
+            return new RegistryOps.RegistryInfoLookup() {
+                public <T> Optional<RegistryOps.RegistryInfo<T>> lookup(ResourceKey<? extends Registry<? extends T>> resourceKey) {
+                    return Optional.ofNullable((RegistryOps.RegistryInfo)map.get(resourceKey));
+                }
+            };
+        }
+
+        private static <T> RegistryOps.RegistryInfo<T> createInfoForContextRegistry(Registry<T> registry) {
+            return new RegistryOps.RegistryInfo(registry.asLookup(), registry.asTagAddingLookup(), registry.registryLifecycle());
         }
     }
 }
