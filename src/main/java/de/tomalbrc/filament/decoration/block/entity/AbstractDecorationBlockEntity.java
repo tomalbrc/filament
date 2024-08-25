@@ -47,7 +47,7 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
 
     public DecorationBlockEntity getMainBlockEntity() {
         assert this.level != null;
-        return (DecorationBlockEntity)this.level.getBlockEntity(new BlockPos(this.worldPosition).offset(this.main));
+        return (DecorationBlockEntity)this.level.getBlockEntity(new BlockPos(this.worldPosition).subtract(this.main));
     }
 
     @Override
@@ -118,11 +118,7 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     abstract protected void setCollisionStructure(boolean collisionStructure);
 
     protected void setCollision(boolean collision) {
-        if (this.isMain()) {
-            this.setCollisionStructure(collision);
-        } else {
-            this.getMainBlockEntity().setCollisionStructure(collision);
-        }
+        this.getBlockState().setValue(DecorationBlock.PASSTHROUGH, !collision);
     }
 
     public Direction getDirection() {

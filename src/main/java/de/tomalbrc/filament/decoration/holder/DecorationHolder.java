@@ -235,11 +235,11 @@ public class DecorationHolder extends ElementHolder {
     }
 
     public void seatPlayer(Seat seat, ServerPlayer player) {
-        SeatEntity seatEntity = new SeatEntity(EntityRegistry.SEAT_ENTITY, player.level());
+        SeatEntity seatEntity = EntityRegistry.SEAT_ENTITY.create(player.level());
         seatEntity.setPos(this.seatTranslation(seat).add(this.getPos()));
-        seatEntity.setYHeadRot((this.parent.getVisualRotationYInDegrees()+90) * Mth.DEG_TO_RAD);
         player.level().addFreshEntity(seatEntity);
         player.startRiding(seatEntity);
+        seatEntity.setYRot((this.parent.getVisualRotationYInDegrees()-180));
     }
 
     public boolean hasSeatedPlayer(Seat seat) {

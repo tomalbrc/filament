@@ -319,10 +319,10 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
     @Override
     protected void destroyBlocks() {
-        BlockState decorationBlockState = this.getLevel().getBlockState(this.getBlockPos());
+        BlockState decorationBlockState = this.getBlockState();
         if (DecorationRegistry.isDecoration(decorationBlockState) && this.getDecorationData() != null) {
             if (this.getDecorationData().hasBlocks()) {
-                Util.forEachRotated(this.getDecorationData().blocks(), this.main, this.getVisualRotationYInDegrees(), blockPos -> {
+                Util.forEachRotated(this.getDecorationData().blocks(), this.getBlockPos(), this.getVisualRotationYInDegrees(), blockPos -> {
                     if (DecorationRegistry.isDecoration(this.getLevel().getBlockState(blockPos))) {
                         this.getLevel().destroyBlock(blockPos, false);
                         this.getLevel().removeBlockEntity(blockPos);
@@ -337,7 +337,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     @Override
     public void destroyStructure(boolean dropItem) {
         if (!this.isMain()) {
-            if (this.main != null && this.getLevel().getBlockEntity(this.main) instanceof DecorationBlockEntity mainBlockEntity) {
+            if (this.main != null && this.getLevel().getBlockEntity(this.getBlockPos().subtract(this.main)) instanceof DecorationBlockEntity mainBlockEntity) {
                 mainBlockEntity.destroyStructure(dropItem);
             }
             return;
@@ -385,7 +385,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     protected void setCollisionStructure(boolean collisionStructure) {
         if (this.getDecorationData() != null && this.getDecorationData().blocks() != null) {
             Util.forEachRotated(this.getDecorationData().blocks(), this.getBlockPos(), this.getVisualRotationYInDegrees(), blockPos -> {
-                BlockState blockState = this.getLevel().getBlockState(blockPos);
+                BlockState blockState = this.getBlockState();
 
                 if (DecorationRegistry.isDecoration(blockState)) {
                     blockState.setValue(DecorationBlock.PASSTHROUGH, !collisionStructure);
