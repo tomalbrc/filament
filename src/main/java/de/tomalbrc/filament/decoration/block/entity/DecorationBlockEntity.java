@@ -23,7 +23,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -46,9 +45,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class DecorationBlockEntity extends AbstractDecorationBlockEntity implements BlockEntityWithElementHolder, FunctionalDecoration {
-    public static final String DECORATION_KEY = "Decoration";
-    public static final String ITEM_KEY = "Item";
-
     public static final String SHOWCASE_KEY = "Showcase";
 
     @Nullable
@@ -62,8 +58,6 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
     LockImpl lockImpl;
 
-    private ResourceLocation decorationId;
-
     public DecorationBlockEntity(BlockPos pos, BlockState state) {
         super(pos, state);
     }
@@ -72,15 +66,13 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
         super.loadAdditional(compoundTag, provider);
 
-        this.decorationId = ResourceLocation.parse(compoundTag.getString(DECORATION_KEY));
-
         if (this.isMain()) this.loadMain(compoundTag, provider);
     }
 
     public void loadMain(CompoundTag compoundTag, HolderLookup.Provider provider) {
         DecorationData decorationData = this.getDecorationData();
         if (decorationData == null) {
-            Filament.LOGGER.error("No decoration formats for " + (this.decorationId == null ? "(null)" : this.decorationId.toString()) + "!");
+            Filament.LOGGER.error("No decoration formats for " + (this.itemStack.getDescriptionId() == null ? "(null)" : this.itemStack.getDescriptionId()) + "!");
         } else if (this.decorationHolder == null) {
             this.makeHolder();
             this.setupBehaviour(decorationData);
@@ -95,7 +87,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
             for (int i = 0; i < this.decorationHolder.getShowcaseData().size(); i++) {
                 Showcase showcase = this.decorationHolder.getShowcaseData().get(i);
-                String key = ITEM_KEY + i;
+                String key = ITEM + i;
                 if (showcase != null && showcaseTag.contains(key)) {
                     this.decorationHolder.setShowcaseItemStack(showcase, ItemStack.parseOptional(provider, showcaseTag.getCompound(key)));
                 }
@@ -111,10 +103,6 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
         super.saveAdditional(compoundTag, provider);
 
-        if (decorationId != null) {
-            compoundTag.putString(DECORATION_KEY, decorationId.toString());
-        }
-
         if (this.containerImpl != null) {
             this.containerImpl.write(compoundTag, provider);
         }
@@ -129,7 +117,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             for (int i = 0; i < decorationHolder.getShowcaseData().size(); i++) {
                 Showcase showcase = decorationHolder.getShowcaseData().get(i);
                 if (showcase != null && !decorationHolder.getShowcaseItemStack(showcase).isEmpty())
-                    showcaseTag.put(ITEM_KEY + i, decorationHolder.getShowcaseItemStack(showcase).save(provider));
+                    showcaseTag.put(ITEM + i, decorationHolder.getShowcaseItemStack(showcase).save(provider));
             }
 
             compoundTag.put(SHOWCASE_KEY, showcaseTag);
@@ -160,7 +148,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
     @Override
     public void attach(LevelChunk chunk) {
-        if (this.isMain()) {
+        if (this.isMain() && this.itemStack != null) {
             ElementHolder elementHolder = this.makeHolder();
             if (elementHolder.getAttachment() == null) {
                 new BlockBoundAttachment(elementHolder, chunk, this.getBlockState(), this.getBlockPos(), this.getBlockPos().getCenter(), this.animatedHolder != null);
@@ -178,8 +166,6 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
     @Override
     public void setupBehaviour(DecorationData decorationData) {
-        this.decorationId = decorationData.id();
-
         // When placed, decorationId is not yet set?
         if (this.isMain()) {
             assert decorationData.behaviour() != null;
@@ -409,6 +395,6 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     }
 
     public DecorationData getDecorationData() {
-        return DecorationRegistry.getDecorationDefinition(decorationId);
+        return ((DecorationBlock)this.getBlockState().getBlock()).getDecorationData();
     }
 }

@@ -1,9 +1,11 @@
 package de.tomalbrc.filament.decoration.block.entity;
 
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.registry.filament.DecorationRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -13,8 +15,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class AbstractDecorationBlockEntity extends BlockEntity {
+    public static final String MAIN = "Main";
+    public static final String VERSION = "V";
+    public static final String ITEM = "Item";
+    public static final String PASSTHROUGH = "Passthrough";
+    public static final String ROTATION = "Rotation";
+    public static final String DIRECTION = "Direction";
 
     protected BlockPos main;
+    protected int version;
 
     protected int rotation;
 
@@ -29,7 +38,7 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     }
 
     public boolean isMain() {
-        return this.main != null && this.main.equals(this.worldPosition);
+        return this.main != null && this.main.equals(BlockPos.ZERO);
     }
 
     public void setMain(BlockPos main) {
@@ -38,32 +47,49 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
 
     public DecorationBlockEntity getMainBlockEntity() {
         assert this.level != null;
-        return (DecorationBlockEntity)this.level.getBlockEntity(this.main);
+        return (DecorationBlockEntity)this.level.getBlockEntity(new BlockPos(this.worldPosition).offset(this.main));
     }
 
     @Override
     protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
         super.loadAdditional(compoundTag, provider);
 
-        // TODO: safely unwrap optional
-        this.main = NbtUtils.readBlockPos(compoundTag, "Main").get();
-        this.itemStack = ItemStack.parse(provider, compoundTag.getCompound("Item")).get();
+        if (!compoundTag.contains(VERSION)) {
+            this.version = 1;
+            if (compoundTag.contains(MAIN)) this.main = NbtUtils.readBlockPos(compoundTag, MAIN).get().subtract(this.worldPosition);
+        }
+        else {
+            this.version = compoundTag.getInt(VERSION);
+            if (compoundTag.contains(MAIN)) this.main = NbtUtils.readBlockPos(compoundTag, MAIN).get();
+        }
 
-        if (compoundTag.contains("Passthrough")) {
-            this.passthrough = compoundTag.getBoolean("Passthrough");
+        if (compoundTag.contains(ITEM)) {
+            this.itemStack = ItemStack.parseOptional(provider, compoundTag.getCompound(ITEM));
+        }
+
+        if (this.itemStack == null || this.itemStack.isEmpty()) {
+            this.itemStack = BuiltInRegistries.ITEM.get(((DecorationBlock)this.getBlockState().getBlock()).getDecorationData().id()).getDefaultInstance();
+        }
+
+        if (compoundTag.contains(PASSTHROUGH)) {
+            this.passthrough = compoundTag.getBoolean(PASSTHROUGH);
             this.setCollision(!this.passthrough);
         }
 
         if (!this.isMain())
             return;
 
-        this.rotation = compoundTag.getInt("Rotation");
-        this.direction = Direction.from3DDataValue(compoundTag.getInt("Direction"));
+        if (compoundTag.contains(ROTATION))
+            this.rotation = compoundTag.getInt(ROTATION);
+        if (compoundTag.contains(DIRECTION))
+            this.direction = Direction.from3DDataValue(compoundTag.getInt(DIRECTION));
     }
 
     @Override
     protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
         super.saveAdditional(compoundTag, provider);
+
+        if (this.itemStack == null) this.itemStack = BuiltInRegistries.ITEM.get(this.getBlockState().getBlockHolder().unwrapKey().get().location()).getDefaultInstance();
 
         if (this.itemStack == null) {
             Filament.LOGGER.error("No item for decoration! Removing decoration block entity at " + this.getBlockPos().toShortString());
@@ -72,14 +98,18 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
             return;
         }
 
-        compoundTag.put("Item", this.itemStack.save(provider));
+        if (this.itemStack != null)
+            compoundTag.put(ITEM, this.itemStack.save(provider));
 
-        compoundTag.put("Main", NbtUtils.writeBlockPos(this.main));
-        if (this.passthrough) compoundTag.putBoolean("Passthrough", this.passthrough);
+        if (this.main == null) this.main = BlockPos.ZERO;
+
+        compoundTag.put(MAIN, NbtUtils.writeBlockPos(this.main));
+        compoundTag.putInt(VERSION, this.version);
+        compoundTag.putBoolean(PASSTHROUGH, this.passthrough);
 
         if (this.isMain()) {
-            compoundTag.putInt("Rotation", this.rotation);
-            compoundTag.putInt("Direction", this.direction.get3DDataValue());
+            compoundTag.putInt(ROTATION, this.rotation);
+            compoundTag.putInt(DIRECTION, this.direction.get3DDataValue());
         }
     }
 

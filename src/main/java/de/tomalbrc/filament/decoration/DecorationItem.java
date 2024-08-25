@@ -153,7 +153,7 @@ public class DecorationItem extends Item implements PolymerItem, Equipable {
                     level.setBlockAndUpdate(blockPos2, blockState);
 
                     if (!decorationData.isSimple() && level.getBlockEntity(blockPos2) instanceof DecorationBlockEntity decorationBlockEntity) {
-                        decorationBlockEntity.setMain(relativeBlockPos);
+                        decorationBlockEntity.setMain(new BlockPos(blockPos2).subtract(relativeBlockPos));
                         decorationBlockEntity.setItem(itemStack.copyWithCount(1));
                         decorationBlockEntity.setRotation(finalRotation);
                         decorationBlockEntity.setDirection(direction);
@@ -182,7 +182,7 @@ public class DecorationItem extends Item implements PolymerItem, Equipable {
 
                 level.setBlockAndUpdate(relativeBlockPos, blockState);
                 if (!decorationData.isSimple() && level.getBlockEntity(relativeBlockPos) instanceof DecorationBlockEntity decorationBlockEntity) {
-                    decorationBlockEntity.setMain(relativeBlockPos);
+                    decorationBlockEntity.setMain(BlockPos.ZERO);
                     decorationBlockEntity.setItem(itemStack.copyWithCount(1));
                     decorationBlockEntity.setRotation(rotation);
                     decorationBlockEntity.setDirection(direction);
