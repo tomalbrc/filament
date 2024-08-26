@@ -1,9 +1,11 @@
 package de.tomalbrc.filament.data.behaviours.item;
 
+import de.tomalbrc.filament.behaviour.item.ItemBehaviour;
+
 /**
  * Food behaviours for edible items
  */
-public class Food {
+public class Food implements ItemBehaviour {
     /**
      * The amount of hunger restored when consumed.
      */

@@ -1,12 +1,14 @@
 package de.tomalbrc.filament.data.behaviours.item;
 
+import de.tomalbrc.filament.behaviour.Behaviour;
+import de.tomalbrc.filament.behaviour.item.ItemBehaviour;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 
 /**
  * Armor item behaviours, using fancypants shader via polymer
  */
-public class Armor {
+public class Armor implements ItemBehaviour {
     /**
      * The equipment slot for the armor piece (e.g., head, chest, legs, or feet).
      */

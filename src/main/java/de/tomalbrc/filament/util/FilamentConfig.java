@@ -11,7 +11,6 @@ public class FilamentConfig {
     static Path CONFIG_FILE_PATH = Constants.CONFIG_DIR.resolve("filament.json");
     static FilamentConfig instance;
 
-    public boolean enchantments = false;
     public boolean emissive_shader = true;
 
     public boolean commands = true;

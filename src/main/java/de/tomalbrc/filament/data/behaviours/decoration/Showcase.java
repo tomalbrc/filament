@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.data.behaviours.decoration;
 
+import de.tomalbrc.filament.behaviour.decoration.DecorationBehaviour;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import org.joml.Quaternionf;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * For item showcase decoration
  */
-public class Showcase {
+public class Showcase implements DecorationBehaviour {
     /**
      * Offset for positioning the showcased item
      */

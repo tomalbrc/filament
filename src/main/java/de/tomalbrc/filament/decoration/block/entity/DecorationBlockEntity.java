@@ -13,6 +13,7 @@ import de.tomalbrc.filament.decoration.util.impl.ContainerImpl;
 import de.tomalbrc.filament.decoration.util.impl.LockImpl;
 import de.tomalbrc.filament.registry.filament.DecorationRegistry;
 import de.tomalbrc.filament.registry.filament.ModelRegistry;
+import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.FilamentContainer;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
@@ -127,9 +128,10 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     @Override
     public ElementHolder makeHolder() {
         if (this.level != null && this.getDecorationData() != null && this.getDecorationData().hasAnimation() && this.animatedHolder == null) {
-            Model model = ModelRegistry.getModel(this.getDecorationData().behaviour().animation.model);
+            Animation animation = this.getDecorationData().behaviour().get(Constants.Behaviours.ANIMATION);
+            Model model = ModelRegistry.getModel(animation.model);
             if (model == null) {
-                Filament.LOGGER.error("No Animated-Java model named '" + this.getDecorationData().behaviour().animation.model + "' was found!");
+                Filament.LOGGER.error("No Animated-Java model named '" + animation.model + "' was found!");
             } else {
                 this.animatedHolder = new AnimatedHolder(this, model);
             }
@@ -171,11 +173,13 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             assert decorationData.behaviour() != null;
 
             if (decorationData.isContainer()) {
-                this.setContainerData(decorationData.behaviour().container);
+                Container container = decorationData.behaviour().get(Constants.Behaviours.CONTAINER);
+                this.setContainerData(container);
             }
 
             if (decorationData.isLock()) {
-                this.setLockData(decorationData.behaviour().lock);
+                Lock lock = decorationData.behaviour().get(Constants.Behaviours.LOCK);
+                this.setLockData(lock);
             }
 
             if (this.decorationHolder == null && this.animatedHolder == null) {
@@ -183,20 +187,25 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             }
 
             if (decorationData.isSeat()) {
-                this.setSeatData(decorationData.behaviour().seat);
+                List<Seat> seat = decorationData.behaviour().get(Constants.Behaviours.SEAT);
+                this.setSeatData(seat);
             }
 
             if (decorationData.isShowcase()) {
-                this.setShowcaseData(decorationData.behaviour().showcase);
+                List<Showcase> showcase = decorationData.behaviour().get(Constants.Behaviours.SHOWCASE);
+                this.setShowcaseData(showcase);
             }
 
             if (decorationData.hasAnimation()) {
-                this.setAnimationData(decorationData.behaviour().animation);
+                Animation animation = decorationData.behaviour().get(Constants.Behaviours.LOCK);
+                this.setAnimationData(animation);
             }
         }
 
-        if (this.getDecorationData().isContainer() && this.getDecorationData().behaviour().container.canPickup && this.getItem().has(DataComponents.CONTAINER)) {
-            Objects.requireNonNull(this.itemStack.get(DataComponents.CONTAINER)).copyInto(containerImpl.container().items);
+        if (this.getDecorationData().isContainer() && this.getItem().has(DataComponents.CONTAINER)) {
+            Container container = this.getDecorationData().behaviour().get(Constants.Behaviours.CONTAINER);
+            if (container.canPickup)
+                Objects.requireNonNull(this.itemStack.get(DataComponents.CONTAINER)).copyInto(containerImpl.container().items);
         }
     }
 
@@ -345,19 +354,24 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
         if (dropItem) {
             ItemStack itemStack = this.getItem();
-            if (this.getDecorationData().isContainer() && this.getDecorationData().behaviour().container.canPickup) {
-                itemStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(this.containerImpl.container().getItems()));
+            if (this.getDecorationData().isContainer()) {
+                Container container = this.getDecorationData().behaviour().get(Constants.Behaviours.CONTAINER);
+                if (container.canPickup)
+                    itemStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(this.containerImpl.container().getItems()));
             }
 
             Util.spawnAtLocation(this.getLevel(), this.getBlockPos().getCenter(), itemStack);
         }
 
-        if (this.containerImpl != null && this.getDecorationData().isContainer() && !this.getDecorationData().behaviour().container.canPickup) {
-            this.containerImpl.container().setValid(false);
-            for (ItemStack itemStack : this.containerImpl.container().items) {
-                if (itemStack.isEmpty()) continue;
+        if (this.containerImpl != null && this.getDecorationData().isContainer()) {
+            Container container = this.getDecorationData().behaviour().get(Constants.Behaviours.CONTAINER);
+            if (!container.canPickup) {
+                this.containerImpl.container().setValid(false);
+                for (ItemStack itemStack : this.containerImpl.container().items) {
+                    if (itemStack.isEmpty()) continue;
 
-                Util.spawnAtLocation(this.getLevel(), this.getBlockPos().getCenter(), itemStack);
+                    Util.spawnAtLocation(this.getLevel(), this.getBlockPos().getCenter(), itemStack);
+                }
             }
         }
 

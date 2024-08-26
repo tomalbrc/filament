@@ -1,11 +1,12 @@
 package de.tomalbrc.filament.data.behaviours.decoration;
 
+import de.tomalbrc.filament.behaviour.decoration.DecorationBehaviour;
 import net.minecraft.resources.ResourceLocation;
 
 /**
  * Lock behaviours for decoration
  */
-public class Lock {
+public class Lock implements DecorationBehaviour {
         /**
          * The identifier of the key required to unlock.
          */

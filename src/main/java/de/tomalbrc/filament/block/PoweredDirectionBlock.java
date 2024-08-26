@@ -2,11 +2,11 @@ package de.tomalbrc.filament.block;
 
 import com.mojang.serialization.MapCodec;
 import de.tomalbrc.filament.data.BlockData;
-import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
+import de.tomalbrc.filament.data.behaviours.block.Repeater;
+import de.tomalbrc.filament.util.Constants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -18,17 +18,17 @@ import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.ticks.TickPriority;
 
 import java.util.HashMap;
 
-public class PoweredDirectionBlock extends DirectionalBlock implements PolymerTexturedBlock {
+public class PoweredDirectionBlock extends SimpleBlock {
     public static final IntegerProperty POWER = IntegerProperty.create("power", 0, 15);
-    public static final BooleanProperty POWERED = BooleanProperty.create("powered");
 
-    private final HashMap<String, BlockState> stateMap;
-    private final BlockState breakEventState;
+    public static final DirectionProperty FACING = DirectionalBlock.FACING;
+    public static final BooleanProperty POWERED = BooleanProperty.create("powered");
 
     private final boolean isRelay;
     private int delay = 1;
@@ -39,17 +39,15 @@ public class PoweredDirectionBlock extends DirectionalBlock implements PolymerTe
     }
 
     public PoweredDirectionBlock(Properties properties, BlockData data) {
-        super(properties);
+        super(properties, data);
         this.registerDefaultState(this.stateDefinition.any().setValue(POWER, 0).setValue(POWERED, false));
 
         this.isRelay = data.isRepeater();
-        if (this.isRelay && data.behaviour().repeater != null) {
-            this.delay = data.behaviour().repeater.delay;
-            this.loss = data.behaviour().repeater.loss;
+        if (this.isRelay &&  data.behaviour().get(Constants.Behaviours.REPEATER) != null) {
+            Repeater repeater = data.behaviour().get(Constants.Behaviours.REPEATER);
+            this.delay = repeater.delay;
+            this.loss = repeater.loss;
         }
-
-        this.stateMap = data.createStateMap();
-        this.breakEventState = data.properties().blockBase.defaultBlockState();
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
@@ -160,11 +158,6 @@ public class PoweredDirectionBlock extends DirectionalBlock implements PolymerTe
             super.onRemove(blockState, level, blockPos, blockState2, bl);
             this.updateNeighborsOnBack(level, blockPos, blockState);
         }
-    }
-
-    @Override
-    public BlockState getPolymerBreakEventBlockState(BlockState state, ServerPlayer player) {
-        return this.breakEventState;
     }
 
     @Override

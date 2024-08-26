@@ -5,9 +5,11 @@ import de.tomalbrc.filament.cosmetic.AnimatedCosmeticHolder;
 import de.tomalbrc.filament.cosmetic.CosmeticHolder;
 import de.tomalbrc.filament.cosmetic.CosmeticInterface;
 import de.tomalbrc.filament.cosmetic.CosmeticUtil;
+import de.tomalbrc.filament.data.behaviours.item.Armor;
 import de.tomalbrc.filament.data.behaviours.item.Cosmetic;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.registry.filament.ModelRegistry;
+import de.tomalbrc.filament.util.Constants;
 import eu.pb4.polymer.virtualentity.api.attachment.EntityAttachment;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -40,7 +42,8 @@ public class LivingEntityMixin implements CosmeticInterface {
             cir.setReturnValue(cosmetic.slot);
         }
         if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.getItemData().isArmor()) {
-            cir.setReturnValue(simpleItem.getItemData().behaviour().armor.slot);
+            Armor armor = simpleItem.getItemData().behaviour().get(Constants.Behaviours.ARMOR);
+            cir.setReturnValue(armor.slot);
         }
     }
 

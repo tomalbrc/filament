@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.mixin;
 
 import de.tomalbrc.filament.registry.RegistryUnfreezer;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.MappedRegistry;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +21,7 @@ public class MappedRegistryMixin<T> implements RegistryUnfreezer {
     private boolean frozen;
 
     public void filament$unfreeze() {
-        this.unregisteredIntrusiveHolders = new IdentityHashMap<>();
+        this.unregisteredIntrusiveHolders = new Reference2ObjectOpenHashMap<>();
         this.frozen = false;
     }
 }

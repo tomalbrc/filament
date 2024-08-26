@@ -1,7 +1,12 @@
 package de.tomalbrc.filament.item;
 
 import de.tomalbrc.filament.data.ItemData;
+import de.tomalbrc.filament.data.behaviours.item.Armor;
+import de.tomalbrc.filament.data.behaviours.item.Cosmetic;
+import de.tomalbrc.filament.data.behaviours.item.Execute;
+import de.tomalbrc.filament.data.behaviours.item.Fuel;
 import de.tomalbrc.filament.registry.filament.FuelRegistry;
+import de.tomalbrc.filament.util.Constants;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.resourcepack.api.PolymerArmorModel;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
@@ -39,8 +44,10 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
         this.modelData = this.itemData.requestModels();
 
         // For armor
-        if (this.itemData.isArmor() && this.itemData.behaviour().armor.texture != null) {
-            this.armorModel = PolymerResourcePackUtils.requestArmor(this.itemData.behaviour().armor.texture);
+        if (this.itemData.isArmor()) {
+            Armor armor = this.itemData.behaviour().get(Constants.Behaviours.ARMOR);
+            if (armor.texture != null)
+                this.armorModel = PolymerResourcePackUtils.requestArmor(armor.texture);
         }
 
         if (this.itemData.isCosmetic() || this.itemData.isArmor()) {
@@ -48,7 +55,8 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
         }
 
         if (this.itemData.isFuel()) {
-            FuelRegistry.add(this, this.itemData.behaviour().fuel.value);
+            Fuel fuel = this.itemData.behaviour().get(Constants.Behaviours.FUEL);
+            FuelRegistry.add(this, fuel.value);
         }
     }
 
@@ -87,11 +95,16 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
     @Override
     @NotNull
     public EquipmentSlot getEquipmentSlot() {
-        boolean armor = itemData.isArmor() && itemData.behaviour().armor.slot != null;
-        boolean cosmetic = itemData.isCosmetic() && itemData.behaviour().cosmetic.slot != null;
-        if (armor || cosmetic) {
-            return armor ? itemData.behaviour().armor.slot : itemData.behaviour().cosmetic.slot;
+        boolean isArmor = itemData.isArmor();
+        boolean isCosmetic = itemData.isCosmetic();
+        if (isArmor) {
+            Armor armor = itemData.behaviour().get(Constants.Behaviours.ARMOR);
+            if (armor.slot != null) return armor.slot;
+        } else if (isCosmetic) {
+            Cosmetic cosmetic = itemData.behaviour().get(Constants.Behaviours.COSMETIC);
+            if (cosmetic.slot != null) return cosmetic.slot;
         }
+
         return EquipmentSlot.MAINHAND;
     }
 
@@ -100,22 +113,25 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
     public InteractionResultHolder<ItemStack> use(Level level, Player user, InteractionHand hand) {
         var res = super.use(level, user, hand);
 
-        if (this.itemData.canExecute() && this.itemData.behaviour().execute.command != null) {
-            user.getServer().getCommands().performPrefixedCommand(user.createCommandSourceStack(), this.itemData.behaviour().execute.command);
+        if (this.itemData.canExecute()) {
+            Execute execute = this.itemData.behaviour().get(Constants.Behaviours.EXECUTE);
+            if (execute.command != null) {
+                user.getServer().getCommands().performPrefixedCommand(user.createCommandSourceStack(), execute.command);
 
-            user.awardStat(Stats.ITEM_USED.get(this));
+                user.awardStat(Stats.ITEM_USED.get(this));
 
-            if (this.itemData.behaviour().execute.sound != null) {
-                var sound = this.itemData.behaviour().execute.sound;
-                level.playSound(null, user, BuiltInRegistries.SOUND_EVENT.get(sound), SoundSource.PLAYERS, 1.0F, 1.0F);
+                if (execute.sound != null) {
+                    var sound = execute.sound;
+                    level.playSound(null, user, BuiltInRegistries.SOUND_EVENT.get(sound), SoundSource.PLAYERS, 1.0F, 1.0F);
+                }
+
+                if (execute.consumes) {
+                    user.getItemInHand(hand).shrink(1);
+                    res = InteractionResultHolder.consume(user.getItemInHand(hand));
+                }
+                else
+                    res = InteractionResultHolder.consume(user.getItemInHand(hand));
             }
-
-            if (this.itemData.behaviour().execute.consumes) {
-                user.getItemInHand(hand).shrink(1);
-                res = InteractionResultHolder.consume(user.getItemInHand(hand));
-            }
-            else
-                res = InteractionResultHolder.consume(user.getItemInHand(hand));
         }
 
         if (this.itemData.isArmor() || this.itemData.isCosmetic()) {

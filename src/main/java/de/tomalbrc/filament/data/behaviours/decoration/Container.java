@@ -1,9 +1,11 @@
 package de.tomalbrc.filament.data.behaviours.decoration;
 
+import de.tomalbrc.filament.behaviour.decoration.DecorationBehaviour;
+
 /**
  * Decoration containers, such as chests, or just drawers etc.
  */
-public class Container {
+public class Container implements DecorationBehaviour {
         /**
          * The name displayed in the container UI
          */

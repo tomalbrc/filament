@@ -1,9 +1,12 @@
 package de.tomalbrc.filament.registry.filament;
 
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.api.registry.BlockTypeRegistry;
 import de.tomalbrc.filament.block.*;
 import de.tomalbrc.filament.data.BlockData;
+import de.tomalbrc.filament.data.behaviours.block.Strippable;
 import de.tomalbrc.filament.data.properties.BlockProperties;
+import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
@@ -18,6 +21,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -34,15 +38,13 @@ public class BlockRegistry {
 
         BlockBehaviour.Properties blockProperties = properties.toBlockProperties();
 
-        Block customBlock = switch (data.type() == null ? BlockData.BlockType.block : data.type()) {
-            case block -> new SimpleBlock(blockProperties, data);
-            case column -> new AxisBlock(blockProperties, data);
-            case count -> new CountBlock(blockProperties, data);
-            case powerlevel -> new PowerlevelBlock(blockProperties, data);
-            case powered_directional -> new PoweredDirectionBlock(blockProperties, data);
-            case slab -> new SimpleSlabBlock(blockProperties, data);
-            case directional, horizontal_directional -> throw new UnsupportedOperationException("Not implemented");
-        };
+        Class<? extends Block> blockClass = BlockTypeRegistry.get(data.type());
+        Block customBlock;
+        try {
+            customBlock = blockClass.getDeclaredConstructor(BlockBehaviour.Properties.class, BlockData.class).newInstance(blockProperties, data);
+        } catch (InstantiationException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
 
         if (customBlock != null) {
             var itemProperties = data.properties().toItemProperties();
@@ -53,7 +55,8 @@ public class BlockRegistry {
             }
 
             if (data.isStrippable()) {
-                StrippableRegistry.add(customBlock.defaultBlockState(), data.behaviour().strippable.replacement);
+                Strippable strippable = data.behaviour().get(Constants.Behaviours.STRIPPABLE);
+                StrippableRegistry.add(customBlock.defaultBlockState(), strippable.replacement);
             }
 
             SimpleBlockItem item = new SimpleBlockItem(itemProperties, customBlock, data);

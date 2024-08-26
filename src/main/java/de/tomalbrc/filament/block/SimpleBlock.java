@@ -1,9 +1,12 @@
 package de.tomalbrc.filament.block;
 
 import de.tomalbrc.filament.data.BlockData;
+import de.tomalbrc.filament.data.behaviours.block.Powersource;
+import de.tomalbrc.filament.util.Constants;
 import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
@@ -13,10 +16,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.HashMap;
 
 public class SimpleBlock extends Block implements PolymerTexturedBlock {
-    private final HashMap<String, BlockState> stateMap;
-    private final BlockState breakEventState;
-
-    private final BlockData blockData;
+    protected final HashMap<String, BlockState> stateMap;
+    protected final BlockState breakEventState;
+    protected final BlockData blockData;
 
     public SimpleBlock(BlockBehaviour.Properties properties, BlockData data) {
         super(properties);
@@ -45,7 +47,8 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock {
     public int getSignal(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, Direction direction) {
         if (this.blockData.isPowersource()) {
             assert this.blockData.behaviour() != null;
-            return this.blockData.behaviour().powersource.value;
+            Powersource powersource = this.blockData.behaviour().get(Constants.Behaviours.POWERSOURCE);
+            return powersource.value;
         } else {
             return 0;
         }

@@ -1,10 +1,14 @@
 package de.tomalbrc.filament.block;
 
 import de.tomalbrc.filament.data.BlockData;
+import de.tomalbrc.filament.data.behaviours.item.Cosmetic;
+import de.tomalbrc.filament.data.behaviours.item.Fuel;
 import de.tomalbrc.filament.registry.filament.FuelRegistry;
+import de.tomalbrc.filament.util.Constants;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -32,7 +36,8 @@ public class SimpleBlockItem extends CustomBlockItem implements PolymerItem, Equ
         );
 
         if (data.isFuel()) {
-            FuelRegistry.add(this, this.blockData.behaviour().fuel.value);
+            Fuel fuel = this.blockData.behaviour().get(Constants.Behaviours.FUEL);
+            FuelRegistry.add(this, fuel.value);
         }
     }
 
@@ -65,9 +70,9 @@ public class SimpleBlockItem extends CustomBlockItem implements PolymerItem, Equ
     @Override
     @NotNull
     public EquipmentSlot getEquipmentSlot() {
-        boolean cosmetic = blockData.isCosmetic() && blockData.behaviour().cosmetic.slot != null;
-        if (cosmetic) {
-            return blockData.behaviour().cosmetic.slot;
+        if (blockData.isCosmetic()) {
+            Cosmetic cosmetic = blockData.behaviour().get(Constants.Behaviours.COSMETIC);
+            return cosmetic.slot;
         }
         return EquipmentSlot.MAINHAND;
     }

@@ -5,6 +5,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import de.tomalbrc.filament.data.BlockData;
+import de.tomalbrc.filament.data.behaviours.block.BehaviourMap;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.Registry;
@@ -43,7 +45,9 @@ public class Json {
             .registerTypeHierarchyAdapter(PushReaction.class, new PushReactionDeserializer())
             .registerTypeHierarchyAdapter(Block.class, new RegistryDeserializer<>(BuiltInRegistries.BLOCK))
             .registerTypeHierarchyAdapter(Item.class, new RegistryDeserializer<>(BuiltInRegistries.ITEM))
-            .registerTypeAdapter(SoundEvent.class, new RegistryDeserializer<>(BuiltInRegistries.SOUND_EVENT))
+            .registerTypeHierarchyAdapter(SoundEvent.class, new RegistryDeserializer<>(BuiltInRegistries.SOUND_EVENT))
+            .registerTypeHierarchyAdapter(BehaviourMap.class, new BehaviourMap.Deserializer())
+            .registerTypeHierarchyAdapter(BlockData.BlockType.class, new BlockData.BlockType.Deserializer())
             .create();
 
     public static class BlockStateDeserializer implements JsonDeserializer<BlockState> {

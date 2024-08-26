@@ -1,9 +1,8 @@
 package de.tomalbrc.filament.data.behaviours.item;
 
+import de.tomalbrc.filament.behaviour.item.ItemBehaviour;
 
-// TODO: document all "mechanics" a.k.a. "behaviours"
-
-public class ItemBehaviourList {
+public class ItemBehaviourList implements ItemBehaviour {
     public Shoot shoot = null;
 
     public Armor armor = null;

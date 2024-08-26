@@ -2,6 +2,7 @@ package de.tomalbrc.filament.item;
 
 import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.data.behaviours.item.Trap;
+import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
@@ -37,7 +38,7 @@ public class TrapItem extends SimpleItem {
     }
 
     private Trap trapData() {
-        Trap trap = this.itemData.behaviour().trap;
+        Trap trap = this.itemData.behaviour().get(Constants.Behaviours.TRAP);
         return trap;
     }
 
@@ -81,7 +82,7 @@ public class TrapItem extends SimpleItem {
     public void use(Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
 
-        Trap trap = this.itemData.behaviour().trap;
+        Trap trap = this.itemData.behaviour().get(Constants.Behaviours.TRAP);
         player.startUsingItem(hand);
 
         if (trap.useDuration > 0) player.getCooldowns().addCooldown(this, trap.useDuration);

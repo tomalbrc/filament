@@ -1,11 +1,12 @@
 package de.tomalbrc.filament.data.behaviours.item;
 
+import de.tomalbrc.filament.behaviour.item.ItemBehaviour;
 import net.minecraft.resources.ResourceLocation;
 
 /**
  * Item behaviours for projectile shooting
  */
-public class Shoot {
+public class Shoot implements ItemBehaviour {
     /**
      * Indicates whether the shooting action consumes the item
      */

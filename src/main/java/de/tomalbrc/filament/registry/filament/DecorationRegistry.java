@@ -2,11 +2,13 @@ package de.tomalbrc.filament.registry.filament;
 
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.DecorationData;
+import de.tomalbrc.filament.data.behaviours.decoration.Container;
 import de.tomalbrc.filament.decoration.DecorationItem;
 import de.tomalbrc.filament.decoration.block.ComplexDecorationBlock;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -77,8 +79,9 @@ public class DecorationRegistry {
             }
         }
 
-        if (data.isContainer() && data.behaviour().container.canPickup) {
-            properties.component(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
+        if (data.isContainer()) {
+            Container container = data.behaviour().get(Constants.Behaviours.CONTAINER);
+            if (container.canPickup) properties.component(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
         }
 
         ItemRegistry.registerItem(data.id(), new DecorationItem(data, properties), ItemRegistry.CUSTOM_DECORATIONS);

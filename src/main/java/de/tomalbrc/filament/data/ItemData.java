@@ -1,8 +1,9 @@
 package de.tomalbrc.filament.data;
 
-import de.tomalbrc.filament.data.behaviours.item.ItemBehaviourList;
+import de.tomalbrc.filament.data.behaviours.block.BehaviourMap;
 import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.data.resource.ItemResource;
+import de.tomalbrc.filament.util.Constants;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -17,7 +18,7 @@ public record ItemData(
         @NotNull ResourceLocation id,
         @Nullable Item vanillaItem,
         @Nullable ItemResource itemResource,
-        @Nullable ItemBehaviourList behaviour,
+        @Nullable BehaviourMap behaviour,
         @Nullable ItemProperties properties,
         @Nullable DataComponentMap components
 ) {
@@ -32,33 +33,33 @@ public record ItemData(
     }
 
     public boolean isFood() {
-        return this.behaviour != null && this.behaviour.food != null;
+        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.FOOD) != null;
     }
 
     public boolean isArmor() {
-        return this.behaviour != null && this.behaviour.armor != null;
+        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.ARMOR) != null;
     }
 
     public boolean isCosmetic() {
-        return this.behaviour != null && this.behaviour.cosmetic != null;
+        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.COSMETIC) != null;
     }
 
     public boolean isFuel() {
-        return this.behaviour != null && this.behaviour.fuel != null;
+        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.FUEL) != null;
     }
 
     public boolean canShoot() {
-        return this.behaviour != null && this.behaviour.shoot != null;
+        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.SHOOT) != null;
     }
     public boolean isInstrument() {
-        return this.behaviour != null && this.behaviour.instrument != null && this.behaviour.instrument.sound != null;
+        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.INSTRUMENT) != null;
     }
 
     public boolean isTrap() {
-        return this.behaviour != null && this.behaviour.trap != null && this.behaviour.trap.types != null;
+        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.TRAP) != null;
     }
 
     public boolean canExecute() {
-        return this.behaviour != null && this.behaviour.execute != null;
+        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.EXECUTE) != null;
     }
 }

@@ -1,6 +1,8 @@
 package de.tomalbrc.filament.data.properties;
 
-import de.tomalbrc.filament.data.behaviours.item.ItemBehaviourList;
+import de.tomalbrc.filament.data.behaviours.block.BehaviourMap;
+import de.tomalbrc.filament.data.behaviours.item.Food;
+import de.tomalbrc.filament.util.Constants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
@@ -24,10 +26,10 @@ public class ItemProperties {
     }
 
     public Item.Properties toItemProperties() {
-        return toItemProperties(null, null);
+        return toItemProperties(null);
     }
 
-    public Item.Properties toItemProperties(@Nullable Item vanillaItem, @Nullable ItemBehaviourList behaviour) {
+    public Item.Properties toItemProperties(@Nullable BehaviourMap behaviour) {
         Item.Properties props = new Item.Properties();
         props.stacksTo(stackSize);
 
@@ -37,12 +39,14 @@ public class ItemProperties {
         if (fireResistant)
             props.fireResistant();
 
-        if (behaviour != null && behaviour.food != null) {
+        if (behaviour != null && behaviour.get(Constants.Behaviours.FOOD) != null) {
+            Food food = behaviour.get(Constants.Behaviours.FOOD);
+
             FoodProperties.Builder builder = new FoodProperties.Builder();
-            if (behaviour.food.canAlwaysEat) builder.alwaysEdible();
-            if (behaviour.food.fastfood) builder.fast();
-            builder.saturationModifier(behaviour.food.saturation);
-            builder.nutrition(behaviour.food.hunger);
+            if (food.canAlwaysEat) builder.alwaysEdible();
+            if (food.fastfood) builder.fast();
+            builder.saturationModifier(food.saturation);
+            builder.nutrition(food.hunger);
 
             props.food(builder.build());
         }

@@ -1,11 +1,12 @@
 package de.tomalbrc.filament.data.behaviours.decoration;
 
+import de.tomalbrc.filament.behaviour.decoration.DecorationBehaviour;
 import org.joml.Vector3f;
 
 /**
  * Seat behaviours for decoration
  */
-public class Seat {
+public class Seat implements DecorationBehaviour {
     /**
      * The player seating offset
      */

@@ -1,6 +1,8 @@
 package de.tomalbrc.filament;
 
 import com.mojang.logging.LogUtils;
+import de.tomalbrc.filament.api.registry.BehaviourRegistry;
+import de.tomalbrc.filament.api.registry.BlockTypeRegistry;
 import de.tomalbrc.filament.command.DyeCommand;
 import de.tomalbrc.filament.command.HatCommand;
 import de.tomalbrc.filament.command.PickCommand;
@@ -24,15 +26,13 @@ public class Filament implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        FilamentConfig.load();
-
         PolymerResourcePackUtils.markAsRequired();
 
-        EntityRegistry.register();
+        FilamentConfig.load();
+        BehaviourRegistry.init();
+        BlockTypeRegistry.init();
 
-        if (FilamentConfig.getInstance().enchantments) {
-            PolymerResourcePackUtils.addModAssets(Constants.MOD_ID); // for translations
-        }
+        EntityRegistry.register();
 
         if (FilamentConfig.getInstance().commands) {
             CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> {

@@ -2,6 +2,7 @@ package de.tomalbrc.filament.item;
 
 import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.data.behaviours.item.Instrument;
+import de.tomalbrc.filament.util.Constants;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -26,7 +27,7 @@ public class InstrumentItem extends SimpleItem {
 
         if (itemData.isInstrument()) {
             assert itemData.behaviour() != null;
-            Instrument instrument = itemData.behaviour().instrument;
+            Instrument instrument = itemData.behaviour().get(Constants.Behaviours.INSTRUMENT);
             player.startUsingItem(interactionHand);
             play(level, player, instrument);
             if (instrument.useDuration > 0) player.getCooldowns().addCooldown(this, instrument.useDuration);

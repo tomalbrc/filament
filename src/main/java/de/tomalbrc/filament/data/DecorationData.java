@@ -1,7 +1,8 @@
 package de.tomalbrc.filament.data;
 
-import de.tomalbrc.filament.data.behaviours.decoration.DecorationBehaviourList;
+import de.tomalbrc.filament.data.behaviours.block.BehaviourMap;
 import de.tomalbrc.filament.data.properties.DecorationProperties;
+import de.tomalbrc.filament.util.Constants;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.minecraft.core.component.DataComponentMap;
@@ -28,7 +29,7 @@ public record DecorationData(
 
         @Nullable DecorationProperties properties,
 
-        @Nullable DecorationBehaviourList behaviour,
+        @Nullable BehaviourMap behaviour,
         @Nullable DataComponentMap components
 ) {
     public PolymerModelData requestModel() {
@@ -36,15 +37,15 @@ public record DecorationData(
     }
 
     public boolean isSeat() {
-        return this.behaviour != null && this.behaviour.seat != null;
+        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.SEAT) != null;
     }
 
     public boolean isContainer() {
-        return this.behaviour != null && this.behaviour.container != null;
+        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.CONTAINER) != null;
     }
 
     public boolean hasAnimation() {
-        return this.behaviour != null && this.behaviour.animation != null;
+        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.ANIMATION) != null;
     }
 
     public boolean hasBlocks() {
@@ -52,15 +53,15 @@ public record DecorationData(
     }
 
     public boolean isShowcase() {
-        return this.behaviour != null && this.behaviour.showcase != null;
+        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.SHOWCASE) != null;
     }
 
     public boolean isLock() {
-        return this.behaviour != null && this.behaviour.lock != null;
+        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.LOCK) != null;
     }
 
     public boolean isFuel() {
-        return this.behaviour != null && this.behaviour.fuel != null;
+        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.FUEL) != null;
     }
 
     public boolean isSimple() {
@@ -71,7 +72,7 @@ public record DecorationData(
     }
 
     public boolean isCosmetic() {
-        return this.behaviour != null && this.behaviour.cosmetic != null;
+        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.COSMETIC) != null;
     }
 
     public record BlockConfig(Vector3f origin,

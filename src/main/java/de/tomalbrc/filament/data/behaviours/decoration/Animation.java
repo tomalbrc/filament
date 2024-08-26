@@ -1,11 +1,12 @@
 package de.tomalbrc.filament.data.behaviours.decoration;
 
+import de.tomalbrc.filament.behaviour.decoration.DecorationBehaviour;
 import net.minecraft.resources.ResourceLocation;
 
 /**
  * Animation behaviours for decoration using animated java models (powered by nylon)
  */
-public class Animation {
+public class Animation implements DecorationBehaviour {
     /**
      * The name of the animated model associated with this animation (if applicable).
      */

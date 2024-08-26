@@ -16,6 +16,7 @@ public record BlockResource(Map<String, ResourceLocation> models,
         return this.textures != null;
     }
 
+    /*
     public boolean hasValidModels(BlockData.BlockType type) {
         if (models == null || type == null)
             return false;
@@ -86,5 +87,5 @@ public record BlockResource(Map<String, ResourceLocation> models,
         }
 
         return false;
-    }
+    }*/
 }

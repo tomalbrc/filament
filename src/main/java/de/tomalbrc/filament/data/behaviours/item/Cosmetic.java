@@ -1,5 +1,7 @@
 package de.tomalbrc.filament.data.behaviours.item;
 
+import de.tomalbrc.filament.behaviour.Behaviour;
+import de.tomalbrc.filament.behaviour.item.ItemBehaviour;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 import org.joml.Vector3f;
@@ -7,7 +9,7 @@ import org.joml.Vector3f;
 /**
  * Cosmetics; either head or chestplate slot, can be Blockbenchmodel for chestplate slot or simple item model for either
  */
-public class Cosmetic {
+public class Cosmetic implements ItemBehaviour {
     /**
      * The equipment slot for the cosmetic (head, chest).
      */

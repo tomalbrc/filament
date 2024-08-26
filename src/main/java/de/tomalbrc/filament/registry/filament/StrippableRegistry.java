@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.Map;
 
 public class StrippableRegistry {
-    private static Map<BlockState, ResourceLocation> strippables = new Reference2ObjectArrayMap<>();
+    private static final Map<BlockState, ResourceLocation> strippables = new Reference2ObjectArrayMap<>();
 
     public static BlockState getStrippable(BlockState blockState) {
         return BuiltInRegistries.BLOCK.get(strippables.get(blockState)).defaultBlockState();

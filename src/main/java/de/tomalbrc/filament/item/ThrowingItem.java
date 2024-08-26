@@ -3,6 +3,7 @@ package de.tomalbrc.filament.item;
 import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.data.behaviours.item.Shoot;
 import de.tomalbrc.filament.registry.filament.EntityRegistry;
+import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -26,7 +27,7 @@ public class ThrowingItem extends SimpleItem implements PolymerItem {
     public ThrowingItem(Item.Properties properties, ItemData itemData) {
         super(properties, itemData);
         assert itemData.behaviour() != null;
-        this.shootBehaviour = itemData.behaviour().shoot;
+        this.shootBehaviour = itemData.behaviour().get(Constants.Behaviours.SHOOT);
     }
 
     @Override

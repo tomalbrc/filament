@@ -21,13 +21,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class DefaultModelDataMixin {
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void filament$additionalBlockModelTypes(CallbackInfo ci) {
-        addTripwire(false, BlockModelType.valueOf("TRIPWIRE_BLOCK"));
-        addTripwire(true, BlockModelType.valueOf("FLAT_TRIPWIRE_BLOCK"));
-        addPetriSlab(BlockModelType.valueOf("SLAB_BLOCK"));
+        filament$addSlabs(BlockModelType.valueOf("SLAB_BLOCK"));
     }
 
     @Unique
-    private static void addPetriSlab(BlockModelType modelType) {
+    private static void filament$addSlabs(BlockModelType modelType) {
         ObjectArrayList<BlockState> list = new ObjectArrayList<>();
 
         // Generate all permutations
