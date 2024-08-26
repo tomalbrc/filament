@@ -22,8 +22,6 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.ticks.TickPriority;
 
-import java.util.HashMap;
-
 public class PoweredDirectionBlock extends SimpleBlock {
     public static final IntegerProperty POWER = IntegerProperty.create("power", 0, 15);
 

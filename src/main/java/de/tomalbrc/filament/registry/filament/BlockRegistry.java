@@ -2,7 +2,7 @@ package de.tomalbrc.filament.registry.filament;
 
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.registry.BlockTypeRegistry;
-import de.tomalbrc.filament.block.*;
+import de.tomalbrc.filament.block.SimpleBlockItem;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.behaviours.block.Strippable;
 import de.tomalbrc.filament.data.properties.BlockProperties;

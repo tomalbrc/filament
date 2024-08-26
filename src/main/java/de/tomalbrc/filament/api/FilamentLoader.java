@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.Locale;
 import java.util.function.Consumer;
 
 public class FilamentLoader {

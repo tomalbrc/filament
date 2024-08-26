@@ -1,11 +1,9 @@
 package de.tomalbrc.filament.api.registry;
 
-import de.tomalbrc.filament.behaviour.Behaviour;
 import de.tomalbrc.filament.block.*;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.util.Constants;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirectionalBlock;
 

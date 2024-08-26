@@ -1,7 +1,6 @@
 package de.tomalbrc.filament.api.registry;
 
 import com.google.common.reflect.TypeToken;
-import de.tomalbrc.filament.behaviour.Behaviour;
 import de.tomalbrc.filament.data.behaviours.block.Powersource;
 import de.tomalbrc.filament.data.behaviours.block.Repeater;
 import de.tomalbrc.filament.data.behaviours.block.Strippable;

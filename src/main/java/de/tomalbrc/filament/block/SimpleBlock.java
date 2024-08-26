@@ -6,7 +6,6 @@ import de.tomalbrc.filament.util.Constants;
 import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;

@@ -1,11 +1,7 @@
 package de.tomalbrc.filament.data.resource;
 
-import de.tomalbrc.filament.data.BlockData;
-import net.minecraft.data.models.model.ModelTemplate;
-import net.minecraft.data.models.model.ModelTemplates;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.List;
 import java.util.Map;
 
 public record BlockResource(Map<String, ResourceLocation> models,

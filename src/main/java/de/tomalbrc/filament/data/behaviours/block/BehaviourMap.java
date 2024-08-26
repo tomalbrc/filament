@@ -1,8 +1,8 @@
 package de.tomalbrc.filament.data.behaviours.block;
 
 import com.google.gson.*;
-import de.tomalbrc.filament.behaviour.Behaviour;
 import de.tomalbrc.filament.api.registry.BehaviourRegistry;
+import de.tomalbrc.filament.behaviour.Behaviour;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 

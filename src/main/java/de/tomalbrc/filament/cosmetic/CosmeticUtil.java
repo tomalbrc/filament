@@ -5,7 +5,6 @@ import de.tomalbrc.filament.data.behaviours.item.Cosmetic;
 import de.tomalbrc.filament.decoration.DecorationItem;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.util.Constants;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 

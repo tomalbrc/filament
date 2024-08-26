@@ -1,9 +1,5 @@
 package de.tomalbrc.filament.util;
 
-import de.tomalbrc.filament.block.AxisBlock;
-import de.tomalbrc.filament.block.CountBlock;
-import de.tomalbrc.filament.block.SimpleBlock;
-import de.tomalbrc.filament.block.SimpleSlabBlock;
 import de.tomalbrc.filament.data.BlockData;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;

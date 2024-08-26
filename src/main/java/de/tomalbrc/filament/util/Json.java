@@ -26,10 +26,11 @@ import net.minecraft.world.level.material.PushReaction;
 import org.joml.Quaternionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.spongepowered.include.com.google.common.collect.ImmutableList;
 
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class Json {
     public static final Gson GSON = new GsonBuilder()

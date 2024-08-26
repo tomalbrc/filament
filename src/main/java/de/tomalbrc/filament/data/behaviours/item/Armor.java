@@ -1,6 +1,5 @@
 package de.tomalbrc.filament.data.behaviours.item;
 
-import de.tomalbrc.filament.behaviour.Behaviour;
 import de.tomalbrc.filament.behaviour.item.ItemBehaviour;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;

@@ -2,7 +2,6 @@ package de.tomalbrc.filament.data.behaviours.block;
 
 import de.tomalbrc.filament.behaviour.block.BlockBehaviour;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Block behaviour for strippable blocks (with an axe)

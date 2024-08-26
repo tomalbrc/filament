@@ -1,9 +1,9 @@
 package de.tomalbrc.filament.data;
 
-import com.google.gson.*;
-import com.google.gson.annotations.SerializedName;
-import de.tomalbrc.filament.api.registry.BehaviourRegistry;
-import de.tomalbrc.filament.behaviour.Behaviour;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import de.tomalbrc.filament.data.behaviours.block.BehaviourMap;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.data.resource.BlockResource;
@@ -21,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
-import java.util.Map;
 
 
 public record BlockData(

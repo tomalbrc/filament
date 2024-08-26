@@ -17,8 +17,6 @@ import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
-import java.util.Objects;
-
 public class AnimatedHolder extends PositionedHolder {
     private final DecorationBlockEntity decorationBlockEntity;
 
