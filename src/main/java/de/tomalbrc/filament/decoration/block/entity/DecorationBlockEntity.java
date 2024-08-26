@@ -42,7 +42,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Objects;
 
 public class DecorationBlockEntity extends AbstractDecorationBlockEntity implements BlockEntityWithElementHolder, FunctionalDecoration {
@@ -87,7 +86,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             CompoundTag showcaseTag = compoundTag.getCompound(SHOWCASE_KEY);
 
             for (int i = 0; i < this.decorationHolder.getShowcaseData().size(); i++) {
-                Showcase showcase = this.decorationHolder.getShowcaseData().get(i);
+                Showcase.ShowcaseMeta showcase = this.decorationHolder.getShowcaseData().get(i);
                 String key = ITEM + i;
                 if (showcase != null && showcaseTag.contains(key)) {
                     this.decorationHolder.setShowcaseItemStack(showcase, ItemStack.parseOptional(provider, showcaseTag.getCompound(key)));
@@ -116,7 +115,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             CompoundTag showcaseTag = new CompoundTag();
 
             for (int i = 0; i < decorationHolder.getShowcaseData().size(); i++) {
-                Showcase showcase = decorationHolder.getShowcaseData().get(i);
+                Showcase.ShowcaseMeta showcase = decorationHolder.getShowcaseData().get(i);
                 if (showcase != null && !decorationHolder.getShowcaseItemStack(showcase).isEmpty())
                     showcaseTag.put(ITEM + i, decorationHolder.getShowcaseItemStack(showcase).save(provider));
             }
@@ -187,12 +186,12 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             }
 
             if (decorationData.isSeat()) {
-                List<Seat> seat = decorationData.behaviour().get(Constants.Behaviours.SEAT);
+                Seat seat = decorationData.behaviour().get(Constants.Behaviours.SEAT);
                 this.setSeatData(seat);
             }
 
             if (decorationData.isShowcase()) {
-                List<Showcase> showcase = decorationData.behaviour().get(Constants.Behaviours.SHOWCASE);
+                Showcase showcase = decorationData.behaviour().get(Constants.Behaviours.SHOWCASE);
                 this.setShowcaseData(showcase);
             }
 
@@ -220,14 +219,14 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     }
 
     @Override
-    public void setSeatData(@NotNull List<Seat> seatData) {
+    public void setSeatData(@NotNull Seat seatData) {
         if (this.decorationHolder != null) {
             this.decorationHolder.setSeatData(seatData);
         }
     }
 
     @Override
-    public void setShowcaseData(@NotNull List<Showcase> showcaseData) {
+    public void setShowcaseData(@NotNull Showcase showcaseData) {
         if (this.decorationHolder != null) {
             this.decorationHolder.setShowcaseData(showcaseData);
         }
@@ -291,7 +290,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
         if (this.decorationHolder != null) {
             if (this.decorationHolder.isSeat() && player.getItemInHand(interactionHand).isEmpty() && !this.decorationHolder.isShowcase()) {
-                Seat seat = this.decorationHolder.getClosestSeat(location);
+                Seat.SeatMeta seat = this.decorationHolder.getClosestSeat(location);
 
                 if (seat != null && !this.decorationHolder.hasSeatedPlayer(seat)) {
                     this.decorationHolder.seatPlayer(seat, player);
@@ -301,7 +300,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             }
 
             if (this.decorationHolder.isShowcase() && !player.isSecondaryUseActive()) {
-                Showcase showcase = this.decorationHolder.getClosestShowcase(location);
+                Showcase.ShowcaseMeta showcase = this.decorationHolder.getClosestShowcase(location);
                 ItemStack itemStack = player.getItemInHand(interactionHand);
 
                 if (this.decorationHolder.canUseShowcaseItem(showcase, itemStack)) {

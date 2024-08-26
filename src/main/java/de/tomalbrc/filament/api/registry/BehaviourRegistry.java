@@ -1,6 +1,5 @@
 package de.tomalbrc.filament.api.registry;
 
-import com.google.common.reflect.TypeToken;
 import de.tomalbrc.filament.data.behaviours.block.Powersource;
 import de.tomalbrc.filament.data.behaviours.block.Repeater;
 import de.tomalbrc.filament.data.behaviours.block.Strippable;
@@ -11,7 +10,6 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 
 import java.lang.reflect.Type;
-import java.util.List;
 import java.util.Map;
 
 public class BehaviourRegistry {
@@ -38,8 +36,8 @@ public class BehaviourRegistry {
         registerBehaviour(Constants.Behaviours.ANIMATION, Animation.class);
         registerBehaviour(Constants.Behaviours.CONTAINER, Container.class);
         registerBehaviour(Constants.Behaviours.LOCK, Lock.class);
-        registerBehaviour(Constants.Behaviours.SEAT, new TypeToken<List<Seat>>() {}.getType());
-        registerBehaviour(Constants.Behaviours.SHOWCASE, new TypeToken<List<Showcase>>() {}.getType());
+        registerBehaviour(Constants.Behaviours.SEAT, Seat.class);
+        registerBehaviour(Constants.Behaviours.SHOWCASE, Showcase.class);
     }
 
     public static void registerBehaviour(ResourceLocation resourceLocation, Type behaviour) {

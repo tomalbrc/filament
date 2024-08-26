@@ -25,17 +25,15 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-import java.util.List;
-
 public class DecorationHolder extends ElementHolder {
 
     DecorationBlockEntity parent;
 
     // TODO: for block showcases, we need a reference to the original ItemStack the player put in there..!
-    Object2ObjectOpenHashMap<Showcase, DisplayElement> showcases = new Object2ObjectOpenHashMap<>();
+    Object2ObjectOpenHashMap<Showcase.ShowcaseMeta, DisplayElement> showcases = new Object2ObjectOpenHashMap<>();
 
-    List<Showcase> showcaseDataList;
-    List<Seat> seatDataList;
+    Showcase showcaseDataList;
+    Seat seatDataList;
 
     public DecorationHolder() {
         super();
@@ -60,14 +58,14 @@ public class DecorationHolder extends ElementHolder {
         }
     }
 
-    public Showcase getClosestShowcase(Vec3 location) {
+    public Showcase.ShowcaseMeta getClosestShowcase(Vec3 location) {
         if (this.showcaseDataList.size() == 1) {
             return this.showcaseDataList.get(0);
         }
         else {
             double dist = Double.MAX_VALUE;
-            Showcase nearest = null;
-            for (Showcase showcase : this.showcaseDataList) {
+            Showcase.ShowcaseMeta nearest = null;
+            for (Showcase.ShowcaseMeta showcase : this.showcaseDataList) {
                 Vec3 q = this.parent.getBlockPos().getCenter().add(new Vec3(this.showcaseTranslation(showcase)));
                 double distance = q.distanceTo(location);
 
@@ -81,15 +79,15 @@ public class DecorationHolder extends ElementHolder {
         }
     }
 
-    public Seat getClosestSeat(Vec3 location) {
+    public Seat.SeatMeta getClosestSeat(Vec3 location) {
         if (this.seatDataList.size() == 1) {
             return this.seatDataList.get(0);
         }
         else {
             double dist = Double.MAX_VALUE;
-            Seat nearest = null;
+            Seat.SeatMeta nearest = null;
 
-            for (Seat seat : this.seatDataList) {
+            for (Seat.SeatMeta seat : this.seatDataList) {
                 Vec3 q = this.parent.getBlockPos().getCenter().add(seatTranslation(seat));
                 double distance = q.distanceTo(location);
 
@@ -103,12 +101,12 @@ public class DecorationHolder extends ElementHolder {
         }
     }
 
-    public Vec3 seatTranslation(Seat seat) {
+    public Vec3 seatTranslation(Seat.SeatMeta seat) {
         Vec3 v3 = new Vec3(seat.offset).subtract(0, 0.3, 0).yRot((float) Math.toRadians(this.parent.getVisualRotationYInDegrees()+180));
         return new Vec3(-v3.x, v3.y, v3.z);
     }
 
-    private Vector3f showcaseTranslation(Showcase showcase) {
+    private Vector3f showcaseTranslation(Showcase.ShowcaseMeta showcase) {
         return new Vector3f(showcase.offset).sub(0, 0.475f, 0).rotate(Axis.YN.rotation(Mth.DEG_TO_RAD * this.parent.getVisualRotationYInDegrees()));
     }
     private BlockDisplayElement element(BlockItem blockItem) {
@@ -121,7 +119,7 @@ public class DecorationHolder extends ElementHolder {
         displayElement.setItem(itemStack.copy());
         return displayElement;
     }
-    private DisplayElement createShowcase(Showcase showcase, ItemStack itemStack) {
+    private DisplayElement createShowcase(Showcase.ShowcaseMeta showcase, ItemStack itemStack) {
         DisplayElement element = null;
 
         switch (showcase.type) {
@@ -160,15 +158,15 @@ public class DecorationHolder extends ElementHolder {
         return element;
     }
 
-    public void setShowcaseData(List<Showcase> showcaseData) {
+    public void setShowcaseData(Showcase showcaseData) {
         this.showcaseDataList = showcaseData;
     }
 
-    public List<Showcase> getShowcaseData() {
+    public Showcase getShowcaseData() {
         return this.showcaseDataList;
     }
 
-    public boolean canUseShowcaseItem(Showcase showcase, ItemStack item) {
+    public boolean canUseShowcaseItem(Showcase.ShowcaseMeta showcase, ItemStack item) {
         boolean hasFilterItems = showcase.filterItems != null && !showcase.filterItems.isEmpty();
         boolean hasFilterTags = showcase.filterTags != null && !showcase.filterTags.isEmpty();
 
@@ -192,7 +190,7 @@ public class DecorationHolder extends ElementHolder {
         return !(hasFilterItems || hasFilterTags);
     }
 
-    public void setShowcaseItemStack(Showcase showcase, ItemStack itemStack) {
+    public void setShowcaseItemStack(Showcase.ShowcaseMeta showcase, ItemStack itemStack) {
         boolean isBlockItem = itemStack.getItem() instanceof BlockItem;
         boolean hasElement = this.showcases.containsKey(showcase);
 
@@ -220,7 +218,7 @@ public class DecorationHolder extends ElementHolder {
         this.tick();
     }
 
-    public ItemStack getShowcaseItemStack(Showcase showcase) {
+    public ItemStack getShowcaseItemStack(Showcase.ShowcaseMeta showcase) {
         DisplayElement element = this.showcases.get(showcase);
         if (element instanceof ItemDisplayElement itemDisplayElement) {
             return itemDisplayElement.getItem().copy();
@@ -230,11 +228,11 @@ public class DecorationHolder extends ElementHolder {
         return ItemStack.EMPTY;
     }
 
-    public void setSeatData(List<Seat> seatData) {
+    public void setSeatData(Seat seatData) {
         this.seatDataList = seatData;
     }
 
-    public void seatPlayer(Seat seat, ServerPlayer player) {
+    public void seatPlayer(Seat.SeatMeta seat, ServerPlayer player) {
         SeatEntity seatEntity = EntityRegistry.SEAT_ENTITY.create(player.level());
         seatEntity.setPos(this.seatTranslation(seat).add(this.getPos()));
         player.level().addFreshEntity(seatEntity);
@@ -242,7 +240,7 @@ public class DecorationHolder extends ElementHolder {
         seatEntity.setYRot((this.parent.getVisualRotationYInDegrees()-180));
     }
 
-    public boolean hasSeatedPlayer(Seat seat) {
+    public boolean hasSeatedPlayer(Seat.SeatMeta seat) {
         return !this.getAttachment().getWorld().getEntitiesOfClass(SeatEntity.class, AABB.ofSize(seatTranslation(seat).add(this.getPos()), 0.2, 0.2, 0.2), x -> true).isEmpty();
     }
 

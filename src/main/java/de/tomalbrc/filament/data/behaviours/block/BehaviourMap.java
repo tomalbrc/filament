@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class BehaviourMap {
     private final Map<ResourceLocation, Behaviour> behaviourMap = new Object2ObjectOpenHashMap<>();
-    public void put(ResourceLocation resourceLocation, Behaviour behaviour) {
+    public <T> void put(ResourceLocation resourceLocation, Behaviour behaviour) {
         behaviourMap.put(resourceLocation, behaviour);
     }
 
@@ -24,15 +24,15 @@ public class BehaviourMap {
         public BehaviourMap deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
             JsonObject object = jsonElement.getAsJsonObject();
             BehaviourMap behaviourMap = new BehaviourMap();
-            for (Map.Entry<String, JsonElement> map : object.entrySet()) {
+            for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
                 ResourceLocation resourceLocation;
-                if (map.getKey().contains(":"))
-                    resourceLocation = ResourceLocation.parse(map.getKey());
+                if (entry.getKey().contains(":"))
+                    resourceLocation = ResourceLocation.parse(entry.getKey());
                 else
-                    resourceLocation = ResourceLocation.fromNamespaceAndPath("filament", map.getKey());
+                    resourceLocation = ResourceLocation.fromNamespaceAndPath("filament", entry.getKey());
 
                 Type clazz = BehaviourRegistry.get(resourceLocation);
-                Object deserialized = jsonDeserializationContext.deserialize(map.getValue(), clazz);
+                Object deserialized = jsonDeserializationContext.deserialize(entry.getValue(), clazz);
                 behaviourMap.put(resourceLocation, (Behaviour) deserialized);
             }
             return behaviourMap;
