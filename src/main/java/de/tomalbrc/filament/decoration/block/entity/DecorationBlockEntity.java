@@ -196,7 +196,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             }
 
             if (decorationData.hasAnimation()) {
-                Animation animation = decorationData.behaviour().get(Constants.Behaviours.LOCK);
+                Animation animation = decorationData.behaviour().get(Constants.Behaviours.ANIMATION);
                 this.setAnimationData(animation);
             }
         }
