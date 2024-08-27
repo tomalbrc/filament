@@ -33,10 +33,10 @@ public class CosmeticUtil {
             cosmeticData = simpleItem.getDecorationData().behaviourConfig().get(Constants.Behaviours.COSMETIC);
         }
         if (item instanceof SimpleBlockItem simpleItem && simpleItem.getBlockData().isCosmetic()) {
-            cosmeticData = simpleItem.getBlockData().behaviour().get(Constants.Behaviours.COSMETIC);
+            cosmeticData = simpleItem.getBlockData().behaviourConfig().get(Constants.Behaviours.COSMETIC);
         }
         if (item instanceof SimpleItem simpleItem && simpleItem.getItemData().isCosmetic()) {
-            cosmeticData = simpleItem.getItemData().behaviour().get(Constants.Behaviours.COSMETIC);
+            cosmeticData = simpleItem.getItemData().behaviourConfig().get(Constants.Behaviours.COSMETIC);
         }
 
         return cosmeticData;

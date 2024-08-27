@@ -55,7 +55,7 @@ public class BlockRegistry {
             }
 
             if (data.isStrippable()) {
-                Strippable.StrippableConfig strippable = data.behaviour().get(Constants.Behaviours.STRIPPABLE);
+                Strippable.StrippableConfig strippable = data.behaviourConfig().get(Constants.Behaviours.STRIPPABLE);
                 StrippableRegistry.add(customBlock.defaultBlockState(), strippable.replacement);
             }
 

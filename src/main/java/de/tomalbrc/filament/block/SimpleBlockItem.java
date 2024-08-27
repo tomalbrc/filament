@@ -35,7 +35,7 @@ public class SimpleBlockItem extends CustomBlockItem implements PolymerItem, Equ
         );
 
         if (data.isFuel()) {
-            Fuel.FuelConfig fuel = this.blockData.behaviour().get(Constants.Behaviours.FUEL);
+            Fuel.FuelConfig fuel = this.blockData.behaviourConfig().get(Constants.Behaviours.FUEL);
             FuelRegistry.add(this, fuel.value);
         }
     }
@@ -70,7 +70,7 @@ public class SimpleBlockItem extends CustomBlockItem implements PolymerItem, Equ
     @NotNull
     public EquipmentSlot getEquipmentSlot() {
         if (blockData.isCosmetic()) {
-            Cosmetic.CosmeticConfig cosmetic = blockData.behaviour().get(Constants.Behaviours.COSMETIC);
+            Cosmetic.CosmeticConfig cosmetic = blockData.behaviourConfig().get(Constants.Behaviours.COSMETIC);
             return cosmetic.slot;
         }
         return EquipmentSlot.MAINHAND;

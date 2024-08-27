@@ -38,7 +38,7 @@ public class TrapItem extends SimpleItem {
     }
 
     private Trap.TrapConfig trapData() {
-        Trap.TrapConfig trap = this.itemData.behaviour().get(Constants.Behaviours.TRAP);
+        Trap.TrapConfig trap = this.itemData.behaviourConfig().get(Constants.Behaviours.TRAP);
         return trap;
     }
 
@@ -82,7 +82,7 @@ public class TrapItem extends SimpleItem {
     public void use(Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
 
-        Trap.TrapConfig trap = this.itemData.behaviour().get(Constants.Behaviours.TRAP);
+        Trap.TrapConfig trap = this.itemData.behaviourConfig().get(Constants.Behaviours.TRAP);
         player.startUsingItem(hand);
 
         if (trap.useDuration > 0) player.getCooldowns().addCooldown(this, trap.useDuration);

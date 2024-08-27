@@ -42,7 +42,7 @@ public class LivingEntityMixin implements CosmeticInterface {
             cir.setReturnValue(cosmetic.slot);
         }
         if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.getItemData().isArmor()) {
-            Armor.ArmorConfig armor = simpleItem.getItemData().behaviour().get(Constants.Behaviours.ARMOR);
+            Armor.ArmorConfig armor = simpleItem.getItemData().behaviourConfig().get(Constants.Behaviours.ARMOR);
             cir.setReturnValue(armor.slot);
         }
     }
@@ -53,7 +53,7 @@ public class LivingEntityMixin implements CosmeticInterface {
             filament$destroyHolder();
         }
 
-        if (equipmentSlot == EquipmentSlot.CHEST && !itemStack2.isEmpty() && CosmeticUtil.isCosmetic(itemStack2) && (Object)this instanceof ServerPlayer serverPlayer) {
+        if (equipmentSlot == EquipmentSlot.CHEST && !itemStack2.isEmpty() && CosmeticUtil.isCosmetic(itemStack2) && (Object)this instanceof LivingEntity serverPlayer) {
             filament$addHolder(serverPlayer, itemStack2.getItem(), itemStack2);
         }
     }
@@ -71,15 +71,16 @@ public class LivingEntityMixin implements CosmeticInterface {
         filament$destroyHolder();
     }
 
-    @Unique public void filament$addHolder(ServerPlayer serverPlayer, Item simpleItem, ItemStack itemStack) {
+    @Unique public void filament$addHolder(LivingEntity livingEntity, Item simpleItem, ItemStack itemStack) {
         Cosmetic.CosmeticConfig cosmeticData = CosmeticUtil.getCosmeticData(simpleItem);
 
         if (cosmeticData.model != null) {
             if (filamentAnimatedCosmeticHolder == null) {
-                filamentAnimatedCosmeticHolder = new AnimatedCosmeticHolder(serverPlayer, ModelRegistry.getModel(cosmeticData.model));
-                EntityAttachment.ofTicking(filamentAnimatedCosmeticHolder, serverPlayer);
+                filamentAnimatedCosmeticHolder = new AnimatedCosmeticHolder(livingEntity, ModelRegistry.getModel(cosmeticData.model));
+                EntityAttachment.ofTicking(filamentAnimatedCosmeticHolder, livingEntity);
 
-                filamentAnimatedCosmeticHolder.startWatching(serverPlayer);
+                if (livingEntity instanceof ServerPlayer serverPlayer)
+                    filamentCosmeticHolder.startWatching(serverPlayer);
 
                 if (cosmeticData.autoplay != null) {
                     filamentAnimatedCosmeticHolder.getAnimator().playAnimation(cosmeticData.autoplay);
@@ -88,9 +89,10 @@ public class LivingEntityMixin implements CosmeticInterface {
         }
         else {
             if (filamentCosmeticHolder == null) {
-                filamentCosmeticHolder = new CosmeticHolder(serverPlayer, itemStack);
-                EntityAttachment.ofTicking(filamentCosmeticHolder, serverPlayer);
+                filamentCosmeticHolder = new CosmeticHolder(livingEntity, itemStack);
+                EntityAttachment.ofTicking(filamentCosmeticHolder, livingEntity);
 
+                if (livingEntity instanceof ServerPlayer serverPlayer)
                 filamentCosmeticHolder.startWatching(serverPlayer);
             }
         }

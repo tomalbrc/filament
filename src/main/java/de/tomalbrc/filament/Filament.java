@@ -26,6 +26,8 @@ public class Filament implements ModInitializer {
 
     @Override
     public void onInitialize() {
+
+
         PolymerResourcePackUtils.markAsRequired();
 
         FilamentConfig.load();

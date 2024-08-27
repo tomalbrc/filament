@@ -41,8 +41,8 @@ public class PoweredDirectionBlock extends SimpleBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(POWER, 0).setValue(POWERED, false));
 
         this.isRelay = data.isRepeater();
-        if (this.isRelay &&  data.behaviour().get(Constants.Behaviours.REPEATER) != null) {
-            Repeater.RepeaterConfig repeater = data.behaviour().get(Constants.Behaviours.REPEATER);
+        if (this.isRelay &&  data.behaviourConfig().get(Constants.Behaviours.REPEATER) != null) {
+            Repeater.RepeaterConfig repeater = data.behaviourConfig().get(Constants.Behaviours.REPEATER);
             this.delay = repeater.delay;
             this.loss = repeater.loss;
         }

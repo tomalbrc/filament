@@ -167,15 +167,16 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             return InteractionResult.FAIL;
         }
 
-        for (var behaviour : behaviours) {
-            if (behaviour instanceof DecorationBehaviour<?> decorationBehaviour) {
-                InteractionResult res = decorationBehaviour.interact(player, interactionHand, location, this);
+        InteractionResult res = InteractionResult.PASS;
+        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : behaviours) {
+            if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
+                res = decorationBehaviour.interact(player, interactionHand, location, this);
                 if (res.consumesAction())
                     break;
             }
         }
 
-        return InteractionResult.PASS;
+        return res;
     }
 
     @Override

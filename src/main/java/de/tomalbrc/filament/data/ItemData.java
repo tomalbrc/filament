@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.data;
 
+import com.google.gson.annotations.SerializedName;
 import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.data.resource.ItemResource;
@@ -18,7 +19,8 @@ public record ItemData(
         @NotNull ResourceLocation id,
         @Nullable Item vanillaItem,
         @Nullable ItemResource itemResource,
-        @Nullable BehaviourConfigMap behaviour,
+        @SerializedName("behaviour")
+        @Nullable BehaviourConfigMap behaviourConfig,
         @Nullable ItemProperties properties,
         @Nullable DataComponentMap components
 ) {
@@ -33,33 +35,33 @@ public record ItemData(
     }
 
     public boolean isFood() {
-        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.FOOD) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.FOOD) != null;
     }
 
     public boolean isArmor() {
-        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.ARMOR) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.ARMOR) != null;
     }
 
     public boolean isCosmetic() {
-        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.COSMETIC) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.COSMETIC) != null;
     }
 
     public boolean isFuel() {
-        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.FUEL) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.FUEL) != null;
     }
 
     public boolean canShoot() {
-        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.SHOOT) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.SHOOT) != null;
     }
     public boolean isInstrument() {
-        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.INSTRUMENT) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.INSTRUMENT) != null;
     }
 
     public boolean isTrap() {
-        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.TRAP) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.TRAP) != null;
     }
 
     public boolean canExecute() {
-        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.EXECUTE) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.EXECUTE) != null;
     }
 }

@@ -5,21 +5,21 @@ import de.tomalbrc.bil.core.holder.wrapper.DisplayWrapper;
 import de.tomalbrc.bil.core.model.Model;
 import eu.pb4.polymer.virtualentity.api.VirtualEntityUtils;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 
 public class AnimatedCosmeticHolder extends EntityHolder {
-    private final ServerPlayer player;
+    private final LivingEntity entity;
     private double prevX = 0;
     private double prevZ = 0;
 
     private float bodyYaw;
 
-    public AnimatedCosmeticHolder(ServerPlayer player, Model model) {
-        super(player, model);
+    public AnimatedCosmeticHolder(LivingEntity entity, Model model) {
+        super(entity, model);
 
-        this.player = player;
+        this.entity = entity;
     }
 
     @Override
@@ -29,17 +29,17 @@ public class AnimatedCosmeticHolder extends EntityHolder {
 
         display.element().setYaw(this.bodyYaw);
 
-        this.prevX = this.player.getX();
-        this.prevZ = this.player.getZ();
+        this.prevX = this.entity.getX();
+        this.prevZ = this.entity.getZ();
     }
 
     @Override
     public CommandSourceStack createCommandSourceStack() {
-        return this.player.createCommandSourceStack();
+        return this.entity.createCommandSourceStack();
     }
 
-    private void tickMovement(final ServerPlayer player) {
-        float yaw = this.player.getYRot();
+    private void tickMovement(final LivingEntity player) {
+        float yaw = this.entity.getYRot();
         double i = player.getX() - this.prevX;
         double d = player.getZ() - this.prevZ;
         float f = (float)(i * i + d * d);
@@ -80,7 +80,7 @@ public class AnimatedCosmeticHolder extends EntityHolder {
     public boolean startWatching(ServerGamePacketListenerImpl player) {
         var ret = super.startWatching(player);
 
-        player.send(VirtualEntityUtils.createRidePacket(this.player.getId(), this.getDisplayIds()));
+        player.send(VirtualEntityUtils.createRidePacket(this.entity.getId(), this.getDisplayIds()));
 
         return ret;
     }
@@ -89,7 +89,7 @@ public class AnimatedCosmeticHolder extends EntityHolder {
     public void onTick() {
         super.onTick();
 
-        this.tickMovement(this.player);
+        this.tickMovement(this.entity);
 
         // manual ticking
         //this.onAsyncTick();

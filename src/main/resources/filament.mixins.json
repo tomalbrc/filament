@@ -13,6 +13,7 @@
     "MobMixin",
     "PlayerMixin",
     "ReloadableServerResourcesMixin",
+    "TrimPatternsMixin",
     "WorldLoaderMixin",
     "cosmetic.LivingEntityMixin",
     "cosmetic.ServerPlayerMixin",

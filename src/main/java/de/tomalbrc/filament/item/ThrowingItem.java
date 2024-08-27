@@ -26,8 +26,8 @@ public class ThrowingItem extends SimpleItem implements PolymerItem {
 
     public ThrowingItem(Item.Properties properties, ItemData itemData) {
         super(properties, itemData);
-        assert itemData.behaviour() != null;
-        this.shootConfig = itemData.behaviour().get(Constants.Behaviours.SHOOT);
+        assert itemData.behaviourConfig() != null;
+        this.shootConfig = itemData.behaviourConfig().get(Constants.Behaviours.SHOOT);
     }
 
     @Override

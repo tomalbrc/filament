@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.item;
 
+import de.tomalbrc.filament.FilamentTrimPatterns;
 import de.tomalbrc.filament.behaviours.item.Armor;
 import de.tomalbrc.filament.behaviours.item.Cosmetic;
 import de.tomalbrc.filament.behaviours.item.Execute;
@@ -38,6 +39,9 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
     @Nullable
     PolymerArmorModel armorModel = null;
 
+    @Nullable
+    FilamentTrimPatterns.FilamentTrimHolder trimHolder = null;
+
     public SimpleItem(Properties properties, ItemData itemData) {
         super(properties);
         this.itemData = itemData;
@@ -45,9 +49,12 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
 
         // For armor
         if (this.itemData.isArmor()) {
-            Armor.ArmorConfig armor = this.itemData.behaviour().get(Constants.Behaviours.ARMOR);
-            if (armor.texture != null)
+            Armor.ArmorConfig armor = this.itemData.behaviourConfig().get(Constants.Behaviours.ARMOR);
+            if (armor.trim && armor.texture != null)
                 this.armorModel = PolymerResourcePackUtils.requestArmor(armor.texture);
+            else if (armor.texture != null) {
+                this.trimHolder = FilamentTrimPatterns.addConfig(armor);
+            }
         }
 
         if (this.itemData.isCosmetic() || this.itemData.isArmor()) {
@@ -55,7 +62,7 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
         }
 
         if (this.itemData.isFuel()) {
-            Fuel.FuelConfig fuel = this.itemData.behaviour().get(Constants.Behaviours.FUEL);
+            Fuel.FuelConfig fuel = this.itemData.behaviourConfig().get(Constants.Behaviours.FUEL);
             FuelRegistry.add(this, fuel.value);
         }
     }
@@ -98,10 +105,10 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
         boolean isArmor = itemData.isArmor();
         boolean isCosmetic = itemData.isCosmetic();
         if (isArmor) {
-            Armor.ArmorConfig armor = itemData.behaviour().get(Constants.Behaviours.ARMOR);
+            Armor.ArmorConfig armor = itemData.behaviourConfig().get(Constants.Behaviours.ARMOR);
             if (armor.slot != null) return armor.slot;
         } else if (isCosmetic) {
-            Cosmetic.CosmeticConfig cosmetic = itemData.behaviour().get(Constants.Behaviours.COSMETIC);
+            Cosmetic.CosmeticConfig cosmetic = itemData.behaviourConfig().get(Constants.Behaviours.COSMETIC);
             if (cosmetic.slot != null) return cosmetic.slot;
         }
 
@@ -114,7 +121,7 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
         var res = super.use(level, user, hand);
 
         if (this.itemData.canExecute()) {
-            Execute.ExecuteConfig execute = this.itemData.behaviour().get(Constants.Behaviours.EXECUTE);
+            Execute.ExecuteConfig execute = this.itemData.behaviourConfig().get(Constants.Behaviours.EXECUTE);
             if (execute.command != null) {
                 user.getServer().getCommands().performPrefixedCommand(user.createCommandSourceStack(), execute.command);
 

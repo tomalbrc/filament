@@ -29,5 +29,10 @@ public class Armor implements ItemBehaviour<Armor.ArmorConfig> {
          * The resource location of the texture associated with the armor.
          */
         public ResourceLocation texture;
+
+        /**
+         * Flag wether to use armor trims instead of shader based armor
+         */
+        public boolean trim = false;
     }
 }

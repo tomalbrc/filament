@@ -45,8 +45,8 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock {
     @Override
     public int getSignal(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, Direction direction) {
         if (this.blockData.isPowersource()) {
-            assert this.blockData.behaviour() != null;
-            Powersource.PowersourceConfig powersource = this.blockData.behaviour().get(Constants.Behaviours.POWERSOURCE);
+            assert this.blockData.behaviourConfig() != null;
+            Powersource.PowersourceConfig powersource = this.blockData.behaviourConfig().get(Constants.Behaviours.POWERSOURCE);
             return powersource.value;
         } else {
             return 0;

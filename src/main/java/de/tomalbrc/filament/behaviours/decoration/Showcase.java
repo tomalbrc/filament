@@ -52,7 +52,7 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
 
     @Override
     public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
-        if (!player.isSecondaryUseActive() && decorationBlockEntity.getDecorationHolder() instanceof DecorationHolder decorationHolder) {
+        if (!player.isSecondaryUseActive() && decorationBlockEntity.getDecorationHolder() instanceof DecorationHolder) {
             Showcase.ShowcaseMeta showcase = getClosestShowcase(decorationBlockEntity, location);
             ItemStack itemStack = player.getItemInHand(hand);
 

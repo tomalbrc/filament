@@ -4,6 +4,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.google.gson.annotations.SerializedName;
 import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.data.resource.BlockResource;
@@ -30,7 +31,8 @@ public record BlockData(
         @NotNull BlockModelType blockModelType,
         @NotNull BlockProperties properties,
         @Nullable BlockType type,
-        @Nullable BehaviourConfigMap behaviour,
+        @SerializedName("behaviour")
+        @Nullable BehaviourConfigMap behaviourConfig,
         @Nullable DataComponentMap components
         ) {
 
@@ -59,22 +61,22 @@ public record BlockData(
     }
 
     public boolean isPowersource() {
-        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.POWERSOURCE) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.POWERSOURCE) != null;
     }
 
     public boolean isRepeater() {
-        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.REPEATER) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.REPEATER) != null;
     }
     public boolean isStrippable() {
-        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.STRIPPABLE) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.STRIPPABLE) != null;
     }
 
     public boolean isFuel() {
-        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.FUEL) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.FUEL) != null;
     }
 
     public boolean isCosmetic() {
-        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.COSMETIC) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.COSMETIC) != null;
     }
 
     public record BlockType(ResourceLocation resourceLocation) {

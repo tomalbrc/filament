@@ -26,8 +26,8 @@ public class InstrumentItem extends SimpleItem {
         ItemStack itemStack = player.getItemInHand(interactionHand);
 
         if (itemData.isInstrument()) {
-            assert itemData.behaviour() != null;
-            Instrument.InstrumentConfig instrument = itemData.behaviour().get(Constants.Behaviours.INSTRUMENT);
+            assert itemData.behaviourConfig() != null;
+            Instrument.InstrumentConfig instrument = itemData.behaviourConfig().get(Constants.Behaviours.INSTRUMENT);
             player.startUsingItem(interactionHand);
             play(level, player, instrument);
             if (instrument.useDuration > 0) player.getCooldowns().addCooldown(this, instrument.useDuration);
