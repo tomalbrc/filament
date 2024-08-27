@@ -4,7 +4,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-import de.tomalbrc.filament.data.behaviours.block.BehaviourMap;
+import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.data.resource.BlockResource;
 import de.tomalbrc.filament.data.resource.ItemResource;
@@ -30,7 +30,7 @@ public record BlockData(
         @NotNull BlockModelType blockModelType,
         @NotNull BlockProperties properties,
         @Nullable BlockType type,
-        @Nullable BehaviourMap behaviour,
+        @Nullable BehaviourConfigMap behaviour,
         @Nullable DataComponentMap components
         ) {
 

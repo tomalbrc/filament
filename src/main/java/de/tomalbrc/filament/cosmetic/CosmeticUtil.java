@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.cosmetic;
 
+import de.tomalbrc.filament.behaviours.item.Cosmetic;
 import de.tomalbrc.filament.block.SimpleBlockItem;
-import de.tomalbrc.filament.data.behaviours.item.Cosmetic;
 import de.tomalbrc.filament.decoration.DecorationItem;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.util.Constants;
@@ -23,14 +23,14 @@ public class CosmeticUtil {
         return false;
     }
 
-    public static Cosmetic getCosmeticData(ItemStack itemStack) {
+    public static Cosmetic.CosmeticConfig getCosmeticData(ItemStack itemStack) {
         return getCosmeticData(itemStack.getItem());
     }
 
-    public static Cosmetic getCosmeticData(Item item) {
-        Cosmetic cosmeticData = null;
+    public static Cosmetic.CosmeticConfig getCosmeticData(Item item) {
+        Cosmetic.CosmeticConfig cosmeticData = null;
         if (item instanceof DecorationItem simpleItem && simpleItem.getDecorationData().isCosmetic()) {
-            cosmeticData = simpleItem.getDecorationData().behaviour().get(Constants.Behaviours.COSMETIC);
+            cosmeticData = simpleItem.getDecorationData().behaviourConfig().get(Constants.Behaviours.COSMETIC);
         }
         if (item instanceof SimpleBlockItem simpleItem && simpleItem.getBlockData().isCosmetic()) {
             cosmeticData = simpleItem.getBlockData().behaviour().get(Constants.Behaviours.COSMETIC);

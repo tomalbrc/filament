@@ -5,8 +5,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
 import de.tomalbrc.filament.data.BlockData;
-import de.tomalbrc.filament.data.behaviours.block.BehaviourMap;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.Registry;
@@ -47,7 +47,7 @@ public class Json {
             .registerTypeHierarchyAdapter(Block.class, new RegistryDeserializer<>(BuiltInRegistries.BLOCK))
             .registerTypeHierarchyAdapter(Item.class, new RegistryDeserializer<>(BuiltInRegistries.ITEM))
             .registerTypeHierarchyAdapter(SoundEvent.class, new RegistryDeserializer<>(BuiltInRegistries.SOUND_EVENT))
-            .registerTypeHierarchyAdapter(BehaviourMap.class, new BehaviourMap.Deserializer())
+            .registerTypeHierarchyAdapter(BehaviourConfigMap.class, new BehaviourConfigMap.Deserializer())
             .registerTypeHierarchyAdapter(BlockData.BlockType.class, new BlockData.BlockType.Deserializer())
             .create();
 
@@ -185,10 +185,8 @@ public class Json {
         }
 
         private static RegistryOps.RegistryInfoLookup createContext(RegistryAccess registryAccess) {
-            final Map<ResourceKey<? extends Registry<?>>, RegistryOps.RegistryInfo<?>> map = new HashMap();
-            registryAccess.registries().forEach((registryEntry) -> {
-                map.put(registryEntry.key(), createInfoForContextRegistry(registryEntry.value()));
-            });
+            final Map<ResourceKey<? extends Registry<?>>, RegistryOps.RegistryInfo<?>> map = new HashMap<>();
+            registryAccess.registries().forEach((registryEntry) -> map.put(registryEntry.key(), createInfoForContextRegistry(registryEntry.value())));
             return new RegistryOps.RegistryInfoLookup() {
                 public <T> Optional<RegistryOps.RegistryInfo<T>> lookup(ResourceKey<? extends Registry<? extends T>> resourceKey) {
                     return Optional.ofNullable((RegistryOps.RegistryInfo)map.get(resourceKey));

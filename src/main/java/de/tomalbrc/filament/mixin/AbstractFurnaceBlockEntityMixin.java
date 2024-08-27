@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.mixin;
 
-import de.tomalbrc.filament.registry.filament.FuelRegistry;
+import de.tomalbrc.filament.registry.FuelRegistry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
 
-// Fuel behaviour support
+// Fuel behaviourConfig support
 @Mixin(AbstractFurnaceBlockEntity.class)
 public class AbstractFurnaceBlockEntityMixin {
     @Inject(method = "getFuel", at = @At("RETURN"))

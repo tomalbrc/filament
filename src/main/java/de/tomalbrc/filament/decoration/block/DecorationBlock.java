@@ -2,8 +2,9 @@ package de.tomalbrc.filament.decoration.block;
 
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import de.tomalbrc.filament.registry.filament.DecorationRegistry;
+import de.tomalbrc.filament.registry.DecorationRegistry;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -83,6 +84,7 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
     }
 
     @Override
+    @MethodsReturnNonnullByDefault
     public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
         BlockState returnVal = super.playerWillDestroy(level, blockPos, blockState, player);
         this.removeDecoration(level, blockPos, player);
@@ -97,6 +99,7 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
     }
 
     @Override
+    @MethodsReturnNonnullByDefault
     public VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
         if (blockState.getValue(PASSTHROUGH)) {
             return Shapes.empty();
@@ -128,13 +131,16 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
         return false;
     }
 
+    @Override
+    @MethodsReturnNonnullByDefault
     public FluidState getFluidState(BlockState blockState) {
         return blockState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(blockState);
     }
 
     @Override
+    @MethodsReturnNonnullByDefault
     public BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) {
-        if (blockState.getValue(WATERLOGGED).booleanValue()) {
+        if (blockState.getValue(WATERLOGGED)) {
             levelAccessor.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
         }
 

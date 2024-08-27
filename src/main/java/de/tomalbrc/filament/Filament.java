@@ -7,7 +7,7 @@ import de.tomalbrc.filament.command.DyeCommand;
 import de.tomalbrc.filament.command.HatCommand;
 import de.tomalbrc.filament.command.PickCommand;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import de.tomalbrc.filament.registry.filament.*;
+import de.tomalbrc.filament.registry.*;
 import de.tomalbrc.filament.util.*;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;

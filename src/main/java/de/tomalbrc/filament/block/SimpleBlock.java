@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.block;
 
+import de.tomalbrc.filament.behaviours.block.Powersource;
 import de.tomalbrc.filament.data.BlockData;
-import de.tomalbrc.filament.data.behaviours.block.Powersource;
 import de.tomalbrc.filament.util.Constants;
 import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
 import net.minecraft.core.BlockPos;
@@ -46,7 +46,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock {
     public int getSignal(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, Direction direction) {
         if (this.blockData.isPowersource()) {
             assert this.blockData.behaviour() != null;
-            Powersource powersource = this.blockData.behaviour().get(Constants.Behaviours.POWERSOURCE);
+            Powersource.PowersourceConfig powersource = this.blockData.behaviour().get(Constants.Behaviours.POWERSOURCE);
             return powersource.value;
         } else {
             return 0;

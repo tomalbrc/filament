@@ -1,9 +1,9 @@
 package de.tomalbrc.filament.block;
 
+import de.tomalbrc.filament.behaviours.item.Cosmetic;
+import de.tomalbrc.filament.behaviours.item.Fuel;
 import de.tomalbrc.filament.data.BlockData;
-import de.tomalbrc.filament.data.behaviours.item.Cosmetic;
-import de.tomalbrc.filament.data.behaviours.item.Fuel;
-import de.tomalbrc.filament.registry.filament.FuelRegistry;
+import de.tomalbrc.filament.registry.FuelRegistry;
 import de.tomalbrc.filament.util.Constants;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
@@ -35,7 +35,7 @@ public class SimpleBlockItem extends CustomBlockItem implements PolymerItem, Equ
         );
 
         if (data.isFuel()) {
-            Fuel fuel = this.blockData.behaviour().get(Constants.Behaviours.FUEL);
+            Fuel.FuelConfig fuel = this.blockData.behaviour().get(Constants.Behaviours.FUEL);
             FuelRegistry.add(this, fuel.value);
         }
     }
@@ -70,7 +70,7 @@ public class SimpleBlockItem extends CustomBlockItem implements PolymerItem, Equ
     @NotNull
     public EquipmentSlot getEquipmentSlot() {
         if (blockData.isCosmetic()) {
-            Cosmetic cosmetic = blockData.behaviour().get(Constants.Behaviours.COSMETIC);
+            Cosmetic.CosmeticConfig cosmetic = blockData.behaviour().get(Constants.Behaviours.COSMETIC);
             return cosmetic.slot;
         }
         return EquipmentSlot.MAINHAND;

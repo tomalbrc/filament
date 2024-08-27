@@ -1,14 +1,14 @@
 package de.tomalbrc.filament.mixin.cosmetic;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import de.tomalbrc.filament.behaviours.item.Armor;
+import de.tomalbrc.filament.behaviours.item.Cosmetic;
 import de.tomalbrc.filament.cosmetic.AnimatedCosmeticHolder;
 import de.tomalbrc.filament.cosmetic.CosmeticHolder;
 import de.tomalbrc.filament.cosmetic.CosmeticInterface;
 import de.tomalbrc.filament.cosmetic.CosmeticUtil;
-import de.tomalbrc.filament.data.behaviours.item.Armor;
-import de.tomalbrc.filament.data.behaviours.item.Cosmetic;
 import de.tomalbrc.filament.item.SimpleItem;
-import de.tomalbrc.filament.registry.filament.ModelRegistry;
+import de.tomalbrc.filament.registry.ModelRegistry;
 import de.tomalbrc.filament.util.Constants;
 import eu.pb4.polymer.virtualentity.api.attachment.EntityAttachment;
 import net.minecraft.server.level.ServerPlayer;
@@ -37,12 +37,12 @@ public class LivingEntityMixin implements CosmeticInterface {
 
     @Inject(method = "getEquipmentSlotForItem", at = @At(value = "HEAD"), cancellable = true)
     private void filament$customGetEquipmentSlotForItem(ItemStack itemStack, CallbackInfoReturnable<EquipmentSlot> cir) {
-        Cosmetic cosmetic = CosmeticUtil.getCosmeticData(itemStack);
+        Cosmetic.CosmeticConfig cosmetic = CosmeticUtil.getCosmeticData(itemStack);
         if (cosmetic != null) {
             cir.setReturnValue(cosmetic.slot);
         }
         if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.getItemData().isArmor()) {
-            Armor armor = simpleItem.getItemData().behaviour().get(Constants.Behaviours.ARMOR);
+            Armor.ArmorConfig armor = simpleItem.getItemData().behaviour().get(Constants.Behaviours.ARMOR);
             cir.setReturnValue(armor.slot);
         }
     }
@@ -72,7 +72,7 @@ public class LivingEntityMixin implements CosmeticInterface {
     }
 
     @Unique public void filament$addHolder(ServerPlayer serverPlayer, Item simpleItem, ItemStack itemStack) {
-        Cosmetic cosmeticData = CosmeticUtil.getCosmeticData(simpleItem);
+        Cosmetic.CosmeticConfig cosmeticData = CosmeticUtil.getCosmeticData(simpleItem);
 
         if (cosmeticData.model != null) {
             if (filamentAnimatedCosmeticHolder == null) {

@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.data;
 
-import de.tomalbrc.filament.data.behaviours.block.BehaviourMap;
+import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.util.Constants;
@@ -18,7 +18,7 @@ public record ItemData(
         @NotNull ResourceLocation id,
         @Nullable Item vanillaItem,
         @Nullable ItemResource itemResource,
-        @Nullable BehaviourMap behaviour,
+        @Nullable BehaviourConfigMap behaviour,
         @Nullable ItemProperties properties,
         @Nullable DataComponentMap components
 ) {

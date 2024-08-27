@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.data;
 
-import de.tomalbrc.filament.data.behaviours.block.BehaviourMap;
+import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.DecorationProperties;
 import de.tomalbrc.filament.util.Constants;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
@@ -29,7 +29,7 @@ public record DecorationData(
 
         @Nullable DecorationProperties properties,
 
-        @Nullable BehaviourMap behaviour,
+        @Nullable BehaviourConfigMap behaviourConfig,
         @Nullable DataComponentMap components
 ) {
     public PolymerModelData requestModel() {
@@ -37,15 +37,15 @@ public record DecorationData(
     }
 
     public boolean isSeat() {
-        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.SEAT) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.SEAT) != null;
     }
 
     public boolean isContainer() {
-        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.CONTAINER) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.CONTAINER) != null;
     }
 
     public boolean hasAnimation() {
-        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.ANIMATION) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.ANIMATION) != null;
     }
 
     public boolean hasBlocks() {
@@ -53,26 +53,26 @@ public record DecorationData(
     }
 
     public boolean isShowcase() {
-        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.SHOWCASE) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.SHOWCASE) != null;
     }
 
     public boolean isLock() {
-        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.LOCK) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.LOCK) != null;
     }
 
     public boolean isFuel() {
-        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.FUEL) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.FUEL) != null;
     }
 
     public boolean isSimple() {
         return false;
         // TODO: itemStack is not correct/missing data since we get in from the decoration data id...
         // so dyed color will be missing from the displayed item
-        //return ((!this.hasBlocks() || Util.barrierDimensions(this.blocks(), 0).equals(1, 1)) && this.behaviour() == null) || this.size != null;
+        //return ((!this.hasBlocks() || Util.barrierDimensions(this.blocks(), 0).equals(1, 1)) && this.behaviourConfig() == null) || this.size != null;
     }
 
     public boolean isCosmetic() {
-        return this.behaviour != null && this.behaviour.get(Constants.Behaviours.COSMETIC) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.COSMETIC) != null;
     }
 
     public record BlockConfig(Vector3f origin,

@@ -1,19 +1,22 @@
 package de.tomalbrc.filament.api.registry;
 
-import de.tomalbrc.filament.data.behaviours.block.Powersource;
-import de.tomalbrc.filament.data.behaviours.block.Repeater;
-import de.tomalbrc.filament.data.behaviours.block.Strippable;
-import de.tomalbrc.filament.data.behaviours.decoration.*;
-import de.tomalbrc.filament.data.behaviours.item.*;
+import de.tomalbrc.filament.api.behaviour.Behaviour;
+import de.tomalbrc.filament.behaviours.block.Powersource;
+import de.tomalbrc.filament.behaviours.block.Repeater;
+import de.tomalbrc.filament.behaviours.block.Strippable;
+import de.tomalbrc.filament.behaviours.decoration.*;
+import de.tomalbrc.filament.behaviours.item.*;
 import de.tomalbrc.filament.util.Constants;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.util.Map;
+import java.util.function.Function;
 
 public class BehaviourRegistry {
-    private static final Map<ResourceLocation, Type> behaviourMap = new Object2ObjectOpenHashMap<>();
+    private static final Map<ResourceLocation, BehaviourType> behaviourMap = new Object2ObjectOpenHashMap<>();
 
     public static void init() {
         registerBuiltin();
@@ -40,11 +43,30 @@ public class BehaviourRegistry {
         registerBehaviour(Constants.Behaviours.SHOWCASE, Showcase.class);
     }
 
-    public static void registerBehaviour(ResourceLocation resourceLocation, Type behaviour) {
-        behaviourMap.put(resourceLocation, behaviour);
+    private static void registerBehaviour(ResourceLocation resourceLocation, Class<? extends Behaviour<?>> type) {
+        behaviourMap.put(resourceLocation, new BehaviourType(resourceLocation, type, o -> {
+            try {
+                return type.getDeclaredConstructor(Behaviour.getConfigType(type)).newInstance(o);
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                     NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            }
+        }));
     }
 
-    public static Type get(ResourceLocation key) {
-        return behaviourMap.get(key);
+    public static Type getConfigType(ResourceLocation key) {
+        BehaviourType info = behaviourMap.get(key);
+        return Behaviour.getConfigType(info.type);
+    }
+
+    public static Behaviour<?> create(ResourceLocation key, Object config) {
+        BehaviourType info = behaviourMap.get(key);
+        return (info != null) ? info.createInstance(config) : null;
+    }
+
+    public record BehaviourType(ResourceLocation resourceLocation, Class<? extends Behaviour<?>> type, Function<Object, Behaviour> function) {
+        public Behaviour createInstance(Object object) {
+            return function.apply(object);
+        }
     }
 }

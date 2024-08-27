@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.mixin;
 
-import de.tomalbrc.filament.registry.filament.StrippableRegistry;
+import de.tomalbrc.filament.registry.StrippableRegistry;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;

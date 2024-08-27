@@ -2,7 +2,7 @@ package de.tomalbrc.filament.mixin;
 
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import de.tomalbrc.filament.registry.filament.DecorationRegistry;
+import de.tomalbrc.filament.registry.DecorationRegistry;
 import it.unimi.dsi.fastutil.objects.Object2ByteLinkedOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -53,7 +53,7 @@ public class FlowingFluidMixin {
             cir.setReturnValue(this.canFlowThrough(blockState2));
     }
     @Inject(method = "canPassThroughWall", locals = LocalCapture.CAPTURE_FAILSOFT, at = @At("TAIL"), cancellable = true)
-    private void filament$canPassThroughWall(Direction direction, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, BlockPos blockPos2, BlockState blockState2, CallbackInfoReturnable<Boolean> cir, Object2ByteLinkedOpenHashMap object2ByteLinkedOpenHashMap, Block.BlockStatePairKey blockStatePairKey, VoxelShape voxelShape, VoxelShape voxelShape2, boolean bl) {
+    private void filament$canPassThroughWall(Direction direction, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, BlockPos blockPos2, BlockState blockState2, CallbackInfoReturnable<Boolean> cir) {
         if (DecorationRegistry.isDecoration(blockState) || DecorationRegistry.isDecoration(blockState2))
             cir.setReturnValue(true);
     }

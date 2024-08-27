@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.item;
 
+import de.tomalbrc.filament.behaviours.item.Instrument;
 import de.tomalbrc.filament.data.ItemData;
-import de.tomalbrc.filament.data.behaviours.item.Instrument;
 import de.tomalbrc.filament.util.Constants;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -27,7 +27,7 @@ public class InstrumentItem extends SimpleItem {
 
         if (itemData.isInstrument()) {
             assert itemData.behaviour() != null;
-            Instrument instrument = itemData.behaviour().get(Constants.Behaviours.INSTRUMENT);
+            Instrument.InstrumentConfig instrument = itemData.behaviour().get(Constants.Behaviours.INSTRUMENT);
             player.startUsingItem(interactionHand);
             play(level, player, instrument);
             if (instrument.useDuration > 0) player.getCooldowns().addCooldown(this, instrument.useDuration);
@@ -38,7 +38,7 @@ public class InstrumentItem extends SimpleItem {
         }
     }
 
-    private static void play(Level level, Player player, Instrument instrument) {
+    private static void play(Level level, Player player, Instrument.InstrumentConfig instrument) {
         float f = instrument.range / 25.0F;
         level.playSound(null, player, SoundEvent.createVariableRangeEvent(instrument.sound), SoundSource.RECORDS, f, 1.0F);
         level.gameEvent(GameEvent.INSTRUMENT_PLAY, player.position(), GameEvent.Context.of(player));

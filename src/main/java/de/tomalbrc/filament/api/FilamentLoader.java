@@ -1,10 +1,10 @@
 package de.tomalbrc.filament.api;
 
 import de.tomalbrc.filament.Filament;
-import de.tomalbrc.filament.registry.filament.BlockRegistry;
-import de.tomalbrc.filament.registry.filament.DecorationRegistry;
-import de.tomalbrc.filament.registry.filament.ItemRegistry;
-import de.tomalbrc.filament.registry.filament.ModelRegistry;
+import de.tomalbrc.filament.registry.BlockRegistry;
+import de.tomalbrc.filament.registry.DecorationRegistry;
+import de.tomalbrc.filament.registry.ItemRegistry;
+import de.tomalbrc.filament.registry.ModelRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
 

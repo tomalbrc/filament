@@ -1,14 +1,14 @@
 package de.tomalbrc.filament.decoration;
 
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.behaviours.item.Cosmetic;
+import de.tomalbrc.filament.behaviours.item.Fuel;
 import de.tomalbrc.filament.data.DecorationData;
-import de.tomalbrc.filament.data.behaviours.item.Cosmetic;
-import de.tomalbrc.filament.data.behaviours.item.Fuel;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import de.tomalbrc.filament.registry.filament.DecorationRegistry;
-import de.tomalbrc.filament.registry.filament.FuelRegistry;
+import de.tomalbrc.filament.registry.DecorationRegistry;
+import de.tomalbrc.filament.registry.FuelRegistry;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
@@ -50,7 +50,7 @@ public class DecorationItem extends Item implements PolymerItem, Equipable {
         this.modelData = this.decorationData.requestModel();
 
         if (this.decorationData.isFuel()) {
-            Fuel fuel = this.decorationData.behaviour().get(Constants.Behaviours.FUEL);
+            Fuel.FuelConfig fuel = this.decorationData.behaviourConfig().get(Constants.Behaviours.FUEL);
             FuelRegistry.add(this, fuel.value);
         }
     }
@@ -250,7 +250,7 @@ public class DecorationItem extends Item implements PolymerItem, Equipable {
     public EquipmentSlot getEquipmentSlot() {
         boolean cosmetic = decorationData.isCosmetic();
         if (cosmetic) {
-            Cosmetic cosmetic1 = this.decorationData.behaviour().get(Constants.Behaviours.COSMETIC);
+            Cosmetic.CosmeticConfig cosmetic1 = this.decorationData.behaviourConfig().get(Constants.Behaviours.COSMETIC);
             if (cosmetic1.slot != null)
                 return cosmetic1.slot;
         }

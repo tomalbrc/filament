@@ -12,4 +12,8 @@ public interface BlockEntityWithElementHolder {
     void attach(ServerLevel level);
 
     ElementHolder makeHolder();
+
+    ElementHolder getDecorationHolder();
+
+    void setDecorationHolder(ElementHolder holder);
 }

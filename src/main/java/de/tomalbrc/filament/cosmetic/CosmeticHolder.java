@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.cosmetic;
 
-import de.tomalbrc.filament.data.behaviours.item.Cosmetic;
+import de.tomalbrc.filament.behaviours.item.Cosmetic;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.VirtualEntityUtils;
 import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
@@ -27,7 +27,7 @@ public class CosmeticHolder extends ElementHolder {
 
         this.displayElement = new ItemDisplayElement(itemStack);
 
-        Cosmetic cosmeticData = CosmeticUtil.getCosmeticData(itemStack);
+        Cosmetic.CosmeticConfig cosmeticData = CosmeticUtil.getCosmeticData(itemStack);
         if (cosmeticData != null) {
             this.displayElement.setTranslation(cosmeticData.translation);
             this.displayElement.setScale(cosmeticData.scale);

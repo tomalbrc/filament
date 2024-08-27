@@ -1,8 +1,8 @@
 package de.tomalbrc.filament.item;
 
+import de.tomalbrc.filament.behaviours.item.Shoot;
 import de.tomalbrc.filament.data.ItemData;
-import de.tomalbrc.filament.data.behaviours.item.Shoot;
-import de.tomalbrc.filament.registry.filament.EntityRegistry;
+import de.tomalbrc.filament.registry.EntityRegistry;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
@@ -22,12 +22,12 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 public class ThrowingItem extends SimpleItem implements PolymerItem {
-    private final Shoot shootBehaviour;
+    private final Shoot.ShootConfig shootConfig;
 
     public ThrowingItem(Item.Properties properties, ItemData itemData) {
         super(properties, itemData);
         assert itemData.behaviour() != null;
-        this.shootBehaviour = itemData.behaviour().get(Constants.Behaviours.SHOOT);
+        this.shootConfig = itemData.behaviour().get(Constants.Behaviours.SHOOT);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ThrowingItem extends SimpleItem implements PolymerItem {
 
                 float pitch = user.getXRot();
                 float yaw = user.getYRot();
-                double speed = this.shootBehaviour.speed; // Adjust the speed as needed
+                double speed = this.shootConfig.speed; // Adjust the speed as needed
 
                 Vector3f deltaMovement = new Vector3f(
                         -(float) Math.sin(Math.toRadians(yaw)) * (float) Math.cos(Math.toRadians(pitch)),
@@ -58,11 +58,11 @@ public class ThrowingItem extends SimpleItem implements PolymerItem {
                 projectile.setXRot(user.getXRot());
                 projectile.setDeltaMovement(deltaMovement.x, deltaMovement.y, deltaMovement.z);
 
-                var projItem = this.shootBehaviour.projectile != null ? BuiltInRegistries.ITEM.get(this.shootBehaviour.projectile).getDefaultInstance() : itemStack.copyWithCount(1);
+                var projItem = this.shootConfig.projectile != null ? BuiltInRegistries.ITEM.get(this.shootConfig.projectile).getDefaultInstance() : itemStack.copyWithCount(1);
                 projectile.setProjectileStack(projItem);
                 projectile.setPickupStack(projItem);
                 projectile.setOwner(user);
-                projectile.setBaseDamage(this.shootBehaviour.baseDamage);
+                projectile.setBaseDamage(this.shootConfig.baseDamage);
 
                 if (user.isCreative()) {
                     projectile.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
@@ -70,8 +70,8 @@ public class ThrowingItem extends SimpleItem implements PolymerItem {
             }
 
             level.addFreshEntity(projectile);
-            level.playSound(null, projectile, this.shootBehaviour.sound != null ? BuiltInRegistries.SOUND_EVENT.get(this.shootBehaviour.sound) : SoundEvents.TRIDENT_THROW.value(), SoundSource.PLAYERS, 1.0F, 1.0F);
-            if (!user.isCreative() && this.shootBehaviour.consumes) {
+            level.playSound(null, projectile, this.shootConfig.sound != null ? BuiltInRegistries.SOUND_EVENT.get(this.shootConfig.sound) : SoundEvents.TRIDENT_THROW.value(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            if (!user.isCreative() && this.shootConfig.consumes) {
                 itemStack.shrink(1);
             }
         }

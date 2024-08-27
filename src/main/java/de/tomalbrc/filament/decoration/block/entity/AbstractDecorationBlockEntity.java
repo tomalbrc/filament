@@ -2,7 +2,7 @@ package de.tomalbrc.filament.decoration.block.entity;
 
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
-import de.tomalbrc.filament.registry.filament.DecorationRegistry;
+import de.tomalbrc.filament.registry.DecorationRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -55,7 +55,7 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
         super.loadAdditional(compoundTag, provider);
 
         if (!compoundTag.contains(VERSION)) {
-            this.version = 1;
+            this.version = 1; // upgrade old format
             if (compoundTag.contains(MAIN)) this.main = NbtUtils.readBlockPos(compoundTag, MAIN).get().subtract(this.worldPosition);
         }
         else {

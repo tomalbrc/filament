@@ -1,8 +1,8 @@
 package de.tomalbrc.filament.block;
 
 import com.mojang.serialization.MapCodec;
+import de.tomalbrc.filament.behaviours.block.Repeater;
 import de.tomalbrc.filament.data.BlockData;
-import de.tomalbrc.filament.data.behaviours.block.Repeater;
 import de.tomalbrc.filament.util.Constants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -42,7 +42,7 @@ public class PoweredDirectionBlock extends SimpleBlock {
 
         this.isRelay = data.isRepeater();
         if (this.isRelay &&  data.behaviour().get(Constants.Behaviours.REPEATER) != null) {
-            Repeater repeater = data.behaviour().get(Constants.Behaviours.REPEATER);
+            Repeater.RepeaterConfig repeater = data.behaviour().get(Constants.Behaviours.REPEATER);
             this.delay = repeater.delay;
             this.loss = repeater.loss;
         }
