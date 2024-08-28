@@ -29,7 +29,5 @@ public interface DecorationBehaviour<T> extends Behaviour<T> {
 
     default void destroy(DecorationBlockEntity decorationBlockEntity, boolean dropItem) {}
 
-    default void modifyItemProperties(Item.Properties properties) {}
-
     default void modifyDrop(DecorationBlockEntity decorationBlockEntity, ItemStack itemStack) {}
 }
