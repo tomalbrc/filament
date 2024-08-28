@@ -93,6 +93,8 @@ public class Container implements DecorationBehaviour<Container.ContainerConfig>
                 player.openMenu(new SimpleMenuProvider((i, playerInventory, playerEntity) -> new HopperMenu(i, playerInventory, container), containerName));
             }
 
+            decorationBlockEntity.setChanged();
+
             return InteractionResult.CONSUME;
         }
         return InteractionResult.PASS;

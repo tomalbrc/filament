@@ -70,6 +70,8 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
                     this.setShowcaseItemStack(decorationBlockEntity, showcase, ItemStack.EMPTY);
                 }
 
+                decorationBlockEntity.setChanged();
+
                 return InteractionResult.CONSUME;
             }
         }

@@ -37,8 +37,8 @@ public class Animation implements DecorationBehaviour<Animation.AnimationConfig>
     }
 
     @Override
-    public void onAttach(DecorationBlockEntity blockEntity) {
-        if (blockEntity.getDecorationHolder() instanceof AnimatedHolder animatedHolder) {
+    public void onElementAttach(DecorationBlockEntity blockEntity, ElementHolder holder) {
+        if (holder instanceof AnimatedHolder animatedHolder) {
             animatedHolder.setRotation(blockEntity.getVisualRotationYInDegrees());
         }
     }

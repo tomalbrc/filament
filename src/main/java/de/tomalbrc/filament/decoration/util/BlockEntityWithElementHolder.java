@@ -11,7 +11,7 @@ public interface BlockEntityWithElementHolder {
     // for just-placed ones
     void attach(ServerLevel level);
 
-    ElementHolder makeHolder();
+    ElementHolder getOrCreateHolder();
 
     ElementHolder getDecorationHolder();
 

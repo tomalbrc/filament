@@ -55,7 +55,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             this.itemStack.getDescriptionId();
             Filament.LOGGER.error("No decoration formats for " + this.itemStack.getDescriptionId() + "!");
         } else if (this.decorationHolder == null) {
-            this.makeHolder();
+            this.getOrCreateHolder();
             this.setupBehaviour(decorationData);
         }
 
@@ -77,7 +77,10 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     }
 
     @Override
-    public ElementHolder makeHolder() {
+    public ElementHolder getOrCreateHolder() {
+        if (this.decorationHolder != null)
+            return this.decorationHolder;
+
         ElementHolder altHolder = null;
         for (Map.Entry<ResourceLocation, Behaviour<?>> behaviourEntry : this.behaviours) {
             if (behaviourEntry.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
@@ -108,7 +111,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     @Override
     public void attach(LevelChunk chunk) {
         if (this.isMain() && this.itemStack != null) {
-            ElementHolder elementHolder = this.makeHolder();
+            ElementHolder elementHolder = this.getOrCreateHolder();
             if (elementHolder.getAttachment() == null) {
                 new BlockBoundAttachment(elementHolder, chunk, this.getBlockState(), this.getBlockPos(), this.getBlockPos().getCenter(), !(this.getDecorationHolder() instanceof DecorationHolder));
             }
@@ -116,7 +119,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
         for (Map.Entry<ResourceLocation, Behaviour<?>> behaviourEntry : this.behaviours) {
             if (behaviourEntry.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
-                decorationBehaviour.onAttach(this);
+                decorationBehaviour.onElementAttach(this, this.decorationHolder);
             }
         }
     }
@@ -132,7 +135,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             assert decorationData.behaviourConfig() != null;
 
             if (this.decorationHolder == null) {
-                this.makeHolder();
+                this.getOrCreateHolder();
             }
 
             this.initBehaviours(decorationData.behaviourConfig());

@@ -19,7 +19,7 @@ public interface DecorationBehaviour<T> extends Behaviour<T> {
         return null;
     }
 
-    default void onAttach(DecorationBlockEntity blockEntity) {}
+    default void onElementAttach(DecorationBlockEntity blockEntity, ElementHolder holder) {}
 
     default InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) { return InteractionResult.PASS; }
 

@@ -9,7 +9,6 @@ import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.armortrim.TrimPattern;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;

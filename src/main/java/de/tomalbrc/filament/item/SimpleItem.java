@@ -1,12 +1,12 @@
 package de.tomalbrc.filament.item;
 
-import de.tomalbrc.filament.trim.FilamentTrimPatterns;
 import de.tomalbrc.filament.behaviours.item.Armor;
 import de.tomalbrc.filament.behaviours.item.Cosmetic;
 import de.tomalbrc.filament.behaviours.item.Execute;
 import de.tomalbrc.filament.behaviours.item.Fuel;
 import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.registry.FuelRegistry;
+import de.tomalbrc.filament.trim.FilamentTrimPatterns;
 import de.tomalbrc.filament.util.Constants;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.core.api.item.PolymerItemUtils;
