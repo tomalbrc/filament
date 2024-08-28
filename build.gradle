@@ -6,6 +6,10 @@ plugins {
 version = project.mod_version + "+" + project.minecraft_version
 group = project.maven_group
 
+loom {
+    accessWidenerPath = file("src/main/resources/filament.accesswidener")
+}
+
 repositories {
     maven { url 'https://maven.tomalbrc.de' }
     maven { url 'https://maven.nucleoid.xyz' }

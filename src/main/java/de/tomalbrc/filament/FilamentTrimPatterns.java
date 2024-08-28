@@ -5,29 +5,41 @@ import de.tomalbrc.filament.util.Json;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.core.Holder;
+import net.minecraft.core.RegistrationInfo;
+import net.minecraft.core.WritableRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.armortrim.TrimPattern;
-import org.lwjgl.util.freetype.FreeType;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 
 public class FilamentTrimPatterns {
+    public static Armor.ArmorConfig getConfig() {
+        var conf = new Armor.ArmorConfig();
+        conf.texture = ResourceLocation.withDefaultNamespace("chainmail");
+        return conf;
+    }
+
     public static class FilamentTrimHolder {
-        public TrimPattern trimPattern;
+        public Holder.Reference<TrimPattern> trimPattern;
     }
     private static Map<Armor.ArmorConfig, FilamentTrimHolder> trimConfigs = new Object2ObjectOpenHashMap();
-
-    public static final ResourceKey<TrimPattern> FILAMENT_TEST = of("filament-test");
+    public static final FilamentTrimHolder CHAIN_TRIM = addConfig(getConfig());
 
     public static FilamentTrimHolder addConfig(Armor.ArmorConfig config) {
         var tmpHolder = trimConfigs.get(config);
@@ -39,11 +51,38 @@ public class FilamentTrimPatterns {
         return holder;
     }
 
-    public static void bootstrap(BootstrapContext<TrimPattern> registry) {
-        register(registry, Items.BARRIER, FILAMENT_TEST);
+    public static boolean isEmpty() {
+        return trimConfigs.size() <= 1;
+    }
 
-        // TODO: add to resourcepack contents ..?
+    public static void bootstrap(WritableRegistry<TrimPattern> registry) {
+        if (FilamentTrimPatterns.isEmpty())
+            return;
+
+        for (Map.Entry<Armor.ArmorConfig, FilamentTrimHolder> entry : trimConfigs.entrySet()) {
+            entry.getValue().trimPattern = register(registry, Items.BARRIER, of(entry.getKey().texture));
+        }
+
         PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(FilamentTrimPatterns::addRPContents);
+        PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder -> {
+            var p1 = "assets/minecraft/textures/models/armor/chainmail_layer_1.png";
+            var p2 = "assets/minecraft/textures/models/armor/chainmail_layer_2.png";
+
+            resourcePackBuilder.addData("assets/minecraft/textures/trims/models/armor/chainmail.png", resourcePackBuilder.getDataOrSource(p1));
+            resourcePackBuilder.addData("assets/minecraft/textures/trims/models/armor/chainmail_leggings.png", resourcePackBuilder.getDataOrSource(p2));
+
+            BufferedImage image = new BufferedImage(64, 32, BufferedImage.TYPE_INT_ARGB);
+            byte[] pngData = null;
+            try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+                ImageIO.write(image, "png", stream);
+                pngData = stream.toByteArray();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            resourcePackBuilder.addData(p1, pngData);
+            resourcePackBuilder.addData(p2, pngData);
+        });
     }
 
     public static void addRPContents(ResourcePackBuilder builder) {
@@ -52,33 +91,42 @@ public class FilamentTrimPatterns {
         var data = builder.getDataOrSource(path);
         ResourcePackTrimPatternAtlas atlas = Json.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(data)), ResourcePackTrimPatternAtlas.class);
 
-        ResourcePackTrimPatternAtlas.Source source = new ResourcePackTrimPatternAtlas.Source();
-        source.type = atlas.sources.get(0).type;
-        source.palette_key = atlas.sources.get(0).palette_key;
 
+        List<ResourceLocation> resourceLocationList = new ObjectArrayList<>();
         for (Map.Entry<Armor.ArmorConfig, FilamentTrimHolder> entry : trimConfigs.entrySet()) {
-            String texturePath = entry.getKey().texture.getNamespace() + ":models/armor/" + entry.getKey().texture.getPath();
-            source.textures.add(texturePath);
+            ResourcePackTrimPatternAtlas.Source source = new ResourcePackTrimPatternAtlas.Source();
+            source.type = atlas.sources.get(0).type;
+            source.palette_key = atlas.sources.get(0).palette_key;
+            source.textures = new ObjectArrayList<>();
+
+            if (!resourceLocationList.contains(entry.getKey().texture)) { // only once for every texture
+                source.textures.add(entry.getKey().texture.withPrefix("trims/models/armor/").toString());
+                source.textures.add(entry.getKey().texture.withPrefix("trims/models/armor/").withSuffix("_leggings").toString());
+                resourceLocationList.add(entry.getKey().texture);
+            }
+
+            source.permutations = atlas.sources.get(0).permutations;
+
+            atlas.sources.add(source);
         }
-
-        source.permutations = atlas.sources.get(0).permutations;
-
-        atlas.sources.add(source);
 
         builder.addData(path, Json.GSON.toJson(atlas).getBytes(StandardCharsets.UTF_8));
     }
 
-    private static void register(BootstrapContext<TrimPattern> registry, Item template, ResourceKey<TrimPattern> key) {
+
+
+    private static Holder.Reference<TrimPattern> register(WritableRegistry<TrimPattern> registry, Item template, ResourceKey<TrimPattern> key) {
         TrimPattern armorTrimPattern = new TrimPattern(
                 key.location(),
                 BuiltInRegistries.ITEM.wrapAsHolder(template),
-                Component.literal("filament.dummy"),
+                Component.empty(),
                 false // decal
         );
-        registry.register(key, armorTrimPattern);
+        return registry.register(key, armorTrimPattern, RegistrationInfo.BUILT_IN);
     }
-    private static ResourceKey<TrimPattern> of(String id) {
-        return ResourceKey.create(Registries.TRIM_PATTERN, ResourceLocation.fromNamespaceAndPath("filament", id));
+
+    private static ResourceKey<TrimPattern> of(ResourceLocation resourceLocation) {
+        return ResourceKey.create(Registries.TRIM_PATTERN, resourceLocation);
     }
 
     private FilamentTrimPatterns() {

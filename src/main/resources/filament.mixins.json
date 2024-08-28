@@ -13,12 +13,15 @@
     "MobMixin",
     "PlayerMixin",
     "ReloadableServerResourcesMixin",
-    "TrimPatternsMixin",
     "WorldLoaderMixin",
     "cosmetic.LivingEntityMixin",
     "cosmetic.ServerPlayerMixin",
     "polymer.AutoHostMixin",
-    "polymer.DefaultModelDataMixin"
+    "polymer.DefaultModelDataMixin",
+    "trim.ItemStackMixin",
+    "trim.ItemStackPacketCodecMixin",
+    "trim.RegistryDataLoaderMixin",
+    "trim.SmithingTrimRecipeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

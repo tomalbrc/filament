@@ -31,5 +31,6 @@
     "polymer-networking": "*",
     "polymer-virtual-entity": "*",
     "bil": ">=1.1.10"
-  }
+  },
+  "accessWidener": "filament.accesswidener"
 }
