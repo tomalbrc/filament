@@ -1,4 +1,4 @@
-package de.tomalbrc.filament;
+package de.tomalbrc.filament.trim;
 
 import java.util.List;
 import java.util.Map;

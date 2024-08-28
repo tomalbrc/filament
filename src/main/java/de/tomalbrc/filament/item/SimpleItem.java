@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.item;
 
-import de.tomalbrc.filament.FilamentTrimPatterns;
+import de.tomalbrc.filament.trim.FilamentTrimPatterns;
 import de.tomalbrc.filament.behaviours.item.Armor;
 import de.tomalbrc.filament.behaviours.item.Cosmetic;
 import de.tomalbrc.filament.behaviours.item.Execute;
@@ -114,7 +114,8 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
     @Override
     public ItemStack getPolymerItemStack(ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
         ItemStack itemStack1 = PolymerItemUtils.createItemStack(itemStack, tooltipType, lookup, player);
-        if (this.trimHolder != null) itemStack1.set(DataComponents.TRIM, new ArmorTrim(lookup.lookup(Registries.TRIM_MATERIAL).get().get(TrimMaterials.QUARTZ).get(), this.trimHolder.trimPattern, false));
+        if (this.trimHolder != null)
+            itemStack1.set(DataComponents.TRIM, new ArmorTrim(lookup.lookup(Registries.TRIM_MATERIAL).get().get(TrimMaterials.REDSTONE).get(), this.trimHolder.trimPattern, false));
         return itemStack1;
     }
 

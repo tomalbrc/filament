@@ -18,7 +18,6 @@
     "cosmetic.ServerPlayerMixin",
     "polymer.AutoHostMixin",
     "polymer.DefaultModelDataMixin",
-    "trim.ItemStackMixin",
     "trim.ItemStackPacketCodecMixin",
     "trim.RegistryDataLoaderMixin",
     "trim.SmithingTrimRecipeMixin"

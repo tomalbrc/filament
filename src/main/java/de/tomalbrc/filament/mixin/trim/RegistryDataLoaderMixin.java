@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.mixin.trim;
 
-import de.tomalbrc.filament.FilamentTrimPatterns;
+import de.tomalbrc.filament.trim.FilamentTrimPatterns;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.core.registries.Registries;
@@ -16,8 +16,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(RegistryDataLoader.class)
 public class RegistryDataLoaderMixin {
-    @Unique private static MappedRegistry trim = null;
-
     @Inject(at = @At(value = "TAIL"), method = "method_56514")
     private static void filament$bootstrap(ResourceManager resourceManager, RegistryDataLoader.Loader loader, RegistryOps.RegistryInfoLookup registryInfoLookup, CallbackInfo ci) {
         if (loader.registry() instanceof MappedRegistry mappedRegistry) {
