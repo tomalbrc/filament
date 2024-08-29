@@ -56,7 +56,7 @@ public class TrapItem extends SimpleItem {
                     list.add(Component.literal("› ").append(Component.translatable(BuiltInRegistries.MOB_EFFECT.get(e).getDescriptionId()))); // todo: make "Contains " translateable?
                 }
             }
-            list.add(Component.literal("Chance: " + this.trapData().chance));
+            list.add(Component.literal("Chance: " + this.trapData().chance + "%"));
         }
 
         super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
