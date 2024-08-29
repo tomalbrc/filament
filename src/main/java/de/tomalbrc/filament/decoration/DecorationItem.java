@@ -33,6 +33,7 @@ import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
@@ -41,12 +42,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Iterator;
 import java.util.List;
 
-public class DecorationItem extends Item implements PolymerItem, Equipable {
+public class DecorationItem extends BlockItem implements PolymerItem, Equipable {
     final private DecorationData decorationData;
     final private PolymerModelData modelData;
 
-    public DecorationItem(DecorationData decorationData, Item.Properties properties) {
-        super(properties);
+    public DecorationItem(Block block, DecorationData decorationData, Item.Properties properties) {
+        super(block, properties);
         this.decorationData = decorationData;
         this.modelData = this.decorationData.requestModel();
 
@@ -199,7 +200,7 @@ public class DecorationItem extends Item implements PolymerItem, Equipable {
             player.startUsingItem(useOnContext.getHand());
             itemStack.shrink(1);
 
-            level.playSound(null, player, SoundEvents.WOOD_PLACE, SoundSource.PLAYERS, 1.0F, 1.0F);
+            level.playSound(null, blockPos, SoundEvents.WOOD_PLACE, SoundSource.PLAYERS, 1.0F, 1.0F);
 
             return InteractionResult.sidedSuccess(level.isClientSide);
         }

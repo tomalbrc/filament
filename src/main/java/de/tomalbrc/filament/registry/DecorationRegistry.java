@@ -79,14 +79,13 @@ public class DecorationRegistry {
             }
         }
 
-
         if (data.isContainer()) {
             Container.ContainerConfig container = data.behaviourConfig().get(Constants.Behaviours.CONTAINER);
             if (container.canPickup)
                 properties.component(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
         }
 
-        ItemRegistry.registerItem(data.id(), new DecorationItem(data, properties), ItemRegistry.CUSTOM_DECORATIONS);
+        ItemRegistry.registerItem(data.id(), new DecorationItem(block, data, properties), ItemRegistry.CUSTOM_DECORATIONS);
 
         REGISTERED_DECORATIONS++;
     }

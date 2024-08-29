@@ -20,6 +20,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -54,7 +56,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     public void setLevel(Level level) {
         super.setLevel(level);
         if (isMain() && level != null && this.decorationHolder == null) {
-            if (this.behaviours.isEmpty() && !this.getDecorationData().behaviourConfig().isEmpty())
+            if (this.behaviours.isEmpty() && this.getDecorationData().behaviourConfig() != null && !this.getDecorationData().behaviourConfig().isEmpty())
                 this.initBehaviours(this.getDecorationData().behaviourConfig());
             this.getOrCreateHolder();
         }
@@ -194,10 +196,10 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
                 Util.forEachRotated(this.getDecorationData().blocks(), this.getBlockPos(), this.getVisualRotationYInDegrees(), blockPos -> {
                     if (DecorationRegistry.isDecoration(this.getLevel().getBlockState(blockPos))) {
                         this.getLevel().removeBlock(blockPos, false);
-                        this.getLevel().removeBlockEntity(blockPos);
                     }
                 });
             } else {
+                level.playSound(null, this.getBlockPos(), SoundEvents.WOOD_BREAK, SoundSource.PLAYERS, 1.0F, 1.0F);
                 this.getLevel().destroyBlock(this.getBlockPos(), true);
             }
         }
