@@ -69,6 +69,9 @@ Here is a basic example of an item configuration:
   },
   "behaviour": {
     ...
+  },
+  "components": {
+    ...
   }
 }
 ```

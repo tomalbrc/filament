@@ -62,6 +62,7 @@ Example of all behaviour fields for decorations:
   }
 }
 ```
+---
 
 ### `animation` behaviour
 
@@ -71,6 +72,8 @@ Defines animation behaviours for decorations.
 - **Fields**:
     - `model`: The name of the animated model associated with this animation (if applicable).
     - `autoplay`: The name of the animation to autoplay (if specified).
+
+---
 
 ### `container` behaviour
 
@@ -84,6 +87,8 @@ Defines container behaviours for decorations.
     - `openAnimation`: The name of the animation to play when the container is opened (if applicable).
     - `closeAnimation`: The name of the animation to play when the container is closed (if applicable).
 
+---
+
 ### `lock` behaviour
 
 **Description**:
@@ -96,6 +101,8 @@ Defines lock behaviours for decorations.
     - `unlockAnimation`: Name of the animation to play upon successful unlocking (if applicable).
     - `command`: Command to execute when the lock is successfully unlocked (if specified).
 
+---
+
 ### `seat` behaviour
 
 **Description**:
@@ -104,6 +111,8 @@ Defines seating behaviours for decorations.
 - **Fields**:
     - `offset`: The player seating offset.
     - `direction`: The rotation direction of the seat.
+
+---
 
 ### `showcase` behaviour
 
@@ -118,6 +127,8 @@ Defines showcase behaviours for decorations.
     - `filterItems`: Items to allow.
     - `filterTags`: Items with given item tags to allow.
 
+---
+
 ### `fuel` behaviour
 
 **Description**:
@@ -125,6 +136,8 @@ Defines fuel behaviours for decorations, specifying their value used in furnaces
 
 - **Fields**:
     - `value`: The value associated with the fuel, determining burn duration.
+
+---
 
 ### `food` behaviour
 
@@ -137,6 +150,8 @@ Defines food item behaviours for edible decorations.
     - `canAlwaysEat`: Indicates whether the item can be eaten when the hunger bar is full.
     - `fastfood`: Boolean indicating whether the food item is considered fast food (eats faster than normal).
 
+---
+
 ### `cosmetic` behaviour
 
 **Description**:
@@ -148,3 +163,4 @@ Defines cosmetic behaviours for decorations, supporting both Blockbench models f
     - `autoplay`: Optional, the name of the animation to autoplay, which should be loopable.
     - `scale`: Scale of the chest cosmetic, defaulting to (1, 1, 1).
     - `translation`: Translation of the chest cosmetic, defaulting to (0, 0, 0).
+

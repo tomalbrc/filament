@@ -22,8 +22,10 @@ Blocks like candles or turtle eggs, with mutiple blocks in 1:
     }
   },
   "itemResource": {
-    "model": "mynamespace:custom/block/stone/pebbles_item"
-  },
+    "models": {
+      "default": "mynamespace:custom/block/stone/pebbles_item"
+    }
+  },  
   "type": "count",
   "blockModelType": "biome_plant_block",
   "properties": {

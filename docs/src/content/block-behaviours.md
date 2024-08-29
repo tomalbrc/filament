@@ -47,6 +47,7 @@ Example of a block with behaviours set:
   }
 }
 ```
+---
 
 ### `powersource` behaviour
 
@@ -55,6 +56,8 @@ Defines the block as a redstone power source.
 
 - **Fields**:
     - `value`: The redstone power value the block emits.
+
+---
 
 ### `repeater` behaviour
 
@@ -65,6 +68,8 @@ Defines the block as a redstone repeater with configurable delay and loss.
     - `delay`: Delay in ticks.
     - `loss`: Power loss during transfer.
 
+---
+
 ### `fuel` behaviour
 
 **Description**:
@@ -72,6 +77,8 @@ Defines fuel behaviours for blocks, specifying their value used in furnaces and 
 
 - **Fields**:
     - `value`: The value associated with the fuel, determining burn duration.
+
+---
 
 ### `food` behaviour
 
@@ -84,6 +91,8 @@ Defines food item behaviours for edible blocks.
     - `canAlwaysEat`: Indicates whether the item can be eaten when the hunger bar is full.
     - `fastfood`: Boolean indicating whether the food item is considered fast food (eats faster than normal).
 
+---
+
 ### `cosmetic` behaviour
 
 **Description**:
@@ -95,6 +104,8 @@ Defines cosmetic behaviours for blocks, supporting both Blockbench models for ch
     - `autoplay`: Optional, the name of the animation to autoplay, which should be loopable.
     - `scale`: Scale of the chest cosmetic, defaulting to (1, 1, 1).
     - `translation`: Translation of the chest cosmetic, defaulting to (0, 0, 0).
+
+---
 
 ### `strippable` behaviour
 
