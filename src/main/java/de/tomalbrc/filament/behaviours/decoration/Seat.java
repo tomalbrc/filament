@@ -32,7 +32,7 @@ public class Seat implements DecorationBehaviour<Seat.SeatConfig> {
 
     @Override
     public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
-        if (decorationBlockEntity.getDecorationHolder() instanceof DecorationHolder decorationHolder) {
+        if (!player.isSecondaryUseActive() && decorationBlockEntity.getDecorationHolder() instanceof DecorationHolder decorationHolder) {
             Seat.SeatMeta seat = this.getClosestSeat(decorationBlockEntity, location);
 
             if (seat != null && !this.hasSeatedPlayer(decorationBlockEntity, seat)) {

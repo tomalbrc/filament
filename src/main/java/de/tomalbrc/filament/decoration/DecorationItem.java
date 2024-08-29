@@ -20,6 +20,8 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -38,7 +40,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DecorationItem extends Item implements PolymerItem, Equipable {
     final private DecorationData decorationData;
@@ -130,15 +131,15 @@ public class DecorationItem extends Item implements PolymerItem, Equipable {
             propertyPlaceCheck = decorationData.properties().placement.canPlace(direction);
         }
 
-        if (player == null || !this.mayPlace(player, direction, itemStack, relativeBlockPos)) {
+        float angle = this.getVisualRotationYInDegrees(direction, rotation);
+
+        if (player == null || !this.mayPlace(player, direction, itemStack, relativeBlockPos) || !propertyPlaceCheck) {
             return InteractionResult.FAIL;
-        } else if (!propertyPlaceCheck) {
-            return InteractionResult.FAIL;
-        } else if (this.canPlaceAt(level, relativeBlockPos, useOnContext.getHorizontalDirection().getOpposite(), useOnContext.getClickedFace()) && itemStack.getItem() instanceof DecorationItem) {
+        } else if (this.canPlaceAt(level, relativeBlockPos, useOnContext.getHorizontalDirection().getOpposite(), useOnContext.getClickedFace(), angle) && itemStack.getItem() instanceof DecorationItem) {
             if (decorationData.hasBlocks()) {
                 int finalRotation = rotation;
-                Util.forEachRotated(decorationData.blocks(), relativeBlockPos, this.getVisualRotationYInDegrees(direction, rotation), blockPos2 -> {
-                    level.destroyBlock(blockPos2, true);
+                Util.forEachRotated(decorationData.blocks(), relativeBlockPos, angle, blockPos2 -> {
+                    level.destroyBlock(blockPos2, false);
 
                     BlockPlaceContext blockPlaceContext = new BlockPlaceContext(player, useOnContext.getHand(), itemStack, new BlockHitResult(useOnContext.getClickLocation(), useOnContext.getClickedFace(), blockPos2, useOnContext.isInside()));
                     BlockState blockState = DecorationRegistry.getDecorationBlock(decorationData.id()).getStateForPlacement(blockPlaceContext);
@@ -198,6 +199,8 @@ public class DecorationItem extends Item implements PolymerItem, Equipable {
             player.startUsingItem(useOnContext.getHand());
             itemStack.shrink(1);
 
+            level.playSound(null, player, SoundEvents.WOOD_PLACE, SoundSource.PLAYERS, 1.0F, 1.0F);
+
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
 
@@ -211,23 +214,19 @@ public class DecorationItem extends Item implements PolymerItem, Equipable {
     /**
      * Check if multi-block structure can be placed
      */
-    private boolean canPlaceAt(Level level, BlockPos blockPos, Direction direction, Direction clickedFace) {
+    private boolean canPlaceAt(Level level, BlockPos blockPos, Direction direction, Direction clickedFace, float angle) {
         if (!level.getBlockState(blockPos).canBeReplaced()) {
             return false;
         }
 
         if (decorationData.hasBlocks()) {
-            float angle;
-            angle = Util.SEGMENTED_ANGLE8.toDegrees(Util.SEGMENTED_ANGLE8.fromDirection(direction.getOpposite()));
-
-            // :concern:
-            AtomicBoolean canPlace = new AtomicBoolean(true);
+            boolean canPlace[] = new boolean[]{true};
             Util.forEachRotated(decorationData.blocks(), blockPos, angle, blockPos2 -> {
                 if (!level.getBlockState(blockPos2).canBeReplaced()) {
-                    canPlace.set(false);
+                    canPlace[0] = false;
                 }
             });
-            return canPlace.get();
+            return canPlace[0];
         }
 
         return true;

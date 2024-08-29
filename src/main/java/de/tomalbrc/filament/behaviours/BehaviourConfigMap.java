@@ -12,15 +12,19 @@ import java.util.function.BiConsumer;
 public class BehaviourConfigMap {
     private final Map<ResourceLocation, Object> behaviourConfigMap = new Object2ObjectOpenHashMap<>();
     public <T> void put(ResourceLocation resourceLocation, Object config) {
-        behaviourConfigMap.put(resourceLocation, config);
+        this.behaviourConfigMap.put(resourceLocation, config);
     }
 
     public <T> T get(ResourceLocation resourceLocation) {
-        return (T) behaviourConfigMap.get(resourceLocation);
+        return (T) this.behaviourConfigMap.get(resourceLocation);
     }
 
     public void forEach(BiConsumer<ResourceLocation, Object> biConsumer) {
-        behaviourConfigMap.forEach(biConsumer);
+        this.behaviourConfigMap.forEach(biConsumer);
+    }
+
+    public boolean isEmpty() {
+        return this.behaviourConfigMap.isEmpty();
     }
 
     public static class Deserializer implements JsonDeserializer<BehaviourConfigMap> {

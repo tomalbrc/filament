@@ -36,7 +36,7 @@ public class AnimatedHolder extends PositionedHolder {
         this.getElements().forEach(x -> {
             if (x instanceof DisplayElement displayElement) {
                 displayElement.setTeleportDuration(0);
-                displayElement.setYaw(rotation);
+                displayElement.setYaw(rotation - 180);
             }
         });
     }

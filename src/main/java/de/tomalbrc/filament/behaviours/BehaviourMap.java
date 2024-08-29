@@ -11,21 +11,25 @@ import java.util.Map;
 public class BehaviourMap implements Iterable<Map.Entry<ResourceLocation, Behaviour<?>>> {
     private final Map<ResourceLocation, Behaviour<?>> behaviourMap = new Object2ObjectOpenHashMap<>();
     public <T> void put(ResourceLocation resourceLocation, Behaviour<?> behaviour) {
-        behaviourMap.put(resourceLocation, behaviour);
+        this.behaviourMap.put(resourceLocation, behaviour);
     }
 
     public <T> T get(ResourceLocation resourceLocation) {
-        return (T) behaviourMap.get(resourceLocation);
+        return (T) this.behaviourMap.get(resourceLocation);
     }
 
     public void from(BehaviourConfigMap configMap) {
-        configMap.forEach((resourceLocation, behaviour) -> {
+        if (configMap != null) configMap.forEach((resourceLocation, behaviour) -> {
             this.put(resourceLocation, BehaviourRegistry.create(resourceLocation, behaviour));
         });
     }
 
+    public boolean isEmpty() {
+        return this.behaviourMap.isEmpty();
+    }
+
     @Override
     public Iterator<Map.Entry<ResourceLocation, Behaviour<?>>> iterator() {
-        return behaviourMap.entrySet().iterator();
+        return this.behaviourMap.entrySet().iterator();
     }
 }

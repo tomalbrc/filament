@@ -25,6 +25,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec3;
@@ -49,13 +50,22 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         if (this.isMain()) this.loadMain(compoundTag, provider);
     }
 
+    @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        if (isMain() && level != null && this.decorationHolder == null) {
+            if (this.behaviours.isEmpty() && !this.getDecorationData().behaviourConfig().isEmpty())
+                this.initBehaviours(this.getDecorationData().behaviourConfig());
+            this.getOrCreateHolder();
+        }
+    }
+
     public void loadMain(CompoundTag compoundTag, HolderLookup.Provider provider) {
         DecorationData decorationData = this.getDecorationData();
         if (decorationData == null) {
             this.itemStack.getDescriptionId();
             Filament.LOGGER.error("No decoration formats for " + this.itemStack.getDescriptionId() + "!");
         } else if (this.decorationHolder == null) {
-            this.getOrCreateHolder();
             this.setupBehaviour(decorationData);
         }
 
@@ -131,13 +141,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
     public void setupBehaviour(DecorationData decorationData) {
         // When placed, decorationId is not yet set?
-        if (this.isMain()) {
-            assert decorationData.behaviourConfig() != null;
-
-            if (this.decorationHolder == null) {
-                this.getOrCreateHolder();
-            }
-
+        if (this.isMain() && this.behaviours.isEmpty() && decorationData.behaviourConfig() != null) {
             this.initBehaviours(decorationData.behaviourConfig());
         }
     }
@@ -166,7 +170,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
         DecorationData decorationData = this.getDecorationData();
         if (decorationData == null) {
-            Filament.LOGGER.warn("Can't interact with decoration: Missing decoration formats! Location: " + location.toString());
+            Filament.LOGGER.warn("Can't interact with decoration: Missing decoration data! Location: " + location.toString());
             return InteractionResult.FAIL;
         }
 
@@ -189,7 +193,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             if (this.getDecorationData().hasBlocks()) {
                 Util.forEachRotated(this.getDecorationData().blocks(), this.getBlockPos(), this.getVisualRotationYInDegrees(), blockPos -> {
                     if (DecorationRegistry.isDecoration(this.getLevel().getBlockState(blockPos))) {
-                        this.getLevel().destroyBlock(blockPos, false);
+                        this.getLevel().removeBlock(blockPos, false);
                         this.getLevel().removeBlockEntity(blockPos);
                     }
                 });
