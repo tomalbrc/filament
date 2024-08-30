@@ -14,7 +14,7 @@ Blocks with a custom texture.
 [More info](blocks.md)
 
 - Decorations:
-Blocks that rotate by 45° with multi-block texture and waterlogging support.
+Blocks that rotate by 45° with multi-block and waterlogging support.
 For everything that a block would not suffice for.
 
 [More info](decorations.md)
