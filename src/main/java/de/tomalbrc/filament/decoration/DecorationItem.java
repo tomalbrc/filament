@@ -111,9 +111,11 @@ public class DecorationItem extends BlockItem implements PolymerItem, Equipable 
             return InteractionResult.FAIL;
         }
 
+        var replaceable = useOnContext.getLevel().getBlockState(useOnContext.getClickedPos()).canBeReplaced();
+
         BlockPos blockPos = useOnContext.getClickedPos();
-        Direction direction = useOnContext.getClickedFace();
-        BlockPos relativeBlockPos = blockPos.relative(direction);
+        Direction direction = replaceable ? Direction.UP : useOnContext.getClickedFace();
+        BlockPos relativeBlockPos = replaceable ? blockPos : blockPos.relative(direction);
         Player player = useOnContext.getPlayer();
         ItemStack itemStack = useOnContext.getItemInHand();
         Level level = useOnContext.getLevel();
