@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.data.properties;
 
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.material.PushReaction;
 
 public class DecorationProperties extends ItemProperties {
@@ -14,6 +15,8 @@ public class DecorationProperties extends ItemProperties {
 
     public boolean waterloggable = true;
     public boolean solid = false;
+
+    public ItemDisplayContext display = ItemDisplayContext.FIXED;
 
     public record Placement(boolean wall, boolean floor, boolean ceiling) {
         public static Placement DEFAULT = new Placement(false, true, false);

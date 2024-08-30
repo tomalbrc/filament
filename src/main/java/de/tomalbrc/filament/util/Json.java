@@ -20,6 +20,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
@@ -42,6 +43,7 @@ public class Json {
             .registerTypeHierarchyAdapter(Quaternionf.class, new QuaternionfDeserializer())
             .registerTypeHierarchyAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
             .registerTypeHierarchyAdapter(BlockModelType.class, new BlockModelTypeDeserializer())
+            .registerTypeHierarchyAdapter(ItemDisplayContext.class, new ItemDisplayContextDeserializer())
             .registerTypeHierarchyAdapter(DataComponentMap.class, new DataComponentsDeserializer())
             .registerTypeHierarchyAdapter(PushReaction.class, new PushReactionDeserializer())
             .registerTypeHierarchyAdapter(Block.class, new RegistryDeserializer<>(BuiltInRegistries.BLOCK))
@@ -144,6 +146,22 @@ public class Json {
                 return BlockModelType.valueOf(value);
             } catch (IllegalArgumentException e) {
                 throw new JsonParseException("Invalid BlockModelType value: " + value, e);
+            }
+        }
+    }
+
+    private static class ItemDisplayContextDeserializer implements JsonDeserializer<ItemDisplayContext> {
+        @Override
+        public ItemDisplayContext deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
+            if (!element.isJsonPrimitive() || !element.getAsJsonPrimitive().isString()) {
+                throw new JsonParseException("Expected string, got " + element);
+            }
+
+            String value = element.getAsString().toUpperCase();
+            try {
+                return ItemDisplayContext.valueOf(value);
+            } catch (IllegalArgumentException e) {
+                throw new JsonParseException("Invalid ItemDisplayContext value: " + value, e);
             }
         }
     }

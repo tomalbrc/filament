@@ -26,7 +26,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
@@ -211,7 +210,7 @@ public class Util {
         itemDisplayElement.setDisplayWidth(size.x*2.f);
 
         itemDisplayElement.setTransformation(matrix4f);
-        itemDisplayElement.setModelTransformation(ItemDisplayContext.FIXED);
+        itemDisplayElement.setModelTransformation(data.properties().display);
 
         return itemDisplayElement;
     }
