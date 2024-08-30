@@ -199,7 +199,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
                     }
                 });
             } else {
-                level.playSound(null, this.getBlockPos(), SoundEvents.WOOD_BREAK, SoundSource.PLAYERS, 1.0F, 1.0F);
+                level.playSound(null, this.getBlockPos(), SoundEvents.STONE_BREAK, SoundSource.PLAYERS, 1.0F, 1.0F);
                 this.getLevel().destroyBlock(this.getBlockPos(), true);
             }
         }
