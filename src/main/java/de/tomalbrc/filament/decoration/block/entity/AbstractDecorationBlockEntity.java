@@ -23,7 +23,7 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     public static final String DIRECTION = "Direction";
 
     protected BlockPos main;
-    protected int version;
+    protected int version = 1;
 
     protected int rotation;
 

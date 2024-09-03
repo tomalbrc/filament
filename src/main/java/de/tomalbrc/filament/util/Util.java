@@ -81,7 +81,7 @@ public class Util {
 
     public static void forEachRotated(List<DecorationData.BlockConfig> blockConfigs, BlockPos originBlockPos, float rotation, Consumer<BlockPos> consumer) {
         if (blockConfigs != null) {
-            blockConfigs.forEach(blockConfig -> {
+            for (DecorationData.BlockConfig blockConfig : blockConfigs) {
                 Vector3fc origin = blockConfig.origin();
                 Vector3fc size = blockConfig.size();
                 for (int x = 0; x < size.x(); x++) {
@@ -96,7 +96,7 @@ public class Util {
                         }
                     }
                 }
-            });
+            }
         }
     }
 

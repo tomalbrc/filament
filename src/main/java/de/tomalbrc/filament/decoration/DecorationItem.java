@@ -138,7 +138,7 @@ public class DecorationItem extends BlockItem implements PolymerItem, Equipable 
 
         if (player == null || !this.mayPlace(player, direction, itemStack, relativeBlockPos) || !propertyPlaceCheck) {
             return InteractionResult.FAIL;
-        } else if (this.canPlaceAt(level, relativeBlockPos, useOnContext.getHorizontalDirection().getOpposite(), useOnContext.getClickedFace(), angle) && itemStack.getItem() instanceof DecorationItem) {
+        } else if (this.canPlaceAt(level, relativeBlockPos, angle) && itemStack.getItem() instanceof DecorationItem) {
             if (decorationData.hasBlocks()) {
                 int finalRotation = rotation;
                 Util.forEachRotated(decorationData.blocks(), relativeBlockPos, angle, blockPos2 -> {
@@ -217,7 +217,7 @@ public class DecorationItem extends BlockItem implements PolymerItem, Equipable 
     /**
      * Check if multi-block structure can be placed
      */
-    private boolean canPlaceAt(Level level, BlockPos blockPos, Direction direction, Direction clickedFace, float angle) {
+    private boolean canPlaceAt(Level level, BlockPos blockPos, float angle) {
         if (!level.getBlockState(blockPos).canBeReplaced()) {
             return false;
         }
