@@ -53,10 +53,10 @@ public class ModelRegistry {
     }
 
     public static void registerAjModel(InputStream inputStream, ResourceLocation resourceLocation) throws IOException {
-        ajmodels.put(resourceLocation, new AjModelLoader().load(inputStream, resourceLocation.getPath()));
+        ajmodels.put(sanitize(resourceLocation), new AjModelLoader().load(inputStream, resourceLocation.getPath()));
     }
 
     public static void registerBbModel(InputStream inputStream, ResourceLocation resourceLocation) throws IOException {
-        ajmodels.put(resourceLocation, new BbModelLoader().load(inputStream, resourceLocation.getPath()));
+        ajmodels.put(sanitize(resourceLocation), new BbModelLoader().load(inputStream, resourceLocation.getPath()));
     }
 }

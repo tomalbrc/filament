@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.behaviours;
 
 import com.google.gson.*;
+import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.registry.BehaviourRegistry;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
@@ -40,6 +41,12 @@ public class BehaviourConfigMap {
                     resourceLocation = ResourceLocation.fromNamespaceAndPath("filament", entry.getKey());
 
                 Type clazz = BehaviourRegistry.getConfigType(resourceLocation);
+
+                if (clazz == null) {
+                    Filament.LOGGER.error("Could not load behaviour " + resourceLocation);
+                    continue;
+                }
+
                 Object deserialized = jsonDeserializationContext.deserialize(entry.getValue(), clazz);
                 behaviourConfigMap.put(resourceLocation, deserialized);
             }

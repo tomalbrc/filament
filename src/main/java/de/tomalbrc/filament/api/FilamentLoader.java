@@ -11,13 +11,14 @@ import net.minecraft.resources.ResourceLocation;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.function.Consumer;
 
 public class FilamentLoader {
     public static void loadBlocks(String modid) {
         search(modid, f -> {
             try {
-                BlockRegistry.register(f);
+                BlockRegistry.register(Files.newInputStream(f));
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
@@ -28,7 +29,7 @@ public class FilamentLoader {
     public static void loadItems(String modid) {
         search(modid, f -> {
             try {
-                ItemRegistry.register(f);
+                ItemRegistry.register(Files.newInputStream(f));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -38,7 +39,7 @@ public class FilamentLoader {
     public static void loadDecorations(String modid) {
         search(modid, f -> {
             try {
-                DecorationRegistry.register(f);
+                DecorationRegistry.register(Files.newInputStream(f));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -48,7 +49,8 @@ public class FilamentLoader {
     public static void loadModels(String modid, String namespace) {
         search(modid, f -> {
             try {
-                ModelRegistry.registerAjModel(f, ResourceLocation.fromNamespaceAndPath(namespace, f.toString()));
+                if (f.getFileName() != null)
+                    ModelRegistry.registerAjModel(Files.newInputStream(f), ResourceLocation.fromNamespaceAndPath(namespace, f.getFileName().toString()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -56,22 +58,23 @@ public class FilamentLoader {
 
         search(modid, f -> {
             try {
-                ModelRegistry.registerBbModel(f, ResourceLocation.fromNamespaceAndPath(namespace, f.toString()));
+                if (f.getFileName() != null)
+                    ModelRegistry.registerBbModel(Files.newInputStream(f), ResourceLocation.fromNamespaceAndPath(namespace, f.getFileName().toString()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }, "filament/model/", ".bbmodel");
     }
 
-    private static void search(String modid, Consumer<InputStream> registry, String path) {
+    private static void search(String modid, Consumer<Path> registry, String path) {
         search(modid, registry, path, ".json");
     }
 
-    private static void search(String modid, Consumer<InputStream> registry, String path, String ext) {
+    private static void search(String modid, Consumer<Path> registry, String path, String ext) {
         processJsonFilesInJar(modid, registry, path, ext);
     }
 
-    private static void processJsonFilesInJar(String modid, Consumer<InputStream> consumer, String rootPath, String ext) {
+    private static void processJsonFilesInJar(String modid, Consumer<Path> consumer, String rootPath, String ext) {
         var container = FabricLoader.getInstance().getModContainer(modid);
         if (container.isPresent() && !container.get().getRootPaths().isEmpty()) {
             for (var rootPaths : container.get().getRootPaths()) {
@@ -80,14 +83,14 @@ public class FilamentLoader {
                         try {
                             var name = file.getFileName().toString();
                             if (file.toAbsolutePath().toString().contains(rootPath) && name.endsWith(ext)) {
-                                consumer.accept(Files.newInputStream(file));
+                                consumer.accept(file);
                             }
                         } catch (Throwable ignored) {
-                            ignored.printStackTrace();
+                            //ignored.printStackTrace();
                         }
                     });
                 } catch (Throwable e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                 }
             }
         } else {
