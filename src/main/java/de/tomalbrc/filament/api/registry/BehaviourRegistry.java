@@ -43,7 +43,7 @@ public class BehaviourRegistry {
         registerBehaviour(Constants.Behaviours.SHOWCASE, Showcase.class);
     }
 
-    private static void registerBehaviour(ResourceLocation resourceLocation, Class<? extends Behaviour<?>> type) {
+    public static void registerBehaviour(ResourceLocation resourceLocation, Class<? extends Behaviour<?>> type) {
         behaviourMap.put(resourceLocation, new BehaviourType(resourceLocation, type, o -> {
             try {
                 return type.getDeclaredConstructor(Behaviour.getConfigType(type)).newInstance(o);
