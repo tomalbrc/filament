@@ -67,7 +67,7 @@ public class Container implements DecorationBehaviour<Container.ContainerConfig>
         public String closeAnimation = null;
 
         /**
-         * Flag to indicate wether the container can be picked up like shulker boxes.
+         * Flag to indicate whether the container can be picked up like shulker boxes.
          */
         public boolean canPickup = false;
     }

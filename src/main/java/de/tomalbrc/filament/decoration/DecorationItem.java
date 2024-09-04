@@ -20,7 +20,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -202,7 +202,8 @@ public class DecorationItem extends BlockItem implements PolymerItem, Equipable 
             player.startUsingItem(useOnContext.getHand());
             itemStack.shrink(1);
 
-            level.playSound(null, blockPos, SoundEvents.STONE_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
+            SoundEvent breakSound = this.getDecorationData().properties().blockBase.defaultBlockState().getSoundType().getPlaceSound();
+            level.playSound(null, blockPos,  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);
 
             return InteractionResult.sidedSuccess(level.isClientSide);
         }

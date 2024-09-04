@@ -20,7 +20,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -195,14 +195,21 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             if (this.getDecorationData().hasBlocks()) {
                 Util.forEachRotated(this.getDecorationData().blocks(), this.getBlockPos(), this.getVisualRotationYInDegrees(), blockPos -> {
                     if (DecorationRegistry.isDecoration(this.getLevel().getBlockState(blockPos))) {
-                        Util.showBreakParticle((ServerLevel) this.level, blockPos, this.getItem(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+                        if (this.getDecorationData().properties() != null && this.getDecorationData().properties().showBreakParticles)
+                            Util.showBreakParticle((ServerLevel) this.level, blockPos, this.getDecorationData().properties().useItemParticles ? this.getItem() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
                         this.getLevel().removeBlock(blockPos, false);
                     }
                 });
             } else {
-                var blockPos = this.getBlockPos();
-                Util.showBreakParticle((ServerLevel) this.level, blockPos, this.getItem(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
-                this.level.playSound(null, this.getBlockPos(), SoundEvents.STONE_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
+                BlockPos blockPos = this.getBlockPos();
+
+                if (this.getDecorationData().properties() != null && this.getDecorationData().properties().showBreakParticles)
+                    Util.showBreakParticle((ServerLevel) this.level, blockPos, this.getDecorationData().properties().useItemParticles ? this.getItem() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+
+                if (this.getDecorationData().properties() != null) {
+                    SoundEvent breakSound = this.getDecorationData().properties().blockBase.defaultBlockState().getSoundType().getBreakSound();
+                    this.level.playSound(null, this.getBlockPos(),  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);
+                }
                 this.getLevel().destroyBlock(this.getBlockPos(), true);
             }
         }

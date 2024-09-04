@@ -29,7 +29,7 @@ public class Food implements ItemBehaviour<Food.FoodConfig> {
         public float saturation = 0.6f;
 
         /**
-         * Indicates wether the item can be eaten when the hunger bar is full
+         * Indicates whether the item can be eaten when the hunger bar is full
          */
         public boolean canAlwaysEat = false;
 
