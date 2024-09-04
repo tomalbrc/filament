@@ -167,7 +167,9 @@ public class Util {
     }
 
     public static ItemDisplayElement decorationItemDisplay(DecorationBlockEntity blockEntity) {
-        return decorationItemDisplay(blockEntity.getDecorationData(), blockEntity.getDirection(), blockEntity.getVisualRotationYInDegrees());
+        ItemDisplayElement display = decorationItemDisplay(blockEntity.getDecorationData(), blockEntity.getDirection(), blockEntity.getVisualRotationYInDegrees());
+        display.setItem(blockEntity.getItem().copyWithCount(1));
+        return display;
     }
 
     public static ItemDisplayElement decorationItemDisplay(DecorationData data, Direction direction, float rotation) {
