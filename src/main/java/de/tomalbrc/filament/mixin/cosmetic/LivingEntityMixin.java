@@ -80,7 +80,7 @@ public class LivingEntityMixin implements CosmeticInterface {
                 EntityAttachment.ofTicking(filamentAnimatedCosmeticHolder, livingEntity);
 
                 if (livingEntity instanceof ServerPlayer serverPlayer)
-                    filamentCosmeticHolder.startWatching(serverPlayer);
+                    filamentAnimatedCosmeticHolder.startWatching(serverPlayer);
 
                 if (cosmeticData.autoplay != null) {
                     filamentAnimatedCosmeticHolder.getAnimator().playAnimation(cosmeticData.autoplay);
@@ -93,7 +93,7 @@ public class LivingEntityMixin implements CosmeticInterface {
                 EntityAttachment.ofTicking(filamentCosmeticHolder, livingEntity);
 
                 if (livingEntity instanceof ServerPlayer serverPlayer)
-                filamentCosmeticHolder.startWatching(serverPlayer);
+                    filamentCosmeticHolder.startWatching(serverPlayer);
             }
         }
     }

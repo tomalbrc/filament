@@ -81,7 +81,7 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
 
     @Override
     public void read(CompoundTag compoundTag, HolderLookup.Provider provider, DecorationBlockEntity blockEntity) {
-        if (compoundTag.contains(SHOWCASE_KEY) && blockEntity.getDecorationHolder() != null) {
+        if (compoundTag.contains(SHOWCASE_KEY) && blockEntity.getOrCreateHolder() != null) {
             CompoundTag showcaseTag = compoundTag.getCompound(SHOWCASE_KEY);
             DecorationHolder holder = DecorationHolder.class.cast(blockEntity.getDecorationHolder());
             if (holder == null)

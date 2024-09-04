@@ -145,7 +145,7 @@ public class Util {
         return element;
     }
 
-    public static InteractionElement decorationInteraction(BlockPos blockPos) {
+    public static InteractionElement decorationInteraction(BlockPos blockPos, DecorationData decorationData) {
         InteractionElement element = new InteractionElement();
         element.setHandler(new VirtualElement.InteractionHandler() {
             @Override
@@ -160,6 +160,12 @@ public class Util {
             }
         });
         element.setSize(1.f, 1.f);
+
+        if (decorationData.size() != null) {
+            element.setSize(decorationData.size().x, decorationData.size().y);
+        } else {
+            element.setSize(1.f, 1.f);
+        }
 
         element.setOffset(new Vec3(0, -0.5f, 0));
 
