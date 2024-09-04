@@ -11,6 +11,7 @@ import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.holder.DecorationHolder;
 import de.tomalbrc.filament.decoration.util.BlockEntityWithElementHolder;
 import de.tomalbrc.filament.registry.DecorationRegistry;
+import de.tomalbrc.filament.util.FilamentConfig;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.attachment.ChunkAttachment;
@@ -163,7 +164,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     }
 
     public InteractionResult decorationInteract(ServerPlayer player, InteractionHand interactionHand, Vec3 location) {
-        if (player.gameMode.getGameModeForPlayer() == GameType.ADVENTURE)
+        if (FilamentConfig.getInstance().preventAdventureModeDecorationInteraction && player.gameMode.getGameModeForPlayer() == GameType.ADVENTURE)
             return InteractionResult.PASS;
 
         if (!this.isMain()) {

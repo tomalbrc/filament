@@ -17,6 +17,8 @@ public class FilamentConfig {
     public boolean trimArmorReplaceChainmail = false;
     public boolean forceAutohost = true;
 
+    public boolean preventAdventureModeDecorationInteraction = true;
+
     public static FilamentConfig getInstance() {
         if (instance == null) {
             if (!load()) // only save if file wasn't just created
