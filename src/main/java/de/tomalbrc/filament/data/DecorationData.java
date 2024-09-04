@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.DecorationProperties;
 import de.tomalbrc.filament.util.Constants;
+import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.minecraft.core.component.DataComponentMap;
@@ -67,10 +68,10 @@ public record DecorationData(
     }
 
     public boolean isSimple() {
-        return false;
-        // TODO: itemStack is not correct/missing data since we get in from the decoration data id...
-        // so dyed color will be missing from the displayed item
-        //return ((!this.hasBlocks() || Util.barrierDimensions(this.blocks(), 0).equals(1, 1)) && this.behaviourConfig() == null) || this.size != null;
+        boolean singleBlock = (!this.hasBlocks() || Util.barrierDimensions(this.blocks(), 0).equals(1, 1));
+        boolean hasBehaviour = this.behaviourConfig() != null;
+        boolean canBeDyed = this.vanillaItem != null && (vanillaItem == Items.LEATHER_HORSE_ARMOR || vanillaItem == Items.FIREWORK_STAR);
+        return !canBeDyed && !hasBehaviour && (singleBlock || this.size != null);
     }
 
     public boolean isCosmetic() {
