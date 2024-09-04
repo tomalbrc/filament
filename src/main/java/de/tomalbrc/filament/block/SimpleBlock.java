@@ -36,7 +36,6 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock {
         return this.breakEventState;
     }
 
-
     @Override
     public boolean isSignalSource(BlockState blockState) {
         return this.blockData.isPowersource();
