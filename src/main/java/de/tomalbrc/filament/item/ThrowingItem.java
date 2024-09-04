@@ -70,7 +70,7 @@ public class ThrowingItem extends SimpleItem implements PolymerItem {
             }
 
             level.addFreshEntity(projectile);
-            level.playSound(null, projectile, this.shootConfig.sound != null ? BuiltInRegistries.SOUND_EVENT.get(this.shootConfig.sound) : SoundEvents.TRIDENT_THROW.value(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            level.playSound(null, projectile, this.shootConfig.sound != null ? BuiltInRegistries.SOUND_EVENT.get(this.shootConfig.sound) : SoundEvents.TRIDENT_THROW.value(), SoundSource.NEUTRAL, 1.0F, 1.0F);
             if (!user.isCreative() && this.shootConfig.consumes) {
                 itemStack.shrink(1);
             }

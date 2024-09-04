@@ -202,7 +202,7 @@ public class DecorationItem extends BlockItem implements PolymerItem, Equipable 
             player.startUsingItem(useOnContext.getHand());
             itemStack.shrink(1);
 
-            level.playSound(null, blockPos, SoundEvents.STONE_PLACE, SoundSource.PLAYERS, 1.0F, 1.0F);
+            level.playSound(null, blockPos, SoundEvents.STONE_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
 
             return InteractionResult.sidedSuccess(level.isClientSide);
         }

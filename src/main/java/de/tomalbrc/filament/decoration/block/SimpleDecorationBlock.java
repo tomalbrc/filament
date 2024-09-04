@@ -1,11 +1,13 @@
 package de.tomalbrc.filament.decoration.block;
 
 import de.tomalbrc.filament.decoration.holder.SimpleHolder;
+import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.BlockWithMovingElementHolder;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -49,7 +51,8 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithM
     public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
         BlockState returnVal = super.playerWillDestroy(level, blockPos, blockState, player);
         if (!this.getDecorationData().hasBlocks()) {
-            level.playSound(null, blockPos, SoundEvents.STONE_BREAK, SoundSource.PLAYERS, 1.0F, 1.0F);
+            Util.showBreakParticle((ServerLevel) level, blockPos, BuiltInRegistries.ITEM.get(this.decorationId).getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+            level.playSound(null, blockPos, SoundEvents.STONE_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
         return returnVal;
     }

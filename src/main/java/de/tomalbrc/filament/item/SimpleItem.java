@@ -164,7 +164,7 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
 
                 if (execute.sound != null) {
                     var sound = execute.sound;
-                    level.playSound(null, user, BuiltInRegistries.SOUND_EVENT.get(sound), SoundSource.PLAYERS, 1.0F, 1.0F);
+                    level.playSound(null, user, BuiltInRegistries.SOUND_EVENT.get(sound), SoundSource.NEUTRAL, 1.0F, 1.0F);
                 }
 
                 if (execute.consumes) {

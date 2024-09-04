@@ -195,11 +195,14 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             if (this.getDecorationData().hasBlocks()) {
                 Util.forEachRotated(this.getDecorationData().blocks(), this.getBlockPos(), this.getVisualRotationYInDegrees(), blockPos -> {
                     if (DecorationRegistry.isDecoration(this.getLevel().getBlockState(blockPos))) {
+                        Util.showBreakParticle((ServerLevel) this.level, blockPos, this.getItem(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
                         this.getLevel().removeBlock(blockPos, false);
                     }
                 });
             } else {
-                level.playSound(null, this.getBlockPos(), SoundEvents.STONE_BREAK, SoundSource.PLAYERS, 1.0F, 1.0F);
+                var blockPos = this.getBlockPos();
+                Util.showBreakParticle((ServerLevel) this.level, blockPos, this.getItem(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+                this.level.playSound(null, this.getBlockPos(), SoundEvents.STONE_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
                 this.getLevel().destroyBlock(this.getBlockPos(), true);
             }
         }

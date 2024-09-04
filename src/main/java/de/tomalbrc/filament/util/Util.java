@@ -13,8 +13,11 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.sounds.SoundSource;
@@ -61,6 +64,10 @@ public class Util {
                 type.getPitch() * 0.8F,
                 player.level().getRandom().nextLong()
         ));
+    }
+
+    public static void showBreakParticle(ServerLevel level, BlockPos blockPos, ItemStack stack, float x, float y, float z) {
+        level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, stack), x, y, z, 27, 0.125, 0.125, 0.125, 0.05);
     }
 
     public static Optional<Integer> validateAndConvertHexColor(String hexColor) {
@@ -125,8 +132,13 @@ public class Util {
 
             @Override
             public void attack(ServerPlayer player) {
-                if (player.gameMode.getGameModeForPlayer() != GameType.ADVENTURE)
+                if (player.gameMode.getGameModeForPlayer() != GameType.ADVENTURE) {
+                    var level = element.getHolder().getAttachment().getWorld();
+                    var blockState = level.getBlockState(blockEntity.getBlockPos());
+                    blockState.getBlock().playerWillDestroy(level, blockEntity.getBlockPos(), blockState, player);
+
                     blockEntity.destroyStructure(player != null && !player.isCreative());
+                }
             }
         });
 
@@ -155,8 +167,12 @@ public class Util {
 
             @Override
             public void attack(ServerPlayer player) {
-                if (player.gameMode.getGameModeForPlayer() != GameType.ADVENTURE)
+                if (player.gameMode.getGameModeForPlayer() != GameType.ADVENTURE) {
+                    var level = element.getHolder().getAttachment().getWorld();
+                    var blockState = level.getBlockState(blockPos);
+                    blockState.getBlock().playerWillDestroy(level, blockPos, blockState, player);
                     element.getHolder().getAttachment().getWorld().destroyBlock(BlockPos.containing(element.getHolder().getAttachment().getPos()), false);
+                }
             }
         });
         element.setSize(1.f, 1.f);
