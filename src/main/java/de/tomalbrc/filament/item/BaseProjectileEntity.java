@@ -126,7 +126,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     @Override
     @NotNull
     protected ItemStack getPickupItem() {
-        return this.pickupStack == null ? ItemStack.EMPTY : this.pickupStack.copy();
+        return this.pickupStack == null ? this.projectileStack : this.pickupStack.copy();
     }
 
     @Override
