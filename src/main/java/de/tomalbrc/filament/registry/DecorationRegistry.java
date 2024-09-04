@@ -20,6 +20,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -83,6 +85,10 @@ public class DecorationRegistry {
             Container.ContainerConfig container = data.behaviourConfig().get(Constants.Behaviours.CONTAINER);
             if (container.canPickup)
                 properties.component(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
+        }
+
+        if (data.vanillaItem() != null && (data.vanillaItem() == Items.LEATHER_HORSE_ARMOR || data.vanillaItem() == Items.FIREWORK_STAR)) {
+            properties.component(DataComponents.DYED_COLOR, new DyedItemColor(0xdaad6d, false));
         }
 
         ItemRegistry.registerItem(data.id(), new DecorationItem(block, data, properties), ItemRegistry.CUSTOM_DECORATIONS);

@@ -34,7 +34,7 @@ public class DyeCommand {
                 String hexColorString = getString(context, "color");
                 Optional<Integer> color = Util.validateAndConvertHexColor(hexColorString);
                 if (color.isPresent()) {
-                    item.set(DataComponents.DYED_COLOR, new DyedItemColor(color.get(), false));
+                    item.set(DataComponents.DYED_COLOR, new DyedItemColor(color.get(), true));
                     return Command.SINGLE_SUCCESS;
                 }
             }
