@@ -4,7 +4,7 @@ import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
-import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
+import eu.pb4.polymer.virtualentity.api.attachment.ChunkAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import net.minecraft.core.BlockPos;
@@ -22,8 +22,8 @@ public class SimpleHolder extends ElementHolder {
     protected void updateInitialPosition() {
         super.updateInitialPosition();
 
-        if (this.getAttachment() instanceof BlockBoundAttachment blockBoundAttachment) {
-            this.setBlock(blockBoundAttachment.getBlockPos(), blockBoundAttachment.getBlockState());
+        if (this.getAttachment() instanceof ChunkAttachment chunkAttachment) {
+            this.setBlock(BlockPos.containing(chunkAttachment.getPos()), chunkAttachment.getChunk().getBlockState(BlockPos.containing(chunkAttachment.getPos())));
         }
     }
 
