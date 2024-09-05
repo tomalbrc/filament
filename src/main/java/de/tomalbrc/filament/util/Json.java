@@ -157,7 +157,7 @@ public class Json {
                 throw new JsonParseException("Expected string, got " + element);
             }
 
-            String value = element.getAsString().toUpperCase();
+            String value = element.getAsString().toLowerCase();
             try {
                 return ItemDisplayContext.valueOf(value);
             } catch (IllegalArgumentException e) {
