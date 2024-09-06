@@ -57,7 +57,7 @@ public class DecorationRegistry {
         if (!data.isSimple()) {
             block = new ComplexDecorationBlock(FabricBlockSettings.create().nonOpaque().luminance(blockState ->
                     blockState.getValue(DecorationBlock.LIGHT_LEVEL)
-            ).breakInstantly().dropsNothing().dynamicBounds().allowsSpawning((x, y, z, w) -> false).pistonBehavior(PushReaction.BLOCK), data.id());
+            ).dropsNothing().dynamicBounds().allowsSpawning((x, y, z, w) -> false).pistonBehavior(PushReaction.BLOCK).destroyTime(data.properties() != null ? data.properties().destroyTime : 0), data.id());
 
             BlockEntityType<DecorationBlockEntity> DECORATION_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(DecorationBlockEntity::new, block).build();
             EntityRegistry.registerBlockEntity(data.id(), DECORATION_BLOCK_ENTITY);
@@ -67,13 +67,13 @@ public class DecorationRegistry {
         } else {
             block = new SimpleDecorationBlock(FabricBlockSettings.create().nonOpaque().luminance(blockState ->
                     blockState.getValue(DecorationBlock.LIGHT_LEVEL)
-            ).breakInstantly().dropsNothing().dynamicBounds().allowsSpawning((x, y, z, w) -> false).pistonBehavior(data.properties() != null ? data.properties().pushReaction : PushReaction.NORMAL), data.id());
+            ).dropsNothing().dynamicBounds().allowsSpawning((x, y, z, w) -> false).pistonBehavior(data.properties() != null ? data.properties().pushReaction : PushReaction.NORMAL).destroyTime(data.properties() != null ? data.properties().destroyTime : 0), data.id());
         }
 
         decorationBlocks.put(data.id(), block);
         BlockRegistry.registerBlock(data.id(), block);
 
-        Item.Properties properties = data.properties() != null ? data.properties().toItemProperties() : new Item.Properties().stacksTo(16);
+        Item.Properties properties = data.properties() != null ? data.properties().toItemProperties() : new Item.Properties().stacksTo(64);
 
         if (data.components() != null) {
             for (TypedDataComponent component : data.components()) {

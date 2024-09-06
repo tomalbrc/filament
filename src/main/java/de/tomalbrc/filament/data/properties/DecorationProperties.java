@@ -21,6 +21,8 @@ public class DecorationProperties extends ItemProperties {
 
     public ItemDisplayContext display = ItemDisplayContext.FIXED;
 
+    public int destroyTime = 0;
+
     @NotNull
     public Block blockBase = Blocks.STONE;
 
