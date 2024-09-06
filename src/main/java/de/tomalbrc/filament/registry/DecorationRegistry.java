@@ -3,6 +3,7 @@ package de.tomalbrc.filament.registry;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviours.decoration.Container;
 import de.tomalbrc.filament.data.DecorationData;
+import de.tomalbrc.filament.data.properties.DecorationProperties;
 import de.tomalbrc.filament.decoration.DecorationItem;
 import de.tomalbrc.filament.decoration.block.ComplexDecorationBlock;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
@@ -11,7 +12,6 @@ import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.component.DataComponents;
@@ -25,6 +25,7 @@ import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 
@@ -53,11 +54,10 @@ public class DecorationRegistry {
         decorations.put(data.id(), data);
 
         DecorationBlock block;
+        BlockBehaviour.Properties props = data.properties() != null ? data.properties().toBlockProperties() : new DecorationProperties().toBlockProperties();
 
         if (!data.isSimple()) {
-            block = new ComplexDecorationBlock(FabricBlockSettings.create().nonOpaque().luminance(blockState ->
-                    blockState.getValue(DecorationBlock.LIGHT_LEVEL)
-            ).dropsNothing().dynamicBounds().allowsSpawning((x, y, z, w) -> false).pistonBehavior(PushReaction.BLOCK).destroyTime(data.properties() != null ? data.properties().destroyTime : 0), data.id());
+            block = new ComplexDecorationBlock(props.pushReaction(PushReaction.BLOCK), data.id());
 
             BlockEntityType<DecorationBlockEntity> DECORATION_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(DecorationBlockEntity::new, block).build();
             EntityRegistry.registerBlockEntity(data.id(), DECORATION_BLOCK_ENTITY);
@@ -65,9 +65,7 @@ public class DecorationRegistry {
             decorationBlockEntities.put(block, DECORATION_BLOCK_ENTITY);
             REGISTERED_BLOCK_ENTITIES++;
         } else {
-            block = new SimpleDecorationBlock(FabricBlockSettings.create().nonOpaque().luminance(blockState ->
-                    blockState.getValue(DecorationBlock.LIGHT_LEVEL)
-            ).dropsNothing().dynamicBounds().allowsSpawning((x, y, z, w) -> false).pistonBehavior(data.properties() != null ? data.properties().pushReaction : PushReaction.NORMAL).destroyTime(data.properties() != null ? data.properties().destroyTime : 0), data.id());
+            block = new SimpleDecorationBlock(props, data.id());
         }
 
         decorationBlocks.put(data.id(), block);

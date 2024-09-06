@@ -17,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +31,7 @@ public class SimpleBlockItem extends CustomBlockItem implements PolymerItem, Equ
         super(block, properties);
         this.blockData = data;
         this.polymerModel = PolymerResourcePackUtils.requestModel(
-                data.properties().itemBase,
+                data.vanillaItem() == null ? Items.PAPER : data.vanillaItem(),
                 data.itemResource() != null && data.itemResource().models() != null ? data.itemResource().models().get("default") : data.blockResource().models().entrySet().iterator().next().getValue()
         );
 

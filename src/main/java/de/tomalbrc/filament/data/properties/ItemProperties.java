@@ -17,9 +17,6 @@ public class ItemProperties {
     public List<String> lore;
     public boolean fireResistant;
 
-    // for blocks & decoration
-    public int lightEmission = Integer.MIN_VALUE;
-
     public void appendHoverText(List<Component> tooltip) {
         if (this.lore != null)
             this.lore.forEach(line -> tooltip.add(Component.literal(line)));
@@ -52,9 +49,5 @@ public class ItemProperties {
         }
 
         return props;
-    }
-
-    public boolean isLightSource() {
-        return this.lightEmission != Integer.MIN_VALUE;
     }
 }

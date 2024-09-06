@@ -15,7 +15,6 @@ public class FilamentConfig {
 
     public boolean commands = true;
     public boolean trimArmorReplaceChainmail = false;
-    public boolean forceAutohost = true;
 
     public boolean preventAdventureModeDecorationInteraction = true;
 

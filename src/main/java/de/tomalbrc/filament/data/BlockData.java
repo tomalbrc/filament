@@ -15,6 +15,7 @@ import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +27,7 @@ import java.util.HashMap;
 
 public record BlockData(
         @NotNull ResourceLocation id,
+        @Nullable Item vanillaItem,
         @NotNull BlockResource blockResource,
         @NotNull ItemResource itemResource,
         @NotNull BlockModelType blockModelType,
