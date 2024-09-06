@@ -10,9 +10,11 @@ import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.*;
 import de.tomalbrc.filament.util.*;
 import eu.pb4.polymer.blocks.api.BlockModelType;
+import eu.pb4.polymer.core.api.block.PolymerBlockUtils;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -45,6 +47,13 @@ public class Filament implements ModInitializer {
             FilamentShaderUtil.registerCallback();
         }
 
+        PolymerBlockUtils.BREAKING_PROGRESS_UPDATE.register(VirtualDestroyStage::updateState);
+        PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
+            if (player instanceof ServerPlayer serverPlayer) {
+                ((VirtualDestroyStage.ServerGamePacketListenerExtF) serverPlayer.connection).filament$getVirtualDestroyStage().setState(-1);
+            }
+        });
+
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
             if (!world.isClientSide() && hand == InteractionHand.MAIN_HAND) {
                 BlockPos pos = hitResult.getBlockPos();
@@ -64,6 +73,8 @@ public class Filament implements ModInitializer {
         FilamentReloadUtil.registerEarlyReloadListener(new ItemRegistry.ItemDataReloadListener());
 
         FilamentRPUtil.registerCallback();
+
+        VirtualDestroyStage.destroy(null);
 
         for (var e: BlockModelType.values()) {
             //System.out.println("Blocks left: " + e + " = " + PolymerBlockResourceUtils.getBlocksLeft(e));

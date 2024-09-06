@@ -3,6 +3,7 @@ package de.tomalbrc.filament.decoration.block;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.DecorationRegistry;
+import de.tomalbrc.filament.util.VirtualDestroyStage;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -31,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 
-public abstract class DecorationBlock extends Block implements PolymerBlock, SimpleWaterloggedBlock {
+public abstract class DecorationBlock extends Block implements PolymerBlock, SimpleWaterloggedBlock, VirtualDestroyStage.Marker {
     final protected ResourceLocation decorationId;
 
     public static final IntegerProperty LIGHT_LEVEL = BlockStateProperties.LEVEL;
