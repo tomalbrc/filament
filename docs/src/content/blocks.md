@@ -13,6 +13,7 @@ Blocks like candles or turtle eggs, with mutiple blocks in 1:
 ```json
 {
   "id": "mynamespace:pebbles",
+  "vanillaItem": "minecraft:paper",
   "blockResource": {
     "models": {
       "1": "mynamespace:custom/block/stone/pebbles_1",
@@ -30,8 +31,7 @@ Blocks like candles or turtle eggs, with mutiple blocks in 1:
   "blockModelType": "biome_plant_block",
   "properties": {
     "destroyTime": 0,
-    "blockBase": "minecraft:stone",
-    "itemBase": "minecraft:paper"
+    "blockBase": "minecraft:stone"
   },
   "components": {
     ...

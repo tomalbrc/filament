@@ -1,50 +1,56 @@
 # Block Properties
 
-The `BlockProperties` JSON configuration defines various properties for a custom block. These properties include the base block and item, tool requirements, explosion resistance, destroy time, and redstone conductivity.
+Block properties share the same properties as [items](item-properties.md)
 
-## Fields
-
-### `blockBase`
-- **Type**: `String`
-- **Default Value**: `"minecraft:stone"`
-- **Description**: Specifies the base block for this block property. Must be a valid block identifier.
-
-### `itemBase`
-- **Type**: `String`
-- **Default Value**: `"minecraft:paper"`
-- **Description**: Specifies the base item for this block property. Must be a valid item identifier.
-
-### `requiresTool`
-- **Type**: `boolean`
-- **Default Value**: `false`
-- **Description**: Indicates whether the block requires a specific tool to be harvested.
-
-### `explosionResistance`
-- **Type**: `number`
-- **Default Value**: none
-- **Description**: The block's resistance to explosions.
-
-### `destroyTime`
-- **Type**: `number`
-- **Default Value**: none
-- **Description**: The time required to destroy the block.
-
-### `redstoneConductor`
-- **Type**: `boolean`
-- **Default Value**: `true`
-- **Description**: Indicates whether the block can conduct redstone signals.
-
-## Example
-
+All properties (excluding the shared item and decoration properties):
 ```json
-"properties": {
-  "blockBase": "minecraft:stone",
-  "itemBase": "minecraft:paper",
-  "requiresTool": true,
-  "explosionResistance": 10,
-  "destroyTime": 5,
-  "redstoneConductor": false
+{
+  "properties": {
+    "blockBase": "minecraft:stone",
+    "itemBase": "minecraft:paper",
+    "requiresTool": true,
+    "explosionResistance": 10,
+    "destroyTime": 5,
+    "redstoneConductor": false,
+    "lightEmission": 0
+  }
 }
 ```
 
-This JSON configuration will create a block with the specified properties, such as requiring a tool for loot-drop, having specific explosion resistance and destroy time, and not conducting redstone signals.
+### `blockBase`:
+
+Specifies the base block for this block property. Must be a valid block identifier.
+
+Defaults to `minecraft:stone`
+
+### `itemBase`:
+
+Specifies the base item for this block property. Must be a valid item identifier.
+
+Defaults to `minecraft:paper`
+
+### `requiresTool`:
+
+Boolean (true/false) indicating whether the block requires a specific tool to be harvested.
+
+Defaults to `false`
+
+### `explosionResistance`:
+
+Number indicating the block's resistance to explosions.
+
+### `destroyTime`:
+
+Time in seconds indicating the time required to destroy the block.
+
+### `redstoneConductor`:
+
+Boolean (true/false) indicating whether the block can conduct redstone signals.
+
+Defaults to `true`
+
+### `lightEmission`:
+
+Light level this block emits.
+
+Defaults to `0`

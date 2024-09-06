@@ -1,6 +1,8 @@
 # Properties
 
-All properties (excluding the shared item properties):
+Decoration properties share the same properties as [items](item-properties.md) and [blocks](block-properties.md)
+
+All properties (excluding the shared item and block properties):
 ```json
 {
   "properties": {

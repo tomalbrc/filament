@@ -1,12 +1,18 @@
 # Examples
 
+See the datapack in the github repository for more examples!
+
+https://github.com/tomalbrc/filament/tree/1.21/example_datapack
+
 ### Clown horn intrument:
 ```json
 {
   "id": "mynamespace:clown_horn",
   "vanillaItem": "minecraft:paper",
-  "models": {
-    "default": "mynamespace:custom/misc/clown_horn"
+  "itemResource":  {
+    "models": {
+      "default": "mynamespace:custom/misc/clown_horn"
+    }
   },
   "properties": {
     "stackSize": 1
@@ -26,9 +32,11 @@
 {
   "id": "mynamespace:allay_bottle",
   "vanillaItem": "minecraft:carrot_on_a_stick",
-  "models": {
-    "default": "mynamespace:custom/traps/allay_bottle",
-    "trapped": "mynamespace:custom/traps/allay_bottle_trapped"
+  "itemResource": {
+    "models": {
+      "default": "mynamespace:custom/traps/allay_bottle",
+      "trapped": "mynamespace:custom/traps/allay_bottle_trapped"
+    }
   },
   "properties": {
     "durability": 20,
@@ -48,11 +56,12 @@
 {
   "id": "mynamespace:magic_hat",
   "vanillaItem": "minecraft:paper",
-  "models": {
-    "default": "mynamespace:custom/hats/magic_hat"
+  "itemResource": {
+    "models": {
+      "default": "mynamespace:custom/hats/magic_hat"
+    }
   },
   "properties": {
-    "durability": 1,
     "stackSize": 1
   }
 }

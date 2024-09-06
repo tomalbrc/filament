@@ -1,6 +1,7 @@
 # Decoration Behaviours
 
 Example of all behaviour fields for decorations:
+
 ```json
 {
   "id": "mynamespace:clown_horn",
