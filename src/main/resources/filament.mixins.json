@@ -16,7 +16,6 @@
     "WorldLoaderMixin",
     "cosmetic.LivingEntityMixin",
     "cosmetic.ServerPlayerMixin",
-    "polymer.AutoHostMixin",
     "polymer.DefaultModelDataMixin",
     "trim.ItemStackPacketCodecMixin",
     "trim.RegistryDataLoaderMixin",
