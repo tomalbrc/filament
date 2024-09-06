@@ -51,7 +51,7 @@ public class ItemFrameElement extends GenericEntityElement {
 
     @Override
     protected EntityType<? extends Entity> getEntityType() {
-        return parent.getDecorationData().properties() != null && parent.getDecorationData().properties().glow ? EntityType.GLOW_ITEM_FRAME : EntityType.ITEM_FRAME;
+        return parent.getDecorationData().properties().glow ? EntityType.GLOW_ITEM_FRAME : EntityType.ITEM_FRAME;
     }
 
     @Override

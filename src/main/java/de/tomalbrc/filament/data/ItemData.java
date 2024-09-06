@@ -2,6 +2,7 @@ package de.tomalbrc.filament.data;
 
 import com.google.gson.annotations.SerializedName;
 import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
+import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.util.Constants;
@@ -11,6 +12,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,12 +26,20 @@ public record ItemData(
         @Nullable ItemProperties properties,
         @Nullable DataComponentMap components
 ) {
-    @SuppressWarnings({"FieldCanBeLocal"})
+    private static final ItemProperties altProps = new ItemProperties();
+    @Override
+    @NotNull
+    public ItemProperties properties() {
+        if (properties == null) {
+            return altProps;
+        }
+        return properties;
+    }
 
     public Object2ObjectOpenHashMap<String, PolymerModelData> requestModels() {
         Object2ObjectOpenHashMap<String, PolymerModelData> map = new Object2ObjectOpenHashMap<>();
         if (itemResource != null) {
-            itemResource.models().forEach((key, value) -> map.put(key, PolymerResourcePackUtils.requestModel(vanillaItem, value)));
+            itemResource.models().forEach((key, value) -> map.put(key, PolymerResourcePackUtils.requestModel(this.vanillaItem == null ? Items.PAPER : this.vanillaItem, value)));
         }
         return map.isEmpty() ? null : map;
     }

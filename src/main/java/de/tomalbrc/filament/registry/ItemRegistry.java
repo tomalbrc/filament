@@ -83,7 +83,7 @@ public class ItemRegistry {
     static public void register(ItemData data) {
         if (BuiltInRegistries.ITEM.containsKey(data.id())) return;
 
-        Item.Properties properties = data.properties() != null ? data.properties().toItemProperties(data.behaviourConfig()) : new Item.Properties();
+        Item.Properties properties = data.properties().toItemProperties(data.behaviourConfig());
 
         if (data.components() != null) {
             for (TypedDataComponent component : data.components()) {

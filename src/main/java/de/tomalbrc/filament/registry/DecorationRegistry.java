@@ -54,7 +54,7 @@ public class DecorationRegistry {
         decorations.put(data.id(), data);
 
         DecorationBlock block;
-        BlockBehaviour.Properties props = data.properties() != null ? data.properties().toBlockProperties() : new DecorationProperties().toBlockProperties();
+        BlockBehaviour.Properties props = data.properties().toBlockProperties();
 
         if (!data.isSimple()) {
             block = new ComplexDecorationBlock(props.pushReaction(PushReaction.BLOCK), data.id());
@@ -71,7 +71,7 @@ public class DecorationRegistry {
         decorationBlocks.put(data.id(), block);
         BlockRegistry.registerBlock(data.id(), block);
 
-        Item.Properties properties = data.properties() != null ? data.properties().toItemProperties() : new Item.Properties().stacksTo(64);
+        Item.Properties properties = data.properties().toItemProperties();
 
         if (data.components() != null) {
             for (TypedDataComponent component : data.components()) {

@@ -7,6 +7,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.annotations.SerializedName;
 import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.BlockProperties;
+import de.tomalbrc.filament.data.properties.DecorationProperties;
 import de.tomalbrc.filament.data.resource.BlockResource;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.util.Constants;
@@ -31,13 +32,21 @@ public record BlockData(
         @NotNull BlockResource blockResource,
         @NotNull ItemResource itemResource,
         @NotNull BlockModelType blockModelType,
-        @NotNull BlockProperties properties,
+        @Nullable BlockProperties properties,
         @Nullable BlockType type,
         @SerializedName("behaviour")
         @Nullable BehaviourConfigMap behaviourConfig,
         @Nullable DataComponentMap components
         ) {
-
+    private static final BlockProperties altProps = new BlockProperties();
+    @Override
+    @NotNull
+    public BlockProperties properties() {
+        if (properties == null) {
+            return altProps;
+        }
+        return properties;
+    }
 
     public HashMap<String, BlockState> createStateMap() {
         HashMap<String, BlockState> val = new HashMap<>();

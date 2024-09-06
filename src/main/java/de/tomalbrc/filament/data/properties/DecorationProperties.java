@@ -21,6 +21,8 @@ public class DecorationProperties extends BlockProperties {
 
     public boolean showBreakParticles = true;
 
+    public boolean drops = true;
+
     @Override
     public BlockBehaviour.Properties toBlockProperties() {
         BlockBehaviour.Properties props = super.toBlockProperties();

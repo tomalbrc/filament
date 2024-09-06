@@ -35,12 +35,18 @@ public record DecorationData(
         @Nullable BehaviourConfigMap behaviourConfig,
         @Nullable DataComponentMap components
 ) {
-    public PolymerModelData requestModel() {
-        return PolymerResourcePackUtils.requestModel(vanillaItem != null ? vanillaItem : Items.GUNPOWDER, model);
+    private static final DecorationProperties altProps = new DecorationProperties();
+    @Override
+    @NotNull
+    public DecorationProperties properties() {
+        if (properties == null) {
+            return altProps;
+        }
+        return properties;
     }
 
-    public boolean isSeat() {
-        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.SEAT) != null;
+    public PolymerModelData requestModel() {
+        return PolymerResourcePackUtils.requestModel(vanillaItem != null ? vanillaItem : Items.GUNPOWDER, model);
     }
 
     public boolean isContainer() {
@@ -53,14 +59,6 @@ public record DecorationData(
 
     public boolean hasBlocks() {
         return this.blocks != null;
-    }
-
-    public boolean isShowcase() {
-        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.SHOWCASE) != null;
-    }
-
-    public boolean isLock() {
-        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.LOCK) != null;
     }
 
     public boolean isFuel() {

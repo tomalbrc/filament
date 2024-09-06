@@ -198,7 +198,7 @@ public class Util {
         ItemDisplayElement itemDisplayElement = new ItemDisplayElement(BuiltInRegistries.ITEM.get(data.id()));
         itemDisplayElement.setTeleportDuration(1);
 
-        if (data != null && data.properties() != null && data.properties().glow) {
+        if (data != null && data.properties().glow) {
             itemDisplayElement.setBrightness(Brightness.FULL_BRIGHT);
         }
 

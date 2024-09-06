@@ -60,7 +60,7 @@ public class FlowingFluidMixin {
         if (DecorationRegistry.isDecoration(blockState)) {
             DecorationBlock decorationBlock = (DecorationBlock) blockState.getBlock();
 
-            if (decorationBlock.getDecorationData() != null && decorationBlock.getDecorationData().properties() != null) {
+            if (decorationBlock.getDecorationData() != null) {
                 return !decorationBlock.getDecorationData().hasBlocks() && !decorationBlock.getDecorationData().properties().waterloggable && !decorationBlock.getDecorationData().properties().solid;
             }
         }
@@ -70,7 +70,7 @@ public class FlowingFluidMixin {
 
     @Unique
     private boolean isWaterloggable(DecorationBlock decorationBlock) {
-        if (decorationBlock.getDecorationData() != null && decorationBlock.getDecorationData().properties() != null) {
+        if (decorationBlock.getDecorationData() != null) {
             return decorationBlock.getDecorationData().properties().waterloggable;
         }
 
@@ -79,7 +79,7 @@ public class FlowingFluidMixin {
 
     @Unique
     private boolean isSolid(DecorationBlock decorationBlock) {
-        if (decorationBlock.getDecorationData() != null && decorationBlock.getDecorationData().properties() != null) {
+        if (decorationBlock.getDecorationData() != null) {
             return decorationBlock.getDecorationData().properties().solid;
         }
 

@@ -196,22 +196,22 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             if (this.getDecorationData().hasBlocks()) {
                 Util.forEachRotated(this.getDecorationData().blocks(), this.getBlockPos(), this.getVisualRotationYInDegrees(), blockPos -> {
                     if (DecorationRegistry.isDecoration(this.getLevel().getBlockState(blockPos))) {
-                        if (this.getDecorationData().properties() != null && this.getDecorationData().properties().showBreakParticles)
+                        if (this.getDecorationData().properties().showBreakParticles)
                             Util.showBreakParticle((ServerLevel) this.level, blockPos, this.getDecorationData().properties().useItemParticles ? this.getItem() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
                         this.getLevel().removeBlock(blockPos, false);
                     }
                 });
             } else {
+                assert this.level != null;
+
                 BlockPos blockPos = this.getBlockPos();
 
-                if (this.getDecorationData().properties() != null && this.getDecorationData().properties().showBreakParticles)
+                if (this.getDecorationData().properties().showBreakParticles)
                     Util.showBreakParticle((ServerLevel) this.level, blockPos, this.getDecorationData().properties().useItemParticles ? this.getItem() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
 
-                if (this.getDecorationData().properties() != null) {
-                    SoundEvent breakSound = this.getDecorationData().properties().blockBase.defaultBlockState().getSoundType().getBreakSound();
-                    this.level.playSound(null, this.getBlockPos(),  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);
-                }
-                this.getLevel().destroyBlock(this.getBlockPos(), true);
+                SoundEvent breakSound = this.getDecorationData().properties().blockBase.defaultBlockState().getSoundType().getBreakSound();
+                this.level.playSound(null, this.getBlockPos(),  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);
+                this.level.destroyBlock(this.getBlockPos(), true);
             }
         }
     }

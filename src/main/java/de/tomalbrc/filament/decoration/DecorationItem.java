@@ -67,9 +67,7 @@ public class DecorationItem extends BlockItem implements PolymerItem, Equipable 
             list.add(Component.literal("§9Dyeable"));
         }
 
-        if (this.decorationData.properties() != null) {
-            this.decorationData.properties().appendHoverText(list);
-        }
+        this.decorationData.properties().appendHoverText(list);
 
         if (itemStack.has(DataComponents.CONTAINER)) {
             Iterator<ItemStack> itemStackIterator = itemStack.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).nonEmptyItems().iterator();
@@ -121,7 +119,7 @@ public class DecorationItem extends BlockItem implements PolymerItem, Equipable 
         Level level = useOnContext.getLevel();
 
         int rotation = 0;
-        if (decorationData.properties() != null && decorationData.properties().rotate) {
+        if (decorationData.properties().rotate) {
             if (decorationData.properties().rotateSmooth) {
                 rotation = Util.SEGMENTED_ANGLE8.fromDegrees(useOnContext.getRotation()-180);
             } else {
@@ -129,12 +127,8 @@ public class DecorationItem extends BlockItem implements PolymerItem, Equipable 
             }
         }
 
-        boolean propertyPlaceCheck = true;
-        if (decorationData.properties() != null) {
-            propertyPlaceCheck = decorationData.properties().placement.canPlace(direction);
-        }
-
-        float angle = this.getVisualRotationYInDegrees(direction, rotation);
+        boolean propertyPlaceCheck = decorationData.properties().placement.canPlace(direction);
+        float angle = DecorationItem.getVisualRotationYInDegrees(direction, rotation);
 
         if (player == null || !this.mayPlace(player, direction, itemStack, relativeBlockPos) || !propertyPlaceCheck) {
             return InteractionResult.FAIL;
@@ -146,7 +140,7 @@ public class DecorationItem extends BlockItem implements PolymerItem, Equipable 
 
                     BlockPlaceContext blockPlaceContext = new BlockPlaceContext(player, useOnContext.getHand(), itemStack, new BlockHitResult(useOnContext.getClickLocation(), useOnContext.getClickedFace(), blockPos2, useOnContext.isInside()));
                     BlockState blockState = DecorationRegistry.getDecorationBlock(decorationData.id()).getStateForPlacement(blockPlaceContext);
-                    if (decorationData.properties() != null && decorationData.properties().isLightSource()) {
+                    if (decorationData.properties().isLightSource()) {
                         blockState = blockState.setValue(DecorationBlock.LIGHT_LEVEL, decorationData.properties().lightEmission);
                     }
 
@@ -179,7 +173,7 @@ public class DecorationItem extends BlockItem implements PolymerItem, Equipable 
                     blockState = blockState.setValue(DecorationBlock.WATERLOGGED, false);
                 }
 
-                if (decorationData.properties() != null && decorationData.properties().isLightSource()) {
+                if (decorationData.properties().isLightSource()) {
                     blockState = blockState.setValue(DecorationBlock.LIGHT_LEVEL, decorationData.properties().lightEmission);
                 }
 
