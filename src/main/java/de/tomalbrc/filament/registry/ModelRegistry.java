@@ -41,8 +41,7 @@ public class ModelRegistry {
                 }
             }
 
-            Filament.LOGGER.info("filament decorations registered: " + DecorationRegistry.REGISTERED_DECORATIONS);
-            Filament.LOGGER.info("filament decoration block entities registered: " + DecorationRegistry.REGISTERED_BLOCK_ENTITIES);
+            Filament.LOGGER.info("filament models registered: " + ajmodels.size());
         }
     }
 

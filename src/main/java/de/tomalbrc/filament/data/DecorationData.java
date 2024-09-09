@@ -45,6 +45,15 @@ public record DecorationData(
         return properties;
     }
 
+    @Override
+    @NotNull
+    public Item vanillaItem() {
+        if (vanillaItem == null) {
+            return Items.PAPER;
+        }
+        return vanillaItem;
+    }
+
     public PolymerModelData requestModel() {
         return PolymerResourcePackUtils.requestModel(vanillaItem != null ? vanillaItem : Items.GUNPOWDER, model);
     }
@@ -61,8 +70,15 @@ public record DecorationData(
         return this.blocks != null;
     }
 
-    public boolean isFuel() {
-        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.FUEL) != null;
+    public int countBlocks() {
+        if (!this.hasBlocks())
+            return 0;
+
+        int c = 0;
+        for (BlockConfig block : this.blocks) {
+            c += block.size().x() * block.size().y() * block.size().z();
+        }
+        return c;
     }
 
     public boolean isSimple() {

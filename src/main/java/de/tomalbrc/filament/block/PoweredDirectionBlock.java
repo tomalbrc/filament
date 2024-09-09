@@ -157,9 +157,4 @@ public class PoweredDirectionBlock extends SimpleBlock {
             this.updateNeighborsOnBack(level, blockPos, blockState);
         }
     }
-
-    @Override
-    public BlockState getPolymerBlockState(BlockState state) {
-        return stateMap.get(String.format("%s,powered=%b", state.getValue(FACING).getSerializedName(), state.getValue(POWERED)));
-    }
 }

@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-// For shared properties that make sense for both, item *and* decoration
+// For shared properties that make sense for both, item, blocks *and* decoration
 public class ItemProperties {
     public int durability = Integer.MIN_VALUE;
     public int stackSize = 64;

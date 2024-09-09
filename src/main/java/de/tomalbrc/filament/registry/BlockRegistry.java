@@ -1,12 +1,11 @@
 package de.tomalbrc.filament.registry;
 
 import de.tomalbrc.filament.Filament;
-import de.tomalbrc.filament.api.registry.BlockTypeRegistry;
-import de.tomalbrc.filament.behaviours.block.Strippable;
+import de.tomalbrc.filament.behaviours.BehaviourUtil;
+import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.block.SimpleBlockItem;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
-import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
@@ -21,7 +20,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -33,40 +31,29 @@ public class BlockRegistry {
     }
 
     public static void register(BlockData data) throws IOException {
-        BlockProperties properties = data.properties();
         if (BuiltInRegistries.BLOCK.containsKey(data.id())) return;
 
+        BlockProperties properties = data.properties();
         BlockBehaviour.Properties blockProperties = properties.toBlockProperties();
 
-        Class<? extends Block> blockClass = BlockTypeRegistry.get(data.type());
-        Block customBlock;
-        try {
-            customBlock = blockClass.getDeclaredConstructor(BlockBehaviour.Properties.class, BlockData.class).newInstance(blockProperties, data);
-        } catch (InstantiationException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        SimpleBlock customBlock = new SimpleBlock(blockProperties, data);
+        BehaviourUtil.postInitBlock(customBlock, customBlock, data.behaviourConfig());
 
-        if (customBlock != null) {
-            var itemProperties = data.properties().toItemProperties();
-            if (data.components() != null) {
-                for (TypedDataComponent component : data.components()) {
-                    itemProperties.component(component.type(), component.value());
-                }
+        var itemProperties = data.properties().toItemProperties();
+        if (data.components() != null) {
+            for (TypedDataComponent component : data.components()) {
+                itemProperties.component(component.type(), component.value());
             }
-
-            if (data.isStrippable()) {
-                Strippable.StrippableConfig strippable = data.behaviourConfig().get(Constants.Behaviours.STRIPPABLE);
-                StrippableRegistry.add(customBlock.defaultBlockState(), strippable.replacement);
-            }
-
-            SimpleBlockItem item = new SimpleBlockItem(itemProperties, customBlock, data);
-            BlockRegistry.registerBlock(data.id(), customBlock);
-            ItemRegistry.registerItem(data.id(), item, ItemRegistry.CUSTOM_BLOCK_ITEMS);
-
-            REGISTERED_BLOCKS++;
-        } else {
-            throw new IOException(String.format("Could not read block type {}", data.type()));
         }
+        SimpleBlockItem item = new SimpleBlockItem(itemProperties, customBlock, data);
+        BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
+
+        BlockRegistry.registerBlock(data.id(), customBlock);
+        ItemRegistry.registerItem(data.id(), item, ItemRegistry.CUSTOM_BLOCK_ITEMS);
+
+        customBlock.postRegister();
+
+        REGISTERED_BLOCKS++;
     }
 
     public static void registerBlock(ResourceLocation identifier, Block block) {
@@ -91,8 +78,6 @@ public class BlockRegistry {
                     Filament.LOGGER.error("Failed to load block resource \"" + entry.getKey() + "\".");
                 }
             }
-
-            Filament.LOGGER.info("filament blocks registered: " + BlockRegistry.REGISTERED_BLOCKS);
         }
     }
 }

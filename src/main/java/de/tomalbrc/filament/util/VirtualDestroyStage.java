@@ -22,7 +22,6 @@ import org.joml.Vector3f;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.IntStream;
 
 public class VirtualDestroyStage extends ElementHolder {
     public static final ItemStack[] MODELS = new ItemStack[10];

@@ -5,35 +5,37 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.SerializedName;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.BlockProperties;
-import de.tomalbrc.filament.data.properties.DecorationProperties;
 import de.tomalbrc.filament.data.resource.BlockResource;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.util.Constants;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
+import it.unimi.dsi.fastutil.objects.Reference2ReferenceArrayMap;
+import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
-import java.util.HashMap;
+import java.util.Map;
 
 
 public record BlockData(
         @NotNull ResourceLocation id,
         @Nullable Item vanillaItem,
         @NotNull BlockResource blockResource,
-        @NotNull ItemResource itemResource,
+        @Nullable ItemResource itemResource,
         @NotNull BlockModelType blockModelType,
         @Nullable BlockProperties properties,
-        @Nullable BlockType type,
         @SerializedName("behaviour")
         @Nullable BehaviourConfigMap behaviourConfig,
         @Nullable DataComponentMap components
@@ -48,22 +50,45 @@ public record BlockData(
         return properties;
     }
 
-    public HashMap<String, BlockState> createStateMap() {
-        HashMap<String, BlockState> val = new HashMap<>();
+    @Override
+    @NotNull
+    public Item vanillaItem() {
+        if (vanillaItem == null) {
+            return Items.PAPER;
+        }
+        return vanillaItem;
+    }
+
+    public Map<BlockState, BlockStateMeta> createStandardStateMap() {
+        Reference2ReferenceArrayMap<BlockState, BlockStateMeta> val = new Reference2ReferenceArrayMap<>();
 
         if (blockResource.couldGenerate()) {
             //val = BlockModelGenerator.generate(blockResource);
             throw new UnsupportedOperationException("Not implemented");
-        }
-        else if (blockResource.models() != null) {
-            for (HashMap.Entry<String, ResourceLocation> entry : this.blockResource.models().entrySet()) {
+        } else if (blockResource.models() != null && this.blockModelType != null) {
+            for (Map.Entry<String, ResourceLocation> entry : this.blockResource.models().entrySet()) {
                 PolymerBlockModel blockModel = PolymerBlockModel.of(entry.getValue());
 
-                var requestedState = PolymerBlockResourceUtils.requestBlock(this.blockModelType, blockModel);
-                val.put(entry.getKey(), requestedState);
+                BlockState requestedState = PolymerBlockResourceUtils.requestBlock(this.blockModelType, blockModel);
 
-                if (requestedState.hasProperty(SlabBlock.WATERLOGGED) && requestedState.hasProperty(SlabBlock.TYPE)) {
-                    PolymerBlockResourceUtils.requestBlock(this.blockModelType, blockModel);
+                if (entry.getKey().equals("default")) {
+                    val.put(BuiltInRegistries.BLOCK.get(id).defaultBlockState(), BlockStateMeta.of(requestedState, blockModel));
+                }
+                else {
+                    BlockStateParser.BlockResult parsed;
+                    String str = String.format("%s[%s]", id, entry.getKey());
+                    try {
+                        parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), str, false);
+                    } catch (CommandSyntaxException e) {
+                        e.printStackTrace();
+                        throw new JsonParseException("Invalid BlockState value: " + str);
+                    }
+
+                    val.put(parsed.blockState(), BlockStateMeta.of(requestedState, blockModel));
+                }
+
+                if (requestedState == null) {
+                    throw new RuntimeException("Ran out of block states to use for " + this.blockModelType.name() + "!");
                 }
             }
         }
@@ -71,23 +96,18 @@ public record BlockData(
         return val;
     }
 
-    public boolean isPowersource() {
-        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.POWERSOURCE) != null;
-    }
-
     public boolean isRepeater() {
         return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.REPEATER) != null;
-    }
-    public boolean isStrippable() {
-        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.STRIPPABLE) != null;
-    }
-
-    public boolean isFuel() {
-        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.FUEL) != null;
     }
 
     public boolean isCosmetic() {
         return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.COSMETIC) != null;
+    }
+
+    public record BlockStateMeta(BlockState blockState, PolymerBlockModel polymerBlockModel) {
+        public static BlockStateMeta of(BlockState blockState, PolymerBlockModel blockModel) {
+            return new BlockStateMeta(blockState, blockModel);
+        }
     }
 
     public record BlockType(ResourceLocation resourceLocation) {

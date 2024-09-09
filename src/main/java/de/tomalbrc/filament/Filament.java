@@ -1,8 +1,6 @@
 package de.tomalbrc.filament;
 
 import com.mojang.logging.LogUtils;
-import de.tomalbrc.filament.api.registry.BehaviourRegistry;
-import de.tomalbrc.filament.api.registry.BlockTypeRegistry;
 import de.tomalbrc.filament.command.DyeCommand;
 import de.tomalbrc.filament.command.HatCommand;
 import de.tomalbrc.filament.command.PickCommand;
@@ -29,9 +27,6 @@ public class Filament implements ModInitializer {
     @Override
     public void onInitialize() {
         PolymerResourcePackUtils.markAsRequired();
-
-        BehaviourRegistry.init();
-        BlockTypeRegistry.init();
 
         EntityRegistry.register();
 

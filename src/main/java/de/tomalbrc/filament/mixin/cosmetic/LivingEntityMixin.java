@@ -41,8 +41,8 @@ public class LivingEntityMixin implements CosmeticInterface {
         if (cosmetic != null) {
             cir.setReturnValue(cosmetic.slot);
         }
-        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.getItemData().isArmor()) {
-            Armor.ArmorConfig armor = simpleItem.getItemData().behaviourConfig().get(Constants.Behaviours.ARMOR);
+        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.getBehaviour(Constants.Behaviours.ARMOR) != null)  {
+            Armor.ArmorConfig armor = (Armor.ArmorConfig) simpleItem.getBehaviour(Constants.Behaviours.ARMOR).getConfig();
             cir.setReturnValue(armor.slot);
         }
     }

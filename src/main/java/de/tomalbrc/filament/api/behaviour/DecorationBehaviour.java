@@ -1,6 +1,5 @@
-package de.tomalbrc.filament.api.behaviour.decoration;
+package de.tomalbrc.filament.api.behaviour;
 
-import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import net.minecraft.core.HolderLookup;

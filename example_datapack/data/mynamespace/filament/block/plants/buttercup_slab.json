@@ -2,9 +2,9 @@
   "id": "mynamespace:buttercup_slab",
   "blockResource": {
     "models" : {
-      "top": "minecraft:custom/furniture/displays/quartz_pedastal",
-      "bottom": "minecraft:custom/block/plants/buttercup",
-      "double" : "minecraft:custom/block/concrete/green_concrete_bricks"
+      "type=top": "minecraft:custom/furniture/displays/quartz_pedastal",
+      "type=bottom": "minecraft:custom/block/plants/buttercup",
+      "type=double" : "minecraft:custom/block/concrete/green_concrete_bricks"
     }
   },
   "type": "slab",

@@ -2,7 +2,7 @@ package de.tomalbrc.filament.behaviours.decoration;
 
 import de.tomalbrc.bil.core.model.Model;
 import de.tomalbrc.filament.Filament;
-import de.tomalbrc.filament.api.behaviour.decoration.DecorationBehaviour;
+import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.decoration.holder.AnimatedHolder;
 import de.tomalbrc.filament.registry.ModelRegistry;

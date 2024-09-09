@@ -1,9 +1,12 @@
 package de.tomalbrc.filament.behaviours.item;
 
-import de.tomalbrc.filament.api.behaviour.item.ItemBehaviour;
+import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
+import de.tomalbrc.filament.behaviours.BehaviourHolder;
+import de.tomalbrc.filament.registry.FuelRegistry;
+import net.minecraft.world.item.Item;
 
 /**
- * Fuel behaviourConfig
+ * Fuel behaviour
  */
 public class Fuel implements ItemBehaviour<Fuel.FuelConfig> {
     private final FuelConfig config;
@@ -15,6 +18,11 @@ public class Fuel implements ItemBehaviour<Fuel.FuelConfig> {
     @Override
     public FuelConfig getConfig() {
         return this.config;
+    }
+
+    @Override
+    public void init(Item item, BehaviourHolder behaviourHolder) {
+        FuelRegistry.add(item, config.value);
     }
 
     public static class FuelConfig {

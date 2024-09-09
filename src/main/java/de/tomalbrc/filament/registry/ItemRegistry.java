@@ -1,11 +1,9 @@
 package de.tomalbrc.filament.registry;
 
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.behaviours.BehaviourUtil;
 import de.tomalbrc.filament.data.ItemData;
-import de.tomalbrc.filament.item.InstrumentItem;
 import de.tomalbrc.filament.item.SimpleItem;
-import de.tomalbrc.filament.item.ThrowingItem;
-import de.tomalbrc.filament.item.TrapItem;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
 import eu.pb4.polymer.core.api.item.PolymerItemGroupUtils;
@@ -91,16 +89,9 @@ public class ItemRegistry {
             }
         }
 
-        Item item;
-        if (data.canShoot()) {
-            item = new ThrowingItem(properties, data);
-        } else if (data.isInstrument()) {
-            item = new InstrumentItem(properties, data);
-        } else if (data.isTrap()) {
-            item = new TrapItem(properties, data);
-        } else {
-            item = new SimpleItem(properties, data);
-        }
+        SimpleItem item = new SimpleItem(null, properties, data, data.vanillaItem());
+
+        BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
 
         ItemRegistry.registerItem(data.id(), item, CUSTOM_ITEMS);
         REGISTERED_ITEMS++;
@@ -112,6 +103,8 @@ public class ItemRegistry {
     }
 
     public static class ItemDataReloadListener implements SimpleSynchronousResourceReloadListener {
+        static private boolean printedInfo = false;
+
         @Override
         public ResourceLocation getFabricId() {
             return ResourceLocation.fromNamespaceAndPath("filament", "items");
@@ -129,12 +122,25 @@ public class ItemRegistry {
                 }
             }
 
-            Filament.LOGGER.info("filament items registered: " + ItemRegistry.REGISTERED_ITEMS);
+            if (!printedInfo) {
+                Filament.LOGGER.info("filament items registered: " + ItemRegistry.REGISTERED_ITEMS);
+                Filament.LOGGER.info("filament blocks registered: " + BlockRegistry.REGISTERED_BLOCKS);
+                Filament.LOGGER.info("filament decorations registered: " + DecorationRegistry.REGISTERED_DECORATIONS);
+                Filament.LOGGER.info("filament decoration block entities registered: " + DecorationRegistry.REGISTERED_BLOCK_ENTITIES);
+                printedInfo = true;
+            }
 
-            PolymerItemGroupUtils.registerPolymerItemGroup(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "item"), ITEM_GROUP);
-            PolymerItemGroupUtils.registerPolymerItemGroup(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "block"), BLOCK_ITEM_GROUP);
-            PolymerItemGroupUtils.registerPolymerItemGroup(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "decoration"), DECORATION_ITEM_GROUP);
+            var itemId = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "item");
+            if (ITEM_GROUP.getDisplayItems().isEmpty() && !BuiltInRegistries.CREATIVE_MODE_TAB.containsKey(itemId))
+                PolymerItemGroupUtils.registerPolymerItemGroup(itemId, ITEM_GROUP);
 
+            var blockId = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "block");
+            if (ITEM_GROUP.getDisplayItems().isEmpty() && !BuiltInRegistries.CREATIVE_MODE_TAB.containsKey(blockId))
+                PolymerItemGroupUtils.registerPolymerItemGroup(blockId, BLOCK_ITEM_GROUP);
+
+            var decId = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "decoration");
+            if (ITEM_GROUP.getDisplayItems().isEmpty() && !BuiltInRegistries.CREATIVE_MODE_TAB.containsKey(decId))
+                PolymerItemGroupUtils.registerPolymerItemGroup(decId, DECORATION_ITEM_GROUP);
         }
     }
 }

@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.behaviours.decoration;
 
-import de.tomalbrc.filament.api.behaviour.decoration.DecorationBehaviour;
+import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;

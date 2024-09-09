@@ -5,7 +5,6 @@
   "mixins": [
     "AbstractFurnaceBlockEntityMixin",
     "AxeItemMixin",
-    "BlockItemMixin",
     "FlowingFluidMixin",
     "ItemFrameAccessor",
     "LevelChunkMixin",
@@ -14,10 +13,10 @@
     "PlayerMixin",
     "ReloadableServerResourcesMixin",
     "ServerGamePacketListenerImplMixin",
+    "StateDefinitionBuilderMixin",
     "WorldLoaderMixin",
     "cosmetic.LivingEntityMixin",
     "cosmetic.ServerPlayerMixin",
-    "polymer.DefaultModelDataMixin",
     "trim.ItemStackPacketCodecMixin",
     "trim.RegistryDataLoaderMixin",
     "trim.SmithingTrimRecipeMixin"

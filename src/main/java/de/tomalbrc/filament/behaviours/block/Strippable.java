@@ -1,7 +1,10 @@
 package de.tomalbrc.filament.behaviours.block;
 
-import de.tomalbrc.filament.api.behaviour.block.BlockBehaviour;
+import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
+import de.tomalbrc.filament.behaviours.BehaviourHolder;
+import de.tomalbrc.filament.registry.StrippableRegistry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 
 /**
  * Block behaviourConfig for strippable blocks (with an axe)
@@ -17,6 +20,11 @@ public class Strippable implements BlockBehaviour<Strippable.StrippableConfig> {
     @Override
     public StrippableConfig getConfig() {
         return this.config;
+    }
+
+    @Override
+    public void init(Block block, BehaviourHolder behaviourHolder) {
+        StrippableRegistry.add(block.defaultBlockState(), config.replacement);
     }
 
     public static class StrippableConfig {

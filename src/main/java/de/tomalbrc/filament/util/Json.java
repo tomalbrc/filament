@@ -6,7 +6,6 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
-import de.tomalbrc.filament.data.BlockData;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.Registry;
@@ -50,7 +49,6 @@ public class Json {
             .registerTypeHierarchyAdapter(Item.class, new RegistryDeserializer<>(BuiltInRegistries.ITEM))
             .registerTypeHierarchyAdapter(SoundEvent.class, new RegistryDeserializer<>(BuiltInRegistries.SOUND_EVENT))
             .registerTypeHierarchyAdapter(BehaviourConfigMap.class, new BehaviourConfigMap.Deserializer())
-            .registerTypeHierarchyAdapter(BlockData.BlockType.class, new BlockData.BlockType.Deserializer())
             .create();
 
     public static class BlockStateDeserializer implements JsonDeserializer<BlockState> {

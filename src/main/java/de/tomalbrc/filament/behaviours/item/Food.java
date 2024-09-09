@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.behaviours.item;
 
-import de.tomalbrc.filament.api.behaviour.item.ItemBehaviour;
+import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 
 /**
  * Food behaviours for edible items

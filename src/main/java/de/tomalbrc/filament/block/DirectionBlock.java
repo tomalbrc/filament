@@ -7,10 +7,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class DirectionBlock extends DirectionalBlock implements PolymerTexturedBlock {
-    private final HashMap<String, BlockState> stateMap;
+    private final Map<BlockState, BlockData.BlockStateMeta> stateMap;
     private final BlockState breakEventState;
 
     public MapCodec<DirectionBlock> codec() {
@@ -19,7 +19,7 @@ public class DirectionBlock extends DirectionalBlock implements PolymerTexturedB
 
     public DirectionBlock(Properties properties, BlockData data) {
         super(properties);
-        this.stateMap = data.createStateMap();
+        this.stateMap = data.createStandardStateMap();
         this.breakEventState = data.properties().blockBase.defaultBlockState();
     }
 
@@ -30,6 +30,6 @@ public class DirectionBlock extends DirectionalBlock implements PolymerTexturedB
 
     @Override
     public BlockState getPolymerBlockState(BlockState state) {
-        return stateMap.get(state.getValue(FACING).getSerializedName());
+        return this.stateMap.get(state).blockState();
     }
 }

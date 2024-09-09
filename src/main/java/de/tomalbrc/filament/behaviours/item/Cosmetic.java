@@ -1,8 +1,15 @@
 package de.tomalbrc.filament.behaviours.item;
 
-import de.tomalbrc.filament.api.behaviour.item.ItemBehaviour;
+import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Equipable;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.joml.Vector3f;
 
 /**
@@ -18,6 +25,20 @@ public class Cosmetic implements ItemBehaviour<Cosmetic.CosmeticConfig> {
     @Override
     public CosmeticConfig getConfig() {
         return this.config;
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Item item, Level level, Player player, InteractionHand interactionHand) {
+        if (item instanceof Equipable equipable) {
+            return equipable.swapWithEquipmentSlot(item, level, player, interactionHand);
+        }
+
+        return ItemBehaviour.super.use(item, level, player, interactionHand);
+    }
+
+    @Override
+    public EquipmentSlot getEquipmentSlot() {
+        return this.config.slot;
     }
 
     public static class CosmeticConfig {

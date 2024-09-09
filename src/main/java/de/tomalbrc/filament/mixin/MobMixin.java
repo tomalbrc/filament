@@ -1,6 +1,8 @@
 package de.tomalbrc.filament.mixin;
 
-import de.tomalbrc.filament.item.TrapItem;
+import de.tomalbrc.filament.behaviours.BehaviourHolder;
+import de.tomalbrc.filament.behaviours.item.Trap;
+import de.tomalbrc.filament.util.Constants;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -19,12 +21,13 @@ public class MobMixin {
     public void filament$trapItemInteract(Player player, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResult> cir) {
         ItemStack itemStack = player.getItemInHand(interactionHand);
 
-        Mob mob = (Mob)(Object)this;
-        if (itemStack.getItem() instanceof TrapItem trapItem && !player.getCooldowns().isOnCooldown(trapItem)) {
-            boolean canUse = trapItem.canUseOn(mob);
+        Mob mob = Mob.class.cast(this);
+        if (itemStack.getItem() instanceof BehaviourHolder behaviourHolder && behaviourHolder.getBehaviours().get(Constants.Behaviours.TRAP) != null && !player.getCooldowns().isOnCooldown(itemStack.getItem())) {
+            Trap trap = behaviourHolder.getBehaviour(Constants.Behaviours.TRAP);
+            boolean canUse = trap.canUseOn(mob);
 
-            if (itemStack.getMaxDamage() - itemStack.getDamageValue() > 1 && canUse && trapItem.canSave(mob)) {
-                trapItem.saveToTag(mob, itemStack);
+            if (itemStack.getMaxDamage() - itemStack.getDamageValue() > 1 && canUse && trap.canSave(mob)) {
+                trap.saveToTag(mob, itemStack);
 
                 if (player.level() instanceof ServerLevel serverLevel) {
                     serverLevel.sendParticles(ParticleTypes.WHITE_ASH, mob.position().x, mob.position().y, mob.position().z, 20, 0.125, 0.25, 0.125, 0.1);
@@ -33,7 +36,7 @@ public class MobMixin {
                 mob.discard();
             }
 
-            trapItem.use(player, interactionHand);
+            itemStack.getItem().use(player.level(), player, interactionHand);
 
             cir.setReturnValue(InteractionResult.CONSUME);
             cir.cancel();

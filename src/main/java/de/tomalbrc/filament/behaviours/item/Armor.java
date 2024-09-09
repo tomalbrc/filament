@@ -1,14 +1,33 @@
 package de.tomalbrc.filament.behaviours.item;
 
-import de.tomalbrc.filament.api.behaviour.item.ItemBehaviour;
+import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
+import de.tomalbrc.filament.behaviours.BehaviourHolder;
+import de.tomalbrc.filament.trim.FilamentTrimPatterns;
+import eu.pb4.polymer.resourcepack.api.PolymerArmorModel;
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.armortrim.ArmorTrim;
+import net.minecraft.world.item.armortrim.TrimMaterials;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * Armor item behaviours, using fancypants shader via polymer
+ * Armor item behaviours, using fancypants shader via polymer or armor trims
  */
 public class Armor implements ItemBehaviour<Armor.ArmorConfig> {
     private final ArmorConfig config;
+    private PolymerArmorModel armorModel;
+    private FilamentTrimPatterns.FilamentTrimHolder trimHolder;
 
     public Armor(ArmorConfig config) {
         this.config = config;
@@ -17,6 +36,40 @@ public class Armor implements ItemBehaviour<Armor.ArmorConfig> {
     @Override
     public ArmorConfig getConfig() {
         return this.config;
+    }
+
+    @Override
+    public void init(Item item, BehaviourHolder behaviourHolder) {
+        if (!config.trim && config.texture != null)
+            this.armorModel = PolymerResourcePackUtils.requestArmor(config.texture);
+        else if (config.texture != null) {
+            this.trimHolder = FilamentTrimPatterns.addConfig(config);
+        }
+
+        DispenserBlock.registerBehavior(item, ArmorItem.DISPENSE_ITEM_BEHAVIOR);
+    }
+
+    public ItemStack modifyPolymerItemStack(ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
+        if (this.trimHolder != null)
+            itemStack.set(DataComponents.TRIM, new ArmorTrim(lookup.lookup(Registries.TRIM_MATERIAL).get().get(TrimMaterials.REDSTONE).get(), this.trimHolder.trimPattern, false));
+        return itemStack;
+    }
+
+    public int modifyPolymerArmorColor(ItemStack itemStack, @Nullable ServerPlayer player, int color) {
+        return this.armorModel != null ? this.armorModel.color() : color;
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Item item, Level level, Player player, InteractionHand interactionHand) {
+        if (item instanceof Equipable equipable) {
+            return equipable.swapWithEquipmentSlot(item, level, player, interactionHand);
+        }
+        return ItemBehaviour.super.use(item, level, player, interactionHand);
+    }
+
+    @Override
+    public EquipmentSlot getEquipmentSlot() {
+        return this.config.slot;
     }
 
     public static class ArmorConfig {

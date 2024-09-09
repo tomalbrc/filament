@@ -2,7 +2,6 @@ package de.tomalbrc.filament.data;
 
 import com.google.gson.annotations.SerializedName;
 import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
-import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.util.Constants;
@@ -36,6 +35,15 @@ public record ItemData(
         return properties;
     }
 
+    @Override
+    @NotNull
+    public Item vanillaItem() {
+        if (vanillaItem == null) {
+            return Items.PAPER;
+        }
+        return vanillaItem;
+    }
+
     public Object2ObjectOpenHashMap<String, PolymerModelData> requestModels() {
         Object2ObjectOpenHashMap<String, PolymerModelData> map = new Object2ObjectOpenHashMap<>();
         if (itemResource != null) {
@@ -59,6 +67,7 @@ public record ItemData(
     public boolean isFuel() {
         return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.FUEL) != null;
     }
+
 
     public boolean canShoot() {
         return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.SHOOT) != null;

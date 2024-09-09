@@ -1,14 +1,14 @@
 package de.tomalbrc.filament.decoration;
 
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.behaviours.BehaviourHolder;
 import de.tomalbrc.filament.behaviours.item.Cosmetic;
-import de.tomalbrc.filament.behaviours.item.Fuel;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.registry.DecorationRegistry;
-import de.tomalbrc.filament.registry.FuelRegistry;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
@@ -42,19 +42,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Iterator;
 import java.util.List;
 
-public class DecorationItem extends BlockItem implements PolymerItem, Equipable {
+public class DecorationItem extends SimpleItem implements PolymerItem, Equipable, BehaviourHolder {
     final private DecorationData decorationData;
     final private PolymerModelData modelData;
 
     public DecorationItem(Block block, DecorationData decorationData, Item.Properties properties) {
-        super(block, properties);
+        super(block, properties, decorationData.properties(), decorationData.vanillaItem());
+        this.initBehaviours(decorationData.behaviourConfig());
         this.decorationData = decorationData;
         this.modelData = this.decorationData.requestModel();
-
-        if (this.decorationData.isFuel()) {
-            Fuel.FuelConfig fuel = this.decorationData.behaviourConfig().get(Constants.Behaviours.FUEL);
-            FuelRegistry.add(this, fuel.value);
-        }
     }
 
     public DecorationData getDecorationData() {
@@ -66,8 +62,6 @@ public class DecorationItem extends BlockItem implements PolymerItem, Equipable 
         if (this.decorationData.vanillaItem() == Items.LEATHER_HORSE_ARMOR) {
             list.add(Component.literal("§9Dyeable"));
         }
-
-        this.decorationData.properties().appendHoverText(list);
 
         if (itemStack.has(DataComponents.CONTAINER)) {
             Iterator<ItemStack> itemStackIterator = itemStack.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).nonEmptyItems().iterator();
@@ -85,6 +79,8 @@ public class DecorationItem extends BlockItem implements PolymerItem, Equipable 
                 list.add(Component.translatable("container.shulkerBox.more", j - i).withStyle(ChatFormatting.ITALIC));
             }
         }
+
+        super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
     }
 
     @Override
@@ -103,6 +99,7 @@ public class DecorationItem extends BlockItem implements PolymerItem, Equipable 
     }
 
     @Override
+    @NotNull
     public InteractionResult useOn(UseOnContext useOnContext) {
         if (decorationData == null) {
             Filament.LOGGER.warn("Can't use decoration Item: Missing decoration formats!");
@@ -140,6 +137,8 @@ public class DecorationItem extends BlockItem implements PolymerItem, Equipable 
 
                     BlockPlaceContext blockPlaceContext = new BlockPlaceContext(player, useOnContext.getHand(), itemStack, new BlockHitResult(useOnContext.getClickLocation(), useOnContext.getClickedFace(), blockPos2, useOnContext.isInside()));
                     BlockState blockState = DecorationRegistry.getDecorationBlock(decorationData.id()).getStateForPlacement(blockPlaceContext);
+                    assert blockState != null;
+
                     if (decorationData.properties().isLightSource()) {
                         blockState = blockState.setValue(DecorationBlock.LIGHT_LEVEL, decorationData.properties().lightEmission);
                     }
@@ -167,6 +166,8 @@ public class DecorationItem extends BlockItem implements PolymerItem, Equipable 
                 BlockPlaceContext blockPlaceContext = new BlockPlaceContext(player, useOnContext.getHand(), itemStack, new BlockHitResult(useOnContext.getClickLocation(), useOnContext.getClickedFace(), useOnContext.getClickedPos(), useOnContext.isInside()));
 
                 BlockState blockState = DecorationRegistry.getDecorationBlock(decorationData.id()).getStateForPlacement(blockPlaceContext);
+                assert blockState != null;
+
                 blockState = blockState.setValue(DecorationBlock.PASSTHROUGH, true);
 
                 if (!decorationData.properties().waterloggable) {
@@ -218,7 +219,7 @@ public class DecorationItem extends BlockItem implements PolymerItem, Equipable 
         }
 
         if (decorationData.hasBlocks()) {
-            boolean canPlace[] = new boolean[]{true};
+            boolean[] canPlace = new boolean[]{true};
             Util.forEachRotated(decorationData.blocks(), blockPos, angle, blockPos2 -> {
                 if (!level.getBlockState(blockPos2).canBeReplaced()) {
                     canPlace[0] = false;
@@ -245,6 +246,8 @@ public class DecorationItem extends BlockItem implements PolymerItem, Equipable 
     @Override
     @NotNull
     public EquipmentSlot getEquipmentSlot() {
+        assert decorationData.behaviourConfig() != null;
+
         boolean cosmetic = decorationData.isCosmetic();
         if (cosmetic) {
             Cosmetic.CosmeticConfig cosmetic1 = this.decorationData.behaviourConfig().get(Constants.Behaviours.COSMETIC);

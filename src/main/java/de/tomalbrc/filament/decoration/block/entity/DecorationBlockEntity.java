@@ -2,7 +2,7 @@ package de.tomalbrc.filament.decoration.block.entity;
 
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.behaviour.Behaviour;
-import de.tomalbrc.filament.api.behaviour.decoration.DecorationBehaviour;
+import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviours.BehaviourHolder;
 import de.tomalbrc.filament.behaviours.BehaviourMap;
@@ -42,6 +42,9 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     @Nullable
     private ElementHolder decorationHolder;
 
+    public BehaviourMap getBehaviours() {
+        return this.behaviours;
+    }
     public DecorationBlockEntity(BlockPos pos, BlockState state) {
         super(pos, state);
     }
@@ -149,15 +152,16 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         }
     }
 
+    @Override
     public void initBehaviours(BehaviourConfigMap behaviourConfigMap) {
-        this.behaviours.from(behaviourConfigMap);
+        BehaviourHolder.super.initBehaviours(behaviourConfigMap);
+
         for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.behaviours) {
             if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
                 decorationBehaviour.init(this);
             }
         }
     }
-
 
     public InteractionResult interact(Player player, InteractionHand interactionHand, Vec3 location) {
         return this.decorationInteract((ServerPlayer) player, interactionHand, location);
@@ -225,6 +229,10 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             return;
         }
 
+        if (!this.getDecorationData().properties().drops) {
+            dropItem = false;
+        }
+
         ItemStack thisItemStack = this.getItem();
         for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.behaviours) {
             if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
@@ -263,10 +271,5 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
     public DecorationData getDecorationData() {
         return ((DecorationBlock)this.getBlockState().getBlock()).getDecorationData();
-    }
-
-    @Override
-    public <T extends Behaviour> T getBehaviour(ResourceLocation resourceLocation) {
-        return this.behaviours.get(resourceLocation);
     }
 }

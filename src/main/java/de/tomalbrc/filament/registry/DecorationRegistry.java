@@ -1,9 +1,9 @@
 package de.tomalbrc.filament.registry;
 
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.behaviours.BehaviourUtil;
 import de.tomalbrc.filament.behaviours.decoration.Container;
 import de.tomalbrc.filament.data.DecorationData;
-import de.tomalbrc.filament.data.properties.DecorationProperties;
 import de.tomalbrc.filament.decoration.DecorationItem;
 import de.tomalbrc.filament.decoration.block.ComplexDecorationBlock;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
@@ -54,7 +54,7 @@ public class DecorationRegistry {
         decorations.put(data.id(), data);
 
         DecorationBlock block;
-        BlockBehaviour.Properties props = data.properties().toBlockProperties();
+        BlockBehaviour.Properties props = data.properties().toBlockProperties().noOcclusion();
 
         if (!data.isSimple()) {
             block = new ComplexDecorationBlock(props.pushReaction(PushReaction.BLOCK), data.id());
@@ -85,11 +85,13 @@ public class DecorationRegistry {
                 properties.component(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
         }
 
-        if (data.vanillaItem() != null && (data.vanillaItem() == Items.LEATHER_HORSE_ARMOR || data.vanillaItem() == Items.FIREWORK_STAR)) {
+        if (data.vanillaItem() == Items.LEATHER_HORSE_ARMOR || data.vanillaItem() == Items.FIREWORK_STAR) {
             properties.component(DataComponents.DYED_COLOR, new DyedItemColor(0xdaad6d, false));
         }
 
-        ItemRegistry.registerItem(data.id(), new DecorationItem(block, data, properties), ItemRegistry.CUSTOM_DECORATIONS);
+        DecorationItem item = new DecorationItem(block, data, properties);
+        BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
+        ItemRegistry.registerItem(data.id(), item, ItemRegistry.CUSTOM_DECORATIONS);
 
         REGISTERED_DECORATIONS++;
     }
@@ -132,9 +134,6 @@ public class DecorationRegistry {
                     Filament.LOGGER.error("Failed to load decoration resource \"" + entry.getKey() + "\".");
                 }
             }
-
-            Filament.LOGGER.info("filament decorations registered: " + DecorationRegistry.REGISTERED_DECORATIONS);
-            Filament.LOGGER.info("filament decoration block entities registered: " + DecorationRegistry.REGISTERED_BLOCK_ENTITIES);
         }
     }
 }

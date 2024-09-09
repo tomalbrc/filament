@@ -12,12 +12,19 @@ public class Constants {
 
 
     public static class Behaviours {
+        public static final ResourceLocation COMPOSTABLE = ResourceLocation.fromNamespaceAndPath("filament", "compostable");
         public static final ResourceLocation FUEL = ResourceLocation.fromNamespaceAndPath("filament", "fuel");
 
         // Blocks
         public static final ResourceLocation POWERSOURCE = ResourceLocation.fromNamespaceAndPath("filament", "powersource");
         public static final ResourceLocation REPEATER = ResourceLocation.fromNamespaceAndPath("filament", "repeater");
         public static final ResourceLocation STRIPPABLE = ResourceLocation.fromNamespaceAndPath("filament", "strippable");
+        public static final ResourceLocation COLUMN = ResourceLocation.fromNamespaceAndPath("filament", "column");
+        public static final ResourceLocation COUNT = ResourceLocation.fromNamespaceAndPath("filament", "count");
+        public static final ResourceLocation DIRECTIONAL_POWERED = ResourceLocation.fromNamespaceAndPath("filament", "directional_powered");
+        public static final ResourceLocation DIRECTIONAL = ResourceLocation.fromNamespaceAndPath("filament", "directional");
+        public static final ResourceLocation POWERLEVEL = ResourceLocation.fromNamespaceAndPath("filament", "powerlevel");
+        public static final ResourceLocation SLAB = ResourceLocation.fromNamespaceAndPath("filament", "slab");
 
         // Items
         public static final ResourceLocation COSMETIC = ResourceLocation.fromNamespaceAndPath("filament", "cosmetic");

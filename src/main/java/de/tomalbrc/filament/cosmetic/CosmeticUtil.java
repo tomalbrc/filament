@@ -1,8 +1,6 @@
 package de.tomalbrc.filament.cosmetic;
 
 import de.tomalbrc.filament.behaviours.item.Cosmetic;
-import de.tomalbrc.filament.block.SimpleBlockItem;
-import de.tomalbrc.filament.decoration.DecorationItem;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.util.Constants;
 import net.minecraft.world.item.Item;
@@ -10,13 +8,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class CosmeticUtil {
     public static boolean isCosmetic(ItemStack itemStack) {
-        if (itemStack.getItem() instanceof DecorationItem simpleItem && simpleItem.getDecorationData().isCosmetic()) {
-            return true;
-        }
-        if (itemStack.getItem() instanceof SimpleBlockItem simpleItem && simpleItem.getBlockData().isCosmetic()) {
-            return true;
-        }
-        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.getItemData().isCosmetic()) {
+        if (itemStack.getItem() instanceof SimpleItem simpleItem && getCosmeticData(simpleItem) != null) {
             return true;
         }
 
@@ -29,16 +21,9 @@ public class CosmeticUtil {
 
     public static Cosmetic.CosmeticConfig getCosmeticData(Item item) {
         Cosmetic.CosmeticConfig cosmeticData = null;
-        if (item instanceof DecorationItem simpleItem && simpleItem.getDecorationData().isCosmetic()) {
-            cosmeticData = simpleItem.getDecorationData().behaviourConfig().get(Constants.Behaviours.COSMETIC);
+        if (item instanceof SimpleItem simpleItem && simpleItem.getBehaviour(Constants.Behaviours.COSMETIC) != null) {
+            cosmeticData = (Cosmetic.CosmeticConfig) simpleItem.getBehaviour(Constants.Behaviours.COSMETIC).getConfig();
         }
-        if (item instanceof SimpleBlockItem simpleItem && simpleItem.getBlockData().isCosmetic()) {
-            cosmeticData = simpleItem.getBlockData().behaviourConfig().get(Constants.Behaviours.COSMETIC);
-        }
-        if (item instanceof SimpleItem simpleItem && simpleItem.getItemData().isCosmetic()) {
-            cosmeticData = simpleItem.getItemData().behaviourConfig().get(Constants.Behaviours.COSMETIC);
-        }
-
         return cosmeticData;
     }
 }

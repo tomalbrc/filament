@@ -6,15 +6,15 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class SimpleSlabBlock extends SlabBlock implements PolymerTexturedBlock {
-    private final HashMap<String, BlockState> stateMap;
+    private final Map<BlockState, BlockData.BlockStateMeta> stateMap;
     private final BlockState breakEventState;
 
     public SimpleSlabBlock(Properties properties, BlockData data) {
         super(properties.dynamicShape());
-        this.stateMap = data.createStateMap();
+        this.stateMap = data.createStandardStateMap();
         this.breakEventState = data.properties().blockBase.defaultBlockState();
     }
 
@@ -25,11 +25,6 @@ public class SimpleSlabBlock extends SlabBlock implements PolymerTexturedBlock {
 
     @Override
     public BlockState getPolymerBlockState(BlockState state) {
-        var newState = switch (state.getValue(TYPE)) {
-            case TOP -> this.stateMap.get("top");
-            case BOTTOM -> this.stateMap.get("bottom");
-            case DOUBLE -> this.stateMap.get("double");
-        };
-        return newState.setValue(SlabBlock.WATERLOGGED, state.getValue(SlabBlock.WATERLOGGED));
+        return this.stateMap.get(state).blockState();
     }
 }
