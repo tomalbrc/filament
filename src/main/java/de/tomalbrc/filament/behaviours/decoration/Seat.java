@@ -11,6 +11,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 import java.util.Objects;
@@ -26,6 +27,7 @@ public class Seat implements DecorationBehaviour<Seat.SeatConfig> {
     }
 
     @Override
+    @NotNull
     public SeatConfig getConfig() {
         return this.seatConfig;
     }

@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Block behaviours for redstone power source
@@ -22,6 +23,7 @@ public class Powersource implements BlockBehaviour<Powersource.PowersourceConfig
     }
 
     @Override
+    @NotNull
     public PowersourceConfig getConfig() {
         return this.config;
     }

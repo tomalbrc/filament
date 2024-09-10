@@ -5,6 +5,7 @@ import de.tomalbrc.filament.behaviours.BehaviourHolder;
 import de.tomalbrc.filament.registry.StrippableRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Block behaviourConfig for strippable blocks (with an axe)
@@ -18,6 +19,7 @@ public class Strippable implements BlockBehaviour<Strippable.StrippableConfig> {
     }
 
     @Override
+    @NotNull
     public StrippableConfig getConfig() {
         return this.config;
     }

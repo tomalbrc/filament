@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 public class Execute implements ItemBehaviour<Execute.ExecuteConfig> {
     private final ExecuteConfig config;
@@ -20,6 +21,7 @@ public class Execute implements ItemBehaviour<Execute.ExecuteConfig> {
     }
 
     @Override
+    @NotNull
     public ExecuteConfig getConfig() {
         return null;
     }

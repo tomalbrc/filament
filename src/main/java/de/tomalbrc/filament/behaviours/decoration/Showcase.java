@@ -25,6 +25,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -46,6 +47,7 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
     }
 
     @Override
+    @NotNull
     public ShowcaseConfig getConfig() {
         return this.config;
     }

@@ -12,6 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
+import org.jetbrains.annotations.NotNull;
 
 public class Instrument implements ItemBehaviour<Instrument.InstrumentConfig> {
     private final InstrumentConfig config;
@@ -21,6 +22,7 @@ public class Instrument implements ItemBehaviour<Instrument.InstrumentConfig> {
     }
 
     @Override
+    @NotNull
     public InstrumentConfig getConfig() {
         return this.config;
     }

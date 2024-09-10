@@ -10,6 +10,7 @@ import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 /**
@@ -23,6 +24,7 @@ public class Cosmetic implements ItemBehaviour<Cosmetic.CosmeticConfig> {
     }
 
     @Override
+    @NotNull
     public CosmeticConfig getConfig() {
         return this.config;
     }

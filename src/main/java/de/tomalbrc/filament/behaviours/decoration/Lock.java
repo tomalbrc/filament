@@ -12,6 +12,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Lock behaviours for decoration
@@ -26,6 +27,7 @@ public class Lock implements DecorationBehaviour<Lock.LockConfig> {
     }
 
     @Override
+    @NotNull
     public LockConfig getConfig() {
         return this.lockConfig;
     }

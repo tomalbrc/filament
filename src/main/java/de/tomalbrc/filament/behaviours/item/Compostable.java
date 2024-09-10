@@ -4,6 +4,7 @@ import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.behaviours.BehaviourHolder;
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
 import net.minecraft.world.item.Item;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Compostable behaviour
@@ -16,6 +17,7 @@ public class Compostable implements ItemBehaviour<Compostable.CompostableConfig>
     }
 
     @Override
+    @NotNull
     public CompostableConfig getConfig() {
         return this.config;
     }

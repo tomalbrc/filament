@@ -19,6 +19,7 @@ import net.minecraft.world.item.armortrim.ArmorTrim;
 import net.minecraft.world.item.armortrim.TrimMaterials;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -34,6 +35,7 @@ public class Armor implements ItemBehaviour<Armor.ArmorConfig> {
     }
 
     @Override
+    @NotNull
     public ArmorConfig getConfig() {
         return this.config;
     }

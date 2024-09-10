@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.ticks.TickPriority;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -160,6 +161,7 @@ public class Repeater implements BlockBehaviour<Repeater.RepeaterConfig> {
     }
 
     @Override
+    @NotNull
     public RepeaterConfig getConfig() {
         return this.config;
     }

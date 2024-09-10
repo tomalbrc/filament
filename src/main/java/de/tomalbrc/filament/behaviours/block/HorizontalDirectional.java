@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Block behaviourConfig for strippable blocks (with an axe)
@@ -21,6 +22,7 @@ public class HorizontalDirectional implements BlockBehaviour<HorizontalDirection
     }
 
     @Override
+    @NotNull
     public DirectionalConfig getConfig() {
         return this.config;
     }

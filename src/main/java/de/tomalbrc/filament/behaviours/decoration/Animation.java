@@ -8,6 +8,7 @@ import de.tomalbrc.filament.decoration.holder.AnimatedHolder;
 import de.tomalbrc.filament.registry.ModelRegistry;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Animation behaviours for decoration using animated java models (powered by nylon)
@@ -20,6 +21,7 @@ public class Animation implements DecorationBehaviour<Animation.AnimationConfig>
     }
 
     @Override
+    @NotNull
     public AnimationConfig getConfig() {
         return this.config;
     }

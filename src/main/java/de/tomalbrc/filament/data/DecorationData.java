@@ -36,12 +36,11 @@ public record DecorationData(
         @Nullable BehaviourConfigMap behaviourConfig,
         @Nullable DataComponentMap components
 ) {
-    private static final DecorationProperties altProps = new DecorationProperties();
     @Override
     @NotNull
     public DecorationProperties properties() {
         if (properties == null) {
-            return altProps;
+            return DecorationProperties.EMPTY;
         }
         return properties;
     }

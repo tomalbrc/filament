@@ -8,6 +8,8 @@ import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})
 public class BlockProperties extends ItemProperties {
+    public static final BlockProperties EMPTY = new BlockProperties();
+
     @NotNull
     public Block blockBase = Blocks.STONE;
     public boolean requiresTool = false;

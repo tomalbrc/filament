@@ -19,6 +19,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -36,6 +37,7 @@ public class Container implements DecorationBehaviour<Container.ContainerConfig>
     }
 
     @Override
+    @NotNull
     public ContainerConfig getConfig() {
         return config;
     }

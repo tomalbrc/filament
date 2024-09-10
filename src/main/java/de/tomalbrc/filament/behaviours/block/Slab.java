@@ -29,6 +29,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -46,6 +47,7 @@ public class Slab implements BlockBehaviour<Slab.SlabConfig>, SimpleWaterloggedB
     }
 
     @Override
+    @NotNull
     public SlabConfig getConfig() {
         return this.config;
     }

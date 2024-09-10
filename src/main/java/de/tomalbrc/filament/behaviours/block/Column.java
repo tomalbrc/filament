@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import org.jetbrains.annotations.NotNull;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.AXIS;
 
@@ -33,6 +34,7 @@ public class Column implements BlockBehaviour<Column.ColumnConfig> {
     }
 
     @Override
+    @NotNull
     public ColumnConfig getConfig() {
         return this.config;
     }

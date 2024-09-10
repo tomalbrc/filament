@@ -35,12 +35,11 @@ public record BlockData(
         @Nullable BehaviourConfigMap behaviourConfig,
         @Nullable DataComponentMap components
         ) {
-    private static final BlockProperties altProps = new BlockProperties();
     @Override
     @NotNull
     public BlockProperties properties() {
         if (properties == null) {
-            return altProps;
+            return BlockProperties.EMPTY;
         }
         return properties;
     }

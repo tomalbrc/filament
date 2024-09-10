@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Block behaviourConfig for strippable blocks (with an axe)
@@ -25,6 +26,7 @@ public class Powerlevel implements BlockBehaviour<Powerlevel.PowerlevelConfig> {
     }
 
     @Override
+    @NotNull
     public PowerlevelConfig getConfig() {
         return this.config;
     }

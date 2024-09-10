@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.behaviours.item;
 
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Food behaviours for edible items
@@ -13,6 +14,7 @@ public class Food implements ItemBehaviour<Food.FoodConfig> {
     }
 
     @Override
+    @NotNull
     public FoodConfig getConfig() {
         return this.config;
     }

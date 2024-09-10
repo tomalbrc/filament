@@ -4,6 +4,7 @@ import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.behaviours.BehaviourHolder;
 import de.tomalbrc.filament.registry.FuelRegistry;
 import net.minecraft.world.item.Item;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Fuel behaviour
@@ -16,6 +17,7 @@ public class Fuel implements ItemBehaviour<Fuel.FuelConfig> {
     }
 
     @Override
+    @NotNull
     public FuelConfig getConfig() {
         return this.config;
     }

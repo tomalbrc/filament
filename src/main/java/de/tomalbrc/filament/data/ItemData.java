@@ -24,12 +24,11 @@ public record ItemData(
         @Nullable ItemProperties properties,
         @Nullable DataComponentMap components
 ) {
-    private static final ItemProperties altProps = new ItemProperties();
     @Override
     @NotNull
     public ItemProperties properties() {
         if (properties == null) {
-            return altProps;
+            return ItemProperties.EMPTY;
         }
         return properties;
     }

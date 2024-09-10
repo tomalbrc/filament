@@ -6,6 +6,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 
 
 public class DecorationProperties extends BlockProperties {
+    public static final DecorationProperties EMPTY = new DecorationProperties();
+
     public boolean rotate = false;
     public boolean rotateSmooth = false;
 
