@@ -9,7 +9,6 @@ import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.registry.DecorationRegistry;
-import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
@@ -250,7 +249,7 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Equipable
 
         boolean cosmetic = decorationData.isCosmetic();
         if (cosmetic) {
-            Cosmetic.CosmeticConfig cosmetic1 = this.decorationData.behaviourConfig().get(Constants.Behaviours.COSMETIC);
+            Cosmetic.CosmeticConfig cosmetic1 = this.decorationData.behaviourConfig().get(BehaviourRegistry.COSMETIC);
             if (cosmetic1.slot != null)
                 return cosmetic1.slot;
         }

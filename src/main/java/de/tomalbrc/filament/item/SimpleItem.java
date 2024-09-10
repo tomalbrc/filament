@@ -45,7 +45,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
 
     protected final Item vanillaItem;
 
-    BehaviourMap behaviours = new BehaviourMap();
+    protected final BehaviourMap behaviours = new BehaviourMap();
 
     public BehaviourMap getBehaviours() {
         return this.behaviours;

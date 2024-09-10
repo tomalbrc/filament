@@ -1,7 +1,6 @@
 {
   "id": "mynamespace:darkoak_chair_with_cushion",
   "model": "minecraft:custom/furniture/chairs/darkoak_chair_with_cushion",
-  "itemModel": "minecraft:custom/furniture/chairs/darkoak_chair_with_cushion",
   "vanillaItem": "minecraft:leather_horse_armor",
   "properties": {
     "rotate": true,

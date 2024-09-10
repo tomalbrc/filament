@@ -15,7 +15,9 @@
     }
   },
   "itemResource": {
-    "model": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_8"
+    "models": {
+      "default": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_8"
+    }
   },
   "type": "powerlevel",
   "blockModelType": "full_block",

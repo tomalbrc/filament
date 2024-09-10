@@ -3,9 +3,9 @@ package de.tomalbrc.filament.behaviours.decoration;
 import com.mojang.math.Axis;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
+import de.tomalbrc.filament.api.registry.BehaviourRegistry;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.decoration.holder.DecorationHolder;
-import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.elements.BlockDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
@@ -83,18 +83,21 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
     public void read(CompoundTag compoundTag, HolderLookup.Provider provider, DecorationBlockEntity blockEntity) {
         if (compoundTag.contains(SHOWCASE_KEY) && blockEntity.getOrCreateHolder() != null) {
             CompoundTag showcaseTag = compoundTag.getCompound(SHOWCASE_KEY);
-            DecorationHolder holder = DecorationHolder.class.cast(blockEntity.getDecorationHolder());
+            DecorationHolder holder = (DecorationHolder) blockEntity.getDecorationHolder();
             if (holder == null)
                 return;
 
-            Showcase showcase = blockEntity.getBehaviour(Constants.Behaviours.SHOWCASE);
-            for (int i = 0; i < showcase.config.size(); i++) {
-                Showcase.ShowcaseMeta showcaseMeta = showcase.config.get(i);
-                String key = ITEM + i;
-                if (showcase != null && showcaseTag.contains(key)) {
-                    setShowcaseItemStack(blockEntity, showcaseMeta, ItemStack.parseOptional(provider, showcaseTag.getCompound(key)));
+            if (blockEntity.has(BehaviourRegistry.SHOWCASE)) {
+                Showcase showcase = blockEntity.get(BehaviourRegistry.SHOWCASE);
+                for (int i = 0; i < showcase.config.size(); i++) {
+                    Showcase.ShowcaseMeta showcaseMeta = showcase.config.get(i);
+                    String key = ITEM + i;
+                    if (showcaseTag.contains(key)) {
+                        setShowcaseItemStack(blockEntity, showcaseMeta, ItemStack.parseOptional(provider, showcaseTag.getCompound(key)));
+                    }
                 }
             }
+
         }
     }
 

@@ -9,7 +9,6 @@ import de.tomalbrc.filament.decoration.block.ComplexDecorationBlock;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -80,7 +79,7 @@ public class DecorationRegistry {
         }
 
         if (data.isContainer()) {
-            Container.ContainerConfig container = data.behaviourConfig().get(Constants.Behaviours.CONTAINER);
+            Container.ContainerConfig container = data.behaviourConfig().get(BehaviourRegistry.CONTAINER);
             if (container.canPickup)
                 properties.component(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
         }

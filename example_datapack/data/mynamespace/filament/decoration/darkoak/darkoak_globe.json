@@ -1,7 +1,6 @@
 {
   "id": "mynamespace:darkoak_globe",
   "model": "minecraft:custom/furniture/misc/darkoak_globe",
-  "itemModel": "minecraft:custom/furniture/misc/darkoak_globe",
   "properties": {
     "rotate": true,
     "rotateSmooth": true

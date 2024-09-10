@@ -1,9 +1,9 @@
 package de.tomalbrc.filament.data;
 
 import com.google.gson.annotations.SerializedName;
+import de.tomalbrc.filament.api.registry.BehaviourRegistry;
 import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.DecorationProperties;
-import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
@@ -18,6 +18,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.List;
+import java.util.Objects;
 
 public record DecorationData(
         @NotNull ResourceLocation id,
@@ -59,11 +60,7 @@ public record DecorationData(
     }
 
     public boolean isContainer() {
-        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.CONTAINER) != null;
-    }
-
-    public boolean hasAnimation() {
-        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.ANIMATION) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.has(BehaviourRegistry.CONTAINER);
     }
 
     public boolean hasBlocks() {
@@ -76,22 +73,22 @@ public record DecorationData(
 
         int c = 0;
         for (BlockConfig block : this.blocks) {
-            c += block.size().x() * block.size().y() * block.size().z();
+            c += (int) (block.size().x() * block.size().y() * block.size().z());
         }
         return c;
     }
 
     public boolean isSimple() {
-        boolean singleBlock = (!this.hasBlocks() || Util.barrierDimensions(this.blocks(), 0).equals(1, 1));
+        boolean singleBlock = (!this.hasBlocks() || Util.barrierDimensions(Objects.requireNonNull(this.blocks()), 0).equals(1, 1));
         boolean hasBehaviour = this.behaviourConfig() != null;
         boolean canBeDyed = this.vanillaItem != null && (vanillaItem == Items.LEATHER_HORSE_ARMOR || vanillaItem == Items.FIREWORK_STAR);
-        boolean groundOnly = !this.properties.placement.wall() && !this.properties.placement.ceiling();
+        boolean groundOnly = this.properties != null && !this.properties.placement.wall() && !this.properties.placement.ceiling();
 
         return groundOnly && !canBeDyed && !hasBehaviour && (singleBlock || this.size != null);
     }
 
     public boolean isCosmetic() {
-        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.COSMETIC) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.has(BehaviourRegistry.COSMETIC);
     }
 
     public record BlockConfig(Vector3f origin,

@@ -58,7 +58,7 @@ public class VirtualDestroyStage extends ElementHolder {
             ChunkAttachment.of(self, player.serverLevel(), vecPos);
             self.mains().get(0).setTranslation(new Vector3f());
 
-            if (state.getBlock() instanceof ComplexDecorationBlock decorationBlock1 && decorationBlock1.getDecorationData().hasBlocks() && !Util.barrierDimensions(decorationBlock1.getDecorationData().blocks(), 0).equals(1, 1)) {
+            if (state.getBlock() instanceof ComplexDecorationBlock decorationBlock1 && decorationBlock1.getDecorationData().hasBlocks()) {
                 for (int i1 = 0; i1 < decorationBlock1.getDecorationData().countBlocks(); i1++) {
                     self.addElement(self.mains().get(i1));
                 }

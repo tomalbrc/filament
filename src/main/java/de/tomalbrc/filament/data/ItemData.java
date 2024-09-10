@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.data.resource.ItemResource;
-import de.tomalbrc.filament.util.Constants;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -50,37 +49,5 @@ public record ItemData(
             itemResource.models().forEach((key, value) -> map.put(key, PolymerResourcePackUtils.requestModel(this.vanillaItem == null ? Items.PAPER : this.vanillaItem, value)));
         }
         return map.isEmpty() ? null : map;
-    }
-
-    public boolean isFood() {
-        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.FOOD) != null;
-    }
-
-    public boolean isArmor() {
-        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.ARMOR) != null;
-    }
-
-    public boolean isCosmetic() {
-        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.COSMETIC) != null;
-    }
-
-    public boolean isFuel() {
-        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.FUEL) != null;
-    }
-
-
-    public boolean canShoot() {
-        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.SHOOT) != null;
-    }
-    public boolean isInstrument() {
-        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.INSTRUMENT) != null;
-    }
-
-    public boolean isTrap() {
-        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.TRAP) != null;
-    }
-
-    public boolean canExecute() {
-        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.EXECUTE) != null;
     }
 }

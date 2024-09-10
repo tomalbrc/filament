@@ -1,16 +1,13 @@
 package de.tomalbrc.filament.data;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import de.tomalbrc.filament.api.registry.BehaviourRegistry;
 import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.data.resource.BlockResource;
 import de.tomalbrc.filament.data.resource.ItemResource;
-import de.tomalbrc.filament.util.Constants;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
@@ -25,7 +22,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Type;
 import java.util.Map;
 
 
@@ -96,55 +92,13 @@ public record BlockData(
         return val;
     }
 
-    public boolean isRepeater() {
-        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.REPEATER) != null;
-    }
-
     public boolean isCosmetic() {
-        return this.behaviourConfig != null && this.behaviourConfig.get(Constants.Behaviours.COSMETIC) != null;
+        return this.behaviourConfig != null && this.behaviourConfig.get(BehaviourRegistry.COSMETIC) != null;
     }
 
     public record BlockStateMeta(BlockState blockState, PolymerBlockModel polymerBlockModel) {
         public static BlockStateMeta of(BlockState blockState, PolymerBlockModel blockModel) {
             return new BlockStateMeta(blockState, blockModel);
-        }
-    }
-
-    public record BlockType(ResourceLocation resourceLocation) {
-        public static BlockType ofFilament(String path) {
-            return new BlockType(ResourceLocation.fromNamespaceAndPath("filament", path));
-        }
-
-        public static BlockType of(String path) {
-            return new BlockType(ResourceLocation.parse(path));
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == null)
-                return false;
-
-            if (BlockType.class == this.getClass() && ((BlockType)obj).resourceLocation() != null && this.resourceLocation != null)
-                return ((BlockType)obj).resourceLocation().equals(this.resourceLocation);
-
-            return false;
-        }
-
-        @Override
-        public int hashCode() {
-            return resourceLocation.hashCode();
-        }
-
-        public static class Deserializer implements JsonDeserializer<BlockType> {
-            @Override
-            public BlockType deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-                String resLoc = jsonElement.getAsString();
-                ResourceLocation resourceLocation;
-                if (resLoc.contains(":"))
-                    return BlockType.of(resLoc);
-                else
-                    return BlockType.ofFilament(resLoc);
-            }
         }
     }
 }

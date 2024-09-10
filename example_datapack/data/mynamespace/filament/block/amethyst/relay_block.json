@@ -17,7 +17,9 @@
     }
   },
   "itemResource": {
-    "model": "minecraft:custom/block/arcanery/relay/relay_north_off"
+    "models": {
+      "default": "minecraft:custom/block/arcanery/relay/relay_north_off"
+    }
   },
   "type": "powered_directional",
   "blockModelType": "full_block",

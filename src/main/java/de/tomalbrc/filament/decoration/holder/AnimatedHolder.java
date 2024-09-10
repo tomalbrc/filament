@@ -6,11 +6,10 @@ import de.tomalbrc.bil.core.holder.wrapper.DisplayWrapper;
 import de.tomalbrc.bil.core.model.Model;
 import de.tomalbrc.bil.core.model.Pose;
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.api.registry.BehaviourRegistry;
 import de.tomalbrc.filament.behaviours.decoration.Animation;
 import de.tomalbrc.filament.behaviours.decoration.Container;
-import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import de.tomalbrc.filament.util.Constants;
 import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import net.minecraft.server.level.ServerLevel;
@@ -26,8 +25,8 @@ public class AnimatedHolder extends PositionedHolder {
 
         this.updateCullingBox();
 
-        if (this.decorationBlockEntity.getDecorationData().hasAnimation()) {
-            Animation.AnimationConfig animation = this.decorationBlockEntity.getDecorationData().behaviourConfig().get(Constants.Behaviours.ANIMATION);
+        if (this.decorationBlockEntity.has(BehaviourRegistry.ANIMATION)) {
+            Animation.AnimationConfig animation = this.decorationBlockEntity.getDecorationData().behaviourConfig().get(BehaviourRegistry.ANIMATION);
             this.setAnimationData(animation);
         }
     }
@@ -70,9 +69,8 @@ public class AnimatedHolder extends PositionedHolder {
                     }
                 });
 
-                DecorationData decorationData = decorationBlockEntity.getDecorationData();
-                if (this.decorationBlockEntity.getBehaviour(Constants.Behaviours.CONTAINER) != null && decorationData != null && decorationData.isContainer()) {
-                    Container container = this.decorationBlockEntity.getBehaviour(Constants.Behaviours.CONTAINER);
+                if (this.decorationBlockEntity.has(BehaviourRegistry.CONTAINER)) {
+                    Container container = this.decorationBlockEntity.get(BehaviourRegistry.CONTAINER);
 
                     if (container.getConfig().openAnimation != null) {
                         container.container.setOpenCallback(() -> {

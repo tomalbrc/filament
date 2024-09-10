@@ -7,8 +7,6 @@
       "type=double" : "minecraft:custom/block/concrete/green_concrete_bricks"
     }
   },
-  "type": "slab",
-  "blockModelType": "SLAB_BLOCK",
   "properties": {
     "destroyTime": 0,
     "blockBase": "minecraft:dandelion",

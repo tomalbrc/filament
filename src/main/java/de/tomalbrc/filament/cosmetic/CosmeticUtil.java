@@ -2,7 +2,6 @@ package de.tomalbrc.filament.cosmetic;
 
 import de.tomalbrc.filament.behaviours.item.Cosmetic;
 import de.tomalbrc.filament.item.SimpleItem;
-import de.tomalbrc.filament.util.Constants;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -21,8 +20,8 @@ public class CosmeticUtil {
 
     public static Cosmetic.CosmeticConfig getCosmeticData(Item item) {
         Cosmetic.CosmeticConfig cosmeticData = null;
-        if (item instanceof SimpleItem simpleItem && simpleItem.getBehaviour(Constants.Behaviours.COSMETIC) != null) {
-            cosmeticData = (Cosmetic.CosmeticConfig) simpleItem.getBehaviour(Constants.Behaviours.COSMETIC).getConfig();
+        if (item instanceof SimpleItem simpleItem && simpleItem.get(BehaviourRegistry.COSMETIC) != null) {
+            cosmeticData = (Cosmetic.CosmeticConfig) simpleItem.get(BehaviourRegistry.COSMETIC).getConfig();
         }
         return cosmeticData;
     }
