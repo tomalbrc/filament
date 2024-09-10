@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.registry;
 
 import de.tomalbrc.filament.Filament;
-import de.tomalbrc.filament.behaviours.BehaviourUtil;
+import de.tomalbrc.filament.behaviour.BehaviourUtil;
 import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.util.Constants;

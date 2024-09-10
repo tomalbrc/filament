@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.registry;
 
 import de.tomalbrc.filament.Filament;
-import de.tomalbrc.filament.behaviours.BehaviourUtil;
+import de.tomalbrc.filament.behaviour.BehaviourUtil;
 import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.block.SimpleBlockItem;
 import de.tomalbrc.filament.data.BlockData;

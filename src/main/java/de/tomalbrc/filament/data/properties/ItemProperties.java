@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.data.properties;
 
-import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
-import de.tomalbrc.filament.behaviours.Behaviours;
+import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
+import de.tomalbrc.filament.behaviour.Behaviours;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;

@@ -25,9 +25,7 @@ public class BehaviourRegistry {
         Type[] genericInterfaces = behaviour.getGenericInterfaces();
         for (Type genericInterface : genericInterfaces) {
             if (genericInterface instanceof ParameterizedType parameterizedType) {
-                if (((Class<?>) parameterizedType.getRawType()).isAssignableFrom(Behaviour.class)) {
-                    return (Class<E>) parameterizedType.getActualTypeArguments()[0];
-                }
+                return (Class<E>)parameterizedType.getActualTypeArguments()[0];
             }
         }
         return null;

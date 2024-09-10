@@ -3,7 +3,7 @@ package de.tomalbrc.filament.data;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
+import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.data.resource.BlockResource;
 import de.tomalbrc.filament.data.resource.ItemResource;

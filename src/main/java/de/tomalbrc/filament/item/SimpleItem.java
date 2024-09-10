@@ -3,8 +3,8 @@ package de.tomalbrc.filament.item;
 import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
-import de.tomalbrc.filament.behaviours.BehaviourHolder;
-import de.tomalbrc.filament.behaviours.BehaviourMap;
+import de.tomalbrc.filament.behaviour.BehaviourHolder;
+import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.data.properties.ItemProperties;
@@ -183,20 +183,20 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
     @Override
     @NotNull
     public InteractionResult useOn(UseOnContext useOnContext) {
-        var res = InteractionResult.PASS;
-        if (this.getBlock() instanceof SimpleBlock) {
-            super.useOn(useOnContext);
-            if (res.consumesAction()) {
-                return res;
-            }
-        }
-
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
-                res = itemBehaviour.useOn(useOnContext);
+                var res = itemBehaviour.useOn(useOnContext);
                 if (res.consumesAction()) {
                     return res;
                 }
+            }
+        }
+
+        var res = InteractionResult.PASS;
+        if (this.getBlock() instanceof SimpleBlock) {
+            res = super.useOn(useOnContext);
+            if (res.consumesAction()) {
+                return res;
             }
         }
 

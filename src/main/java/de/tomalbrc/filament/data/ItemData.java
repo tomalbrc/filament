@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.data;
 
 import com.google.gson.annotations.SerializedName;
-import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
+import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;

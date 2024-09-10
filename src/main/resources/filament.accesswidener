@@ -1,2 +1,3 @@
 accessWidener   v2  named
 accessible class net/minecraft/resources/RegistryDataLoader$Loader
+accessible class net/minecraft/world/entity/animal/Bee$BeeGrowCropGoal

@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.trim;
 
-import de.tomalbrc.filament.behaviours.item.Armor;
+import de.tomalbrc.filament.behaviour.item.Armor;
 import de.tomalbrc.filament.util.FilamentConfig;
 import de.tomalbrc.filament.util.Json;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;

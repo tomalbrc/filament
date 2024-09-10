@@ -1,9 +1,9 @@
 package de.tomalbrc.filament.registry;
 
 import de.tomalbrc.filament.Filament;
-import de.tomalbrc.filament.behaviours.BehaviourUtil;
-import de.tomalbrc.filament.behaviours.Behaviours;
-import de.tomalbrc.filament.behaviours.decoration.Container;
+import de.tomalbrc.filament.behaviour.BehaviourUtil;
+import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.behaviour.decoration.Container;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.DecorationItem;
 import de.tomalbrc.filament.decoration.block.ComplexDecorationBlock;

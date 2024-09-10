@@ -1,9 +1,9 @@
 package de.tomalbrc.filament.decoration;
 
 import de.tomalbrc.filament.Filament;
-import de.tomalbrc.filament.behaviours.BehaviourHolder;
-import de.tomalbrc.filament.behaviours.Behaviours;
-import de.tomalbrc.filament.behaviours.item.Cosmetic;
+import de.tomalbrc.filament.behaviour.BehaviourHolder;
+import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.behaviour.item.Cosmetic;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
@@ -101,8 +101,12 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Equipable
     @Override
     @NotNull
     public InteractionResult useOn(UseOnContext useOnContext) {
+        var res = super.useOn(useOnContext);
+        if (res.consumesAction())
+            return res;
+
         if (decorationData == null) {
-            Filament.LOGGER.warn("Can't use decoration Item: Missing decoration formats!");
+            Filament.LOGGER.warn("Can't use decoration Item: Missing decoration data!");
             return InteractionResult.FAIL;
         }
 

@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.cosmetic;
 
-import de.tomalbrc.filament.behaviours.Behaviours;
-import de.tomalbrc.filament.behaviours.item.Cosmetic;
+import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.behaviour.item.Cosmetic;
 import de.tomalbrc.filament.item.SimpleItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

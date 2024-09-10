@@ -2,16 +2,16 @@
   "id": "mynamespace:amethyst_crystal_display",
   "blockResource": {
     "models": {
-      "0": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_0",
-      "1": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_1",
-      "2": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_2",
-      "3": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_3",
-      "4": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_4",
-      "5": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_5",
-      "6": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_6",
-      "7": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_7",
-      "8": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_8",
-      "9": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_9"
+      "power=0": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_0",
+      "power=1": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_1",
+      "power=2": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_2",
+      "power=3": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_3",
+      "power=4": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_4",
+      "power=5": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_5",
+      "power=6": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_6",
+      "power=7": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_7",
+      "power=8": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_8",
+      "power=9": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_9"
     }
   },
   "itemResource": {
@@ -19,7 +19,9 @@
       "default": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_8"
     }
   },
-  "type": "powerlevel",
+  "behaviour": {
+    "powerlevel": {"max": 9}
+  },
   "blockModelType": "full_block",
   "properties": {
     "redstoneConductor": false,

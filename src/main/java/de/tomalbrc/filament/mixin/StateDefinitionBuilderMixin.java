@@ -17,9 +17,11 @@ import java.util.function.Function;
 public class StateDefinitionBuilderMixin<O, S extends StateHolder<O, S>> {
     @Shadow @Final private O owner;
 
+    @SuppressWarnings("unchecked")
     @Inject(method = "create", at = @At("HEAD"), cancellable = true)
     void filament$abortCreate(Function<O, S> function, StateDefinition.Factory<O, S> factory, CallbackInfoReturnable<StateDefinition<O, S>> cir) {
-        if (this.owner instanceof SimpleBlock simpleBlock && !simpleBlock.hasData()) {
+        // we have to prevent the code from creating a StateDefinition since it won't contain the properties form the behaviours yet
+        if (this.owner instanceof SimpleBlock simpleBlock && !simpleBlock.hasData()) { // only if the block doesn't have data set-up yet
             cir.setReturnValue((StateDefinition<O, S>) Blocks.STONE.getStateDefinition());
         }
     }

@@ -2,8 +2,8 @@ package de.tomalbrc.filament.block;
 
 import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.behaviour.BehaviourType;
-import de.tomalbrc.filament.behaviours.BehaviourHolder;
-import de.tomalbrc.filament.behaviours.BehaviourMap;
+import de.tomalbrc.filament.behaviour.BehaviourHolder;
+import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.data.BlockData;
 import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
 import net.minecraft.core.BlockPos;
@@ -16,6 +16,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -282,6 +283,18 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     protected void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
         this.forEach(x -> x.onRemove(blockState, level, blockPos, blockState2, bl));
         super.onRemove(blockState, level, blockPos, blockState2, bl);
+    }
+
+    @Override
+    public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
+                var res = blockBehaviour.canSurvive(blockState, levelReader, blockPos);
+                if (!res)
+                    return false;
+            }
+        }
+        return true;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.api.behaviour;
 
-import de.tomalbrc.filament.behaviours.BehaviourHolder;
+import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.data.BlockData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -10,6 +10,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -92,6 +93,10 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
     }
 
     default void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
+    }
+
+    default boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
+        return true;
     }
 
     default void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {

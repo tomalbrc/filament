@@ -1,9 +1,9 @@
 package de.tomalbrc.filament.mixin.cosmetic;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import de.tomalbrc.filament.behaviours.Behaviours;
-import de.tomalbrc.filament.behaviours.item.Armor;
-import de.tomalbrc.filament.behaviours.item.Cosmetic;
+import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.behaviour.item.Armor;
+import de.tomalbrc.filament.behaviour.item.Cosmetic;
 import de.tomalbrc.filament.cosmetic.AnimatedCosmeticHolder;
 import de.tomalbrc.filament.cosmetic.CosmeticHolder;
 import de.tomalbrc.filament.cosmetic.CosmeticInterface;
