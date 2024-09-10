@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.mixin;
 
-import de.tomalbrc.filament.api.registry.BehaviourRegistry;
 import de.tomalbrc.filament.behaviours.BehaviourHolder;
+import de.tomalbrc.filament.behaviours.Behaviours;
 import de.tomalbrc.filament.behaviours.item.Trap;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -22,8 +22,8 @@ public class MobMixin {
         ItemStack itemStack = player.getItemInHand(interactionHand);
 
         Mob mob = Mob.class.cast(this);
-        if (itemStack.getItem() instanceof BehaviourHolder behaviourHolder && behaviourHolder.getBehaviours().get(BehaviourRegistry.TRAP) != null && !player.getCooldowns().isOnCooldown(itemStack.getItem())) {
-            Trap trap = behaviourHolder.get(BehaviourRegistry.TRAP);
+        if (itemStack.getItem() instanceof BehaviourHolder behaviourHolder && behaviourHolder.getBehaviours().has(Behaviours.TRAP) && !player.getCooldowns().isOnCooldown(itemStack.getItem())) {
+            Trap trap = behaviourHolder.get(Behaviours.TRAP);
             boolean canUse = trap.canUseOn(mob);
 
             if (itemStack.getMaxDamage() - itemStack.getDamageValue() > 1 && canUse && trap.canSave(mob)) {

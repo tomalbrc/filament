@@ -1,13 +1,13 @@
 package de.tomalbrc.filament.block;
 
 import de.tomalbrc.filament.api.behaviour.Behaviour;
+import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.behaviours.BehaviourHolder;
 import de.tomalbrc.filament.behaviours.BehaviourMap;
 import de.tomalbrc.filament.data.BlockData;
 import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
@@ -53,14 +53,12 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
         this.blockData = data;
 
         // the StateDefinition built too early, cant access BlockData from within createBlockStateDefinition
-        StateDefinition.Builder<Block, BlockState> builder = new StateDefinition.Builder<Block, BlockState>(this);
+        StateDefinition.Builder<Block, BlockState> builder = new StateDefinition.Builder<>(this);
         this.createBlockStateDefinition(builder);
         this.stateDefinitionEx = builder.create(Block::defaultBlockState, BlockState::new);
 
         BlockState[] def = {this.stateDefinitionEx.any()};
-        this.forEach(behaviour -> {
-            def[0] = behaviour.modifyDefaultState(def[0]);
-        });
+        this.forEach(behaviour -> def[0] = behaviour.modifyDefaultState(def[0]));
         this.registerDefaultState(def[0]);
     }
 
@@ -71,19 +69,17 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     @Override
     @NotNull
     public StateDefinition<Block, BlockState> getStateDefinition() {
-        return stateDefinitionEx;
+        return this.stateDefinitionEx;
     }
 
     public void postRegister() {
         this.stateMap = this.blockData.createStandardStateMap();
-        this.forEach(behaviour -> {
-            behaviour.modifyStateMap(this.stateMap, this.blockData);
-        });
+        this.forEach(behaviour -> behaviour.modifyStateMap(this.stateMap, this.blockData));
     }
 
     @Override
     public BlockState getPolymerBlockState(BlockState blockState) {
-        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 BlockState polyBlockState = blockBehaviour.getCustomPolymerBlockState(this.stateMap, blockState);
                 if (polyBlockState != null)
@@ -99,7 +95,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     private void forEach(Consumer<de.tomalbrc.filament.api.behaviour.BlockBehaviour<?>> consumer) {
-        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 consumer.accept(blockBehaviour);
             }
@@ -117,7 +113,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {
         BlockState def = this.defaultBlockState();
-        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 def = blockBehaviour.getStateForPlacement(def, blockPlaceContext);
             }
@@ -132,8 +128,9 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    protected BlockState rotate(BlockState blockState, Rotation rotation) {
-        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+    @NotNull
+    public BlockState rotate(BlockState blockState, Rotation rotation) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.rotate(blockState, rotation);
                 if (res != null)
@@ -144,8 +141,9 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
+    @NotNull
     public BlockState mirror(BlockState blockState, Mirror mirror) {
-        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.mirror(blockState, mirror);
                 if (res != null)
@@ -157,7 +155,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     public boolean isSignalSource(BlockState blockState) {
-        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.isSignalSource(blockState);
                 if (res)
@@ -169,7 +167,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     public int getDirectSignal(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, Direction direction) {
-        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.getDirectSignal(blockState, blockGetter, blockPos, direction);
                 if (res > 0)
@@ -181,7 +179,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     public int getSignal(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, Direction direction) {
-        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.getSignal(blockState, blockGetter, blockPos, direction);
                 if (res > 0)
@@ -193,7 +191,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     protected boolean useShapeForLightOcclusion(BlockState blockState) {
-        if (this.getBehaviours() != null) for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+        if (this.getBehaviours() != null) for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.useShapeForLightOcclusion(blockState);
                 if (res.isPresent())
@@ -205,7 +203,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     protected boolean canBeReplaced(BlockState blockState, BlockPlaceContext blockPlaceContext) {
-        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.canBeReplaced(blockState, blockPlaceContext);
                 if (res.isPresent())
@@ -218,7 +216,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     @Override
     @NotNull
     protected FluidState getFluidState(BlockState blockState) {
-        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.getFluidState(blockState);
                 if (res != null)
@@ -230,7 +228,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     public boolean placeLiquid(LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState, FluidState fluidState) {
-        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour && blockBehaviour instanceof SimpleWaterloggedBlock waterloggedBlock) {
                 return waterloggedBlock.placeLiquid(levelAccessor, blockPos, blockState, fluidState);
             }
@@ -240,7 +238,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     public boolean canPlaceLiquid(@Nullable Player player, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
-        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour && blockBehaviour instanceof SimpleWaterloggedBlock waterloggedBlock) {
                 return waterloggedBlock.canPlaceLiquid(player, blockGetter, blockPos, blockState, fluid);
             }
@@ -251,7 +249,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     @Override
     @NotNull
     protected BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) {
-        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.updateShape(blockState, direction, blockState2, levelAccessor, blockPos, blockPos2);
                 if (res != null) {
@@ -264,7 +262,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     protected boolean isPathfindable(BlockState blockState, PathComputationType pathComputationType) {
-        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.isPathfindable(blockState, pathComputationType);
                 if (res.isPresent())

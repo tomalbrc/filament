@@ -2,8 +2,8 @@ package de.tomalbrc.filament.decoration.block.entity;
 
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.behaviour.Behaviour;
+import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
-import de.tomalbrc.filament.api.registry.BehaviourRegistry;
 import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviours.BehaviourHolder;
 import de.tomalbrc.filament.behaviours.BehaviourMap;
@@ -75,7 +75,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             this.setupBehaviour(decorationData);
         }
 
-        for (Map.Entry<BehaviourRegistry.BehaviourType<?, ?>, Behaviour<?>> entry : this.behaviours) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : this.behaviours) {
             if (entry.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
                 decorationBehaviour.read(compoundTag, provider, this);
             }
@@ -86,7 +86,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
         super.saveAdditional(compoundTag, provider);
 
-        for (Map.Entry<BehaviourRegistry.BehaviourType<?, ?>, Behaviour<?>> entry : behaviours) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : behaviours) {
             if (entry.getValue() instanceof DecorationBehaviour<?> decorationBehaviour)
                 decorationBehaviour.write(compoundTag, provider, this);
         }
@@ -98,7 +98,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             return this.decorationHolder;
 
         ElementHolder altHolder = null;
-        for (Map.Entry<BehaviourRegistry.BehaviourType<?, ?>, Behaviour<?>> entry : this.behaviours) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : this.behaviours) {
             if (entry.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
                 altHolder = decorationBehaviour.createHolder(this);
                 if (altHolder != null) {
@@ -134,7 +134,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             }
         }
 
-        for (Map.Entry<BehaviourRegistry.BehaviourType<?, ?>, Behaviour<?>> behaviourEntry : this.behaviours) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviourEntry : this.behaviours) {
             if (behaviourEntry.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
                 decorationBehaviour.onElementAttach(this, this.decorationHolder);
             }
@@ -157,7 +157,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     public void initBehaviours(BehaviourConfigMap behaviourConfigMap) {
         BehaviourHolder.super.initBehaviours(behaviourConfigMap);
 
-        for (Map.Entry<BehaviourRegistry.BehaviourType<?, ?>, Behaviour<?>> behaviour : this.behaviours) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.behaviours) {
             if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
                 decorationBehaviour.init(this);
             }
@@ -183,7 +183,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         }
 
         InteractionResult res = InteractionResult.PASS;
-        for (Map.Entry<BehaviourRegistry.BehaviourType<?, ?>, Behaviour<?>> behaviour : behaviours) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : behaviours) {
             if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
                 res = decorationBehaviour.interact(player, interactionHand, location, this);
                 if (res.consumesAction())
@@ -235,7 +235,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         }
 
         ItemStack thisItemStack = this.getItem();
-        for (Map.Entry<BehaviourRegistry.BehaviourType<?, ?>, Behaviour<?>> behaviour : this.behaviours) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.behaviours) {
             if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
                 if (dropItem)
                     decorationBehaviour.modifyDrop(this, thisItemStack);

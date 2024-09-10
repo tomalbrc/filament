@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.cosmetic;
 
+import de.tomalbrc.filament.behaviours.Behaviours;
 import de.tomalbrc.filament.behaviours.item.Cosmetic;
 import de.tomalbrc.filament.item.SimpleItem;
 import net.minecraft.world.item.Item;
@@ -7,11 +8,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class CosmeticUtil {
     public static boolean isCosmetic(ItemStack itemStack) {
-        if (itemStack.getItem() instanceof SimpleItem simpleItem && getCosmeticData(simpleItem) != null) {
-            return true;
-        }
-
-        return false;
+        return itemStack.getItem() instanceof SimpleItem simpleItem && getCosmeticData(simpleItem) != null;
     }
 
     public static Cosmetic.CosmeticConfig getCosmeticData(ItemStack itemStack) {
@@ -20,8 +17,8 @@ public class CosmeticUtil {
 
     public static Cosmetic.CosmeticConfig getCosmeticData(Item item) {
         Cosmetic.CosmeticConfig cosmeticData = null;
-        if (item instanceof SimpleItem simpleItem && simpleItem.get(BehaviourRegistry.COSMETIC) != null) {
-            cosmeticData = (Cosmetic.CosmeticConfig) simpleItem.get(BehaviourRegistry.COSMETIC).getConfig();
+        if (item instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.COSMETIC)) {
+            cosmeticData = simpleItem.get(Behaviours.COSMETIC).getConfig();
         }
         return cosmeticData;
     }

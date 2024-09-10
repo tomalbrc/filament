@@ -3,7 +3,6 @@ package de.tomalbrc.filament.data;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import de.tomalbrc.filament.api.registry.BehaviourRegistry;
 import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.data.resource.BlockResource;
@@ -30,7 +29,7 @@ public record BlockData(
         @Nullable Item vanillaItem,
         @NotNull BlockResource blockResource,
         @Nullable ItemResource itemResource,
-        @NotNull BlockModelType blockModelType,
+        @Nullable BlockModelType blockModelType,
         @Nullable BlockProperties properties,
         @SerializedName("behaviour")
         @Nullable BehaviourConfigMap behaviourConfig,
@@ -90,10 +89,6 @@ public record BlockData(
         }
 
         return val;
-    }
-
-    public boolean isCosmetic() {
-        return this.behaviourConfig != null && this.behaviourConfig.get(BehaviourRegistry.COSMETIC) != null;
     }
 
     public record BlockStateMeta(BlockState blockState, PolymerBlockModel polymerBlockModel) {

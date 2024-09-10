@@ -3,7 +3,7 @@ package de.tomalbrc.filament.behaviours.decoration;
 import com.mojang.math.Axis;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
-import de.tomalbrc.filament.api.registry.BehaviourRegistry;
+import de.tomalbrc.filament.behaviours.Behaviours;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.decoration.holder.DecorationHolder;
 import de.tomalbrc.filament.util.Util;
@@ -87,8 +87,8 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
             if (holder == null)
                 return;
 
-            if (blockEntity.has(BehaviourRegistry.SHOWCASE)) {
-                Showcase showcase = blockEntity.get(BehaviourRegistry.SHOWCASE);
+            if (blockEntity.has(Behaviours.SHOWCASE)) {
+                Showcase showcase = blockEntity.get(Behaviours.SHOWCASE);
                 for (int i = 0; i < showcase.config.size(); i++) {
                     Showcase.ShowcaseMeta showcaseMeta = showcase.config.get(i);
                     String key = ITEM + i;

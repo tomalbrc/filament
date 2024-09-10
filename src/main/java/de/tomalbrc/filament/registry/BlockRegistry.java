@@ -36,6 +36,7 @@ public class BlockRegistry {
         BlockProperties properties = data.properties();
         BlockBehaviour.Properties blockProperties = properties.toBlockProperties();
 
+        Filament.LOGGER.error(data.id().toString());
         SimpleBlock customBlock = new SimpleBlock(blockProperties, data);
         BehaviourUtil.postInitBlock(customBlock, customBlock, data.behaviourConfig());
 

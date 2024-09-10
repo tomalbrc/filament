@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.data.properties;
 
-import de.tomalbrc.filament.api.registry.BehaviourRegistry;
 import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
+import de.tomalbrc.filament.behaviours.Behaviours;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
@@ -35,8 +35,8 @@ public class ItemProperties {
         if (fireResistant)
             props.fireResistant();
 
-        if (behaviourConfigs != null && behaviourConfigs.has(BehaviourRegistry.FOOD)) {
-            var food = behaviourConfigs.get(BehaviourRegistry.FOOD);
+        if (behaviourConfigs != null && behaviourConfigs.has(Behaviours.FOOD)) {
+            var food = behaviourConfigs.get(Behaviours.FOOD);
 
             FoodProperties.Builder builder = new FoodProperties.Builder();
             if (food.canAlwaysEat) builder.alwaysEdible();

@@ -3,6 +3,7 @@ package de.tomalbrc.filament.behaviours;
 import com.google.gson.*;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.behaviour.Behaviour;
+import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.api.registry.BehaviourRegistry;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
@@ -12,21 +13,24 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class BehaviourConfigMap {
-    private final Map<BehaviourRegistry.BehaviourType<?, ?>, Object> behaviourConfigMap = new Object2ObjectOpenHashMap<>();
-    public void put(BehaviourRegistry.BehaviourType<?,?> type, Object config) {
+    private final Map<BehaviourType<? extends Behaviour<?>,?>, Object> behaviourConfigMap = new Object2ObjectOpenHashMap<>();
+
+    public void put(BehaviourType<?,?> type, Object config) {
         this.behaviourConfigMap.put(type, config);
     }
 
-    public <T extends Behaviour<E>,E> E get(BehaviourRegistry.BehaviourType<T,E> type) {
+    public <T extends Behaviour<E>,E> E get(BehaviourType<T,E> type) {
         return (E) this.behaviourConfigMap.get(type);
     }
 
-    public <T extends Behaviour<E>,E> boolean has(BehaviourRegistry.BehaviourType<T,E> type) {
+    public <T extends Behaviour<E>,E> boolean has(BehaviourType<T,E> type) {
         return this.behaviourConfigMap.containsKey(type);
     }
 
-    public <T extends Behaviour<E>,E> void forEach(BiConsumer<BehaviourRegistry.BehaviourType<T,E>, Object> biConsumer) {
-        this.behaviourConfigMap.forEach((BiConsumer<? super BehaviourRegistry.BehaviourType, ? super Object>) biConsumer);
+    public <T extends Behaviour<E>,E> void forEach(BiConsumer<BehaviourType<T,E>, Object> biConsumer) {
+        for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Object> entry : this.behaviourConfigMap.entrySet()) {
+            biConsumer.accept((BehaviourType<T, E>) entry.getKey(), entry.getValue());
+        }
     }
 
     public boolean isEmpty() {

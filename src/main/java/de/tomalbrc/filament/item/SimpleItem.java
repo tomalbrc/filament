@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.item;
 
 import de.tomalbrc.filament.api.behaviour.Behaviour;
+import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.behaviours.BehaviourHolder;
 import de.tomalbrc.filament.behaviours.BehaviourMap;
@@ -15,7 +16,6 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -40,8 +40,6 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
     protected ItemData itemData;
     protected ItemProperties properties;
     protected Object2ObjectOpenHashMap<String, PolymerModelData> modelData;
-
-    protected boolean doPlace;
 
     protected final Item vanillaItem;
 
@@ -69,11 +67,19 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
     }
 
     @Override
+    @NotNull
     public String getDescriptionId() {
         return this.getBlock() != null ? this.getBlock().getDescriptionId() : this.getOrCreateDescriptionId();
     }
 
     @Override
+    @Nullable
+    public Block getBlock() {
+        return super.getBlock();
+    }
+
+    @Override
+    @NotNull
     public FeatureFlagSet requiredFeatures() {
         return this.getBlock() != null ? this.getBlock().requiredFeatures() : this.vanillaItem.requiredFeatures();
     }
@@ -91,7 +97,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
 
     @Override
     public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
-        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
                 itemBehaviour.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
             }
@@ -102,7 +108,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
     @Override
     public ItemStack getPolymerItemStack(ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
         ItemStack itemStack1 = PolymerItemUtils.createItemStack(itemStack, tooltipType, lookup, player);
-        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
                 itemBehaviour.modifyPolymerItemStack(itemStack1, tooltipType, lookup, player);
             }
@@ -117,7 +123,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
 
     @Override
     public int getPolymerCustomModelData(ItemStack itemStack, @Nullable ServerPlayer player) {
-        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
                 var data = itemBehaviour.modifyPolymerCustomModelData(this.modelData, itemStack, player);
                 if (data != -1) {
@@ -132,7 +138,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
     @Override
     public int getPolymerArmorColor(ItemStack itemStack, @Nullable ServerPlayer player) {
         int color = -1;
-        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
                 color = itemBehaviour.modifyPolymerArmorColor(itemStack, player, color);
             }
@@ -143,7 +149,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
     @Override
     @NotNull
     public EquipmentSlot getEquipmentSlot() {
-        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
                 var slot = itemBehaviour.getEquipmentSlot();
                 if (slot != EquipmentSlot.MAINHAND) {
@@ -162,7 +168,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
             return res;
         }
 
-        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
                 res = itemBehaviour.use(this, level, user, hand);
                 if (res.getResult().consumesAction()) {
@@ -175,16 +181,17 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
     }
 
     @Override
+    @NotNull
     public InteractionResult useOn(UseOnContext useOnContext) {
         var res = InteractionResult.PASS;
-        if (this.getBlock() != null && this.getBlock() instanceof SimpleBlock) {
+        if (this.getBlock() instanceof SimpleBlock) {
             super.useOn(useOnContext);
             if (res.consumesAction()) {
                 return res;
             }
         }
 
-        for (Map.Entry<ResourceLocation, Behaviour<?>> behaviour : this.getBehaviours()) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
                 res = itemBehaviour.useOn(useOnContext);
                 if (res.consumesAction()) {

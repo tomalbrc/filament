@@ -2,6 +2,7 @@ package de.tomalbrc.filament.decoration;
 
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviours.BehaviourHolder;
+import de.tomalbrc.filament.behaviours.Behaviours;
 import de.tomalbrc.filament.behaviours.item.Cosmetic;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
@@ -249,7 +250,7 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Equipable
 
         boolean cosmetic = decorationData.isCosmetic();
         if (cosmetic) {
-            Cosmetic.CosmeticConfig cosmetic1 = this.decorationData.behaviourConfig().get(BehaviourRegistry.COSMETIC);
+            Cosmetic.CosmeticConfig cosmetic1 = this.decorationData.behaviourConfig().get(Behaviours.COSMETIC);
             if (cosmetic1.slot != null)
                 return cosmetic1.slot;
         }

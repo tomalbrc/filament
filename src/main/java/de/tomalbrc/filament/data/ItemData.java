@@ -36,6 +36,15 @@ public record ItemData(
 
     @Override
     @NotNull
+    public DataComponentMap components() {
+        if (properties == null) {
+            return DataComponentMap.EMPTY;
+        }
+        return components;
+    }
+
+    @Override
+    @NotNull
     public Item vanillaItem() {
         if (vanillaItem == null) {
             return Items.PAPER;

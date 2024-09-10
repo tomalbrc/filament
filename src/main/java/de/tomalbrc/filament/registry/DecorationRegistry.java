@@ -2,6 +2,7 @@ package de.tomalbrc.filament.registry;
 
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviours.BehaviourUtil;
+import de.tomalbrc.filament.behaviours.Behaviours;
 import de.tomalbrc.filament.behaviours.decoration.Container;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.DecorationItem;
@@ -79,7 +80,7 @@ public class DecorationRegistry {
         }
 
         if (data.isContainer()) {
-            Container.ContainerConfig container = data.behaviourConfig().get(BehaviourRegistry.CONTAINER);
+            Container.ContainerConfig container = data.behaviourConfig().get(Behaviours.CONTAINER);
             if (container.canPickup)
                 properties.component(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
         }

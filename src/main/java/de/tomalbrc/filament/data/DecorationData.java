@@ -1,8 +1,8 @@
 package de.tomalbrc.filament.data;
 
 import com.google.gson.annotations.SerializedName;
-import de.tomalbrc.filament.api.registry.BehaviourRegistry;
 import de.tomalbrc.filament.behaviours.BehaviourConfigMap;
+import de.tomalbrc.filament.behaviours.Behaviours;
 import de.tomalbrc.filament.data.properties.DecorationProperties;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
@@ -60,7 +60,7 @@ public record DecorationData(
     }
 
     public boolean isContainer() {
-        return this.behaviourConfig != null && this.behaviourConfig.has(BehaviourRegistry.CONTAINER);
+        return this.behaviourConfig != null && this.behaviourConfig.has(Behaviours.CONTAINER);
     }
 
     public boolean hasBlocks() {
@@ -88,7 +88,7 @@ public record DecorationData(
     }
 
     public boolean isCosmetic() {
-        return this.behaviourConfig != null && this.behaviourConfig.has(BehaviourRegistry.COSMETIC);
+        return this.behaviourConfig != null && this.behaviourConfig.has(Behaviours.COSMETIC);
     }
 
     public record BlockConfig(Vector3f origin,
