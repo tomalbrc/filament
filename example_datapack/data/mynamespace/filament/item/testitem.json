@@ -5,6 +5,11 @@
     "durability": 20,
     "stackSize": 1
   },
+  "behaviour": {
+    "compostable": {
+      "chance": "50"
+    }
+  },
   "components": {
     "minecraft:tool": {
       "default_mining_speed":1.0,

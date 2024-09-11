@@ -2,16 +2,16 @@
   "id": "mynamespace:amethyst_crystal_display",
   "blockResource": {
     "models": {
-      "power=0": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_0",
-      "power=1": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_1",
-      "power=2": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_2",
-      "power=3": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_3",
-      "power=4": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_4",
-      "power=5": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_5",
-      "power=6": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_6",
-      "power=7": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_7",
-      "power=8": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_8",
-      "power=9": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_9"
+      "powerlevel=0": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_0",
+      "powerlevel=1": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_1",
+      "powerlevel=2": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_2",
+      "powerlevel=3": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_3",
+      "powerlevel=4": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_4",
+      "powerlevel=5": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_5",
+      "powerlevel=6": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_6",
+      "powerlevel=7": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_7",
+      "powerlevel=8": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_8",
+      "powerlevel=9": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_9"
     }
   },
   "itemResource": {
@@ -20,12 +20,13 @@
     }
   },
   "behaviour": {
-    "powerlevel": {"max": 9}
+    "powerlevel": {
+      "max": 9
+    }
   },
   "blockModelType": "full_block",
   "properties": {
     "redstoneConductor": false,
-    "blockBase": "minecraft:amethyst_block",
-    "itemBase": "minecraft:paper"
+    "blockBase": "minecraft:amethyst_block"
   }
 }
