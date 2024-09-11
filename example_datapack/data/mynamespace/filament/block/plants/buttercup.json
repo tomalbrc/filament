@@ -6,9 +6,14 @@
     }
   },
   "blockModelType": "plant_block",
+  "behaviour": {
+    "can_survive": {
+      "tags": ["minecraft:dirt"]
+    }
+  },
   "properties": {
     "destroyTime": 0,
     "blockBase": "minecraft:dandelion",
-    "itemBase": "minecraft:paper"
+    "pushReaction": "destroy"
   }
 }
