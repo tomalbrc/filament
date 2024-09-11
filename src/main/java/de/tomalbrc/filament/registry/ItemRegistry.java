@@ -130,16 +130,17 @@ public class ItemRegistry {
                 printedInfo = true;
             }
 
+
             var itemId = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "item");
-            if (ITEM_GROUP.getDisplayItems().isEmpty() && !BuiltInRegistries.CREATIVE_MODE_TAB.containsKey(itemId))
+            if (!ITEM_GROUP.getDisplayItems().isEmpty() && !BuiltInRegistries.CREATIVE_MODE_TAB.containsKey(itemId))
                 PolymerItemGroupUtils.registerPolymerItemGroup(itemId, ITEM_GROUP);
 
             var blockId = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "block");
-            if (ITEM_GROUP.getDisplayItems().isEmpty() && !BuiltInRegistries.CREATIVE_MODE_TAB.containsKey(blockId))
+            if (!BLOCK_ITEM_GROUP.getDisplayItems().isEmpty() && !BuiltInRegistries.CREATIVE_MODE_TAB.containsKey(blockId))
                 PolymerItemGroupUtils.registerPolymerItemGroup(blockId, BLOCK_ITEM_GROUP);
 
             var decId = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "decoration");
-            if (ITEM_GROUP.getDisplayItems().isEmpty() && !BuiltInRegistries.CREATIVE_MODE_TAB.containsKey(decId))
+            if (!DECORATION_ITEM_GROUP.getDisplayItems().isEmpty() && !BuiltInRegistries.CREATIVE_MODE_TAB.containsKey(decId))
                 PolymerItemGroupUtils.registerPolymerItemGroup(decId, DECORATION_ITEM_GROUP);
         }
     }

@@ -27,8 +27,7 @@ public class PlaceRestrict implements ItemBehaviour<PlaceRestrict.Config> {
     @Override
     public InteractionResult useOn(UseOnContext useOnContext) {
         var pos = useOnContext.getClickedPos();
-
-        var state = useOnContext.getLevel().getBlockState(pos.below());
+        var state = useOnContext.getLevel().getBlockState(pos);
         if (config.blocks != null && config.blocks.contains(state.getBlock()))
             return InteractionResult.PASS;
         if (config.tags != null) {

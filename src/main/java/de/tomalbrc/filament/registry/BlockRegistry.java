@@ -7,6 +7,8 @@ import de.tomalbrc.filament.block.SimpleBlockItem;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.Json;
+import eu.pb4.polymer.blocks.api.BlockModelType;
+import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
@@ -78,6 +80,10 @@ public class BlockRegistry {
                 } catch (IOException | IllegalStateException e) {
                     Filament.LOGGER.error("Failed to load block resource \"" + entry.getKey() + "\".");
                 }
+            }
+
+            for (var e: BlockModelType.values()) {
+                System.out.println("Blocks left: " + e + " = " + PolymerBlockResourceUtils.getBlocksLeft(e));
             }
         }
     }

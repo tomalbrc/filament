@@ -18,21 +18,21 @@ import org.jetbrains.annotations.NotNull;
  */
 public class Powerlevel implements BlockBehaviour<Powerlevel.PowerlevelConfig> {
     public static final IntegerProperty[] POWERS = {
-            IntegerProperty.create("power", 0,1),
-            IntegerProperty.create("power", 0,2),
-            IntegerProperty.create("power", 0,3),
-            IntegerProperty.create("power", 0,4),
-            IntegerProperty.create("power", 0,5),
-            IntegerProperty.create("power", 0,6),
-            IntegerProperty.create("power", 0,7),
-            IntegerProperty.create("power", 0,8),
-            IntegerProperty.create("power", 0,9),
-            IntegerProperty.create("power", 0,10),
-            IntegerProperty.create("power", 0,11),
-            IntegerProperty.create("power", 0,12),
-            IntegerProperty.create("power", 0,13),
-            IntegerProperty.create("power", 0,14),
-            IntegerProperty.create("power", 0,15),
+            IntegerProperty.create("powerlevel", 0,1),
+            IntegerProperty.create("powerlevel", 0,2),
+            IntegerProperty.create("powerlevel", 0,3),
+            IntegerProperty.create("powerlevel", 0,4),
+            IntegerProperty.create("powerlevel", 0,5),
+            IntegerProperty.create("powerlevel", 0,6),
+            IntegerProperty.create("powerlevel", 0,7),
+            IntegerProperty.create("powerlevel", 0,8),
+            IntegerProperty.create("powerlevel", 0,9),
+            IntegerProperty.create("powerlevel", 0,10),
+            IntegerProperty.create("powerlevel", 0,11),
+            IntegerProperty.create("powerlevel", 0,12),
+            IntegerProperty.create("powerlevel", 0,13),
+            IntegerProperty.create("powerlevel", 0,14),
+            IntegerProperty.create("powerlevel", 0,15),
     };
 
     private final PowerlevelConfig config;
