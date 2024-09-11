@@ -25,15 +25,15 @@ public class FlowingFluidMixin {
     @Inject(method = "canSpreadTo", at = @At("TAIL"), cancellable = true)
     private void filament$canSpreadTo(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Direction direction, BlockPos blockPos2, BlockState blockState2, FluidState fluidState, Fluid fluid, CallbackInfoReturnable<Boolean> cir) {
         if (DecorationRegistry.isDecoration(blockState2)) {
-            boolean isWaterloggable = this.isWaterloggable((DecorationBlock) blockState2.getBlock()) && direction != Direction.DOWN;
-            boolean isSolid = this.isSolid((DecorationBlock) blockState2.getBlock()) && direction != Direction.DOWN;
+            boolean isWaterloggable = this.filament$isWaterloggable((DecorationBlock) blockState2.getBlock()) && direction != Direction.DOWN;
+            boolean isSolid = this.filament$isSolid((DecorationBlock) blockState2.getBlock()) && direction != Direction.DOWN;
             cir.setReturnValue(isWaterloggable || !isSolid);
         }
     }
 
     @Inject(method = "spreadTo", at = @At("TAIL"))
     protected void filament$spreadTo(LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState, Direction direction, FluidState fluidState, CallbackInfo ci) {
-        if (DecorationRegistry.isDecoration(blockState) && !isWaterloggable((DecorationBlock) blockState.getBlock()) && !isSolid((DecorationBlock) blockState.getBlock())) {
+        if (DecorationRegistry.isDecoration(blockState) && !filament$isWaterloggable((DecorationBlock) blockState.getBlock()) && !filament$isSolid((DecorationBlock) blockState.getBlock())) {
             if (levelAccessor.getBlockEntity(blockPos) instanceof DecorationBlockEntity decorationBlockEntity) {
                 decorationBlockEntity.destroyStructure(true);
             }
@@ -46,8 +46,8 @@ public class FlowingFluidMixin {
     @Inject(method = "canPassThrough", at = @At("TAIL"), cancellable = true)
     private void filament$canPassThrough(BlockGetter blockGetter, Fluid fluid, BlockPos blockPos, BlockState blockState, Direction direction, BlockPos blockPos2, BlockState blockState2, FluidState fluidState, CallbackInfoReturnable<Boolean> cir) {
         // pass-thu but only non-waterloggable blocks and non-solid
-        if (DecorationRegistry.isDecoration(blockState2) && !isWaterloggable((DecorationBlock) blockState2.getBlock()) && !isSolid((DecorationBlock) blockState2.getBlock()))
-            cir.setReturnValue(this.canFlowThrough(blockState2));
+        if (DecorationRegistry.isDecoration(blockState2) && !filament$isWaterloggable((DecorationBlock) blockState2.getBlock()) && !filament$isSolid((DecorationBlock) blockState2.getBlock()))
+            cir.setReturnValue(this.filament$canFlowThrough(blockState2));
     }
     @Inject(method = "canPassThroughWall", locals = LocalCapture.CAPTURE_FAILSOFT, at = @At("TAIL"), cancellable = true)
     private void filament$canPassThroughWall(Direction direction, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, BlockPos blockPos2, BlockState blockState2, CallbackInfoReturnable<Boolean> cir) {
@@ -56,7 +56,7 @@ public class FlowingFluidMixin {
     }
 
     @Unique
-    private boolean canFlowThrough(BlockState blockState) {
+    private boolean filament$canFlowThrough(BlockState blockState) {
         if (DecorationRegistry.isDecoration(blockState)) {
             DecorationBlock decorationBlock = (DecorationBlock) blockState.getBlock();
 
@@ -69,7 +69,7 @@ public class FlowingFluidMixin {
     }
 
     @Unique
-    private boolean isWaterloggable(DecorationBlock decorationBlock) {
+    private boolean filament$isWaterloggable(DecorationBlock decorationBlock) {
         if (decorationBlock.getDecorationData() != null) {
             return decorationBlock.getDecorationData().properties().waterloggable;
         }
@@ -78,7 +78,7 @@ public class FlowingFluidMixin {
     }
 
     @Unique
-    private boolean isSolid(DecorationBlock decorationBlock) {
+    private boolean filament$isSolid(DecorationBlock decorationBlock) {
         if (decorationBlock.getDecorationData() != null) {
             return decorationBlock.getDecorationData().properties().solid;
         }
