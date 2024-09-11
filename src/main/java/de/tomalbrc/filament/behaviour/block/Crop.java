@@ -4,24 +4,23 @@ import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.block.SimpleBlock;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.Ravager;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.*;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
     public static final IntegerProperty[] AGES = {
@@ -62,17 +61,7 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
 
     @Override
     public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
-        var belowState = levelReader.getBlockState(blockPos.below());
-        if (config.survivesOnBlocks != null && config.survivesOnBlocks.contains(belowState.getBlock()) && hasSufficientLight(levelReader, blockPos))
-            return true;
-        if (config.survivesOnBlocksWithTags != null) {
-            for (ResourceLocation tag : config.survivesOnBlocksWithTags) {
-                var tagKey = TagKey.create(Registries.BLOCK, tag);
-                if (belowState.is(tagKey) && hasSufficientLight(levelReader, blockPos))
-                    return true;
-            }
-        }
-        return false;
+        return hasSufficientLight(levelReader, blockPos);
     }
 
     @Override
@@ -119,9 +108,9 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
             for(int j = -config.moistureBonusRadius; j <= config.moistureBonusRadius; ++j) {
                 float localBonus = 0.f;
                 BlockState blockState = blockGetter.getBlockState(blockPos2.offset(i, 0, j));
-                if (blockState.is(Blocks.FARMLAND)) {
+                if (blockState.is(config.moistureBonusBlock)) {
                     localBonus = 1.f;
-                    if (blockState.getValue(FarmBlock.MOISTURE) > 0) {
+                    if (blockState.hasProperty(FarmBlock.MOISTURE) && blockState.getValue(FarmBlock.MOISTURE) > 0) {
                         localBonus = 3.f;
                     }
                 }
@@ -152,8 +141,8 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
         return bonus;
     }
 
-    private static boolean isCrop(Block block1) {
-        return block1 instanceof SimpleBlock simpleBlock && simpleBlock.has(Behaviours.CROP);
+    private boolean isCrop(Block block1) {
+        return block1 instanceof SimpleBlock simpleBlock && simpleBlock.has(Behaviours.CROP) && simpleBlock.get(Behaviours.CROP).config == config;
     }
 
     protected boolean hasSufficientLight(LevelReader levelReader, BlockPos blockPos) {
@@ -164,15 +153,6 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
         if (entity instanceof Ravager && level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
             level.destroyBlock(blockPos, true, entity);
         }
-    }
-
-    protected ItemLike getBaseSeedId() {
-        return Items.WHEAT_SEEDS;
-    }
-
-    @Override
-    public ItemStack getCloneItemStack(ItemStack itemStack, LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
-        return new ItemStack(this.getBaseSeedId());
     }
 
     @Override
@@ -195,8 +175,6 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
         public int minLightLevel = 8;
 
         public int moistureBonusRadius = 1;
-
-        public List<Block> survivesOnBlocks;
-        public List<ResourceLocation> survivesOnBlocksWithTags;
+        public Block moistureBonusBlock = Blocks.FARMLAND;
     }
 }

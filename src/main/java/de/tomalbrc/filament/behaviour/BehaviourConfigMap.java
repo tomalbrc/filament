@@ -50,13 +50,12 @@ public class BehaviourConfigMap {
                     resourceLocation = ResourceLocation.fromNamespaceAndPath("filament", entry.getKey());
 
                 var behaviourType = BehaviourRegistry.getType(resourceLocation);
-                var clazz = behaviourType.configType();
 
-                if (clazz == null) {
+                if (behaviourType == null || behaviourType.configType() == null) {
                     Filament.LOGGER.error("Could not load behaviour " + resourceLocation);
                     continue;
                 }
-
+                var clazz = behaviourType.configType();
                 Object deserialized = jsonDeserializationContext.deserialize(entry.getValue(), clazz);
                 behaviourConfigMap.put(BehaviourRegistry.getType(resourceLocation), deserialized);
             }

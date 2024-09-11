@@ -5,7 +5,6 @@ import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.data.BlockData;
-import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,7 +19,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -87,7 +85,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
                     return polyBlockState;
             }
         }
-        return this.stateMap.get(blockState).blockState();
+        return this.stateMap.get(blockState) != null ? this.stateMap.get(blockState).blockState() : Blocks.BEDROCK.defaultBlockState();
     }
 
     @Override
@@ -215,6 +213,11 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
+    protected boolean canBeReplaced(BlockState blockState, Fluid fluid) {
+        return blockState.canBeReplaced() || !blockData.properties().solid;
+    }
+
+    @Override
     @NotNull
     protected FluidState getFluidState(BlockState blockState) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
@@ -231,10 +234,13 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     public boolean placeLiquid(LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState, FluidState fluidState) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour && blockBehaviour instanceof SimpleWaterloggedBlock waterloggedBlock) {
-                return waterloggedBlock.placeLiquid(levelAccessor, blockPos, blockState, fluidState);
+                var res = waterloggedBlock.placeLiquid(levelAccessor, blockPos, blockState, fluidState);
+                if (res) {
+                    return true;
+                }
             }
         }
-        return false;
+        return !blockData.properties().solid;
     }
 
     @Override
@@ -244,21 +250,19 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
                 return waterloggedBlock.canPlaceLiquid(player, blockGetter, blockPos, blockState, fluid);
             }
         }
-        return false;
+        return !blockData.properties().solid;
     }
 
     @Override
     @NotNull
     protected BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) {
+        var bs = super.updateShape(blockState, direction, blockState2, levelAccessor, blockPos, blockPos2);
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
-                var res = blockBehaviour.updateShape(blockState, direction, blockState2, levelAccessor, blockPos, blockPos2);
-                if (res != null) {
-                    return res;
-                }
+                bs = blockBehaviour.updateShape(bs, direction, blockState2, levelAccessor, blockPos, blockPos2);
             }
         }
-        return super.updateShape(blockState, direction, blockState2, levelAccessor, blockPos, blockPos2);
+        return bs;
     }
 
     @Override
@@ -318,6 +322,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
         super.tick(blockState, serverLevel, blockPos, randomSource);
         this.forEach(x -> x.tick(blockState, serverLevel, blockPos, randomSource));
     }
+
 
     // random ticking
 

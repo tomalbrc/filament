@@ -3,7 +3,6 @@ package de.tomalbrc.filament.data;
 import com.google.gson.JsonParseException;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.data.resource.BlockResource;
@@ -64,7 +63,6 @@ public record BlockData(
             for (Map.Entry<String, ResourceLocation> entry : this.blockResource.models().entrySet()) {
                 PolymerBlockModel blockModel = PolymerBlockModel.of(entry.getValue());
 
-                Filament.LOGGER.warn("thingy requesting "+id+" model: "+blockModelType+" for model "+blockModel.model());
                 BlockState requestedState = PolymerBlockResourceUtils.requestBlock(this.blockModelType, blockModel);
 
                 if (entry.getKey().equals("default")) {

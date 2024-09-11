@@ -192,15 +192,14 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
             }
         }
 
-        var res = InteractionResult.PASS;
         if (this.getBlock() instanceof SimpleBlock) {
-            res = super.useOn(useOnContext);
+            var res = super.useOn(useOnContext);
             if (res.consumesAction()) {
                 return res;
             }
         }
 
-        return InteractionResult.PASS;
+        return InteractionResult.FAIL;
     }
 
     @Override

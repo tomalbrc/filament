@@ -22,25 +22,32 @@ public class BlockProperties extends ItemProperties {
     public boolean transparent = false;
     public boolean allowsSpawning = false;
     public boolean replaceable = false;
+    public boolean collision = true;
+
+    public boolean solid = true;
 
     public PushReaction pushReaction = PushReaction.NORMAL;
 
     public BlockBehaviour.Properties toBlockProperties() {
-        BlockBehaviour.Properties props = BlockBehaviour.Properties.ofFullCopy(this.blockBase);
+        BlockBehaviour.Properties props = BlockBehaviour.Properties.of();
+        props.sound(this.blockBase.defaultBlockState().getSoundType());
 
         if (this.destroyTime != Float.MIN_VALUE) props.destroyTime(this.destroyTime);
         if (this.explosionResistance != Float.MIN_VALUE) props.explosionResistance(this.explosionResistance);
         if (this.isLightSource()) props.lightLevel((state) -> this.lightEmission);
-        if (this.isLightSource()) props.lightLevel((state) -> this.lightEmission);
         props.isRedstoneConductor((a,b,c) -> this.redstoneConductor);
         if (this.requiresTool) props.requiresCorrectToolForDrops();
-        if (this.transparent) props.noOcclusion();
         if (this.replaceable) props.replaceable();
+        if (this.transparent) props.noOcclusion();
+        if (!this.collision) props.noCollission();
+
+        if (this.solid) props.forceSolidOn();
+        else props.forceSolidOff();
 
         props.isValidSpawn((blockState,blockGetter,blockPos,entityType) -> this.allowsSpawning);
         props.pushReaction(this.pushReaction);
 
-        return props.dynamicShape();
+        return props.dynamicShape().forceSolidOn();
     }
 
     public boolean isLightSource() {

@@ -15,7 +15,6 @@ public class DecorationProperties extends BlockProperties {
     public boolean glow = false;
 
     public boolean waterloggable = true;
-    public boolean solid = false;
 
     public ItemDisplayContext display = ItemDisplayContext.FIXED;
 
@@ -28,7 +27,7 @@ public class DecorationProperties extends BlockProperties {
     @Override
     public BlockBehaviour.Properties toBlockProperties() {
         BlockBehaviour.Properties props = super.toBlockProperties();
-        return props.dynamicShape();
+        return props.dynamicShape().noOcclusion();
     }
 
     public record Placement(boolean wall, boolean floor, boolean ceiling) {

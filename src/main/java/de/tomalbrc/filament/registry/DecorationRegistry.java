@@ -54,7 +54,7 @@ public class DecorationRegistry {
         decorations.put(data.id(), data);
 
         DecorationBlock block;
-        BlockBehaviour.Properties props = data.properties().toBlockProperties().noOcclusion();
+        BlockBehaviour.Properties props = data.properties().toBlockProperties();
 
         if (!data.isSimple()) {
             block = new ComplexDecorationBlock(props.pushReaction(PushReaction.BLOCK), data.id());

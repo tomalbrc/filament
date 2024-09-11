@@ -36,6 +36,7 @@ public class BehaviourRegistry {
         BehaviourType<?, ?> info = behaviourMap.get(key);
         if (info == null) {
             Filament.LOGGER.error("Could not find behaviour " + key);
+            return null;
         }
         return (BehaviourType<T, E>) behaviourMap.get(info.id());
     }

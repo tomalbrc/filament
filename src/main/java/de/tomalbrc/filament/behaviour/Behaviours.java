@@ -20,7 +20,7 @@ public class Behaviours {
     public static final BehaviourType<Instrument, Instrument.InstrumentConfig> INSTRUMENT = registerBehaviour("instrument", Instrument.class);
     public static final BehaviourType<Shoot, Shoot.ShootConfig> SHOOT = registerBehaviour("shoot", Shoot.class);
     public static final BehaviourType<Trap, Trap.TrapConfig> TRAP = registerBehaviour("trap", Trap.class);
-    public static final BehaviourType<PlaceRestrict, PlaceRestrict.Config> PLACE_RESTRICT = registerBehaviour("place_restrict", PlaceRestrict.class);
+    public static final BehaviourType<CanSurvive, CanSurvive.Config> CAN_SURVIVE = registerBehaviour("can_survive", CanSurvive.class);
 
     // Block
     public static final BehaviourType<Column, Column.ColumnConfig> COLUMN = registerBehaviour("column", Column.class);
