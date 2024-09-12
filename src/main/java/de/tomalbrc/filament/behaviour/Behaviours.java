@@ -19,10 +19,11 @@ public class Behaviours {
     public static final BehaviourType<Fuel, Fuel.FuelConfig> FUEL = registerBehaviour("fuel", Fuel.class);
     public static final BehaviourType<Instrument, Instrument.InstrumentConfig> INSTRUMENT = registerBehaviour("instrument", Instrument.class);
     public static final BehaviourType<Shoot, Shoot.ShootConfig> SHOOT = registerBehaviour("shoot", Shoot.class);
+    public static final BehaviourType<Stripper, Stripper.Config> STRIPPER = registerBehaviour("stripper", Stripper.class);
     public static final BehaviourType<Trap, Trap.TrapConfig> TRAP = registerBehaviour("trap", Trap.class);
-    public static final BehaviourType<CanSurvive, CanSurvive.Config> CAN_SURVIVE = registerBehaviour("can_survive", CanSurvive.class);
 
     // Block
+    public static final BehaviourType<CanSurvive, CanSurvive.Config> CAN_SURVIVE = registerBehaviour("can_survive", CanSurvive.class);
     public static final BehaviourType<Column, Column.ColumnConfig> COLUMN = registerBehaviour("column", Column.class);
     public static final BehaviourType<Count, Count.CountConfig> COUNT = registerBehaviour("count", Count.class);
     public static final BehaviourType<Crop, Crop.Config> CROP = registerBehaviour("crop", Crop.class);

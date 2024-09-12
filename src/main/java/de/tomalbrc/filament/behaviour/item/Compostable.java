@@ -24,7 +24,7 @@ public class Compostable implements ItemBehaviour<Compostable.CompostableConfig>
 
     @Override
     public void init(Item item, BehaviourHolder behaviourHolder) {
-        CompostingChanceRegistry.INSTANCE.add(item, this.config.chance);
+        CompostingChanceRegistry.INSTANCE.add(item, this.config.chance/100.f);
     }
 
     public static class CompostableConfig {

@@ -7,8 +7,9 @@
   },
   "behaviour": {
     "compostable": {
-      "chance": "50"
-    }
+      "chance": 50
+    },
+    "stripper": {}
   },
   "components": {
     "minecraft:tool": {

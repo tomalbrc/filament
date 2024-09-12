@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.mixin;
 
-import de.tomalbrc.filament.registry.RegistryUnfreezer;
+import de.tomalbrc.filament.util.RegistryUnfreezer;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.MappedRegistry;

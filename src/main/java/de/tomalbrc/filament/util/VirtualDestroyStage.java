@@ -28,7 +28,6 @@ public class VirtualDestroyStage extends ElementHolder {
     private final List<ItemDisplayElement> mains = new ObjectArrayList<>();
     private int state;
 
-
     public VirtualDestroyStage() {
         for (int i = 0; i < 32; i++) {
             var main = new ItemDisplayElement();

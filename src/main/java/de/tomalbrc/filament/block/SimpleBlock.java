@@ -240,6 +240,12 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
                 }
             }
         }
+
+        if (!blockData.properties().solid) {
+            levelAccessor.destroyBlock(blockPos, true);
+            levelAccessor.setBlock(blockPos, fluidState.createLegacyBlock(), 0);
+        }
+
         return !blockData.properties().solid;
     }
 

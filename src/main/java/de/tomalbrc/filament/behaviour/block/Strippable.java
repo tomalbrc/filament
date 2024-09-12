@@ -26,7 +26,7 @@ public class Strippable implements BlockBehaviour<Strippable.StrippableConfig> {
 
     @Override
     public void init(Block block, BehaviourHolder behaviourHolder) {
-        StrippableRegistry.add(block.defaultBlockState(), config.replacement);
+        StrippableRegistry.add(block, config.replacement);
     }
 
     public static class StrippableConfig {

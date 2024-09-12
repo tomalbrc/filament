@@ -3,7 +3,9 @@
   "minVersion": "0.8",
   "package": "de.tomalbrc.filament.mixin",
   "mixins": [
+    "AxeItemAccessor",
     "BlockItemMixin",
+    "BucketItemMixin",
     "FlowingFluidMixin",
     "ItemFrameAccessor",
     "LevelChunkMixin",

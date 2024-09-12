@@ -3,7 +3,6 @@ package de.tomalbrc.filament.mixin.behaviour;
 import de.tomalbrc.filament.registry.StrippableRegistry;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.Property;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,13 +15,8 @@ import java.util.Optional;
 public class AxeItemMixin {
     @Inject(method = "getStripped", locals = LocalCapture.CAPTURE_FAILSOFT, at = @At("RETURN"), cancellable = true)
     private void filament$onGetStripped(BlockState blockState, CallbackInfoReturnable<Optional<BlockState>> cir) {
-        if (StrippableRegistry.has(blockState)) {
-            var ns = StrippableRegistry.getStrippable(blockState);
-            for (Property property : blockState.getProperties()) {
-                if (ns.hasProperty(property)) {
-                    ns.setValue(property, blockState.getValue(property));
-                }
-            }
+        if (StrippableRegistry.has(blockState.getBlock())) {
+            var ns = StrippableRegistry.get(blockState.getBlock()).withPropertiesOf(blockState);
             cir.setReturnValue(Optional.of(ns));
         }
     }
