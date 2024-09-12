@@ -12,10 +12,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Block behaviourConfig for strippable blocks (with an axe)
- * Copies blockstate properties if applicabable
- */
 public class Powerlevel implements BlockBehaviour<Powerlevel.PowerlevelConfig> {
     public static final IntegerProperty[] POWERS = {
             IntegerProperty.create("powerlevel", 0,1),

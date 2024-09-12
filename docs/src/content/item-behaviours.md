@@ -1,10 +1,10 @@
-Certainly! Here's the updated documentation for item behaviours along with the descriptions of the internal classes provided:
+# Item Behaviours
 
-# Behaviours
+Item behaviours define specific functionalities associated with items, blocks, and decorations. 
 
-Item behaviours define specific functionalities associated with items, blocks, and decorations. All behaviours are optional, and some are mutually exclusive (e.g., trap, shoot, and instrument).
+All behaviours are optional, and some are mutually exclusive (e.g., trap, shoot, and instrument).
 
-Example with all behaviours set:
+Example with some behaviours set:
 ```json
 {
   "id": "mynamespace:multi_example",
@@ -67,7 +67,6 @@ Example with all behaviours set:
 
 ### `armor` behaviour
 
-**Description**:
 Defines armour item behaviours, utilizing the Fancypants shader via Polymer.
 As of filament 0.7 it is possible to use armor trims to render custom armor, to enable this, set the `trim` flag to `true`.
 
@@ -92,10 +91,18 @@ As of filament 0.7 it is possible to use armor trims to render custom armor, to 
 
 ---
 
+### `compostable` behaviour
+
+Makes the item usable in composters.
+
+- **Fields**:
+  - `chance`: Chance of raising the composter level by 1 between 0 and 100
+
+---
+
 ### `cosmetic` behaviour
 
-**Description**:
-Defines cosmetic item behaviours for either the head or chestplate slot, supporting both Blockbench models for chestplates and simple item models for either slot.
+Defines cosmetic item behaviour for either the head or chestplate slot, supporting both Blockbench models for chestplates and simple item models for either slot.
 
 - **Fields**:
   - `slot`: The equipment slot for the cosmetic (head or chest).
@@ -108,7 +115,6 @@ Defines cosmetic item behaviours for either the head or chestplate slot, support
 
 ### `execute` behaviour
 
-**Description**:
 Executes a command on item use.
 
 - **Fields**:
@@ -120,8 +126,7 @@ Executes a command on item use.
 
 ### `food` behaviour
 
-**Description**:
-Defines food item behaviours for edible items.
+Defines food item behaviour for edible items.
 
 - **Fields**:
   - `hunger`: The amount of hunger restored when consumed.
@@ -133,8 +138,7 @@ Defines food item behaviours for edible items.
 
 ### `fuel` behaviour
 
-**Description**:
-Defines fuel behaviours for items, specifying their value used in furnaces and similar item-burning blocks.
+Defines fuel behaviour for items, specifying their value used in furnaces and similar item-burning blocks.
 
 - **Fields**:
   - `value`: The value associated with the fuel, determining burn duration.
@@ -143,8 +147,7 @@ Defines fuel behaviours for items, specifying their value used in furnaces and s
 
 ### `instrument` behaviour
 
-**Description**:
-Defines instrument behaviours for items, similar to goat horns.
+Defines instrument behaviour for items, similar to goat horns.
 
 - **Fields**:
   - `sound`: The sound associated with the instrument.
@@ -155,8 +158,7 @@ Defines instrument behaviours for items, similar to goat horns.
 
 ### `shoot` behaviour
 
-**Description**:
-Defines behaviours for items capable of shooting projectiles or being shot themselves.
+Defines behaviour for items capable of shooting projectiles or being shot themselves.
 
 - **Fields**:
   - `consumes`: Indicates whether shooting consumes the item.
@@ -167,10 +169,15 @@ Defines behaviours for items capable of shooting projectiles or being shot thems
 
 ---
 
+### `stripper` behaviour
+
+Let's the item strip Logs/scrape copper blocks like an axe. Uses 1 durability.
+
+---
+
 ### `trap` behaviour
 
-**Description**:
-Defines trap behaviours for items capable of trapping specific entity types.
+Defines trap behaviour for items capable of trapping specific entity types.
 
 - **Fields**:
   - `types`: List of allowed entity types to trap. Example: `["minecraft:silverfish", "minecraft:spider"]`

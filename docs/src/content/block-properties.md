@@ -54,3 +54,31 @@ Defaults to `true`
 Light level this block emits.
 
 Defaults to `0`
+
+### `transparent`:
+Flag indicating whether the block is transparent. Transparent blocks don't block light
+
+Defaults to `false`
+
+### `allowsSpawning`:
+Flag indicating whether mobs can spawn on this block.
+
+Defaults to `false`
+
+### `replaceable`:
+Flag indicating whether this block can be replaced by another block when placing a new block (e.g., grass can be replaced when placing a solid block).
+Defaults to `false`
+
+### `collision`:
+Flag indicating whether the block has collision
+Defaults to `true`
+
+### `solid`:
+Flag indicating whether the block gets flushed away with water.
+
+Defaults to `true`
+
+### `pushReaction`:
+Specifies how the block reacts to being pushed by a piston. Possible values include normal, destroy, block
+
+Defaults to `normal`

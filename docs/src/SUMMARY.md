@@ -9,7 +9,6 @@
         - [Behaviours](content/item-behaviours.md)
         - [Item Examples](content/item-examples.md)
     - [Blocks](content/blocks.md)
-        - [Types](content/block-types.md)
         - [Block model types](content/block-model-types.md)
         - [Properties](content/block-properties.md)
         - [Behaviours](content/block-behaviours.md)

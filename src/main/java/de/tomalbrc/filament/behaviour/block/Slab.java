@@ -35,10 +35,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * Block behaviourConfig for strippable blocks (with an axe)
- * Copies blockstate properties if applicabable
- */
 public class Slab implements BlockBehaviour<Slab.SlabConfig>, SimpleWaterloggedBlock {
     private final SlabConfig config;
 

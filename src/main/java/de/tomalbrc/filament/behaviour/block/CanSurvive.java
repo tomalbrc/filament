@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.behaviour.item;
+package de.tomalbrc.filament.behaviour.block;
 
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import net.minecraft.core.BlockPos;

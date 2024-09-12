@@ -31,4 +31,6 @@ You can also set components similar to item configurations using the `components
 }
 ```
 
-See sub-points 2.3.x
+The file contents are very similar to that of blocks, except for additional behaviours exclusive to decorations.
+
+Decorations do not support most of the block behaviours.

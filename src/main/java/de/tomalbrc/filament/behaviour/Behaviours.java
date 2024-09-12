@@ -24,11 +24,11 @@ public class Behaviours {
 
     // Block
     public static final BehaviourType<CanSurvive, CanSurvive.Config> CAN_SURVIVE = registerBehaviour("can_survive", CanSurvive.class);
-    public static final BehaviourType<Column, Column.ColumnConfig> COLUMN = registerBehaviour("column", Column.class);
+    public static final BehaviourType<Axis, Axis.Config> AXIS = registerBehaviour("axis", Axis.class);
     public static final BehaviourType<Count, Count.CountConfig> COUNT = registerBehaviour("count", Count.class);
     public static final BehaviourType<Crop, Crop.Config> CROP = registerBehaviour("crop", Crop.class);
-    public static final BehaviourType<Directional, Directional.DirectionalConfig> DIRECTIONAL = registerBehaviour("directional", Directional.class);
-    public static final BehaviourType<HorizontalDirectional, HorizontalDirectional.DirectionalConfig> HORIZONTAL_DIRECTIONAL = registerBehaviour("horizontal_directional", HorizontalDirectional.class);
+    public static final BehaviourType<Facing, Facing.Config> FACING = registerBehaviour("facing", Facing.class);
+    public static final BehaviourType<HorizontalFacing, HorizontalFacing.Config> HORIZONTAL_FACING = registerBehaviour("horizontal_facing", HorizontalFacing.class);
     public static final BehaviourType<Powerlevel, Powerlevel.PowerlevelConfig> POWERLEVEL = registerBehaviour("powerlevel", Powerlevel.class);
     public static final BehaviourType<Slab, Slab.SlabConfig> SLAB = registerBehaviour("slab", Slab.class);
     public static final BehaviourType<Repeater, Repeater.RepeaterConfig> REPEATER = registerBehaviour("repeater", Repeater.class);

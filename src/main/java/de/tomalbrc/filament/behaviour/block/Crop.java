@@ -3,14 +3,12 @@ package de.tomalbrc.filament.behaviour.block;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.block.SimpleBlock;
+import eu.pb4.polymer.core.api.block.PolymerBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.monster.Ravager;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -22,6 +20,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import org.jetbrains.annotations.NotNull;
 
+// todo: ravager interaction, bee interaction, villager interaction!
 public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
     public static final IntegerProperty[] AGES = {
             IntegerProperty.create("age", 0,1),
@@ -104,11 +103,11 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
         float bonus = 1.0F;
         BlockPos blockPos2 = blockPos.below();
 
-        for(int i = -config.moistureBonusRadius; i <= config.moistureBonusRadius; ++i) {
-            for(int j = -config.moistureBonusRadius; j <= config.moistureBonusRadius; ++j) {
+        for(int i = -config.bonusRadius; i <= config.bonusRadius; ++i) {
+            for(int j = -config.bonusRadius; j <= config.bonusRadius; ++j) {
                 float localBonus = 0.f;
                 BlockState blockState = blockGetter.getBlockState(blockPos2.offset(i, 0, j));
-                if (blockState.is(config.moistureBonusBlock)) {
+                if (blockState.is(config.bonusBlock)) {
                     localBonus = 1.f;
                     if (blockState.hasProperty(FarmBlock.MOISTURE) && blockState.getValue(FarmBlock.MOISTURE) > 0) {
                         localBonus = 3.f;
@@ -149,12 +148,6 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
         return levelReader.getRawBrightness(blockPos, 0) >= config.minLightLevel;
     }
 
-    protected void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
-        if (entity instanceof Ravager && level.getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING)) {
-            level.destroyBlock(blockPos, true, entity);
-        }
-    }
-
     @Override
     public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
         return this.getAge(blockState) < config.maxAge-1;
@@ -167,6 +160,9 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
 
     @Override
     public void performBonemeal(ServerLevel serverLevel, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
+        if (blockState.getBlock() instanceof PolymerBlock polymerBlock && !(polymerBlock.getPolymerBlockState(blockState).getBlock() instanceof BonemealableBlock)) {
+            serverLevel.levelEvent(1505, blockPos, 15);
+        }
         this.growCrops(serverLevel, blockPos, blockState);
     }
 
@@ -174,7 +170,7 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
         public int maxAge = 4;
         public int minLightLevel = 8;
 
-        public int moistureBonusRadius = 1;
-        public Block moistureBonusBlock = Blocks.FARMLAND;
+        public int bonusRadius = 1;
+        public Block bonusBlock = Blocks.FARMLAND;
     }
 }

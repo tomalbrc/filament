@@ -12,14 +12,10 @@ import org.jetbrains.annotations.NotNull;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.AXIS;
 
-/**
- * Block behaviourConfig for strippable blocks (with an axe)
- * Copies blockstate properties if applicabable
- */
-public class Column implements BlockBehaviour<Column.ColumnConfig> {
-    private final ColumnConfig config;
+public class Axis implements BlockBehaviour<Axis.Config> {
+    private final Config config;
 
-    public Column(ColumnConfig config) {
+    public Axis(Config config) {
         this.config = config;
     }
 
@@ -35,7 +31,7 @@ public class Column implements BlockBehaviour<Column.ColumnConfig> {
 
     @Override
     @NotNull
-    public ColumnConfig getConfig() {
+    public Axis.Config getConfig() {
         return this.config;
     }
 
@@ -50,5 +46,5 @@ public class Column implements BlockBehaviour<Column.ColumnConfig> {
         return self.setValue(AXIS, blockPlaceContext.getClickedFace().getAxis());
     }
 
-    public static class ColumnConfig {}
+    public static class Config {}
 }
