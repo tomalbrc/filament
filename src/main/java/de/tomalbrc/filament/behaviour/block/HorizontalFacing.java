@@ -31,7 +31,7 @@ public class HorizontalFacing implements BlockBehaviour<HorizontalFacing.Config>
 
     @Override
     public BlockState getStateForPlacement(BlockState selfDefault, BlockPlaceContext blockPlaceContext) {
-        return selfDefault.setValue(BlockStateProperties.HORIZONTAL_FACING, blockPlaceContext.getNearestLookingDirection().getOpposite().getOpposite());
+        return selfDefault.setValue(BlockStateProperties.HORIZONTAL_FACING, blockPlaceContext.getHorizontalDirection().getOpposite());
     }
 
     @Override
