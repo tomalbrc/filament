@@ -23,12 +23,6 @@ Specifies the base block for this block property. Must be a valid block identifi
 
 Defaults to `minecraft:stone`
 
-### `itemBase`:
-
-Specifies the base item for this block property. Must be a valid item identifier.
-
-Defaults to `minecraft:paper`
-
 ### `requiresTool`:
 
 Boolean (true/false) indicating whether the block requires a specific tool to be harvested.

@@ -67,7 +67,6 @@ Example of all behaviour fields for decorations:
 
 ### `animation` behaviour
 
-**Description**:
 Defines animation behaviours for decorations.
 
 - **Fields**:
@@ -78,7 +77,6 @@ Defines animation behaviours for decorations.
 
 ### `container` behaviour
 
-**Description**:
 Defines container behaviours for decorations.
 
 - **Fields**:
@@ -92,7 +90,6 @@ Defines container behaviours for decorations.
 
 ### `lock` behaviour
 
-**Description**:
 Defines lock behaviours for decorations.
 
 - **Fields**:
@@ -106,7 +103,6 @@ Defines lock behaviours for decorations.
 
 ### `seat` behaviour
 
-**Description**:
 Defines seating behaviours for decorations.
 
 - **Fields**:
@@ -117,7 +113,6 @@ Defines seating behaviours for decorations.
 
 ### `showcase` behaviour
 
-**Description**:
 Defines showcase behaviours for decorations.
 
 - **Fields**:
@@ -132,7 +127,6 @@ Defines showcase behaviours for decorations.
 
 ### `fuel` behaviour
 
-**Description**:
 Defines fuel behaviours for decorations, specifying their value used in furnaces and similar item-burning blocks.
 
 - **Fields**:
@@ -142,7 +136,6 @@ Defines fuel behaviours for decorations, specifying their value used in furnaces
 
 ### `food` behaviour
 
-**Description**:
 Defines food item behaviours for edible decorations.
 
 - **Fields**:
@@ -155,7 +148,6 @@ Defines food item behaviours for edible decorations.
 
 ### `cosmetic` behaviour
 
-**Description**:
 Defines cosmetic behaviours for decorations, supporting both Blockbench models for chestplates and simple item models.
 
 - **Fields**:
