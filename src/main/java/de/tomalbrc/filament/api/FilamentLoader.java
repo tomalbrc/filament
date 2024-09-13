@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.api;
 
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.registry.BlockRegistry;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.registry.ItemRegistry;
@@ -15,6 +16,7 @@ import java.util.function.Consumer;
 
 public class FilamentLoader {
     public static void loadBlocks(String modid) {
+        Behaviours.init();
         search(modid, f -> {
             try {
                 BlockRegistry.register(Files.newInputStream(f));
@@ -26,6 +28,7 @@ public class FilamentLoader {
     }
 
     public static void loadItems(String modid) {
+        Behaviours.init();
         search(modid, f -> {
             try {
                 ItemRegistry.register(Files.newInputStream(f));
@@ -36,6 +39,7 @@ public class FilamentLoader {
     }
 
     public static void loadDecorations(String modid) {
+        Behaviours.init();
         search(modid, f -> {
             try {
                 DecorationRegistry.register(Files.newInputStream(f));
@@ -46,6 +50,7 @@ public class FilamentLoader {
     }
 
     public static void loadModels(String modid, String namespace) {
+        Behaviours.init();
         search(modid, f -> {
             try {
                 if (f.getFileName() != null)
