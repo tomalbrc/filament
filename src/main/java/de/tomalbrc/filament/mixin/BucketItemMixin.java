@@ -48,10 +48,10 @@ public abstract class BucketItemMixin implements FakeItem {
     public InteractionResult useOn(UseOnContext useOnContext) {
         var bs = useOnContext.getLevel().getBlockState(useOnContext.getClickedPos());
         if (bs.getBlock() instanceof SimpleBlock simpleBlock && simpleBlock.getPolymerBlockState(bs, (ServerPlayer) useOnContext.getPlayer()).getBlock() instanceof NoteBlock) {
-            Fluid c = content;
+            Fluid content1 = content;
             var res = this.use(useOnContext.getLevel(), useOnContext.getPlayer(), useOnContext.getHand()).getResult();
             if (res.consumesAction()) {
-                if (this.content == Fluids.EMPTY) {
+                if (content1 == Fluids.EMPTY) {
                     playEmptySound(null, useOnContext.getLevel(), useOnContext.getClickedPos());
                 } else {
                     simpleBlock.getPickupSound().ifPresent((soundEvent) -> {

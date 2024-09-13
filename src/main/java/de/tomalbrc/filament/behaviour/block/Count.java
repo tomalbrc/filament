@@ -43,6 +43,8 @@ public class Count implements BlockBehaviour<Count.CountConfig> {
             BlockState newState = blockState.cycle(COUNT);
             if (newState.getValue(COUNT) > this.config.max)
                 return newState.setValue(COUNT, this.config.max);
+            else
+                return newState;
         }
 
         return self;
