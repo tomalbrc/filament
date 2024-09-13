@@ -6,6 +6,7 @@ import de.tomalbrc.filament.api.registry.BehaviourRegistry;
 import de.tomalbrc.filament.behaviour.block.*;
 import de.tomalbrc.filament.behaviour.decoration.*;
 import de.tomalbrc.filament.behaviour.item.*;
+import de.tomalbrc.filament.util.Constants;
 import net.minecraft.resources.ResourceLocation;
 
 @SuppressWarnings("unused")
@@ -43,7 +44,7 @@ public class Behaviours {
     public static final BehaviourType<Showcase, Showcase.ShowcaseConfig> SHOWCASE = registerBehaviour("showcase", Showcase.class);
 
     private static <T extends Behaviour<E>,E> BehaviourType<T, E> registerBehaviour(String name, Class<T> type) {
-        return BehaviourRegistry.registerBehaviour(ResourceLocation.fromNamespaceAndPath("filament", name), type);
+        return BehaviourRegistry.registerBehaviour(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, name), type);
     }
 
     public static void init() {

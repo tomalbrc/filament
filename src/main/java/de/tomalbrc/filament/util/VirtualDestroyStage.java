@@ -109,7 +109,7 @@ public class VirtualDestroyStage extends ElementHolder {
 
     static {
         for (int i = 0; i < MODELS.length; i++) {
-            MODELS[i] = PolymerResourcePackUtils.requestModel(Items.STICK, ResourceLocation.fromNamespaceAndPath("filament", "block/special/destroy_stage_" + i)).asStack();
+            MODELS[i] = PolymerResourcePackUtils.requestModel(Items.STICK, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "block/special/destroy_stage_" + i)).asStack();
         }
 
         var model =  """

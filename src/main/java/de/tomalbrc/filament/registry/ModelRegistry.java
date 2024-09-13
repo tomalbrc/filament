@@ -4,6 +4,7 @@ import de.tomalbrc.bil.core.model.Model;
 import de.tomalbrc.bil.file.loader.AjModelLoader;
 import de.tomalbrc.bil.file.loader.BbModelLoader;
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.util.Constants;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -25,7 +26,7 @@ public class ModelRegistry {
     public static class AjModelReloadListener implements SimpleSynchronousResourceReloadListener {
         @Override
         public ResourceLocation getFabricId() {
-            return ResourceLocation.fromNamespaceAndPath("filament", "ajmodel");
+            return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "ajmodel");
         }
 
         @Override

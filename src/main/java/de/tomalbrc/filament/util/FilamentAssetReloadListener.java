@@ -17,7 +17,7 @@ public class FilamentAssetReloadListener implements SimpleSynchronousResourceRel
 
     @Override
     public ResourceLocation getFabricId() {
-        return ResourceLocation.fromNamespaceAndPath("filament", "assets");
+        return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "assets");
     }
 
     @Override

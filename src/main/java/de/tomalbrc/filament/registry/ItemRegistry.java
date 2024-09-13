@@ -107,7 +107,7 @@ public class ItemRegistry {
 
         @Override
         public ResourceLocation getFabricId() {
-            return ResourceLocation.fromNamespaceAndPath("filament", "items");
+            return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "items");
         }
 
         @Override
@@ -132,15 +132,15 @@ public class ItemRegistry {
 
 
             var itemId = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "item");
-            if (ITEM_GROUP.getDisplayItems().isEmpty() && !BuiltInRegistries.CREATIVE_MODE_TAB.containsKey(itemId))
+            if (!PolymerItemGroupUtils.contains(itemId) && !CUSTOM_ITEMS.isEmpty())
                 PolymerItemGroupUtils.registerPolymerItemGroup(itemId, ITEM_GROUP);
 
             var blockId = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "block");
-            if (BLOCK_ITEM_GROUP.getDisplayItems().isEmpty() && !BuiltInRegistries.CREATIVE_MODE_TAB.containsKey(blockId))
+            if (!PolymerItemGroupUtils.contains(blockId) && !CUSTOM_BLOCK_ITEMS.isEmpty())
                 PolymerItemGroupUtils.registerPolymerItemGroup(blockId, BLOCK_ITEM_GROUP);
 
             var decId = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "decoration");
-            if (DECORATION_ITEM_GROUP.getDisplayItems().isEmpty() && !BuiltInRegistries.CREATIVE_MODE_TAB.containsKey(decId))
+            if (!PolymerItemGroupUtils.contains(decId) && !CUSTOM_DECORATIONS.isEmpty())
                 PolymerItemGroupUtils.registerPolymerItemGroup(decId, DECORATION_ITEM_GROUP);
         }
     }

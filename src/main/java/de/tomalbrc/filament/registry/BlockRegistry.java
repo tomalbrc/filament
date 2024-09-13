@@ -6,6 +6,7 @@ import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.block.SimpleBlockItem;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
+import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
@@ -63,7 +64,7 @@ public class BlockRegistry {
     public static class BlockDataReloadListener implements SimpleSynchronousResourceReloadListener {
         @Override
         public ResourceLocation getFabricId() {
-            return ResourceLocation.fromNamespaceAndPath("filament", "filament");
+            return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, Constants.MOD_ID);
         }
 
         @Override

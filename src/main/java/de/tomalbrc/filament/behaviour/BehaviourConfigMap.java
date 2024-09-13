@@ -5,6 +5,7 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.api.registry.BehaviourRegistry;
+import de.tomalbrc.filament.util.Constants;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 
@@ -47,7 +48,7 @@ public class BehaviourConfigMap {
                 if (entry.getKey().contains(":"))
                     resourceLocation = ResourceLocation.parse(entry.getKey());
                 else
-                    resourceLocation = ResourceLocation.fromNamespaceAndPath("filament", entry.getKey());
+                    resourceLocation = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, entry.getKey());
 
                 var behaviourType = BehaviourRegistry.getType(resourceLocation);
 

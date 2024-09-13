@@ -23,11 +23,11 @@
     "fabricloader": ">=${loader_version}",
     "fabric-api": "*",
     "minecraft": ">=${minecraft_version}",
-    "polymer-core": "*",
-    "polymer-resource-pack": "*",
-    "polymer-networking": "*",
-    "polymer-virtual-entity": "*",
-    "bil": ">=1.1.10"
+    "polymer-core": ">=${polymer_version}",
+    "polymer-resource-pack": ">=${polymer_version}",
+    "polymer-networking": ">=${polymer_version}",
+    "polymer-virtual-entity": ">=${polymer_version}",
+    "bil": ">=${bil_version}"
   },
   "accessWidener": "filament.accesswidener"
 }
