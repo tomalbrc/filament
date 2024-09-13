@@ -27,7 +27,7 @@ Defaults to `minecraft:stone`
 
 Boolean (true/false) indicating whether the block requires a specific tool to be harvested.
 
-Defaults to `false`
+Defaults to `true`
 
 ### `explosionResistance`:
 
