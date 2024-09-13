@@ -34,6 +34,7 @@ public class BlockProperties extends ItemProperties {
 
         if (this.destroyTime != Float.MIN_VALUE) props.destroyTime(this.destroyTime);
         if (this.explosionResistance != Float.MIN_VALUE) props.explosionResistance(this.explosionResistance);
+        else if (this.destroyTime != Float.MIN_VALUE) props.explosionResistance(this.destroyTime);
         if (this.isLightSource()) props.lightLevel((state) -> this.lightEmission);
         props.isRedstoneConductor((a,b,c) -> this.redstoneConductor);
         if (this.requiresTool) props.requiresCorrectToolForDrops();
