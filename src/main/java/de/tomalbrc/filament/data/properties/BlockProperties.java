@@ -12,7 +12,7 @@ public class BlockProperties extends ItemProperties {
 
     @NotNull
     public Block blockBase = Blocks.STONE;
-    public boolean requiresTool = false;
+    public boolean requiresTool = true;
     public float explosionResistance = Float.MIN_VALUE;
     public float destroyTime = Float.MIN_VALUE;
     public boolean redstoneConductor = true;
