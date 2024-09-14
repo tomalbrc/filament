@@ -86,12 +86,12 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
 
     @Override
     public boolean hurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
-        return this.itemData.components().has(DataComponents.TOOL);
+        return this.itemData != null && this.itemData.components().has(DataComponents.TOOL);
     }
 
     @Override
     public void postHurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
-        if (this.itemData.components().has(DataComponents.TOOL))
+        if (this.itemData != null && this.itemData.components().has(DataComponents.TOOL))
             itemStack.hurtAndBreak(1, livingEntity2, EquipmentSlot.MAINHAND);
     }
 
