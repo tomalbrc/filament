@@ -1,8 +1,8 @@
 # Properties
 
-Decoration properties share the same properties as [items](item-properties.md) and a few of [blocks](block-properties.md)
+Decoration properties share the same properties as [items](item-properties.md) and a few of [blocks](block-properties.md), like `solid` and `pushReaction`
 
-All properties (excluding the shared item and block properties):
+Example of properties:
 ```json
 {
   "properties": {

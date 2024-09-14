@@ -20,6 +20,7 @@ All properties (excluding the shared item and decoration properties):
 ### `blockBase`:
 
 Specifies the base block for this block property. Must be a valid block identifier.
+This is used for sounds and particles.
 
 Defaults to `minecraft:stone`
 
@@ -33,9 +34,15 @@ Defaults to `true`
 
 Number indicating the block's resistance to explosions.
 
+Defaults to `0`
+
 ### `destroyTime`:
 
-Time in seconds indicating the time required to destroy the block.
+Resistance of the block/the time required to destroy the block.
+
+The destroyTime is used as explosionResistance if explosionResistance is not explicitly specified.
+
+Defaults to `0`
 
 ### `redstoneConductor`:
 
