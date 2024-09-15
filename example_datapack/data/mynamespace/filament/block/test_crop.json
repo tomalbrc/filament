@@ -1,0 +1,28 @@
+{
+  "id" : "mynamespace:test_crop",
+  "blockResource": {
+    "models" : {
+      "age=0" : "minecraft:block/beetroots_stage0",
+      "age=1" : "minecraft:block/beetroots_stage1",
+      "age=2" : "minecraft:block/beetroots_stage2",
+      "age=3" : "minecraft:block/beetroots_stage3"
+    }
+  },
+  "properties" : {
+    "blockBase" : "minecraft:sugarcane",
+    "transparent": true,
+    "replaceable": false,
+    "destroyTime": 0,
+    "pushReaction": "destroy"
+  },
+  "blockModelType" : "plant_block",
+  "behaviour": {
+    "crop": {
+      "maxAge": 4
+    },
+    "can_survive": {
+      "blocks": ["minecraft:sand"],
+      "tags": ["minecraft:dirt"]
+    }
+  }
+}
