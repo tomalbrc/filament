@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class PlayerMixin {
     @ModifyExpressionValue(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getItemInHand(Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack;"))
     public ItemStack bl4(ItemStack original) {
-        if (original.getItem() instanceof SimpleItem simpleItem && simpleItem.getItemData().components().has(DataComponents.TOOL)) {
+        if (original.getItem() instanceof SimpleItem simpleItem && simpleItem.components().has(DataComponents.TOOL)) {
             return Items.WOODEN_SWORD.getDefaultInstance();
         }
         return original;
