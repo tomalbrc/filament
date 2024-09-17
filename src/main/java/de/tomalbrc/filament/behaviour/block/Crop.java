@@ -3,7 +3,7 @@ package de.tomalbrc.filament.behaviour.block;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.block.SimpleBlock;
-import eu.pb4.polymer.core.api.block.PolymerBlock;
+import de.tomalbrc.filament.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -160,9 +160,10 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
 
     @Override
     public void performBonemeal(ServerLevel serverLevel, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
-        if (blockState.getBlock() instanceof PolymerBlock polymerBlock && !(polymerBlock.getPolymerBlockState(blockState).getBlock() instanceof BonemealableBlock)) {
-            serverLevel.levelEvent(1505, blockPos, 15);
+        if (blockState.getBlock() instanceof SimpleBlock polymerBlock && !(polymerBlock.getPolymerBlockState(blockState).getBlock() instanceof BonemealableBlock)) {
+            Util.handleBoneMealEffects(serverLevel, blockPos);
         }
+
         this.growCrops(serverLevel, blockPos, blockState);
     }
 
