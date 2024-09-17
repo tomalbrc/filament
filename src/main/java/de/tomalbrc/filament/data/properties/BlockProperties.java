@@ -15,9 +15,9 @@ public class BlockProperties extends ItemProperties {
     public boolean requiresTool = true;
     public float explosionResistance = Float.MIN_VALUE;
     public float destroyTime = Float.MIN_VALUE;
-    public boolean redstoneConductor = true;
+    public BlockStateMappedProperty<Boolean> redstoneConductor = null;
 
-    public int lightEmission = Integer.MIN_VALUE;
+    public BlockStateMappedProperty<Integer> lightEmission = null;
 
     public boolean transparent = false;
     public boolean allowsSpawning = false;
@@ -35,8 +35,8 @@ public class BlockProperties extends ItemProperties {
         if (this.destroyTime != Float.MIN_VALUE) props.destroyTime(this.destroyTime);
         if (this.explosionResistance != Float.MIN_VALUE) props.explosionResistance(this.explosionResistance);
         else if (this.destroyTime != Float.MIN_VALUE) props.explosionResistance(this.destroyTime);
-        if (this.isLightSource()) props.lightLevel((state) -> this.lightEmission);
-        props.isRedstoneConductor((a,b,c) -> this.redstoneConductor);
+        if (this.mayBeLightSource()) props.lightLevel((state) -> this.lightEmission.getOrDefault(state, 0));
+        if (this.mayBeRedstoneConductor()) props.isRedstoneConductor((blockState, blockGetter, blockPos) -> this.redstoneConductor.getOrDefault(blockState, false));
         if (this.requiresTool) props.requiresCorrectToolForDrops();
         if (this.replaceable) props.replaceable();
         if (this.transparent) props.noOcclusion();
@@ -51,7 +51,11 @@ public class BlockProperties extends ItemProperties {
         return props.dynamicShape();
     }
 
-    public boolean isLightSource() {
-        return this.lightEmission != Integer.MIN_VALUE;
+    public boolean mayBeRedstoneConductor() {
+        return this.redstoneConductor != null && (this.redstoneConductor.isMap() || (this.redstoneConductor.getRawValue() != null && this.redstoneConductor.getRawValue()));
+    }
+
+    public boolean mayBeLightSource() {
+        return this.lightEmission != null && (this.lightEmission.isMap() || (this.lightEmission.getRawValue() != null && this.lightEmission.getRawValue() > 0));
     }
 }

@@ -143,8 +143,8 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Equipable
                     BlockState blockState = DecorationRegistry.getDecorationBlock(decorationData.id()).getStateForPlacement(blockPlaceContext);
                     assert blockState != null;
 
-                    if (decorationData.properties().isLightSource()) {
-                        blockState = blockState.setValue(DecorationBlock.LIGHT_LEVEL, decorationData.properties().lightEmission);
+                    if (decorationData.properties().mayBeLightSource()) {
+                        blockState = blockState.setValue(DecorationBlock.LIGHT_LEVEL, decorationData.properties().lightEmission.getValue(blockState));
                     }
 
                     if (!decorationData.properties().waterloggable)
@@ -178,8 +178,8 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Equipable
                     blockState = blockState.setValue(DecorationBlock.WATERLOGGED, false);
                 }
 
-                if (decorationData.properties().isLightSource()) {
-                    blockState = blockState.setValue(DecorationBlock.LIGHT_LEVEL, decorationData.properties().lightEmission);
+                if (decorationData.properties().mayBeLightSource()) {
+                    blockState = blockState.setValue(DecorationBlock.LIGHT_LEVEL, decorationData.properties().lightEmission.getValue(blockState));
                 }
 
                 if (decorationData.isSimple()) {

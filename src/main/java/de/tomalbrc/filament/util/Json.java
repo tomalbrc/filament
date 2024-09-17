@@ -1,11 +1,13 @@
 package de.tomalbrc.filament.util;
 
 import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
+import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.Registry;
@@ -49,7 +51,34 @@ public class Json {
             .registerTypeHierarchyAdapter(Item.class, new RegistryDeserializer<>(BuiltInRegistries.ITEM))
             .registerTypeHierarchyAdapter(SoundEvent.class, new RegistryDeserializer<>(BuiltInRegistries.SOUND_EVENT))
             .registerTypeHierarchyAdapter(BehaviourConfigMap.class, new BehaviourConfigMap.Deserializer())
+            .registerTypeAdapter(BlockStateMappedProperty.class, new BlockStateMappedPropertyDeserializer<>())
             .create();
+
+    public static class BlockStateMappedPropertyDeserializer<T> implements JsonDeserializer<BlockStateMappedProperty<T>> {
+        @Override
+        public BlockStateMappedProperty<T> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            if (json.isJsonPrimitive()) {
+                JsonPrimitive primitive = json.getAsJsonPrimitive();
+
+                if (primitive.isBoolean()) {
+                    return new BlockStateMappedProperty<>((T) (Boolean) primitive.getAsBoolean());
+                } else if (primitive.isNumber()) {
+                    Number number = primitive.getAsNumber();
+                    if (number.doubleValue() == number.intValue()) {
+                        return new BlockStateMappedProperty<>((T) (Integer) number.intValue());
+                    } else {
+                        return new BlockStateMappedProperty<>((T) (Double) number.doubleValue());
+                    }
+                }
+            } else if (json.isJsonObject()) {
+                Type mapType = new TypeToken<Map<String, Integer>>() {}.getType();
+                Map<String, T> map = context.deserialize(json, mapType);
+                return new BlockStateMappedProperty<>(map);
+            }
+
+            throw new JsonParseException("Invalid format for MappedProperty");
+        }
+    }
 
     public static class BlockStateDeserializer implements JsonDeserializer<BlockState> {
         @Override
