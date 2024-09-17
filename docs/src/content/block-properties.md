@@ -48,11 +48,39 @@ Defaults to `0`
 
 Boolean (true/false) indicating whether the block can conduct redstone signals.
 
+The value of this property can be mapped to a blockstate like this:
+
+```json
+{
+  "properties": {
+    "redstoneConductor": {
+      "powerlevel=0": true,
+      "powerlevel=1": false,
+      ...
+    }
+  }
+}
+```
+
 Defaults to `true`
 
 ### `lightEmission`:
 
 Light level this block emits.
+
+The value of this property can be mapped to a blockstate like this:
+
+```json
+{
+  "properties": {
+    "lightEmission": {
+      "powerlevel=0": 0,
+      "powerlevel=1": 1,
+      ...
+    }
+  }
+}
+```
 
 Defaults to `0`
 
