@@ -3,6 +3,6 @@ authors = ["tomalbrc"]
 language = "en"
 multilingual = false
 src = "src"
-title = "filament 0.7 docs"
+title = "Filament Documentation"
 
 # we be using mdbook

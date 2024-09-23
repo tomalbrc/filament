@@ -1,5 +1,3 @@
-Absolutely, here is the updated documentation with a basic example:
-
 # Items
 
 ## File Location
@@ -15,17 +13,15 @@ Item configurations have two required fields: `id` and `vanillaItem`.
 
 ### `id`
 
-- **Type**: `Identifier`
-- **Description**: Your custom ID in the format `"namespace:item_name"`, as it will show up in-game.
+Your custom ID in the format `namespace:item_name`
 
 ### `vanillaItem`
 
-- **Type**: `Item`
-- **Description**: The vanilla item to "overwrite". Filament (through Polymer) will create `custom_model_data` IDs for the generated resource pack. Your custom item will not inherit any other properties server-side from the vanilla item other than appearance, if the `itemResource` field is not set. For interaction purposes on the client, it is important to choose the appropriate vanilla item to use here.
+The vanilla item to "overwrite". Filament (through Polymer) will create `custom_model_data` IDs for the generated resource pack. Your custom item will not inherit any other properties server-side from the vanilla item other than appearance, if the `itemResource` field is not set. For interaction purposes on the client, it is important to choose the appropriate vanilla item to use here.
 
 ## Optional Fields
 
-The fields `itemResource`, `properties`, and `behaviour` are optional.
+The fields `itemResource`, `properties`, `group`, and `behaviour` are optional.
 
 ### `itemResource`
 
@@ -40,15 +36,21 @@ The fields `itemResource`, `properties`, and `behaviour` are optional.
 
 ### `properties`
 
-- **Description**: Defines various properties for the item. The structure and contents of this field will depend on the specific properties being set.
+Defines various properties for the item. The structure and contents of this field will depend on the specific properties being set.
+
+### `group`
+
+Defines the item-group for this item. See [Item Groups](item-groups.md) for more information.
 
 ### `behaviour`
 
-- **Description**: Defines specific behaviours or interactions for the item. The structure and contents of this field will depend on the specific behaviours being set.
+Defines specific behaviours or interactions for the item. The structure and contents of this field will depend on the specific behaviours being set.
+
+See [Item Behaviours](item-behaviours.md) for more information.
 
 ### `components`
 
-- **Description**: Defines a set of vanilla minecraft components like `minecraft:food`, `minecraft:tool`, etc. The format is the same that is used in datapacks. This is only supported in minecraft version 1.20.5 and later
+Defines a set of vanilla minecraft components like `minecraft:food`, `minecraft:tool`, etc. The format is the same that is used in datapacks. This is only supported in minecraft version 1.20.5 and later
 
 
 ## Example

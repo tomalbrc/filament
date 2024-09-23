@@ -3,7 +3,9 @@
 [Introduction](README.md)
 
 - [Using filament](usage.md)
+- [Developers](DEVELOPERS.md)
 - [Creating content](content/README.md)
+    - [Item Groups](content/item-groups.md)
     - [Items](content/items.md)
         - [Properties](content/item-properties.md)
         - [Behaviours](content/item-behaviours.md)

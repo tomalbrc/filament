@@ -33,6 +33,7 @@ Blocks like candles or turtle eggs, with mutiple blocks in 1:
     "destroyTime": 0,
     "blockBase": "minecraft:stone"
   },
+  "group": "mynamespace:myblockgroup",
   "components": {
     ...
   }
@@ -107,6 +108,10 @@ The block model to use/retexture. See [Block Model Types](block-model-types.md) 
 ## `properties`: 
 
 The properties of this block. See [Block Properties](block-properties.md) for details.
+
+### `group`
+
+Defines the item-group for this blocks' item. See [Item Groups](item-groups.md) for more information.
 
 ## `components`:
 
