@@ -23,7 +23,7 @@ public class Execute implements ItemBehaviour<Execute.ExecuteConfig> {
     @Override
     @NotNull
     public ExecuteConfig getConfig() {
-        return null;
+        return config;
     }
 
     @Override

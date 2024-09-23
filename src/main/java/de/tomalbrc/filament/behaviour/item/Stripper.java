@@ -33,7 +33,7 @@ public class Stripper implements ItemBehaviour<Stripper.Config> {
     @Override
     @NotNull
     public Stripper.Config getConfig() {
-        return null;
+        return config;
     }
 
     @Override
@@ -89,6 +89,5 @@ public class Stripper implements ItemBehaviour<Stripper.Config> {
         }
     }
 
-    public static class Config {
-    }
+    public static class Config {}
 }
