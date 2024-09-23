@@ -13,7 +13,6 @@ import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.TypedDataComponent;
@@ -60,7 +59,7 @@ public class DecorationRegistry {
         if (!data.isSimple()) {
             block = new ComplexDecorationBlock(props.pushReaction(PushReaction.BLOCK), data.id());
 
-            BlockEntityType<DecorationBlockEntity> DECORATION_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(DecorationBlockEntity::new, block).build();
+            BlockEntityType<DecorationBlockEntity> DECORATION_BLOCK_ENTITY = BlockEntityType.Builder.of(DecorationBlockEntity::new).build(null);
             EntityRegistry.registerBlockEntity(data.id(), DECORATION_BLOCK_ENTITY);
 
             decorationBlockEntities.put(block, DECORATION_BLOCK_ENTITY);
@@ -74,13 +73,11 @@ public class DecorationRegistry {
 
         Item.Properties properties = data.properties().toItemProperties();
 
-        if (data.components() != null) {
-            for (TypedDataComponent component : data.components()) {
-                properties.component(component.type(), component.value());
-            }
+        for (TypedDataComponent component : data.components()) {
+            properties.component(component.type(), component.value());
         }
 
-        if (data.isContainer()) {
+        if (data.behaviourConfig() != null && data.isContainer()) {
             Container.ContainerConfig container = data.behaviourConfig().get(Behaviours.CONTAINER);
             if (container.canPickup)
                 properties.component(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
@@ -92,7 +89,7 @@ public class DecorationRegistry {
 
         DecorationItem item = new DecorationItem(block, data, properties);
         BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
-        ItemRegistry.registerItem(data.id(), item, ItemRegistry.CUSTOM_DECORATIONS);
+        ItemRegistry.registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.DECORATION_GROUP_ID);
 
         REGISTERED_DECORATIONS++;
     }

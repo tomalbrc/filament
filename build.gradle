@@ -33,6 +33,8 @@ dependencies {
     // BIL
     modImplementation include("de.tomalbrc:blockbench-import-library:${project.bil_version}")
 
+    modImplementation include("eu.pb4:placeholder-api:${project.papi_version}")
+
     modImplementation include('me.lucko:fabric-permissions-api:0.3.1')
 }
 

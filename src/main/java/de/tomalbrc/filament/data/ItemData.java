@@ -22,7 +22,9 @@ public record ItemData(
         @SerializedName("behaviour")
         @Nullable BehaviourConfigMap behaviourConfig,
         @Nullable ItemProperties properties,
-        @Nullable DataComponentMap components
+        @Nullable DataComponentMap components,
+        @SerializedName("group")
+        @Nullable ResourceLocation itemGroup
 ) {
     @Override
     @NotNull
@@ -36,7 +38,7 @@ public record ItemData(
     @Override
     @NotNull
     public DataComponentMap components() {
-        if (properties == null) {
+        if (components == null) {
             return DataComponentMap.EMPTY;
         }
         return components;

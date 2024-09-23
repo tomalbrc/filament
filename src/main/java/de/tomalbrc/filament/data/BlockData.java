@@ -33,7 +33,9 @@ public record BlockData(
         @Nullable BlockProperties properties,
         @SerializedName("behaviour")
         @Nullable BehaviourConfigMap behaviourConfig,
-        @Nullable DataComponentMap components
+        @Nullable DataComponentMap components,
+        @SerializedName("group")
+        @Nullable ResourceLocation itemGroup
         ) {
     @Override
     @NotNull
@@ -42,6 +44,15 @@ public record BlockData(
             return BlockProperties.EMPTY;
         }
         return properties;
+    }
+
+    @Override
+    @NotNull
+    public DataComponentMap components() {
+        if (components == null) {
+            return DataComponentMap.EMPTY;
+        }
+        return components;
     }
 
     @Override

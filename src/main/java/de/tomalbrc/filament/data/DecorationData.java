@@ -34,7 +34,9 @@ public record DecorationData(
 
         @SerializedName("behaviour")
         @Nullable BehaviourConfigMap behaviourConfig,
-        @Nullable DataComponentMap components
+        @Nullable DataComponentMap components,
+        @SerializedName("group")
+        @Nullable ResourceLocation itemGroup
 ) {
     @Override
     @NotNull
@@ -43,6 +45,15 @@ public record DecorationData(
             return DecorationProperties.EMPTY;
         }
         return properties;
+    }
+
+    @Override
+    @NotNull
+    public DataComponentMap components() {
+        if (components == null) {
+            return DataComponentMap.EMPTY;
+        }
+        return components;
     }
 
     @Override

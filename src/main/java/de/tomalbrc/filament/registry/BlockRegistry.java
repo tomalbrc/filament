@@ -41,16 +41,14 @@ public class BlockRegistry {
         BehaviourUtil.postInitBlock(customBlock, customBlock, data.behaviourConfig());
 
         var itemProperties = data.properties().toItemProperties();
-        if (data.components() != null) {
-            for (TypedDataComponent component : data.components()) {
-                itemProperties.component(component.type(), component.value());
-            }
+        for (TypedDataComponent component : data.components()) {
+            itemProperties.component(component.type(), component.value());
         }
         SimpleBlockItem item = new SimpleBlockItem(itemProperties, customBlock, data);
         BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
 
         BlockRegistry.registerBlock(data.id(), customBlock);
-        ItemRegistry.registerItem(data.id(), item, ItemRegistry.CUSTOM_BLOCK_ITEMS);
+        ItemRegistry.registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.BLOCK_GROUP_ID);
 
         customBlock.postRegister();
 
