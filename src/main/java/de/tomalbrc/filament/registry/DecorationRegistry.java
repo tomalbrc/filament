@@ -13,6 +13,7 @@ import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.TypedDataComponent;
@@ -59,7 +60,7 @@ public class DecorationRegistry {
         if (!data.isSimple()) {
             block = new ComplexDecorationBlock(props.pushReaction(PushReaction.BLOCK), data.id());
 
-            BlockEntityType<DecorationBlockEntity> DECORATION_BLOCK_ENTITY = BlockEntityType.Builder.of(DecorationBlockEntity::new).build(null);
+            BlockEntityType<DecorationBlockEntity> DECORATION_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(DecorationBlockEntity::new, block).build();
             EntityRegistry.registerBlockEntity(data.id(), DECORATION_BLOCK_ENTITY);
 
             decorationBlockEntities.put(block, DECORATION_BLOCK_ENTITY);
