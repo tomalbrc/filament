@@ -49,8 +49,6 @@ So an `en_US.json` for a resrouce-pack might look like this:
 or for german (`de_DE.json`):
 
 ```json
-So an en_US.json for a resrouce-pack might look like this:
-```json
 {
   "mynamespace.itemGroup.mygroup": "Meine Gruppe"
 }
