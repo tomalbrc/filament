@@ -1,6 +1,6 @@
 {
   "id": "mynamespace:testitem",
-  "vanillaItem": "minecraft:paper",
+  "vanillaItem": "minecraft:debug_stick",
   "properties": {
     "durability": 20,
     "stackSize": 1

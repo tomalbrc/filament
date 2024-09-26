@@ -1,5 +1,10 @@
 {
   "id" : "mynamespace:test_crop",
+  "itemResource": {
+    "models": {
+      "default": "minecraft:item/beetroot_seeds"
+    }
+  },
   "blockResource": {
     "models" : {
       "age=0" : "minecraft:block/beetroots_stage0",
@@ -15,7 +20,7 @@
     "destroyTime": 0,
     "pushReaction": "destroy"
   },
-  "blockModelType" : "plant_block",
+  "blockModelType" : "tripwire_block",
   "behaviour": {
     "crop": {
       "maxAge": 4
