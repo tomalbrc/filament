@@ -3,6 +3,7 @@ package de.tomalbrc.filament.behaviour.item;
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
@@ -29,7 +30,7 @@ public class Execute implements ItemBehaviour<Execute.ExecuteConfig> {
     @Override
     public InteractionResultHolder<ItemStack> use(Item item, Level level, Player user, InteractionHand hand) {
         if (this.config.command != null) {
-            user.getServer().getCommands().performPrefixedCommand(user.createCommandSourceStack(), this.config.command);
+            user.getServer().getCommands().performPrefixedCommand(user.getServer().createCommandSourceStack().withSource(user).withPosition(user.position()).withRotation(user.getRotationVector()).withLevel((ServerLevel) user.level()), this.config.command);
 
             user.awardStat(Stats.ITEM_USED.get(item));
 
