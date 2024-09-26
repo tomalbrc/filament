@@ -82,7 +82,7 @@ public record BlockData(
                     finalType = BlockModelType.FULL_BLOCK;
                     if (PolymerBlockResourceUtils.getBlocksLeft(finalType) <= 0) {
                         weAreInTrouble = true;
-                        Filament.LOGGER.error("Filament: Ran out of blockModelTypes to use AND FULL_BLOCK! Using bedrock temporarily. Fix your Block-Configs!");
+                        Filament.LOGGER.error("Filament: Ran out of blockModelTypes to use AND FULL_BLOCK ran out too! Using Bedrock block temporarily. Fix your Block-Config for "+id()+"!");
                     } else
                         Filament.LOGGER.error("Filament: Ran out of blockModelTypes to use! Using FULL_BLOCK");
                 }
@@ -102,10 +102,6 @@ public record BlockData(
                     }
 
                     val.put(parsed.blockState(), BlockStateMeta.of(weAreInTrouble ? Blocks.BEDROCK.defaultBlockState() : requestedState, blockModel));
-                }
-
-                if (requestedState == null) {
-                    throw new RuntimeException("Ran out of block states to use for " + this.blockModelType.name() + "!");
                 }
             }
         }
