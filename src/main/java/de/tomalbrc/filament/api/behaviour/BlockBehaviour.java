@@ -19,11 +19,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.redstone.Orientation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Optional;
 
+@SuppressWarnings("unused")
 public interface BlockBehaviour<T> extends Behaviour<T> {
     default void init(Block block, BehaviourHolder behaviourHolder) {
 
@@ -57,7 +59,7 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
         return blockState;
     }
 
-    default void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos2, boolean bl) {
+    default void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, Orientation orientation, boolean bl) {
     }
 
     default Optional<Boolean> isPathfindable(BlockState blockState, PathComputationType pathComputationType) {

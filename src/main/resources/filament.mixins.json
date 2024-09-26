@@ -15,15 +15,12 @@
     "ServerGamePacketListenerImplMixin",
     "StateDefinitionBuilderMixin",
     "WorldLoaderMixin",
-    "behaviour.AbstractFurnaceBlockEntityMixin",
     "behaviour.AxeItemMixin",
+    "behaviour.FuelValuesMixin",
     "behaviour.MobMixin",
     "behaviour.PlayerMixin",
     "cosmetic.LivingEntityMixin",
-    "cosmetic.ServerPlayerMixin",
-    "trim.ItemStackPacketCodecMixin",
-    "trim.RegistryDataLoaderMixin",
-    "trim.SmithingTrimRecipeMixin"
+    "cosmetic.ServerPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

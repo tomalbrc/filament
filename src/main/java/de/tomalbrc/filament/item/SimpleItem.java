@@ -11,15 +11,13 @@ import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.core.api.item.PolymerItemUtils;
-import eu.pb4.polymer.resourcepack.api.PolymerModelData;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -36,10 +34,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 
-public class SimpleItem extends BlockItem implements PolymerItem, Equipable, BehaviourHolder {
-    protected ItemData itemData;
+public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolder {
+    private ItemData itemData;
     protected ItemProperties properties;
-    protected Object2ObjectOpenHashMap<String, PolymerModelData> modelData;
 
     protected final Item vanillaItem;
 
@@ -56,7 +53,6 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
         this.vanillaItem = vanillaItem;
         this.itemData = itemData;
         this.properties = itemData.properties();
-        this.modelData = this.itemData.requestModels();
     }
 
     public SimpleItem(Block block, Item.Properties itemProperties, ItemProperties props, Item vanillaItem) {
@@ -67,13 +63,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
     }
 
     @Override
-    @NotNull
-    public String getDescriptionId() {
-        return this.getBlock() != null ? this.getBlock().getDescriptionId() : this.getOrCreateDescriptionId();
-    }
-
-    @Override
-    @Nullable
+    @Nullable // yes there is no block item for simple items
     public Block getBlock() {
         return super.getBlock();
     }
@@ -106,33 +96,33 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
     }
 
     @Override
-    public ItemStack getPolymerItemStack(ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
-        ItemStack itemStack1 = PolymerItemUtils.createItemStack(itemStack, tooltipType, lookup, player);
-        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
-            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
-                itemBehaviour.modifyPolymerItemStack(itemStack1, tooltipType, lookup, player);
-            }
-        }
-        return itemStack1;
-    }
-
-    @Override
     public Item getPolymerItem(ItemStack itemStack, @Nullable ServerPlayer player) {
         return this.vanillaItem != null ? this.vanillaItem : Items.PAPER;
     }
 
     @Override
-    public int getPolymerCustomModelData(ItemStack itemStack, @Nullable ServerPlayer player) {
+    public final ItemStack getPolymerItemStack(ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
+        var stack = PolymerItemUtils.createItemStack(itemStack, tooltipType, lookup, player);
+        stack.set(DataComponents.ITEM_MODEL, this.getModel());
+
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
-                var data = itemBehaviour.modifyPolymerCustomModelData(this.modelData, itemStack, player);
-                if (data != -1) {
-                    return data;
-                }
+                itemBehaviour.modifyPolymerItemStack(this.getModelMap(), itemStack, stack, tooltipType, lookup, player);
             }
         }
 
-        return this.modelData != null ? this.modelData.get("default").value() : -1;
+        return stack;
+    }
+
+    protected Map<String, ResourceLocation> getModelMap() {
+        return this.itemData.itemResource() == null ? Map.of() : this.itemData.itemResource().models();
+    }
+
+    protected ResourceLocation getModel() {
+        if (this.itemData.itemResource() != null)
+            return this.itemData.itemResource().models().get("default");
+
+        return vanillaItem.components().get(DataComponents.ITEM_MODEL);
     }
 
     @Override
@@ -148,30 +138,16 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
 
     @Override
     @NotNull
-    public EquipmentSlot getEquipmentSlot() {
-        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
-            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
-                var slot = itemBehaviour.getEquipmentSlot();
-                if (slot != EquipmentSlot.MAINHAND) {
-                    return slot;
-                }
-            }
-        }
-        return EquipmentSlot.MAINHAND;
-    }
-
-    @Override
-    @NotNull
-    public InteractionResultHolder<ItemStack> use(Level level, Player user, InteractionHand hand) {
+    public InteractionResult use(Level level, Player user, InteractionHand hand) {
         var res = super.use(level, user, hand);
-        if (res.getResult().consumesAction()) {
+        if (res.consumesAction()) {
             return res;
         }
 
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
                 res = itemBehaviour.use(this, level, user, hand);
-                if (res.getResult().consumesAction()) {
+                if (res.consumesAction()) {
                     return res;
                 }
             }
@@ -213,9 +189,5 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
         }
 
         return true;
-    }
-
-    public ItemData getItemData() {
-        return this.itemData;
     }
 }

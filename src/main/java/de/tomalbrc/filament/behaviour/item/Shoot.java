@@ -10,7 +10,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
@@ -36,12 +37,12 @@ public class Shoot implements ItemBehaviour<Shoot.ShootConfig> {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Item item, Level level, Player user, InteractionHand hand) {
-        user.getCooldowns().addCooldown(item, 8);
+    public InteractionResult use(Item item, Level level, Player user, InteractionHand hand) {
+        user.getCooldowns().addCooldown(user.getItemInHand(hand), 8);
         ItemStack itemStack = user.getItemInHand(hand);
 
         if (!level.isClientSide) {
-            BaseProjectileEntity projectile = EntityRegistry.BASE_PROJECTILE.create(level);
+            BaseProjectileEntity projectile = EntityRegistry.BASE_PROJECTILE.create(level, EntitySpawnReason.TRIGGERED);
             if (projectile != null) {
                 projectile.setPos(user.position().add(0, user.getEyeHeight(), 0));
                 Util.damageAndBreak(1, itemStack, user, Player.getSlotForHand(hand));
@@ -60,7 +61,7 @@ public class Shoot implements ItemBehaviour<Shoot.ShootConfig> {
                 projectile.setXRot(user.getXRot());
                 projectile.setDeltaMovement(deltaMovement.x, deltaMovement.y, deltaMovement.z);
 
-                var projItem = this.config.projectile != null ? BuiltInRegistries.ITEM.get(this.config.projectile).getDefaultInstance() : itemStack.copyWithCount(1);
+                var projItem = this.config.projectile != null ? BuiltInRegistries.ITEM.get(this.config.projectile).orElseThrow().value().getDefaultInstance() : itemStack.copyWithCount(1);
                 projectile.setProjectileStack(projItem);
                 projectile.setPickupStack(projItem);
                 projectile.setOwner(user);
@@ -72,7 +73,7 @@ public class Shoot implements ItemBehaviour<Shoot.ShootConfig> {
             }
 
             level.addFreshEntity(projectile);
-            level.playSound(null, projectile, this.config.sound != null ? BuiltInRegistries.SOUND_EVENT.get(this.config.sound) : SoundEvents.TRIDENT_THROW.value(), SoundSource.NEUTRAL, 1.0F, 1.0F);
+            level.playSound(null, projectile, this.config.sound != null ? BuiltInRegistries.SOUND_EVENT.get(this.config.sound).orElseThrow().value() : SoundEvents.TRIDENT_THROW.value(), SoundSource.NEUTRAL, 1.0F, 1.0F);
             if (!user.isCreative() && this.config.consumes) {
                 itemStack.shrink(1);
             }
@@ -80,7 +81,7 @@ public class Shoot implements ItemBehaviour<Shoot.ShootConfig> {
 
         user.awardStat(Stats.ITEM_USED.get(item));
 
-        return InteractionResultHolder.consume(itemStack);
+        return InteractionResult.CONSUME;
     }
 
     public static class ShootConfig {

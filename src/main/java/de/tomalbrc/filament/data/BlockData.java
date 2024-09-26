@@ -77,13 +77,13 @@ public record BlockData(
                 BlockState requestedState = PolymerBlockResourceUtils.requestBlock(this.blockModelType, blockModel);
 
                 if (entry.getKey().equals("default")) {
-                    val.put(BuiltInRegistries.BLOCK.get(id).defaultBlockState(), BlockStateMeta.of(requestedState, blockModel));
+                    val.put(BuiltInRegistries.BLOCK.get(id).orElseThrow().value().defaultBlockState(), BlockStateMeta.of(requestedState, blockModel));
                 }
                 else {
                     BlockStateParser.BlockResult parsed;
                     String str = String.format("%s[%s]", id, entry.getKey());
                     try {
-                        parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), str, false);
+                        parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK, str, false);
                     } catch (CommandSyntaxException e) {
                         e.printStackTrace();
                         throw new JsonParseException("Invalid BlockState value: " + str);

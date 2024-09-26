@@ -6,10 +6,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +26,7 @@ public class Execute implements ItemBehaviour<Execute.ExecuteConfig> {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Item item, Level level, Player user, InteractionHand hand) {
+    public InteractionResult use(Item item, Level level, Player user, InteractionHand hand) {
         if (this.config.command != null) {
             user.getServer().getCommands().performPrefixedCommand(user.createCommandSourceStack(), this.config.command);
 
@@ -35,13 +34,13 @@ public class Execute implements ItemBehaviour<Execute.ExecuteConfig> {
 
             if (this.config.sound != null) {
                 var sound = this.config.sound;
-                level.playSound(null, user, BuiltInRegistries.SOUND_EVENT.get(sound), SoundSource.NEUTRAL, 1.0F, 1.0F);
+                level.playSound(null, user, BuiltInRegistries.SOUND_EVENT.get(sound).orElseThrow().value(), SoundSource.NEUTRAL, 1.0F, 1.0F);
             }
 
             if (this.config.consumes) {
                 user.getItemInHand(hand).shrink(1);
             }
-            return InteractionResultHolder.consume(user.getItemInHand(hand));
+            return InteractionResult.CONSUME;
         }
 
         return ItemBehaviour.super.use(item, level, user, hand);

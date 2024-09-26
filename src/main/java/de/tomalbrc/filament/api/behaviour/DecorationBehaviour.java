@@ -13,6 +13,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
+@SuppressWarnings("unused")
 public interface DecorationBehaviour<T> extends Behaviour<T> {
     default void init(DecorationBlockEntity blockEntity) {
     }

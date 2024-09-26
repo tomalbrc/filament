@@ -10,6 +10,8 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -20,6 +22,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.function.Function;
 
 public class ItemRegistry {
     public static int REGISTERED_ITEMS = 0;
@@ -37,17 +40,22 @@ public class ItemRegistry {
             properties.component(component.type(), component.value());
         }
 
-        SimpleItem item = new SimpleItem(null, properties, data, data.vanillaItem());
 
+        var item = ItemRegistry.registerItem(key(data.id()), (newProps) -> new SimpleItem(null, newProps, data, data.vanillaItem()), properties, data.itemGroup() != null ? data.itemGroup() : Constants.ITEM_GROUP_ID);
         BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
 
-        ItemRegistry.registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.ITEM_GROUP_ID);
         REGISTERED_ITEMS++;
     }
 
-    public static void registerItem(ResourceLocation identifier, Item item, ResourceLocation itemGroup) {
+    public static ResourceKey<Item> key(ResourceLocation id) {
+        return ResourceKey.create(Registries.ITEM, id);
+    }
+
+    public static <T extends Item> T registerItem(ResourceKey<Item> identifier, Function<Item.Properties, T> function, Item.Properties properties, ResourceLocation itemGroup) {
+        T item = function.apply(properties.setId(identifier));
         Registry.register(BuiltInRegistries.ITEM, identifier, item);
         ItemGroupRegistry.addItem(itemGroup, item);
+        return item;
     }
 
     public static class ItemDataReloadListener implements SimpleSynchronousResourceReloadListener {

@@ -10,10 +10,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -32,8 +30,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.BiConsumer;
 
 public abstract class DecorationBlock extends Block implements PolymerBlock, SimpleWaterloggedBlock, VirtualDestroyStage.Marker {
     final protected ResourceLocation decorationId;
@@ -78,13 +74,6 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
     }
 
     @Override
-    public void onExplosionHit(BlockState blockState, Level level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
-        if (!blockState.isAir() && explosion.getBlockInteraction() != Explosion.BlockInteraction.TRIGGER_BLOCK) {
-            this.removeDecoration(level, blockPos, null);
-        }
-    }
-
-    @Override
     @MethodsReturnNonnullByDefault
     public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
         BlockState returnVal = super.playerWillDestroy(level, blockPos, blockState, player);
@@ -113,8 +102,8 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
     public boolean canPlaceLiquid(@Nullable Player player, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
         if (DecorationRegistry.isDecoration(blockState) &&
                 ((DecorationBlock) blockState.getBlock()).getDecorationData() != null &&
-                ((DecorationBlock) blockState.getBlock()).getDecorationData().properties().waterloggable) {
-            return SimpleWaterloggedBlock.super.canPlaceLiquid(player, blockGetter, blockPos, blockState, fluid);
+                ((DecorationBlock) blockState.getBlock()).getDecorationData().properties().waterloggable || !((DecorationBlock) blockState.getBlock()).getDecorationData().properties().solid) {
+            return fluid == Fluids.WATER || fluid == Fluids.FLOWING_WATER;
         }
         return false;
     }

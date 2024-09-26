@@ -11,7 +11,7 @@ public class StrippableRegistry {
     private static final Map<Block, ResourceLocation> strippables = new Reference2ObjectArrayMap<>();
 
     public static Block get(Block block) {
-        return BuiltInRegistries.BLOCK.get(strippables.get(block));
+        return BuiltInRegistries.BLOCK.get(strippables.get(block)).orElseThrow().value();
     }
 
     public static boolean has(Block block) {

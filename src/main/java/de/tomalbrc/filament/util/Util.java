@@ -115,9 +115,7 @@ public class Util {
     public static Vector2f barrierDimensions(List<DecorationData.BlockConfig> blockConfigs, float rotation) {
         if (!blockConfigs.isEmpty()) {
             List<BlockPos> posList = new ObjectArrayList<>();
-            Util.forEachRotated(blockConfigs, BlockPos.ZERO, rotation, blockPos2 -> {
-                posList.add(blockPos2);
-            });
+            Util.forEachRotated(blockConfigs, BlockPos.ZERO, rotation, posList::add);
             Optional<BoundingBox> boundingBox = BoundingBox.encapsulatingPositions(posList);
             if (boundingBox.isPresent()) {
                 return new Vector2f(java.lang.Math.max(boundingBox.get().getXSpan(), boundingBox.get().getZSpan()), boundingBox.get().getYSpan());
@@ -166,11 +164,6 @@ public class Util {
         InteractionElement element = new InteractionElement();
         element.setHandler(new VirtualElement.InteractionHandler() {
             @Override
-            public void interactAt(ServerPlayer player, InteractionHand hand, Vec3 pos) {
-
-            }
-
-            @Override
             public void attack(ServerPlayer player) {
                 if (player.gameMode.getGameModeForPlayer() != GameType.ADVENTURE) {
                     var level = element.getHolder().getAttachment().getWorld();
@@ -200,7 +193,7 @@ public class Util {
     }
 
     public static ItemDisplayElement decorationItemDisplay(DecorationData data, Direction direction, float rotation) {
-        ItemDisplayElement itemDisplayElement = new ItemDisplayElement(BuiltInRegistries.ITEM.get(data.id()));
+        ItemDisplayElement itemDisplayElement = new ItemDisplayElement(BuiltInRegistries.ITEM.get(data.id()).orElseThrow().value());
         itemDisplayElement.setTeleportDuration(1);
 
         if (data != null && data.properties().glow) {
@@ -267,6 +260,11 @@ public class Util {
         for (SimpleSynchronousResourceReloadListener listener : FilamentReloadUtil.getReloadListeners()) {
             listener.onResourceManagerReload(resourceManager);
         }
+
+        ((RegistryUnfreezer)BuiltInRegistries.BLOCK).filament$freeze();
+        ((RegistryUnfreezer)BuiltInRegistries.ITEM).filament$freeze();
+        ((RegistryUnfreezer)BuiltInRegistries.BLOCK_ENTITY_TYPE).filament$freeze();
+        ((RegistryUnfreezer)BuiltInRegistries.CREATIVE_MODE_TAB).filament$freeze();
     }
 
     public static void damageAndBreak(int i, ItemStack itemStack, LivingEntity livingEntity, EquipmentSlot slot) {

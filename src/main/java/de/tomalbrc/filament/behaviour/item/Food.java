@@ -34,10 +34,5 @@ public class Food implements ItemBehaviour<Food.FoodConfig> {
          * Indicates whether the item can be eaten when the hunger bar is full
          */
         public boolean canAlwaysEat = false;
-
-        /**
-         * Fast food, 0.8 secs, default is 1.6f
-         */
-        public boolean fastfood = false;
     }
 }

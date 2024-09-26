@@ -12,6 +12,8 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -23,6 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.function.Function;
 
 public class BlockRegistry {
     public static int REGISTERED_BLOCKS = 0;
@@ -37,26 +40,29 @@ public class BlockRegistry {
         BlockProperties properties = data.properties();
         BlockBehaviour.Properties blockProperties = properties.toBlockProperties();
 
-        SimpleBlock customBlock = new SimpleBlock(blockProperties, data);
+        SimpleBlock customBlock = BlockRegistry.registerBlock(key(data.id()), (props)-> new SimpleBlock(props, data), blockProperties);
         BehaviourUtil.postInitBlock(customBlock, customBlock, data.behaviourConfig());
 
         var itemProperties = data.properties().toItemProperties();
         for (TypedDataComponent component : data.components()) {
             itemProperties.component(component.type(), component.value());
         }
-        SimpleBlockItem item = new SimpleBlockItem(itemProperties, customBlock, data);
-        BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
 
-        BlockRegistry.registerBlock(data.id(), customBlock);
-        ItemRegistry.registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.BLOCK_GROUP_ID);
+        SimpleBlockItem item = ItemRegistry.registerItem(ItemRegistry.key(data.id()), (newProps) -> new SimpleBlockItem(newProps, customBlock, data), itemProperties, data.itemGroup() != null ? data.itemGroup() : Constants.BLOCK_GROUP_ID);
+        BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
 
         customBlock.postRegister();
 
         REGISTERED_BLOCKS++;
     }
 
-    public static void registerBlock(ResourceLocation identifier, Block block) {
-        Registry.register(BuiltInRegistries.BLOCK, identifier, block);
+    public static ResourceKey<Block> key(ResourceLocation id) {
+        return ResourceKey.create(Registries.BLOCK, id);
+    }
+
+    public static <T extends Block> T registerBlock(ResourceKey<Block> resourceKey, Function<BlockBehaviour.Properties, T> function, BlockBehaviour.Properties properties) {
+        T block = function.apply(properties.setId(resourceKey));
+        return Registry.register(BuiltInRegistries.BLOCK, resourceKey, block);
     }
 
     public static class BlockDataReloadListener implements SimpleSynchronousResourceReloadListener {

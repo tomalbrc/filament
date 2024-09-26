@@ -4,6 +4,7 @@ import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -14,11 +15,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.animal.Bucketable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -51,15 +51,16 @@ public class Trap implements ItemBehaviour<Trap.TrapConfig> {
 
     @Override
     public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
-        if (itemStack.get(DataComponents.BUCKET_ENTITY_DATA) != null && itemStack.get(DataComponents.BUCKET_ENTITY_DATA).contains("Type")) {
-            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(itemStack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag().getString("Type")));
+        var bucketData = itemStack.get(DataComponents.BUCKET_ENTITY_DATA);
+        if (bucketData != null && bucketData.contains("Type")) {
+            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(bucketData.copyTag().getString("Type"))).orElseThrow().value();
             list.add(Component.literal("Contains ").append(Component.translatable(type.getDescriptionId()))); // todo: make "Contains " translateable?
         } else {
             if (this.config.requiredEffects != null) {
                 list.add(Component.literal("Requires effects: "));
                 for (int i = 0; i < this.config.requiredEffects.size(); i++) {
                     var e = this.config.requiredEffects.get(i);
-                    list.add(Component.literal("› ").append(Component.translatable(BuiltInRegistries.MOB_EFFECT.get(e).getDescriptionId()))); // todo: make "Contains " translateable?
+                    list.add(Component.literal("› ").append(Component.translatable(BuiltInRegistries.MOB_EFFECT.get(e).orElseThrow().value().getDescriptionId()))); // todo: make "Contains " translateable?
                 }
             }
             list.add(Component.literal("Chance: " + this.config.chance + "%"));
@@ -67,10 +68,9 @@ public class Trap implements ItemBehaviour<Trap.TrapConfig> {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Item item, Level level, Player user, InteractionHand hand) {
-        ItemStack itemStack = user.getItemInHand(hand);
+    public InteractionResult use(Item item, Level level, Player user, InteractionHand hand) {
         this.useTrapAndBreak(item, user, hand);
-        return InteractionResultHolder.consume(itemStack);
+        return InteractionResult.CONSUME;
     }
 
     public void useTrapAndBreak(Item item, Player player, InteractionHand hand) {
@@ -78,7 +78,7 @@ public class Trap implements ItemBehaviour<Trap.TrapConfig> {
 
         player.startUsingItem(hand);
 
-        if (this.config.useDuration > 0) player.getCooldowns().addCooldown(item, this.config.useDuration);
+        if (this.config.useDuration > 0) player.getCooldowns().addCooldown(itemStack, this.config.useDuration);
 
         player.awardStat(Stats.ITEM_USED.get(item));
 
@@ -102,6 +102,14 @@ public class Trap implements ItemBehaviour<Trap.TrapConfig> {
         return modelData != null ? canSpawn(itemStack) ? modelData.get("trapped").value() : modelData.get("default").value() : -1;
     }
 
+    @Override
+    public ItemStack modifyPolymerItemStack(Map<String, ResourceLocation> modelData, ItemStack self, ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
+        if (canSpawn(self)) {
+            itemStack.set(DataComponents.ITEM_MODEL, modelData.get("trapped"));
+        }
+        return itemStack;
+    }
+
     private static boolean canSpawn(ItemStack useOnContext) {
         return useOnContext.get(DataComponents.BUCKET_ENTITY_DATA) == null ? false : useOnContext.get(DataComponents.BUCKET_ENTITY_DATA).contains("Type");
     }
@@ -109,8 +117,8 @@ public class Trap implements ItemBehaviour<Trap.TrapConfig> {
     private void spawn(ServerLevel serverLevel, Player player, InteractionHand hand, ItemStack itemStack, BlockPos blockPos) {
         var compoundTag = itemStack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag();
 
-        EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(compoundTag.getString("Type")));
-        Entity entity = entityType.spawn(serverLevel, blockPos.above(1), MobSpawnType.BUCKET);
+        EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(compoundTag.getString("Type"))).orElseThrow().value();
+        Entity entity = entityType.spawn(serverLevel, blockPos.above(1), EntitySpawnReason.BUCKET);
         if (entity instanceof Mob mob) {
             this.loadFromTag(mob, compoundTag);
         }
@@ -129,7 +137,7 @@ public class Trap implements ItemBehaviour<Trap.TrapConfig> {
             hasEffects = false;
             for (int i = 0; i < this.config.requiredEffects.size(); i++) {
                 var effectId = this.config.requiredEffects.get(i);
-                var optional = BuiltInRegistries.MOB_EFFECT.getHolder(effectId);
+                var optional = BuiltInRegistries.MOB_EFFECT.get(effectId);
                 if (optional.isPresent() && mob.hasEffect(optional.get())) {
                     hasEffects = true;
                 }

@@ -1,8 +1,6 @@
 package de.tomalbrc.filament.mixin.cosmetic;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import de.tomalbrc.filament.behaviour.Behaviours;
-import de.tomalbrc.filament.behaviour.item.Armor;
 import de.tomalbrc.filament.behaviour.item.Cosmetic;
 import de.tomalbrc.filament.cosmetic.AnimatedCosmeticHolder;
 import de.tomalbrc.filament.cosmetic.CosmeticHolder;
@@ -40,10 +38,6 @@ public class LivingEntityMixin implements CosmeticInterface {
         Cosmetic.CosmeticConfig cosmetic = CosmeticUtil.getCosmeticData(itemStack);
         if (cosmetic != null) {
             cir.setReturnValue(cosmetic.slot);
-        }
-        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.ARMOR))  {
-            Armor.ArmorConfig armor = simpleItem.get(Behaviours.ARMOR).getConfig();
-            cir.setReturnValue(armor.slot);
         }
     }
 

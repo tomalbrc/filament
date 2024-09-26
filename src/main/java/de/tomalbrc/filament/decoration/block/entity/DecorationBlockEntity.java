@@ -69,8 +69,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     public void loadMain(CompoundTag compoundTag, HolderLookup.Provider provider) {
         DecorationData decorationData = this.getDecorationData();
         if (decorationData == null) {
-            this.itemStack.getDescriptionId();
-            Filament.LOGGER.error("No decoration formats for " + this.itemStack.getDescriptionId() + "!");
+            Filament.LOGGER.error("No decoration formats for " + this.itemStack.getItem().getDescriptionId() + "!");
         } else if (this.decorationHolder == null) {
             this.setupBehaviour(decorationData);
         }

@@ -48,7 +48,7 @@ public class BlockProperties extends ItemProperties {
         props.isValidSpawn((blockState,blockGetter,blockPos,entityType) -> this.allowsSpawning);
         props.pushReaction(this.pushReaction);
 
-        return props.dynamicShape();
+        return props;
     }
 
     public boolean mayBeRedstoneConductor() {

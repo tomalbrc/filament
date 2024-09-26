@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.redstone.Orientation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -78,14 +79,14 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     public BlockState getPolymerBlockState(BlockState blockState) {
-        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+        if (this.stateMap != null) for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 BlockState polyBlockState = blockBehaviour.getCustomPolymerBlockState(this.stateMap, blockState);
                 if (polyBlockState != null)
                     return polyBlockState;
             }
         }
-        return this.stateMap.get(blockState) != null ? this.stateMap.get(blockState).blockState() : Blocks.BEDROCK.defaultBlockState();
+        return this.stateMap != null && this.stateMap.get(blockState) != null ? this.stateMap.get(blockState).blockState() : Blocks.BEDROCK.defaultBlockState();
     }
 
     @Override
@@ -122,8 +123,8 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos2, boolean bl) {
-        this.forEach(x -> x.neighborChanged(blockState, level, blockPos, block, blockPos2, bl));
+    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, Orientation orientation, boolean bl) {
+        this.forEach(x -> x.neighborChanged(blockState, level, blockPos, block, orientation, bl));
     }
 
     @Override
@@ -354,7 +355,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     @Override
     public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
-            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
                 var res = bonemealableBlock.isValidBonemealTarget(levelReader, blockPos, blockState);
                 if (res)
                     return true;
@@ -366,7 +367,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     @Override
     public boolean isBonemealSuccess(Level level, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
-            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
                 var res = bonemealableBlock.isBonemealSuccess(level, randomSource, blockPos, blockState);
                 if (res)
                     return true;
@@ -378,7 +379,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     @Override
     public void performBonemeal(ServerLevel serverLevel, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
-            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
                 bonemealableBlock.performBonemeal(serverLevel, randomSource, blockPos, blockState);
             }
         }
@@ -388,7 +389,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     public Type getType() {
         var def = BonemealableBlock.super.getType();
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
-            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
                 var res = bonemealableBlock.getType();
                 if (!res.equals(def))
                     return res;

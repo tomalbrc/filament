@@ -57,7 +57,7 @@ public class Stripper implements ItemBehaviour<Stripper.Config> {
                 itemStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(useOnContext.getHand()));
             }
 
-            return InteractionResult.sidedSuccess(level.isClientSide);
+            return InteractionResult.SUCCESS;
         }
     }
 

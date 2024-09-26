@@ -56,11 +56,17 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
 
         if (!compoundTag.contains(VERSION)) {
             this.version = 1; // upgrade old format
-            if (compoundTag.contains(MAIN)) this.main = NbtUtils.readBlockPos(compoundTag, MAIN).get().subtract(this.worldPosition);
+            if (compoundTag.contains(MAIN)) {
+                var optional = NbtUtils.readBlockPos(compoundTag, MAIN);
+                this.main = optional.orElse(this.main).subtract(this.worldPosition);
+            }
         }
         else {
             this.version = compoundTag.getInt(VERSION);
-            if (compoundTag.contains(MAIN)) this.main = NbtUtils.readBlockPos(compoundTag, MAIN).get();
+            if (compoundTag.contains(MAIN)) {
+                var optional = NbtUtils.readBlockPos(compoundTag, MAIN);
+                this.main = optional.orElse(this.main);
+            }
         }
 
         if (compoundTag.contains(ITEM)) {
@@ -68,7 +74,7 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
         }
 
         if (this.itemStack == null || this.itemStack.isEmpty()) {
-            this.itemStack = BuiltInRegistries.ITEM.get(((DecorationBlock)this.getBlockState().getBlock()).getDecorationData().id()).getDefaultInstance();
+            this.itemStack = BuiltInRegistries.ITEM.get(((DecorationBlock)this.getBlockState().getBlock()).getDecorationData().id()).orElseThrow().value().getDefaultInstance();
         }
 
         if (compoundTag.contains(PASSTHROUGH)) {
@@ -89,9 +95,13 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
         super.saveAdditional(compoundTag, provider);
 
-        if (this.itemStack == null) this.itemStack = BuiltInRegistries.ITEM.get(this.getBlockState().getBlockHolder().unwrapKey().get().location()).getDefaultInstance();
-
         if (this.itemStack == null) {
+            var optionalKey = this.getBlockState().getBlockHolder().unwrapKey();
+            var optional = BuiltInRegistries.ITEM.get(optionalKey.orElseThrow().location());
+            optional.ifPresent(item -> this.itemStack = item.value().getDefaultInstance());
+        }
+
+        if (this.itemStack == null && this.level != null) {
             Filament.LOGGER.error("No item for decoration! Removing decoration block entity at " + this.getBlockPos().toShortString());
             this.level.destroyBlock(this.getBlockPos(), false);
             this.setRemoved();

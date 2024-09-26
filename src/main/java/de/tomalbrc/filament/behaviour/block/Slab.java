@@ -100,7 +100,7 @@ public class Slab implements BlockBehaviour<Slab.SlabConfig>, SimpleWaterloggedB
 
     @Override
     public FluidState getFluidState(BlockState blockState) {
-        if (blockState.getValue(BlockStateProperties.WATERLOGGED).booleanValue()) {
+        if (blockState.getValue(BlockStateProperties.WATERLOGGED)) {
             return Fluids.WATER.getSource(false);
         }
         return null;
@@ -124,7 +124,7 @@ public class Slab implements BlockBehaviour<Slab.SlabConfig>, SimpleWaterloggedB
 
     @Override
     public BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) {
-        if (blockState.getValue(BlockStateProperties.WATERLOGGED).booleanValue()) {
+        if (blockState.getValue(BlockStateProperties.WATERLOGGED)) {
             levelAccessor.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
         }
         return blockState;
@@ -151,7 +151,7 @@ public class Slab implements BlockBehaviour<Slab.SlabConfig>, SimpleWaterloggedB
             BlockStateParser.BlockResult parsed;
             String str = String.format("%s[%s]", data.id(), entry.getKey());
             try {
-                parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), str, false);
+                parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK, str, false);
             } catch (CommandSyntaxException e) {
                 e.printStackTrace();
                 throw new JsonParseException("Invalid BlockState value: " + str);

@@ -29,12 +29,14 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.function.Function;
 
 public class DecorationRegistry {
     public static int REGISTERED_BLOCK_ENTITIES = 0;
@@ -50,30 +52,18 @@ public class DecorationRegistry {
     }
 
     static public void register(DecorationData data) {
-        if (decorations.containsKey(data.id())) return;
-
+        if (decorations.containsKey(data.id())) {
+            decorations.put(data.id(), data); // replace anyway for /reload
+            return;
+        }
         decorations.put(data.id(), data);
 
-        DecorationBlock block;
-        BlockBehaviour.Properties props = data.properties().toBlockProperties();
+        BlockBehaviour.Properties blockProperties = data.properties().toBlockProperties();
 
-        if (!data.isSimple()) {
-            block = new ComplexDecorationBlock(props.pushReaction(PushReaction.BLOCK), data.id());
-
-            BlockEntityType<DecorationBlockEntity> DECORATION_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(DecorationBlockEntity::new, block).build();
-            EntityRegistry.registerBlockEntity(data.id(), DECORATION_BLOCK_ENTITY);
-
-            decorationBlockEntities.put(block, DECORATION_BLOCK_ENTITY);
-            REGISTERED_BLOCK_ENTITIES++;
-        } else {
-            block = new SimpleDecorationBlock(props, data.id());
-        }
-
+        var block = BlockRegistry.registerBlock(BlockRegistry.key(data.id()), getBlockCreator(data), blockProperties);
         decorationBlocks.put(data.id(), block);
-        BlockRegistry.registerBlock(data.id(), block);
 
         Item.Properties properties = data.properties().toItemProperties();
-
         for (TypedDataComponent component : data.components()) {
             properties.component(component.type(), component.value());
         }
@@ -88,11 +78,31 @@ public class DecorationRegistry {
             properties.component(DataComponents.DYED_COLOR, new DyedItemColor(0xdaad6d, false));
         }
 
-        DecorationItem item = new DecorationItem(block, data, properties);
+        var item = ItemRegistry.registerItem(ItemRegistry.key(data.id()), (newProps) -> new DecorationItem(block, data, newProps), properties, data.itemGroup() != null ? data.itemGroup() : Constants.DECORATION_GROUP_ID);
         BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
-        ItemRegistry.registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.DECORATION_GROUP_ID);
 
         REGISTERED_DECORATIONS++;
+    }
+
+    @NotNull
+    private static Function<BlockBehaviour.Properties, Block> getBlockCreator(DecorationData data) {
+        Function<BlockBehaviour.Properties, Block> gen;
+        if (!data.isSimple()) {
+            gen = (x) -> {
+                var block = new ComplexDecorationBlock(x.pushReaction(PushReaction.BLOCK), data.id());
+
+                BlockEntityType<DecorationBlockEntity> DECORATION_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(DecorationBlockEntity::new, block).build();
+                EntityRegistry.registerBlockEntity(EntityRegistry.key(data.id()), DECORATION_BLOCK_ENTITY);
+
+                decorationBlockEntities.put(block, DECORATION_BLOCK_ENTITY);
+                REGISTERED_BLOCK_ENTITIES++;
+
+                return block;
+            };
+        } else {
+            gen = (x) -> new SimpleDecorationBlock(x, data.id());
+        }
+        return gen;
     }
 
     public static DecorationData getDecorationDefinition(ResourceLocation resourceLocation) {
