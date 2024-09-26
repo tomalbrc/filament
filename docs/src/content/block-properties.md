@@ -42,6 +42,8 @@ Resistance of the block/the time required to destroy the block.
 
 The destroyTime is used as explosionResistance if explosionResistance is not explicitly specified.
 
+For indestructible blocks use a destroyTime of -1.
+
 Defaults to `0`
 
 ### `redstoneConductor`:
