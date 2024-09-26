@@ -16,16 +16,16 @@ import org.joml.Vector3f;
 /**
  * Cosmetics; either head or chestplate slot, can be Blockbenchmodel for chestplate slot or simple item model for either
  */
-public class Cosmetic implements ItemBehaviour<Cosmetic.CosmeticConfig> {
-    private final CosmeticConfig config;
+public class Cosmetic implements ItemBehaviour<Cosmetic.Config> {
+    private final Config config;
 
-    public Cosmetic(CosmeticConfig config) {
+    public Cosmetic(Config config) {
         this.config = config;
     }
 
     @Override
     @NotNull
-    public CosmeticConfig getConfig() {
+    public Cosmetic.Config getConfig() {
         return this.config;
     }
 
@@ -43,7 +43,7 @@ public class Cosmetic implements ItemBehaviour<Cosmetic.CosmeticConfig> {
         return this.config.slot;
     }
 
-    public static class CosmeticConfig {
+    public static class Config {
         /**
          * The equipment slot for the cosmetic (head, chest).
          */

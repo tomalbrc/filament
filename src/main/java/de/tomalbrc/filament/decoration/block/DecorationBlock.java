@@ -113,8 +113,9 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
     public boolean canPlaceLiquid(@Nullable Player player, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
         if (DecorationRegistry.isDecoration(blockState) &&
                 ((DecorationBlock) blockState.getBlock()).getDecorationData() != null &&
-                ((DecorationBlock) blockState.getBlock()).getDecorationData().properties().waterloggable) {
-            return SimpleWaterloggedBlock.super.canPlaceLiquid(player, blockGetter, blockPos, blockState, fluid);
+                (((DecorationBlock) blockState.getBlock()).getDecorationData().properties().waterloggable ||
+                !((DecorationBlock) blockState.getBlock()).getDecorationData().properties().solid)) {
+            return fluid == Fluids.WATER || fluid == Fluids.FLOWING_WATER;
         }
         return false;
     }

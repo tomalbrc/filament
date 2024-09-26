@@ -28,7 +28,7 @@ public class CosmeticHolder extends ElementHolder {
 
         this.displayElement = new ItemDisplayElement(itemStack);
 
-        Cosmetic.CosmeticConfig cosmeticData = CosmeticUtil.getCosmeticData(itemStack);
+        Cosmetic.Config cosmeticData = CosmeticUtil.getCosmeticData(itemStack);
         if (cosmeticData != null) {
             this.displayElement.setTranslation(cosmeticData.translation);
             this.displayElement.setScale(cosmeticData.scale);

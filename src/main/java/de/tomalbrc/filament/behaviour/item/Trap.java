@@ -36,16 +36,16 @@ import java.util.Map;
 /**
  * Mob trap
  */
-public class Trap implements ItemBehaviour<Trap.TrapConfig> {
-    private final TrapConfig config;
+public class Trap implements ItemBehaviour<Trap.Config> {
+    private final Config config;
 
-    public Trap(TrapConfig config) {
+    public Trap(Config config) {
         this.config = config;
     }
 
     @Override
     @NotNull
-    public TrapConfig getConfig() {
+    public Trap.Config getConfig() {
         return config;
     }
 
@@ -155,7 +155,7 @@ public class Trap implements ItemBehaviour<Trap.TrapConfig> {
         Bucketable.loadDefaultDataFromBucketTag(mob, compoundTag);
     }
 
-    public static class TrapConfig {
+    public static class Config {
         // allowed util types to trap
         public List<ResourceLocation> types = null;
 

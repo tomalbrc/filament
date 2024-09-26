@@ -25,18 +25,18 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Armor item behaviour, using fancypants shader via polymer or armor trims
  */
-public class Armor implements ItemBehaviour<Armor.ArmorConfig> {
-    private final ArmorConfig config;
+public class Armor implements ItemBehaviour<Armor.Config> {
+    private final Config config;
     private PolymerArmorModel armorModel;
     private FilamentTrimPatterns.FilamentTrimHolder trimHolder;
 
-    public Armor(ArmorConfig config) {
+    public Armor(Config config) {
         this.config = config;
     }
 
     @Override
     @NotNull
-    public ArmorConfig getConfig() {
+    public Armor.Config getConfig() {
         return this.config;
     }
 
@@ -74,7 +74,7 @@ public class Armor implements ItemBehaviour<Armor.ArmorConfig> {
         return this.config.slot;
     }
 
-    public static class ArmorConfig {
+    public static class Config {
         /**
          * The equipment slot for the armor piece (e.g., head, chest, legs, or feet).
          */

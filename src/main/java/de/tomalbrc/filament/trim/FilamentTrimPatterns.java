@@ -37,19 +37,19 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class FilamentTrimPatterns {
-    private static final Map<Armor.ArmorConfig, FilamentTrimHolder> trimConfigs = new Object2ObjectOpenHashMap();
+    private static final Map<Armor.Config, FilamentTrimHolder> trimConfigs = new Object2ObjectOpenHashMap();
 
     private static final Map<Item, BiConsumer<RegistryAccess, ItemStack>> modelList = new Reference2ObjectOpenHashMap<>();
 
     public static final FilamentTrimHolder CHAIN_TRIM = addConfig(fakeChainmailConfig());
 
-    private static Armor.ArmorConfig fakeChainmailConfig() {
-        var conf = new Armor.ArmorConfig();
+    private static Armor.Config fakeChainmailConfig() {
+        var conf = new Armor.Config();
         conf.texture = ResourceLocation.withDefaultNamespace("chainmail");
         return conf;
     }
 
-    public static FilamentTrimHolder addConfig(Armor.ArmorConfig config) {
+    public static FilamentTrimHolder addConfig(Armor.Config config) {
         var tmpHolder = trimConfigs.get(config);
         if (tmpHolder != null)
             return tmpHolder;
@@ -62,7 +62,7 @@ public class FilamentTrimPatterns {
     }
 
     public static void bootstrap(WritableRegistry<TrimPattern> registry) {
-        for (Map.Entry<Armor.ArmorConfig, FilamentTrimHolder> entry : trimConfigs.entrySet()) {
+        for (Map.Entry<Armor.Config, FilamentTrimHolder> entry : trimConfigs.entrySet()) {
             if (entry.getValue() == CHAIN_TRIM && !overwriteChainMail()) continue;
 
             entry.getValue().trimPattern = register(registry, Items.BARRIER, of(entry.getKey().texture));
@@ -102,7 +102,7 @@ public class FilamentTrimPatterns {
         ResourcePackTrimPatternAtlas atlas = Json.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(data)), ResourcePackTrimPatternAtlas.class);
 
         List<ResourceLocation> resourceLocationList = new ObjectArrayList<>();
-        for (Map.Entry<Armor.ArmorConfig, FilamentTrimHolder> entry : trimConfigs.entrySet()) {
+        for (Map.Entry<Armor.Config, FilamentTrimHolder> entry : trimConfigs.entrySet()) {
             ResourcePackTrimPatternAtlas.Source source = new ResourcePackTrimPatternAtlas.Source();
             source.type = atlas.sources.get(0).type;
             source.palette_key = atlas.sources.get(0).palette_key;
