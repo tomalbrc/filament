@@ -2,6 +2,7 @@ package de.tomalbrc.filament.data.properties;
 
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.Behaviours;
+import eu.pb4.placeholders.api.TextParserUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
@@ -20,7 +21,7 @@ public class ItemProperties {
 
     public void appendHoverText(List<Component> tooltip) {
         if (this.lore != null)
-            this.lore.forEach(line -> tooltip.add(Component.literal(line)));
+            this.lore.forEach(line -> tooltip.add(TextParserUtils.formatText(line)));
     }
 
     public Item.Properties toItemProperties() {
