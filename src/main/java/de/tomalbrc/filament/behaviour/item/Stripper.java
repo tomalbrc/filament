@@ -63,7 +63,7 @@ public class Stripper implements ItemBehaviour<Stripper.Config> {
 
     private BlockState getNewBlockState(Level level, BlockPos blockPos, @Nullable Player player, BlockState blockState) {
         var replacementBlock = AxeItemAccessor.getSTRIPPABLES().get(blockState.getBlock());
-        if (replacementBlock == null) {
+        if (replacementBlock == null && StrippableRegistry.has(blockState.getBlock())) {
             replacementBlock = StrippableRegistry.get(blockState.getBlock());
         }
 
