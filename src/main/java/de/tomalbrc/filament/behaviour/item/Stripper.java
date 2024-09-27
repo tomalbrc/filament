@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -42,7 +41,7 @@ public class Stripper implements ItemBehaviour<Stripper.Config> {
         BlockPos blockPos = useOnContext.getClickedPos();
         Player player = useOnContext.getPlayer();
 
-        BlockState optional = this.getNewBlockState(level, blockPos, player, level.getBlockState(blockPos));
+        BlockState optional = this.getNewBlockState(level, blockPos, level.getBlockState(blockPos));
         if (optional == null) {
             return InteractionResult.PASS;
         } else {
@@ -61,7 +60,7 @@ public class Stripper implements ItemBehaviour<Stripper.Config> {
         }
     }
 
-    private BlockState getNewBlockState(Level level, BlockPos blockPos, @Nullable Player player, BlockState blockState) {
+    private BlockState getNewBlockState(Level level, BlockPos blockPos, BlockState blockState) {
         var replacementBlock = AxeItemAccessor.getSTRIPPABLES().get(blockState.getBlock());
         if (replacementBlock == null && StrippableRegistry.has(blockState.getBlock())) {
             replacementBlock = StrippableRegistry.get(blockState.getBlock());
