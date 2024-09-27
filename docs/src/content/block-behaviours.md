@@ -200,3 +200,11 @@ Defines the block as slab, top, bottom, double, with placements, waterloggable.
 
 - **Block-State-Properties to provide models for**:
   - `type`: top, bottom, double
+
+### `drop_xp` behaviour
+
+Makes the block drop xp when being mined without the silk-touch enchantment.
+
+- **Fields**:
+  - `min`: Minimum amount of XP to drop
+  - `max`: Maximum amount of XP to drop

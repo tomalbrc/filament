@@ -153,6 +153,16 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
+    public void spawnAfterBreak(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, boolean bl) {
+        super.spawnAfterBreak(blockState, serverLevel, blockPos, itemStack, bl);
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
+                blockBehaviour.spawnAfterBreak(blockState, serverLevel, blockPos, itemStack, bl);
+            }
+        }
+    }
+
+    @Override
     public boolean isSignalSource(BlockState blockState) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
@@ -296,6 +306,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
+    @NotNull
     public ItemStack getCloneItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
         ItemStack stack = super.getCloneItemStack(levelReader, blockPos, blockState);
 
@@ -354,7 +365,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     @Override
     public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
-            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
                 var res = bonemealableBlock.isValidBonemealTarget(levelReader, blockPos, blockState);
                 if (res)
                     return true;
@@ -366,7 +377,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     @Override
     public boolean isBonemealSuccess(Level level, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
-            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
                 var res = bonemealableBlock.isBonemealSuccess(level, randomSource, blockPos, blockState);
                 if (res)
                     return true;
@@ -378,17 +389,18 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     @Override
     public void performBonemeal(ServerLevel serverLevel, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
-            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
                 bonemealableBlock.performBonemeal(serverLevel, randomSource, blockPos, blockState);
             }
         }
     }
 
     @Override
+    @NotNull
     public Type getType() {
         var def = BonemealableBlock.super.getType();
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
-            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
                 var res = bonemealableBlock.getType();
                 if (!res.equals(def))
                     return res;

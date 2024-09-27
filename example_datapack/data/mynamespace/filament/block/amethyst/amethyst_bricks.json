@@ -6,6 +6,12 @@
       "default": "minecraft:custom/block/arcanery/amethyst_bricks"
     }
   },
+  "behaviour": {
+    "drop_xp": {
+      "min": 4,
+      "max": 8
+    }
+  },
   "properties": {
     "blockBase": "minecraft:amethyst_block",
     "itemBase": "minecraft:paper"
