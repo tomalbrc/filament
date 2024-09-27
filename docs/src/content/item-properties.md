@@ -34,7 +34,11 @@ Defaults to `64`
 
 ### `lore`:
 
-List of strings to use as item lore
+List of strings to use as item lore. Supports PlaceholderAPI's simple text formatting.
+
+Example: `<c:red>MyLore</c>`
+
+Example: `<lang:'mymod.lore.mylore'>`
 
 ### `fireResistant`:
 
