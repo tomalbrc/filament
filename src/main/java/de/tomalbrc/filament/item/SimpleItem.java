@@ -103,6 +103,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
             }
         }
         this.properties.appendHoverText(list);
+        super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
     }
 
     @Override
