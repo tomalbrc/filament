@@ -38,7 +38,7 @@ public record BlockData(
         @Nullable DataComponentMap components,
         @SerializedName("group")
         @Nullable ResourceLocation itemGroup
-        ) {
+) {
     @Override
     @NotNull
     public BlockProperties properties() {
@@ -89,13 +89,13 @@ public record BlockData(
                 BlockState requestedState = weAreInTrouble ? null : PolymerBlockResourceUtils.requestBlock(finalType, blockModel);
 
                 if (entry.getKey().equals("default")) {
-                    val.put(BuiltInRegistries.BLOCK.get(id).defaultBlockState(), BlockStateMeta.of(weAreInTrouble ? Blocks.BEDROCK.defaultBlockState() : requestedState, blockModel));
+                    val.put(BuiltInRegistries.BLOCK.get(id).orElseThrow().value().defaultBlockState(), BlockStateMeta.of(weAreInTrouble ? Blocks.BEDROCK.defaultBlockState() : requestedState, blockModel));
                 }
                 else {
                     BlockStateParser.BlockResult parsed;
                     String str = String.format("%s[%s]", id, entry.getKey());
                     try {
-                        parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), str, false);
+                        parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK, str, false);
                     } catch (CommandSyntaxException e) {
                         e.printStackTrace();
                         throw new JsonParseException("Invalid BlockState value: " + str);

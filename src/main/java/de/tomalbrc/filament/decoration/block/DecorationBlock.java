@@ -9,13 +9,10 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -32,8 +29,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.BiConsumer;
 
 public abstract class DecorationBlock extends Block implements PolymerBlock, SimpleWaterloggedBlock, VirtualDestroyStage.Marker {
     final protected ResourceLocation decorationId;
@@ -78,13 +73,6 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
     }
 
     @Override
-    public void onExplosionHit(BlockState blockState, Level level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
-        if (!blockState.isAir() && explosion.getBlockInteraction() != Explosion.BlockInteraction.TRIGGER_BLOCK) {
-            this.removeDecoration(level, blockPos, null);
-        }
-    }
-
-    @Override
     @MethodsReturnNonnullByDefault
     public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
         BlockState returnVal = super.playerWillDestroy(level, blockPos, blockState, player);
@@ -113,8 +101,7 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
     public boolean canPlaceLiquid(@Nullable Player player, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
         if (DecorationRegistry.isDecoration(blockState) &&
                 ((DecorationBlock) blockState.getBlock()).getDecorationData() != null &&
-                (((DecorationBlock) blockState.getBlock()).getDecorationData().properties().waterloggable ||
-                !((DecorationBlock) blockState.getBlock()).getDecorationData().properties().solid)) {
+                ((DecorationBlock) blockState.getBlock()).getDecorationData().properties().waterloggable || !((DecorationBlock) blockState.getBlock()).getDecorationData().properties().solid) {
             return fluid == Fluids.WATER || fluid == Fluids.FLOWING_WATER;
         }
         return false;
@@ -140,12 +127,12 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
 
     @Override
     @MethodsReturnNonnullByDefault
-    public BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) {
+    protected BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
         if (blockState.getValue(WATERLOGGED)) {
-            levelAccessor.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
+            scheduledTickAccess.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelReader));
         }
 
-        return super.updateShape(blockState, direction, blockState2, levelAccessor, blockPos, blockPos2);
+        return super.updateShape(blockState, levelReader, scheduledTickAccess, blockPos, direction, blockPos2, blockState2, randomSource);
     }
 
     @Override

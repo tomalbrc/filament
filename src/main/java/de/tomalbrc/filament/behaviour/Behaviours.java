@@ -12,9 +12,8 @@ import net.minecraft.resources.ResourceLocation;
 @SuppressWarnings("unused")
 public class Behaviours {
     // Item
-    public static final BehaviourType<Armor, Armor.Config> ARMOR = registerBehaviour("armor", Armor.class);
     public static final BehaviourType<Cosmetic, Cosmetic.Config> COSMETIC = registerBehaviour("cosmetic", Cosmetic.class);
-    public static final BehaviourType<Execute, Execute.ExecuteConfig> EXECUTE = registerBehaviour("execute", Execute.class);
+    public static final BehaviourType<Execute, Execute.Config> EXECUTE = registerBehaviour("execute", Execute.class);
     public static final BehaviourType<Food, Food.FoodConfig> FOOD = registerBehaviour("food", Food.class);
     public static final BehaviourType<Compostable, Compostable.CompostableConfig> COMPOSTABLE = registerBehaviour("compostable", Compostable.class);
     public static final BehaviourType<Fuel, Fuel.Config> FUEL = registerBehaviour("fuel", Fuel.class);
