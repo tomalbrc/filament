@@ -54,7 +54,7 @@ public class Seat implements DecorationBehaviour<Seat.SeatConfig> {
         seatEntity.setPos(this.seatTranslation(decorationBlockEntity, seat).add(decorationBlockEntity.getDecorationHolder().getPos()));
         player.level().addFreshEntity(seatEntity);
         player.startRiding(seatEntity);
-        seatEntity.setYRot((decorationBlockEntity.getVisualRotationYInDegrees()-180));
+        seatEntity.setYRot((decorationBlockEntity.getVisualRotationYInDegrees() - seat.direction));
     }
 
     public boolean hasSeatedPlayer(DecorationBlockEntity decorationBlockEntity, Seat.SeatMeta seat) {
@@ -97,7 +97,7 @@ public class Seat implements DecorationBehaviour<Seat.SeatConfig> {
         /**
          * The rotation direction of the seat
          */
-        public float direction = 0;
+        public float direction = 180;
     }
 
     public static class SeatConfig extends ObjectArrayList<SeatMeta> { }

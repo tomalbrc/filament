@@ -9,16 +9,16 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Fuel behaviour
  */
-public class Fuel implements ItemBehaviour<Fuel.FuelConfig> {
-    private final FuelConfig config;
+public class Fuel implements ItemBehaviour<Fuel.Config> {
+    private final Config config;
 
-    public Fuel(FuelConfig config) {
+    public Fuel(Config config) {
         this.config = config;
     }
 
     @Override
     @NotNull
-    public FuelConfig getConfig() {
+    public Fuel.Config getConfig() {
         return this.config;
     }
 
@@ -27,7 +27,7 @@ public class Fuel implements ItemBehaviour<Fuel.FuelConfig> {
         FuelRegistry.add(item, config.value);
     }
 
-    public static class FuelConfig {
+    public static class Config {
         /**
          * The value associated with the fuel, used in furnaces and similar item burning blocks
          */

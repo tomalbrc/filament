@@ -11,12 +11,12 @@ public class CosmeticUtil {
         return itemStack.getItem() instanceof SimpleItem simpleItem && getCosmeticData(simpleItem) != null;
     }
 
-    public static Cosmetic.CosmeticConfig getCosmeticData(ItemStack itemStack) {
+    public static Cosmetic.Config getCosmeticData(ItemStack itemStack) {
         return getCosmeticData(itemStack.getItem());
     }
 
-    public static Cosmetic.CosmeticConfig getCosmeticData(Item item) {
-        Cosmetic.CosmeticConfig cosmeticData = null;
+    public static Cosmetic.Config getCosmeticData(Item item) {
+        Cosmetic.Config cosmeticData = null;
         if (item instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.COSMETIC)) {
             cosmeticData = simpleItem.get(Behaviours.COSMETIC).getConfig();
         }

@@ -184,3 +184,14 @@ Defines trap behaviour for items capable of trapping specific entity types.
   - `requiredEffects`: List of required effects for the trap. Example: `["minecraft:weakness"]`
   - `chance`: Chance of the trap triggering (`0`-`100`).
   - `useDuration`: Use cooldown for the trap item.
+
+---
+
+### `banner_pattern` behaviour
+
+Allows you to assign a banner pattern to an item for use in Looms.
+
+See the `mynamespace:bannertestitem` item config in the example datapack in the GitHub repo.
+
+- **Fields**:
+  - `id`: The id of your banner_pattern in your datapack

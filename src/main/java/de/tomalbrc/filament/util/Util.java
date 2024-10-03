@@ -136,10 +136,6 @@ public class Util {
             @Override
             public void attack(ServerPlayer player) {
                 if (player.gameMode.getGameModeForPlayer() != GameType.ADVENTURE) {
-                    var level = element.getHolder().getAttachment().getWorld();
-                    var blockState = level.getBlockState(blockEntity.getBlockPos());
-                    blockState.getBlock().playerWillDestroy(level, blockEntity.getBlockPos(), blockState, player);
-
                     blockEntity.destroyStructure(player != null && !player.isCreative());
                 }
             }
@@ -166,9 +162,6 @@ public class Util {
             @Override
             public void attack(ServerPlayer player) {
                 if (player.gameMode.getGameModeForPlayer() != GameType.ADVENTURE) {
-                    var level = element.getHolder().getAttachment().getWorld();
-                    var blockState = level.getBlockState(blockPos);
-                    blockState.getBlock().playerWillDestroy(level, blockPos, blockState, player);
                     element.getHolder().getAttachment().getWorld().destroyBlock(BlockPos.containing(element.getHolder().getAttachment().getPos()), false);
                 }
             }

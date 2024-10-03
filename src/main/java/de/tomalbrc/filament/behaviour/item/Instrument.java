@@ -14,16 +14,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class Instrument implements ItemBehaviour<Instrument.InstrumentConfig> {
-    private final InstrumentConfig config;
+public class Instrument implements ItemBehaviour<Instrument.Config> {
+    private final Config config;
 
-    public Instrument(InstrumentConfig config) {
+    public Instrument(Config config) {
         this.config = config;
     }
 
     @Override
     @NotNull
-    public InstrumentConfig getConfig() {
+    public Instrument.Config getConfig() {
         return this.config;
     }
 
@@ -40,13 +40,13 @@ public class Instrument implements ItemBehaviour<Instrument.InstrumentConfig> {
         return InteractionResult.CONSUME;
     }
 
-    private static void play(Level level, Player player, Instrument.InstrumentConfig instrument) {
+    private static void play(Level level, Player player, Config instrument) {
         float f = instrument.range / 25.0F;
         level.playSound(null, player, SoundEvent.createVariableRangeEvent(instrument.sound), SoundSource.RECORDS, f, 1.0F);
         level.gameEvent(GameEvent.INSTRUMENT_PLAY, player.position(), GameEvent.Context.of(player));
     }
 
-    public static class InstrumentConfig {
+    public static class Config {
         public ResourceLocation sound = null;
 
         public int range = 0;

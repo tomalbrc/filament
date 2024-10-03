@@ -76,6 +76,9 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
         return null;
     }
 
+    default void spawnAfterBreak(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, boolean bl) {
+    }
+
     default boolean isSignalSource(BlockState blockState) {
         return false;
     }

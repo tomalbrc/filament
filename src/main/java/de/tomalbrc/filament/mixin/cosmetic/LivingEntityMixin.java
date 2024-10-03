@@ -1,6 +1,8 @@
 package de.tomalbrc.filament.mixin.cosmetic;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.behaviour.item.Armor;
 import de.tomalbrc.filament.behaviour.item.Cosmetic;
 import de.tomalbrc.filament.cosmetic.AnimatedCosmeticHolder;
 import de.tomalbrc.filament.cosmetic.CosmeticHolder;
@@ -35,9 +37,13 @@ public class LivingEntityMixin implements CosmeticInterface {
 
     @Inject(method = "getEquipmentSlotForItem", at = @At(value = "HEAD"), cancellable = true)
     private void filament$customGetEquipmentSlotForItem(ItemStack itemStack, CallbackInfoReturnable<EquipmentSlot> cir) {
-        Cosmetic.CosmeticConfig cosmetic = CosmeticUtil.getCosmeticData(itemStack);
+        Cosmetic.Config cosmetic = CosmeticUtil.getCosmeticData(itemStack);
         if (cosmetic != null) {
             cir.setReturnValue(cosmetic.slot);
+        }
+        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.ARMOR))  {
+            Armor.Config armor = simpleItem.get(Behaviours.ARMOR).getConfig();
+            cir.setReturnValue(armor.slot);
         }
     }
 
@@ -66,7 +72,7 @@ public class LivingEntityMixin implements CosmeticInterface {
     }
 
     @Unique public void filament$addHolder(LivingEntity livingEntity, Item simpleItem, ItemStack itemStack) {
-        Cosmetic.CosmeticConfig cosmeticData = CosmeticUtil.getCosmeticData(simpleItem);
+        Cosmetic.Config cosmeticData = CosmeticUtil.getCosmeticData(simpleItem);
 
         if (cosmeticData.model != null) {
             if (filamentAnimatedCosmeticHolder == null) {

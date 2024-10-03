@@ -10,6 +10,8 @@
     "FlowingFluidMixin",
     "ItemFrameAccessor",
     "LevelChunkMixin",
+    "behaviour.LoomMenu$5Mixin",
+    "behaviour.LoomMenuMixin",
     "MappedRegistryMixin",
     "ReloadableServerResourcesMixin",
     "ServerGamePacketListenerImplMixin",

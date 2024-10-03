@@ -12,15 +12,17 @@ import net.minecraft.resources.ResourceLocation;
 @SuppressWarnings("unused")
 public class Behaviours {
     // Item
-    public static final BehaviourType<Cosmetic, Cosmetic.CosmeticConfig> COSMETIC = registerBehaviour("cosmetic", Cosmetic.class);
+    public static final BehaviourType<Armor, Armor.Config> ARMOR = registerBehaviour("armor", Armor.class);
+    public static final BehaviourType<Cosmetic, Cosmetic.Config> COSMETIC = registerBehaviour("cosmetic", Cosmetic.class);
     public static final BehaviourType<Execute, Execute.ExecuteConfig> EXECUTE = registerBehaviour("execute", Execute.class);
     public static final BehaviourType<Food, Food.FoodConfig> FOOD = registerBehaviour("food", Food.class);
     public static final BehaviourType<Compostable, Compostable.CompostableConfig> COMPOSTABLE = registerBehaviour("compostable", Compostable.class);
-    public static final BehaviourType<Fuel, Fuel.FuelConfig> FUEL = registerBehaviour("fuel", Fuel.class);
-    public static final BehaviourType<Instrument, Instrument.InstrumentConfig> INSTRUMENT = registerBehaviour("instrument", Instrument.class);
+    public static final BehaviourType<Fuel, Fuel.Config> FUEL = registerBehaviour("fuel", Fuel.class);
+    public static final BehaviourType<Instrument, Instrument.Config> INSTRUMENT = registerBehaviour("instrument", Instrument.class);
     public static final BehaviourType<Shoot, Shoot.ShootConfig> SHOOT = registerBehaviour("shoot", Shoot.class);
     public static final BehaviourType<Stripper, Stripper.Config> STRIPPER = registerBehaviour("stripper", Stripper.class);
-    public static final BehaviourType<Trap, Trap.TrapConfig> TRAP = registerBehaviour("trap", Trap.class);
+    public static final BehaviourType<Trap, Trap.Config> TRAP = registerBehaviour("trap", Trap.class);
+    public static final BehaviourType<BannerPattern, BannerPattern.Config> BANNER_PATTERN = registerBehaviour("banner_pattern", BannerPattern.class);
 
     // Block
     public static final BehaviourType<CanSurvive, CanSurvive.Config> CAN_SURVIVE = registerBehaviour("can_survive", CanSurvive.class);
@@ -34,6 +36,7 @@ public class Behaviours {
     public static final BehaviourType<Repeater, Repeater.RepeaterConfig> REPEATER = registerBehaviour("repeater", Repeater.class);
     public static final BehaviourType<Powersource, Powersource.PowersourceConfig> POWERSOURCE = registerBehaviour("powersource", Powersource.class);
     public static final BehaviourType<Strippable, Strippable.StrippableConfig> STRIPPABLE = registerBehaviour("strippable", Strippable.class);
+    public static final BehaviourType<DropXp, DropXp.Config> DROP_XP = registerBehaviour("drop_xp", DropXp.class);
 
     // Decoration
     public static final BehaviourType<Animation, Animation.AnimationConfig> ANIMATION = registerBehaviour("animation", Animation.class);

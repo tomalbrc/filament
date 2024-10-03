@@ -93,6 +93,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
             }
         }
         this.properties.appendHoverText(list);
+        super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
     }
 
     @Override

@@ -107,7 +107,7 @@ Defines seating behaviours for decorations.
 
 - **Fields**:
     - `offset`: The player seating offset.
-    - `direction`: The rotation direction of the seat.
+    - `direction`: The rotation offset of the seat in degrees. Defaults to `180`
 
 ---
 

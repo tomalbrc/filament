@@ -2,27 +2,48 @@ package de.tomalbrc.filament.behaviour.item;
 
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Equipable;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 /**
  * Cosmetics; either head or chestplate slot, can be Blockbenchmodel for chestplate slot or simple item model for either
  */
-public class Cosmetic implements ItemBehaviour<Cosmetic.CosmeticConfig> {
-    private final CosmeticConfig config;
+public class Cosmetic implements ItemBehaviour<Cosmetic.Config> {
+    private final Config config;
 
-    public Cosmetic(CosmeticConfig config) {
+    public Cosmetic(Config config) {
         this.config = config;
     }
 
     @Override
     @NotNull
-    public CosmeticConfig getConfig() {
+    public Cosmetic.Config getConfig() {
         return this.config;
     }
 
-    public static class CosmeticConfig {
+    @Override
+    public InteractionResultHolder<ItemStack> use(Item item, Level level, Player player, InteractionHand interactionHand) {
+        if (item instanceof Equipable equipable) {
+            return equipable.swapWithEquipmentSlot(item, level, player, interactionHand);
+        }
+
+        return ItemBehaviour.super.use(item, level, player, interactionHand);
+    }
+
+    @Override
+    public EquipmentSlot getEquipmentSlot() {
+        return this.config.slot;
+    }
+
+    public static class Config {
         /**
          * The equipment slot for the cosmetic (head, chest).
          */

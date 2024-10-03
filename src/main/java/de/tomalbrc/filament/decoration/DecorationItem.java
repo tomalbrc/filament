@@ -2,6 +2,8 @@ package de.tomalbrc.filament.decoration;
 
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
+import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.behaviour.item.Cosmetic;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
@@ -10,23 +12,23 @@ import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
+import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
@@ -39,15 +41,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-public class DecorationItem extends SimpleItem implements PolymerItem, BehaviourHolder {
+public class DecorationItem extends SimpleItem implements PolymerItem, Equipable, BehaviourHolder {
     final private DecorationData decorationData;
+    final private PolymerModelData modelData;
 
     public DecorationItem(Block block, DecorationData decorationData, Item.Properties properties) {
         super(block, properties, decorationData.properties(), decorationData.vanillaItem());
         this.initBehaviours(decorationData.behaviourConfig());
         this.decorationData = decorationData;
+        this.modelData = this.decorationData.requestModel();
     }
 
     public DecorationData getDecorationData() {
@@ -82,17 +85,12 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Behaviour
 
     @Override
     public Item getPolymerItem(ItemStack itemStack, @Nullable ServerPlayer player) {
-        return this.vanillaItem;
+        return modelData.item();
     }
 
     @Override
-    protected Map<String, ResourceLocation> getModelMap() {
-        return this.decorationData.itemResource() == null ? Map.of() : this.decorationData.itemResource().models();
-    }
-
-    @Override
-    protected ResourceLocation getModel() {
-        return this.decorationData.model();
+    public int getPolymerCustomModelData(ItemStack itemStack, @Nullable ServerPlayer player) {
+        return modelData.value();
     }
 
     public static float getVisualRotationYInDegrees(Direction direction, int rotation) {
@@ -206,7 +204,7 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Behaviour
             SoundEvent breakSound = this.getDecorationData().properties().blockBase.defaultBlockState().getSoundType().getPlaceSound();
             level.playSound(null, blockPos,  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);
 
-            return InteractionResult.SUCCESS_SERVER;
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
 
         return InteractionResult.FAIL;
@@ -235,5 +233,31 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Behaviour
         }
 
         return true;
+    }
+
+    @Override
+    @NotNull
+    public InteractionResultHolder<ItemStack> use(Level level, Player user, InteractionHand hand) {
+        var res = super.use(level, user, hand);
+
+        if (res.getResult() != InteractionResult.CONSUME && this.decorationData.isCosmetic()) {
+            res = this.swapWithEquipmentSlot(this, level, user, hand);
+        }
+
+        return res;
+    }
+
+    @Override
+    @NotNull
+    public EquipmentSlot getEquipmentSlot() {
+        assert decorationData.behaviourConfig() != null;
+
+        boolean cosmetic = decorationData.isCosmetic();
+        if (cosmetic) {
+            Cosmetic.Config cosmetic1 = this.decorationData.behaviourConfig().get(Behaviours.COSMETIC);
+            if (cosmetic1.slot != null)
+                return cosmetic1.slot;
+        }
+        return EquipmentSlot.MAINHAND;
     }
 }
