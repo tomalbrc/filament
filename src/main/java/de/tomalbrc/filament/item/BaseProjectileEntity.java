@@ -142,7 +142,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
             var damageSource = this.damageSources().trident(this, owner);
 
             float damage = (float) this.getBaseDamage();
-            if (target.hurt(damageSource, damage)) {
+            if (target.hurtServer((ServerLevel) level(), damageSource, damage)) {
                 if (target.getType() != EntityType.ENDERMAN && this.getOwner() instanceof LivingEntity livingOwner) {
                     EnchantmentHelper.doPostAttackEffectsWithItemSource((ServerLevel) target.level(), livingOwner, damageSource, this.getWeaponItem());
                     this.doPostHurtEffects(target);

@@ -24,19 +24,17 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // Polymer
-    modImplementation ("eu.pb4:polymer-core:${project.polymer_version}")
-    modImplementation ("eu.pb4:polymer-blocks:${project.polymer_version}")
-    modImplementation ("eu.pb4:polymer-resource-pack:${project.polymer_version}")
-    modImplementation ("eu.pb4:polymer-virtual-entity:${project.polymer_version}")
-    modImplementation ("eu.pb4:polymer-networking:${project.polymer_version}")
-    modImplementation ("eu.pb4:polymer-autohost:${project.polymer_version}")
+    modImplementation include("eu.pb4:polymer-core:${project.polymer_version}")
+    modImplementation include("eu.pb4:polymer-blocks:${project.polymer_version}")
+    modImplementation include("eu.pb4:polymer-resource-pack:${project.polymer_version}")
+    modImplementation include("eu.pb4:polymer-virtual-entity:${project.polymer_version}")
+    modImplementation include("eu.pb4:polymer-networking:${project.polymer_version}")
+    modImplementation include("eu.pb4:polymer-autohost:${project.polymer_version}")
 
     // BIL
     modImplementation include("de.tomalbrc:blockbench-import-library:${project.bil_version}")
 
     modImplementation include("eu.pb4:placeholder-api:${project.papi_version}")
-
-    modImplementation include('me.lucko:fabric-permissions-api:0.3.1')
 }
 
 processResources {
