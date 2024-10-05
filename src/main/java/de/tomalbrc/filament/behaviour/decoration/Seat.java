@@ -5,15 +5,19 @@ import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.decoration.holder.DecorationHolder;
 import de.tomalbrc.filament.decoration.util.SeatEntity;
 import de.tomalbrc.filament.registry.EntityRegistry;
+import de.tomalbrc.filament.util.Util;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -34,7 +38,7 @@ public class Seat implements DecorationBehaviour<Seat.SeatConfig> {
 
     @Override
     public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
-        if (!player.isSecondaryUseActive() && decorationBlockEntity.getDecorationHolder() instanceof DecorationHolder decorationHolder) {
+        if (!player.isSecondaryUseActive() && decorationBlockEntity.getDecorationHolder() instanceof DecorationHolder) {
             Seat.SeatMeta seat = this.getClosestSeat(decorationBlockEntity, location);
 
             if (seat != null && !this.hasSeatedPlayer(decorationBlockEntity, seat)) {
@@ -48,7 +52,7 @@ public class Seat implements DecorationBehaviour<Seat.SeatConfig> {
     }
 
     public void seatPlayer(DecorationBlockEntity decorationBlockEntity, Seat.SeatMeta seat, ServerPlayer player) {
-        SeatEntity seatEntity = EntityRegistry.SEAT_ENTITY.create(player.level());
+        SeatEntity seatEntity = EntityRegistry.SEAT_ENTITY.create(player.serverLevel());
         seatEntity.setPos(this.seatTranslation(decorationBlockEntity, seat).add(decorationBlockEntity.getDecorationHolder().getPos()));
         player.level().addFreshEntity(seatEntity);
         player.startRiding(seatEntity);
@@ -61,7 +65,7 @@ public class Seat implements DecorationBehaviour<Seat.SeatConfig> {
 
     public Seat.SeatMeta getClosestSeat(DecorationBlockEntity decorationBlockEntity, Vec3 location) {
         if (seatConfig.size() == 1) {
-            return seatConfig.get(0);
+            return seatConfig.getFirst();
         }
         else {
             double dist = Double.MAX_VALUE;
@@ -84,6 +88,24 @@ public class Seat implements DecorationBehaviour<Seat.SeatConfig> {
     public Vec3 seatTranslation(DecorationBlockEntity decorationBlockEntity, Seat.SeatMeta seat) {
         Vec3 v3 = new Vec3(seat.offset).subtract(0, 0.3, 0).yRot((float) Math.toRadians(decorationBlockEntity.getVisualRotationYInDegrees()+180));
         return new Vec3(-v3.x, v3.y, v3.z);
+    }
+
+    public SeatEntity getSeatEntity(DecorationBlockEntity decorationBlockEntity, Seat.SeatMeta seat) {
+        List<SeatEntity> entities = Objects.requireNonNull(decorationBlockEntity.getLevel()).getEntitiesOfClass(SeatEntity.class, AABB.ofSize(seatTranslation(decorationBlockEntity, seat).add(decorationBlockEntity.getDecorationHolder().getPos()), 0.2, 0.2, 0.2), x -> true);
+        if (!entities.isEmpty())
+            return entities.getFirst();
+
+        return null;
+    }
+
+    @Override
+    public void destroy(DecorationBlockEntity decorationBlockEntity, boolean dropItem) {
+        for (SeatMeta seatMeta : this.seatConfig) {
+            var seat = getSeatEntity(decorationBlockEntity, seatMeta);
+            if (seat != null && seat.getFirstPassenger() != null) {
+                seat.getFirstPassenger().stopRiding();
+            }
+        }
     }
 
     public static class SeatMeta {
