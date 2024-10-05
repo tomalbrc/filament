@@ -5,13 +5,10 @@ import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.decoration.holder.DecorationHolder;
 import de.tomalbrc.filament.decoration.util.SeatEntity;
 import de.tomalbrc.filament.registry.EntityRegistry;
-import de.tomalbrc.filament.util.Util;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -53,6 +50,7 @@ public class Seat implements DecorationBehaviour<Seat.SeatConfig> {
 
     public void seatPlayer(DecorationBlockEntity decorationBlockEntity, Seat.SeatMeta seat, ServerPlayer player) {
         SeatEntity seatEntity = EntityRegistry.SEAT_ENTITY.create(player.serverLevel());
+        assert seatEntity != null;
         seatEntity.setPos(this.seatTranslation(decorationBlockEntity, seat).add(decorationBlockEntity.getDecorationHolder().getPos()));
         player.level().addFreshEntity(seatEntity);
         player.startRiding(seatEntity);
