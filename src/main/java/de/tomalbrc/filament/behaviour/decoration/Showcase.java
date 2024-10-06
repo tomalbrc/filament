@@ -4,6 +4,8 @@ import com.mojang.math.Axis;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.block.SimpleBlockItem;
+import de.tomalbrc.filament.decoration.DecorationItem;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.decoration.holder.DecorationHolder;
 import de.tomalbrc.filament.util.Util;
@@ -172,7 +174,7 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
             newElement = this.createShowcase(decorationBlockEntity, showcase, itemStack);
             decorationBlockEntity.getDecorationHolder().addElement(newElement);
         } else {
-            if (element instanceof BlockDisplayElement blockDisplayElement && itemStack.getItem() instanceof BlockItem blockItem) {
+            if (element instanceof BlockDisplayElement blockDisplayElement && itemStack.getItem() instanceof BlockItem blockItem && (!(blockItem instanceof SimpleBlockItem DecorationItem))) {
                 blockDisplayElement.setBlockState(blockItem.getBlock().defaultBlockState());
             } else if (element instanceof ItemDisplayElement itemDisplayElement) {
                 itemDisplayElement.setItem(itemStack);
@@ -198,12 +200,12 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
         switch (showcase.type) {
             case item -> element = this.element(itemStack);
             case block -> {
-                if (itemStack.getItem().asItem() instanceof BlockItem blockItem) {
+                if (itemStack.getItem().asItem() instanceof BlockItem blockItem && !(blockItem instanceof DecorationItem)) {
                     element = this.element(blockItem);
                 }
             }
             case dynamic -> {
-                if (itemStack.getItem().asItem() instanceof BlockItem blockItem) {
+                if (itemStack.getItem().asItem() instanceof BlockItem blockItem && !(blockItem instanceof DecorationItem)) {
                     element = this.element(blockItem);
                 } else {
                     element = this.element(itemStack);
