@@ -36,6 +36,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Universal item, base for all filament items, with behaviour support
+ *
+ * I wish BlockItem was an interface...
+ */
 public class SimpleItem extends BlockItem implements PolymerItem, Equipable, BehaviourHolder {
     protected ItemData itemData;
     protected ItemProperties properties;
