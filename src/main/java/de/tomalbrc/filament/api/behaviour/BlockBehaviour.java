@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -25,7 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface BlockBehaviour<T> extends Behaviour<T> {
-    default void init(Block block, BehaviourHolder behaviourHolder) {
+    default void init(Item item, Block block, BehaviourHolder behaviourHolder) {
 
     }
 
