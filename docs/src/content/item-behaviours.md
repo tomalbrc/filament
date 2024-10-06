@@ -97,6 +97,7 @@ Makes the item usable in composters.
 
 - **Fields**:
   - `chance`: Chance of raising the composter level by 1 between 0 and 100
+  - `villagerInteraction`: Allows farmer villagers to compost the item. Defaults to `true`
 
 ---
 

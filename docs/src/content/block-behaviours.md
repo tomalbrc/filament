@@ -130,11 +130,21 @@ The bonus block and radius can be configured.
 
 You probably want to use this behaviour together with the `can_survive` behaviour.
 
+If you want your custom crop block to *not* turn farmland into dirt *without* moisture, like vanilla crops do, add your block to the block tag `maintains_farmland`.
+
+In order for the farmland to not turn into dirt when placing the crop on top of it, make sure the `solid` property is set to `false`
+
+For bee pollination, use the block tag `bee_growables`.
+
+You can make farmer villagers able to plant the seeds using the item tag `villager_plantable_seeds`. Villagers will only work on crops that are on top of farmland blocks (vanilla limitation).
+
 - **Fields**:
-  - `maxAge`: maximum age steps of this block (from 0 to maxAge-1). Defaults to 4
-  - `minLightLevel`: Minimum light level this crop needs to survive. Defaults to 8
+  - `maxAge`: maximum age steps of this block (from 0 to maxAge-1). Defaults to 4.
+  - `minLightLevel`: Minimum light level this crop needs to survive. Defaults to 8.
   - `bonusRadius`: Radius to check for bonus blocks for. Defaults to 1.
-  - `bonusBlock`: Bonus block to check for. More bonus blocks means faster growth. Defaults to `minecraft:farmland`
+  - `bonusBlock`: Bonus block to check for. More bonus blocks means faster growth. Defaults to `minecraft:farmland`.
+  - `villagerInteraction`: Allows farmer villagers to break and plant the custom crop. Defaults to `true`.
+  - `beeInteraction`: Allows bees to pollinate the crop to increase its age. Defaults to `true`.
 
 - **Block-State-Properties to provide models for**:
   - `age`: 0...maxAge-1
@@ -146,11 +156,13 @@ You probably want to use this behaviour together with the `can_survive` behaviou
 Checks for the block below with one of the configured block tags or blocks list.
 The block will break off, similar to flowers or crops, when the block below them is not supported.
 
-Useful for bushes/plants/crops and more
+Useful for bushes/plants/crops/flowers and more
 
 - **Fields**:
-  - `blocks`: List of blocks this block can survive on. Example: `blocks: ["minecraft:stone", "minecraft:sand"]`
-  - `tags`: List of block-tags this block can survive on. Example: `tags: ["minecraft:dirt", "minecraft:sculk_replaceable"]`
+  - `blocks`: List of blocks this block can survive on. 
+    - Example: `blocks: ["minecraft:stone", "minecraft:sand"]`
+  - `tags`: List of block-tags this block can survive on. 
+    - Example: `tags: ["minecraft:dirt", "minecraft:sculk_replaceable"]`
 
 ---
 
