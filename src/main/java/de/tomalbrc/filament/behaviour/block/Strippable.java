@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Block behaviourConfig for strippable blocks (with an axe)
- * Copies blockstate properties if applicabable
+ * Copies blockstate properties if applicable
  */
 public class Strippable implements BlockBehaviour<Strippable.StrippableConfig> {
     private final StrippableConfig config;
