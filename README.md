@@ -16,9 +16,9 @@ TLDR: ItemsAdder / Oraxen alternative for fabric. Doesn't handle datapack files 
 
 ## Features
 
-- Custom Items:** Add unique items to the game with different behaviors, including armor, shooting, and more.
-- Custom Blocks:** Introduce new blocks with different properties.
-- Custom Decorations:** Introduce your own decorations such as furniture, complete with customizable placement and various behaviors for player interaction.
+- **Custom Items:** Add unique items to the game with different behaviors, including armor, shooting, and more.
+- **Custom Blocks:** Introduce new blocks with different properties.
+- **Custom Decorations:** Introduce your own decorations such as furniture, complete with customizable placement and various behaviors for player interaction.
 
 ## Installation
 
