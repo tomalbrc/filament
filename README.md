@@ -34,7 +34,6 @@ There is an example datapack in the GitHub repo, just drop it into your world's 
 
 [Check out the documentation!](https://tomalbrc.de/projects/filament/docs)
 
----
 
 ## Mods using filament
 
