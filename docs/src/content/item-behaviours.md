@@ -11,7 +11,7 @@ Example with some behaviours set:
   "vanillaItem": "minecraft:paper",
   "itemResource": {
     "models": {
-      "default": "mynamespace:custom/misc/clown_horn"
+      "default": "mynamespace:custom/misc/clown_horn",
       "trapped": "mynamespace:custom/misc/clown_horn_trapped"
     }
   },
