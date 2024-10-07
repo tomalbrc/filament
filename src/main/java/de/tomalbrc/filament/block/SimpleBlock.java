@@ -29,9 +29,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 
-public class SimpleBlock extends Block implements PolymerTexturedBlock, BehaviourHolder, SimpleWaterloggedBlock, BonemealableBlock {
+public class SimpleBlock extends Block implements PolymerTexturedBlock, BehaviourHolder, SimpleWaterloggedBlock, BonemealableBlock, WeatheringCopper {
     protected Map<BlockState, BlockData.BlockStateMeta> stateMap;
     protected final BlockState breakEventState;
     protected final BlockData blockData;
@@ -407,5 +408,35 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
             }
         }
         return def;
+    }
+
+
+    @Override
+    public void changeOverTime(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof WeatheringCopper weatheringCopper) {
+                weatheringCopper.changeOverTime(blockState, serverLevel, blockPos, randomSource);
+            }
+        }
+    }
+
+    @Override
+    public WeatherState getAge() {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof WeatheringCopper weatheringCopper) {
+                return weatheringCopper.getAge();
+            }
+        }
+        return WeatherState.OXIDIZED;
+    }
+
+    @Override
+    public Optional<BlockState> getNextState(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof WeatheringCopper weatheringCopper) {
+                return weatheringCopper.getNextState(blockState, serverLevel, blockPos, randomSource);
+            }
+        }
+        return Optional.empty();
     }
 }

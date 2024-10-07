@@ -23,6 +23,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import org.joml.Quaternionf;
@@ -47,6 +48,7 @@ public class Json {
             .registerTypeHierarchyAdapter(ItemDisplayContext.class, new ItemDisplayContextDeserializer())
             .registerTypeHierarchyAdapter(DataComponentMap.class, new DataComponentsDeserializer())
             .registerTypeHierarchyAdapter(PushReaction.class, new PushReactionDeserializer())
+            .registerTypeHierarchyAdapter(WeatheringCopper.WeatherState.class, new WeatherStateDeserializer())
             .registerTypeHierarchyAdapter(Block.class, new RegistryDeserializer<>(BuiltInRegistries.BLOCK))
             .registerTypeHierarchyAdapter(Item.class, new RegistryDeserializer<>(BuiltInRegistries.ITEM))
             .registerTypeHierarchyAdapter(SoundEvent.class, new RegistryDeserializer<>(BuiltInRegistries.SOUND_EVENT))
@@ -204,7 +206,23 @@ public class Json {
             try {
                 return PushReaction.valueOf(value);
             } catch (IllegalArgumentException e) {
-                throw new JsonParseException("Invalid BlockModelType value: " + value, e);
+                throw new JsonParseException("Invalid PushReaction value: " + value, e);
+            }
+        }
+    }
+
+    private static class WeatherStateDeserializer implements JsonDeserializer<WeatheringCopper.WeatherState> {
+        @Override
+        public WeatheringCopper.WeatherState deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
+            if (!element.isJsonPrimitive() || !element.getAsJsonPrimitive().isString()) {
+                throw new JsonParseException("Expected string, got " + element);
+            }
+
+            String value = element.getAsString().toUpperCase();
+            try {
+                return WeatheringCopper.WeatherState.valueOf(value);
+            } catch (IllegalArgumentException e) {
+                throw new JsonParseException("Invalid WeatherState value: " + value, e);
             }
         }
     }
@@ -234,13 +252,13 @@ public class Json {
             registryAccess.registries().forEach((registryEntry) -> map.put(registryEntry.key(), createInfoForContextRegistry(registryEntry.value())));
             return new RegistryOps.RegistryInfoLookup() {
                 public <T> Optional<RegistryOps.RegistryInfo<T>> lookup(ResourceKey<? extends Registry<? extends T>> resourceKey) {
-                    return Optional.ofNullable((RegistryOps.RegistryInfo)map.get(resourceKey));
+                    return Optional.ofNullable((RegistryOps.RegistryInfo<T>)map.get(resourceKey));
                 }
             };
         }
 
         private static <T> RegistryOps.RegistryInfo<T> createInfoForContextRegistry(Registry<T> registry) {
-            return new RegistryOps.RegistryInfo(registry.asLookup(), registry.asTagAddingLookup(), registry.registryLifecycle());
+            return new RegistryOps.RegistryInfo<>(registry.asLookup(), registry.asTagAddingLookup(), registry.registryLifecycle());
         }
     }
 }

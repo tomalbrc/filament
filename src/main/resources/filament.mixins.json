@@ -21,6 +21,7 @@
     "behaviour.LoomMenuMixin",
     "behaviour.MobMixin",
     "behaviour.PlayerMixin",
+    "behaviour.WeatheringCopperMixin",
     "behaviour.crop.BeeMixin",
     "behaviour.crop.HarvestFarmlandMixin",
     "cosmetic.LivingEntityMixin",

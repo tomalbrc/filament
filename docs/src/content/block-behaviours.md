@@ -220,3 +220,11 @@ Makes the block drop xp when being mined without the silk-touch enchantment.
 - **Fields**:
   - `min`: Minimum amount of XP to drop
   - `max`: Maximum amount of XP to drop
+
+### `oxidizable` behaviour
+
+Defines the block as oxidizing block, similar to the vanilla copper blocks, randomly replacing it with another block when it "ages". Can be reverted/scraped by axes and resets with lightning bolts like vanilla copper blocks.
+
+- **Fields**:
+  - `replacement`: The identifier of the block to replace the current block with (e.g., "minecraft:stone").
+  - `weatherState`: The current weathering state of this block. Can be `unaffected`, `exposed`, `weathered`, `oxidized`. Defaults to `unaffected`
