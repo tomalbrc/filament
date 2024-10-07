@@ -30,6 +30,12 @@ There is an example data-pack in the GitHub repo, drop that into your worlds dat
 
 ---
 
+This project uses code from the [FactoryTools](https://github.com/Patbox/FactoryTools) project by Patbox, specifically the Virtual Destroy stages for decorations.
+
+You can find a copy of the FactoryTools LGPL3 License in `factorytools-license.txt`
+
+---
+
 - [Modrinth](https://modrinth.com/mod/filament)
 - [GitHub](https://github.com/tomalbrc/filament)
 - [Discord](https://discord.gg/9X6w2kfy89)
