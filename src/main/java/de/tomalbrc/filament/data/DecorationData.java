@@ -92,8 +92,9 @@ public record DecorationData(
         boolean singleBlock = (!this.hasBlocks() || Util.barrierDimensions(Objects.requireNonNull(this.blocks()), 0).equals(1, 1));
         boolean hasBehaviour = this.behaviourConfig() != null;
         boolean canBeDyed = this.vanillaItem != null && (vanillaItem == Items.LEATHER_HORSE_ARMOR || vanillaItem == Items.FIREWORK_STAR);
+        boolean groundOnly = this.properties != null && !this.properties.placement.wall() && !this.properties.placement.ceiling();
 
-        return !canBeDyed && !hasBehaviour && (singleBlock || this.size != null);
+        return groundOnly && !canBeDyed && !hasBehaviour && (singleBlock || this.size != null);
     }
 
     public boolean isCosmetic() {
