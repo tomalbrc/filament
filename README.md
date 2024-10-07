@@ -12,7 +12,7 @@ Since most things are packet based, especially decorations, the performance impa
 
 You should use [polymers auto-host capability](https://polymer.pb4.eu/latest/user/resource-pack-hosting/) to host the resourcepack, no 3rd party server needed!
 
-TLDR: ItemsAdder / Oraxen alternative for fabric. Doesn't handle datapack files such as item-tags / block-tags, etc.
+TLDR: ItemsAdder / Oraxen alternative for fabric. Doesn't handle datapack files such as item-tags / block-tags, etc (bring your own datapack).
 
 ## Features
 
