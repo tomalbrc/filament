@@ -137,6 +137,15 @@ Defines food item behaviour for edible items.
 
 ---
 
+### `villager_food` behaviour
+
+Makes the item edible for villagers (for villager breeding).
+
+- **Fields**:
+  - `value`: The amount of "breeding power" the item has (1 = normal food item, 4 = bread). Defaults to 1
+
+---
+
 ### `fuel` behaviour
 
 Defines fuel behaviour for items, specifying their value used in furnaces and similar item-burning blocks.
