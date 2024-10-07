@@ -15,6 +15,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
@@ -38,14 +39,15 @@ public class BlockRegistry {
         BlockBehaviour.Properties blockProperties = properties.toBlockProperties();
 
         SimpleBlock customBlock = new SimpleBlock(blockProperties, data);
-        BehaviourUtil.postInitBlock(customBlock, customBlock, data.behaviourConfig());
 
-        var itemProperties = data.properties().toItemProperties();
+        Item.Properties itemProperties = data.properties().toItemProperties();
         for (TypedDataComponent component : data.components()) {
             itemProperties.component(component.type(), component.value());
         }
+
         SimpleBlockItem item = new SimpleBlockItem(itemProperties, customBlock, data);
         BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
+        BehaviourUtil.postInitBlock(item, customBlock, customBlock, data.behaviourConfig());
 
         BlockRegistry.registerBlock(data.id(), customBlock);
         ItemRegistry.registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.BLOCK_GROUP_ID);

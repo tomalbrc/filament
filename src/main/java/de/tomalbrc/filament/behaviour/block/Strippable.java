@@ -4,6 +4,7 @@ import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.registry.StrippableRegistry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +26,7 @@ public class Strippable implements BlockBehaviour<Strippable.StrippableConfig> {
     }
 
     @Override
-    public void init(Block block, BehaviourHolder behaviourHolder) {
+    public void init(Item item, Block block, BehaviourHolder behaviourHolder) {
         StrippableRegistry.add(block, config.replacement);
     }
 
