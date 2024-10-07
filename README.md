@@ -36,6 +36,19 @@ There is an example datapack in the GitHub repo, just drop it into your world's 
 
 ---
 
+## Mods using filament
+
+These mods use filament for their items/blocks/decorations:
+
+- [Decorative Boxes by swzo](https://modrinth.com/mod/decorative-boxes)
+- [Better Amethyst Polymerized by swzo](https://modrinth.com/mod/better-amethyst-polymerized)
+- [Toms Server Additions: Decorations & Furniture](https://modrinth.com/mod/tsa-decorations)
+- [Toms Server Additions: Stone!](https://modrinth.com/mod/tsa-stone)
+- [Toms Server Additions: Planks!](https://modrinth.com/mod/tsa-planks)
+- [Toms Server Additions: Concrete!](https://modrinth.com/mod/tsa-concrete)
+
+---
+
 This project uses code from the [FactoryTools](https://github.com/Patbox/FactoryTools) project by Patbox, specifically the Virtual Destroy stages for decorations.
 
 You can find a copy of the FactoryTools LGPL3 License in `factorytools-license.txt`
