@@ -9,6 +9,7 @@ import com.mojang.serialization.JsonOps;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import eu.pb4.polymer.blocks.api.BlockModelType;
+import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
@@ -54,6 +55,7 @@ public class Json {
             .registerTypeHierarchyAdapter(SoundEvent.class, new RegistryDeserializer<>(BuiltInRegistries.SOUND_EVENT))
             .registerTypeHierarchyAdapter(BehaviourConfigMap.class, new BehaviourConfigMap.Deserializer())
             .registerTypeAdapter(BlockStateMappedProperty.class, new BlockStateMappedPropertyDeserializer<>())
+            .registerTypeAdapter(PolymerBlockModel.class, new PolymerBlockModelDeserializer())
             .create();
 
     public static class BlockStateMappedPropertyDeserializer<T> implements JsonDeserializer<BlockStateMappedProperty<T>> {
@@ -110,6 +112,28 @@ public class Json {
             }
 
             throw new JsonParseException("Invalid EquipmentSlot value: " + name);
+        }
+    }
+
+    public static class PolymerBlockModelDeserializer implements JsonDeserializer<PolymerBlockModel> {
+        @Override
+        public PolymerBlockModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            if (json.isJsonPrimitive()) {
+                JsonPrimitive primitive = json.getAsJsonPrimitive();
+                if (primitive.isString()) {
+                    return PolymerBlockModel.of(ResourceLocation.tryParse(primitive.getAsString()));
+                }
+            } else if (json.isJsonObject()) {
+                JsonObject object = json.getAsJsonObject();
+                ResourceLocation model = ResourceLocation.parse(object.get("model").getAsString());
+                int x = object.has("x") ? object.get("x").getAsInt() : 0;
+                int y = object.has("y") ? object.get("y").getAsInt() : 0;
+                boolean uvLock = object.has("uvLock") && object.get("uvLock").getAsBoolean();
+                int weight = object.has("weight") ? object.get("weight").getAsInt() : 1;
+                return PolymerBlockModel.of(model, x, y, uvLock, weight);
+            }
+
+            throw new JsonParseException("Invalid PolymerBlockModel value: " + json);
         }
     }
 
