@@ -7,10 +7,6 @@
   },
   "behaviour": {
     "armor": {
-      "attributes": {
-        "name": "attribute.maxhealth",
-        "value": 1
-      },
       "slot": "head",
       "texture": "minecraft:amethyst"
     }
