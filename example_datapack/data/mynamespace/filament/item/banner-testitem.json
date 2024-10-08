@@ -3,7 +3,7 @@
   "vanillaItem": "minecraft:paper",
   "itemResource": {
     "models": {
-      "default": "minecraft:creeper_banner_pattern"
+      "default": "minecraft:item/creeper_banner_pattern"
     }
   },
   "properties": {
