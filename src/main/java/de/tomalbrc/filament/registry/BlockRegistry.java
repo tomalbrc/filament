@@ -8,6 +8,8 @@ import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
+import de.tomalbrc.filament.util.Util;
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
@@ -18,14 +20,17 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 
 public class BlockRegistry {
+    private static final Map<ResourceLocation, String> blockNames = new HashMap<>();
     public static int REGISTERED_BLOCKS = 0;
 
     public static void register(InputStream inputStream) throws IOException {
@@ -49,7 +54,7 @@ public class BlockRegistry {
         BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
         BehaviourUtil.postInitBlock(item, customBlock, customBlock, data.behaviourConfig());
 
-        BlockRegistry.registerBlock(data.id(), customBlock);
+        BlockRegistry.registerBlock(data.name(), data.id(), customBlock);
         ItemRegistry.registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.BLOCK_GROUP_ID);
 
         customBlock.postRegister();
@@ -57,8 +62,11 @@ public class BlockRegistry {
         REGISTERED_BLOCKS++;
     }
 
-    public static void registerBlock(ResourceLocation identifier, Block block) {
+    public static void registerBlock(@Nullable String name, ResourceLocation identifier, Block block) {
         Registry.register(BuiltInRegistries.BLOCK, identifier, block);
+        if (name != null) {
+            blockNames.putIfAbsent(identifier, name);
+        }
     }
 
     public static class BlockDataReloadListener implements SimpleSynchronousResourceReloadListener {
@@ -76,9 +84,10 @@ public class BlockRegistry {
                     BlockData data = Json.GSON.fromJson(reader, BlockData.class);
                     BlockRegistry.register(data);
                 } catch (IOException | IllegalStateException e) {
-                    Filament.LOGGER.error("Failed to load block resource \"" + entry.getKey() + "\".");
+                    Filament.LOGGER.error("Failed to load block resource \"{}\".", entry.getKey());
                 }
             }
+            PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(builder -> Util.langGenerator(builder, "block", blockNames));
         }
     }
 }

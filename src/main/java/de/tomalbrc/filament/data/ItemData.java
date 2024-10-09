@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
 public record ItemData(
+        @Nullable String name,
         @NotNull ResourceLocation id,
         @Nullable Item vanillaItem,
         @Nullable ItemResource itemResource,

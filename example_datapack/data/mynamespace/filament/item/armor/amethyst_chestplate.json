@@ -1,5 +1,6 @@
 {
   "id": "mynamespace:amethyst_chestplate",
+  "name": "§dAmethyst Chestplate",
   "vanillaItem": "minecraft:leather_chestplate",
   "properties": {
     "durability": 10,

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 public record DecorationData(
+        @Nullable String name,
         @NotNull ResourceLocation id,
         @NotNull ResourceLocation model,
 

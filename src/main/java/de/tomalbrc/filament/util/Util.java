@@ -4,6 +4,7 @@ import com.mojang.math.Axis;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
@@ -16,6 +17,7 @@ import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -39,7 +41,10 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
 import org.joml.*;
 
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -213,7 +218,7 @@ public class Util {
         if (direction == Direction.DOWN || direction == Direction.UP) {
             matrix4f.setTranslation(0, -0.5f, 0);
 
-            float ang = (float) java.lang.Math.toRadians(rotation+180);
+            float ang = (float) java.lang.Math.toRadians(rotation + 180);
             double angleRadians = Mth.atan2(-Mth.sin(ang), Mth.cos(ang));
             matrix4f.rotate(Axis.YP.rotation((float) angleRadians).normalize());
             matrix4f.rotate(Axis.XP.rotationDegrees(-90));
@@ -229,7 +234,7 @@ public class Util {
 
         }
 
-        itemDisplayElement.setDisplayWidth(size.x*2.f);
+        itemDisplayElement.setDisplayWidth(size.x * 2.f);
 
         itemDisplayElement.setTransformation(matrix4f);
         itemDisplayElement.setModelTransformation(data.properties().display);
@@ -252,10 +257,10 @@ public class Util {
     }
 
     public static void loadDatapackContents(ResourceManager resourceManager) {
-        ((RegistryUnfreezer)BuiltInRegistries.BLOCK).filament$unfreeze();
-        ((RegistryUnfreezer)BuiltInRegistries.ITEM).filament$unfreeze();
-        ((RegistryUnfreezer)BuiltInRegistries.BLOCK_ENTITY_TYPE).filament$unfreeze();
-        ((RegistryUnfreezer)BuiltInRegistries.CREATIVE_MODE_TAB).filament$unfreeze();
+        ((RegistryUnfreezer) BuiltInRegistries.BLOCK).filament$unfreeze();
+        ((RegistryUnfreezer) BuiltInRegistries.ITEM).filament$unfreeze();
+        ((RegistryUnfreezer) BuiltInRegistries.BLOCK_ENTITY_TYPE).filament$unfreeze();
+        ((RegistryUnfreezer) BuiltInRegistries.CREATIVE_MODE_TAB).filament$unfreeze();
 
         for (SimpleSynchronousResourceReloadListener listener : FilamentReloadUtil.getReloadListeners()) {
             listener.onResourceManagerReload(resourceManager);
@@ -271,5 +276,17 @@ public class Util {
             itemStack.shrink(1);
             livingEntity.onEquippedItemBroken(item, slot);
         }
+    }
+
+    public static void langGenerator(ResourcePackBuilder builder, String type, Map<ResourceLocation, String> names) {
+        String langPath = "assets/minecraft/lang/en_us.json";
+        Map<String, String> langEntries = new HashMap<>();
+        for (Map.Entry<ResourceLocation, String> entry : names.entrySet()) {
+            String key = type + "." + entry.getKey().getNamespace() + "." + entry.getKey().getPath();
+            langEntries.put(key, entry.getValue());
+        }
+
+        String jsonContent = Json.GSON.toJson(langEntries);
+        builder.addData(langPath, jsonContent.getBytes(StandardCharsets.UTF_8));
     }
 }
