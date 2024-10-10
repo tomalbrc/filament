@@ -1,6 +1,6 @@
 {
   "id": "mynamespace:amethyst_leggings",
-  "name": "§dAmethyst Leggings",
+  "name": { "en_us": "§dAmethyst Leggings" },
   "vanillaItem": "minecraft:leather_leggings",
   "properties": {
     "durability": 10,
