@@ -1,6 +1,6 @@
 {
   "id": "mynamespace:amethyst_bricks",
-  "name": { "en_us": "§dAmethyst Bricks" },
+  "displayName": { "en_us": "§dAmethyst Bricks" },
   "blockModelType": "full_block",
   "blockResource": {
     "models": {

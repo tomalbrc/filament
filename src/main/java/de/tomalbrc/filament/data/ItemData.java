@@ -18,7 +18,7 @@ import java.util.Map;
 
 @SuppressWarnings("unused")
 public record ItemData(
-        @Nullable Map<String, String> name,
+        @Nullable Map<String, String> displayName,
         @NotNull ResourceLocation id,
         @Nullable Item vanillaItem,
         @Nullable ItemResource itemResource,

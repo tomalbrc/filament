@@ -1,6 +1,6 @@
 {
   "id": "mynamespace:amethyst_boots",
-  "name": { "en_us": "§dAmethyst Boots" },
+  "displayName": { "en_us": "§dAmethyst Boots" },
   "vanillaItem": "minecraft:chainmail_boots",
   "itemResource": {
     "models": {

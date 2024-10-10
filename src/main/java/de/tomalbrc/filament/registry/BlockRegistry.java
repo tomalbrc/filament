@@ -54,7 +54,7 @@ public class BlockRegistry {
         BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
         BehaviourUtil.postInitBlock(item, customBlock, customBlock, data.behaviourConfig());
 
-        BlockRegistry.registerBlock(data.name(), data.id(), customBlock);
+        BlockRegistry.registerBlock(data.displayName(), data.id(), customBlock);
         ItemRegistry.registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.BLOCK_GROUP_ID);
 
         customBlock.postRegister();

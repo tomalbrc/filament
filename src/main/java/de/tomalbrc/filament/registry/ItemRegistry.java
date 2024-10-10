@@ -48,8 +48,8 @@ public class ItemRegistry {
 
         registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.ITEM_GROUP_ID);
 
-        if (data.name() != null) {
-            itemNames.putIfAbsent(data.id(), data.name());
+        if (data.displayName() != null) {
+            itemNames.putIfAbsent(data.id(), data.displayName());
         }
 
         REGISTERED_ITEMS++;

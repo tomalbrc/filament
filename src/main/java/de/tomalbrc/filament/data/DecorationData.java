@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public record DecorationData(
-        @Nullable Map<String, String> name,
+        @Nullable Map<String, String> displayName,
         @NotNull ResourceLocation id,
         @NotNull ResourceLocation model,
 

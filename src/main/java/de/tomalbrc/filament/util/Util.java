@@ -279,7 +279,7 @@ public class Util {
     }
 
     public static void langGenerator(ResourcePackBuilder builder, String type, Map<ResourceLocation, Map<String, String>> names) {
-        Map<String, Map<String, String>> langEntries = new HashMap<>();
+        Map<String, Map<String, Map<String, String>>> langEntries = new HashMap<>();
 
         for (Map.Entry<ResourceLocation, Map<String, String>> entry : names.entrySet()) {
             ResourceLocation id = entry.getKey();
@@ -291,16 +291,20 @@ public class Util {
                 if (name != null) {
                     String key = type + "." + id.getNamespace() + "." + id.getPath();
                     langEntries
+                            .computeIfAbsent(id.getNamespace(), k -> new HashMap<>())
                             .computeIfAbsent(lang, k -> new HashMap<>())
                             .put(key, name);
                 }
             }
         }
-        for (Map.Entry<String, Map<String, String>> langFileEntry : langEntries.entrySet()) {
-            String lang = langFileEntry.getKey();
-            String langPath = "assets/" + Constants.MOD_ID + "/lang/" + lang + ".json";
-            String jsonContent = Json.GSON.toJson(langFileEntry.getValue());
-            builder.addData(langPath, jsonContent.getBytes(StandardCharsets.UTF_8));
+        for (Map.Entry<String, Map<String, Map<String, String>>> namespaceEntry : langEntries.entrySet()) {
+            String namespace = namespaceEntry.getKey();
+            for (Map.Entry<String, Map<String, String>> langFileEntry : namespaceEntry.getValue().entrySet()) {
+                String lang = langFileEntry.getKey();
+                String langPath = "assets/" + namespace + "/lang/" + lang + ".json";
+                String jsonContent = Json.GSON.toJson(langFileEntry.getValue());
+                builder.addData(langPath, jsonContent.getBytes(StandardCharsets.UTF_8));
+            }
         }
     }
 }
