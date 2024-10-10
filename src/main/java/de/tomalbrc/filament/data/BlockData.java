@@ -27,7 +27,7 @@ import java.util.Map;
 
 
 public record BlockData(
-        @Nullable String name,
+        @Nullable Map<String, String> name,
         @NotNull ResourceLocation id,
         @Nullable Item vanillaItem,
         @NotNull BlockResource blockResource,

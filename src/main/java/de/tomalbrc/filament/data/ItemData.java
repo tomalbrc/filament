@@ -14,9 +14,11 @@ import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
+
 @SuppressWarnings("unused")
 public record ItemData(
-        @Nullable String name,
+        @Nullable Map<String, String> name,
         @NotNull ResourceLocation id,
         @Nullable Item vanillaItem,
         @Nullable ItemResource itemResource,

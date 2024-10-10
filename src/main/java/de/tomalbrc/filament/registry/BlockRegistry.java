@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BlockRegistry {
-    private static final Map<ResourceLocation, String> blockNames = new HashMap<>();
+    private static final Map<ResourceLocation, Map<String, String>> blockNames = new HashMap<>();
     public static int REGISTERED_BLOCKS = 0;
 
     public static void register(InputStream inputStream) throws IOException {
@@ -62,7 +62,7 @@ public class BlockRegistry {
         REGISTERED_BLOCKS++;
     }
 
-    public static void registerBlock(@Nullable String name, ResourceLocation identifier, Block block) {
+    public static void registerBlock(@Nullable Map<String, String> name, ResourceLocation identifier, Block block) {
         Registry.register(BuiltInRegistries.BLOCK, identifier, block);
         if (name != null) {
             blockNames.putIfAbsent(identifier, name);

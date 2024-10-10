@@ -18,10 +18,11 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public record DecorationData(
-        @Nullable String name,
+        @Nullable Map<String, String> name,
         @NotNull ResourceLocation id,
         @NotNull ResourceLocation model,
 

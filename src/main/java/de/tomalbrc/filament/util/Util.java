@@ -278,15 +278,29 @@ public class Util {
         }
     }
 
-    public static void langGenerator(ResourcePackBuilder builder, String type, Map<ResourceLocation, String> names) {
-        String langPath = "assets/minecraft/lang/en_us.json";
-        Map<String, String> langEntries = new HashMap<>();
-        for (Map.Entry<ResourceLocation, String> entry : names.entrySet()) {
-            String key = type + "." + entry.getKey().getNamespace() + "." + entry.getKey().getPath();
-            langEntries.put(key, entry.getValue());
-        }
+    public static void langGenerator(ResourcePackBuilder builder, String type, Map<ResourceLocation, Map<String, String>> names) {
+        Map<String, Map<String, String>> langEntries = new HashMap<>();
 
-        String jsonContent = Json.GSON.toJson(langEntries);
-        builder.addData(langPath, jsonContent.getBytes(StandardCharsets.UTF_8));
+        for (Map.Entry<ResourceLocation, Map<String, String>> entry : names.entrySet()) {
+            ResourceLocation id = entry.getKey();
+            Map<String, String> nameMap = entry.getValue();
+
+            for (Map.Entry<String, String> langEntry : nameMap.entrySet()) {
+                String lang = langEntry.getKey();
+                String name = langEntry.getValue();
+                if (name != null) {
+                    String key = type + "." + id.getNamespace() + "." + id.getPath();
+                    langEntries
+                            .computeIfAbsent(lang, k -> new HashMap<>())
+                            .put(key, name);
+                }
+            }
+        }
+        for (Map.Entry<String, Map<String, String>> langFileEntry : langEntries.entrySet()) {
+            String lang = langFileEntry.getKey();
+            String langPath = "assets/" + Constants.MOD_ID + "/lang/" + lang + ".json";
+            String jsonContent = Json.GSON.toJson(langFileEntry.getValue());
+            builder.addData(langPath, jsonContent.getBytes(StandardCharsets.UTF_8));
+        }
     }
 }

@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ItemRegistry {
-    private static final Map<ResourceLocation, String> itemNames = new HashMap<>();
+    private static final Map<ResourceLocation, Map<String, String>> itemNames = new HashMap<>();
     public static int REGISTERED_ITEMS = 0;
 
     public static void register(InputStream inputStream) throws IOException {
