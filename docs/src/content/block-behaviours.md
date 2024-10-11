@@ -105,7 +105,7 @@ Works similar to turtle eggs or candles, allows you to place "multiple blocks/it
 
 ### `facing` behaviour
 
-Gives the block an `axis` property/block-state similar to wooden logs/pillars and handles placement.
+Gives the block a `facing` property/block-state similar to wooden logs/pillars and handles placement.
 
 - **Block-State-Properties to provide models for**:
   - `facing`: north, east, south, west, up, down
@@ -199,12 +199,16 @@ Supplies a `powerlevel` blockstate and changes to it depending on the input reds
 - **Block-State-Properties to provide models for**:
   - `powerlevel`: 0...max-1
 
+---
+
 ### `strippable` behaviour
 
 Defines the block as strippable, replacing it with another block when interacted with an axe.
 
 - **Fields**:
     - `replacement`: The identifier of the block to replace the current block with (e.g., "minecraft:stone").
+
+---
 
 ### `slab` behaviour
 
@@ -213,9 +217,65 @@ Defines the block as slab, top, bottom, double, with placements, waterloggable.
 - **Block-State-Properties to provide models for**:
   - `type`: top, bottom, double
 
+---
+
+### `trapdoor` behaviour
+
+Trapdoor like block.
+
+- **Fields**:
+  - canOpenByWindCharge = true;
+  - canOpenByHand = true;
+  - openSound = SoundEvents.WOODEN_TRAPDOOR_OPEN;
+  - closeSound = SoundEvents.WOODEN_TRAPDOOR_CLOSE;
+
+---
+
+### `door` behaviour
+
+Door-like "block" that is 2 blocks high.
+Comes with all door block state properties (hinge, open, powered, etc)
+
+- **Fields**:
+  - canOpenByWindCharge = true;
+  - canOpenByHand = true;
+  - openSound = SoundEvents.WOODEN_TRAPDOOR_OPEN;
+  - closeSound = SoundEvents.WOODEN_TRAPDOOR_CLOSE;
+
+---
+
+### `simple_waterloggable` behaviour
+
+Simple waterloggable block.
+
+---
+
 ### `drop_xp` behaviour
 
 Makes the block drop xp when being mined without the silk-touch enchantment.
+
+The values of the `min` and `max` fields can be mapped to block-states.
+
+Example:
+```
+{
+  ...,
+  "behaviour": {
+    "drop_xp": {
+      "min": {
+        "age=0": 0,
+        "age=1": 0,
+        "age=2": 4
+      },
+      "max": {
+        "age=0": 0,
+        "age=1": 0,
+        "age=2": 6
+      }
+    }
+  }
+}
+```
 
 - **Fields**:
   - `min`: Minimum amount of XP to drop
@@ -227,4 +287,4 @@ Defines the block as oxidizing block, similar to the vanilla copper blocks, rand
 
 - **Fields**:
   - `replacement`: The identifier of the block to replace the current block with (e.g., "minecraft:stone").
-  - `weatherState`: The current weathering state of this block. Can be `unaffected`, `exposed`, `weathered`, `oxidized`. Defaults to `unaffected`
+  - `weatherState`: The current weathering state of this block. Can be `unaffected`, `exposed`, `weathered`, `oxidized`. Defaults to `unaffected`. A `weatherState` of `oxidized` will not oxidize any further.

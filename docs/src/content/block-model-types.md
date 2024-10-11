@@ -25,4 +25,36 @@ bottom_slab | 5
 bottom_slab_waterlogged | 5
 
 
-When choosing blocks that break instantly on the client, like plant blocks, the destroyTime property in the block config has to be 0 as well
+When choosing blocks that break instantly on the client, like plant blocks, the destroyTime property in the block config has to be 0 as well.
+
+You can map the `blockModelType` field of block configs to blockstates, this allows you to change the hitbox of the block depending on the block-state.
+
+In some cases, for example when using the `simple_waterloggable` behaviour, you might want to specify the waterlogged state for your custom block.
+
+Example:
+```
+{
+  "id": "mynamespace:half_slab",
+  "blockResource": {
+    "models" : {
+      "waterlogged=false": "minecraft:custom/block/dirt/dirt_slab",
+      "waterlogged=true": "minecraft:custom/block/dirt/dirt_slab"
+    }
+  },
+  "itemResource": {
+    "models" : {
+      "default": "minecraft:custom/block/dirt/dirt_slab"
+    }
+  },
+  "behaviour": {
+    "simple_waterloggable": {}
+  },
+  "blockModelType": {
+    "waterlogged=false": "sculk_sensor_block",
+    "waterlogged=true": "sculk_sensor_block_waterlogged"
+  },
+  "properties": {
+    "blockBase": "minecraft:dirt"
+  }
+}
+```
