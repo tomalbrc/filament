@@ -27,10 +27,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,8 +56,8 @@ public class Json {
             .registerTypeHierarchyAdapter(Item.class, new RegistryDeserializer<>(BuiltInRegistries.ITEM))
             .registerTypeHierarchyAdapter(SoundEvent.class, new RegistryDeserializer<>(BuiltInRegistries.SOUND_EVENT))
             .registerTypeHierarchyAdapter(BehaviourConfigMap.class, new BehaviourConfigMap.Deserializer())
-            .registerTypeAdapter(BlockStateMappedProperty.class, new BlockStateMappedPropertyDeserializer<>())
-            .registerTypeAdapter(PolymerBlockModel.class, new PolymerBlockModelDeserializer())
+            .registerTypeHierarchyAdapter(BlockStateMappedProperty.class, new BlockStateMappedPropertyDeserializer<>())
+            .registerTypeHierarchyAdapter(PolymerBlockModel.class, new PolymerBlockModelDeserializer())
             .create();
 
     public static class BlockStateMappedPropertyDeserializer<T> implements JsonDeserializer<BlockStateMappedProperty<T>> {
@@ -63,24 +65,37 @@ public class Json {
         public BlockStateMappedProperty<T> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             if (json.isJsonPrimitive()) {
                 JsonPrimitive primitive = json.getAsJsonPrimitive();
-
-                if (primitive.isBoolean()) {
-                    return new BlockStateMappedProperty<>((T) (Boolean) primitive.getAsBoolean());
-                } else if (primitive.isNumber()) {
-                    Number number = primitive.getAsNumber();
-                    if (number.doubleValue() == number.intValue()) {
-                        return new BlockStateMappedProperty<>((T) (Integer) number.intValue());
-                    } else {
-                        return new BlockStateMappedProperty<>((T) (Double) number.doubleValue());
-                    }
-                }
+                Type propertyType = ((ParameterizedType) typeOfT).getActualTypeArguments()[0];
+                T t = context.deserialize(primitive, propertyType);
+                return new BlockStateMappedProperty<>(t);
             } else if (json.isJsonObject()) {
-                Type mapType = new TypeToken<Map<String, Integer>>() {}.getType();
+                ParameterizedType mapType = getParameterizedType((ParameterizedType) typeOfT);
                 Map<String, T> map = context.deserialize(json, mapType);
                 return new BlockStateMappedProperty<>(map);
             }
 
             throw new JsonParseException("Invalid format for MappedProperty");
+        }
+
+        @NotNull
+        private static ParameterizedType getParameterizedType(ParameterizedType typeOfT) {
+            Type propertyType = typeOfT.getActualTypeArguments()[0];
+            return new ParameterizedType() {
+                @Override
+                public Type[] getActualTypeArguments() {
+                    return new Type[]{String.class, propertyType};
+                }
+
+                @Override
+                public Type getRawType() {
+                    return Map.class;
+                }
+
+                @Override
+                public Type getOwnerType() {
+                    return null;
+                }
+            };
         }
     }
 
