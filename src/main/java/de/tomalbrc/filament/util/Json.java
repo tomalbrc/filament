@@ -1,7 +1,6 @@
 package de.tomalbrc.filament.util;
 
 import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;

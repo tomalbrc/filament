@@ -1,7 +1,6 @@
 package de.tomalbrc.filament.trim;
 
 import java.util.List;
-import java.util.Map;
 
 public class ResourcePackBlocksAtlas {
     public List<Source> sources;

@@ -2,7 +2,6 @@ package de.tomalbrc.filament.behaviour.item;
 
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
-import de.tomalbrc.filament.data.ItemData;
 import net.fabricmc.fabric.api.registry.VillagerInteractionRegistries;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
