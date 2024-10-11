@@ -1,5 +1,6 @@
 {
   "id": "mynamespace:amethyst_helmet",
+  "displayName": { "en_us": "§dAmethyst Helmet" },
   "vanillaItem": "minecraft:leather_helmet",
   "properties": {
     "durability": 10,
