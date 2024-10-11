@@ -16,21 +16,14 @@ public class SimpleBlockItem extends SimpleItem implements PolymerItem, Equipabl
 
     private final PolymerModelData itemModelData;
 
-    private final BlockData blockData;
-
     public SimpleBlockItem(Properties properties, Block block, BlockData data) {
         super(block, properties, data.properties(), data.vanillaItem());
-        this.blockData = data;
         boolean hasItemModels = data.itemResource() != null && data.itemResource().models() != null;
         this.itemModelData = PolymerResourcePackUtils.requestModel(
                 data.vanillaItem(),
-                hasItemModels ? data.itemResource().models().get("default") : data.blockResource().models().entrySet().iterator().next().getValue());
+                hasItemModels ? data.itemResource().models().get("default") : data.blockResource().models().entrySet().iterator().next().getValue().model());
 
         this.initBehaviours(data.behaviourConfig());
-    }
-
-    public BlockData getBlockData() {
-        return this.blockData;
     }
 
     @Override

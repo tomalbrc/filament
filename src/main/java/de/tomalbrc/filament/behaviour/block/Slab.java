@@ -11,7 +11,6 @@ import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -100,7 +99,7 @@ public class Slab implements BlockBehaviour<Slab.SlabConfig>, SimpleWaterloggedB
 
     @Override
     public FluidState getFluidState(BlockState blockState) {
-        if (blockState.getValue(BlockStateProperties.WATERLOGGED).booleanValue()) {
+        if (blockState.getValue(BlockStateProperties.WATERLOGGED)) {
             return Fluids.WATER.getSource(false);
         }
         return null;
@@ -124,7 +123,7 @@ public class Slab implements BlockBehaviour<Slab.SlabConfig>, SimpleWaterloggedB
 
     @Override
     public BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) {
-        if (blockState.getValue(BlockStateProperties.WATERLOGGED).booleanValue()) {
+        if (blockState.getValue(BlockStateProperties.WATERLOGGED)) {
             levelAccessor.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
         }
         return blockState;
@@ -132,32 +131,26 @@ public class Slab implements BlockBehaviour<Slab.SlabConfig>, SimpleWaterloggedB
 
     @Override
     public Optional<Boolean> isPathfindable(BlockState blockState, PathComputationType pathComputationType) {
-        switch (pathComputationType) {
-            case LAND, AIR: {
-                return Optional.of(false);
-            }
-            case WATER: {
-                return Optional.of(blockState.getFluidState().is(FluidTags.WATER));
-            }
-        }
-        return Optional.of(false);
+        return switch (pathComputationType) {
+            case LAND, AIR -> Optional.of(false);
+            case WATER -> Optional.of(blockState.getFluidState().is(FluidTags.WATER));
+        };
     }
 
     @Override
     public boolean modifyStateMap(Map<BlockState, BlockData.BlockStateMeta> map, BlockData data) {
-        for (Map.Entry<String, ResourceLocation> entry : data.blockResource().models().entrySet()) {
-            PolymerBlockModel blockModel = PolymerBlockModel.of(entry.getValue());
+        for (Map.Entry<String, PolymerBlockModel> entry : data.blockResource().models().entrySet()) {
+            PolymerBlockModel blockModel = entry.getValue();
 
             BlockStateParser.BlockResult parsed;
             String str = String.format("%s[%s]", data.id(), entry.getKey());
             try {
                 parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), str, false);
             } catch (CommandSyntaxException e) {
-                e.printStackTrace();
                 throw new JsonParseException("Invalid BlockState value: " + str);
             }
 
-            BlockState requestedState = null;
+            BlockState requestedState;
             if (parsed.blockState().getValue(SlabBlock.TYPE) == SlabType.TOP) {
                 requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.TOP_SLAB, blockModel);
             } else if (parsed.blockState().getValue(SlabBlock.TYPE) == SlabType.BOTTOM) {
