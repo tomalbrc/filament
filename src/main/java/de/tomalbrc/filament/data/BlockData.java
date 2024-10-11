@@ -6,6 +6,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.BlockProperties;
+import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import de.tomalbrc.filament.data.resource.BlockResource;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import eu.pb4.polymer.blocks.api.BlockModelType;
@@ -31,7 +32,7 @@ public record BlockData(
         @Nullable Item vanillaItem,
         @NotNull BlockResource blockResource,
         @Nullable ItemResource itemResource,
-        @Nullable BlockModelType blockModelType,
+        @Nullable BlockStateMappedProperty<BlockModelType> blockModelType,
         @Nullable BlockProperties properties,
         @SerializedName("behaviour")
         @Nullable BehaviourConfigMap behaviourConfig,
@@ -73,40 +74,52 @@ public record BlockData(
             //val = BlockModelGenerator.generate(blockResource);
             throw new UnsupportedOperationException("Not implemented");
         } else if (blockResource.models() != null && this.blockModelType != null) {
-            for (Map.Entry<String, ResourceLocation> entry : this.blockResource.models().entrySet()) {
-                PolymerBlockModel blockModel = PolymerBlockModel.of(entry.getValue());
-
-                BlockModelType finalType = this.blockModelType;
-                boolean weAreInTrouble = false;
-                if (PolymerBlockResourceUtils.getBlocksLeft(finalType) <= 0) {
-                    finalType = BlockModelType.FULL_BLOCK;
-                    if (PolymerBlockResourceUtils.getBlocksLeft(finalType) <= 0) {
-                        weAreInTrouble = true;
-                        Filament.LOGGER.error("Filament: Ran out of blockModelTypes to use AND FULL_BLOCK ran out too! Using Bedrock block temporarily. Fix your Block-Config for "+id()+"!");
-                    } else
-                        Filament.LOGGER.error("Filament: Ran out of blockModelTypes to use! Using FULL_BLOCK");
-                }
-                BlockState requestedState = weAreInTrouble ? null : PolymerBlockResourceUtils.requestBlock(finalType, blockModel);
-
+            for (Map.Entry<String, PolymerBlockModel> entry : this.blockResource.models().entrySet()) {
                 if (entry.getKey().equals("default")) {
-                    val.put(BuiltInRegistries.BLOCK.get(id).defaultBlockState(), BlockStateMeta.of(weAreInTrouble ? Blocks.BEDROCK.defaultBlockState() : requestedState, blockModel));
+                    var type = safeBlockModelType(this.blockModelType.getRawValue());
+                    BlockState requestedState = type == null ? null : PolymerBlockResourceUtils.requestBlock(type, entry.getValue());
+                    val.put(BuiltInRegistries.BLOCK.get(id).defaultBlockState(), BlockStateMeta.of(type == null ? Blocks.BEDROCK.defaultBlockState() : requestedState, entry.getValue()));
                 }
                 else {
-                    BlockStateParser.BlockResult parsed;
-                    String str = String.format("%s[%s]", id, entry.getKey());
-                    try {
-                        parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), str, false);
-                    } catch (CommandSyntaxException e) {
-                        e.printStackTrace();
-                        throw new JsonParseException("Invalid BlockState value: " + str);
+                    var state = blockState(String.format("%s[%s]", id, entry.getKey()));
+                    if (this.blockModelType.isMap()) {
+                        var type = safeBlockModelType(this.blockModelType.getOrDefault(state, BlockModelType.FULL_BLOCK));
+                        BlockState requestedState = type == null ? null : PolymerBlockResourceUtils.requestBlock(type, entry.getValue());
+                        val.put(state, BlockStateMeta.of(type == null ? Blocks.BEDROCK.defaultBlockState() : requestedState, entry.getValue()));
+                    } else {
+                        var type = safeBlockModelType(this.blockModelType.getRawValue());
+                        BlockState requestedState = type == null ? null : PolymerBlockResourceUtils.requestBlock(type, entry.getValue());
+                        val.put(state, BlockStateMeta.of(type == null ? Blocks.BEDROCK.defaultBlockState() : requestedState, entry.getValue()));
                     }
-
-                    val.put(parsed.blockState(), BlockStateMeta.of(weAreInTrouble ? Blocks.BEDROCK.defaultBlockState() : requestedState, blockModel));
                 }
             }
         }
 
         return val;
+    }
+
+    private static BlockState blockState(String str) {
+        BlockStateParser.BlockResult parsed;
+        try {
+            parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), str, false);
+        } catch (CommandSyntaxException e) {
+            throw new JsonParseException("Invalid BlockState value: " + str);
+        }
+        return parsed.blockState();
+    }
+
+    private BlockModelType safeBlockModelType(BlockModelType blockModelType) {
+        if (PolymerBlockResourceUtils.getBlocksLeft(blockModelType) <= 0) {
+            blockModelType = BlockModelType.FULL_BLOCK;
+            if (PolymerBlockResourceUtils.getBlocksLeft(blockModelType) <= 0) {
+                Filament.LOGGER.error("Filament: Ran out of blockModelTypes to use AND FULL_BLOCK ran out too! Using Bedrock block temporarily. Fix your Block-Config for {}!", this.id());
+                return null;
+            } else {
+                Filament.LOGGER.error("Filament: Ran out of blockModelTypes to use! Using FULL_BLOCK");
+            }
+        }
+
+        return blockModelType;
     }
 
     public record BlockStateMeta(BlockState blockState, PolymerBlockModel polymerBlockModel) {
