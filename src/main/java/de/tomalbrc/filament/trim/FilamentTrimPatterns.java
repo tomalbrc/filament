@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.trim;
 
+import com.mojang.serialization.Lifecycle;
 import de.tomalbrc.filament.behaviour.item.Armor;
 import de.tomalbrc.filament.util.FilamentConfig;
 import de.tomalbrc.filament.util.Json;
@@ -8,6 +9,7 @@ import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+import net.minecraft.SharedConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistrationInfo;
 import net.minecraft.core.RegistryAccess;
@@ -18,6 +20,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.repository.KnownPack;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -34,6 +37,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 public class FilamentTrimPatterns {
@@ -56,6 +60,11 @@ public class FilamentTrimPatterns {
 
         FilamentTrimHolder holder = new FilamentTrimHolder();
 
+        for (Map.Entry<Armor.Config, FilamentTrimHolder> configFilamentTrimHolderEntry : trimConfigs.entrySet()) {
+            if (configFilamentTrimHolderEntry.getKey().texture.equals(config.texture)) {
+                return configFilamentTrimHolderEntry.getValue();
+            }
+        }
         trimConfigs.put(config, holder);
 
         return holder;
@@ -96,29 +105,8 @@ public class FilamentTrimPatterns {
     }
 
     public static void addRPContents(ResourcePackBuilder builder) {
-        String path = "assets/minecraft/atlases/armor_trims.json";
-
-        var data = builder.getDataOrSource(path);
-        ResourcePackTrimPatternAtlas atlas = Json.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(data)), ResourcePackTrimPatternAtlas.class);
-
-        List<ResourceLocation> resourceLocationList = new ObjectArrayList<>();
-        for (Map.Entry<Armor.Config, FilamentTrimHolder> entry : trimConfigs.entrySet()) {
-            ResourcePackTrimPatternAtlas.Source source = new ResourcePackTrimPatternAtlas.Source();
-            source.type = atlas.sources.get(0).type;
-            source.palette_key = atlas.sources.get(0).palette_key;
-            source.textures = new ObjectArrayList<>();
-
-            if (!resourceLocationList.contains(entry.getKey().texture)) { // only once for every texture
-                source.textures.add(entry.getKey().texture.withPrefix("trims/models/armor/").toString());
-                source.textures.add(entry.getKey().texture.withPrefix("trims/models/armor/").withSuffix("_leggings").toString());
-                resourceLocationList.add(entry.getKey().texture);
-            }
-
-            source.permutations = atlas.sources.get(0).permutations;
-
-            atlas.sources.add(source);
-        }
-        builder.addData(path, Json.GSON.toJson(atlas).getBytes(StandardCharsets.UTF_8));
+        addTrimAtlas(builder);
+        addBlockAtlas(builder);
 
         if (overwriteChainMail()) {
             copyChainmailTexture(builder);
@@ -126,7 +114,7 @@ public class FilamentTrimPatterns {
             List<Item> items = List.of(Items.CHAINMAIL_HELMET, Items.CHAINMAIL_CHESTPLATE, Items.CHAINMAIL_LEGGINGS, Items.CHAINMAIL_BOOTS);
             for (Item item : items) {
                 String itemModelPath = "assets/minecraft/models/item/" + BuiltInRegistries.ITEM.getKey(item).getPath() + ".json";
-                data = builder.getDataOrSource(itemModelPath);
+                var data = builder.getDataOrSource(itemModelPath);
                 // strip overrides, ResourcePackSimplifiedItemModel doesn't have a field for that
                 ResourcePackSimplifiedItemModel tmp = Json.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(data)), ResourcePackSimplifiedItemModel.class);
                 builder.addData(itemModelPath, Json.GSON.toJson(tmp).getBytes(StandardCharsets.UTF_8));
@@ -134,14 +122,53 @@ public class FilamentTrimPatterns {
         }
     }
 
+    private static void addTrimAtlas(ResourcePackBuilder builder) {
+        String path = "assets/minecraft/atlases/armor_trims.json";
+        var data = builder.getDataOrSource(path);
+        ResourcePackTrimPatternAtlas atlas = Json.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(data)), ResourcePackTrimPatternAtlas.class);
+        atlas.sources.getFirst().textures = new ObjectArrayList<>();
+        var permEntry = atlas.sources.getFirst().permutations.entrySet().iterator().next();
+        atlas.sources.getFirst().permutations = Map.of(permEntry.getKey(), permEntry.getValue());
+
+        for (Map.Entry<Armor.Config, FilamentTrimHolder> entry : trimConfigs.entrySet()) {
+            var k1 = entry.getKey().texture.withPrefix("trims/models/armor/").toString();
+            if (!atlas.sources.getFirst().textures.contains(k1)) atlas.sources.getFirst().textures.add(k1);
+
+            var k2 = entry.getKey().texture.withPrefix("trims/models/armor/").withSuffix("_leggings").toString();
+            if (!atlas.sources.getFirst().textures.contains(k2)) atlas.sources.getFirst().textures.add(k2);
+        }
+        builder.addData(path, Json.GSON.toJson(atlas).getBytes(StandardCharsets.UTF_8));
+    }
+
+    private static void addBlockAtlas(ResourcePackBuilder builder) {
+        String path = "assets/minecraft/atlases/blocks.json";
+        ResourcePackBlocksAtlas atlas = new ResourcePackBlocksAtlas();
+        atlas.sources = new ObjectArrayList<>();
+
+        for (Map.Entry<Armor.Config, FilamentTrimHolder> entry : trimConfigs.entrySet()) {
+            ResourcePackBlocksAtlas.Source source = new ResourcePackBlocksAtlas.Source();
+            source.type = "single";
+            source.sprite = entry.getKey().texture.withPrefix("trims/models/armor/").toString();
+            source.resource = entry.getKey().texture.withPrefix("trims/models/armor/").toString();
+            atlas.sources.add(source);
+
+            ResourcePackBlocksAtlas.Source source2 = new ResourcePackBlocksAtlas.Source();
+            source2.type = "single";
+            source2.sprite = entry.getKey().texture.withPrefix("trims/models/armor/").withSuffix("_leggings").toString();
+            source2.resource = entry.getKey().texture.withPrefix("trims/models/armor/").withSuffix("_leggings").toString();
+            atlas.sources.add(source2);
+        }
+        builder.addData(path, Json.GSON.toJson(atlas).getBytes(StandardCharsets.UTF_8));
+    }
+
     private static Holder.Reference<TrimPattern> register(WritableRegistry<TrimPattern> registry, Item template, ResourceKey<TrimPattern> key) {
         TrimPattern armorTrimPattern = new TrimPattern(
                 key.location(),
                 BuiltInRegistries.ITEM.wrapAsHolder(template),
-                Component.empty(),
+                Component.literal("-"),
                 false // decal
         );
-        return registry.register(key, armorTrimPattern, RegistrationInfo.BUILT_IN);
+        return registry.register(key, armorTrimPattern, new RegistrationInfo(Optional.of(new KnownPack("filament", "filament", SharedConstants.getCurrentVersion().getId())), Lifecycle.stable()));
     }
 
     private static ResourceKey<TrimPattern> of(ResourceLocation resourceLocation) {

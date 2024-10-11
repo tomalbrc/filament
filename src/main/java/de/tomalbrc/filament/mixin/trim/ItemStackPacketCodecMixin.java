@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(targets = "net/minecraft/world/item/ItemStack$1")
+@Mixin(targets = "net/minecraft/world/item/ItemStack$1", priority = 400) // 400 so we can change it before polymer does
 public abstract class ItemStackPacketCodecMixin {
     @Inject(method = "encode(Lnet/minecraft/network/RegistryFriendlyByteBuf;Lnet/minecraft/world/item/ItemStack;)V", at = @At("HEAD"))
     private void filament$modifyChainmail(RegistryFriendlyByteBuf registryFriendlyByteBuf, ItemStack itemStack, CallbackInfo ci, @Local(argsOnly = true) RegistryFriendlyByteBuf buf) {

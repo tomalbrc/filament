@@ -53,7 +53,7 @@ public class Armor implements ItemBehaviour<Armor.Config> {
 
     public ItemStack modifyPolymerItemStack(ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
         if (this.trimHolder != null)
-            itemStack.set(DataComponents.TRIM, new ArmorTrim(lookup.lookup(Registries.TRIM_MATERIAL).get().get(TrimMaterials.REDSTONE).get(), this.trimHolder.trimPattern, false));
+            itemStack.set(DataComponents.TRIM, new ArmorTrim(lookup.lookup(Registries.TRIM_MATERIAL).get().get(TrimMaterials.QUARTZ).get(), this.trimHolder.trimPattern, false));
         return itemStack;
     }
 
