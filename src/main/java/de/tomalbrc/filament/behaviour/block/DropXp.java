@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.behaviour.block;
 
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
+import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.valueproviders.ConstantInt;
@@ -28,18 +29,18 @@ public class DropXp implements BlockBehaviour<DropXp.Config> {
     }
 
     @Override
-    public void spawnAfterBreak(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, boolean bl) {
-        if (bl) {
-            this.spawnXpAfterEnchantCheck(serverLevel, blockPos, itemStack, this.getRange());
+    public void spawnAfterBreak(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, boolean doSpawn) {
+        if (doSpawn) {
+            this.spawnXpAfterEnchantCheck(serverLevel, blockPos, itemStack, this.getRange(blockState));
         }
     }
 
-    private IntProvider getRange() {
+    private IntProvider getRange(BlockState blockState) {
         if (this.config.max == this.config.min) {
-            return ConstantInt.of(this.config.min);
+            return ConstantInt.of(this.config.min.getOrDefault(blockState, 0));
         }
 
-        return UniformInt.of(this.config.min, this.config.max);
+        return UniformInt.of(this.config.min.getOrDefault(blockState, 0), this.config.max.getOrDefault(blockState, 0));
     }
 
     protected void spawnXpAfterEnchantCheck(ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, IntProvider intProvider) {
@@ -56,7 +57,7 @@ public class DropXp implements BlockBehaviour<DropXp.Config> {
     }
 
     public static class Config {
-        public int min = 0;
-        public int max = 0;
+        public BlockStateMappedProperty<Integer> min = BlockStateMappedProperty.of(0);
+        public BlockStateMappedProperty<Integer> max = BlockStateMappedProperty.of(0);
     }
 }
