@@ -1,0 +1,58 @@
+{
+  "id": "mynamespace:test_door",
+  "blockResource": {
+    "models" : {
+      "hinge=left,open=true,half=lower,facing=north": {"model": "minecraft:block/acacia_trapdoor_open", "y": 90},
+      "hinge=left,open=true,half=lower,facing=east": {"model": "minecraft:block/acacia_trapdoor_open", "y": 180},
+      "hinge=left,open=true,half=lower,facing=south": {"model": "minecraft:block/acacia_trapdoor_open", "y": 270},
+      "hinge=left,open=true,half=lower,facing=west": {"model": "minecraft:block/acacia_trapdoor_open", "y": 0},
+
+      "hinge=left,open=true,half=upper,facing=north": {"model": "minecraft:block/acacia_trapdoor_open", "y": 90},
+      "hinge=left,open=true,half=upper,facing=east": {"model": "minecraft:block/acacia_trapdoor_open", "y": 180},
+      "hinge=left,open=true,half=upper,facing=south": {"model": "minecraft:block/acacia_trapdoor_open", "y": 270},
+      "hinge=left,open=true,half=upper,facing=west": {"model": "minecraft:block/acacia_trapdoor_open", "y": 0},
+
+      "hinge=left,open=false,half=lower,facing=north": {"model": "minecraft:block/acacia_trapdoor_open", "y": 0},
+      "hinge=left,open=false,half=lower,facing=east": {"model": "minecraft:block/acacia_trapdoor_open", "y": 90},
+      "hinge=left,open=false,half=lower,facing=south": {"model": "minecraft:block/acacia_trapdoor_open", "y": 180},
+      "hinge=left,open=false,half=lower,facing=west": {"model": "minecraft:block/acacia_trapdoor_open", "y": 270},
+
+      "hinge=left,open=false,half=upper,facing=north": {"model": "minecraft:block/acacia_trapdoor_open", "y": 0},
+      "hinge=left,open=false,half=upper,facing=east": {"model": "minecraft:block/acacia_trapdoor_open", "y": 90},
+      "hinge=left,open=false,half=upper,facing=south": {"model": "minecraft:block/acacia_trapdoor_open", "y": 180},
+      "hinge=left,open=false,half=upper,facing=west": {"model": "minecraft:block/acacia_trapdoor_open", "y": 270},
+
+
+      "hinge=right,open=true,half=lower,facing=north": {"model": "minecraft:block/acacia_trapdoor_open", "y": 270},
+      "hinge=right,open=true,half=lower,facing=east": {"model": "minecraft:block/acacia_trapdoor_open", "y": 0},
+      "hinge=right,open=true,half=lower,facing=south": {"model": "minecraft:block/acacia_trapdoor_open", "y": 90},
+      "hinge=right,open=true,half=lower,facing=west": {"model": "minecraft:block/acacia_trapdoor_open", "y": 180},
+
+      "hinge=right,open=true,half=upper,facing=north": {"model": "minecraft:block/acacia_trapdoor_open", "y": 270},
+      "hinge=right,open=true,half=upper,facing=east": {"model": "minecraft:block/acacia_trapdoor_open", "y": 0},
+      "hinge=right,open=true,half=upper,facing=south": {"model": "minecraft:block/acacia_trapdoor_open", "y": 90},
+      "hinge=right,open=true,half=upper,facing=west": {"model": "minecraft:block/acacia_trapdoor_open", "y": 180},
+
+      "hinge=right,open=false,half=lower,facing=north": {"model": "minecraft:block/acacia_trapdoor_open", "y": 0},
+      "hinge=right,open=false,half=lower,facing=east": {"model": "minecraft:block/acacia_trapdoor_open", "y": 90},
+      "hinge=right,open=false,half=lower,facing=south": {"model": "minecraft:block/acacia_trapdoor_open", "y": 180},
+      "hinge=right,open=false,half=lower,facing=west": {"model": "minecraft:block/acacia_trapdoor_open", "y": 270},
+
+      "hinge=right,open=false,half=upper,facing=north": {"model": "minecraft:block/acacia_trapdoor_open", "y": 0},
+      "hinge=right,open=false,half=upper,facing=east": {"model": "minecraft:block/acacia_trapdoor_open", "y": 90},
+      "hinge=right,open=false,half=upper,facing=south": {"model": "minecraft:block/acacia_trapdoor_open", "y": 180},
+      "hinge=right,open=false,half=upper,facing=west": {"model": "minecraft:block/acacia_trapdoor_open", "y": 270}
+    }
+  },
+  "itemResource": {
+    "models" : {
+        "default": "minecraft:item/acacia_trapdoor"
+    }
+  },
+  "behaviour": {
+    "door": {}
+  },
+  "properties": {
+    "blockBase": "minecraft:dirt"
+  }
+}

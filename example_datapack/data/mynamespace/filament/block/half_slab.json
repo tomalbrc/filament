@@ -1,0 +1,24 @@
+{
+  "id": "mynamespace:half_slab",
+  "blockResource": {
+    "models" : {
+      "waterlogged=false": "minecraft:custom/block/dirt/dirt_slab",
+      "waterlogged=true": "minecraft:custom/block/dirt/dirt_slab"
+    }
+  },
+  "itemResource": {
+    "models" : {
+      "default": "minecraft:custom/block/dirt/dirt_slab"
+    }
+  },
+  "behaviour": {
+    "simple_waterloggable": {}
+  },
+  "blockModelType": {
+    "waterlogged=false": "sculk_sensor_block",
+    "waterlogged=true": "sculk_sensor_block_waterlogged"
+  },
+  "properties": {
+    "blockBase": "minecraft:dirt"
+  }
+}
