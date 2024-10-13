@@ -5,7 +5,6 @@ import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.item.SimpleItem;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -14,6 +13,7 @@ import xyz.nucleoid.packettweaker.PacketContext;
 import java.util.Map;
 
 public class SimpleBlockItem extends SimpleItem implements PolymerItem, BehaviourHolder {
+    private final BlockData blockData;
 
     public SimpleBlockItem(Properties properties, Block block, BlockData data) {
         super(block, properties, data.properties(), data.vanillaItem());
@@ -34,6 +34,6 @@ public class SimpleBlockItem extends SimpleItem implements PolymerItem, Behaviou
     @Override
     protected ResourceLocation getModel() {
         boolean hasItemModels = this.blockData.itemResource() != null && this.blockData.itemResource().models() != null;
-        return hasItemModels ? this.blockData.itemResource().models().get("default") : this.blockData.blockResource().models().entrySet().iterator().next().getValue();
+        return hasItemModels ? this.blockData.itemResource().models().get("default") : this.blockData.blockResource().models().entrySet().iterator().next().getValue().model();
     }
 }

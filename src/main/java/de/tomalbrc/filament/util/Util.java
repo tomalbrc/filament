@@ -4,7 +4,6 @@ import com.mojang.math.Axis;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
@@ -17,7 +16,6 @@ import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -41,10 +39,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
 import org.joml.*;
 
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -273,36 +268,6 @@ public class Util {
             Item item = itemStack.getItem();
             itemStack.shrink(1);
             livingEntity.onEquippedItemBroken(item, slot);
-        }
-    }
-
-    public static void langGenerator(ResourcePackBuilder builder, String type, Map<ResourceLocation, Map<String, String>> names) {
-        Map<String, Map<String, Map<String, String>>> langEntries = new HashMap<>();
-
-        for (Map.Entry<ResourceLocation, Map<String, String>> entry : names.entrySet()) {
-            ResourceLocation id = entry.getKey();
-            Map<String, String> nameMap = entry.getValue();
-
-            for (Map.Entry<String, String> langEntry : nameMap.entrySet()) {
-                String lang = langEntry.getKey();
-                String name = langEntry.getValue();
-                if (name != null) {
-                    String key = type + "." + id.getNamespace() + "." + id.getPath();
-                    langEntries
-                            .computeIfAbsent(id.getNamespace(), k -> new HashMap<>())
-                            .computeIfAbsent(lang, k -> new HashMap<>())
-                            .put(key, name);
-                }
-            }
-        }
-        for (Map.Entry<String, Map<String, Map<String, String>>> namespaceEntry : langEntries.entrySet()) {
-            String namespace = namespaceEntry.getKey();
-            for (Map.Entry<String, Map<String, String>> langFileEntry : namespaceEntry.getValue().entrySet()) {
-                String lang = langFileEntry.getKey();
-                String langPath = "assets/" + namespace + "/lang/" + lang + ".json";
-                String jsonContent = Json.GSON.toJson(langFileEntry.getValue());
-                builder.addData(langPath, jsonContent.getBytes(StandardCharsets.UTF_8));
-            }
         }
     }
 }

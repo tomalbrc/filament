@@ -8,8 +8,6 @@ import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
-import de.tomalbrc.filament.util.Util;
-import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
@@ -22,18 +20,15 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
 public class BlockRegistry {
-    private static final Map<ResourceLocation, Map<String, String>> blockNames = new HashMap<>();
     public static int REGISTERED_BLOCKS = 0;
 
     public static void register(InputStream inputStream) throws IOException {
@@ -57,24 +52,18 @@ public class BlockRegistry {
         BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
         BehaviourUtil.postInitBlock(item, customBlock, customBlock, data.behaviourConfig());
 
-        BlockRegistry.registerBlock(data.displayName(), data.id(), customBlock);
-        ItemRegistry.registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.BLOCK_GROUP_ID);
-
         customBlock.postRegister();
 
         REGISTERED_BLOCKS++;
     }
 
-    public static ResourceKey<Block> key(@Nullable Map<String, String> name, ResourceLocation id) {
+    public static ResourceKey<Block> key(ResourceLocation id) {
         return ResourceKey.create(Registries.BLOCK, id);
     }
 
     public static <T extends Block> T registerBlock(ResourceKey<Block> resourceKey, Function<BlockBehaviour.Properties, T> function, BlockBehaviour.Properties properties) {
         T block = function.apply(properties.setId(resourceKey));
         return Registry.register(BuiltInRegistries.BLOCK, resourceKey, block);
-        if (name != null) {
-            blockNames.putIfAbsent(identifier, name);
-        }
     }
 
     public static class BlockDataReloadListener implements SimpleSynchronousResourceReloadListener {
@@ -95,7 +84,6 @@ public class BlockRegistry {
                     Filament.LOGGER.error("Failed to load block resource \"{}\".", entry.getKey());
                 }
             }
-            PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(builder -> Util.langGenerator(builder, "block", blockNames));
         }
     }
 }

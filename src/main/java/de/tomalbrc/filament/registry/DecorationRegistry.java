@@ -60,7 +60,6 @@ public class DecorationRegistry {
 
         var block = BlockRegistry.registerBlock(BlockRegistry.key(data.id()), getBlockCreator(data), blockProperties);
         decorationBlocks.put(data.id(), block);
-        BlockRegistry.registerBlock(data.displayName(), data.id(), block);
 
         Item.Properties properties = data.properties().toItemProperties();
         for (TypedDataComponent component : data.components()) {

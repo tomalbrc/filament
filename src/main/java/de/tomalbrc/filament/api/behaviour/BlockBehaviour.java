@@ -77,7 +77,7 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
         return null;
     }
 
-    default void onExplosionHit(BlockState blockState, Level level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
+    default void onExplosionHit(BlockState blockState, ServerLevel level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
     }
 
     default BlockState rotate(BlockState blockState, Rotation rotation) {

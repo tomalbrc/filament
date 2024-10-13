@@ -9,7 +9,6 @@ import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
@@ -158,11 +157,11 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, Orientation orientation, boolean bl) {
         if (this.getBehaviours() != null)
             this.forEach(x -> x.neighborChanged(blockState, level, blockPos, block, orientation, bl));
-        super.neighborChanged(blockState, level, blockPos, block, blockPos2, bl);
+        super.neighborChanged(blockState, level, blockPos, block, orientation, bl);
     }
 
     @Override
-    public void onExplosionHit(BlockState blockState, Level level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
+    public void onExplosionHit(BlockState blockState, ServerLevel level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
         if (this.getBehaviours() != null)
             this.forEach(x -> x.onExplosionHit(blockState, level, blockPos, explosion, biConsumer));
         super.onExplosionHit(blockState, level, blockPos, explosion, biConsumer);

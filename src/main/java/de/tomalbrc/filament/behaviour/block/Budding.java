@@ -48,15 +48,15 @@ public class Budding implements BlockBehaviour<Budding.Config>, SimpleWaterlogge
         BlockState state = null;
 
         if (this.canGrowAndReplace(blockState2)) {
-            state = BuiltInRegistries.BLOCK.get(this.config.grows.getFirst()).defaultBlockState();
+            state = BuiltInRegistries.BLOCK.get(this.config.grows.getFirst()).orElseThrow().value().defaultBlockState();
         }
 
         Direction dir = getFacingOrNull(blockState2);
         Direction.Axis axis = getAxisOrNull(blockState2);
         for (int i = 0; i < this.config.grows.size()-1; i++) {
-            Block currentStage = BuiltInRegistries.BLOCK.get(this.config.grows.get(i));
+            Block currentStage = BuiltInRegistries.BLOCK.get(this.config.grows.get(i)).orElseThrow().value();
             if (blockState2.is(currentStage) && (dir == null || dir == direction || axis == null || axis.test(direction))) {
-                Block nextStage = BuiltInRegistries.BLOCK.get(this.config.grows.get(i + 1));
+                Block nextStage = BuiltInRegistries.BLOCK.get(this.config.grows.get(i + 1)).orElseThrow().value();
                 state = nextStage.defaultBlockState();
                 break;
             }
@@ -116,7 +116,7 @@ public class Budding implements BlockBehaviour<Budding.Config>, SimpleWaterlogge
     }
 
     private boolean canGrowAndReplace(BlockState blockState) {
-        return blockState.isAir() || BuiltInRegistries.BLOCK.get(this.config.grows.getFirst()).defaultBlockState().hasProperty(BlockStateProperties.WATERLOGGED) && blockState.is(Blocks.WATER) && blockState.getFluidState().getAmount() == 8;
+        return blockState.isAir() || BuiltInRegistries.BLOCK.get(this.config.grows.getFirst()).orElseThrow().value().defaultBlockState().hasProperty(BlockStateProperties.WATERLOGGED) && blockState.is(Blocks.WATER) && blockState.getFluidState().getAmount() == 8;
     }
 
     public static class Config {
