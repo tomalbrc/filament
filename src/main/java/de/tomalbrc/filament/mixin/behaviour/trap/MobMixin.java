@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.mixin.behaviour;
+package de.tomalbrc.filament.mixin.behaviour.trap;
 
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.Behaviours;

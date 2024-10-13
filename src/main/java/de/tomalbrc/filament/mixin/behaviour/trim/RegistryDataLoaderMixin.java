@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.mixin.trim;
+package de.tomalbrc.filament.mixin.behaviour.trim;
 
 import de.tomalbrc.filament.trim.FilamentTrimPatterns;
 import net.minecraft.core.MappedRegistry;

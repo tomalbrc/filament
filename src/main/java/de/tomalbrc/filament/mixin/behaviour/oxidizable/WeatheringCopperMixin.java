@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.mixin.behaviour;
+package de.tomalbrc.filament.mixin.behaviour.oxidizable;
 
 import de.tomalbrc.filament.registry.OxidizableRegistry;
 import net.minecraft.world.level.block.Block;

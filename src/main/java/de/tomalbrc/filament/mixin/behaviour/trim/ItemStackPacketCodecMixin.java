@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.mixin.trim;
+package de.tomalbrc.filament.mixin.behaviour.trim;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import de.tomalbrc.filament.trim.FilamentTrimPatterns;

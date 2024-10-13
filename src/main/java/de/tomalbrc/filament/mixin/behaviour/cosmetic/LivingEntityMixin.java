@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.mixin.cosmetic;
+package de.tomalbrc.filament.mixin.behaviour.cosmetic;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import de.tomalbrc.filament.behaviour.Behaviours;
