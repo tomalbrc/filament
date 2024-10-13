@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.item;
 
 import com.mojang.math.Axis;
+import de.tomalbrc.filament.behaviour.item.Shoot;
 import eu.pb4.polymer.core.api.entity.PolymerEntity;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.VirtualEntityUtils;
@@ -57,6 +58,8 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     protected final InteractionElement interactionElement = new InteractionElement(); // InteractionElement.redirect(this);
     protected final InteractionElement interactionElement2 = new InteractionElement(); // InteractionElement.redirect(this);
 
+    public Shoot.ShootConfig config;
+
     protected void createMainDisplayElement() {
         this.mainDisplayElement.setItem(this.projectileStack);
 
@@ -66,9 +69,9 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
         }
 
         this.mainDisplayElement.setLeftRotation(Axis.ZP.rotationDegrees(180));
-        this.mainDisplayElement.setRightRotation(new Quaternionf().rotateY((float) Math.toRadians(getYRot() + 90)).normalize());
-        this.mainDisplayElement.setTranslation(new Vector3f(0.f, 0.15f, 0.f));
-        this.mainDisplayElement.setScale(new Vector3f(0.6f));
+        this.mainDisplayElement.setRightRotation(new Quaternionf().rotateY((float) Math.toRadians(getYRot())).mul(config.rotation).normalize());
+        this.mainDisplayElement.setTranslation(new Vector3f(0.f, 0.15f, 0.f).add(config.translation));
+        this.mainDisplayElement.setScale(config.scale);
     }
 
     public BaseProjectileEntity(EntityType<? extends AbstractArrow> entityType, Level world) {
@@ -86,9 +89,13 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
         VirtualEntityUtils.addVirtualPassenger(this, this.interactionElement2.getEntityId());
     }
 
+    public ItemDisplayElement getDisplayElement() {
+        return this.mainDisplayElement;
+    }
+
     public void setProjectileStack(ItemStack projectileStack) {
         this.projectileStack = projectileStack;
-        createMainDisplayElement();
+        this.createMainDisplayElement();
     }
 
     public void setPickupStack(ItemStack itemStack) {
