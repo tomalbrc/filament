@@ -1,7 +1,6 @@
 package de.tomalbrc.filament.api.behaviour;
 
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
-import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
