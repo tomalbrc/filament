@@ -38,12 +38,4 @@ public interface ItemBehaviour<T> extends Behaviour<T> {
     default ItemStack modifyPolymerItemStack(Map<String, ResourceLocation> models, ItemStack self, ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
         return itemStack;
     }
-
-    default int modifyPolymerCustomModelData(Map<String, PolymerModelData> modelData, ItemStack itemStack, @Nullable ServerPlayer player) {
-        return -1;
-    }
-
-    default int modifyPolymerArmorColor(ItemStack itemStack, @Nullable ServerPlayer player, int color) {
-        return color;
-    }
 }

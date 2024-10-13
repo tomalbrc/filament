@@ -34,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -111,7 +112,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     }
 
     @Override
-    public EntityType<?> getPolymerEntityType(ServerPlayer player) {
+    public EntityType<?> getPolymerEntityType(PacketContext packetContext) {
         return EntityType.ARMOR_STAND;
     }
 

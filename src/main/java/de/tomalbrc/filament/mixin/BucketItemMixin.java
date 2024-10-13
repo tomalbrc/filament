@@ -27,6 +27,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 @Mixin(BucketItem.class)
 public abstract class BucketItemMixin implements FakeItem {
@@ -43,9 +44,9 @@ public abstract class BucketItemMixin implements FakeItem {
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext useOnContext) {
+    public InteractionResult filament$useOn(UseOnContext useOnContext) {
         var bs = useOnContext.getLevel().getBlockState(useOnContext.getClickedPos());
-        if (bs.getBlock() instanceof SimpleBlock simpleBlock && simpleBlock.getPolymerBlockState(bs, (ServerPlayer) useOnContext.getPlayer()).getBlock() instanceof NoteBlock) {
+        if (bs.getBlock() instanceof SimpleBlock simpleBlock && simpleBlock.getPolymerBlockState(bs, PacketContext.of((ServerPlayer) useOnContext.getPlayer())).getBlock() instanceof NoteBlock) {
             Fluid content1 = content;
             var res = this.use(useOnContext.getLevel(), useOnContext.getPlayer(), useOnContext.getHand());
             if (res == InteractionResult.CONSUME) {

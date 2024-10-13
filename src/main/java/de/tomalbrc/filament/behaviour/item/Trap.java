@@ -98,20 +98,15 @@ public class Trap implements ItemBehaviour<Trap.Config> {
     }
 
     @Override
-    public int modifyPolymerCustomModelData(Map<String, PolymerModelData> modelData, ItemStack itemStack, @Nullable ServerPlayer player) {
-        return modelData != null ? canSpawn(itemStack) ? modelData.get("trapped").value() : modelData.get("default").value() : -1;
-    }
-
-    @Override
     public ItemStack modifyPolymerItemStack(Map<String, ResourceLocation> modelData, ItemStack self, ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
-        if (canSpawn(self)) {
-            itemStack.set(DataComponents.ITEM_MODEL, modelData.get("trapped"));
+        if (modelData != null) {
+            itemStack.set(DataComponents.ITEM_MODEL, canSpawn(self) ? modelData.get("trapped") : modelData.get("default"));
         }
         return itemStack;
     }
 
     private static boolean canSpawn(ItemStack useOnContext) {
-        return useOnContext.get(DataComponents.BUCKET_ENTITY_DATA) == null ? false : useOnContext.get(DataComponents.BUCKET_ENTITY_DATA).contains("Type");
+        return useOnContext.get(DataComponents.BUCKET_ENTITY_DATA) != null && useOnContext.get(DataComponents.BUCKET_ENTITY_DATA).contains("Type");
     }
 
     private void spawn(ServerLevel serverLevel, Player player, InteractionHand hand, ItemStack itemStack, BlockPos blockPos) {

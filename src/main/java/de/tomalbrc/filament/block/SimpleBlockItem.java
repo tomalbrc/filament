@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.Map;
 
@@ -23,7 +24,7 @@ public class SimpleBlockItem extends SimpleItem implements PolymerItem, Behaviou
     }
 
     @Override
-    public Item getPolymerItem(ItemStack itemStack, ServerPlayer player) {
+    public Item getPolymerItem(ItemStack itemStack, PacketContext packetContext) {
         return this.vanillaItem;
     }
 

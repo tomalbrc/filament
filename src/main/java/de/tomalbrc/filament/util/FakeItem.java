@@ -5,5 +5,5 @@ import net.minecraft.world.item.context.UseOnContext;
 
 public interface FakeItem {
 
-    InteractionResult useOn(UseOnContext useOnContext);
+    InteractionResult filament$useOn(UseOnContext useOnContext);
 }

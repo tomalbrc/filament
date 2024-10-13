@@ -29,6 +29,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 public abstract class DecorationBlock extends Block implements PolymerBlock, SimpleWaterloggedBlock, VirtualDestroyStage.Marker {
     final protected ResourceLocation decorationId;
@@ -65,7 +66,7 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
     }
 
     @Override
-    public BlockState getPolymerBlockState(BlockState state) {
+    public BlockState getPolymerBlockState(BlockState state, PacketContext packetContext) {
         var block = state.getValue(DecorationBlock.PASSTHROUGH) ? state.getValue(DecorationBlock.WATERLOGGED) ? Blocks.WATER : Blocks.AIR : Blocks.BARRIER;
         return state.getValue(DecorationBlock.WATERLOGGED) && !state.getValue(DecorationBlock.PASSTHROUGH) ?
                 block.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, true) :

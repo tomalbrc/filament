@@ -36,6 +36,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.Iterator;
 import java.util.List;
@@ -81,7 +82,7 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Behaviour
     }
 
     @Override
-    public Item getPolymerItem(ItemStack itemStack, @Nullable ServerPlayer player) {
+    public Item getPolymerItem(ItemStack itemStack, PacketContext packetContext) {
         return this.vanillaItem;
     }
 

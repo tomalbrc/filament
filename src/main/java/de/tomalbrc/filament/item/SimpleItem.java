@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 import java.util.Map;
@@ -97,18 +98,18 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
     }
 
     @Override
-    public Item getPolymerItem(ItemStack itemStack, @Nullable ServerPlayer player) {
+    public Item getPolymerItem(ItemStack itemStack, PacketContext packetContext) {
         return this.vanillaItem != null ? this.vanillaItem : Items.PAPER;
     }
 
     @Override
-    public final ItemStack getPolymerItemStack(ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
-        var stack = PolymerItemUtils.createItemStack(itemStack, tooltipType, lookup, player);
+    public final ItemStack getPolymerItemStack(ItemStack itemStack, TooltipFlag tooltipType, PacketContext packetContext) {
+        var stack = PolymerItemUtils.createItemStack(itemStack, tooltipType, packetContext);
         stack.set(DataComponents.ITEM_MODEL, this.getModel());
 
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
-                itemBehaviour.modifyPolymerItemStack(this.getModelMap(), itemStack, stack, tooltipType, lookup, player);
+                itemBehaviour.modifyPolymerItemStack(this.getModelMap(), itemStack, stack, tooltipType, packetContext.getRegistryWrapperLookup(), packetContext.getPlayer());
             }
         }
 
@@ -124,17 +125,6 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
             return this.itemData.itemResource().models().get("default");
 
         return vanillaItem.components().get(DataComponents.ITEM_MODEL);
-    }
-
-    @Override
-    public int getPolymerArmorColor(ItemStack itemStack, @Nullable ServerPlayer player) {
-        int color = -1;
-        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
-            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
-                color = itemBehaviour.modifyPolymerArmorColor(itemStack, player, color);
-            }
-        }
-        return color;
     }
 
     @Override

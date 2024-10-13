@@ -25,6 +25,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.redstone.Orientation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -75,7 +76,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public BlockState getPolymerBlockState(BlockState blockState) {
+    public BlockState getPolymerBlockState(BlockState blockState, PacketContext packetContext) {
         if (this.stateMap != null) for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 BlockState polyBlockState = blockBehaviour.getCustomPolymerBlockState(this.stateMap, blockState);
@@ -87,7 +88,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public BlockState getPolymerBreakEventBlockState(BlockState state, ServerPlayer player) {
+    public BlockState getPolymerBreakEventBlockState(BlockState state, PacketContext packetContext) {
         return this.breakEventState;
     }
 

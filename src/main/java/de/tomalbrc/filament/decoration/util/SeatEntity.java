@@ -14,11 +14,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 
 public class SeatEntity extends Entity implements PolymerEntity {
-    private Direction direction = Direction.UP;
+    private final Direction direction = Direction.UP;
 
     public SeatEntity(EntityType type, Level world) {
         super(type, world);
@@ -53,12 +55,13 @@ public class SeatEntity extends Entity implements PolymerEntity {
     }
 
     @Override
-    public EntityType<?> getPolymerEntityType(ServerPlayer player) {
+    public EntityType<?> getPolymerEntityType(PacketContext packetContext) {
         return EntityType.ARMOR_STAND;
     }
 
 
     @Override
+    @NotNull
     public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
         return Vec3.atBottomCenterOf(this.getOnPos()).relative(this.direction, 1);
     }
