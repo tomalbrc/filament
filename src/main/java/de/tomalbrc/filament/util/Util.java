@@ -10,6 +10,7 @@ import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -288,12 +289,14 @@ public class Util {
             for (Map.Entry<String, String> langEntry : nameMap.entrySet()) {
                 String lang = langEntry.getKey();
                 String name = langEntry.getValue();
+
                 if (name != null) {
+                    String serializedName = LegacyComponentSerializer.legacySection().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(name));
                     String key = type + "." + id.getNamespace() + "." + id.getPath();
                     langEntries
                             .computeIfAbsent(id.getNamespace(), k -> new HashMap<>())
                             .computeIfAbsent(lang, k -> new HashMap<>())
-                            .put(key, name);
+                            .put(key, serializedName);
                 }
             }
         }
