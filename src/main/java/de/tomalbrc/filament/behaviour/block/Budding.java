@@ -11,7 +11,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,24 +52,25 @@ public class Budding implements BlockBehaviour<Budding.Config>, SimpleWaterlogge
         }
 
         Direction dir = getFacingOrNull(blockState2);
+        Direction.Axis axis = getAxisOrNull(blockState2);
         for (int i = 0; i < this.config.grows.size()-1; i++) {
-            var currentStage = BuiltInRegistries.BLOCK.get(this.config.grows.get(i));
-            if (blockState2.is(currentStage) && (dir == null || dir == direction)) {
-                var nextStage = BuiltInRegistries.BLOCK.get(this.config.grows.get(i + 1));
+            Block currentStage = BuiltInRegistries.BLOCK.get(this.config.grows.get(i));
+            if (blockState2.is(currentStage) && (dir == null || dir == direction || axis == null || axis.test(direction))) {
+                Block nextStage = BuiltInRegistries.BLOCK.get(this.config.grows.get(i + 1));
                 state = nextStage.defaultBlockState();
                 break;
             }
         }
 
         if (state != null) {
-            BlockState finalState = setWaterlogged(setFacing(state, direction), blockState2.getFluidState().getType() == Fluids.WATER);
+            BlockState finalState = setWaterlogged(setFacingOrAxis(state, direction), blockState2.getFluidState().getType() == Fluids.WATER);
             serverLevel.setBlockAndUpdate(blockPos2, finalState);
         }
     }
 
-    private Direction getFacingOrNull(BlockState blockState) {
-        List<DirectionProperty> props = ImmutableList.of(BlockStateProperties.FACING, BlockStateProperties.HORIZONTAL_FACING, BlockStateProperties.VERTICAL_DIRECTION, BlockStateProperties.FACING_HOPPER);
-        for (var prop: props) {
+    private Direction.Axis getAxisOrNull(BlockState blockState) {
+        List<EnumProperty<Direction.Axis>> props2 = ImmutableList.of(BlockStateProperties.AXIS, BlockStateProperties.HORIZONTAL_AXIS);
+        for (var prop: props2) {
             if (blockState.hasProperty(prop)) {
                 return blockState.getValue(prop);
             }
@@ -78,11 +79,28 @@ public class Budding implements BlockBehaviour<Budding.Config>, SimpleWaterlogge
         return null;
     }
 
-    private BlockState setFacing(BlockState blockState, Direction direction) {
-        List<DirectionProperty> props = ImmutableList.of(BlockStateProperties.FACING, BlockStateProperties.HORIZONTAL_FACING, BlockStateProperties.VERTICAL_DIRECTION, BlockStateProperties.FACING_HOPPER);
+    private Direction getFacingOrNull(BlockState blockState) {
+        List<EnumProperty<Direction>> props = ImmutableList.of(BlockStateProperties.FACING, BlockStateProperties.HORIZONTAL_FACING, BlockStateProperties.VERTICAL_DIRECTION, BlockStateProperties.FACING_HOPPER);
+        for (var prop: props) {
+            if (blockState.hasProperty(prop)) {
+                return blockState.getValue(prop);
+            }
+        }
+        return null;
+    }
+
+    private BlockState setFacingOrAxis(BlockState blockState, Direction direction) {
+        List<EnumProperty<Direction>> props = ImmutableList.of(BlockStateProperties.FACING, BlockStateProperties.HORIZONTAL_FACING, BlockStateProperties.VERTICAL_DIRECTION, BlockStateProperties.FACING_HOPPER);
         for (var prop: props) {
             if (blockState.hasProperty(prop)) {
                 return blockState.setValue(prop, direction);
+            }
+        }
+
+        List<EnumProperty<Direction.Axis>> props2 = ImmutableList.of(BlockStateProperties.AXIS, BlockStateProperties.HORIZONTAL_AXIS);
+        for (var prop: props2) {
+            if (blockState.hasProperty(prop)) {
+                return blockState.setValue(prop, direction.getAxis());
             }
         }
 
