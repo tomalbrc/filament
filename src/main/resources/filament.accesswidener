@@ -3,3 +3,6 @@ accessible class net/minecraft/resources/RegistryDataLoader$Loader
 accessible class net/minecraft/world/entity/animal/Bee$BeeGrowCropGoal
 
 accessible method net/minecraft/world/level/block/DoublePlantBlock preventDropFromBottomPart (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/player/Player;)V
+
+accessible method net/minecraft/world/item/ProjectileWeaponItem draw (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/LivingEntity;)Ljava/util/List;
+accessible method net/minecraft/world/item/CrossbowItem tryLoadProjectiles (Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;)Z
