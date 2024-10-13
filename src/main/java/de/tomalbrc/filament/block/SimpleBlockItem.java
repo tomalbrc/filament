@@ -15,8 +15,6 @@ import java.util.Map;
 
 public class SimpleBlockItem extends SimpleItem implements PolymerItem, BehaviourHolder {
 
-    private final BlockData blockData;
-
     public SimpleBlockItem(Properties properties, Block block, BlockData data) {
         super(block, properties, data.properties(), data.vanillaItem());
         this.blockData = data;

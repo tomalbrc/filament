@@ -6,6 +6,8 @@ import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
+import de.tomalbrc.filament.util.Util;
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
@@ -21,10 +23,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
 public class ItemRegistry {
+    private static final Map<ResourceLocation, Map<String, String>> itemNames = new HashMap<>();
     public static int REGISTERED_ITEMS = 0;
 
     public static void register(InputStream inputStream) throws IOException {
@@ -43,6 +48,12 @@ public class ItemRegistry {
 
         var item = ItemRegistry.registerItem(key(data.id()), (newProps) -> new SimpleItem(null, newProps, data, data.vanillaItem()), properties, data.itemGroup() != null ? data.itemGroup() : Constants.ITEM_GROUP_ID);
         BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
+
+        registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.ITEM_GROUP_ID);
+
+        if (data.displayName() != null) {
+            itemNames.putIfAbsent(data.id(), data.displayName());
+        }
 
         REGISTERED_ITEMS++;
     }
@@ -74,15 +85,14 @@ public class ItemRegistry {
                     ItemData data = Json.GSON.fromJson(reader, ItemData.class);
                     ItemRegistry.register(data);
                 } catch (IOException | IllegalStateException e) {
-                    Filament.LOGGER.error("Failed to load item resource \"" + entry.getKey() + "\".");
+                    Filament.LOGGER.error("Failed to load item resource \"{}\".", entry.getKey(), e);
                 }
             }
-
+            PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(builder -> Util.langGenerator(builder, "item", itemNames));
             if (!printedInfo) {
-                Filament.LOGGER.info("filament items registered: " + ItemRegistry.REGISTERED_ITEMS);
-                Filament.LOGGER.info("filament blocks registered: " + BlockRegistry.REGISTERED_BLOCKS);
-                Filament.LOGGER.info("filament decorations registered: " + DecorationRegistry.REGISTERED_DECORATIONS);
-                Filament.LOGGER.info("filament decoration block entities registered: " + DecorationRegistry.REGISTERED_BLOCK_ENTITIES);
+                for (String s : Arrays.asList("Filament items registered: " + REGISTERED_ITEMS, "Filament blocks registered: " + BlockRegistry.REGISTERED_BLOCKS, "Filament decorations registered: " + DecorationRegistry.REGISTERED_DECORATIONS, "Filament decoration block entities registered: " + DecorationRegistry.REGISTERED_BLOCK_ENTITIES)) {
+                    Filament.LOGGER.info(s);
+                }
                 printedInfo = true;
             }
         }

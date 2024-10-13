@@ -3,6 +3,7 @@
 There are 3 different configuration formats, depending on what you want to add;
 Items, Blocks or Decorations.
 
+---
 
 ## Items:
 
@@ -10,10 +11,14 @@ The Items category contains items such as food, instruments, hats, armour, weapo
 
 [More info...](items.md)
 
+---
+
 ## Blocks:
-Blocks with a custom texture.
+Blocks with a custom texture, ranges from simple blocks, to slabs, doors, trapdoors, crops, ores, and more. 
 
 [More info...](blocks.md)
+
+---
 
 ## Decorations:
 Blocks that rotate by 45° with multi-block and waterlogging support.

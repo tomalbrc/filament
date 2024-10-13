@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.behaviour.block;
 
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
+import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -19,7 +20,7 @@ public class Powersource implements BlockBehaviour<Powersource.PowersourceConfig
 
     @Override
     public int getSignal(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, Direction direction) {
-        return config.value;
+        return config.value.getOrDefault(blockState, 0);
     }
 
     @Override
@@ -30,8 +31,8 @@ public class Powersource implements BlockBehaviour<Powersource.PowersourceConfig
 
     public static class PowersourceConfig {
         /**
-         * The redstone power value
+         * The redstone power values
          */
-        public int value = 15;
+        public BlockStateMappedProperty<Integer> value = BlockStateMappedProperty.of(15);
     }
 }

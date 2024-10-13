@@ -11,7 +11,7 @@ Example with some behaviours set:
   "vanillaItem": "minecraft:paper",
   "itemResource": {
     "models": {
-      "default": "mynamespace:custom/misc/clown_horn"
+      "default": "mynamespace:custom/misc/clown_horn",
       "trapped": "mynamespace:custom/misc/clown_horn_trapped"
     }
   },
@@ -97,6 +97,7 @@ Makes the item usable in composters.
 
 - **Fields**:
   - `chance`: Chance of raising the composter level by 1 between 0 and 100
+  - `villagerInteraction`: Allows farmer villagers to compost the item. Defaults to `true`
 
 ---
 
@@ -133,6 +134,15 @@ Defines food item behaviour for edible items.
   - `saturation`: The saturation modifier provided by the food.
   - `canAlwaysEat`: Indicates whether the item can be eaten when the hunger bar is full.
   - `fastfood`: Boolean indicating whether the food item is considered fast food (eats faster than normal).
+
+---
+
+### `villager_food` behaviour
+
+Makes the item edible for villagers (for villager breeding).
+
+- **Fields**:
+  - `value`: The amount of "breeding power" the item has (1 = normal food item, 4 = bread). Defaults to 1
 
 ---
 

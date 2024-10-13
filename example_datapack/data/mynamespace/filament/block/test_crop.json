@@ -16,6 +16,7 @@
   "properties" : {
     "blockBase" : "minecraft:sugar_cane",
     "transparent": true,
+    "solid": false,
     "replaceable": false,
     "destroyTime": 0,
     "pushReaction": "destroy"
@@ -26,7 +27,7 @@
       "maxAge": 4
     },
     "can_survive": {
-      "blocks": ["minecraft:sand"],
+      "blocks": ["minecraft:farmland"],
       "tags": ["minecraft:dirt"]
     }
   }

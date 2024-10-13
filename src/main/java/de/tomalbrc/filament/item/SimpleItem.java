@@ -35,6 +35,11 @@ import xyz.nucleoid.packettweaker.PacketContext;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Universal item, base for all filament items, with behaviour support
+ *
+ * I wish BlockItem was an interface...
+ */
 public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolder {
     private ItemData itemData;
     protected ItemProperties properties;

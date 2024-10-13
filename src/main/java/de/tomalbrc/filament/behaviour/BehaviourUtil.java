@@ -17,13 +17,13 @@ public class BehaviourUtil {
         }
     }
 
-    public static void postInitBlock(Block block, BehaviourHolder behaviourHolder, BehaviourConfigMap configMap) {
+    public static void postInitBlock(Item blockItem, Block block, BehaviourHolder behaviourHolder, BehaviourConfigMap configMap) {
         if (configMap == null)
             return;
 
         for (var e : behaviourHolder.getBehaviours()) {
             if (e.getValue() instanceof BlockBehaviour<?> blockBehaviour) {
-                blockBehaviour.init(block, behaviourHolder);
+                blockBehaviour.init(blockItem, block, behaviourHolder);
             }
         }
     }

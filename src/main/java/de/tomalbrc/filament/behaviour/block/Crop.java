@@ -1,13 +1,16 @@
 package de.tomalbrc.filament.behaviour.block;
 
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
+import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.util.Util;
+import net.fabricmc.fabric.api.registry.VillagerInteractionRegistries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -45,6 +48,15 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
 
     public Crop(Config config) {
         this.config = config;
+    }
+
+    @Override
+    public void init(Item item, Block block, BehaviourHolder behaviourHolder) {
+        BlockBehaviour.super.init(item, block, behaviourHolder);
+
+        if (config.villagerInteraction) {
+            VillagerInteractionRegistries.registerCollectable(item);
+        }
     }
 
     @Override
@@ -94,6 +106,16 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
         }
 
         level.setBlock(blockPos, blockState.setValue(AGES[Math.max(0, config.maxAge-1)], i), 2);
+    }
+
+    public BlockState incrementedAge(BlockState blockState) {
+        var prop = AGES[Math.max(0, config.maxAge-1)];
+        return blockState.setValue(prop, blockState.getValue(prop));
+    }
+
+    public boolean isMaxAge(BlockState blockState) {
+        var prop = AGES[Math.max(0, config.maxAge-1)];
+        return blockState.getValue(prop) == config.maxAge-1;
     }
 
     protected int getBonemealAgeIncrease(Level level) {
@@ -174,5 +196,8 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
 
         public int bonusRadius = 1;
         public Block bonusBlock = Blocks.FARMLAND;
+
+        public boolean villagerInteraction = true;
+        public boolean beeInteraction = true;
     }
 }

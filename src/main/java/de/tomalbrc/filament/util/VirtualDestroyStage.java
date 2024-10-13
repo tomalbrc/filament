@@ -24,19 +24,41 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class VirtualDestroyStage extends ElementHolder {
-    public static final ItemStack[] MODELS = new ItemStack[10];
-    private final List<ItemDisplayElement> mains = new ObjectArrayList<>();
+    public static final ItemStack[] DESTROY_STAGE_MODELS = new ItemStack[10];
+    private final List<ItemDisplayElement> destroyElements = new ObjectArrayList<>();
     private int state;
 
     public VirtualDestroyStage() {
         for (int i = 0; i < 32; i++) {
-            var main = new ItemDisplayElement();
-            main.setItem(MODELS[0]);
-            main.setScale(new Vector3f(1.01f));
-            this.mains.add(main);
+            var element = new ItemDisplayElement();
+            element.setItem(DESTROY_STAGE_MODELS[0]);
+            element.setScale(new Vector3f(1.01f));
+            this.destroyElements.add(element);
         }
-        this.addElement(mains.get(0));
     }
+
+    private List<ItemDisplayElement> destroyElements() {
+        return this.destroyElements;
+    }
+
+
+    @Override
+    public void destroy() {
+        this.destroyElements.forEach(this::removeElement);
+        super.destroy();
+    }
+
+    public void setState(int i) {
+        if (this.state == i) {
+            return;
+        }
+
+        this.state = i;
+        this.destroyElements.forEach(x -> x.setItem(i < 0 ? ItemStack.EMPTY : DESTROY_STAGE_MODELS[Math.min(i, DESTROY_STAGE_MODELS.length - 1)]));
+        this.tick();
+    }
+
+
 
     @SuppressWarnings("SameReturnValue")
     public static boolean updateState(ServerPlayer player, BlockPos pos, BlockState state, int i) {
@@ -55,11 +77,11 @@ public class VirtualDestroyStage extends ElementHolder {
         if (self.getAttachment() == null || !self.getAttachment().getPos().equals(vecPos)) {
             // init display list
             ChunkAttachment.of(self, player.serverLevel(), vecPos);
-            self.mains().get(0).setTranslation(new Vector3f());
+            self.destroyElements().get(0).setTranslation(new Vector3f());
 
             if (state.getBlock() instanceof ComplexDecorationBlock decorationBlock1 && decorationBlock1.getDecorationData().hasBlocks()) {
                 for (int i1 = 0; i1 < decorationBlock1.getDecorationData().countBlocks(); i1++) {
-                    self.addElement(self.mains().get(i1));
+                    self.addElement(self.destroyElements().get(i1));
                 }
 
                 BlockEntity blockEntity = player.serverLevel().getBlockEntity(pos);
@@ -68,7 +90,7 @@ public class VirtualDestroyStage extends ElementHolder {
                     final DecorationBlockEntity finalDecorationBlockEntity = decorationBlockEntity.isMain() ? decorationBlockEntity : decorationBlockEntity.getMainBlockEntity();
                     Util.forEachRotated(finalDecorationBlockEntity.getDecorationData().blocks(), finalDecorationBlockEntity.getBlockPos(), finalDecorationBlockEntity.getVisualRotationYInDegrees(), rotPos -> {
                         BlockPos op = rotPos.subtract(pos);
-                        self.mains.get(index.getAndIncrement()).setTranslation(new Vector3f(op.getX(), op.getY(), op.getZ()));
+                        self.destroyElements.get(index.getAndIncrement()).setTranslation(new Vector3f(op.getX(), op.getY(), op.getZ()));
                     });
                 }
             }
@@ -79,37 +101,15 @@ public class VirtualDestroyStage extends ElementHolder {
         return true;
     }
 
-    private List<ItemDisplayElement> mains() {
-        return this.mains;
-    }
-
     public static void destroy(@Nullable ServerPlayer player) {
         if (player != null && player.connection != null) {
             ((ServerGamePacketListenerExtF) player.connection).filament$getVirtualDestroyStage().destroy();
         }
     }
 
-    @Override
-    public void destroy() {
-        var e = this.getElements();
-        e.forEach(this::removeElement);
-        super.destroy();
-    }
-
-    public void setState(int i) {
-        if (this.state == i) {
-            return;
-        }
-
-        this.state = i;
-        this.mains.forEach(x -> x.setItem(i < 0 ? ItemStack.EMPTY : MODELS[Math.min(i, MODELS.length - 1)]));
-        this.tick();
-    }
-
-
     static {
-        for (int i = 0; i < MODELS.length; i++) {
-            MODELS[i] = PolymerResourcePackUtils.requestModel(Items.STICK, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "block/special/destroy_stage_" + i)).asStack();
+        for (int i = 0; i < DESTROY_STAGE_MODELS.length; i++) {
+            DESTROY_STAGE_MODELS[i] = PolymerResourcePackUtils.requestModel(Items.STICK, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "block/special/destroy_stage_" + i)).asStack();
         }
 
         var model =  """
@@ -122,7 +122,7 @@ public class VirtualDestroyStage extends ElementHolder {
                 """;
 
         PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(x -> {
-            for (var i = 0; i < MODELS.length; i++) {
+            for (var i = 0; i < DESTROY_STAGE_MODELS.length; i++) {
                 x.addData("assets/filament/models/block/special/destroy_stage_" + i + ".json", model.replace("|ID|", "" + i).getBytes(StandardCharsets.UTF_8));
             }
         });

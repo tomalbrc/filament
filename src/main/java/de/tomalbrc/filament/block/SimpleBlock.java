@@ -10,7 +10,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -23,14 +26,17 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.redstone.Orientation;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class SimpleBlock extends Block implements PolymerTexturedBlock, BehaviourHolder, SimpleWaterloggedBlock, BonemealableBlock {
+public class SimpleBlock extends Block implements PolymerTexturedBlock, BehaviourHolder, SimpleWaterloggedBlock, BonemealableBlock, WeatheringCopper {
     protected Map<BlockState, BlockData.BlockStateMeta> stateMap;
     protected final BlockState breakEventState;
     protected final BlockData blockData;
@@ -103,6 +109,34 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     /// --- behaviour impl
 
     @Override
+    @NotNull
+    public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+        if (this.getBehaviours() != null)
+            this.forEach(x -> x.playerWillDestroy(level, blockPos, blockState, player));
+        return super.playerWillDestroy(level, blockPos, blockState, player);
+    }
+
+
+    @Override
+    public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, LivingEntity livingEntity, ItemStack itemStack) {
+        if (this.getBehaviours() != null)
+            this.forEach(x -> x.setPlacedBy(level, blockPos, blockState, livingEntity, itemStack));
+    }
+
+    @Override
+    protected long getSeed(BlockState blockState, BlockPos blockPos) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
+                var res = blockBehaviour.getSeed(blockState, blockPos);
+                if (res != null && res.isPresent())
+                    return res.orElseThrow();
+            }
+        }
+
+        return Mth.getSeed(blockPos);
+    }
+
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         if (this.getBehaviours() != null)
             this.forEach(x -> x.createBlockStateDefinition(builder));
@@ -122,7 +156,16 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, Orientation orientation, boolean bl) {
-        this.forEach(x -> x.neighborChanged(blockState, level, blockPos, block, orientation, bl));
+        if (this.getBehaviours() != null)
+            this.forEach(x -> x.neighborChanged(blockState, level, blockPos, block, orientation, bl));
+        super.neighborChanged(blockState, level, blockPos, block, blockPos2, bl);
+    }
+
+    @Override
+    public void onExplosionHit(BlockState blockState, Level level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
+        if (this.getBehaviours() != null)
+            this.forEach(x -> x.onExplosionHit(blockState, level, blockPos, explosion, biConsumer));
+        super.onExplosionHit(blockState, level, blockPos, explosion, biConsumer);
     }
 
     @Override
@@ -406,5 +449,54 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
             }
         }
         return def;
+    }
+
+    // -- interaction
+
+    @Override
+    @NotNull
+    public InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
+                var res = blockBehaviour.useWithoutItem(blockState, level, blockPos, player, blockHitResult);
+                if (res != null && res.consumesAction())
+                    return res;
+            }
+        }
+        return InteractionResult.PASS;
+    }
+
+    // --- oxidization
+
+
+    @Override
+    public void changeOverTime(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof WeatheringCopper weatheringCopper) {
+                weatheringCopper.changeOverTime(blockState, serverLevel, blockPos, randomSource);
+            }
+        }
+    }
+
+    @Override
+    @NotNull
+    public WeatherState getAge() {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof WeatheringCopper weatheringCopper) {
+                return weatheringCopper.getAge();
+            }
+        }
+        return WeatherState.OXIDIZED;
+    }
+
+    @Override
+    @NotNull
+    public Optional<BlockState> getNextState(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof WeatheringCopper weatheringCopper) {
+                return weatheringCopper.getNextState(blockState, serverLevel, blockPos, randomSource);
+            }
+        }
+        return Optional.empty();
     }
 }

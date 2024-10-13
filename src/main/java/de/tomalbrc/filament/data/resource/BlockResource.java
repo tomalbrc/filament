@@ -1,10 +1,11 @@
 package de.tomalbrc.filament.data.resource;
 
+import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
 
-public record BlockResource(Map<String, ResourceLocation> models,
+public record BlockResource(Map<String, PolymerBlockModel> models,
                            Map<String, ResourceLocation> textures,
                            Map<String, ResourceLocation> vanilla) {
 

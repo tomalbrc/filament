@@ -39,13 +39,11 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class DecorationRegistry {
-    public static int REGISTERED_BLOCK_ENTITIES = 0;
-    public static int REGISTERED_DECORATIONS = 0;
-
     private static final Object2ObjectOpenHashMap<ResourceLocation, DecorationData> decorations = new Object2ObjectOpenHashMap<>();
-
     private static final Object2ObjectOpenHashMap<ResourceLocation, Block> decorationBlocks = new Object2ObjectOpenHashMap<>();
     private static final Object2ObjectOpenHashMap<Block, BlockEntityType<DecorationBlockEntity>> decorationBlockEntities = new Object2ObjectOpenHashMap<>();
+    public static int REGISTERED_BLOCK_ENTITIES = 0;
+    public static int REGISTERED_DECORATIONS = 0;
 
     public static void register(InputStream inputStream) throws IOException {
         register(Json.GSON.fromJson(new InputStreamReader(inputStream, StandardCharsets.UTF_8), DecorationData.class));
@@ -62,6 +60,7 @@ public class DecorationRegistry {
 
         var block = BlockRegistry.registerBlock(BlockRegistry.key(data.id()), getBlockCreator(data), blockProperties);
         decorationBlocks.put(data.id(), block);
+        BlockRegistry.registerBlock(data.displayName(), data.id(), block);
 
         Item.Properties properties = data.properties().toItemProperties();
         for (TypedDataComponent component : data.components()) {
@@ -140,7 +139,7 @@ public class DecorationRegistry {
                     DecorationData data = Json.GSON.fromJson(reader, DecorationData.class);
                     DecorationRegistry.register(data);
                 } catch (IOException | IllegalStateException e) {
-                    Filament.LOGGER.error("Failed to load decoration resource \"" + entry.getKey() + "\".");
+                    Filament.LOGGER.error("Failed to load decoration resource \"{}\".", entry.getKey());
                 }
             }
         }
