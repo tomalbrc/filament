@@ -87,7 +87,7 @@ public class BlockRegistry {
                     Filament.LOGGER.error("Failed to load block resource \"{}\".", entry.getKey());
                 }
             }
-            PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(builder -> Util.langGenerator(builder, "block", blockNames));
+            PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(builder -> Util.langGenerator(builder, "block", blockNames));
         }
     }
 }

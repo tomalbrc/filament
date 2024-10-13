@@ -77,7 +77,7 @@ public class FilamentTrimPatterns {
             entry.getValue().trimPattern = register(registry, Items.BARRIER, of(entry.getKey().texture));
         }
 
-        PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(FilamentTrimPatterns::addRPContents);
+        PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(FilamentTrimPatterns::addRPContents);
     }
 
     private static void copyChainmailTexture(ResourcePackBuilder resourcePackBuilder) {
