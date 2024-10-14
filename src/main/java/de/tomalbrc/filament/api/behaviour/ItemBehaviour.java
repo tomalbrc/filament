@@ -51,8 +51,7 @@ public interface ItemBehaviour<T> extends Behaviour<T> {
         return false;
     }
 
-    default ItemStack modifyPolymerItemStack(ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
-        return itemStack;
+    default void modifyPolymerItemStack(ItemStack original, ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
     }
 
     default int modifyPolymerCustomModelData(Map<String, PolymerModelData> modelData, ItemStack itemStack, @Nullable ServerPlayer player) {

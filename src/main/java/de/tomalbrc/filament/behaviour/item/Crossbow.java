@@ -2,12 +2,12 @@ package de.tomalbrc.filament.behaviour.item;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.item.SimpleItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.CommonComponents;
@@ -47,7 +47,7 @@ import java.util.function.Predicate;
  * Fuel behaviour
  */
 public class Crossbow implements ItemBehaviour<Crossbow.Config> {
-    CrossbowItem.ChargingSounds DEFAULT_SOUNDS = new CrossbowItem.ChargingSounds(Optional.of(SoundEvents.CROSSBOW_LOADING_START), Optional.of(SoundEvents.CROSSBOW_LOADING_MIDDLE), Optional.of(SoundEvents.CROSSBOW_LOADING_END));
+    private final CrossbowItem.ChargingSounds sounds;
 
     private final Config config;
     private boolean startSoundPlayed;
@@ -55,6 +55,11 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config> {
 
     public Crossbow(Config config) {
         this.config = config;
+        this.sounds = new CrossbowItem.ChargingSounds(
+                Optional.of(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(config.loadingStartSound)),
+                Optional.of(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(config.loadingMiddleSound)),
+                Optional.of(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(config.loadingEndSound))
+        );
     }
 
     @Override
@@ -64,12 +69,19 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config> {
     }
 
     @Override
+    public void modifyPolymerItemStack(ItemStack original, ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
+        // polymer removes that component, so we have to add it back again.
+        itemStack.set(DataComponents.CHARGED_PROJECTILES, original.get(DataComponents.CHARGED_PROJECTILES));
+    }
+
+    @Override
     public Optional<Integer> getEnchantmentValue() {
         return Optional.of(1);
     }
 
 
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand interactionHand) {
+    @Override
+    public InteractionResultHolder<ItemStack> use(Item item, Level level, Player player, InteractionHand interactionHand) {
         ItemStack itemStack = player.getItemInHand(interactionHand);
         ChargedProjectiles chargedProjectiles = itemStack.get(DataComponents.CHARGED_PROJECTILES);
         if (chargedProjectiles != null && !chargedProjectiles.isEmpty()) {
@@ -89,21 +101,14 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config> {
         return chargedProjectiles.contains(Items.FIREWORK_ROCKET) ? 1.6F : 3.15F;
     }
 
+    @Override
     public void releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int i) {
         int j = this.getUseDuration(itemStack, livingEntity).orElseThrow() - i;
-        float f = getPowerForTime(j, itemStack, livingEntity);
-        if (f >= 1.0F && !isCharged(itemStack) && CrossbowItem.tryLoadProjectiles(livingEntity, itemStack)) {
+        float f = CrossbowItem.getPowerForTime(j, itemStack, livingEntity);
+        if (f >= 1.f && !CrossbowItem.isCharged(itemStack) && CrossbowItem.tryLoadProjectiles(livingEntity, itemStack)) {
             CrossbowItem.ChargingSounds chargingSounds = this.getChargingSounds(itemStack);
-            chargingSounds.end().ifPresent((holder) -> {
-                level.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), holder.value(), livingEntity.getSoundSource(), 1.0F, 1.0F / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F);
-            });
+            chargingSounds.end().ifPresent((holder) -> level.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), holder.value(), livingEntity.getSoundSource(), 1.0F, 1.0F / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F));
         }
-
-    }
-
-    public static boolean isCharged(ItemStack itemStack) {
-        ChargedProjectiles chargedProjectiles = itemStack.getOrDefault(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
-        return !chargedProjectiles.isEmpty();
     }
 
     protected void shootProjectile(LivingEntity livingEntity, Projectile projectile, int i, float f, float g, float h, @Nullable LivingEntity livingEntity2) {
@@ -116,14 +121,14 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config> {
             vector3f = getProjectileShotVector(livingEntity, new Vec3(d, k, e), h);
         } else {
             Vec3 vec3 = livingEntity.getUpVector(1.0F);
-            Quaternionf quaternionf = (new Quaternionf()).setAngleAxis((double)(h * 0.017453292F), vec3.x, vec3.y, vec3.z);
+            Quaternionf quaternionf = (new Quaternionf()).setAngleAxis((h * 0.017453292F), vec3.x, vec3.y, vec3.z);
             Vec3 vec32 = livingEntity.getViewVector(1.0F);
             vector3f = vec32.toVector3f().rotate(quaternionf);
         }
 
         projectile.shoot(vector3f.x(), vector3f.y(), vector3f.z(), f, g);
         float l = getShotPitch(livingEntity.getRandom(), i);
-        livingEntity.level().playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), SoundEvents.CROSSBOW_SHOOT, livingEntity.getSoundSource(), 1.0F, l);
+        livingEntity.level().playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), this.config.shootSound, livingEntity.getSoundSource(), 1.0F, l);
     }
 
     private static Vector3f getProjectileShotVector(LivingEntity livingEntity, Vec3 vec3, float f) {
@@ -210,6 +215,7 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config> {
         return 1.0F / (randomSource.nextFloat() * 0.5F + 1.8F) + f;
     }
 
+    @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack itemStack, int i) {
         if (!level.isClientSide) {
             CrossbowItem.ChargingSounds chargingSounds = this.getChargingSounds(itemStack);
@@ -221,21 +227,18 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config> {
 
             if (f >= 0.2F && !this.startSoundPlayed) {
                 this.startSoundPlayed = true;
-                chargingSounds.start().ifPresent((holder) -> {
-                    level.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), (SoundEvent)holder.value(), SoundSource.PLAYERS, 0.5F, 1.0F);
-                });
+                chargingSounds.start().ifPresent((holder) -> level.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), holder.value(), SoundSource.PLAYERS, 0.5F, 1.0F));
             }
 
             if (f >= 0.5F && !this.midLoadSoundPlayed) {
                 this.midLoadSoundPlayed = true;
-                chargingSounds.mid().ifPresent((holder) -> {
-                    level.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), (SoundEvent)holder.value(), SoundSource.PLAYERS, 0.5F, 1.0F);
-                });
+                chargingSounds.mid().ifPresent((holder) -> level.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), holder.value(), SoundSource.PLAYERS, 0.5F, 1.0F));
             }
         }
 
     }
 
+    @Override
     public Optional<Integer> getUseDuration(ItemStack itemStack, LivingEntity livingEntity) {
         return Optional.of(getChargeDuration(itemStack, livingEntity) + 3);
     }
@@ -246,16 +249,7 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config> {
     }
 
     CrossbowItem.ChargingSounds getChargingSounds(ItemStack itemStack) {
-        return EnchantmentHelper.pickHighestLevel(itemStack, EnchantmentEffectComponents.CROSSBOW_CHARGING_SOUNDS).orElse(DEFAULT_SOUNDS);
-    }
-
-    private static float getPowerForTime(int i, ItemStack itemStack, LivingEntity livingEntity) {
-        float f = (float)i / (float)getChargeDuration(itemStack, livingEntity);
-        if (f > 1.0F) {
-            f = 1.0F;
-        }
-
-        return f;
+        return EnchantmentHelper.pickHighestLevel(itemStack, EnchantmentEffectComponents.CROSSBOW_CHARGING_SOUNDS).orElse(this.sounds);
     }
 
     @Override
@@ -272,18 +266,27 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config> {
                     list.addAll(list2);
                 }
             }
-
         }
     }
 
     @Override
     public boolean useOnRelease(ItemStack itemStack) {
-        return itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.get(Behaviours.CROSSBOW) == this;
+        return itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.CROSSBOW);
     }
 
     public Predicate<ItemStack> supportedProjectiles() {
         return itemStack -> {
             for (var itemId : config.supportedProjectiles) {
+                if (itemStack.is(BuiltInRegistries.ITEM.get(itemId)))
+                    return true;
+            }
+            return false;
+        };
+    }
+
+    public Predicate<ItemStack> supportedHeldProjectiles() {
+        return itemStack -> {
+            for (var itemId : config.supportedHeldProjectiles) {
                 if (itemStack.is(BuiltInRegistries.ITEM.get(itemId)))
                     return true;
             }
@@ -298,5 +301,12 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config> {
         public float powerMultiplier = 1.f;
 
         public List<ResourceLocation> supportedProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"));
+        public List<ResourceLocation> supportedHeldProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"), ResourceLocation.withDefaultNamespace("firework_rocket"));
+
+        public SoundEvent shootSound = SoundEvents.CROSSBOW_SHOOT;
+
+        public SoundEvent loadingStartSound = SoundEvents.CROSSBOW_LOADING_START.value();
+        public SoundEvent loadingMiddleSound = SoundEvents.CROSSBOW_LOADING_MIDDLE.value();
+        public SoundEvent loadingEndSound = SoundEvents.CROSSBOW_LOADING_END.value();
     }
 }

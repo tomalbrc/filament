@@ -35,11 +35,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Universal item, base for all filament items, with behaviour support
- *
  * I wish BlockItem was an interface...
  */
 public class SimpleItem extends BlockItem implements PolymerItem, Equipable, BehaviourHolder {
@@ -171,7 +169,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
         ItemStack itemStack1 = PolymerItemUtils.createItemStack(itemStack, tooltipType, lookup, player);
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
-                itemBehaviour.modifyPolymerItemStack(itemStack1, tooltipType, lookup, player);
+                itemBehaviour.modifyPolymerItemStack(itemStack, itemStack1, tooltipType, lookup, player);
             }
         }
         return itemStack1;

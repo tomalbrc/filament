@@ -20,7 +20,6 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,16 +41,12 @@ public class Bow implements ItemBehaviour<Bow.Config> {
         return this.config;
     }
 
-    public Predicate<ItemStack> getSupportedHeldProjectiles() {
-        return this.supportedProjectiles();
-    }
-
     @Override
     public Optional<Integer> getEnchantmentValue() {
         return Optional.of(1);
     }
 
-    protected void shoot(ServerLevel serverLevel, LivingEntity livingEntity, InteractionHand interactionHand, ItemStack itemStack, List<ItemStack> list, float f, float g, boolean fullPower) {
+    protected void shoot(ServerLevel serverLevel, LivingEntity livingEntity, InteractionHand interactionHand, ItemStack itemStack, List<ItemStack> list, float f, boolean fullPower) {
         float spread = EnchantmentHelper.processProjectileSpread(serverLevel, itemStack, livingEntity, 0.0f);
         float i = list.size() == 1 ? 0.0f : 2.0f * spread / (float)(list.size() - 1);
         float j = (float)((list.size() - 1) % 2) * i / 2.0f;
@@ -62,7 +57,7 @@ public class Bow implements ItemBehaviour<Bow.Config> {
             float m = j + k * (float)((l + 1) / 2) * i;
             k = -k;
             Projectile projectile = this.createProjectile(serverLevel, livingEntity, itemStack, itemStack2, fullPower);
-            this.shootProjectile(livingEntity, projectile, l, f, g, m, null);
+            this.shootProjectile(livingEntity, projectile, f, (float) 1.0, m);
             serverLevel.addFreshEntity(projectile);
             itemStack.hurtAndBreak(this.getDurabilityUse(itemStack2), livingEntity, LivingEntity.getSlotForHand(interactionHand));
             if (itemStack.isEmpty()) break;
@@ -77,12 +72,7 @@ public class Bow implements ItemBehaviour<Bow.Config> {
         if (itemStack2.is(Items.FIREWORK_ROCKET)) {
             return new FireworkRocketEntity(level, itemStack2, livingEntity, livingEntity.getX(), livingEntity.getEyeY() - 0.15000000596046448, livingEntity.getZ(), true);
         } else {
-            Projectile projectile = createArrow(level, livingEntity, itemStack, itemStack2, bl);
-            if (projectile instanceof AbstractArrow abstractArrow) {
-                abstractArrow.setSoundEvent(SoundEvents.CROSSBOW_HIT);
-            }
-
-            return projectile;
+            return createArrow(level, livingEntity, itemStack, itemStack2, bl);
         }
     }
 
@@ -113,15 +103,14 @@ public class Bow implements ItemBehaviour<Bow.Config> {
 
         List<ItemStack> list = BowItem.draw(itemStack, itemStack2, player);
         if (level instanceof ServerLevel serverLevel && !list.isEmpty()) {
-            this.shoot(serverLevel, player, player.getUsedItemHand(), itemStack, list, currentPower * config.powerMultiplier, 1.0f, currentPower == 1.0f);
+            this.shoot(serverLevel, player, player.getUsedItemHand(), itemStack, list, currentPower * config.powerMultiplier, currentPower == 1.0f);
         }
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(), config.shootSound, SoundSource.PLAYERS, 1.0f, 1.0f / (level.getRandom().nextFloat() * 0.4f + 1.2f) + currentPower * 0.5f);
         player.awardStat(Stats.ITEM_USED.get(itemStack.getItem()));
     }
 
-    //@Override
-    public void shootProjectile(LivingEntity livingEntity, Projectile projectile, int i, float f, float g, float h, @Nullable LivingEntity livingEntity2) {
+    public void shootProjectile(LivingEntity livingEntity, Projectile projectile, float f, float g, float h) {
         projectile.shootFromRotation(livingEntity, livingEntity.getXRot(), livingEntity.getYRot() + h, 0.0f, f, g);
     }
 
@@ -151,13 +140,24 @@ public class Bow implements ItemBehaviour<Bow.Config> {
         };
     }
 
+    public Predicate<ItemStack> supportedHeldProjectiles() {
+        return itemStack -> {
+            for (var itemId : config.supportedHeldProjectiles) {
+                if (itemStack.is(BuiltInRegistries.ITEM.get(itemId)))
+                    return true;
+            }
+            return false;
+        };
+    }
+
     public static class Config {
         /**
          * Power multiplier for the projectile
          */
         public float powerMultiplier = 3.f;
 
-        public List<ResourceLocation> supportedProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"), ResourceLocation.withDefaultNamespace("snowball"), ResourceLocation.withDefaultNamespace("tnt"));
+        public List<ResourceLocation> supportedProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"));
+        public List<ResourceLocation> supportedHeldProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"), ResourceLocation.withDefaultNamespace("firework_rocket"));
 
         public SoundEvent shootSound = SoundEvents.ARROW_SHOOT;
     }

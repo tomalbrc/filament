@@ -16,7 +16,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Objects;
 import java.util.function.Predicate;
 
 @Mixin(Player.class)
@@ -28,17 +27,16 @@ public abstract class PlayerMixin {
 
     @Inject(method = "getProjectile", at = @At("HEAD"), cancellable = true)
     private void filament$onGetProjectile(ItemStack itemStack, CallbackInfoReturnable<ItemStack> cir) {
-        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.BOW)) {
-            Predicate<ItemStack> predicate = Objects.requireNonNull(simpleItem.get(Behaviours.BOW)).getSupportedHeldProjectiles();
+        if (filament$bowOrCrossbow(itemStack)) {
+            Predicate<ItemStack> predicate = filament$getHeldPred(itemStack);
             ItemStack projectile = ProjectileWeaponItem.getHeldProjectile(Player.class.cast(this), predicate);
             if (!projectile.isEmpty()) {
                 cir.setReturnValue(projectile);
             } else {
-                predicate = Objects.requireNonNull(simpleItem.get(Behaviours.BOW)).supportedProjectiles();
-                var predicate2 = Objects.requireNonNull(simpleItem.get(Behaviours.CROSSBOW)).supportedProjectiles();
+                predicate = filament$getPred(itemStack);
                 for (int i = 0; i < this.inventory.getContainerSize(); ++i) {
                     ItemStack itemStack3 = this.inventory.getItem(i);
-                    if (predicate.test(itemStack3) || predicate2.test(itemStack3)) {
+                    if (predicate.test(itemStack3)) {
                         cir.setReturnValue(itemStack3);
                         return;
                     }
@@ -58,6 +56,23 @@ public abstract class PlayerMixin {
             return simpleItem.get(Behaviours.CROSSBOW).supportedProjectiles();
         }
 
-        return null;
+        return (itemStack1) -> false;
+    }
+
+    @Unique
+    private Predicate<ItemStack> filament$getHeldPred(ItemStack itemStack) {
+        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.BOW)) {
+            return simpleItem.get(Behaviours.BOW).supportedHeldProjectiles();
+        }
+        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.CROSSBOW)) {
+            return simpleItem.get(Behaviours.CROSSBOW).supportedHeldProjectiles();
+        }
+
+        return (itemStack1) -> false;
+    }
+
+    @Unique
+    private boolean filament$bowOrCrossbow(ItemStack itemStack) {
+        return itemStack.getItem() instanceof SimpleItem simpleItem && (simpleItem.has(Behaviours.BOW) || simpleItem.has(Behaviours.CROSSBOW));
     }
 }
