@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.mixin.behaviour;
+package de.tomalbrc.filament.mixin.behaviour.banner;
 
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.item.SimpleItem;

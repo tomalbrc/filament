@@ -7,6 +7,11 @@ Blocks also work with most item-behaviours to give the blocks' item special feat
 Some block behaviours provide blockstate properties you will have to provide models for, like `axis`, `repeater`, `crop`, `directional`, etc.
 
 Example of a blockResource entry for the `repeater` behaviour (can be found as relay block in the example datapack):
+
+<details>
+<summary>Click to expand</summary>
+
+~~~admonish example
 ```json
 {
   "blockResource": {
@@ -27,8 +32,15 @@ Example of a blockResource entry for the `repeater` behaviour (can be found as r
   }
 }
 ```
+~~~
+</details>
 
 Example of a block with behaviours set:
+
+<details>
+<summary>Click to expand</summary>
+
+~~~admonish example
 ```json
 {
   "id": "mynamespace:myblock",
@@ -74,6 +86,9 @@ Example of a block with behaviours set:
   }
 }
 ```
+~~~
+</details>
+
 This creates a block + item that can be worn and when worn shows an animated blockbench model on the player. The item is also a food and can be used as fuel source in furnaces.
 
 The block acts as a redstone powersource of level 15 and a repeater/relay and is strippable (turns to stone when stripped with an axe or an item with the `stripper` item behaviour)
@@ -173,7 +188,7 @@ Defines the block as a redstone power source.
 The `value` field can map to a block-state, like many other block-related fields.
 
 Example:
-```
+```json
 "value": {
   "age=0": 0,
   "age=1": 15
@@ -284,7 +299,7 @@ Makes the block drop xp when being mined without the silk-touch enchantment.
 The values of the `min` and `max` fields can be mapped to block-states.
 
 Example:
-```
+```json
 {
   ...,
   "behaviour": {

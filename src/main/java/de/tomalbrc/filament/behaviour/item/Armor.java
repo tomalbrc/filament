@@ -51,10 +51,10 @@ public class Armor implements ItemBehaviour<Armor.Config> {
         DispenserBlock.registerBehavior(item, ArmorItem.DISPENSE_ITEM_BEHAVIOR);
     }
 
-    public ItemStack modifyPolymerItemStack(ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
+    @Override
+    public void modifyPolymerItemStack(ItemStack original, ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
         if (this.trimHolder != null)
-            itemStack.set(DataComponents.TRIM, new ArmorTrim(lookup.lookup(Registries.TRIM_MATERIAL).get().get(TrimMaterials.QUARTZ).get(), this.trimHolder.trimPattern, false));
-        return itemStack;
+            itemStack.set(DataComponents.TRIM, new ArmorTrim(lookup.lookup(Registries.TRIM_MATERIAL).orElseThrow().get(TrimMaterials.QUARTZ).orElseThrow(), this.trimHolder.trimPattern, false));
     }
 
     public int modifyPolymerArmorColor(ItemStack itemStack, @Nullable ServerPlayer player, int color) {

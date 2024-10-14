@@ -9,6 +9,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -19,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface ItemBehaviour<T> extends Behaviour<T> {
     default void init(Item item, BehaviourHolder behaviourHolder) {
@@ -31,12 +33,25 @@ public interface ItemBehaviour<T> extends Behaviour<T> {
         return InteractionResultHolder.pass(player.getItemInHand(interactionHand));
     }
 
+    default Optional<Integer> getUseDuration(ItemStack itemStack, LivingEntity livingEntity) {
+        return Optional.empty();
+    }
+
     default InteractionResult useOn(UseOnContext useOnContext) {
         return InteractionResult.PASS;
     }
 
-    default ItemStack modifyPolymerItemStack(ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
-        return itemStack;
+    default void onUseTick(Level level, LivingEntity livingEntity, ItemStack itemStack, int i) {
+    }
+
+    default void releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int useDuration) {
+    }
+
+    default boolean useOnRelease(ItemStack itemStack) {
+        return false;
+    }
+
+    default void modifyPolymerItemStack(ItemStack original, ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
     }
 
     default int modifyPolymerCustomModelData(Map<String, PolymerModelData> modelData, ItemStack itemStack, @Nullable ServerPlayer player) {
@@ -49,5 +64,9 @@ public interface ItemBehaviour<T> extends Behaviour<T> {
 
     default EquipmentSlot getEquipmentSlot() {
         return EquipmentSlot.MAINHAND;
+    }
+
+    default Optional<Integer> getEnchantmentValue() {
+        return Optional.empty();
     }
 }

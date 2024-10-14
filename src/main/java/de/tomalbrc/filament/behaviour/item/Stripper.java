@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.behaviour.item;
 
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
-import de.tomalbrc.filament.mixin.AxeItemAccessor;
+import de.tomalbrc.filament.mixin.behaviour.strippable.AxeItemAccessor;
 import de.tomalbrc.filament.registry.StrippableRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;

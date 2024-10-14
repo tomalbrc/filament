@@ -79,7 +79,7 @@ public class ItemRegistry {
                     Filament.LOGGER.error("Failed to load item resource \"{}\".", entry.getKey(), e);
                 }
             }
-            PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(builder -> Util.langGenerator(builder, "item", itemNames));
+            PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(builder -> Util.langGenerator(builder, "item", itemNames));
             if (!printedInfo) {
                 for (String s : Arrays.asList("Filament items registered: " + REGISTERED_ITEMS, "Filament blocks registered: " + BlockRegistry.REGISTERED_BLOCKS, "Filament decorations registered: " + DecorationRegistry.REGISTERED_DECORATIONS, "Filament decoration block entities registered: " + DecorationRegistry.REGISTERED_BLOCK_ENTITIES)) {
                     Filament.LOGGER.info(s);

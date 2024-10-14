@@ -23,32 +23,30 @@ public class FilamentAssetReloadListener implements SimpleSynchronousResourceRel
 
     @Override
     public void onResourceManagerReload(ResourceManager resourceManager) {
-        Consumer<ResourcePackBuilder> consumer = resourcePackBuilder -> resourceManager.listPacks().forEach(packResources -> {
-            Set<String> clientResources = packResources.getNamespaces(PackType.CLIENT_RESOURCES);
-            if (packResources instanceof AbstractPackResources abstractPackResources) {
-                // using cursed hack for FilePackResource in a mixin to remove double-slashes in the path when providing an empty second string
-                boolean isZip = packResources instanceof FilePackResources;
-                for (String namespace : clientResources) {
-                    abstractPackResources.listResources(PackType.CLIENT_RESOURCES, isZip ? namespace : "", !isZip ? namespace : "", (resourceLocation,ioSupplier) -> {
-                        try {
-                            if (isZip)
-                                resourcePackBuilder.addData("assets/" + resourceLocation.getNamespace() + "/" + resourceLocation.getPath(), ioSupplier.get().readAllBytes());
-                            else
-                                // and another hack, we don't provide a namespace for normals packs... so the namespace is part of the identifiers' path
-                                resourcePackBuilder.addData("assets/" + resourceLocation.getPath(), ioSupplier.get().readAllBytes());
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
+        if (lastConsumer == null) {
+            Consumer<ResourcePackBuilder> consumer = resourcePackBuilder -> resourceManager.listPacks().forEach(packResources -> {
+                Set<String> clientResources = packResources.getNamespaces(PackType.CLIENT_RESOURCES);
+                if (packResources instanceof AbstractPackResources abstractPackResources) {
+                    // using cursed hack for FilePackResource in a mixin to remove double-slashes in the path when providing an empty second string
+                    boolean isZip = packResources instanceof FilePackResources;
+                    for (String namespace : clientResources) {
+                        abstractPackResources.listResources(PackType.CLIENT_RESOURCES, isZip ? namespace : "", !isZip ? namespace : "", (resourceLocation,ioSupplier) -> {
+                            try {
+                                if (isZip)
+                                    resourcePackBuilder.addData("assets/" + resourceLocation.getNamespace() + "/" + resourceLocation.getPath(), ioSupplier.get().readAllBytes());
+                                else
+                                    // and another hack, we don't provide a namespace for normals packs... so the namespace is part of the identifiers' path
+                                    resourcePackBuilder.addData("assets/" + resourceLocation.getPath(), ioSupplier.get().readAllBytes());
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
+                    }
                 }
-            }
-        });
+            });
 
-        if (lastConsumer != null) {
-            PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.unregister(lastConsumer);
+            lastConsumer = consumer;
+            PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(consumer);
         }
-
-        lastConsumer = consumer;
-        PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(consumer);
     }
 }

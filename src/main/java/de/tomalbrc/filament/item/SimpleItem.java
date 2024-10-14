@@ -38,7 +38,6 @@ import java.util.Map;
 
 /**
  * Universal item, base for all filament items, with behaviour support
- *
  * I wish BlockItem was an interface...
  */
 public class SimpleItem extends BlockItem implements PolymerItem, Equipable, BehaviourHolder {
@@ -90,6 +89,60 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
     }
 
     @Override
+    public void onUseTick(Level level, LivingEntity livingEntity, ItemStack itemStack, int i) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                itemBehaviour.onUseTick(level, livingEntity, itemStack, i);
+            }
+        }
+    }
+
+    @Override
+    public void releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int useDuration) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                itemBehaviour.releaseUsing(itemStack, level, livingEntity, useDuration);
+            }
+        }
+    }
+
+    @Override
+    public boolean useOnRelease(ItemStack itemStack) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                boolean didUse = itemBehaviour.useOnRelease(itemStack);
+                if (didUse)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int getEnchantmentValue() {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                var val = itemBehaviour.getEnchantmentValue();
+                if (val.isPresent())
+                    return val.get();
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public int getUseDuration(ItemStack itemStack, LivingEntity livingEntity) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                var val = itemBehaviour.getUseDuration(itemStack, livingEntity);
+                if (val.isPresent())
+                    return val.get();
+            }
+        }
+        return 0;
+    }
+
+    @Override
     public boolean hurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
         return this.components().has(DataComponents.TOOL);
     }
@@ -116,7 +169,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
         ItemStack itemStack1 = PolymerItemUtils.createItemStack(itemStack, tooltipType, lookup, player);
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
-                itemBehaviour.modifyPolymerItemStack(itemStack1, tooltipType, lookup, player);
+                itemBehaviour.modifyPolymerItemStack(itemStack, itemStack1, tooltipType, lookup, player);
             }
         }
         return itemStack1;

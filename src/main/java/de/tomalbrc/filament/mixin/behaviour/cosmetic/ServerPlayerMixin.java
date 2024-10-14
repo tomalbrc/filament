@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.mixin.cosmetic;
+package de.tomalbrc.filament.mixin.behaviour.cosmetic;
 
 import de.tomalbrc.filament.cosmetic.CosmeticInterface;
 import de.tomalbrc.filament.cosmetic.CosmeticUtil;
