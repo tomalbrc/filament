@@ -6,7 +6,7 @@ Behaviours can inherit `ItemBehaviour`, `BlockBehaviour` and `DecorationBehaviou
 
 Custom behaviours can be registered using the `BehaviourRegistry`.
 
-When referencing a custom behaviour in a config file you will have to specify the whole id of the behaviour, by default filament parses behaviours without namespace with the filament namespace.
+When referencing a custom behaviour in a config file you will have to specify the whole id of the behaviour, by default filament parses behaviours without namespace in the filament namespace.
 
 You can checkout [TSA: Decorations](https://github.com/tomalbrc/tsa-decorations/blob/main/src/main/java/de/tomalbrc/decorations/carpentry/CarpentryBehaviour.java) for an example Decoration Behaviour implementation or one of the various built-in behaviours. 
 
