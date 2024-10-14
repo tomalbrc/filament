@@ -1,0 +1,18 @@
+{
+  "id": "mynamespace:budding_testblock",
+  "blockResource": {
+    "models" : {
+      "default": "minecraft:block/bedrock"
+    }
+  },
+  "behaviour": {
+    "budding": {
+      "chance": 50
+    }
+  },
+  "blockModelType": "full_block",
+  "properties": {
+    "blockBase": "minecraft:stripped_acacia_wood",
+    "itemBase": "minecraft:paper"
+  }
+}
