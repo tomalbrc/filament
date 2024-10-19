@@ -93,6 +93,8 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
 
             if (blockEntity.has(Behaviours.SHOWCASE)) {
                 Showcase showcase = blockEntity.get(Behaviours.SHOWCASE);
+                assert showcase != null;
+
                 for (int i = 0; i < showcase.config.size(); i++) {
                     Showcase.ShowcaseMeta showcaseMeta = showcase.config.get(i);
                     String key = ITEM + i;
@@ -126,7 +128,7 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
             config.forEach(showcase -> {
                 ItemStack itemStack = getShowcaseItemStack(showcase);
                 if (itemStack != null && !itemStack.isEmpty()) {
-                    Util.spawnAtLocation(decorationBlockEntity.getLevel(), decorationBlockEntity.getBlockPos().getCenter(), this.getShowcaseItemStack(showcase));
+                    Util.spawnAtLocation(decorationBlockEntity.getLevel(), decorationBlockEntity.getBlockPos().getCenter(), itemStack.copyAndClear());
                 }
             });
         }
@@ -134,7 +136,7 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
 
     public Showcase.ShowcaseMeta getClosestShowcase(DecorationBlockEntity decorationBlockEntity, Vec3 location) {
         if (config.size() == 1) {
-            return config.get(0);
+            return config.getFirst();
         }
         else {
             double dist = Double.MAX_VALUE;
@@ -158,6 +160,8 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
     }
 
     public void setShowcaseItemStack(DecorationBlockEntity decorationBlockEntity, Showcase.ShowcaseMeta showcase, ItemStack itemStack) {
+        assert decorationBlockEntity.getDecorationHolder() != null;
+
         boolean isBlockItem = itemStack.getItem() instanceof BlockItem;
 
         DisplayElement element = this.showcases.get(showcase);
