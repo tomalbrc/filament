@@ -10,7 +10,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -39,11 +39,6 @@ public class Bow implements ItemBehaviour<Bow.Config> {
     @NotNull
     public Bow.Config getConfig() {
         return this.config;
-    }
-
-    @Override
-    public Optional<Integer> getEnchantmentValue() {
-        return Optional.of(1);
     }
 
     protected void shoot(ServerLevel serverLevel, LivingEntity livingEntity, InteractionHand interactionHand, ItemStack itemStack, List<ItemStack> list, float f, boolean fullPower) {
@@ -87,18 +82,18 @@ public class Bow implements ItemBehaviour<Bow.Config> {
     }
 
     @Override
-    public void releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int useDuration) {
+    public boolean releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int useDuration) {
         if (!(livingEntity instanceof Player player)) {
-            return;
+            return false;
         }
         ItemStack itemStack2 = player.getProjectile(itemStack);
         if (itemStack2.isEmpty()) {
-            return;
+            return false;
         }
         int j = this.getUseDuration(itemStack, livingEntity).orElseThrow() - useDuration;
         float currentPower = BowItem.getPowerForTime(j);
         if (currentPower < 0.1) {
-            return;
+            return false;
         }
 
         List<ItemStack> list = BowItem.draw(itemStack, itemStack2, player);
@@ -108,6 +103,7 @@ public class Bow implements ItemBehaviour<Bow.Config> {
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(), config.shootSound, SoundSource.PLAYERS, 1.0f, 1.0f / (level.getRandom().nextFloat() * 0.4f + 1.2f) + currentPower * 0.5f);
         player.awardStat(Stats.ITEM_USED.get(itemStack.getItem()));
+        return true;
     }
 
     public void shootProjectile(LivingEntity livingEntity, Projectile projectile, float f, float g, float h) {
@@ -120,20 +116,20 @@ public class Bow implements ItemBehaviour<Bow.Config> {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Item item, Level level, Player player, InteractionHand interactionHand) {
+    public InteractionResult use(Item item, Level level, Player player, InteractionHand interactionHand) {
         ItemStack itemStack = player.getItemInHand(interactionHand);
         boolean hasProjectile = !player.getProjectile(itemStack).isEmpty();
         if (player.hasInfiniteMaterials() || hasProjectile) {
             player.startUsingItem(interactionHand);
-            return InteractionResultHolder.consume(itemStack);
+            return InteractionResult.CONSUME;
         }
-        return InteractionResultHolder.fail(itemStack);
+        return InteractionResult.FAIL;
     }
 
     public Predicate<ItemStack> supportedProjectiles() {
         return itemStack -> {
             for (var itemId : config.supportedProjectiles) {
-                if (itemStack.is(BuiltInRegistries.ITEM.get(itemId)))
+                if (itemStack.is(BuiltInRegistries.ITEM.get(itemId).orElseThrow()))
                     return true;
             }
             return false;
@@ -143,7 +139,7 @@ public class Bow implements ItemBehaviour<Bow.Config> {
     public Predicate<ItemStack> supportedHeldProjectiles() {
         return itemStack -> {
             for (var itemId : config.supportedHeldProjectiles) {
-                if (itemStack.is(BuiltInRegistries.ITEM.get(itemId)))
+                if (itemStack.is(BuiltInRegistries.ITEM.get(itemId).orElseThrow()))
                     return true;
             }
             return false;

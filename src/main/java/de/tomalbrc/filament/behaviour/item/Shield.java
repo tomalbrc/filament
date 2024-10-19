@@ -1,13 +1,9 @@
 package de.tomalbrc.filament.behaviour.item;
 
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
-import de.tomalbrc.filament.behaviour.BehaviourHolder;
-import de.tomalbrc.filament.registry.FuelRegistry;
 import net.minecraft.network.chat.Component;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -18,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Fuel behaviour
+ * Shield behaviour
  */
 public class Shield implements ItemBehaviour<Shield.Config> {
     private final Config config;
@@ -43,15 +39,10 @@ public class Shield implements ItemBehaviour<Shield.Config> {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Item self, Level level, Player player, InteractionHand interactionHand) {
+    public InteractionResult use(Item self, Level level, Player player, InteractionHand interactionHand) {
         ItemStack itemStack = player.getItemInHand(interactionHand);
         player.startUsingItem(interactionHand);
-        return InteractionResultHolder.consume(itemStack);
-    }
-
-    @Override
-    public EquipmentSlot getEquipmentSlot() {
-        return EquipmentSlot.OFFHAND;
+        return InteractionResult.CONSUME;
     }
 
     public static class Config {

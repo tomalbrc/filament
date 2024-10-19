@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -42,29 +43,18 @@ public interface ItemBehaviour<T> extends Behaviour<T> {
     default void onUseTick(Level level, LivingEntity livingEntity, ItemStack itemStack, int i) {
     }
 
-    default void releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int useDuration) {
+    default boolean releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int useDuration) {
+        return false;
     }
 
     default boolean useOnRelease(ItemStack itemStack) {
         return false;
     }
 
-    default void modifyPolymerItemStack(Map<String, ResourceLocation> models, ItemStack self, ItemStack original, ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
-    }
-
-    default int modifyPolymerCustomModelData(Map<String, PolymerModelData> modelData, ItemStack itemStack, @Nullable ServerPlayer player) {
-        return -1;
+    default void modifyPolymerItemStack(Map<String, ResourceLocation> models, ItemStack original, ItemStack replacement, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
     }
 
     default int modifyPolymerArmorColor(ItemStack itemStack, @Nullable ServerPlayer player, int color) {
         return color;
-    }
-
-    default EquipmentSlot getEquipmentSlot() {
-        return EquipmentSlot.MAINHAND;
-    }
-
-    default Optional<Integer> getEnchantmentValue() {
-        return Optional.empty();
     }
 }

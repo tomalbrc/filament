@@ -31,6 +31,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Mob trap
@@ -97,27 +98,29 @@ public class Trap implements ItemBehaviour<Trap.Config> {
     }
 
     @Override
-    public ItemStack modifyPolymerItemStack(Map<String, ResourceLocation> modelData, ItemStack self, ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
+    public void modifyPolymerItemStack(Map<String, ResourceLocation> modelData, ItemStack original, ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
         if (modelData != null) {
-            itemStack.set(DataComponents.ITEM_MODEL, canSpawn(self) ? modelData.get("trapped") : modelData.get("default"));
+            itemStack.set(DataComponents.ITEM_MODEL, canSpawn(original) ? modelData.get("trapped") : modelData.get("default"));
         }
-        return itemStack;
     }
 
     private static boolean canSpawn(ItemStack useOnContext) {
-        return useOnContext.get(DataComponents.BUCKET_ENTITY_DATA) != null && useOnContext.get(DataComponents.BUCKET_ENTITY_DATA).contains("Type");
+        return useOnContext.get(DataComponents.BUCKET_ENTITY_DATA) != null && Objects.requireNonNull(useOnContext.get(DataComponents.BUCKET_ENTITY_DATA)).contains("Type");
     }
 
     private void spawn(ServerLevel serverLevel, Player player, InteractionHand hand, ItemStack itemStack, BlockPos blockPos) {
-        var compoundTag = itemStack.get(DataComponents.BUCKET_ENTITY_DATA).copyTag();
+        var bucketData = itemStack.get(DataComponents.BUCKET_ENTITY_DATA);
+        if (bucketData != null) {
+            var compoundTag = bucketData.copyTag();
 
-        EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(compoundTag.getString("Type"))).orElseThrow().value();
-        Entity entity = entityType.spawn(serverLevel, blockPos.above(1), EntitySpawnReason.BUCKET);
-        if (entity instanceof Mob mob) {
-            this.loadFromTag(mob, compoundTag);
+            EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(compoundTag.getString("Type"))).orElseThrow().value();
+            Entity entity = entityType.spawn(serverLevel, blockPos.above(1), EntitySpawnReason.BUCKET);
+            if (entity instanceof Mob mob) {
+                this.loadFromTag(mob, compoundTag);
+            }
+
+            itemStack.remove(DataComponents.BUCKET_ENTITY_DATA);
         }
-
-        itemStack.remove(DataComponents.BUCKET_ENTITY_DATA);
     }
 
     public boolean canUseOn(Mob mob) {

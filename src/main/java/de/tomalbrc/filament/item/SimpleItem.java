@@ -88,12 +88,15 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
     }
 
     @Override
-    public void releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int useDuration) {
+    public boolean releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int useDuration) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
-                itemBehaviour.releaseUsing(itemStack, level, livingEntity, useDuration);
+                var res = itemBehaviour.releaseUsing(itemStack, level, livingEntity, useDuration);
+                if (res)
+                    return true;
             }
         }
+        return false;
     }
 
     @Override
@@ -106,18 +109,6 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
             }
         }
         return false;
-    }
-
-    @Override
-    public int getEnchantmentValue() {
-        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
-            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
-                var val = itemBehaviour.getEnchantmentValue();
-                if (val.isPresent())
-                    return val.get();
-            }
-        }
-        return 0;
     }
 
     @Override

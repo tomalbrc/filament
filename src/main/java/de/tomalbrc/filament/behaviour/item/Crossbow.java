@@ -22,7 +22,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -40,6 +40,7 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -69,31 +70,25 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config> {
     }
 
     @Override
-    public void modifyPolymerItemStack(ItemStack original, ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
+    public void modifyPolymerItemStack(Map<String, ResourceLocation> models, ItemStack original, ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
         // polymer removes that component, so we have to add it back again.
         itemStack.set(DataComponents.CHARGED_PROJECTILES, original.get(DataComponents.CHARGED_PROJECTILES));
     }
 
     @Override
-    public Optional<Integer> getEnchantmentValue() {
-        return Optional.of(1);
-    }
-
-
-    @Override
-    public InteractionResultHolder<ItemStack> use(Item item, Level level, Player player, InteractionHand interactionHand) {
+    public InteractionResult use(Item item, Level level, Player player, InteractionHand interactionHand) {
         ItemStack itemStack = player.getItemInHand(interactionHand);
         ChargedProjectiles chargedProjectiles = itemStack.get(DataComponents.CHARGED_PROJECTILES);
         if (chargedProjectiles != null && !chargedProjectiles.isEmpty()) {
             this.performShooting(level, player, interactionHand, itemStack, getShootingPower(chargedProjectiles) * config.powerMultiplier, 1.0F, null);
-            return InteractionResultHolder.consume(itemStack);
+            return InteractionResult.CONSUME;
         } else if (!player.getProjectile(itemStack).isEmpty()) {
             this.startSoundPlayed = false;
             this.midLoadSoundPlayed = false;
             player.startUsingItem(interactionHand);
-            return InteractionResultHolder.consume(itemStack);
+            return InteractionResult.CONSUME;
         } else {
-            return InteractionResultHolder.fail(itemStack);
+            return InteractionResult.FAIL;
         }
     }
 
@@ -102,13 +97,16 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config> {
     }
 
     @Override
-    public void releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int i) {
+    public boolean releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int i) {
         int j = this.getUseDuration(itemStack, livingEntity).orElseThrow() - i;
         float f = CrossbowItem.getPowerForTime(j, itemStack, livingEntity);
         if (f >= 1.f && !CrossbowItem.isCharged(itemStack) && CrossbowItem.tryLoadProjectiles(livingEntity, itemStack)) {
             CrossbowItem.ChargingSounds chargingSounds = this.getChargingSounds(itemStack);
             chargingSounds.end().ifPresent((holder) -> level.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), holder.value(), livingEntity.getSoundSource(), 1.0F, 1.0F / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F));
+
+            return true;
         }
+        return false;
     }
 
     protected void shootProjectile(LivingEntity livingEntity, Projectile projectile, int i, float f, float g, float h, @Nullable LivingEntity livingEntity2) {
@@ -277,7 +275,7 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config> {
     public Predicate<ItemStack> supportedProjectiles() {
         return itemStack -> {
             for (var itemId : config.supportedProjectiles) {
-                if (itemStack.is(BuiltInRegistries.ITEM.get(itemId)))
+                if (itemStack.is(BuiltInRegistries.ITEM.get(itemId).orElseThrow()))
                     return true;
             }
             return false;
@@ -287,7 +285,7 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config> {
     public Predicate<ItemStack> supportedHeldProjectiles() {
         return itemStack -> {
             for (var itemId : config.supportedHeldProjectiles) {
-                if (itemStack.is(BuiltInRegistries.ITEM.get(itemId)))
+                if (itemStack.is(BuiltInRegistries.ITEM.get(itemId).orElseThrow()))
                     return true;
             }
             return false;
