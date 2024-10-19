@@ -3,8 +3,19 @@ package de.tomalbrc.filament.behaviour.item;
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.registry.FuelRegistry;
-import net.minecraft.world.item.Item;
+import net.minecraft.network.chat.Component;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Fuel behaviour
@@ -23,14 +34,26 @@ public class Shield implements ItemBehaviour<Shield.Config> {
     }
 
     @Override
-    public void init(Item item, BehaviourHolder behaviourHolder) {
-        FuelRegistry.add(item, config.value);
+    public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
+        BannerItem.appendHoverTextFromBannerBlockEntityTag(itemStack, list);
+    }
+
+    public Optional<Integer> getUseDuration(ItemStack itemStack, LivingEntity livingEntity) {
+        return Optional.of(72000);
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Item self, Level level, Player player, InteractionHand interactionHand) {
+        ItemStack itemStack = player.getItemInHand(interactionHand);
+        player.startUsingItem(interactionHand);
+        return InteractionResultHolder.consume(itemStack);
+    }
+
+    @Override
+    public EquipmentSlot getEquipmentSlot() {
+        return EquipmentSlot.OFFHAND;
     }
 
     public static class Config {
-        /**
-         * The value associated with the fuel, used in furnaces and similar item burning blocks
-         */
-        public int value = 10;
     }
 }

@@ -25,6 +25,8 @@
     "behaviour.crop.BeeMixin",
     "behaviour.crop.HarvestFarmlandMixin",
     "behaviour.oxidizable.WeatheringCopperMixin",
+    "behaviour.shield.LivingEntityMixin",
+    "behaviour.shield.PlayerMixin",
     "behaviour.strippable.AxeItemAccessor",
     "behaviour.strippable.AxeItemMixin",
     "behaviour.trap.MobMixin",
