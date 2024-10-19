@@ -8,6 +8,8 @@ Item behaviours such as `food`, `fuel` and `cosmetic` are supported by decoratio
 
 You can also set components similar to item configurations using the `components` field
 
+---
+
 ## Contents
 
 ```json

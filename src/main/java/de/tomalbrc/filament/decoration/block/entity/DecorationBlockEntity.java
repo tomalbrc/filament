@@ -234,16 +234,20 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         }
 
         ItemStack thisItemStack = this.getItem();
-        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.behaviours) {
-            if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
-                if (dropItem)
-                    decorationBehaviour.modifyDrop(this, thisItemStack);
-                decorationBehaviour.destroy(this, dropItem);
+        if (thisItemStack != null && !thisItemStack.isEmpty()) {
+            for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.behaviours) {
+                if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
+                    if (dropItem)
+                        decorationBehaviour.modifyDrop(this, thisItemStack);
+                    decorationBehaviour.destroy(this, dropItem);
+                }
             }
-        }
 
-        if (dropItem) {
-            Util.spawnAtLocation(this.getLevel(), this.getBlockPos().getCenter(), thisItemStack);
+            if (dropItem) {
+                Util.spawnAtLocation(this.getLevel(), this.getBlockPos().getCenter(), thisItemStack);
+            }
+
+            thisItemStack.setCount(0);
         }
 
         this.removeHolder(this.decorationHolder);

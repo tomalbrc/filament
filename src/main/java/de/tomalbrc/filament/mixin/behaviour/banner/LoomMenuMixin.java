@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.mixin.behaviour;
+package de.tomalbrc.filament.mixin.behaviour.banner;
 
 import com.google.common.collect.ImmutableList;
 import de.tomalbrc.filament.behaviour.Behaviours;

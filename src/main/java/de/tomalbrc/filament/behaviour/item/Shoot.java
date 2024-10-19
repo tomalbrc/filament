@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -16,8 +17,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 /**
@@ -44,6 +47,8 @@ public class Shoot implements ItemBehaviour<Shoot.ShootConfig> {
         if (!level.isClientSide) {
             BaseProjectileEntity projectile = EntityRegistry.BASE_PROJECTILE.create(level, EntitySpawnReason.TRIGGERED);
             if (projectile != null) {
+                projectile.config = config;
+
                 projectile.setPos(user.position().add(0, user.getEyeHeight(), 0));
                 Util.damageAndBreak(1, itemStack, user, Player.getSlotForHand(hand));
 
@@ -61,7 +66,7 @@ public class Shoot implements ItemBehaviour<Shoot.ShootConfig> {
                 projectile.setXRot(user.getXRot());
                 projectile.setDeltaMovement(deltaMovement.x, deltaMovement.y, deltaMovement.z);
 
-                var projItem = this.config.projectile != null ? BuiltInRegistries.ITEM.get(this.config.projectile).orElseThrow().value().getDefaultInstance() : itemStack.copyWithCount(1);
+                ItemStack projItem = this.config.projectile != null ? BuiltInRegistries.ITEM.get(this.config.projectile).orElseThrow().value().getDefaultInstance() : itemStack.copyWithCount(1);
                 projectile.setProjectileStack(projItem);
                 projectile.setPickupStack(projItem);
                 projectile.setOwner(user);
@@ -109,5 +114,20 @@ public class Shoot implements ItemBehaviour<Shoot.ShootConfig> {
          * Sound effect to play when shooting
          */
         public ResourceLocation sound;
+
+        /**
+         * Rotation
+         */
+        public Quaternionf rotation = new Quaternionf().rotationY(Mth.DEG_TO_RAD*90);
+
+        /**
+         * Translation
+         */
+        public Vector3f translation = new Vector3f();
+
+        /**
+         * Scale
+         */
+        public Vector3f scale = new Vector3f(0.6f);
     }
 }

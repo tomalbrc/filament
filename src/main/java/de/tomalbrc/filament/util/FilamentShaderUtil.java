@@ -108,10 +108,9 @@ public class FilamentShaderUtil {
             """;
 
     public static void registerCallback() {
-        PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder -> {
+        PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder -> {
             resourcePackBuilder.addData("assets/minecraft/shaders/core/rendertype_entity_translucent_cull.fsh", fsh.getBytes(StandardCharsets.UTF_8));
             resourcePackBuilder.addData("assets/minecraft/shaders/core/rendertype_entity_translucent_cull.vsh", vsh.getBytes(StandardCharsets.UTF_8));
         });
     }
-
 }

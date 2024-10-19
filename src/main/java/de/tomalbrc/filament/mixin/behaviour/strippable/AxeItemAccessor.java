@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.mixin;
+package de.tomalbrc.filament.mixin.behaviour.strippable;
 
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.level.block.Block;

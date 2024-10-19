@@ -3,7 +3,6 @@
   "minVersion": "0.8",
   "package": "de.tomalbrc.filament.mixin",
   "mixins": [
-    "AxeItemAccessor",
     "BlockItemMixin",
     "BucketItemMixin",
     "FilePackResourcesMixin",
@@ -20,12 +19,25 @@
     "behaviour.LoomMenu$5Mixin",
     "behaviour.LoomMenuMixin",
     "behaviour.MobMixin",
+    "behaviour.AbstractFurnaceBlockEntityMixin",
     "behaviour.PlayerMixin",
-    "behaviour.WeatheringCopperMixin",
+    "behaviour.banner.LoomMenu$5Mixin",
+    "behaviour.banner.LoomMenuMixin",
+    "behaviour.bow.MobMixin",
+    "behaviour.bow.PlayerMixin",
+    "behaviour.cosmetic.LivingEntityMixin",
+    "behaviour.cosmetic.ServerPlayerMixin",
     "behaviour.crop.BeeMixin",
     "behaviour.crop.HarvestFarmlandMixin",
-    "cosmetic.LivingEntityMixin",
-    "cosmetic.ServerPlayerMixin"
+    "behaviour.oxidizable.WeatheringCopperMixin",
+    "behaviour.shield.LivingEntityMixin",
+    "behaviour.shield.PlayerMixin",
+    "behaviour.strippable.AxeItemAccessor",
+    "behaviour.strippable.AxeItemMixin",
+    "behaviour.trap.MobMixin",
+    "behaviour.trim.ItemStackPacketCodecMixin",
+    "behaviour.trim.RegistryDataLoaderMixin",
+    "behaviour.trim.SmithingTrimRecipeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

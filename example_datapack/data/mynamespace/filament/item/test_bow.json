@@ -1,0 +1,16 @@
+{
+  "id": "mynamespace:test_bow",
+  "vanillaItem": "minecraft:bow",
+  "itemResource":  {
+    "models": {
+      "default": "minecraft:custom/bow/custombow"
+    }
+  },
+  "properties": {
+    "durability": 20,
+    "stackSize": 1
+  },
+  "behaviour": {
+    "bow": {}
+  }
+}

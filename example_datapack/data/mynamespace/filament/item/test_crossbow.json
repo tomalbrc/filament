@@ -1,0 +1,16 @@
+{
+  "id": "mynamespace:test_crossbow",
+  "vanillaItem": "minecraft:crossbow",
+  "itemResource":  {
+    "models": {
+      "default": "minecraft:custom/crossbow"
+    }
+  },
+  "properties": {
+    "durability": 40,
+    "stackSize": 1
+  },
+  "behaviour": {
+    "crossbow": {}
+  }
+}

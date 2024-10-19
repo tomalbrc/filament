@@ -8,6 +8,8 @@ Most Item behaviours such as `food`, `fuel`, `cosmetic` and more are supported b
 
 You can also set components for the block-item, similar to item configurations using the `components` field
 
+---
+
 ## Contents
 
 Blocks like candles or turtle eggs, with mutiple blocks in 1:
@@ -42,6 +44,8 @@ Blocks like candles or turtle eggs, with mutiple blocks in 1:
 
 The fields `id`, `blockResource`, and `blockModelType` are required to be set.
 
+---
+
 # Fields:
 
 ## `id` (required): 
@@ -49,10 +53,14 @@ Identifier of the block and its item.
 
 Example: `mynamespace:myblock`
 
+---
+
 ## `vanillaItem`:
 
 The vanilla item that is sent to the client and gets skinned using CustomModelData internally.
 Defaults to `minecraft:paper`
+
+---
 
 ## `blockResource` (required):
 
@@ -63,7 +71,7 @@ For now it is only possible to provide block models directly, support for just t
 The keys work similar to the vanilla blockstate files in resourcepacks, you specify the model to use based on the block-state.
 
 An example for the `count` block-behaviour:
-```
+```json
 {
   ...,
   "blockResource": {
@@ -78,14 +86,16 @@ An example for the `count` block-behaviour:
 }
 ```
 
-## ```itemResource```:
+---
+
+## `itemResource`:
 
 An object that allows you provide different item-models which may be required by some item-behaviours.
 
 The `trapped` behaviour for example requires a model for the `trapped` key.
 
 Example
-```
+```json
 {
   ...,
   "itemResource": {
@@ -99,26 +109,34 @@ Example
 
 ```
 
+---
+
 ## `blockModelType` (required in most cases):
 
 The block model to use/retexture. See [Block Model Types](block-model-types.md) for a list of options.
 
 ***For some block behaviours like `slab` it may be required to leave this field empty!***
 
+---
+
 ## `properties`: 
 
 The properties of this block. See [Block Properties](block-properties.md) for details.
 
+---
+
 ### `group`
 
 Defines the item-group for this blocks' item. See [Item Groups](item-groups.md) for more information.
+
+---
 
 ## `components`:
 
 An object with minecraft components used for the item.
 
 Example:
-```
+```json
 {
     ...
     "components": {

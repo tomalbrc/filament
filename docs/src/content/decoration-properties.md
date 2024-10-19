@@ -20,17 +20,23 @@ Example of properties:
 }
 ```
 
+---
+
 ### `rotate`:
 
 Boolean (true/false) indicating whether the decoration can rotate (90° intervals)
 
 Defaults to `false`
 
+---
+
 ### `rotateSmooth`:
 
 Boolean (true/false) indicating whether the decoration can rotate in 45° intervals
 
 Defaults to `false`
+
+---
 
 ### `placement`:
 
@@ -47,11 +53,15 @@ Default values:
 }
 ```
 
+---
+
 ### `glow`:
 
 Boolean (true/false) indicating whether the decoration ignores ambient light and assumes light level 15.
 
 Defaults to `false`
+
+---
 
 ### `waterloggable`:
 
@@ -59,11 +69,15 @@ Boolean (true/false) indicating whether the decoration blocks can be waterlogged
 
 Defaults to `true`
 
+---
+
 ### `solid`:
 
 Boolean (true/false) indicating whether the decoration is solid - can be flushed away by water if set to false.
 
 Defaults to `true`
+
+---
 
 ### `display`:
 
@@ -73,11 +87,15 @@ Can be `none`, `thirdperson_lefthand`, `thirdperson_righthand`, `firstperson_lef
 
 Defaults to `fixed`.
 
+---
+
 ### `showBreakParticles`
 
 Flag whether to show break particles. 
 
 Defaults to `true`
+
+---
 
 ### `blockBase`
 
@@ -85,11 +103,15 @@ Used for place & break sounds and particles if `useItemParticles` is set to `fal
 
 Defaults to `minecraft:stone`
 
+---
+
 ### `useItemParticles`
 
 Flag whether to use item particles. Uses the particles of the block defined in `blockBase` if set to `false`. 
 
 Defaults to `true`
+
+---
 
 ### `showBreakParticles`
 

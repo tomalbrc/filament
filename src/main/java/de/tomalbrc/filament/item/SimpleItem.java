@@ -36,7 +36,6 @@ import java.util.Map;
 
 /**
  * Universal item, base for all filament items, with behaviour support
- *
  * I wish BlockItem was an interface...
  */
 public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolder {
@@ -77,6 +76,60 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
     @NotNull
     public FeatureFlagSet requiredFeatures() {
         return this.getBlock() != null ? this.getBlock().requiredFeatures() : this.vanillaItem.requiredFeatures();
+    }
+
+    @Override
+    public void onUseTick(Level level, LivingEntity livingEntity, ItemStack itemStack, int i) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                itemBehaviour.onUseTick(level, livingEntity, itemStack, i);
+            }
+        }
+    }
+
+    @Override
+    public void releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int useDuration) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                itemBehaviour.releaseUsing(itemStack, level, livingEntity, useDuration);
+            }
+        }
+    }
+
+    @Override
+    public boolean useOnRelease(ItemStack itemStack) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                boolean didUse = itemBehaviour.useOnRelease(itemStack);
+                if (didUse)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int getEnchantmentValue() {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                var val = itemBehaviour.getEnchantmentValue();
+                if (val.isPresent())
+                    return val.get();
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public int getUseDuration(ItemStack itemStack, LivingEntity livingEntity) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                var val = itemBehaviour.getUseDuration(itemStack, livingEntity);
+                if (val.isPresent())
+                    return val.get();
+            }
+        }
+        return 0;
     }
 
     @Override

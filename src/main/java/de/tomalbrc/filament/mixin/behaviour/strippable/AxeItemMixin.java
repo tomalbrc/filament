@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.mixin.behaviour;
+package de.tomalbrc.filament.mixin.behaviour.strippable;
 
 import de.tomalbrc.filament.registry.StrippableRegistry;
 import net.minecraft.world.item.AxeItem;

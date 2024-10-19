@@ -74,8 +74,6 @@ public class Filament implements ModInitializer {
         FilamentReloadUtil.registerEarlyReloadListener(new ItemRegistry.ItemDataReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new ItemGroupRegistry.ItemGroupDataReloadListener());
 
-        FilamentRPUtil.registerCallback();
-
         VirtualDestroyStage.destroy(null);
 
         //LOGGER.info("Available Polymer block model types:");

@@ -19,6 +19,9 @@ public class Behaviours {
     public static final BehaviourType<Fuel, Fuel.Config> FUEL = registerBehaviour("fuel", Fuel.class);
     public static final BehaviourType<Instrument, Instrument.Config> INSTRUMENT = registerBehaviour("instrument", Instrument.class);
     public static final BehaviourType<Shoot, Shoot.ShootConfig> SHOOT = registerBehaviour("shoot", Shoot.class);
+    public static final BehaviourType<Bow, Bow.Config> BOW = registerBehaviour("bow", Bow.class);
+    public static final BehaviourType<Crossbow, Crossbow.Config> CROSSBOW = registerBehaviour("crossbow", Crossbow.class);
+    public static final BehaviourType<Shield, Shield.Config> SHIELD = registerBehaviour("shield", Shield.class);
     public static final BehaviourType<Stripper, Stripper.Config> STRIPPER = registerBehaviour("stripper", Stripper.class);
     public static final BehaviourType<Trap, Trap.Config> TRAP = registerBehaviour("trap", Trap.class);
     public static final BehaviourType<BannerPattern, BannerPattern.Config> BANNER_PATTERN = registerBehaviour("banner_pattern", BannerPattern.class);
