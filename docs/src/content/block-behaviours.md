@@ -171,6 +171,8 @@ You can make farmer villagers able to plant the seeds using the item tag `villag
 Checks for the block below with one of the configured block tags or blocks list.
 The block will break off, similar to flowers or crops, when the block below them is not supported.
 
+The behaviour will automatically check for and apply any `facing` or `axis` block-state properties.
+
 Useful for bushes/plants/crops/flowers and more
 
 - **Fields**:
@@ -178,6 +180,7 @@ Useful for bushes/plants/crops/flowers and more
     - Example: `blocks: ["minecraft:stone", "minecraft:sand"]`
   - `tags`: List of block-tags this block can survive on. 
     - Example: `tags: ["minecraft:dirt", "minecraft:sculk_replaceable"]`
+  - `solidOnly`: Only checks if the supporting block is solid. Requires `blocks` and `tags` to be empty.
 
 ---
 
