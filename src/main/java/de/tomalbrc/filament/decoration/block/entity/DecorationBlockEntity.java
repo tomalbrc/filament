@@ -195,14 +195,14 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     }
 
     @Override
-    protected void destroyBlocks() {
+    protected void destroyBlocks(ItemStack particleItem) {
         BlockState decorationBlockState = this.getBlockState();
         if (DecorationRegistry.isDecoration(decorationBlockState) && this.getDecorationData() != null) {
             if (this.getDecorationData().hasBlocks()) {
                 Util.forEachRotated(this.getDecorationData().blocks(), this.getBlockPos(), this.getVisualRotationYInDegrees(), blockPos -> {
                     if (this.getLevel() != null && DecorationRegistry.isDecoration(this.getLevel().getBlockState(blockPos))) {
                         if (this.getDecorationData().properties().showBreakParticles)
-                            Util.showBreakParticle((ServerLevel) this.level, blockPos, this.getDecorationData().properties().useItemParticles ? this.getItem() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+                            Util.showBreakParticle((ServerLevel) this.level, blockPos, this.getDecorationData().properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
                         this.getLevel().removeBlock(blockPos, false);
                     }
                 });
@@ -212,7 +212,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
                 BlockPos blockPos = this.getBlockPos();
 
                 if (this.getDecorationData().properties().showBreakParticles)
-                    Util.showBreakParticle((ServerLevel) this.level, blockPos, this.getDecorationData().properties().useItemParticles ? this.getItem() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+                    Util.showBreakParticle((ServerLevel) this.level, blockPos, this.getDecorationData().properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
 
                 SoundEvent breakSound = this.getDecorationData().properties().blockBase.defaultBlockState().getSoundType().getBreakSound();
                 this.level.playSound(null, this.getBlockPos(),  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -235,6 +235,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         }
 
         ItemStack thisItemStack = this.getItem();
+        ItemStack particleItem = this.getItem();
         if (thisItemStack != null && !thisItemStack.isEmpty()) {
             for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.behaviours) {
                 if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
@@ -248,12 +249,12 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
                 Util.spawnAtLocation(this.getLevel(), this.getBlockPos().getCenter(), thisItemStack);
             }
 
-            thisItemStack.setCount(0);
+            particleItem = thisItemStack.copyAndClear();
         }
 
         this.removeHolder(this.decorationHolder);
 
-        this.destroyBlocks();
+        this.destroyBlocks(particleItem);
     }
 
     private void removeHolder(ElementHolder holder) {
