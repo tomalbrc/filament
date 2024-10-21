@@ -78,9 +78,9 @@ public class Filament implements ModInitializer {
 
         VirtualDestroyStage.destroy(null);
 
-        LOGGER.info("Available Polymer block model types:");
-        for (BlockModelType blockModelType : BlockModelType.values()) {
-            LOGGER.info("\t{} = {}", blockModelType.name(), PolymerBlockResourceUtils.getBlocksLeft(blockModelType));
-        }
+        //LOGGER.info("Available Polymer block model types:");
+        //for (BlockModelType blockModelType : BlockModelType.values()) {
+        //    LOGGER.info("\t{} = {}", blockModelType.name(), PolymerBlockResourceUtils.getBlocksLeft(blockModelType));
+        //}
     }
 }
