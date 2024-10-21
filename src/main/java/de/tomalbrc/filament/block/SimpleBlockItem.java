@@ -34,6 +34,10 @@ public class SimpleBlockItem extends SimpleItem implements PolymerItem, Behaviou
     @Override
     protected ResourceLocation getModel() {
         boolean hasItemModels = this.blockData.itemResource() != null && this.blockData.itemResource().models() != null;
-        return hasItemModels ? this.blockData.itemResource().models().get("default") : this.blockData.blockResource().models().entrySet().iterator().next().getValue().model();
+        return hasItemModels ? this.blockData.itemResource().models().get("default") : removeItemPrefix(this.blockData.blockResource().models().entrySet().iterator().next().getValue().model());
+    }
+
+    private static ResourceLocation removeItemPrefix(ResourceLocation resourceLocation) {
+        return ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), resourceLocation.getPath().startsWith("item/") ? resourceLocation.getPath().substring("item/".length()) : resourceLocation.getPath());
     }
 }
