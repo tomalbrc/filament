@@ -2,7 +2,13 @@
 
 ## File
 
-Decoration configuration files are to be placed in `MyDatapack/data/<namespace>/filament/decoration/my_decoration.json` 
+Decoration configuration files are to be placed in `MyDatapack/data/<namespace>/filament/decoration/my_decoration.json`.
+
+Item behaviours such as `food`, `fuel` and `cosmetic` are supported by decorations.
+
+You can also set components similar to item configurations using the `components` field
+
+---
 
 ## Contents
 
@@ -13,6 +19,7 @@ Decoration configuration files are to be placed in `MyDatapack/data/<namespace>/
   "models": {
     "default": "mynamespace:custom/misc/clown_horn"
   },
+  "group": "mynamespace:mygroup",
   "properties": {
     "stackSize": 1
   },
@@ -22,8 +29,13 @@ Decoration configuration files are to be placed in `MyDatapack/data/<namespace>/
       "range": 64,
       "useDuration": 60
     }
+  },
+  "components": {
+    ...
   }
 }
 ```
 
-See sub-points 2.3.x
+The file contents are very similar to that of blocks, except for additional behaviours exclusive to decorations.
+
+Decorations do not support most of the block behaviours.

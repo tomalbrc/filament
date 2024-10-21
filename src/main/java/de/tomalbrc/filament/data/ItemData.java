@@ -1,62 +1,66 @@
 package de.tomalbrc.filament.data;
 
-import de.tomalbrc.filament.data.behaviours.item.ItemBehaviourList;
+import com.google.gson.annotations.SerializedName;
+import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
+
 @SuppressWarnings("unused")
 public record ItemData(
+        @Nullable Map<String, String> displayName,
         @NotNull ResourceLocation id,
         @Nullable Item vanillaItem,
         @Nullable ItemResource itemResource,
-        @Nullable ItemBehaviourList behaviour,
-        @Nullable ItemProperties properties
+        @SerializedName("behaviour")
+        @Nullable BehaviourConfigMap behaviourConfig,
+        @Nullable ItemProperties properties,
+        @Nullable DataComponentMap components,
+        @SerializedName("group")
+        @Nullable ResourceLocation itemGroup
 ) {
-    @SuppressWarnings({"FieldCanBeLocal"})
+    @Override
+    @NotNull
+    public ItemProperties properties() {
+        if (properties == null) {
+            return ItemProperties.EMPTY;
+        }
+        return properties;
+    }
+
+    @Override
+    @NotNull
+    public DataComponentMap components() {
+        if (components == null) {
+            return DataComponentMap.EMPTY;
+        }
+        return components;
+    }
+
+    @Override
+    @NotNull
+    public Item vanillaItem() {
+        if (vanillaItem == null) {
+            return Items.PAPER;
+        }
+        return vanillaItem;
+    }
 
     public Object2ObjectOpenHashMap<String, PolymerModelData> requestModels() {
         Object2ObjectOpenHashMap<String, PolymerModelData> map = new Object2ObjectOpenHashMap<>();
         if (itemResource != null) {
-            itemResource.models().forEach((key, value) -> map.put(key, PolymerResourcePackUtils.requestModel(vanillaItem, value)));
+            itemResource.models().forEach((key, value) -> map.put(key, PolymerResourcePackUtils.requestModel(this.vanillaItem == null ? Items.PAPER : this.vanillaItem, value)));
         }
         return map.isEmpty() ? null : map;
-    }
-
-    public boolean isFood() {
-        return this.behaviour != null && this.behaviour.food != null;
-    }
-
-    public boolean isArmor() {
-        return this.behaviour != null && this.behaviour.armor != null;
-    }
-
-    public boolean isCosmetic() {
-        return this.behaviour != null && this.behaviour.cosmetic != null;
-    }
-
-    public boolean isFuel() {
-        return this.behaviour != null && this.behaviour.fuel != null;
-    }
-
-    public boolean canShoot() {
-        return this.behaviour != null && this.behaviour.shoot != null;
-    }
-    public boolean isInstrument() {
-        return this.behaviour != null && this.behaviour.instrument != null && this.behaviour.instrument.sound != null;
-    }
-
-    public boolean isTrap() {
-        return this.behaviour != null && this.behaviour.trap != null && this.behaviour.trap.types != null;
-    }
-
-    public boolean canExecute() {
-        return this.behaviour != null && this.behaviour.execute != null;
     }
 }

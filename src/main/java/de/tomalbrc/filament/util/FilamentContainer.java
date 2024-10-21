@@ -30,6 +30,9 @@ public class FilamentContainer extends SimpleContainer {
     @Override
     public void startOpen(Player player) {
         super.startOpen(player);
+        if (player.isSpectator())
+            return;
+
         if (this.watcher == 0 && this.openCallback != null) {
             this.openCallback.run();
         }

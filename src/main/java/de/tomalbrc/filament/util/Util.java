@@ -4,7 +4,7 @@ import com.mojang.math.Axis;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import de.tomalbrc.filament.registry.RegistryUnfreezer;
+import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
@@ -13,10 +13,15 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Brightness;
 import net.minecraft.util.Mth;
@@ -26,7 +31,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
@@ -37,7 +41,10 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
 import org.joml.*;
 
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -45,6 +52,11 @@ import java.util.regex.Pattern;
 
 public class Util {
     public static final SegmentedAnglePrecision SEGMENTED_ANGLE8 = new SegmentedAnglePrecision(3); // 3 bits precision = 8
+
+    public static void handleBoneMealEffects(ServerLevel level, BlockPos blockPos) {
+        level.playSound(null, blockPos, SoundEvents.BONE_MEAL_USE, SoundSource.BLOCKS, 1.0f, 1.0f);
+        level.sendParticles(ParticleTypes.HAPPY_VILLAGER, blockPos.getCenter().x, blockPos.getCenter().y, blockPos.getCenter().z, 15, 0.25, 0.25, 0.25, 0.15);
+    }
 
     public static void handleBlockPlaceEffects(ServerPlayer player, InteractionHand hand, BlockPos pos, SoundType type) {
         player.swing(hand, true);
@@ -62,6 +74,10 @@ public class Util {
                 type.getPitch() * 0.8F,
                 player.level().getRandom().nextLong()
         ));
+    }
+
+    public static void showBreakParticle(ServerLevel level, BlockPos blockPos, ItemStack stack, float x, float y, float z) {
+        level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, stack), x, y, z, 27, 0.125, 0.125, 0.125, 0.05);
     }
 
     public static Optional<Integer> validateAndConvertHexColor(String hexColor) {
@@ -82,7 +98,7 @@ public class Util {
 
     public static void forEachRotated(List<DecorationData.BlockConfig> blockConfigs, BlockPos originBlockPos, float rotation, Consumer<BlockPos> consumer) {
         if (blockConfigs != null) {
-            blockConfigs.forEach(blockConfig -> {
+            for (DecorationData.BlockConfig blockConfig : blockConfigs) {
                 Vector3fc origin = blockConfig.origin();
                 Vector3fc size = blockConfig.size();
                 for (int x = 0; x < size.x(); x++) {
@@ -97,7 +113,7 @@ public class Util {
                         }
                     }
                 }
-            });
+            }
         }
     }
 
@@ -126,8 +142,9 @@ public class Util {
 
             @Override
             public void attack(ServerPlayer player) {
-                if (player.gameMode.getGameModeForPlayer() != GameType.ADVENTURE)
+                if (player.gameMode.getGameModeForPlayer() != GameType.ADVENTURE) {
                     blockEntity.destroyStructure(player != null && !player.isCreative());
+                }
             }
         });
 
@@ -146,7 +163,7 @@ public class Util {
         return element;
     }
 
-    public static InteractionElement decorationInteraction(BlockPos blockPos) {
+    public static InteractionElement decorationInteraction(BlockPos blockPos, DecorationData decorationData) {
         InteractionElement element = new InteractionElement();
         element.setHandler(new VirtualElement.InteractionHandler() {
             @Override
@@ -156,11 +173,18 @@ public class Util {
 
             @Override
             public void attack(ServerPlayer player) {
-                if (player.gameMode.getGameModeForPlayer() != GameType.ADVENTURE)
+                if (player.gameMode.getGameModeForPlayer() != GameType.ADVENTURE) {
                     element.getHolder().getAttachment().getWorld().destroyBlock(BlockPos.containing(element.getHolder().getAttachment().getPos()), false);
+                }
             }
         });
         element.setSize(1.f, 1.f);
+
+        if (decorationData.size() != null) {
+            element.setSize(decorationData.size().x, decorationData.size().y);
+        } else {
+            element.setSize(1.f, 1.f);
+        }
 
         element.setOffset(new Vec3(0, -0.5f, 0));
 
@@ -168,13 +192,16 @@ public class Util {
     }
 
     public static ItemDisplayElement decorationItemDisplay(DecorationBlockEntity blockEntity) {
-        return decorationItemDisplay(blockEntity.getDecorationData(), blockEntity.getDirection(), blockEntity.getVisualRotationYInDegrees());
+        ItemDisplayElement display = decorationItemDisplay(blockEntity.getDecorationData(), blockEntity.getDirection(), blockEntity.getVisualRotationYInDegrees());
+        display.setItem(blockEntity.getItem().copyWithCount(1));
+        return display;
     }
 
     public static ItemDisplayElement decorationItemDisplay(DecorationData data, Direction direction, float rotation) {
         ItemDisplayElement itemDisplayElement = new ItemDisplayElement(BuiltInRegistries.ITEM.get(data.id()));
+        itemDisplayElement.setTeleportDuration(1);
 
-        if (data != null && data.properties() != null && data.properties().glow) {
+        if (data != null && data.properties().glow) {
             itemDisplayElement.setBrightness(Brightness.FULL_BRIGHT);
         }
 
@@ -191,7 +218,7 @@ public class Util {
         if (direction == Direction.DOWN || direction == Direction.UP) {
             matrix4f.setTranslation(0, -0.5f, 0);
 
-            float ang = (float) java.lang.Math.toRadians(rotation+180);
+            float ang = (float) java.lang.Math.toRadians(rotation + 180);
             double angleRadians = Mth.atan2(-Mth.sin(ang), Mth.cos(ang));
             matrix4f.rotate(Axis.YP.rotation((float) angleRadians).normalize());
             matrix4f.rotate(Axis.XP.rotationDegrees(-90));
@@ -207,10 +234,10 @@ public class Util {
 
         }
 
-        itemDisplayElement.setDisplayWidth(size.x*2.f);
+        itemDisplayElement.setDisplayWidth(size.x * 2.f);
 
         itemDisplayElement.setTransformation(matrix4f);
-        itemDisplayElement.setModelTransformation(ItemDisplayContext.FIXED);
+        itemDisplayElement.setModelTransformation(data.properties().display);
 
         return itemDisplayElement;
     }
@@ -230,10 +257,10 @@ public class Util {
     }
 
     public static void loadDatapackContents(ResourceManager resourceManager) {
-        ((RegistryUnfreezer)BuiltInRegistries.BLOCK).filament$unfreeze();
-        ((RegistryUnfreezer)BuiltInRegistries.ITEM).filament$unfreeze();
-        ((RegistryUnfreezer)BuiltInRegistries.BLOCK_ENTITY_TYPE).filament$unfreeze();
-        ((RegistryUnfreezer)BuiltInRegistries.CREATIVE_MODE_TAB).filament$unfreeze();
+        ((RegistryUnfreezer) BuiltInRegistries.BLOCK).filament$unfreeze();
+        ((RegistryUnfreezer) BuiltInRegistries.ITEM).filament$unfreeze();
+        ((RegistryUnfreezer) BuiltInRegistries.BLOCK_ENTITY_TYPE).filament$unfreeze();
+        ((RegistryUnfreezer) BuiltInRegistries.CREATIVE_MODE_TAB).filament$unfreeze();
 
         for (SimpleSynchronousResourceReloadListener listener : FilamentReloadUtil.getReloadListeners()) {
             listener.onResourceManagerReload(resourceManager);
@@ -247,7 +274,37 @@ public class Util {
         if (newDamage >= itemStack.getMaxDamage()) {
             Item item = itemStack.getItem();
             itemStack.shrink(1);
-            livingEntity.broadcastBreakEvent(slot);
+            livingEntity.onEquippedItemBroken(item, slot);
+        }
+    }
+
+    public static void langGenerator(ResourcePackBuilder builder, String type, Map<ResourceLocation, Map<String, String>> names) {
+        Map<String, Map<String, Map<String, String>>> langEntries = new HashMap<>();
+
+        for (Map.Entry<ResourceLocation, Map<String, String>> entry : names.entrySet()) {
+            ResourceLocation id = entry.getKey();
+            Map<String, String> nameMap = entry.getValue();
+
+            for (Map.Entry<String, String> langEntry : nameMap.entrySet()) {
+                String lang = langEntry.getKey();
+                String name = langEntry.getValue();
+                if (name != null) {
+                    String key = type + "." + id.getNamespace() + "." + id.getPath();
+                    langEntries
+                            .computeIfAbsent(id.getNamespace(), k -> new HashMap<>())
+                            .computeIfAbsent(lang, k -> new HashMap<>())
+                            .put(key, name);
+                }
+            }
+        }
+        for (Map.Entry<String, Map<String, Map<String, String>>> namespaceEntry : langEntries.entrySet()) {
+            String namespace = namespaceEntry.getKey();
+            for (Map.Entry<String, Map<String, String>> langFileEntry : namespaceEntry.getValue().entrySet()) {
+                String lang = langFileEntry.getKey();
+                String langPath = "assets/" + namespace + "/lang/" + lang + ".json";
+                String jsonContent = Json.GSON.toJson(langFileEntry.getValue());
+                builder.addData(langPath, jsonContent.getBytes(StandardCharsets.UTF_8));
+            }
         }
     }
 }

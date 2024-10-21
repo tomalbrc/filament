@@ -1,7 +1,7 @@
 {
 	"meta": {
 		"format": "animated_java/ajmodel",
-		"format_version": "0.4.6",
+		"format_version": "0.4.8",
 		"uuid": "75cff169-8467-a06d-28a0-e5bdb1c29a52"
 	},
 	"animated_java": {
@@ -14,7 +14,6 @@
 			"rig_export_folder": "",
 			"texture_export_folder": "",
 			"enable_advanced_resource_pack_settings": false,
-			"resource_pack_mcmeta": "/Users/tomalbrecht/Minecraft/minecraft-software/provim/provim_rp/pack.mcmeta",
 			"verbose": true,
 			"exporter": "animated_java:json_exporter"
 		},
@@ -23,6 +22,7 @@
 				"datapack_mcmeta": "",
 				"outdated_rig_warning": true,
 				"root_entity_nbt": "{}",
+				"use_component_system": false,
 				"include_variant_summon_functions": true,
 				"include_apply_variant_functions": true,
 				"include_uninstall_function": true,
@@ -33,9 +33,6 @@
 				"include_on_tick_function_tags": true,
 				"include_on_summon_function_tags": true,
 				"include_on_remove_function_tags": true
-			},
-			"animated_java:json_exporter": {
-				"output_file": "/Users/tomalbrecht/Minecraft/minecraft-software/provim/Polyvim/config/polyvim/ajmodels/example_chest.json"
 			}
 		},
 		"variants": [
@@ -217,7 +214,14 @@
 			"folder": "block",
 			"namespace": "",
 			"id": "0",
+			"width": 64,
+			"height": 64,
+			"uv_width": 64,
+			"uv_height": 64,
 			"particle": false,
+			"use_as_default": false,
+			"layers_enabled": false,
+			"sync_to_project": "",
 			"render_mode": "default",
 			"render_sides": "auto",
 			"frame_time": 1,
@@ -225,11 +229,12 @@
 			"frame_order": "",
 			"frame_interpolate": false,
 			"visible": true,
-			"mode": "bitmap",
-			"saved": false,
+			"internal": false,
+			"saved": true,
 			"uuid": "cd8c8323-0d63-297d-f90e-f1b54996c1d1",
+			"relative_path": "../../../../../../../provim/provim_rp/assets/animated_java/textures/item/example_chest/texture.png",
 			"source": "data:image/png;base64,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",
-			"relative_path": "../../../../provim_rp/assets/animated_java/textures/item/example_chest/texture.png"
+			"mode": "bitmap"
 		}
 	],
 	"animations": [
@@ -264,12 +269,7 @@
 							"uuid": "0e3fb2e4-c25d-0b69-6220-310aa1c4993f",
 							"time": 0,
 							"color": -1,
-							"interpolation": "catmullrom",
-							"bezier_linked": true,
-							"bezier_left_time": [-0.1, -0.1, -0.1],
-							"bezier_left_value": [0, 0, 0],
-							"bezier_right_time": [0.1, 0.1, 0.1],
-							"bezier_right_value": [0, 0, 0]
+							"interpolation": "catmullrom"
 						},
 						{
 							"channel": "rotation",
@@ -283,12 +283,26 @@
 							"uuid": "cf69c4d9-4558-532f-3d97-61d8036c466e",
 							"time": 0.4,
 							"color": -1,
-							"interpolation": "catmullrom",
-							"bezier_linked": true,
-							"bezier_left_time": [-0.1, -0.1, -0.1],
-							"bezier_left_value": [0, 0, 0],
-							"bezier_right_time": [0.1, 0.1, 0.1],
-							"bezier_right_value": [0, 0, 0]
+							"interpolation": "catmullrom"
+						}
+					]
+				},
+				"effects": {
+					"name": "Effects",
+					"type": "effect",
+					"keyframes": [
+						{
+							"channel": "sound",
+							"data_points": [
+								{
+									"sound": "minecraft:block.chest.open",
+									"file": ""
+								}
+							],
+							"uuid": "a6933fe4-2cec-929a-b237-41f90bf4a404",
+							"time": 0,
+							"color": -1,
+							"interpolation": "linear"
 						}
 					]
 				}
@@ -325,12 +339,7 @@
 							"uuid": "2888d4c5-121f-0547-250e-eed02121ff1e",
 							"time": 0.4,
 							"color": -1,
-							"interpolation": "catmullrom",
-							"bezier_linked": true,
-							"bezier_left_time": [-0.1, -0.1, -0.1],
-							"bezier_left_value": [0, 0, 0],
-							"bezier_right_time": [0.1, 0.1, 0.1],
-							"bezier_right_value": [0, 0, 0]
+							"interpolation": "catmullrom"
 						},
 						{
 							"channel": "rotation",
@@ -344,12 +353,26 @@
 							"uuid": "2f96744a-0882-e2e2-f0b7-9c425ab57b9f",
 							"time": 0,
 							"color": -1,
-							"interpolation": "catmullrom",
-							"bezier_linked": true,
-							"bezier_left_time": [-0.1, -0.1, -0.1],
-							"bezier_left_value": [0, 0, 0],
-							"bezier_right_time": [0.1, 0.1, 0.1],
-							"bezier_right_value": [0, 0, 0]
+							"interpolation": "catmullrom"
+						}
+					]
+				},
+				"effects": {
+					"name": "Effects",
+					"type": "effect",
+					"keyframes": [
+						{
+							"channel": "sound",
+							"data_points": [
+								{
+									"sound": "minecraft:block.chest.close",
+									"file": ""
+								}
+							],
+							"uuid": "d205a7f9-e279-f65c-98cc-48b9be393ade",
+							"time": 0.2,
+							"color": -1,
+							"interpolation": "linear"
 						}
 					]
 				}

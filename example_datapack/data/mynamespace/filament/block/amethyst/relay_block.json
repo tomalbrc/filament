@@ -2,24 +2,25 @@
   "id": "mynamespace:relay_block",
   "blockResource": {
     "models": {
-      "up,powered=false": "minecraft:custom/block/arcanery/relay/relay_up_off",
-      "down,powered=false": "minecraft:custom/block/arcanery/relay/relay_down_off",
-      "north,powered=false": "minecraft:custom/block/arcanery/relay/relay_north_off",
-      "south,powered=false": "minecraft:custom/block/arcanery/relay/relay_south_off",
-      "east,powered=false": "minecraft:custom/block/arcanery/relay/relay_east_off",
-      "west,powered=false": "minecraft:custom/block/arcanery/relay/relay_west_off",
-      "up,powered=true": "minecraft:custom/block/arcanery/relay/relay_up_on",
-      "down,powered=true": "minecraft:custom/block/arcanery/relay/relay_down_on",
-      "north,powered=true": "minecraft:custom/block/arcanery/relay/relay_north_on",
-      "south,powered=true": "minecraft:custom/block/arcanery/relay/relay_south_on",
-      "east,powered=true": "minecraft:custom/block/arcanery/relay/relay_east_on",
-      "west,powered=true": "minecraft:custom/block/arcanery/relay/relay_west_on"
+      "facing=up,powered=false": "minecraft:custom/block/arcanery/relay/relay_up_off",
+      "facing=down,powered=false": "minecraft:custom/block/arcanery/relay/relay_down_off",
+      "facing=north,powered=false": "minecraft:custom/block/arcanery/relay/relay_north_off",
+      "facing=south,powered=false": "minecraft:custom/block/arcanery/relay/relay_south_off",
+      "facing=east,powered=false": "minecraft:custom/block/arcanery/relay/relay_east_off",
+      "facing=west,powered=false": "minecraft:custom/block/arcanery/relay/relay_west_off",
+      "facing=up,powered=true": "minecraft:custom/block/arcanery/relay/relay_up_on",
+      "facing=down,powered=true": "minecraft:custom/block/arcanery/relay/relay_down_on",
+      "facing=north,powered=true": "minecraft:custom/block/arcanery/relay/relay_north_on",
+      "facing=south,powered=true": "minecraft:custom/block/arcanery/relay/relay_south_on",
+      "facing=east,powered=true": "minecraft:custom/block/arcanery/relay/relay_east_on",
+      "facing=west,powered=true": "minecraft:custom/block/arcanery/relay/relay_west_on"
     }
   },
   "itemResource": {
-    "model": "minecraft:custom/block/arcanery/relay/relay_north_off"
+    "models": {
+      "default": "minecraft:custom/block/arcanery/relay/relay_north_off"
+    }
   },
-  "type": "powered_directional",
   "blockModelType": "full_block",
   "properties": {
     "redstoneConductor": false,

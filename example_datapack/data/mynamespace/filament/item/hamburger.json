@@ -11,7 +11,7 @@
   },
   "behaviour": {
       "food": {
-          "fastfood": true,
+          "fastfood": false,
           "hunger": 1,
           "saturation": 0.2,
           "meat": true

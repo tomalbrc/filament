@@ -1,5 +1,3 @@
-Absolutely, here is the updated documentation with a basic example:
-
 # Items
 
 ## File Location
@@ -9,23 +7,29 @@ Item configuration files should be placed in the following directory:
 MyDatapack/data/<namespace>/filament/item/myitem.json
 ```
 
+---
+
 ## Contents
 
 Item configurations have two required fields: `id` and `vanillaItem`.
 
+---
+
 ### `id`
 
-- **Type**: `Identifier`
-- **Description**: Your custom ID in the format `"namespace:item_name"`, as it will show up in-game.
+Your custom ID in the format `namespace:item_name`
+
+---
 
 ### `vanillaItem`
 
-- **Type**: `Item`
-- **Description**: The vanilla item to "overwrite". Filament (through Polymer) will create `custom_model_data` IDs for the generated resource pack. Your custom item will not inherit any other properties server-side from the vanilla item other than appearance, if the `itemResource` field is not set. For interaction purposes on the client, it is important to choose the appropriate vanilla item to use here.
+The vanilla item to "overwrite". Filament (through Polymer) will create `custom_model_data` IDs for the generated resource pack. Your custom item will not inherit any other properties server-side from the vanilla item other than appearance, if the `itemResource` field is not set. For interaction purposes on the client, it is important to choose the appropriate vanilla item to use here.
+
+---
 
 ## Optional Fields
 
-The fields `itemResource`, `properties`, and `behaviour` are optional.
+The fields `itemResource`, `properties`, `group`, and `behaviour` are optional.
 
 ### `itemResource`
 
@@ -38,18 +42,39 @@ The fields `itemResource`, `properties`, and `behaviour` are optional.
     - `default`: The default texture for the item.
     - Additional keys may be required depending on the item's behaviour.
 
+---
+
 ### `properties`
 
-- **Description**: Defines various properties for the item. The structure and contents of this field will depend on the specific properties being set.
+Defines various properties for the item. The structure and contents of this field will depend on the specific properties being set.
+
+---
+
+### `group`
+
+Defines the item-group for this item. See [Item Groups](item-groups.md) for more information.
+
+---
 
 ### `behaviour`
 
-- **Description**: Defines specific behaviours or interactions for the item. The structure and contents of this field will depend on the specific behaviours being set.
+Defines specific behaviours or interactions for the item. The structure and contents of this field will depend on the specific behaviours being set.
+
+See [Item Behaviours](item-behaviours.md) for more information.
+
+---
+
+### `components`
+
+Defines a set of vanilla minecraft components like `minecraft:food`, `minecraft:tool`, etc. The format is the same that is used in datapacks. This is only supported in minecraft version 1.20.5 and later
+
+---
 
 ## Example
 
 Here is a basic example of an item configuration:
 
+~~~admonish example
 ```json
 {
   "id": "mynamespace:clown_horn",
@@ -64,12 +89,10 @@ Here is a basic example of an item configuration:
   },
   "behaviour": {
     ...
+  },
+  "components": {
+    ...
   }
 }
 ```
-
-In this example:
-- The item has a custom ID of `mynamespace:clown_horn`.
-- The item overwrites the appearance of `minecraft:paper`.
-- The `itemResource` field specifies a default model located at `mynamespace:custom/misc/clown_horn`.
-- The `properties` and `behaviour` fields can be customized as needed to define additional properties and behaviours for the item.
+~~~

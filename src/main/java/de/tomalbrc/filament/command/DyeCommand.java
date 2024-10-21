@@ -4,13 +4,13 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import de.tomalbrc.filament.util.HideFlags;
 import de.tomalbrc.filament.util.Util;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.DyedItemColor;
 
 import java.util.Optional;
 
@@ -34,11 +34,7 @@ public class DyeCommand {
                 String hexColorString = getString(context, "color");
                 Optional<Integer> color = Util.validateAndConvertHexColor(hexColorString);
                 if (color.isPresent()) {
-                    CompoundTag itemNbt = item.getOrCreateTag();
-                    CompoundTag displayTag = new CompoundTag();
-                    displayTag.putInt("color", color.get());
-                    itemNbt.put("display", displayTag);
-                    itemNbt.putInt("HideFlags", HideFlags.HideDyed.getValue());
+                    item.set(DataComponents.DYED_COLOR, new DyedItemColor(color.get(), true));
                     return Command.SINGLE_SUCCESS;
                 }
             }

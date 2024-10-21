@@ -3,4 +3,21 @@ authors = ["tomalbrc"]
 language = "en"
 multilingual = false
 src = "src"
-title = "filament-docs"
+title = "Filament Documentation"
+
+# we be using mdbook
+
+[preprocessor.image-size]
+command = "mdbook-image-size"
+
+[preprocessor.admonish]
+command = "mdbook-admonish"
+assets_version = "3.0.2" # do not edit: managed by `mdbook-admonish install`
+
+[output]
+
+[output.html]
+additional-css = ["./mdbook-admonish.css", "./custom.css"]
+
+[output.html.fold]
+enable = true

@@ -1,7 +1,6 @@
 {
   "id": "mynamespace:darkoak_bench",
   "model": "minecraft:custom/furniture/benches/darkoak_bench",
-  "itemModel": "minecraft:custom/furniture/benches/darkoak_bench",
   "properties": {
       "rotate": true,
       "rotateSmooth": true

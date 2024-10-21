@@ -1,0 +1,20 @@
+{
+  "id": "mynamespace:bannertestitem",
+  "vanillaItem": "minecraft:paper",
+  "itemResource": {
+    "models": {
+      "default": "minecraft:item/creeper_banner_pattern"
+    }
+  },
+  "properties": {
+    "stackSize": 1
+  },
+  "behaviour": {
+    "compostable": {
+      "chance": 50
+    },
+    "banner_pattern": {
+      "id": "mynamespace:filament_banner"
+    }
+  }
+}

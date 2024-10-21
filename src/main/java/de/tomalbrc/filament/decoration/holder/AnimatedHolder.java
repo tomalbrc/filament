@@ -6,16 +6,15 @@ import de.tomalbrc.bil.core.holder.wrapper.DisplayWrapper;
 import de.tomalbrc.bil.core.model.Model;
 import de.tomalbrc.bil.core.model.Pose;
 import de.tomalbrc.filament.Filament;
-import de.tomalbrc.filament.data.DecorationData;
-import de.tomalbrc.filament.data.behaviours.decoration.Animation;
+import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.behaviour.decoration.Animation;
+import de.tomalbrc.filament.behaviour.decoration.Container;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
-
-import java.util.Objects;
 
 public class AnimatedHolder extends PositionedHolder {
     private final DecorationBlockEntity decorationBlockEntity;
@@ -26,8 +25,9 @@ public class AnimatedHolder extends PositionedHolder {
 
         this.updateCullingBox();
 
-        if (this.decorationBlockEntity.getDecorationData().hasAnimation()) {
-            this.setAnimationData(decorationBlockEntity.getDecorationData().behaviour().animation);
+        if (this.decorationBlockEntity.has(Behaviours.ANIMATION)) {
+            Animation.AnimationConfig animation = this.decorationBlockEntity.getDecorationData().behaviourConfig().get(Behaviours.ANIMATION);
+            this.setAnimationData(animation);
         }
     }
 
@@ -35,7 +35,7 @@ public class AnimatedHolder extends PositionedHolder {
         this.getElements().forEach(x -> {
             if (x instanceof DisplayElement displayElement) {
                 displayElement.setTeleportDuration(0);
-                displayElement.setYaw(rotation);
+                displayElement.setYaw(rotation - 180);
             }
         });
     }
@@ -54,10 +54,10 @@ public class AnimatedHolder extends PositionedHolder {
         }
     }
 
-    public void setAnimationData(@NotNull Animation animationData) {
+    public void setAnimationData(@NotNull Animation.AnimationConfig animationData) {
         if (animationData.model != null) {
             if (model == null) {
-                Filament.LOGGER.error("No AnimatedJava model named '" + animationData.model + "' was found!");
+                Filament.LOGGER.error("No Animated model named '" + animationData.model + "' was found!");
             } else {
                 if (animationData.autoplay != null) {
                     this.getAnimator().playAnimation(animationData.autoplay);
@@ -69,18 +69,19 @@ public class AnimatedHolder extends PositionedHolder {
                     }
                 });
 
-                DecorationData decorationData = decorationBlockEntity.getDecorationData();
-                if (this.decorationBlockEntity.containerImpl != null && decorationData != null && decorationData.isContainer()) {
-                    if (Objects.requireNonNull(decorationData.behaviour()).container.openAnimation != null) {
-                        this.decorationBlockEntity.containerImpl.container().setOpenCallback(() -> {
-                            assert this.decorationBlockEntity.animatedHolder != null;
-                            this.decorationBlockEntity.animatedHolder.getAnimator().playAnimation(decorationData.behaviour().container.openAnimation, 2);
+                if (this.decorationBlockEntity.has(Behaviours.CONTAINER)) {
+                    Container container = this.decorationBlockEntity.get(Behaviours.CONTAINER);
+
+                    if (container.getConfig().openAnimation != null) {
+                        container.container.setOpenCallback(() -> {
+                            if (this.decorationBlockEntity.getDecorationHolder() instanceof AnimatedHolder animatedHolder)
+                                animatedHolder.getAnimator().playAnimation(container.getConfig().openAnimation, 2);
                         });
                     }
-                    if (Objects.requireNonNull(decorationData.behaviour()).container.closeAnimation != null) {
-                        this.decorationBlockEntity.containerImpl.container().setCloseCallback(() -> {
-                            assert this.decorationBlockEntity.animatedHolder != null;
-                            this.decorationBlockEntity.animatedHolder.getAnimator().playAnimation(decorationData.behaviour().container.closeAnimation, 2);
+                    if (container.getConfig().closeAnimation != null) {
+                        container.container.setCloseCallback(() -> {
+                            if (this.decorationBlockEntity.getDecorationHolder() instanceof AnimatedHolder animatedHolder)
+                                animatedHolder.getAnimator().playAnimation(container.getConfig().closeAnimation, 2);
                         });
                     }
                 }

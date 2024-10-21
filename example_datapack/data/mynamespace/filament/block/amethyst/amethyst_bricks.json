@@ -1,9 +1,16 @@
 {
   "id": "mynamespace:amethyst_bricks",
+  "displayName": { "en_us": "§dAmethyst Bricks" },
   "blockModelType": "full_block",
   "blockResource": {
     "models": {
       "default": "minecraft:custom/block/arcanery/amethyst_bricks"
+    }
+  },
+  "behaviour": {
+    "drop_xp": {
+      "min": 4,
+      "max": 8
     }
   },
   "properties": {

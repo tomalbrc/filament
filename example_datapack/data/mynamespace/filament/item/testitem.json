@@ -1,12 +1,18 @@
 {
   "id": "mynamespace:testitem",
-  "vanillaItem": "minecraft:paper",
+  "vanillaItem": "minecraft:debug_stick",
   "properties": {
     "durability": 20,
     "stackSize": 1
   },
   "behaviour": {
-    "tool": {
+    "compostable": {
+      "chance": 50
+    },
+    "stripper": {}
+  },
+  "components": {
+    "minecraft:tool": {
       "default_mining_speed":1.0,
       "damage_per_block":2,
       "rules":[
@@ -21,33 +27,5 @@
         }
       ]
     }
-  },
-  "attributeModifiers": [
-    {
-      "type":"generic.attack_damage",
-      "name":"generic.attack_damage",
-      "amount":9,
-      "operation":"add_value",
-      "uuid":[
-        -1784316809,
-        1605780530,
-        -1483861630,
-        219532655
-      ],
-      "slot":"mainhand"
-    },
-    {
-      "type":"generic.attack_speed",
-      "name":"generic.attack_speed",
-      "amount":-0.4,
-      "operation":"add_value",
-      "uuid":[
-        621290524,
-        -343981943,
-        -1275738928,
-        656539768
-      ],
-      "slot":"mainhand"
-    }
-  ]
+  }
 }

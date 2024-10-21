@@ -1,11 +1,6 @@
 {
   "id": "mynamespace:wings",
-  "vanillaItem": "minecraft:paper",
-  "itemResource": {
-    "models": {
-      "default": "minecraft:custom/hats/backpack"
-    }
-  },
+  "vanillaItem": "minecraft:feather",
   "behaviour":  {
     "cosmetic": {
       "slot": "chest",

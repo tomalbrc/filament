@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.cosmetic;
 
-import de.tomalbrc.filament.data.behaviours.item.Cosmetic;
+import de.tomalbrc.filament.behaviour.item.Cosmetic;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.VirtualEntityUtils;
 import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
@@ -8,11 +8,12 @@ import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
 public class CosmeticHolder extends ElementHolder {
-    private final ServerPlayer player;
+    private final LivingEntity entity;
     private final DisplayElement displayElement;
 
     private double prevX = 0;
@@ -20,14 +21,14 @@ public class CosmeticHolder extends ElementHolder {
 
     private float bodyYaw;
 
-    public CosmeticHolder(ServerPlayer player, ItemStack itemStack) {
+    public CosmeticHolder(LivingEntity entity, ItemStack itemStack) {
         super();
 
-        this.player = player;
+        this.entity = entity;
 
         this.displayElement = new ItemDisplayElement(itemStack);
 
-        Cosmetic cosmeticData = CosmeticUtil.getCosmeticData(itemStack);
+        Cosmetic.Config cosmeticData = CosmeticUtil.getCosmeticData(itemStack);
         if (cosmeticData != null) {
             this.displayElement.setTranslation(cosmeticData.translation);
             this.displayElement.setScale(cosmeticData.scale);
@@ -42,15 +43,15 @@ public class CosmeticHolder extends ElementHolder {
     public void onTick() {
         super.onTick();
 
-        this.tickMovement(this.player);
+        this.tickMovement(this.entity);
         this.displayElement.setYaw(this.bodyYaw);
 
-        this.prevX = this.player.getX();
-        this.prevZ = this.player.getZ();
+        this.prevX = this.entity.getX();
+        this.prevZ = this.entity.getZ();
     }
 
-    private void tickMovement(final ServerPlayer player) {
-        float yaw = this.player.getYRot();
+    private void tickMovement(final LivingEntity player) {
+        float yaw = this.entity.getYRot();
         double i = player.getX() - this.prevX;
         double d = player.getZ() - this.prevZ;
         float f = (float)(i * i + d * d);
@@ -92,14 +93,14 @@ public class CosmeticHolder extends ElementHolder {
     }
     @Override
     protected void updateInitialPosition() {
-        this.startWatching(this.player);
+        if (this.entity instanceof ServerPlayer serverPlayer) this.startWatching(serverPlayer);
     }
 
     @Override
     public boolean startWatching(ServerGamePacketListenerImpl player) {
         var ret = super.startWatching(player);
 
-        player.send(VirtualEntityUtils.createRidePacket(this.player.getId(), this.displayElement.getEntityIds()));
+        player.send(VirtualEntityUtils.createRidePacket(this.entity.getId(), this.displayElement.getEntityIds()));
 
         return ret;
     }

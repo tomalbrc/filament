@@ -1,7 +1,6 @@
 {
   "id": "mynamespace:quartz_pedestal",
   "model": "minecraft:custom/furniture/displays/quartz_pedastal",
-  "itemModel": "minecraft:custom/furniture/displays/quartz_pedastal",
   "properties": {
     "rotate": true,
     "rotateSmooth": true

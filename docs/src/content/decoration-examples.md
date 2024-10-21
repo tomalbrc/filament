@@ -40,7 +40,6 @@ The `lock` behaviour also supports an animation using the `animation` behaviour
 {
   "id": "mynamespace:beach_umbrella_top",
   "model": "mynamespace:custom/furniture/umbrella/beach_umbrella_top",
-  "itemModel": "mynamespace:custom/furniture/umbrella/beach_umbrella_top",
   "vanillaItem": "minecraft:leather_horse_armor",
   "properties": {
     "rotate": true,
@@ -58,7 +57,11 @@ The `size` field creates an interaction entity with a custom size instead of the
 {
   "id": "mynamespace:pile_of_gold_ingots",
   "model": "mynamespace:custom/deco/misc/pile_of_gold_ingots",
-  "itemModel": "mynamespace:custom/deco/misc/pile_of_gold_ingots",
+  "itemResource": {
+    "models": {
+        "default": "mynamespace:custom/deco/misc/pile_of_gold_ingots"
+    }
+  },
   "properties": {
     "rotate": true,
     "rotateSmooth": true

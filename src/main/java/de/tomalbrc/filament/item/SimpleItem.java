@@ -1,83 +1,220 @@
 package de.tomalbrc.filament.item;
 
+import de.tomalbrc.filament.api.behaviour.Behaviour;
+import de.tomalbrc.filament.api.behaviour.BehaviourType;
+import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
+import de.tomalbrc.filament.behaviour.BehaviourHolder;
+import de.tomalbrc.filament.behaviour.BehaviourMap;
+import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.data.ItemData;
-import de.tomalbrc.filament.registry.filament.FuelRegistry;
+import de.tomalbrc.filament.data.properties.ItemProperties;
+import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
-import eu.pb4.polymer.resourcepack.api.PolymerArmorModel;
+import eu.pb4.polymer.core.api.item.PolymerItemUtils;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
-import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
-public class SimpleItem extends Item implements PolymerItem, Equipable {
-    final protected ItemData itemData;
-    final protected Object2ObjectOpenHashMap<String, PolymerModelData> modelData;
+/**
+ * Universal item, base for all filament items, with behaviour support
+ * I wish BlockItem was an interface...
+ */
+public class SimpleItem extends BlockItem implements PolymerItem, Equipable, BehaviourHolder {
+    protected ItemData itemData;
+    protected ItemProperties properties;
+    protected Object2ObjectOpenHashMap<String, PolymerModelData> modelData;
 
-    @Nullable
-    PolymerArmorModel armorModel = null;
+    protected final Item vanillaItem;
 
-    public SimpleItem(Properties properties, ItemData itemData) {
-        super(properties);
+    protected final BehaviourMap behaviours = new BehaviourMap();
+
+    public BehaviourMap getBehaviours() {
+        return this.behaviours;
+    }
+
+    public SimpleItem(Block block, Properties properties, ItemData itemData, Item vanillaItem) {
+        super(block, properties);
+        this.initBehaviours(itemData.behaviourConfig());
+
+        this.vanillaItem = vanillaItem;
         this.itemData = itemData;
+        this.properties = itemData.properties();
         this.modelData = this.itemData.requestModels();
+    }
 
-        // For armor
-        if (this.itemData.isArmor() && this.itemData.behaviour().armor.texture != null) {
-            this.armorModel = PolymerResourcePackUtils.requestArmor(this.itemData.behaviour().armor.texture);
-        }
+    public SimpleItem(Block block, Item.Properties itemProperties, ItemProperties props, Item vanillaItem) {
+        super(block, itemProperties);
 
-        if (this.itemData.isCosmetic() || this.itemData.isArmor()) {
-            DispenserBlock.registerBehavior(this, ArmorItem.DISPENSE_ITEM_BEHAVIOR);
-        }
+        this.vanillaItem = vanillaItem;
+        this.properties = props;
+    }
 
-        if (this.itemData.isFuel()) {
-            FuelRegistry.add(this, this.itemData.behaviour().fuel.value);
+    @Override
+    @NotNull
+    public String getDescriptionId() {
+        return this.getBlock() != null ? this.getBlock().getDescriptionId() : this.getOrCreateDescriptionId();
+    }
+
+    @Override
+    @Nullable
+    public Block getBlock() {
+        return super.getBlock();
+    }
+
+    @Override
+    @NotNull
+    public FeatureFlagSet requiredFeatures() {
+        return this.getBlock() != null ? this.getBlock().requiredFeatures() : this.vanillaItem.requiredFeatures();
+    }
+
+    @Override
+    public void onUseTick(Level level, LivingEntity livingEntity, ItemStack itemStack, int i) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                itemBehaviour.onUseTick(level, livingEntity, itemStack, i);
+            }
         }
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
-        if (itemData.properties() != null)
-            itemData.properties().appendHoverText(tooltip);
+    public void releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int useDuration) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                itemBehaviour.releaseUsing(itemStack, level, livingEntity, useDuration);
+            }
+        }
+    }
+
+    @Override
+    public boolean useOnRelease(ItemStack itemStack) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                boolean didUse = itemBehaviour.useOnRelease(itemStack);
+                if (didUse)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int getEnchantmentValue() {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                var val = itemBehaviour.getEnchantmentValue();
+                if (val.isPresent())
+                    return val.get();
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public int getUseDuration(ItemStack itemStack, LivingEntity livingEntity) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                var val = itemBehaviour.getUseDuration(itemStack, livingEntity);
+                if (val.isPresent())
+                    return val.get();
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public boolean hurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
+        return this.components().has(DataComponents.TOOL);
+    }
+
+    @Override
+    public void postHurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
+        if (this.components().has(DataComponents.TOOL))
+            itemStack.hurtAndBreak(1, livingEntity2, EquipmentSlot.MAINHAND);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                itemBehaviour.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
+            }
+        }
+        this.properties.appendHoverText(list);
+        super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
+    }
+
+    @Override
+    public ItemStack getPolymerItemStack(ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
+        ItemStack itemStack1 = PolymerItemUtils.createItemStack(itemStack, tooltipType, lookup, player);
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                itemBehaviour.modifyPolymerItemStack(itemStack, itemStack1, tooltipType, lookup, player);
+            }
+        }
+        return itemStack1;
     }
 
     @Override
     public Item getPolymerItem(ItemStack itemStack, @Nullable ServerPlayer player) {
-        return itemData.vanillaItem() != null ? itemData.vanillaItem() : Items.PAPER;
+        return this.vanillaItem != null ? this.vanillaItem : Items.PAPER;
     }
 
     @Override
     public int getPolymerCustomModelData(ItemStack itemStack, @Nullable ServerPlayer player) {
-        return modelData != null ? this.modelData.get("default").value() : -1;
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                var data = itemBehaviour.modifyPolymerCustomModelData(this.modelData, itemStack, player);
+                if (data != -1) {
+                    return data;
+                }
+            }
+        }
+
+        return this.modelData != null ? this.modelData.get("default").value() : -1;
     }
 
     @Override
     public int getPolymerArmorColor(ItemStack itemStack, @Nullable ServerPlayer player) {
-        return armorModel != null ? this.armorModel.color() : -1;
+        int color = -1;
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                color = itemBehaviour.modifyPolymerArmorColor(itemStack, player, color);
+            }
+        }
+        return color;
     }
 
     @Override
     @NotNull
     public EquipmentSlot getEquipmentSlot() {
-        boolean armor = itemData.isArmor() && itemData.behaviour().armor.slot != null;
-        boolean cosmetic = itemData.isCosmetic() && itemData.behaviour().cosmetic.slot != null;
-        if (armor || cosmetic) {
-            return armor ? itemData.behaviour().armor.slot : itemData.behaviour().cosmetic.slot;
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                var slot = itemBehaviour.getEquipmentSlot();
+                if (slot != EquipmentSlot.MAINHAND) {
+                    return slot;
+                }
+            }
         }
         return EquipmentSlot.MAINHAND;
     }
@@ -86,30 +223,55 @@ public class SimpleItem extends Item implements PolymerItem, Equipable {
     @NotNull
     public InteractionResultHolder<ItemStack> use(Level level, Player user, InteractionHand hand) {
         var res = super.use(level, user, hand);
-
-        if (this.itemData.canExecute() && this.itemData.behaviour().execute.command != null) {
-            user.getServer().getCommands().performPrefixedCommand(user.createCommandSourceStack(), this.itemData.behaviour().execute.command);
-
-            user.awardStat(Stats.ITEM_USED.get(this));
-
-            if (this.itemData.behaviour().execute.sound != null) {
-                var sound = this.itemData.behaviour().execute.sound;
-                level.playSound(null, user, BuiltInRegistries.SOUND_EVENT.get(sound), SoundSource.PLAYERS, 1.0F, 1.0F);
-            }
-
-            if (this.itemData.behaviour().execute.consumes) {
-                user.getItemInHand(hand).shrink(1);
-                res = InteractionResultHolder.consume(user.getItemInHand(hand));
-            }
-            else
-                res = InteractionResultHolder.consume(user.getItemInHand(hand));
+        if (res.getResult().consumesAction()) {
+            return res;
         }
 
-        if (this.itemData.isArmor() || this.itemData.isCosmetic()) {
-            res = this.swapWithEquipmentSlot(this, level, user, hand);
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                res = itemBehaviour.use(this, level, user, hand);
+                if (res.getResult().consumesAction()) {
+                    return res;
+                }
+            }
         }
 
         return res;
+    }
+
+    @Override
+    @NotNull
+    public InteractionResult useOn(UseOnContext useOnContext) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                var res = itemBehaviour.useOn(useOnContext);
+                if (res.consumesAction()) {
+                    return res;
+                }
+            }
+        }
+
+        if (this.getBlock() instanceof SimpleBlock) {
+            var res = super.useOn(useOnContext);
+            if (res.consumesAction()) {
+                return res;
+            }
+        }
+
+        return InteractionResult.FAIL;
+    }
+
+    @Override
+    protected boolean placeBlock(BlockPlaceContext context, BlockState state) {
+        if (!super.placeBlock(context, state)) {
+            return false;
+        }
+
+        if (context.getPlayer() instanceof ServerPlayer player) {
+            Util.handleBlockPlaceEffects(player, context.getHand(), context.getClickedPos(), state.getSoundType());
+        }
+
+        return true;
     }
 
     public ItemData getItemData() {

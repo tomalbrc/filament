@@ -6,14 +6,14 @@ plugins {
 version = project.mod_version + "+" + project.minecraft_version
 group = project.maven_group
 
+loom {
+    accessWidenerPath = file("src/main/resources/filament.accesswidener")
+}
+
 repositories {
     maven { url 'https://maven.tomalbrc.de' }
     maven { url 'https://maven.nucleoid.xyz' }
-    //enum extend - fabric-asm
-    maven {
-        name = "Jitpack"
-        url 'https://jitpack.io/'
-    }
+    mavenLocal()
 }
 
 dependencies {
@@ -24,19 +24,19 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     // Polymer
-    modImplementation ("eu.pb4:polymer-core:${project.polymer_version}")
-    modImplementation ("eu.pb4:polymer-blocks:${project.polymer_version}")
-    modImplementation ("eu.pb4:polymer-resource-pack:${project.polymer_version}")
-    modImplementation ("eu.pb4:polymer-virtual-entity:${project.polymer_version}")
-    modImplementation ("eu.pb4:polymer-networking:${project.polymer_version}")
-    modImplementation ("eu.pb4:polymer-autohost:${project.polymer_version}")
+    modImplementation ("eu.pb4:polymer-core:${project.polymer_version_mainstream}")
+    modImplementation include("eu.pb4:polymer-blocks:${project.polymer_version_custom}")
+    modImplementation ("eu.pb4:polymer-resource-pack:${project.polymer_version_mainstream}")
+    modImplementation ("eu.pb4:polymer-virtual-entity:${project.polymer_version_mainstream}")
+    modImplementation ("eu.pb4:polymer-networking:${project.polymer_version_mainstream}")
+    modImplementation ("eu.pb4:polymer-autohost:${project.polymer_version_mainstream}")
 
     // BIL
     modImplementation include("de.tomalbrc:blockbench-import-library:${project.bil_version}")
 
-    modImplementation include('me.lucko:fabric-permissions-api:0.2-SNAPSHOT')
+    modImplementation include("eu.pb4:placeholder-api:${project.papi_version}")
 
-    implementation include('com.github.Chocohead:Fabric-ASM:v2.3')
+    modImplementation include('me.lucko:fabric-permissions-api:0.3.1')
 }
 
 processResources {
@@ -48,12 +48,14 @@ processResources {
     filesMatching("fabric.mod.json") {
         expand "version": project.version,
                 "minecraft_version": project.minecraft_version,
+                "bil_version": project.bil_version,
+                "polymer_version": project.polymer_version_mainstream,
                 "loader_version": project.loader_version
     }
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release.set(17)
+    it.options.release.set(21)
 }
 
 java {

@@ -1,7 +1,6 @@
 {
   "id": "mynamespace:large_darkoak_cabinet",
   "model": "minecraft:custom/furniture/boards/large_darkoak_cabinet",
-  "itemModel": "minecraft:custom/furniture/boards/large_darkoak_cabinet",
   "properties": {
     "rotate": true
   },

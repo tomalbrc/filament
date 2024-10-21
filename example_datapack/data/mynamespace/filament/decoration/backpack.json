@@ -1,0 +1,27 @@
+{
+  "id": "mynamespace:backpack",
+  "vanillaItem": "minecraft:paper",
+  "model": "minecraft:custom/hats/backpack",
+  "behaviour":  {
+    "cosmetic": {
+      "slot": "chest",
+      "translation":[0, -0.38, -0.28],
+      "scale":[1.5, 1.5, 1.5]
+    },
+    "container": {
+      "name": "Backpack",
+      "size": 27,
+      "purge": false,
+      "canPickup": true
+    }
+  },
+  "properties": {
+    "stackSize": 1
+  },
+  "blocks": [
+    {
+      "origin": [0,0,0],
+      "size": [1,1,1]
+    }
+  ]
+}

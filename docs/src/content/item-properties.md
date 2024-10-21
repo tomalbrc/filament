@@ -11,7 +11,6 @@ Example with all properties set:
   "models": {
     "default": "mynamespace:custom/misc/clown_horn"
   },
-  
   "properties": {
     "durability": 100,
     "stackSize": 64,
@@ -20,7 +19,6 @@ Example with all properties set:
   }
 }
 ```
-
 
 ### `durability`:
 
@@ -32,10 +30,18 @@ Number of items a stack can hold.
 Should be between 1 and 99
 Values above 99 or 0 and below might cause problems™
 
+Defaults to `64`
+
 ### `lore`:
 
-List of strings to use as item lore
+List of strings to use as item lore. Supports PlaceholderAPI's simple text formatting.
+
+Example: `<c:red>MyLore</c>`
+
+Example: `<lang:'mymod.lore.mylore'>`
 
 ### `fireResistant`:
 
-Boolean (true/false) wether the item is fire resistant
+Boolean (true/false) wether the item is fire resistant.
+
+Defaults to `false`

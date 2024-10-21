@@ -2,23 +2,40 @@ package de.tomalbrc.filament.util;
 
 import com.google.gson.*;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
+import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
+import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import eu.pb4.polymer.blocks.api.BlockModelType;
+import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.RegistryOps;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class Json {
     public static final Gson GSON = new GsonBuilder()
@@ -30,11 +47,56 @@ public class Json {
             .registerTypeHierarchyAdapter(Quaternionf.class, new QuaternionfDeserializer())
             .registerTypeHierarchyAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
             .registerTypeHierarchyAdapter(BlockModelType.class, new BlockModelTypeDeserializer())
+            .registerTypeHierarchyAdapter(ItemDisplayContext.class, new ItemDisplayContextDeserializer())
+            .registerTypeHierarchyAdapter(DataComponentMap.class, new DataComponentsDeserializer())
             .registerTypeHierarchyAdapter(PushReaction.class, new PushReactionDeserializer())
+            .registerTypeHierarchyAdapter(WeatheringCopper.WeatherState.class, new WeatherStateDeserializer())
             .registerTypeHierarchyAdapter(Block.class, new RegistryDeserializer<>(BuiltInRegistries.BLOCK))
             .registerTypeHierarchyAdapter(Item.class, new RegistryDeserializer<>(BuiltInRegistries.ITEM))
-            .registerTypeAdapter(SoundEvent.class, new RegistryDeserializer<>(BuiltInRegistries.SOUND_EVENT))
+            .registerTypeHierarchyAdapter(SoundEvent.class, new RegistryDeserializer<>(BuiltInRegistries.SOUND_EVENT))
+            .registerTypeHierarchyAdapter(BehaviourConfigMap.class, new BehaviourConfigMap.Deserializer())
+            .registerTypeHierarchyAdapter(BlockStateMappedProperty.class, new BlockStateMappedPropertyDeserializer<>())
+            .registerTypeHierarchyAdapter(PolymerBlockModel.class, new PolymerBlockModelDeserializer())
             .create();
+
+    public static class BlockStateMappedPropertyDeserializer<T> implements JsonDeserializer<BlockStateMappedProperty<T>> {
+        @Override
+        public BlockStateMappedProperty<T> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            if (json.isJsonPrimitive()) {
+                JsonPrimitive primitive = json.getAsJsonPrimitive();
+                Type propertyType = ((ParameterizedType) typeOfT).getActualTypeArguments()[0];
+                T t = context.deserialize(primitive, propertyType);
+                return new BlockStateMappedProperty<>(t);
+            } else if (json.isJsonObject()) {
+                ParameterizedType mapType = getParameterizedType((ParameterizedType) typeOfT);
+                Map<String, T> map = context.deserialize(json, mapType);
+                return new BlockStateMappedProperty<>(map);
+            }
+
+            throw new JsonParseException("Invalid format for MappedProperty");
+        }
+
+        @NotNull
+        private static ParameterizedType getParameterizedType(ParameterizedType typeOfT) {
+            Type propertyType = typeOfT.getActualTypeArguments()[0];
+            return new ParameterizedType() {
+                @Override
+                public Type[] getActualTypeArguments() {
+                    return new Type[]{String.class, propertyType};
+                }
+
+                @Override
+                public Type getRawType() {
+                    return Map.class;
+                }
+
+                @Override
+                public Type getOwnerType() {
+                    return null;
+                }
+            };
+        }
+    }
 
     public static class BlockStateDeserializer implements JsonDeserializer<BlockState> {
         @Override
@@ -64,6 +126,28 @@ public class Json {
             }
 
             throw new JsonParseException("Invalid EquipmentSlot value: " + name);
+        }
+    }
+
+    public static class PolymerBlockModelDeserializer implements JsonDeserializer<PolymerBlockModel> {
+        @Override
+        public PolymerBlockModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            if (json.isJsonPrimitive()) {
+                JsonPrimitive primitive = json.getAsJsonPrimitive();
+                if (primitive.isString()) {
+                    return PolymerBlockModel.of(ResourceLocation.tryParse(primitive.getAsString()));
+                }
+            } else if (json.isJsonObject()) {
+                JsonObject object = json.getAsJsonObject();
+                ResourceLocation model = ResourceLocation.parse(object.get("model").getAsString());
+                int x = object.has("x") ? object.get("x").getAsInt() : 0;
+                int y = object.has("y") ? object.get("y").getAsInt() : 0;
+                boolean uvLock = object.has("uvLock") && object.get("uvLock").getAsBoolean();
+                int weight = object.has("weight") ? object.get("weight").getAsInt() : 1;
+                return PolymerBlockModel.of(model, x, y, uvLock, weight);
+            }
+
+            throw new JsonParseException("Invalid PolymerBlockModel value: " + json);
         }
     }
 
@@ -133,6 +217,22 @@ public class Json {
         }
     }
 
+    private static class ItemDisplayContextDeserializer implements JsonDeserializer<ItemDisplayContext> {
+        @Override
+        public ItemDisplayContext deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
+            if (!element.isJsonPrimitive() || !element.getAsJsonPrimitive().isString()) {
+                throw new JsonParseException("Expected string, got " + element);
+            }
+
+            String value = element.getAsString().toUpperCase();
+            try {
+                return ItemDisplayContext.valueOf(value);
+            } catch (IllegalArgumentException e) {
+                throw new JsonParseException("Invalid ItemDisplayContext value: " + value, e);
+            }
+        }
+    }
+
     private static class PushReactionDeserializer implements JsonDeserializer<PushReaction> {
         @Override
         public PushReaction deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
@@ -144,7 +244,23 @@ public class Json {
             try {
                 return PushReaction.valueOf(value);
             } catch (IllegalArgumentException e) {
-                throw new JsonParseException("Invalid BlockModelType value: " + value, e);
+                throw new JsonParseException("Invalid PushReaction value: " + value, e);
+            }
+        }
+    }
+
+    private static class WeatherStateDeserializer implements JsonDeserializer<WeatheringCopper.WeatherState> {
+        @Override
+        public WeatheringCopper.WeatherState deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
+            if (!element.isJsonPrimitive() || !element.getAsJsonPrimitive().isString()) {
+                throw new JsonParseException("Expected string, got " + element);
+            }
+
+            String value = element.getAsString().toUpperCase();
+            try {
+                return WeatheringCopper.WeatherState.valueOf(value);
+            } catch (IllegalArgumentException e) {
+                throw new JsonParseException("Invalid WeatherState value: " + value, e);
             }
         }
     }
@@ -152,7 +268,35 @@ public class Json {
     private record RegistryDeserializer<T>(Registry<T> registry) implements JsonDeserializer<T> {
         @Override
         public T deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
-            return this.registry.get(new ResourceLocation(element.getAsString()));
+            return this.registry.get(ResourceLocation.parse(element.getAsString()));
+        }
+    }
+
+    public static class DataComponentsDeserializer implements JsonDeserializer<DataComponentMap> {
+        @Override
+        public DataComponentMap deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+            RegistryOps.RegistryInfoLookup registryInfoLookup = createContext(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
+            DataResult<Pair<DataComponentMap, JsonElement>> result = DataComponentMap.CODEC.decode(RegistryOps.create(JsonOps.INSTANCE, registryInfoLookup), jsonElement);
+
+            if (result.resultOrPartial().isEmpty()) {
+                return null;
+            }
+
+            return result.resultOrPartial().get().getFirst();
+        }
+
+        private static RegistryOps.RegistryInfoLookup createContext(RegistryAccess registryAccess) {
+            final Map<ResourceKey<? extends Registry<?>>, RegistryOps.RegistryInfo<?>> map = new HashMap<>();
+            registryAccess.registries().forEach((registryEntry) -> map.put(registryEntry.key(), createInfoForContextRegistry(registryEntry.value())));
+            return new RegistryOps.RegistryInfoLookup() {
+                public <T> Optional<RegistryOps.RegistryInfo<T>> lookup(ResourceKey<? extends Registry<? extends T>> resourceKey) {
+                    return Optional.ofNullable((RegistryOps.RegistryInfo<T>)map.get(resourceKey));
+                }
+            };
+        }
+
+        private static <T> RegistryOps.RegistryInfo<T> createInfoForContextRegistry(Registry<T> registry) {
+            return new RegistryOps.RegistryInfo<>(registry.asLookup(), registry.asTagAddingLookup(), registry.registryLifecycle());
         }
     }
 }

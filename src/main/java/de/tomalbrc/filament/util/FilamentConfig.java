@@ -11,20 +11,21 @@ public class FilamentConfig {
     static Path CONFIG_FILE_PATH = Constants.CONFIG_DIR.resolve("filament.json");
     static FilamentConfig instance;
 
-    public boolean enchantments = false;
     public boolean emissive_shader = true;
 
     public boolean commands = true;
-    public boolean forceAutohost = true;
+    public boolean trimArmorReplaceChainmail = false;
+
+    public boolean preventAdventureModeDecorationInteraction = true;
 
     public static FilamentConfig getInstance() {
         if (instance == null) {
-            load();
+            if (!load()) // only save if file wasn't just created
+                save(); // save since newer versions may contain new options, also removes old options
         }
         return instance;
     }
-    public static void load() {
-
+    public static boolean load() {
         if (!CONFIG_FILE_PATH.toFile().exists()) {
             instance = new FilamentConfig();
             try {
@@ -35,12 +36,23 @@ public class FilamentConfig {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            return;
+            return true;
         }
 
         try {
             FilamentConfig.instance = Json.GSON.fromJson(new FileReader(FilamentConfig.CONFIG_FILE_PATH.toFile()), FilamentConfig.class);
         } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
+    }
+
+    private static void save() {
+        try {
+            FileOutputStream stream = new FileOutputStream(CONFIG_FILE_PATH.toFile());
+            stream.write(Json.GSON.toJson(instance).getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

@@ -1,7 +1,6 @@
 {
   "id": "mynamespace:slim_darkoak_shelf",
   "model": "minecraft:custom/furniture/shelves/slim_darkoak_shelf",
-  "itemModel": "minecraft:custom/furniture/shelves/slim_darkoak_shelf",
   "properties": {
     "rotate": true
   },

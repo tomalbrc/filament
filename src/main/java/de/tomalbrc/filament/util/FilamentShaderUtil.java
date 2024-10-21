@@ -96,7 +96,7 @@ public class FilamentShaderUtil {
             void main() {
                 gl_Position = ProjMat * ModelViewMat * vec4(Position, 1.0);
                         
-                vertexDistance = fog_distance(ModelViewMat, IViewRotMat * Position, FogShape);
+                vertexDistance = fog_distance(IViewRotMat * Position, FogShape);
                 vertexColor = Color;
                 lightColor = minecraft_sample_lightmap(Sampler2, UV2);
                 faceLightColor = minecraft_mix_light(Light0_Direction, Light1_Direction, Normal, vec4(1.0));
@@ -108,10 +108,9 @@ public class FilamentShaderUtil {
             """;
 
     public static void registerCallback() {
-        PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder -> {
+        PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder -> {
             resourcePackBuilder.addData("assets/minecraft/shaders/core/rendertype_entity_translucent_cull.fsh", fsh.getBytes(StandardCharsets.UTF_8));
             resourcePackBuilder.addData("assets/minecraft/shaders/core/rendertype_entity_translucent_cull.vsh", vsh.getBytes(StandardCharsets.UTF_8));
         });
     }
-
 }
