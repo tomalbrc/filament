@@ -16,7 +16,7 @@ public abstract class PlayerMixin extends LivingEntity {
         super(entityType, level);
     }
 
-    @ModifyExpressionValue(method = "hurtCurrentlyUsedShield", at = @At(value = "HEAD", ordinal = 0))
+    @ModifyExpressionValue(method = "hurtCurrentlyUsedShield", at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z"))
     private boolean filament$customShield(boolean original) {
         return original || this.getUseItem().getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.SHIELD);
     }

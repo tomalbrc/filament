@@ -123,7 +123,7 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
         }
     }
 
-    abstract protected void destroyBlocks();
+    abstract protected void destroyBlocks(ItemStack particleItem);
     abstract protected void destroyStructure(boolean dropItems);
     abstract protected void setCollisionStructure(boolean collisionStructure);
 
