@@ -2,7 +2,7 @@ package de.tomalbrc.filament.decoration.block;
 
 import de.tomalbrc.filament.decoration.holder.SimpleHolder;
 import de.tomalbrc.filament.util.Util;
-import eu.pb4.polymer.virtualentity.api.BlockWithMovingElementHolder;
+import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -22,11 +22,12 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.storage.loot.LootParams;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SimpleDecorationBlock extends DecorationBlock implements BlockWithMovingElementHolder {
+public class SimpleDecorationBlock extends DecorationBlock implements BlockWithElementHolder {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
     public static final IntegerProperty ROTATION = IntegerProperty.create("rotation", 0, 7);
 
@@ -64,6 +65,7 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithM
     }
 
     @Override
+    @NotNull
     public List<ItemStack> getDrops(BlockState blockState, LootParams.Builder builder) {
         if (this.getDecorationData().properties().drops) {
             return List.of(BuiltInRegistries.ITEM.get(this.decorationId).orElseThrow().value().getDefaultInstance());

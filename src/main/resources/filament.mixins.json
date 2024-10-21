@@ -14,12 +14,7 @@
     "ServerGamePacketListenerImplMixin",
     "StateDefinitionBuilderMixin",
     "WorldLoaderMixin",
-    "behaviour.AxeItemMixin",
     "behaviour.FuelValuesMixin",
-    "behaviour.LoomMenu$5Mixin",
-    "behaviour.LoomMenuMixin",
-    "behaviour.MobMixin",
-    "behaviour.AbstractFurnaceBlockEntityMixin",
     "behaviour.PlayerMixin",
     "behaviour.banner.LoomMenu$5Mixin",
     "behaviour.banner.LoomMenuMixin",
@@ -34,10 +29,7 @@
     "behaviour.shield.PlayerMixin",
     "behaviour.strippable.AxeItemAccessor",
     "behaviour.strippable.AxeItemMixin",
-    "behaviour.trap.MobMixin",
-    "behaviour.trim.ItemStackPacketCodecMixin",
-    "behaviour.trim.RegistryDataLoaderMixin",
-    "behaviour.trim.SmithingTrimRecipeMixin"
+    "behaviour.trap.MobMixin"
   ],
   "injectors": {
     "defaultRequire": 1
