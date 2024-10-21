@@ -23,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public abstract class BlockItemMixin {
             BlockPos clickedPos = pos.relative(context.getClickedFace().getOpposite());
             BlockState clickedState = context.getLevel().getBlockState(clickedPos);
 
-            if (clickedState.getBlock() instanceof PolymerBlock polymerBlock && polymerBlock.getPolymerBlockState(clickedState, player).getBlock() instanceof NoteBlock) {
+            if (clickedState.getBlock() instanceof PolymerBlock polymerBlock && polymerBlock.getPolymerBlockState(clickedState, PacketContext.of(player)).getBlock() instanceof NoteBlock) {
                 Util.playBlockPlaceSound(player, pos, placementState.getSoundType());
             }
         }

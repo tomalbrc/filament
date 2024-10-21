@@ -9,7 +9,6 @@ import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
@@ -25,9 +24,11 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.Map;
 import java.util.Optional;
@@ -80,19 +81,19 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public BlockState getPolymerBlockState(BlockState blockState) {
-        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+    public BlockState getPolymerBlockState(BlockState blockState, PacketContext packetContext) {
+        if (this.stateMap != null) for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 BlockState polyBlockState = blockBehaviour.getCustomPolymerBlockState(this.stateMap, blockState);
                 if (polyBlockState != null)
                     return polyBlockState;
             }
         }
-        return this.stateMap.get(blockState) != null ? this.stateMap.get(blockState).blockState() : Blocks.BEDROCK.defaultBlockState();
+        return this.stateMap != null && this.stateMap.get(blockState) != null ? this.stateMap.get(blockState).blockState() : Blocks.BEDROCK.defaultBlockState();
     }
 
     @Override
-    public BlockState getPolymerBreakEventBlockState(BlockState state, ServerPlayer player) {
+    public BlockState getPolymerBreakEventBlockState(BlockState state, PacketContext packetContext) {
         return this.breakEventState;
     }
 
@@ -153,14 +154,14 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos2, boolean bl) {
+    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, Orientation orientation, boolean bl) {
         if (this.getBehaviours() != null)
-            this.forEach(x -> x.neighborChanged(blockState, level, blockPos, block, blockPos2, bl));
-        super.neighborChanged(blockState, level, blockPos, block, blockPos2, bl);
+            this.forEach(x -> x.neighborChanged(blockState, level, blockPos, block, orientation, bl));
+        super.neighborChanged(blockState, level, blockPos, block, orientation, bl);
     }
 
     @Override
-    public void onExplosionHit(BlockState blockState, Level level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
+    public void onExplosionHit(BlockState blockState, ServerLevel level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
         if (this.getBehaviours() != null)
             this.forEach(x -> x.onExplosionHit(blockState, level, blockPos, explosion, biConsumer));
         super.onExplosionHit(blockState, level, blockPos, explosion, biConsumer);
@@ -311,11 +312,11 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     @NotNull
-    protected BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) {
-        var bs = super.updateShape(blockState, direction, blockState2, levelAccessor, blockPos, blockPos2);
+    protected BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
+        var bs = super.updateShape(blockState, levelReader, scheduledTickAccess, blockPos, direction, blockPos2, blockState2, randomSource);
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
-                bs = blockBehaviour.updateShape(bs, direction, blockState2, levelAccessor, blockPos, blockPos2);
+                bs = blockBehaviour.updateShape(bs, levelReader, scheduledTickAccess, blockPos, direction, blockPos2, blockState2, randomSource);
             }
         }
         return bs;

@@ -16,7 +16,7 @@ public class OxidizableRegistry {
     private static final Supplier<BiMap<ResourceLocation, Block>> OXIDIZABLES_PREVIOUS = Suppliers.memoize(() -> OXIDIZABLES_NEXT.get().inverse());
 
     public static Block getNext(Block block) {
-        return BuiltInRegistries.BLOCK.get(oxidizables.get(block));
+        return BuiltInRegistries.BLOCK.get(oxidizables.get(block)).orElseThrow().value();
     }
 
     public static Block getPrevious(Block block) {

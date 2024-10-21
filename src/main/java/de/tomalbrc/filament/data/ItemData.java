@@ -4,9 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.data.resource.ItemResource;
-import eu.pb4.polymer.resourcepack.api.PolymerModelData;
-import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -14,11 +11,8 @@ import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-
 @SuppressWarnings("unused")
 public record ItemData(
-        @Nullable Map<String, String> displayName,
         @NotNull ResourceLocation id,
         @Nullable Item vanillaItem,
         @Nullable ItemResource itemResource,
@@ -54,13 +48,5 @@ public record ItemData(
             return Items.PAPER;
         }
         return vanillaItem;
-    }
-
-    public Object2ObjectOpenHashMap<String, PolymerModelData> requestModels() {
-        Object2ObjectOpenHashMap<String, PolymerModelData> map = new Object2ObjectOpenHashMap<>();
-        if (itemResource != null) {
-            itemResource.models().forEach((key, value) -> map.put(key, PolymerResourcePackUtils.requestModel(this.vanillaItem == null ? Items.PAPER : this.vanillaItem, value)));
-        }
-        return map.isEmpty() ? null : map;
     }
 }

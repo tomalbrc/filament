@@ -43,7 +43,6 @@ public class ItemProperties {
 
             FoodProperties.Builder builder = new FoodProperties.Builder();
             if (food.canAlwaysEat) builder.alwaysEdible();
-            if (food.fastfood) builder.fast();
             builder.saturationModifier(food.saturation);
             builder.nutrition(food.hunger);
 

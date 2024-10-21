@@ -105,7 +105,7 @@ public class Json {
 
             BlockStateParser.BlockResult parsed;
             try {
-                parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), name, false);
+                parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK, name, false);
             } catch (CommandSyntaxException e) {
                 throw new JsonParseException("Invalid BlockState value: " + name);
             }
@@ -268,7 +268,7 @@ public class Json {
     private record RegistryDeserializer<T>(Registry<T> registry) implements JsonDeserializer<T> {
         @Override
         public T deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
-            return this.registry.get(ResourceLocation.parse(element.getAsString()));
+            return this.registry.get(ResourceLocation.parse(element.getAsString())).orElseThrow().value();
         }
     }
 
@@ -296,7 +296,7 @@ public class Json {
         }
 
         private static <T> RegistryOps.RegistryInfo<T> createInfoForContextRegistry(Registry<T> registry) {
-            return new RegistryOps.RegistryInfo<>(registry.asLookup(), registry.asTagAddingLookup(), registry.registryLifecycle());
+            return new RegistryOps.RegistryInfo<>(registry, registry, registry.registryLifecycle());
         }
     }
 }

@@ -35,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -118,7 +119,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     }
 
     @Override
-    public EntityType<?> getPolymerEntityType(ServerPlayer player) {
+    public EntityType<?> getPolymerEntityType(PacketContext packetContext) {
         return EntityType.ARMOR_STAND;
     }
 
@@ -149,7 +150,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
             var damageSource = this.damageSources().trident(this, owner);
 
             float damage = (float) this.getBaseDamage();
-            if (target.hurt(damageSource, damage)) {
+            if (target.hurtServer((ServerLevel) level(), damageSource, damage)) {
                 if (target.getType() != EntityType.ENDERMAN && this.getOwner() instanceof LivingEntity livingOwner) {
                     EnchantmentHelper.doPostAttackEffectsWithItemSource((ServerLevel) target.level(), livingOwner, damageSource, this.getWeaponItem());
                     this.doPostHurtEffects(target);

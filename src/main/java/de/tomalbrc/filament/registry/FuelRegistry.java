@@ -6,7 +6,7 @@ import net.minecraft.world.item.Item;
 import java.util.Map;
 
 public class FuelRegistry {
-    private static Map<Item, Integer> cache = new Reference2ObjectArrayMap<>();
+    private static final Map<Item, Integer> cache = new Reference2ObjectArrayMap<>();
 
     public static Map<Item, Integer> getCache() {
         return cache;

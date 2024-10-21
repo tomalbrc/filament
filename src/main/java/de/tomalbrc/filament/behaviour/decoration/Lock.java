@@ -2,6 +2,7 @@ package de.tomalbrc.filament.behaviour.decoration;
 
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.holder.AnimatedHolder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -36,7 +37,7 @@ public class Lock implements DecorationBehaviour<Lock.LockConfig> {
     public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
         if (this.unlocked) return InteractionResult.PASS;
 
-        Item key = this.lockConfig.key == null ? null : BuiltInRegistries.ITEM.get(this.lockConfig.key);
+        Item key = this.lockConfig.key == null ? null : BuiltInRegistries.ITEM.get(this.lockConfig.key).orElseThrow().value();
         ItemStack mainHandItem = player.getItemInHand(InteractionHand.MAIN_HAND);
         boolean hasHandItem = !mainHandItem.isEmpty();
         boolean holdsKeyAndIsValid = hasHandItem && key != null && mainHandItem.is(key);
@@ -46,10 +47,9 @@ public class Lock implements DecorationBehaviour<Lock.LockConfig> {
                 mainHandItem.shrink(1);
             }
 
-            // TODO: FIX LOCK ANIMATION
-            //if (this.lock.unlockAnimation != null && !lock.unlockAnimation.isEmpty() && decorationBlockEntity instanceof AjDecorationBlockEntity ajDecorationEntity) {
-            //    decorationBlockEntity.play(lock.unlockAnimation);
-            //}
+            if (lockConfig.unlockAnimation != null && !lockConfig.unlockAnimation.isEmpty() && decorationBlockEntity.getDecorationHolder() instanceof AnimatedHolder animatedHolder) {
+                animatedHolder.getAnimator().playAnimation(lockConfig.unlockAnimation);
+            }
 
             this.unlocked = true;
 

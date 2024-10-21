@@ -2,6 +2,7 @@ package de.tomalbrc.filament.mixin.behaviour.bow;
 
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.item.SimpleItem;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +18,7 @@ public abstract class MobMixin {
     @Shadow public abstract boolean canReplaceEqualItem(ItemStack itemStack, ItemStack itemStack2);
 
     @Inject(method = "canReplaceCurrentItem", at = @At("HEAD"), cancellable = true)
-    private void filament$onCanReplaceCurrentItem(ItemStack itemStack, ItemStack itemStack2, CallbackInfoReturnable<Boolean> cir) {
+    private void filament$onCanReplaceCurrentItem(ItemStack itemStack, ItemStack itemStack2, EquipmentSlot equipmentSlot, CallbackInfoReturnable<Boolean> cir) {
         if (filament$isBow(itemStack) && filament$isBow(itemStack2)) {
             cir.setReturnValue(this.canReplaceEqualItem(itemStack, itemStack2));
         }

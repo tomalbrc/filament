@@ -15,8 +15,9 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.ticks.TickPriority;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +35,7 @@ public class Repeater implements BlockBehaviour<Repeater.RepeaterConfig> {
 
     public static final IntegerProperty SIGNAL = IntegerProperty.create("signal", 0, 15);
 
-    public static final DirectionProperty FACING = DirectionalBlock.FACING;
+    public static final EnumProperty<Direction> FACING = DirectionalBlock.FACING;
     public static final BooleanProperty POWERED = BooleanProperty.create("powered");
 
     @Override
@@ -54,7 +55,6 @@ public class Repeater implements BlockBehaviour<Repeater.RepeaterConfig> {
         BlockState state = block.setValue(FACING, dir);
         int s = this.getInputSignal(blockPlaceContext.getLevel(), blockPlaceContext.getClickedPos(), state);
         state = state.setValue(POWERED, s > 0).setValue(SIGNAL, s);
-        this.updateNeighboursOnBack(block, blockPlaceContext.getLevel(), blockPlaceContext.getClickedPos(), state);
         return state;
     }
 
@@ -73,7 +73,7 @@ public class Repeater implements BlockBehaviour<Repeater.RepeaterConfig> {
     }
 
     @Override
-    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos2, boolean bl) {
+    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, Orientation orientation, boolean bl) {
         this.checkTickOnNeighbor(blockState.getBlock(), level, blockPos, blockState);
     }
 
@@ -91,13 +91,6 @@ public class Repeater implements BlockBehaviour<Repeater.RepeaterConfig> {
 
             level.scheduleTick(blockPos, self, this.config.delay, tickPriority);
         }
-    }
-
-    protected void updateNeighboursOnBack(BlockState self, Level level, BlockPos blockPos, BlockState blockState) {
-        Direction direction = blockState.getValue(FACING);
-        BlockPos blockPos2 = blockPos.relative(direction.getOpposite());
-        level.neighborChanged(blockPos2, self.getBlock(), blockPos);
-        level.updateNeighborsAtExceptFromFacing(blockPos2, self.getBlock(), direction);
     }
 
     public static boolean isRelay(BlockState blockState) {
@@ -124,8 +117,6 @@ public class Repeater implements BlockBehaviour<Repeater.RepeaterConfig> {
                 serverLevel.scheduleTick(blockPos, blockState.getBlock(), this.config.delay, TickPriority.VERY_HIGH);
             }
         }
-
-        this.updateNeighboursOnBack(blockState, serverLevel, blockPos, blockState);
     }
 
     protected int getInputSignal(Level level, BlockPos blockPos, BlockState blockState) {
@@ -140,18 +131,6 @@ public class Repeater implements BlockBehaviour<Repeater.RepeaterConfig> {
             return 15;
         }
         return level.getSignal(blockPos2, direction);
-    }
-
-    @Override
-    public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
-        this.updateNeighboursOnBack(blockState, level, blockPos, blockState);
-    }
-
-    @Override
-    public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
-        if (!bl && !blockState.is(blockState2.getBlock())) {
-            this.updateNeighboursOnBack(blockState, level, blockPos, blockState);
-        }
     }
 
     @Override

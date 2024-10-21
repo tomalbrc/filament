@@ -6,7 +6,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -28,16 +28,16 @@ public class Instrument implements ItemBehaviour<Instrument.Config> {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Item item, Level level, Player player, InteractionHand interactionHand) {
+    public InteractionResult use(Item item, Level level, Player player, InteractionHand interactionHand) {
         ItemStack itemStack = player.getItemInHand(interactionHand);
 
         player.startUsingItem(interactionHand);
         play(level, player, config);
-        if (config.useDuration > 0) player.getCooldowns().addCooldown(item, config.useDuration);
+        if (config.useDuration > 0) player.getCooldowns().addCooldown(itemStack, config.useDuration);
 
         player.awardStat(Stats.ITEM_USED.get(item));
 
-        return InteractionResultHolder.consume(itemStack);
+        return InteractionResult.CONSUME;
     }
 
     private static void play(Level level, Player player, Config instrument) {

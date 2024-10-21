@@ -5,18 +5,22 @@ import eu.pb4.polymer.virtualentity.api.tracker.EntityTrackedData;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 
 public class SeatEntity extends Entity implements PolymerEntity {
-    private Direction direction = Direction.UP;
+    private final Direction direction = Direction.UP;
 
     public SeatEntity(EntityType type, Level world) {
         super(type, world);
@@ -46,12 +50,18 @@ public class SeatEntity extends Entity implements PolymerEntity {
     }
 
     @Override
-    public EntityType<?> getPolymerEntityType(ServerPlayer player) {
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource damageSource, float f) {
+        return false;
+    }
+
+    @Override
+    public EntityType<?> getPolymerEntityType(PacketContext packetContext) {
         return EntityType.ARMOR_STAND;
     }
 
 
     @Override
+    @NotNull
     public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
         return Vec3.atBottomCenterOf(this.getOnPos()).relative(this.direction, 1);
     }

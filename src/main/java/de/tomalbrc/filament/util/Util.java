@@ -4,7 +4,6 @@ import com.mojang.math.Axis;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
@@ -17,7 +16,6 @@ import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -41,10 +39,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
 import org.joml.*;
 
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -120,9 +115,7 @@ public class Util {
     public static Vector2f barrierDimensions(List<DecorationData.BlockConfig> blockConfigs, float rotation) {
         if (!blockConfigs.isEmpty()) {
             List<BlockPos> posList = new ObjectArrayList<>();
-            Util.forEachRotated(blockConfigs, BlockPos.ZERO, rotation, blockPos2 -> {
-                posList.add(blockPos2);
-            });
+            Util.forEachRotated(blockConfigs, BlockPos.ZERO, rotation, posList::add);
             Optional<BoundingBox> boundingBox = BoundingBox.encapsulatingPositions(posList);
             if (boundingBox.isPresent()) {
                 return new Vector2f(java.lang.Math.max(boundingBox.get().getXSpan(), boundingBox.get().getZSpan()), boundingBox.get().getYSpan());
@@ -167,11 +160,6 @@ public class Util {
         InteractionElement element = new InteractionElement();
         element.setHandler(new VirtualElement.InteractionHandler() {
             @Override
-            public void interactAt(ServerPlayer player, InteractionHand hand, Vec3 pos) {
-
-            }
-
-            @Override
             public void attack(ServerPlayer player) {
                 if (player.gameMode.getGameModeForPlayer() != GameType.ADVENTURE) {
                     element.getHolder().getAttachment().getWorld().destroyBlock(BlockPos.containing(element.getHolder().getAttachment().getPos()), false);
@@ -198,7 +186,7 @@ public class Util {
     }
 
     public static ItemDisplayElement decorationItemDisplay(DecorationData data, Direction direction, float rotation) {
-        ItemDisplayElement itemDisplayElement = new ItemDisplayElement(BuiltInRegistries.ITEM.get(data.id()));
+        ItemDisplayElement itemDisplayElement = new ItemDisplayElement(BuiltInRegistries.ITEM.get(data.id()).orElseThrow().value());
         itemDisplayElement.setTeleportDuration(1);
 
         if (data != null && data.properties().glow) {
@@ -265,6 +253,11 @@ public class Util {
         for (SimpleSynchronousResourceReloadListener listener : FilamentReloadUtil.getReloadListeners()) {
             listener.onResourceManagerReload(resourceManager);
         }
+
+        ((RegistryUnfreezer)BuiltInRegistries.BLOCK).filament$freeze();
+        ((RegistryUnfreezer)BuiltInRegistries.ITEM).filament$freeze();
+        ((RegistryUnfreezer)BuiltInRegistries.BLOCK_ENTITY_TYPE).filament$freeze();
+        ((RegistryUnfreezer)BuiltInRegistries.CREATIVE_MODE_TAB).filament$freeze();
     }
 
     public static void damageAndBreak(int i, ItemStack itemStack, LivingEntity livingEntity, EquipmentSlot slot) {
@@ -275,36 +268,6 @@ public class Util {
             Item item = itemStack.getItem();
             itemStack.shrink(1);
             livingEntity.onEquippedItemBroken(item, slot);
-        }
-    }
-
-    public static void langGenerator(ResourcePackBuilder builder, String type, Map<ResourceLocation, Map<String, String>> names) {
-        Map<String, Map<String, Map<String, String>>> langEntries = new HashMap<>();
-
-        for (Map.Entry<ResourceLocation, Map<String, String>> entry : names.entrySet()) {
-            ResourceLocation id = entry.getKey();
-            Map<String, String> nameMap = entry.getValue();
-
-            for (Map.Entry<String, String> langEntry : nameMap.entrySet()) {
-                String lang = langEntry.getKey();
-                String name = langEntry.getValue();
-                if (name != null) {
-                    String key = type + "." + id.getNamespace() + "." + id.getPath();
-                    langEntries
-                            .computeIfAbsent(id.getNamespace(), k -> new HashMap<>())
-                            .computeIfAbsent(lang, k -> new HashMap<>())
-                            .put(key, name);
-                }
-            }
-        }
-        for (Map.Entry<String, Map<String, Map<String, String>>> namespaceEntry : langEntries.entrySet()) {
-            String namespace = namespaceEntry.getKey();
-            for (Map.Entry<String, Map<String, String>> langFileEntry : namespaceEntry.getValue().entrySet()) {
-                String lang = langFileEntry.getKey();
-                String langPath = "assets/" + namespace + "/lang/" + lang + ".json";
-                String jsonContent = Json.GSON.toJson(langFileEntry.getValue());
-                builder.addData(langPath, jsonContent.getBytes(StandardCharsets.UTF_8));
-            }
         }
     }
 }

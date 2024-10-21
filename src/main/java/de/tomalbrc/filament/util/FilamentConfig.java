@@ -14,7 +14,6 @@ public class FilamentConfig {
     public boolean emissive_shader = true;
 
     public boolean commands = true;
-    public boolean trimArmorReplaceChainmail = false;
 
     public boolean preventAdventureModeDecorationInteraction = true;
 

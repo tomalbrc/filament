@@ -28,7 +28,6 @@ import java.util.Map;
 
 
 public record BlockData(
-        @Nullable Map<String, String> displayName,
         @NotNull ResourceLocation id,
         @Nullable Item vanillaItem,
         @NotNull BlockResource blockResource,
@@ -40,7 +39,7 @@ public record BlockData(
         @Nullable DataComponentMap components,
         @SerializedName("group")
         @Nullable ResourceLocation itemGroup
-        ) {
+) {
     @Override
     @NotNull
     public BlockProperties properties() {
@@ -79,7 +78,7 @@ public record BlockData(
                 if (entry.getKey().equals("default")) {
                     var type = safeBlockModelType(this.blockModelType.getRawValue());
                     BlockState requestedState = type == null ? null : PolymerBlockResourceUtils.requestBlock(type, entry.getValue());
-                    val.put(BuiltInRegistries.BLOCK.get(id).defaultBlockState(), BlockStateMeta.of(type == null ? Blocks.BEDROCK.defaultBlockState() : requestedState, entry.getValue()));
+                    val.put(BuiltInRegistries.BLOCK.get(id).orElseThrow().value().defaultBlockState(), BlockStateMeta.of(type == null ? Blocks.BEDROCK.defaultBlockState() : requestedState, entry.getValue()));
                 }
                 else {
                     var state = blockState(String.format("%s[%s]", id, entry.getKey()));
@@ -102,7 +101,7 @@ public record BlockData(
     private static BlockState blockState(String str) {
         BlockStateParser.BlockResult parsed;
         try {
-            parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), str, false);
+            parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK, str, false);
         } catch (CommandSyntaxException e) {
             throw new JsonParseException("Invalid BlockState value: " + str);
         }

@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import org.jetbrains.annotations.NotNull;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 // todo: ravager interaction, bee interaction, villager interaction!
 public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
@@ -182,7 +183,7 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
 
     @Override
     public void performBonemeal(ServerLevel serverLevel, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
-        if (blockState.getBlock() instanceof SimpleBlock polymerBlock && !(polymerBlock.getPolymerBlockState(blockState).getBlock() instanceof BonemealableBlock)) {
+        if (blockState.getBlock() instanceof SimpleBlock polymerBlock && !(polymerBlock.getPolymerBlockState(blockState, PacketContext.of()).getBlock() instanceof BonemealableBlock)) {
             Util.handleBoneMealEffects(serverLevel, blockPos);
         }
 

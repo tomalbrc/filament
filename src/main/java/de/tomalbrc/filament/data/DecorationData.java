@@ -4,9 +4,8 @@ import com.google.gson.annotations.SerializedName;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.data.properties.DecorationProperties;
+import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.util.Util;
-import eu.pb4.polymer.resourcepack.api.PolymerModelData;
-import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -18,13 +17,12 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 public record DecorationData(
-        @Nullable Map<String, String> displayName,
         @NotNull ResourceLocation id,
         @NotNull ResourceLocation model,
+        @Nullable ItemResource itemResource,
 
         @Nullable Item vanillaItem,
 
@@ -67,10 +65,6 @@ public record DecorationData(
         return vanillaItem;
     }
 
-    public PolymerModelData requestModel() {
-        return PolymerResourcePackUtils.requestModel(vanillaItem != null ? vanillaItem : Items.GUNPOWDER, model);
-    }
-
     public boolean isContainer() {
         return this.behaviourConfig != null && this.behaviourConfig.has(Behaviours.CONTAINER);
     }
@@ -97,10 +91,6 @@ public record DecorationData(
         boolean groundOnly = this.properties != null && !this.properties.placement.wall() && !this.properties.placement.ceiling();
 
         return groundOnly && !canBeDyed && !hasBehaviour && (singleBlock || this.size != null);
-    }
-
-    public boolean isCosmetic() {
-        return this.behaviourConfig != null && this.behaviourConfig.has(Behaviours.COSMETIC);
     }
 
     public record BlockConfig(Vector3f origin,
