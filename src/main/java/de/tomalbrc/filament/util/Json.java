@@ -5,6 +5,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import eu.pb4.polymer.blocks.api.BlockModelType;
@@ -279,6 +280,8 @@ public class Json {
             DataResult<Pair<DataComponentMap, JsonElement>> result = DataComponentMap.CODEC.decode(RegistryOps.create(JsonOps.INSTANCE, registryInfoLookup), jsonElement);
 
             if (result.resultOrPartial().isEmpty()) {
+                Filament.LOGGER.error("Skipping broken components; could not load: {}", jsonElement.getAsString());
+                Filament.LOGGER.error("Minecraft error message: {}",  result.error().orElseThrow().message());
                 return null;
             }
 
