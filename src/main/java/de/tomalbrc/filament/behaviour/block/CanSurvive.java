@@ -43,7 +43,7 @@ public class CanSurvive implements BlockBehaviour<CanSurvive.Config> {
     }
 
     private boolean test(Direction direction, BlockPos blockPos, LevelReader levelReader, BlockState blockState) {
-        var belowState = levelReader.getBlockState(blockPos.relative(direction.getOpposite()));
+        var belowState = levelReader.getBlockState(blockPos.relative(direction));
         if (this.config.blocks != null && this.config.blocks.contains(belowState.getBlock()))
             return true;
         if (this.config.tags != null) {
@@ -54,7 +54,7 @@ public class CanSurvive implements BlockBehaviour<CanSurvive.Config> {
             }
         }
 
-        return this.config.solidOnly && blockState.isSolid();
+        return this.config.solidOnly && belowState.isSolid();
     }
 
     private boolean test(Direction.Axis axis, BlockPos blockPos, LevelReader levelReader, BlockState blockState) {
