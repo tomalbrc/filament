@@ -11,6 +11,7 @@ import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.core.api.item.PolymerItemUtils;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -154,6 +155,13 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
     public final ItemStack getPolymerItemStack(ItemStack itemStack, TooltipFlag tooltipType, PacketContext packetContext) {
         var stack = PolymerItemUtils.createItemStack(itemStack, tooltipType, packetContext);
         stack.set(DataComponents.ITEM_MODEL, this.getModel());
+        if (this.itemData != null) {
+            for (DataComponentType type : this.itemData.components().keySet()) {
+                if (!stack.has(type)) {
+                    stack.set(type, this.itemData.components().get(type));
+                }
+            }
+        }
 
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
