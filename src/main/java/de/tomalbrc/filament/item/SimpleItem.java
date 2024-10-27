@@ -153,7 +153,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
     @Override
     public final ItemStack getPolymerItemStack(ItemStack itemStack, TooltipFlag tooltipType, PacketContext packetContext) {
         ItemStack stack = PolymerItemUtils.createItemStack(itemStack, tooltipType, packetContext);
-        ResourceLocation dataComponentModel = this.itemData.components().get(DataComponents.ITEM_MODEL);
+        ResourceLocation dataComponentModel = this.itemData != null ? this.itemData.components().get(DataComponents.ITEM_MODEL) : null;
         stack.set(DataComponents.ITEM_MODEL, dataComponentModel != null ? dataComponentModel : this.getModel());
 
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
