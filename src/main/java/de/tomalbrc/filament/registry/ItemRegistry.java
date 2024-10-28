@@ -1,8 +1,5 @@
 package de.tomalbrc.filament.registry;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
@@ -10,10 +7,9 @@ import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
+import de.tomalbrc.filament.util.Util;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -23,11 +19,9 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
@@ -37,20 +31,25 @@ public class ItemRegistry {
 
     public static void register(InputStream inputStream) throws IOException {
         var element = JsonParser.parseReader(new InputStreamReader(inputStream));
-        register(Json.GSON.fromJson(element, ItemData.class), element);
+        ItemData data = Json.GSON.fromJson(element, ItemData.class);
+
+        Util.handleComponentsCustom(element, data);
+
+        register(data);
     }
 
-    static public void register(ItemData data, JsonElement element) {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    static public void register(ItemData data) {
         if (BuiltInRegistries.ITEM.containsKey(data.id())) return;
 
-        Item.Properties properties = data.properties().toItemProperties(data.behaviourConfig());
+        Item.Properties properties = data.properties().toItemProperties(data.behaviour());
 
         for (TypedDataComponent component : data.components()) {
             properties.component(component.type(), component.value());
         }
 
-        var item = ItemRegistry.registerItem(key(data.id()), (newProps) -> new SimpleItem(null, newProps, data, data.vanillaItem()), properties, data.itemGroup() != null ? data.itemGroup() : Constants.ITEM_GROUP_ID);
-        BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
+        var item = ItemRegistry.registerItem(key(data.id()), (newProps) -> new SimpleItem(null, newProps, data, data.vanillaItem()), properties, data.group() != null ? data.group() : Constants.ITEM_GROUP_ID);
+        BehaviourUtil.postInitItem(item, item, data.behaviour());
 
         REGISTERED_ITEMS++;
     }
@@ -78,22 +77,8 @@ public class ItemRegistry {
         public void onResourceManagerReload(ResourceManager resourceManager) {
             var resources = resourceManager.listResources("filament/item", path -> path.getPath().endsWith(".json"));
             for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
-                try (var reader = new InputStreamReader(entry.getValue().open())) {
-                    JsonElement element = JsonParser.parseReader(reader);
-                    ItemData data = Json.GSON.fromJson(element, ItemData.class);
-
-                    if (element.getAsJsonObject().has("components")) {
-                        JsonObject comp = element.getAsJsonObject().get("components").getAsJsonObject();
-                        if (comp.has("minecraft:jukebox_playable")) {
-                            data.set(DataComponents.JUKEBOX_PLAYABLE, comp.getAsJsonObject("minecraft:jukebox_playable"));
-                        }
-                        if (comp.has("jukebox_playable")) {
-                            data.set(DataComponents.JUKEBOX_PLAYABLE, comp.getAsJsonObject("jukebox_playable"));
-                        }
-                    }
-
-                    ItemRegistry.register(data, element);
-                    BlockRegistry.addLate();
+                try (InputStream inputStream = entry.getValue().open()) {
+                    ItemRegistry.register(inputStream);
                 } catch (IOException | IllegalStateException e) {
                     Filament.LOGGER.error("Failed to load item resource \"{}\".", entry.getKey(), e);
                 }

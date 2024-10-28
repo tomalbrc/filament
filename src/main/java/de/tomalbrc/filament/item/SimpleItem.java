@@ -59,7 +59,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
 
     public SimpleItem(Block block, Properties properties, ItemData itemData, Item vanillaItem) {
         super(block, properties);
-        this.initBehaviours(itemData.behaviourConfig());
+        this.initBehaviours(itemData.behaviour());
 
         this.vanillaItem = vanillaItem;
         this.itemData = itemData;
@@ -78,7 +78,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
     public void verifyComponentsAfterLoad(ItemStack itemStack) {
         super.verifyComponentsAfterLoad(itemStack);
 
-        if (this.itemData != null && this.itemData.getAdditionalComponents() != null) {
+        if (this.itemData != null) {
             for (Map.Entry<DataComponentType<?>, JsonObject> entry : this.itemData.getAdditionalComponents().entrySet()) {
                 var codec = entry.getKey().codec();
                 assert codec != null;

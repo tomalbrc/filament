@@ -1,54 +1,31 @@
 package de.tomalbrc.filament.data;
 
-import com.google.gson.JsonObject;
-import com.google.gson.annotations.SerializedName;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.data.resource.ItemResource;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
-public class ItemData {
-    protected ResourceLocation id;
+public final class ItemData extends Data {
+    private final @Nullable ItemProperties properties;
 
-    @Nullable
-    protected Item vanillaItem;
-
-    @Nullable
-    protected ItemResource itemResource;
-
-    @SerializedName("behaviour")
-    @Nullable
-    protected BehaviourConfigMap behaviourConfig;
-
-    @Nullable
-    protected ItemProperties properties;
-
-    @Nullable
-    protected DataComponentMap components;
-
-    @SerializedName("group")
-    @Nullable
-    protected ResourceLocation itemGroup;
-
-    protected Map<DataComponentType<?>, JsonObject> additionalComponents;
-
-    public void set(DataComponentType<?> s, JsonObject jsonObject) {
-        if (this.additionalComponents == null) this.additionalComponents = new Object2ObjectOpenHashMap<>();
-        this.additionalComponents.put(s, jsonObject);
-    }
-
-    public Map<DataComponentType<?>, JsonObject> getAdditionalComponents() {
-        return additionalComponents;
+    public ItemData(
+            @NotNull ResourceLocation id,
+            @Nullable Item vanillaItem,
+            @Nullable ItemResource itemResource,
+            @Nullable BehaviourConfigMap behaviourConfig,
+            @Nullable ItemProperties properties,
+            @Nullable DataComponentMap components,
+            @Nullable ResourceLocation itemGroup
+    ) {
+        super(id, vanillaItem, itemResource, behaviourConfig, components, itemGroup);
+        this.properties = properties;
     }
 
     @NotNull
@@ -59,39 +36,34 @@ public class ItemData {
         return properties;
     }
 
-    @NotNull
-    public DataComponentMap components() {
-        if (components == null) {
-            return DataComponentMap.EMPTY;
-        }
-        return components;
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (ItemData) obj;
+        return Objects.equals(this.id, that.id) &&
+                Objects.equals(this.vanillaItem, that.vanillaItem) &&
+                Objects.equals(this.itemResource, that.itemResource) &&
+                Objects.equals(this.behaviour, that.behaviour) &&
+                Objects.equals(this.properties, that.properties) &&
+                Objects.equals(this.components, that.components) &&
+                Objects.equals(this.group, that.group);
     }
 
-    @NotNull
-    public Item vanillaItem() {
-        if (vanillaItem == null) {
-            return Items.PAPER;
-        }
-        return vanillaItem;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, vanillaItem, itemResource, behaviour, properties, components, group);
     }
 
-    @NotNull
-    public ResourceLocation id() {
-        return id;
-    }
-
-    @Nullable
-    public ResourceLocation itemGroup() {
-        return itemGroup;
-    }
-
-    @Nullable
-    public BehaviourConfigMap behaviourConfig() {
-        return behaviourConfig;
-    }
-
-    @Nullable
-    public ItemResource itemResource() {
-        return itemResource;
+    @Override
+    public String toString() {
+        return "ItemData[" +
+                "id=" + id + ", " +
+                "vanillaItem=" + vanillaItem + ", " +
+                "itemResource=" + itemResource + ", " +
+                "behaviourConfig=" + behaviour + ", " +
+                "properties=" + properties + ", " +
+                "components=" + components + ", " +
+                "itemGroup=" + group + ']';
     }
 }

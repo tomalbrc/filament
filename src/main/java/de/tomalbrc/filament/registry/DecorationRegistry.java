@@ -1,5 +1,7 @@
 package de.tomalbrc.filament.registry;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
 import de.tomalbrc.filament.behaviour.Behaviours;
@@ -12,6 +14,7 @@ import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
+import de.tomalbrc.filament.util.Util;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -34,7 +37,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -46,9 +48,15 @@ public class DecorationRegistry {
     public static int REGISTERED_DECORATIONS = 0;
 
     public static void register(InputStream inputStream) throws IOException {
-        register(Json.GSON.fromJson(new InputStreamReader(inputStream, StandardCharsets.UTF_8), DecorationData.class));
+        JsonElement element = JsonParser.parseReader(new InputStreamReader(inputStream));
+        DecorationData data = Json.GSON.fromJson(element, DecorationData.class);
+
+        Util.handleComponentsCustom(element, data);
+
+        register(data);
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     static public void register(DecorationData data) {
         if (decorations.containsKey(data.id())) {
             decorations.put(data.id(), data); // replace anyway for /reload
@@ -66,8 +74,8 @@ public class DecorationRegistry {
             properties.component(component.type(), component.value());
         }
 
-        if (data.behaviourConfig() != null && data.isContainer()) {
-            Container.ContainerConfig container = data.behaviourConfig().get(Behaviours.CONTAINER);
+        if (data.isContainer()) {
+            Container.ContainerConfig container = data.behaviour().get(Behaviours.CONTAINER);
             if (container.canPickup)
                 properties.component(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
         }
@@ -76,8 +84,8 @@ public class DecorationRegistry {
             properties.component(DataComponents.DYED_COLOR, new DyedItemColor(0xdaad6d, false));
         }
 
-        var item = ItemRegistry.registerItem(ItemRegistry.key(data.id()), (newProps) -> new DecorationItem(block, data, newProps), properties, data.itemGroup() != null ? data.itemGroup() : Constants.DECORATION_GROUP_ID);
-        BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
+        var item = ItemRegistry.registerItem(ItemRegistry.key(data.id()), (newProps) -> new DecorationItem(block, data, newProps), properties, data.group() != null ? data.group() : Constants.DECORATION_GROUP_ID);
+        BehaviourUtil.postInitItem(item, item, data.behaviour());
 
         REGISTERED_DECORATIONS++;
     }

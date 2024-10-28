@@ -34,18 +34,18 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class DecorationItem extends SimpleItem implements PolymerItem, BehaviourHolder {
     final private DecorationData decorationData;
 
     public DecorationItem(Block block, DecorationData decorationData, Item.Properties properties) {
         super(block, properties, decorationData.properties(), decorationData.vanillaItem());
-        this.initBehaviours(decorationData.behaviourConfig());
+        this.initBehaviours(decorationData.behaviour());
         this.decorationData = decorationData;
     }
 
@@ -80,13 +80,8 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Behaviour
     }
 
     @Override
-    public Item getPolymerItem(ItemStack itemStack, PacketContext packetContext) {
-        return this.vanillaItem;
-    }
-
-    @Override
     protected Map<String, ResourceLocation> getModelMap() {
-        return this.decorationData.itemResource() == null ? Map.of() : this.decorationData.itemResource().models();
+        return this.decorationData.itemResource() == null ? Map.of() : Objects.requireNonNull(this.decorationData.itemResource()).models();
     }
 
     @Override

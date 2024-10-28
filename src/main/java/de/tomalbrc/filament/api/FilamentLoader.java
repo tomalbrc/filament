@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 public class FilamentLoader {
     public static void loadBlocks(String modid) {
         Behaviours.init();
@@ -21,7 +22,6 @@ public class FilamentLoader {
             try {
                 BlockRegistry.register(Files.newInputStream(f));
             } catch (IOException e) {
-                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }, "filament/block");

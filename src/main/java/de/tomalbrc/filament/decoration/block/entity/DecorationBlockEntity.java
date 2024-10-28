@@ -201,7 +201,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
                 Util.forEachRotated(this.getDecorationData().blocks(), this.getBlockPos(), this.getVisualRotationYInDegrees(), blockPos -> {
                     if (this.getLevel() != null && DecorationRegistry.isDecoration(this.getLevel().getBlockState(blockPos))) {
                         if (this.getDecorationData().properties().showBreakParticles)
-                            Util.showBreakParticle((ServerLevel) this.level, blockPos, this.getDecorationData().properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+                            Util.showBreakParticle((ServerLevel) this.level, this.getDecorationData().properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
                         this.getLevel().removeBlock(blockPos, false);
                     }
                 });
@@ -211,7 +211,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
                 BlockPos blockPos = this.getBlockPos();
 
                 if (this.getDecorationData().properties().showBreakParticles)
-                    Util.showBreakParticle((ServerLevel) this.level, blockPos, this.getDecorationData().properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+                    Util.showBreakParticle((ServerLevel) this.level, this.getDecorationData().properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
 
                 SoundEvent breakSound = this.getDecorationData().properties().blockBase.defaultBlockState().getSoundType().getBreakSound();
                 this.level.playSound(null, this.getBlockPos(),  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);

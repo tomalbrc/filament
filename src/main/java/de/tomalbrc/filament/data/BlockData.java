@@ -1,7 +1,6 @@
 package de.tomalbrc.filament.data;
 
 import com.google.gson.JsonParseException;
-import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
@@ -18,53 +17,42 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Objects;
 
+public final class BlockData extends Data {
+    private final @NotNull BlockResource blockResource;
+    private final @Nullable BlockStateMappedProperty<BlockModelType> blockModelType;
+    private final @Nullable BlockProperties properties;
 
-public record BlockData(
-        @NotNull ResourceLocation id,
-        @Nullable Item vanillaItem,
-        @NotNull BlockResource blockResource,
-        @Nullable ItemResource itemResource,
-        @Nullable BlockStateMappedProperty<BlockModelType> blockModelType,
-        @Nullable BlockProperties properties,
-        @SerializedName("behaviour")
-        @Nullable BehaviourConfigMap behaviourConfig,
-        @Nullable DataComponentMap components,
-        @SerializedName("group")
-        @Nullable ResourceLocation itemGroup
-) {
-    @Override
+    public BlockData(
+            @NotNull ResourceLocation id,
+            @Nullable Item vanillaItem,
+            @Nullable ItemResource itemResource,
+            @Nullable BehaviourConfigMap behaviourConfig,
+            @Nullable DataComponentMap components,
+            @Nullable ResourceLocation itemGroup,
+            @NotNull BlockResource blockResource,
+            @Nullable BlockStateMappedProperty<BlockModelType> blockModelType,
+            @Nullable BlockProperties properties
+    ) {
+        super(id, vanillaItem, itemResource, behaviourConfig, components, itemGroup);
+        this.blockResource = blockResource;
+        this.blockModelType = blockModelType;
+        this.properties = properties;
+    }
+
     @NotNull
     public BlockProperties properties() {
         if (properties == null) {
             return BlockProperties.EMPTY;
         }
         return properties;
-    }
-
-    @Override
-    @NotNull
-    public DataComponentMap components() {
-        if (components == null) {
-            return DataComponentMap.EMPTY;
-        }
-        return components;
-    }
-
-    @Override
-    @NotNull
-    public Item vanillaItem() {
-        if (vanillaItem == null) {
-            return Items.PAPER;
-        }
-        return vanillaItem;
     }
 
     public Map<BlockState, BlockStateMeta> createStandardStateMap() {
@@ -79,8 +67,7 @@ public record BlockData(
                     var type = safeBlockModelType(this.blockModelType.getRawValue());
                     BlockState requestedState = type == null ? null : PolymerBlockResourceUtils.requestBlock(type, entry.getValue());
                     val.put(BuiltInRegistries.BLOCK.get(id).orElseThrow().value().defaultBlockState(), BlockStateMeta.of(type == null ? Blocks.BEDROCK.defaultBlockState() : requestedState, entry.getValue()));
-                }
-                else {
+                } else {
                     var state = blockState(String.format("%s[%s]", id, entry.getKey()));
                     if (this.blockModelType.isMap()) {
                         var type = safeBlockModelType(this.blockModelType.getOrDefault(state, BlockModelType.FULL_BLOCK));
@@ -121,6 +108,50 @@ public record BlockData(
 
         return blockModelType;
     }
+
+    public @NotNull BlockResource blockResource() {
+        return blockResource;
+    }
+
+    public @Nullable BlockStateMappedProperty<BlockModelType> blockModelType() {
+        return blockModelType;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (BlockData) obj;
+        return Objects.equals(this.id, that.id) &&
+                Objects.equals(this.vanillaItem, that.vanillaItem) &&
+                Objects.equals(this.blockResource, that.blockResource) &&
+                Objects.equals(this.itemResource, that.itemResource) &&
+                Objects.equals(this.blockModelType, that.blockModelType) &&
+                Objects.equals(this.properties, that.properties) &&
+                Objects.equals(this.behaviour, that.behaviour) &&
+                Objects.equals(this.components, that.components) &&
+                Objects.equals(this.group, that.group);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, vanillaItem, blockResource, itemResource, blockModelType, properties, behaviour, components, group);
+    }
+
+    @Override
+    public String toString() {
+        return "BlockData[" +
+                "id=" + id + ", " +
+                "vanillaItem=" + vanillaItem + ", " +
+                "blockResource=" + blockResource + ", " +
+                "itemResource=" + itemResource + ", " +
+                "blockModelType=" + blockModelType + ", " +
+                "properties=" + properties + ", " +
+                "behaviourConfig=" + behaviour + ", " +
+                "components=" + components + ", " +
+                "itemGroup=" + group + ']';
+    }
+
 
     public record BlockStateMeta(BlockState blockState, PolymerBlockModel polymerBlockModel) {
         public static BlockStateMeta of(BlockState blockState, PolymerBlockModel blockModel) {

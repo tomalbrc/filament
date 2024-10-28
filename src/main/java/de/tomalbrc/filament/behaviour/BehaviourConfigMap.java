@@ -14,12 +14,14 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 public class BehaviourConfigMap {
+    public static final BehaviourConfigMap EMPTY = new BehaviourConfigMap();
     private final Map<BehaviourType<? extends Behaviour<?>,?>, Object> behaviourConfigMap = new Object2ObjectOpenHashMap<>();
 
     public void put(BehaviourType<?,?> type, Object config) {
         this.behaviourConfigMap.put(type, config);
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends Behaviour<E>,E> E get(BehaviourType<T,E> type) {
         return (E) this.behaviourConfigMap.get(type);
     }
@@ -28,6 +30,7 @@ public class BehaviourConfigMap {
         return this.behaviourConfigMap.containsKey(type);
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends Behaviour<E>,E> void forEach(BiConsumer<BehaviourType<T,E>, Object> biConsumer) {
         for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Object> entry : this.behaviourConfigMap.entrySet()) {
             biConsumer.accept((BehaviourType<T, E>) entry.getKey(), entry.getValue());

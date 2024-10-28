@@ -1,7 +1,10 @@
 package de.tomalbrc.filament.util;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mojang.math.Axis;
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
@@ -12,6 +15,7 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -27,15 +31,12 @@ import net.minecraft.util.SegmentedAnglePrecision;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
 import org.joml.*;
 
@@ -71,7 +72,7 @@ public class Util {
         ));
     }
 
-    public static void showBreakParticle(ServerLevel level, BlockPos blockPos, ItemStack stack, float x, float y, float z) {
+    public static void showBreakParticle(ServerLevel level, ItemStack stack, float x, float y, float z) {
         level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, stack), x, y, z, 27, 0.125, 0.125, 0.125, 0.05);
     }
 
@@ -230,20 +231,6 @@ public class Util {
         return itemDisplayElement;
     }
 
-    @Nullable
-    public static ItemEntity spawnAtLocation(Level level, Vec3 pos, ItemStack itemStack) {
-        if (itemStack.isEmpty()) {
-            return null;
-        } else if (level.isClientSide) {
-            return null;
-        } else {
-            ItemEntity itemEntity = new ItemEntity(level, pos.x(), pos.y(), pos.z(), itemStack);
-            itemEntity.setDefaultPickUpDelay();
-            level.addFreshEntity(itemEntity);
-            return itemEntity;
-        }
-    }
-
     public static void loadDatapackContents(ResourceManager resourceManager) {
         ((RegistryUnfreezer) BuiltInRegistries.BLOCK).filament$unfreeze();
         ((RegistryUnfreezer) BuiltInRegistries.ITEM).filament$unfreeze();
@@ -268,6 +255,18 @@ public class Util {
             Item item = itemStack.getItem();
             itemStack.shrink(1);
             livingEntity.onEquippedItemBroken(item, slot);
+        }
+    }
+
+    public static void handleComponentsCustom(JsonElement element, Data data) {
+        if (element.getAsJsonObject().has("components")) {
+            JsonObject comp = element.getAsJsonObject().get("components").getAsJsonObject();
+            if (comp.has("minecraft:jukebox_playable")) {
+                data.putAdditional(DataComponents.JUKEBOX_PLAYABLE, comp.getAsJsonObject("minecraft:jukebox_playable"));
+            }
+            if (comp.has("jukebox_playable")) {
+                data.putAdditional(DataComponents.JUKEBOX_PLAYABLE, comp.getAsJsonObject("jukebox_playable"));
+            }
         }
     }
 }
