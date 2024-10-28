@@ -8,6 +8,7 @@ import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
@@ -21,21 +22,32 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class BlockRegistry {
     public static int REGISTERED_BLOCKS = 0;
 
-    public static void register(InputStream inputStream) throws IOException {
-        register(Json.GSON.fromJson(new InputStreamReader(inputStream, StandardCharsets.UTF_8), BlockData.class));
+    private static List<Runnable> LATE_ITEMS = new ObjectArrayList<>();
+
+    public static void addLate() {
+        LATE_ITEMS.forEach(Runnable::run);
+        LATE_ITEMS.clear();
     }
 
-    public static void register(BlockData data) throws IOException {
+    public static void register(InputStream inputStream) throws IOException {
+        var bytes = inputStream.readAllBytes();
+        register(Json.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(bytes)), BlockData.class), bytes);
+    }
+
+    public static void register(BlockData data, byte[] reader) throws IOException {
         if (BuiltInRegistries.BLOCK.containsKey(data.id())) return;
 
         BlockProperties properties = data.properties();
@@ -47,6 +59,7 @@ public class BlockRegistry {
         for (TypedDataComponent component : data.components()) {
             itemProperties.component(component.type(), component.value());
         }
+
 
         SimpleBlockItem item = ItemRegistry.registerItem(ItemRegistry.key(data.id()), (newProps) -> new SimpleBlockItem(newProps, customBlock, data), itemProperties, data.itemGroup() != null ? data.itemGroup() : Constants.BLOCK_GROUP_ID);
         BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
@@ -77,9 +90,10 @@ public class BlockRegistry {
             var resources = resourceManager.listResources("filament/block", path -> path.getPath().endsWith(".json"));
             for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
 
-                try (var reader = new InputStreamReader(entry.getValue().open())) {
-                    BlockData data = Json.GSON.fromJson(reader, BlockData.class);
-                    BlockRegistry.register(data);
+                try (var input = entry.getValue().open()) {
+                    var bytes = input.readAllBytes();
+                    BlockData data = Json.GSON.fromJson(new InputStreamReader(new ByteArrayInputStream(bytes)), BlockData.class);
+                    BlockRegistry.register(data, bytes);
                 } catch (IOException | IllegalStateException e) {
                     Filament.LOGGER.error("Failed to load block resource \"{}\".", entry.getKey());
                 }

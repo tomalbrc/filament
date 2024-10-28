@@ -1,5 +1,8 @@
 package de.tomalbrc.filament.item;
 
+import com.google.gson.JsonObject;
+import com.mojang.serialization.JsonOps;
+import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
@@ -8,11 +11,14 @@ import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.data.properties.ItemProperties;
+import de.tomalbrc.filament.util.Json;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.core.api.item.PolymerItemUtils;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -33,6 +39,7 @@ import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Universal item, base for all filament items, with behaviour support
@@ -67,6 +74,27 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
     }
 
     @Override
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public void verifyComponentsAfterLoad(ItemStack itemStack) {
+        super.verifyComponentsAfterLoad(itemStack);
+
+        if (this.itemData != null && this.itemData.getAdditionalComponents() != null) {
+            for (Map.Entry<DataComponentType<?>, JsonObject> entry : this.itemData.getAdditionalComponents().entrySet()) {
+                var codec = entry.getKey().codec();
+                assert codec != null;
+
+                RegistryOps.RegistryInfoLookup registryInfoLookup = Json.DataComponentsDeserializer.createContext(Filament.REGISTRY_ACCESS.compositeAccess());
+                var result = codec.decode(RegistryOps.create(JsonOps.INSTANCE, registryInfoLookup), entry.getValue());
+                if (result.hasResultOrPartial()) {
+                    DataComponentType type = entry.getKey();
+                    itemStack.set(type, (Object)result.getOrThrow().getFirst());
+                }
+            }
+        }
+    }
+
+    @Override
+    @SuppressWarnings("NullableProblems")
     @Nullable // yes there is no block item for simple items
     public Block getBlock() {
         return super.getBlock();
@@ -166,12 +194,12 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
     }
 
     protected Map<String, ResourceLocation> getModelMap() {
-        return this.itemData.itemResource() == null ? Map.of() : this.itemData.itemResource().models();
+        return this.itemData.itemResource() == null ? Map.of() : Objects.requireNonNull(this.itemData.itemResource()).models();
     }
 
     protected ResourceLocation getModel() {
         if (this.itemData.itemResource() != null)
-            return this.itemData.itemResource().models().get("default");
+            return Objects.requireNonNull(this.itemData.itemResource()).models().get("default");
 
         return vanillaItem.components().get(DataComponents.ITEM_MODEL);
     }

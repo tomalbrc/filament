@@ -288,17 +288,19 @@ public class Json {
             return result.resultOrPartial().get().getFirst();
         }
 
-        private static RegistryOps.RegistryInfoLookup createContext(RegistryAccess registryAccess) {
+        public static RegistryOps.RegistryInfoLookup createContext(RegistryAccess registryAccess) {
             final Map<ResourceKey<? extends Registry<?>>, RegistryOps.RegistryInfo<?>> map = new HashMap<>();
             registryAccess.registries().forEach((registryEntry) -> map.put(registryEntry.key(), createInfoForContextRegistry(registryEntry.value())));
             return new RegistryOps.RegistryInfoLookup() {
+                @NotNull
+                @SuppressWarnings("unchecked")
                 public <T> Optional<RegistryOps.RegistryInfo<T>> lookup(ResourceKey<? extends Registry<? extends T>> resourceKey) {
                     return Optional.ofNullable((RegistryOps.RegistryInfo<T>)map.get(resourceKey));
                 }
             };
         }
 
-        private static <T> RegistryOps.RegistryInfo<T> createInfoForContextRegistry(Registry<T> registry) {
+        public static <T> RegistryOps.RegistryInfo<T> createInfoForContextRegistry(Registry<T> registry) {
             return new RegistryOps.RegistryInfo<>(registry, registry, registry.registryLifecycle());
         }
     }

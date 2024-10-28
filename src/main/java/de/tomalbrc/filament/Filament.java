@@ -9,8 +9,6 @@ import de.tomalbrc.filament.data.ItemGroupData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.*;
 import de.tomalbrc.filament.util.*;
-import eu.pb4.polymer.blocks.api.BlockModelType;
-import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
 import eu.pb4.polymer.core.api.block.PolymerBlockUtils;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.api.ModInitializer;
@@ -18,7 +16,9 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.LayeredRegistryAccess;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.RegistryLayer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 
 public class Filament implements ModInitializer {
     public static final Logger LOGGER = LogUtils.getLogger();
+    public static LayeredRegistryAccess<RegistryLayer> REGISTRY_ACCESS;
 
     @Override
     public void onInitialize() {
