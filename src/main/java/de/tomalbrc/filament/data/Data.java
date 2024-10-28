@@ -39,6 +39,7 @@ public abstract class Data {
 
     @NotNull
     public Map<DataComponentType<?>, JsonObject> getAdditionalComponents() {
+        if (this.additionalComponents == null) this.additionalComponents = new Object2ObjectOpenHashMap<>();
         return additionalComponents;
     }
 

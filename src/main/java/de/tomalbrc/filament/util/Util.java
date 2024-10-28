@@ -31,9 +31,11 @@ import net.minecraft.util.SegmentedAnglePrecision;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.Vec3;
@@ -229,6 +231,14 @@ public class Util {
         itemDisplayElement.setModelTransformation(data.properties().display);
 
         return itemDisplayElement;
+    }
+
+    public static void spawnAtLocation(Level level, Vec3 pos, ItemStack itemStack) {
+        if (!itemStack.isEmpty() && !level.isClientSide) {
+            ItemEntity itemEntity = new ItemEntity(level, pos.x(), pos.y(), pos.z(), itemStack);
+            itemEntity.setDefaultPickUpDelay();
+            level.addFreshEntity(itemEntity);
+        }
     }
 
     public static void loadDatapackContents(ResourceManager resourceManager) {

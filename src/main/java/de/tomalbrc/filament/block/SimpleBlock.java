@@ -51,7 +51,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     public SimpleBlock(BlockBehaviour.Properties properties, BlockData data) {
         super(properties);
 
-        this.initBehaviours(data.behaviourConfig());
+        this.initBehaviours(data.behaviour());
         this.breakEventState = data.properties().blockBase.defaultBlockState();
         this.blockData = data;
 

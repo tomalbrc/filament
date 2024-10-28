@@ -60,8 +60,8 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     public void setLevel(Level level) {
         super.setLevel(level);
         if (isMain() && level != null && this.decorationHolder == null) {
-            if (this.behaviours.isEmpty() && this.getDecorationData().behaviourConfig() != null && !this.getDecorationData().behaviourConfig().isEmpty())
-                this.initBehaviours(this.getDecorationData().behaviourConfig());
+            if (this.behaviours.isEmpty() && !this.getDecorationData().behaviour().isEmpty())
+                this.initBehaviours(this.getDecorationData().behaviour());
             this.getOrCreateHolder();
         }
     }
@@ -147,8 +147,8 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
     public void setupBehaviour(DecorationData decorationData) {
         // When placed, decorationId is not yet set?
-        if (this.isMain() && this.behaviours.isEmpty() && decorationData.behaviourConfig() != null) {
-            this.initBehaviours(decorationData.behaviourConfig());
+        if (this.isMain() && this.behaviours.isEmpty()) {
+            this.initBehaviours(decorationData.behaviour());
         }
     }
 

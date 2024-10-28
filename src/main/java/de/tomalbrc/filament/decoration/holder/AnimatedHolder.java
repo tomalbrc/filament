@@ -26,7 +26,7 @@ public class AnimatedHolder extends PositionedHolder {
         this.updateCullingBox();
 
         if (this.decorationBlockEntity.has(Behaviours.ANIMATION)) {
-            Animation.AnimationConfig animation = this.decorationBlockEntity.getDecorationData().behaviourConfig().get(Behaviours.ANIMATION);
+            Animation.AnimationConfig animation = this.decorationBlockEntity.getDecorationData(). behaviour().get(Behaviours.ANIMATION);
             this.setAnimationData(animation);
         }
     }
@@ -71,6 +71,7 @@ public class AnimatedHolder extends PositionedHolder {
 
                 if (this.decorationBlockEntity.has(Behaviours.CONTAINER)) {
                     Container container = this.decorationBlockEntity.get(Behaviours.CONTAINER);
+                    assert container != null;
 
                     if (container.getConfig().openAnimation != null) {
                         container.container.setOpenCallback(() -> {
