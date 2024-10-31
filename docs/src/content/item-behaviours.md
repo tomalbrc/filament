@@ -299,3 +299,9 @@ Defines behaviour for items capable of shooting custom projectiles or being shot
 - `translation`: Translation offset for the projectile. Defaults to `[0 0 0]`
 - `rotation`: Rotation for the projectile. Defaults to `[0 90 0]`
 - `scale`: Scale for the projectile. Defaults to `0.6`
+
+---
+
+## `shield` behaviour
+
+Makes the item usable as shield.
