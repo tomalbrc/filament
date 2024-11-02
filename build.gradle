@@ -31,6 +31,9 @@ dependencies {
     modImplementation ("eu.pb4:polymer-networking:${project.polymer_version}")
     modImplementation ("eu.pb4:polymer-autohost:${project.polymer_version}")
 
+    // Adventure API
+    modImplementation include("net.kyori:adventure-text-serializer-legacy:4.17.0")
+
     // BIL
     modImplementation include("de.tomalbrc:blockbench-import-library:${project.bil_version}")
 
