@@ -35,7 +35,7 @@ public class SimpleHolder extends ElementHolder {
             this.addElement(displayElement);
 
             if (!decorationBlock.getDecorationData().hasBlocks()) {
-                this.interactionElement = Util.decorationInteraction(pos, decorationBlock.getDecorationData());
+                this.interactionElement = Util.decorationInteraction(null, decorationBlock.getDecorationData());
                 this.addElement(interactionElement);
             }
         }
