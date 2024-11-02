@@ -129,6 +129,16 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Equipable
         }
 
         boolean propertyPlaceCheck = decorationData.properties().placement.canPlace(direction);
+        if (!propertyPlaceCheck && decorationData.properties().placement.floor() && !level.getBlockState(relativeBlockPos.relative(Direction.DOWN)).isAir()) {
+            direction = Direction.UP;
+            propertyPlaceCheck = decorationData.properties().placement.canPlace(direction);
+        }
+
+        if (!propertyPlaceCheck && decorationData.properties().placement.ceiling() && !level.getBlockState(relativeBlockPos.relative(Direction.UP)).isAir()) {
+            direction = Direction.DOWN;
+            propertyPlaceCheck = decorationData.properties().placement.canPlace(direction);
+        }
+
         float angle = DecorationItem.getVisualRotationYInDegrees(direction, rotation);
 
         if (player == null || !this.mayPlace(player, direction, itemStack, relativeBlockPos) || !propertyPlaceCheck) {
@@ -136,6 +146,7 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Equipable
         } else if (this.canPlaceAt(level, relativeBlockPos, angle) && itemStack.getItem() instanceof DecorationItem) {
             if (decorationData.hasBlocks()) {
                 int finalRotation = rotation;
+                Direction finalDirection = direction;
                 Util.forEachRotated(decorationData.blocks(), relativeBlockPos, angle, blockPos2 -> {
                     level.destroyBlock(blockPos2, false);
 
@@ -151,7 +162,7 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Equipable
                         blockState = blockState.setValue(DecorationBlock.WATERLOGGED, false);
 
                     if (decorationData.isSimple()) {
-                        blockState = blockState.setValue(SimpleDecorationBlock.FACING, direction);
+                        blockState = blockState.setValue(SimpleDecorationBlock.FACING, finalDirection);
                         blockState = blockState.setValue(SimpleDecorationBlock.ROTATION, (finalRotation + 4) % 8);
                     }
 
@@ -161,7 +172,7 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Equipable
                         decorationBlockEntity.setMain(new BlockPos(blockPos2).subtract(relativeBlockPos));
                         decorationBlockEntity.setItem(itemStack.copyWithCount(1));
                         decorationBlockEntity.setRotation(finalRotation);
-                        decorationBlockEntity.setDirection(direction);
+                        decorationBlockEntity.setDirection(finalDirection);
                         decorationBlockEntity.setupBehaviour(decorationData);
                         decorationBlockEntity.attach((ServerLevel) level);
                     }
