@@ -151,7 +151,7 @@ public class Util {
             element.setSize(1.f, blockEntity.getDirection().equals(Direction.DOWN) ? 1.f : .5f); // default
         }
 
-        var q = blockEntity.getDirection().getNormal();
+        var q = blockEntity.getDirection().getUnitVec3i();
         if (blockEntity.getDirection() != Direction.DOWN && blockEntity.getDirection() != Direction.UP) {
             element.setOffset(new Vec3(q.getX(), q.getY() + element.getHeight(), q.getZ()).multiply(1.f-element.getWidth(), 1, 1.f-element.getWidth()).scale(-0.5f));
         } else {
@@ -180,7 +180,7 @@ public class Util {
         }
 
         if (decorationBlockEntity != null) {
-            var q = decorationBlockEntity.getDirection().getNormal();
+            var q = decorationBlockEntity.getDirection().getUnitVec3i();
             if (decorationBlockEntity.getDirection() != Direction.DOWN && decorationBlockEntity.getDirection() != Direction.UP) {
                 element.setOffset(new Vec3(q.getX(), q.getY() + element.getHeight(), q.getZ()).multiply(1.f-element.getWidth(), 1, 1.f-element.getWidth()).scale(-0.5f));
             } else {
