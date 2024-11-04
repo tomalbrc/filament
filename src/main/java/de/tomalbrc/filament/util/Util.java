@@ -149,7 +149,6 @@ public class Util {
             }
         });
 
-
         if (blockEntity.getDecorationData() != null && blockEntity.getDecorationData().size() != null) {
             element.setSize(blockEntity.getDecorationData().size().x, blockEntity.getDecorationData().size().y);
         } else {
@@ -160,13 +159,13 @@ public class Util {
         if (blockEntity.getDirection() != Direction.DOWN && blockEntity.getDirection() != Direction.UP) {
             element.setOffset(new Vec3(q.getX(), q.getY() + element.getHeight(), q.getZ()).multiply(1.f-element.getWidth(), 1, 1.f-element.getWidth()).scale(-0.5f));
         } else {
-            element.setOffset(new Vec3(q.getX(), q.getY(), q.getZ()).multiply(1, blockEntity.getDirection() == Direction.DOWN ? 1.f-element.getHeight()/2.f : -1, 1).scale(0.5f));
+            element.setOffset(new Vec3(q.getX(), q.getY(), q.getZ()).add(0,  blockEntity.getDirection() == Direction.UP ? -1.5f : 0.5f + ((1.f-element.getHeight())), 0));
         }
 
         return element;
     }
 
-    public static InteractionElement decorationInteraction(DecorationBlockEntity decorationBlockEntity, DecorationData decorationData) {
+    public static InteractionElement decorationInteraction(DecorationData decorationData) {
         InteractionElement element = new InteractionElement();
         element.setHandler(new VirtualElement.InteractionHandler() {
             @Override
@@ -189,14 +188,7 @@ public class Util {
             element.setSize(1.f, 1.f);
         }
 
-        if (decorationBlockEntity != null) {
-            var q = decorationBlockEntity.getDirection().getNormal();
-            if (decorationBlockEntity.getDirection() != Direction.DOWN && decorationBlockEntity.getDirection() != Direction.UP) {
-                element.setOffset(new Vec3(q.getX(), q.getY() + element.getHeight(), q.getZ()).multiply(1.f-element.getWidth(), 1, 1.f-element.getWidth()).scale(-0.5f));
-            } else {
-                element.setOffset(new Vec3(q.getX(), q.getY(), q.getZ()).multiply(1, decorationBlockEntity.getDirection() == Direction.DOWN ? 1.f-element.getHeight()/2.f : -1, 1).scale(0.5f));
-            }
-        }
+        element.setOffset(new Vec3(0, -0.5f, 0));
 
         return element;
     }
