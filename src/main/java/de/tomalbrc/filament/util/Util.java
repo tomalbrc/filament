@@ -10,7 +10,6 @@ import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -121,9 +120,7 @@ public class Util {
     public static Vector2f barrierDimensions(List<DecorationData.BlockConfig> blockConfigs, float rotation) {
         if (!blockConfigs.isEmpty()) {
             List<BlockPos> posList = new ObjectArrayList<>();
-            Util.forEachRotated(blockConfigs, BlockPos.ZERO, rotation, blockPos2 -> {
-                posList.add(blockPos2);
-            });
+            Util.forEachRotated(blockConfigs, BlockPos.ZERO, rotation, posList::add);
             Optional<BoundingBox> boundingBox = BoundingBox.encapsulatingPositions(posList);
             if (boundingBox.isPresent()) {
                 return new Vector2f(java.lang.Math.max(boundingBox.get().getXSpan(), boundingBox.get().getZSpan()), boundingBox.get().getYSpan());
@@ -168,11 +165,6 @@ public class Util {
     public static InteractionElement decorationInteraction(DecorationData decorationData) {
         InteractionElement element = new InteractionElement();
         element.setHandler(new VirtualElement.InteractionHandler() {
-            @Override
-            public void interactAt(ServerPlayer player, InteractionHand hand, Vec3 pos) {
-
-            }
-
             @Override
             public void attack(ServerPlayer player) {
                 if (player.gameMode.getGameModeForPlayer() != GameType.ADVENTURE) {
@@ -277,38 +269,6 @@ public class Util {
             Item item = itemStack.getItem();
             itemStack.shrink(1);
             livingEntity.onEquippedItemBroken(item, slot);
-        }
-    }
-
-    public static void langGenerator(ResourcePackBuilder builder, String type, Map<ResourceLocation, Map<String, String>> names) {
-        Map<String, Map<String, Map<String, String>>> langEntries = new HashMap<>();
-
-        for (Map.Entry<ResourceLocation, Map<String, String>> entry : names.entrySet()) {
-            ResourceLocation id = entry.getKey();
-            Map<String, String> nameMap = entry.getValue();
-
-            for (Map.Entry<String, String> langEntry : nameMap.entrySet()) {
-                String lang = langEntry.getKey();
-                String name = langEntry.getValue();
-
-                if (name != null) {
-                    String serializedName = LegacyComponentSerializer.legacySection().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(name));
-                    String key = type + "." + id.getNamespace() + "." + id.getPath();
-                    langEntries
-                            .computeIfAbsent(id.getNamespace(), k -> new HashMap<>())
-                            .computeIfAbsent(lang, k -> new HashMap<>())
-                            .put(key, serializedName);
-                }
-            }
-        }
-        for (Map.Entry<String, Map<String, Map<String, String>>> namespaceEntry : langEntries.entrySet()) {
-            String namespace = namespaceEntry.getKey();
-            for (Map.Entry<String, Map<String, String>> langFileEntry : namespaceEntry.getValue().entrySet()) {
-                String lang = langFileEntry.getKey();
-                String langPath = "assets/" + namespace + "/lang/" + lang + ".json";
-                String jsonContent = Json.GSON.toJson(langFileEntry.getValue());
-                builder.addData(langPath, jsonContent.getBytes(StandardCharsets.UTF_8));
-            }
         }
     }
 }

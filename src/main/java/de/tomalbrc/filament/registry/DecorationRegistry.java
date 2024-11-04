@@ -68,7 +68,7 @@ public class DecorationRegistry {
         }
 
         decorationBlocks.put(data.id(), block);
-        BlockRegistry.registerBlock(data.displayName(), data.id(), block);
+        BlockRegistry.registerBlock(data.id(), block);
 
         Item.Properties properties = data.properties().toItemProperties();
 

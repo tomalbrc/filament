@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ItemRegistry {
-    private static final Map<ResourceLocation, Map<String, String>> itemNames = new HashMap<>();
     public static int REGISTERED_ITEMS = 0;
 
     public static void register(InputStream inputStream) throws IOException {
@@ -47,10 +46,6 @@ public class ItemRegistry {
         BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
 
         registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.ITEM_GROUP_ID);
-
-        if (data.displayName() != null) {
-            itemNames.putIfAbsent(data.id(), data.displayName());
-        }
 
         REGISTERED_ITEMS++;
     }
@@ -79,7 +74,7 @@ public class ItemRegistry {
                     Filament.LOGGER.error("Failed to load item resource \"{}\".", entry.getKey(), e);
                 }
             }
-            PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(builder -> Util.langGenerator(builder, "item", itemNames));
+
             if (!printedInfo) {
                 for (String s : Arrays.asList("Filament items registered: " + REGISTERED_ITEMS, "Filament blocks registered: " + BlockRegistry.REGISTERED_BLOCKS, "Filament decorations registered: " + DecorationRegistry.REGISTERED_DECORATIONS, "Filament decoration block entities registered: " + DecorationRegistry.REGISTERED_BLOCK_ENTITIES)) {
                     Filament.LOGGER.info(s);

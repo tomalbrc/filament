@@ -54,7 +54,7 @@ public class BlockRegistry {
         BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
         BehaviourUtil.postInitBlock(item, customBlock, customBlock, data.behaviourConfig());
 
-        BlockRegistry.registerBlock(data.displayName(), data.id(), customBlock);
+        BlockRegistry.registerBlock(data.id(), customBlock);
         ItemRegistry.registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.BLOCK_GROUP_ID);
 
         customBlock.postRegister();
@@ -62,11 +62,8 @@ public class BlockRegistry {
         REGISTERED_BLOCKS++;
     }
 
-    public static void registerBlock(@Nullable Map<String, String> name, ResourceLocation identifier, Block block) {
+    public static void registerBlock(ResourceLocation identifier, Block block) {
         Registry.register(BuiltInRegistries.BLOCK, identifier, block);
-        if (name != null) {
-            blockNames.putIfAbsent(identifier, name);
-        }
     }
 
     public static class BlockDataReloadListener implements SimpleSynchronousResourceReloadListener {
@@ -87,7 +84,6 @@ public class BlockRegistry {
                     Filament.LOGGER.error("Failed to load block resource \"{}\".", entry.getKey());
                 }
             }
-            PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(builder -> Util.langGenerator(builder, "block", blockNames));
         }
     }
 }
