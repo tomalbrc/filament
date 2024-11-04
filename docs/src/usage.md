@@ -43,8 +43,6 @@ Item-, block- and decoration configuration files share some common fields.
 Those are:
 
 - `id`: Identifier of the item/block/decoration.
-- `displayName`: An object that lets you specify translations for your item directly. This generates a lang file in the `filament` namespace.
-  - Example: `"&6displayName": {"en_us": "Hello World", "de_de": "&6Hallo Welt"}`
 - `blockResource`: Here you can specify models for different blocks-states or just a single model for simple blocks.
 - `itemResource`: Specifies the model of the item. Some item-behaviours may require you to provide models for their "states" (i.e. the `trap` behaviour) 
 - `properties`: Properties differ for each config type, but all share the [item properties](content/item-properties.md).
