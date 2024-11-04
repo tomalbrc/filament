@@ -111,7 +111,7 @@ public class VirtualDestroyStage extends ElementHolder {
     static {
         for (int i = 0; i < DESTROY_STAGE_MODELS.length; i++) {
             ItemStack stack = Items.STICK.getDefaultInstance();
-            stack.set(DataComponents.ITEM_MODEL, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "block/special/destroy_stage_" + i));
+            stack.set(DataComponents.ITEM_MODEL, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "item/special/destroy_stage_" + i));
             DESTROY_STAGE_MODELS[i] = stack;
         }
 
