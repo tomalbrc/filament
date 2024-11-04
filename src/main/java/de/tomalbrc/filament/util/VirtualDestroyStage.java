@@ -111,7 +111,7 @@ public class VirtualDestroyStage extends ElementHolder {
     static {
         for (int i = 0; i < DESTROY_STAGE_MODELS.length; i++) {
             ItemStack stack = Items.STICK.getDefaultInstance();
-            stack.set(DataComponents.ITEM_MODEL, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "item/special/destroy_stage_" + i));
+            stack.set(DataComponents.ITEM_MODEL, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "special/destroy_stage_" + i));
             DESTROY_STAGE_MODELS[i] = stack;
         }
 
@@ -126,7 +126,7 @@ public class VirtualDestroyStage extends ElementHolder {
 
         PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(x -> {
             for (var i = 0; i < DESTROY_STAGE_MODELS.length; i++) {
-                x.addData("assets/filament/models/block/special/destroy_stage_" + i + ".json", model.replace("|ID|", "" + i).getBytes(StandardCharsets.UTF_8));
+                x.addData("assets/filament/models/item/special/destroy_stage_" + i + ".json", model.replace("|ID|", "" + i).getBytes(StandardCharsets.UTF_8));
             }
         });
     }
