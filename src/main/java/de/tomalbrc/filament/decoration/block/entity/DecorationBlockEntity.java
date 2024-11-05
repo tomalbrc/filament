@@ -245,7 +245,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             }
 
             if (dropItem) {
-                Util.spawnAtLocation(this.getLevel(), this.getBlockPos().getCenter(), thisItemStack);
+                Util.spawnAtLocation(this.getLevel(), this.getBlockPos().getCenter(), thisItemStack.copy());
             }
 
             particleItem = thisItemStack.copyAndClear();
