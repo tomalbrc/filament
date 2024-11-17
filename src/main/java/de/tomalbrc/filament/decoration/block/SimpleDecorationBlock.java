@@ -67,12 +67,6 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithM
         if (this.getDecorationData().properties().showBreakParticles)
             Util.showBreakParticle((ServerLevel) level, blockPos, this.getDecorationData().properties().useItemParticles ? BuiltInRegistries.ITEM.get(this.decorationId).getDefaultInstance() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
 
-        if (!level.isClientSide() && this.getDecorationData().properties().drops) {
-            for (ItemStack drop : this.getDrops(blockState, null)) {
-                Util.spawnAtLocation(level, blockPos.getCenter(), drop);
-            }
-        }
-
         super.onRemove(blockState, level, blockPos, blockState2, bl);
     }
 }
