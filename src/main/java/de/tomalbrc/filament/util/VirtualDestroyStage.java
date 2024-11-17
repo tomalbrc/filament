@@ -1,6 +1,5 @@
 package de.tomalbrc.filament.util;
 
-import de.tomalbrc.filament.decoration.block.ComplexDecorationBlock;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
@@ -80,7 +79,7 @@ public class VirtualDestroyStage extends ElementHolder {
             ChunkAttachment.of(self, player.serverLevel(), vecPos);
             self.destroyElements().get(0).setTranslation(new Vector3f());
 
-            if (state.getBlock() instanceof ComplexDecorationBlock decorationBlock1 && decorationBlock1.getDecorationData().hasBlocks()) {
+            if (state.getBlock() instanceof DecorationBlock decorationBlock1 && decorationBlock1.getDecorationData().hasBlocks()) {
                 for (int i1 = 0; i1 < decorationBlock1.getDecorationData().countBlocks(); i1++) {
                     self.addElement(self.destroyElements().get(i1));
                 }

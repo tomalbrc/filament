@@ -85,12 +85,6 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
         if (this.getDecorationData().properties().showBreakParticles)
             Util.showBreakParticle((ServerLevel) level, this.getDecorationData().properties().useItemParticles ? BuiltInRegistries.ITEM.get(this.decorationId).orElseThrow().value().getDefaultInstance() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
 
-        if (!level.isClientSide() && !player.isCreative() && this.getDecorationData().properties().drops) {
-            for (ItemStack drop : this.getDrops(blockState, null)) {
-                Util.spawnAtLocation(level, blockPos.getCenter(), drop);
-            }
-        }
-
         return returnVal;
     }
 }
