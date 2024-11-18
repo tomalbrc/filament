@@ -33,10 +33,10 @@ import java.util.Map;
 @Mixin(value = LivingEntity.class)
 public abstract class LivingEntityMixin implements CosmeticInterface {
     @Unique
-    private final Map<ItemStack, CosmeticHolder> filamentCosmeticHolder = new Object2ObjectOpenHashMap<>();
+    private final Map<String, CosmeticHolder> filamentCosmeticHolder = new Object2ObjectOpenHashMap<>();
 
     @Unique
-    private final Map<ItemStack, AnimatedCosmeticHolder> filamentAnimatedCosmeticHolder = new Object2ObjectOpenHashMap<>();
+    private final Map<String, AnimatedCosmeticHolder> filamentAnimatedCosmeticHolder = new Object2ObjectOpenHashMap<>();
 
     @Inject(method = "getEquipmentSlotForItem", at = @At(value = "HEAD"), cancellable = true)
     private void filament$customGetEquipmentSlotForItem(ItemStack itemStack, CallbackInfoReturnable<EquipmentSlot> cir) {
@@ -53,11 +53,11 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
     @Inject(method = "onEquipItem", at = @At(value = "HEAD"))
     private void filament$customOnEquipItem(EquipmentSlot equipmentSlot, ItemStack itemStack, ItemStack itemStack2, CallbackInfo ci) {
         if (CosmeticUtil.isCosmetic(itemStack)) {
-            filament$destroyHolder(itemStack);
+            filament$destroyHolder(equipmentSlot.getName());
         }
 
         if (itemStack2.getItem() instanceof SimpleItem simpleItem && CosmeticUtil.isCosmetic(itemStack2) && simpleItem.get(Behaviours.COSMETIC).getConfig().slot == equipmentSlot) {
-            filament$addHolder(LivingEntity.class.cast(this), itemStack2.getItem(), itemStack2);
+            filament$addHolder(LivingEntity.class.cast(this), itemStack2.getItem(), itemStack2, equipmentSlot.getName());
         }
     }
 
@@ -71,19 +71,20 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
 
     @Inject(method = "remove", at = @At(value = "HEAD"))
     private void filament$onRemove(Entity.RemovalReason removalReason, CallbackInfo ci) {
-        for (ItemStack itemStack : LivingEntity.class.cast(this).getArmorSlots()) {
+        var self = LivingEntity.class.cast(this);
+        for (ItemStack itemStack : self.getArmorSlots()) {
             if (CosmeticUtil.isCosmetic(itemStack))
-                filament$destroyHolder(itemStack);
+                filament$destroyHolder(self.getEquipmentSlotForItem(itemStack).getName());
         }
     }
 
     @Unique
     @Override
-    public void filament$addHolder(LivingEntity livingEntity, Item simpleItem, ItemStack itemStack) {
+    public void filament$addHolder(LivingEntity livingEntity, Item simpleItem, ItemStack itemStack, String slot) {
         Cosmetic.Config cosmeticData = CosmeticUtil.getCosmeticData(simpleItem);
 
         if (cosmeticData.model != null) {
-            if (!filamentAnimatedCosmeticHolder.containsKey(itemStack)) {
+            if (!filamentAnimatedCosmeticHolder.containsKey(slot)) {
                 var animatedCosmeticHolder = new AnimatedCosmeticHolder(livingEntity, ModelRegistry.getModel(cosmeticData.model));
                 EntityAttachment.ofTicking(animatedCosmeticHolder, livingEntity);
 
@@ -93,34 +94,34 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
                 if (cosmeticData.autoplay != null) {
                     animatedCosmeticHolder.getAnimator().playAnimation(cosmeticData.autoplay);
                 }
-                filamentAnimatedCosmeticHolder.put(itemStack, animatedCosmeticHolder);
+                filamentAnimatedCosmeticHolder.put(slot, animatedCosmeticHolder);
             }
         }
         else {
-            if (!filamentCosmeticHolder.containsKey(itemStack)) {
+            if (!filamentCosmeticHolder.containsKey(slot)) {
                 var cosmeticHolder = new CosmeticHolder(livingEntity, itemStack);
                 EntityAttachment.ofTicking(cosmeticHolder, livingEntity);
 
                 if (livingEntity instanceof ServerPlayer serverPlayer)
                     cosmeticHolder.startWatching(serverPlayer);
 
-                filamentCosmeticHolder.put(itemStack, cosmeticHolder);
+                filamentCosmeticHolder.put(slot, cosmeticHolder);
             }
         }
     }
 
     @Unique
     @Override
-    public void filament$destroyHolder(ItemStack itemStack) {
-        if (filamentAnimatedCosmeticHolder.containsKey(itemStack)) {
-            filamentAnimatedCosmeticHolder.get(itemStack).getAttachment().destroy();
-            filamentAnimatedCosmeticHolder.get(itemStack).destroy();
-            filamentAnimatedCosmeticHolder.remove(itemStack);
+    public void filament$destroyHolder(String slot) {
+        if (filamentAnimatedCosmeticHolder.containsKey(slot)) {
+            filamentAnimatedCosmeticHolder.get(slot).getAttachment().destroy();
+            filamentAnimatedCosmeticHolder.get(slot).destroy();
+            filamentAnimatedCosmeticHolder.remove(slot);
         }
-        if (filamentCosmeticHolder.containsKey(itemStack)) {
-            filamentCosmeticHolder.get(itemStack).getAttachment().destroy();
-            filamentCosmeticHolder.get(itemStack).destroy();
-            filamentCosmeticHolder.remove(itemStack);
+        if (filamentCosmeticHolder.containsKey(slot)) {
+            filamentCosmeticHolder.get(slot).getAttachment().destroy();
+            filamentCosmeticHolder.get(slot).destroy();
+            filamentCosmeticHolder.remove(slot);
         }
     }
 }

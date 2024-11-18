@@ -3,7 +3,6 @@ package de.tomalbrc.filament.mixin.behaviour.cosmetic;
 import de.tomalbrc.filament.cosmetic.CosmeticInterface;
 import de.tomalbrc.filament.cosmetic.CosmeticUtil;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,8 +17,8 @@ public abstract class ServerPlayerMixin implements CosmeticInterface {
             var slots = serverPlayer.getArmorSlots();
             for (ItemStack item : slots) {
                 if (!item.isEmpty() && CosmeticUtil.isCosmetic(item)) {
-                    filament$destroyHolder(item);
-                    filament$addHolder(serverPlayer, item.getItem(), item);
+                    filament$destroyHolder(serverPlayer.getEquipmentSlotForItem(item).getName());
+                    filament$addHolder(serverPlayer, item.getItem(), item, serverPlayer.getEquipmentSlotForItem(item).getName());
                 }
             }
         }
@@ -28,10 +27,12 @@ public abstract class ServerPlayerMixin implements CosmeticInterface {
     @Inject(method = "hasChangedDimension", at = @At("TAIL"))
     private void filament$onChangeDimension(CallbackInfo ci) {
         if ((Object)this instanceof ServerPlayer serverPlayer) {
-            var item = serverPlayer.getItemBySlot(EquipmentSlot.CHEST);
-            if (!item.isEmpty() && CosmeticUtil.isCosmetic(item)) {
-                filament$destroyHolder(item);
-                filament$addHolder(serverPlayer, item.getItem(), item);
+            var slots = serverPlayer.getArmorSlots();
+            for (ItemStack item : slots) {
+                if (!item.isEmpty() && CosmeticUtil.isCosmetic(item)) {
+                    filament$destroyHolder(serverPlayer.getEquipmentSlotForItem(item).getName());
+                    filament$addHolder(serverPlayer, item.getItem(), item, serverPlayer.getEquipmentSlotForItem(item).getName());
+                }
             }
         }
     }
