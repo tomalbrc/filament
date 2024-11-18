@@ -7,5 +7,5 @@ import net.minecraft.world.item.ItemStack;
 public interface CosmeticInterface {
     void filament$addHolder(LivingEntity livingEntity, Item item, ItemStack itemStack);
 
-    void filament$destroyHolder();
+    void filament$destroyHolder(ItemStack itemStack);
 }
