@@ -115,12 +115,8 @@ public class DecorationRegistry {
         return decorations.get(resourceLocation);
     }
 
-    public static boolean isDecoration(Block block) {
-        return decorationBlocks.containsValue(block);
-    }
-
     public static boolean isDecoration(BlockState blockState) {
-        return isDecoration(blockState.getBlock());
+        return blockState.getBlock() instanceof DecorationBlock;
     }
 
     public static DecorationBlock getDecorationBlock(ResourceLocation resourceLocation) {
