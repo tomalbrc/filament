@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.data.properties.DecorationProperties;
+import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
@@ -18,12 +19,12 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 public record DecorationData(
         @NotNull ResourceLocation id,
-        @NotNull ResourceLocation model,
+        @Nullable ResourceLocation model,
+        @Nullable ItemResource itemResource,
 
         @Nullable Item vanillaItem,
 
@@ -67,7 +68,7 @@ public record DecorationData(
     }
 
     public PolymerModelData requestModel() {
-        return PolymerResourcePackUtils.requestModel(vanillaItem != null ? vanillaItem : Items.GUNPOWDER, model);
+        return PolymerResourcePackUtils.requestModel(vanillaItem != null ? vanillaItem : Items.GUNPOWDER, model == null ? Objects.requireNonNull(itemResource).models().get("default") : model);
     }
 
     public boolean isContainer() {
