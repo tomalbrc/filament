@@ -41,18 +41,12 @@ public final class ItemData extends Data {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
         var that = (ItemData) obj;
-        return Objects.equals(this.id, that.id) &&
-                Objects.equals(this.vanillaItem, that.vanillaItem) &&
-                Objects.equals(this.itemResource, that.itemResource) &&
-                Objects.equals(this.behaviour, that.behaviour) &&
-                Objects.equals(this.properties, that.properties) &&
-                Objects.equals(this.components, that.components) &&
-                Objects.equals(this.group, that.group);
+        return Objects.equals(this.id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, vanillaItem, itemResource, behaviour, properties, components, group);
+        return Objects.hash(id);
     }
 
     @Override

@@ -25,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public final class BlockData extends Data {
     private final @NotNull BlockResource blockResource;
     private final @Nullable BlockStateMappedProperty<BlockModelType> blockModelType;
@@ -122,20 +123,12 @@ public final class BlockData extends Data {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
         var that = (BlockData) obj;
-        return Objects.equals(this.id, that.id) &&
-                Objects.equals(this.vanillaItem, that.vanillaItem) &&
-                Objects.equals(this.blockResource, that.blockResource) &&
-                Objects.equals(this.itemResource, that.itemResource) &&
-                Objects.equals(this.blockModelType, that.blockModelType) &&
-                Objects.equals(this.properties, that.properties) &&
-                Objects.equals(this.behaviour, that.behaviour) &&
-                Objects.equals(this.components, that.components) &&
-                Objects.equals(this.group, that.group);
+        return Objects.equals(this.id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, vanillaItem, blockResource, itemResource, blockModelType, properties, behaviour, components, group);
+        return Objects.hash(id);
     }
 
     @Override

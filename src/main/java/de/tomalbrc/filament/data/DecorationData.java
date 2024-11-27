@@ -18,8 +18,9 @@ import org.joml.Vector3f;
 import java.util.List;
 import java.util.Objects;
 
+@SuppressWarnings("unused")
 public final class DecorationData extends Data {
-    private final @NotNull ResourceLocation model;
+    private final @Nullable ResourceLocation model;
     private final @Nullable List<BlockConfig> blocks;
     private final @Nullable Vector2f size;
     private final @Nullable DecorationProperties properties;
@@ -32,7 +33,7 @@ public final class DecorationData extends Data {
             @Nullable DataComponentMap components,
             @Nullable ResourceLocation itemGroup,
             @Nullable DecorationProperties properties,
-            @NotNull ResourceLocation model,
+            @Nullable ResourceLocation model,
             @Nullable List<BlockConfig> blocks,
             @Nullable Vector2f size
     ) {
@@ -80,7 +81,12 @@ public final class DecorationData extends Data {
     }
 
     public @NotNull ResourceLocation model() {
-        return model;
+        if (model == null) {
+            assert itemResource != null;
+            return itemResource.models().get("default");
+        } else {
+            return model;
+        }
     }
 
     public @Nullable List<BlockConfig> blocks() {
@@ -96,28 +102,18 @@ public final class DecorationData extends Data {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
         var that = (DecorationData) obj;
-        return Objects.equals(this.id, that.id) &&
-                Objects.equals(this.model, that.model) &&
-                Objects.equals(this.itemResource, that.itemResource) &&
-                Objects.equals(this.vanillaItem, that.vanillaItem) &&
-                Objects.equals(this.blocks, that.blocks) &&
-                Objects.equals(this.size, that.size) &&
-                Objects.equals(this.properties, that.properties) &&
-                Objects.equals(this.behaviour, that.behaviour) &&
-                Objects.equals(this.components, that.components) &&
-                Objects.equals(this.group, that.group);
+        return Objects.equals(this.id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, model, itemResource, vanillaItem, blocks, size, properties, behaviour, components, group);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "DecorationData[" +
                 "id=" + id + ", " +
-                "model=" + model + ", " +
                 "itemResource=" + itemResource + ", " +
                 "vanillaItem=" + vanillaItem + ", " +
                 "blocks=" + blocks + ", " +
