@@ -6,8 +6,6 @@ import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
-import de.tomalbrc.filament.util.Util;
-import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
@@ -22,7 +20,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 public class ItemRegistry {

@@ -8,8 +8,6 @@ import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
-import de.tomalbrc.filament.util.Util;
-import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
@@ -20,7 +18,6 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
