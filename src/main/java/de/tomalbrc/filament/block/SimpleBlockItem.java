@@ -31,6 +31,7 @@ public class SimpleBlockItem extends SimpleItem implements PolymerItem, Behaviou
     }
 
     private static ResourceLocation removeItemPrefix(ResourceLocation resourceLocation) {
-        return ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), resourceLocation.getPath().startsWith("item/") ? resourceLocation.getPath().substring("item/".length()) : resourceLocation.getPath());
+        var path = resourceLocation.getPath();
+        return ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), path.startsWith("item/") ? path.substring("item/".length()) : path);
     }
 }
