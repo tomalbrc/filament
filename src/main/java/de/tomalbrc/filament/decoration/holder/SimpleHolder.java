@@ -8,6 +8,7 @@ import eu.pb4.polymer.virtualentity.api.attachment.ChunkAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class SimpleHolder extends ElementHolder {
@@ -31,7 +32,7 @@ public class SimpleHolder extends ElementHolder {
         if (DecorationRegistry.isDecoration(blockState) && this.displayElement == null) {
             SimpleDecorationBlock decorationBlock = (SimpleDecorationBlock) blockState.getBlock();
 
-            this.displayElement = Util.decorationItemDisplay(decorationBlock.getDecorationData(), blockState.getValue(SimpleDecorationBlock.FACING), Util.SEGMENTED_ANGLE8.toDegrees(blockState.getValue(SimpleDecorationBlock.ROTATION)));
+            this.displayElement = Util.decorationItemDisplay(decorationBlock.getDecorationData(), Direction.UP, Util.SEGMENTED_ANGLE8.toDegrees(blockState.getValue(SimpleDecorationBlock.ROTATION)));
             this.addElement(displayElement);
 
             if (!decorationBlock.getDecorationData().hasBlocks()) {

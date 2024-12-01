@@ -28,14 +28,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class SimpleDecorationBlock extends DecorationBlock implements BlockWithElementHolder {
-    public static final EnumProperty<Direction> FACING = BlockStateProperties.FACING;
     public static final IntegerProperty ROTATION = IntegerProperty.create("rotation", 0, 7);
 
     public SimpleDecorationBlock(Properties properties, ResourceLocation decorationId) {
         super(properties, decorationId);
 
         this.registerDefaultState(this.defaultBlockState()
-                .setValue(FACING, Direction.UP)
                 .setValue(ROTATION, 0)
         );
     }
@@ -43,25 +41,12 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(FACING, ROTATION);
+        builder.add(ROTATION);
     }
 
     @Nullable
     public ElementHolder createElementHolder(ServerLevel world, BlockPos pos, BlockState initialBlockState) {
         return new SimpleHolder();
-    }
-
-    @Override
-    protected void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
-        if (!this.getDecorationData().hasBlocks()) {
-            SoundEvent breakSound = this.getDecorationData().properties().blockBase.defaultBlockState().getSoundType().getBreakSound();
-            level.playSound(null, blockPos,  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);
-        }
-
-        if (this.getDecorationData().properties().showBreakParticles)
-            Util.showBreakParticle((ServerLevel) level, this.getDecorationData().properties().useItemParticles ? BuiltInRegistries.ITEM.get(this.decorationId).orElseThrow().value().getDefaultInstance() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
-
-        super.onRemove(blockState, level, blockPos, blockState2, bl);
     }
 
     @Override
@@ -74,17 +59,14 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
     }
 
     @Override
-    @MethodsReturnNonnullByDefault
-    public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
-        BlockState returnVal = super.playerWillDestroy(level, blockPos, blockState, player);
+    protected void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
         if (!this.getDecorationData().hasBlocks()) {
             SoundEvent breakSound = this.getDecorationData().properties().blockBase.defaultBlockState().getSoundType().getBreakSound();
             level.playSound(null, blockPos,  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
-
         if (this.getDecorationData().properties().showBreakParticles)
-            Util.showBreakParticle((ServerLevel) level, this.getDecorationData().properties().useItemParticles ? BuiltInRegistries.ITEM.get(this.decorationId).orElseThrow().value().getDefaultInstance() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+            Util.showBreakParticle((ServerLevel) level, blockPos, this.getDecorationData().properties().useItemParticles ? BuiltInRegistries.ITEM.get(this.decorationId).getDefaultInstance() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
 
-        return returnVal;
+        super.onRemove(blockState, level, blockPos, blockState2, bl);
     }
 }

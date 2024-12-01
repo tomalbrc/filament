@@ -5,12 +5,13 @@ import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.util.VirtualDestroyStage;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
@@ -28,8 +29,11 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.packettweaker.PacketContext;
+
+import java.util.function.BiConsumer;
 
 public abstract class DecorationBlock extends Block implements PolymerBlock, SimpleWaterloggedBlock, VirtualDestroyStage.Marker {
     final protected ResourceLocation decorationId;
@@ -74,7 +78,14 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
     }
 
     @Override
-    @MethodsReturnNonnullByDefault
+    public void onExplosionHit(BlockState blockState, ServerLevel level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
+        if (!blockState.isAir() && explosion.getBlockInteraction() != Explosion.BlockInteraction.TRIGGER_BLOCK) {
+            this.removeDecoration(level, blockPos, null);
+        }
+    }
+
+    @Override
+    @NotNull
     public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
         BlockState returnVal = super.playerWillDestroy(level, blockPos, blockState, player);
         this.removeDecoration(level, blockPos, player);
@@ -89,7 +100,7 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
     }
 
     @Override
-    @MethodsReturnNonnullByDefault
+    @NotNull
     public VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
         if (blockState.getValue(PASSTHROUGH)) {
             return Shapes.empty();
@@ -102,7 +113,8 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
     public boolean canPlaceLiquid(@Nullable Player player, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
         if (DecorationRegistry.isDecoration(blockState) &&
                 ((DecorationBlock) blockState.getBlock()).getDecorationData() != null &&
-                ((DecorationBlock) blockState.getBlock()).getDecorationData().properties().waterloggable || !((DecorationBlock) blockState.getBlock()).getDecorationData().properties().solid) {
+                (((DecorationBlock) blockState.getBlock()).getDecorationData().properties().waterloggable ||
+                !((DecorationBlock) blockState.getBlock()).getDecorationData().properties().solid)) {
             return fluid == Fluids.WATER || fluid == Fluids.FLOWING_WATER;
         }
         return false;
@@ -121,13 +133,13 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
     }
 
     @Override
-    @MethodsReturnNonnullByDefault
+    @NotNull
     public FluidState getFluidState(BlockState blockState) {
         return blockState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(blockState);
     }
 
     @Override
-    @MethodsReturnNonnullByDefault
+    @NotNull
     protected BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
         if (blockState.getValue(WATERLOGGED)) {
             scheduledTickAccess.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelReader));

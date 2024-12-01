@@ -158,7 +158,6 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Behaviour
                         blockState = blockState.setValue(DecorationBlock.WATERLOGGED, false);
 
                     if (decorationData.isSimple()) {
-                        blockState = blockState.setValue(SimpleDecorationBlock.FACING, finalDirection);
                         blockState = blockState.setValue(SimpleDecorationBlock.ROTATION, (finalRotation + 4) % 8);
                     }
 
@@ -190,7 +189,6 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Behaviour
                 }
 
                 if (decorationData.isSimple()) {
-                    blockState = blockState.setValue(SimpleDecorationBlock.FACING, direction);
                     blockState = blockState.setValue(SimpleDecorationBlock.ROTATION, (rotation + 4) % 8);
                 }
 
