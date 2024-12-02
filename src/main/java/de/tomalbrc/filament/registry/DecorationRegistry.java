@@ -48,7 +48,9 @@ public class DecorationRegistry {
     }
 
     static public void register(DecorationData data) {
-        if (decorations.containsKey(data.id())) return;
+        for (Map.Entry<ResourceLocation, DecorationData> entry : decorations.entrySet()) {
+            if (entry.getKey().equals(data.id())) return;
+        }
 
         decorations.put(data.id(), data);
 
