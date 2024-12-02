@@ -178,7 +178,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
         DecorationData decorationData = this.getDecorationData();
         if (decorationData == null) {
-            Filament.LOGGER.warn("Can't interact with decoration: Missing decoration data! Location: " + location.toString());
+            Filament.LOGGER.warn("Can't interact with decoration: Missing decoration data! Location: {}", location.toString());
             return InteractionResult.FAIL;
         }
 
