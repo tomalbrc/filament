@@ -12,7 +12,7 @@ import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.component.DataComponents;
@@ -37,9 +37,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class DecorationRegistry {
-    private static final Object2ObjectOpenHashMap<ResourceLocation, DecorationData> decorations = new Object2ObjectOpenHashMap<>();
-    private static final Object2ObjectOpenHashMap<ResourceLocation, Block> decorationBlocks = new Object2ObjectOpenHashMap<>();
-    private static final Object2ObjectOpenHashMap<Block, BlockEntityType<DecorationBlockEntity>> decorationBlockEntities = new Object2ObjectOpenHashMap<>();
+    private static final Reference2ObjectOpenHashMap<ResourceLocation, DecorationData> decorations = new Reference2ObjectOpenHashMap<>();
+    private static final Reference2ObjectOpenHashMap<ResourceLocation, Block> decorationBlocks = new Reference2ObjectOpenHashMap<>();
+    private static final Reference2ObjectOpenHashMap<Block, BlockEntityType<DecorationBlockEntity>> decorationBlockEntities = new Reference2ObjectOpenHashMap<>();
     public static int REGISTERED_BLOCK_ENTITIES = 0;
     public static int REGISTERED_DECORATIONS = 0;
 
@@ -64,7 +64,7 @@ public class DecorationRegistry {
             decorationBlockEntities.put(block, DECORATION_BLOCK_ENTITY);
             REGISTERED_BLOCK_ENTITIES++;
         } else {
-            block = new SimpleDecorationBlock(props, data.id());
+            block = new SimpleDecorationBlock(props.noLootTable(), data.id());
         }
 
         decorationBlocks.put(data.id(), block);

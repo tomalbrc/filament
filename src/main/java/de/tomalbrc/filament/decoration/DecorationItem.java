@@ -182,8 +182,6 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Equipable
                 BlockState blockState = DecorationRegistry.getDecorationBlock(decorationData.id()).getStateForPlacement(blockPlaceContext);
                 assert blockState != null;
 
-                blockState = blockState.setValue(DecorationBlock.PASSTHROUGH, true);
-
                 if (!decorationData.properties().waterloggable) {
                     blockState = blockState.setValue(DecorationBlock.WATERLOGGED, false);
                 }
