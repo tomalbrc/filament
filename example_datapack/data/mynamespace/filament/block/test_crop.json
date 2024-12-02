@@ -14,7 +14,7 @@
     }
   },
   "properties" : {
-    "blockBase" : "minecraft:sugar_cane",
+    "blockBase" : "minecraft:sugarcane",
     "transparent": true,
     "solid": false,
     "replaceable": false,
