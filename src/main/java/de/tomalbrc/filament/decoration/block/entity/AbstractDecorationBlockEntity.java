@@ -18,7 +18,6 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     public static final String MAIN = "Main";
     public static final String VERSION = "V";
     public static final String ITEM = "Item";
-    public static final String PASSTHROUGH = "Passthrough";
     public static final String ROTATION = "Rotation";
     public static final String DIRECTION = "Direction";
 
@@ -30,8 +29,6 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     protected Direction direction = Direction.UP;
 
     protected ItemStack itemStack;
-
-    private boolean passthrough = false;
 
     public AbstractDecorationBlockEntity(BlockPos pos, BlockState state) {
         super(DecorationRegistry.getBlockEntityType(state), pos, state);
@@ -77,11 +74,6 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
             this.itemStack = BuiltInRegistries.ITEM.get(((DecorationBlock)this.getBlockState().getBlock()).getDecorationData().id()).orElseThrow().value().getDefaultInstance();
         }
 
-        if (compoundTag.contains(PASSTHROUGH)) {
-            this.passthrough = compoundTag.getBoolean(PASSTHROUGH);
-            this.setCollision(!this.passthrough);
-        }
-
         if (!this.isMain())
             return;
 
@@ -102,7 +94,7 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
         }
 
         if (this.itemStack == null && this.level != null) {
-            Filament.LOGGER.error("No item for decoration! Removing decoration block entity at " + this.getBlockPos().toShortString());
+            Filament.LOGGER.error("No item for decoration! Removing decoration block entity at {}", this.getBlockPos().toShortString());
             this.level.destroyBlock(this.getBlockPos(), false);
             this.setRemoved();
             return;
@@ -115,7 +107,6 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
 
         compoundTag.put(MAIN, NbtUtils.writeBlockPos(this.main));
         compoundTag.putInt(VERSION, this.version);
-        compoundTag.putBoolean(PASSTHROUGH, this.passthrough);
 
         if (this.isMain()) {
             compoundTag.putInt(ROTATION, this.rotation);
@@ -125,11 +116,6 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
 
     abstract protected void destroyBlocks(ItemStack particleItem);
     abstract protected void destroyStructure(boolean dropItems);
-    abstract protected void setCollisionStructure(boolean collisionStructure);
-
-    protected void setCollision(boolean collision) {
-        this.getBlockState().setValue(DecorationBlock.PASSTHROUGH, !collision);
-    }
 
     public Direction getDirection() {
         return this.direction;

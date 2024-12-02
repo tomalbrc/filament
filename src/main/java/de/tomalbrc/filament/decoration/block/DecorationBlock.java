@@ -41,7 +41,6 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
     public static final IntegerProperty LIGHT_LEVEL = BlockStateProperties.LEVEL;
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    public static final BooleanProperty PASSTHROUGH = BooleanProperty.create("passthrough");
 
     public DecorationBlock(Properties properties, ResourceLocation decorationId) {
         super(properties);
@@ -52,7 +51,6 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
 
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(LIGHT_LEVEL, 0)
-                .setValue(PASSTHROUGH, false)
                 .setValue(WATERLOGGED, false)
         );
     }
@@ -66,13 +64,14 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(LIGHT_LEVEL, PASSTHROUGH, WATERLOGGED);
+        builder.add(LIGHT_LEVEL, WATERLOGGED);
     }
 
     @Override
     public BlockState getPolymerBlockState(BlockState state, PacketContext packetContext) {
-        var block = state.getValue(DecorationBlock.PASSTHROUGH) ? state.getValue(DecorationBlock.WATERLOGGED) ? Blocks.WATER : Blocks.AIR : Blocks.BARRIER;
-        return state.getValue(DecorationBlock.WATERLOGGED) && !state.getValue(DecorationBlock.PASSTHROUGH) ?
+        var passthrough = !getDecorationData().hasBlocks();
+        var block = passthrough ? state.getValue(DecorationBlock.WATERLOGGED) ? Blocks.WATER : Blocks.AIR : Blocks.BARRIER;
+        return state.getValue(DecorationBlock.WATERLOGGED) && !passthrough ?
                 block.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, true) :
                 block.defaultBlockState();
     }
@@ -102,7 +101,7 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
     @Override
     @NotNull
     public VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
-        if (blockState.getValue(PASSTHROUGH)) {
+        if (!getDecorationData().hasBlocks()) {
             return Shapes.empty();
         } else {
             return Shapes.block();
@@ -153,6 +152,8 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
     public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {
         FluidState fluidState = blockPlaceContext.getLevel().getFluidState(blockPlaceContext.getClickedPos());
         boolean bl = fluidState.isSource() && fluidState.getType() == Fluids.WATER;
-        return super.getStateForPlacement(blockPlaceContext).setValue(WATERLOGGED, bl);
+        var res = super.getStateForPlacement(blockPlaceContext);
+        assert res != null;
+        return res.setValue(WATERLOGGED, bl);
     }
 }

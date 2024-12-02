@@ -261,19 +261,6 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             holder.getAttachment().destroy();
     }
 
-    @Override
-    protected void setCollisionStructure(boolean collisionStructure) {
-        if (this.getDecorationData() != null && this.getDecorationData().blocks() != null) {
-            Util.forEachRotated(this.getDecorationData().blocks(), this.getBlockPos(), this.getVisualRotationYInDegrees(), blockPos -> {
-                BlockState blockState = this.getBlockState();
-
-                if (DecorationRegistry.isDecoration(blockState)) {
-                    blockState.setValue(DecorationBlock.PASSTHROUGH, !collisionStructure);
-                }
-            });
-        }
-    }
-
     public DecorationData getDecorationData() {
         return ((DecorationBlock)this.getBlockState().getBlock()).getDecorationData();
     }

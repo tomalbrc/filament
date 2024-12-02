@@ -21,8 +21,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.storage.loot.LootParams;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -49,9 +47,7 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
         return new SimpleHolder();
     }
 
-    @Override
-    @NotNull
-    public List<ItemStack> getDrops(BlockState blockState, LootParams.Builder builder) {
+    public List<ItemStack> getDrops() {
         if (this.getDecorationData().properties().drops) {
             return List.of(BuiltInRegistries.ITEM.get(this.decorationId).orElseThrow().value().getDefaultInstance());
         }
@@ -66,6 +62,12 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
         }
         if (this.getDecorationData().properties().showBreakParticles)
             Util.showBreakParticle((ServerLevel) level, blockPos, this.getDecorationData().properties().useItemParticles ? BuiltInRegistries.ITEM.get(this.decorationId).getDefaultInstance() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+
+        if (!level.isClientSide() && this.getDecorationData().properties().drops && blockState.getBlock() instanceof SimpleDecorationBlock) {
+            for (ItemStack drop : this.getDrops()) {
+                Util.spawnAtLocation(level, blockPos.getCenter(), drop);
+            }
+        }
 
         super.onRemove(blockState, level, blockPos, blockState2, bl);
     }

@@ -1,5 +1,5 @@
 {
-  "id": "provim:example_chest",
+  "id": "mynamespace:example_chest",
   "model": "minecraft:custom/furniture/chests/example_chest",
   "properties": {
     "rotate": true

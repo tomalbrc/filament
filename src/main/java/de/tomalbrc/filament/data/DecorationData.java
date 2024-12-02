@@ -75,7 +75,7 @@ public final class DecorationData extends Data {
         boolean singleBlock = (!this.hasBlocks() || Util.barrierDimensions(Objects.requireNonNull(this.blocks()), 0).equals(1, 1));
         boolean hasBehaviour = !this.behaviour().isEmpty();
         boolean canBeDyed = this.vanillaItem != null && (vanillaItem == Items.LEATHER_HORSE_ARMOR || vanillaItem == Items.FIREWORK_STAR);
-        boolean groundOnly = this.properties != null && !(this.properties.placement.wall() || this.properties.placement.ceiling());
+        boolean groundOnly = !this.properties().placement.wall() && !this.properties().placement.ceiling();
 
         return groundOnly && !canBeDyed && !hasBehaviour && (singleBlock || this.size != null);
     }
