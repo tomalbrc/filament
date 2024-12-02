@@ -58,10 +58,10 @@ public class DecorationRegistry {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     static public void register(DecorationData data) {
-        if (decorations.containsKey(data.id())) {
-            decorations.put(data.id(), data); // replace anyway for /reload
-            return;
+        for (Map.Entry<ResourceLocation, DecorationData> entry : decorations.entrySet()) {
+            if (entry.getKey().equals(data.id())) return;
         }
+
         decorations.put(data.id(), data);
 
         BlockBehaviour.Properties blockProperties = data.properties().toBlockProperties();
