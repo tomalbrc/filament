@@ -52,12 +52,14 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
 
     @Inject(method = "onEquipItem", at = @At(value = "HEAD"))
     private void filament$customOnEquipItem(EquipmentSlot equipmentSlot, ItemStack itemStack, ItemStack itemStack2, CallbackInfo ci) {
-        if (CosmeticUtil.isCosmetic(itemStack)) {
-            filament$destroyHolder(equipmentSlot.getName());
+        boolean isHandSlot = (equipmentSlot == EquipmentSlot.MAINHAND || equipmentSlot == EquipmentSlot.OFFHAND);
+
+        if (itemStack2.getItem() instanceof SimpleItem simpleItem && CosmeticUtil.isCosmetic(itemStack2) && !isHandSlot) {
+            filament$destroyHolder(simpleItem.get(Behaviours.COSMETIC).getConfig().slot.getName());
         }
 
-        if (itemStack2.getItem() instanceof SimpleItem simpleItem && CosmeticUtil.isCosmetic(itemStack2) && simpleItem.get(Behaviours.COSMETIC).getConfig().slot == equipmentSlot) {
-            filament$addHolder(LivingEntity.class.cast(this), itemStack2.getItem(), itemStack2, equipmentSlot.getName());
+        if (itemStack.getItem() instanceof SimpleItem simpleItem && CosmeticUtil.isCosmetic(itemStack) && isHandSlot) {
+            filament$addHolder(LivingEntity.class.cast(this), itemStack.getItem(), itemStack, simpleItem.get(Behaviours.COSMETIC).getConfig().slot.getName());
         }
     }
 
