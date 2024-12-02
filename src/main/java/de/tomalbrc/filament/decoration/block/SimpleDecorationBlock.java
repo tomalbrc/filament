@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.decoration.block;
 
+import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.holder.SimpleHolder;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
@@ -56,14 +57,15 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
 
     @Override
     protected void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
-        if (!this.getDecorationData().hasBlocks()) {
-            SoundEvent breakSound = this.getDecorationData().properties().blockBase.defaultBlockState().getSoundType().getBreakSound();
+        DecorationData data = this.getDecorationData();
+        if (!data.hasBlocks()) {
+            SoundEvent breakSound = data.properties().blockBase.defaultBlockState().getSoundType().getBreakSound();
             level.playSound(null, blockPos,  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
-        if (this.getDecorationData().properties().showBreakParticles)
-            Util.showBreakParticle((ServerLevel) level, blockPos, this.getDecorationData().properties().useItemParticles ? BuiltInRegistries.ITEM.get(this.decorationId).getDefaultInstance() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+        if (data.properties().showBreakParticles)
+            Util.showBreakParticle((ServerLevel) level, blockPos, data.properties().useItemParticles ? BuiltInRegistries.ITEM.get(this.decorationId).getDefaultInstance() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
 
-        if (!level.isClientSide() && this.getDecorationData().properties().drops && blockState.getBlock() instanceof SimpleDecorationBlock) {
+        if (!level.isClientSide() && data.properties().drops && blockState.getBlock() instanceof SimpleDecorationBlock) {
             for (ItemStack drop : this.getDrops()) {
                 Util.spawnAtLocation(level, blockPos.getCenter(), drop);
             }

@@ -69,7 +69,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     public void loadMain(CompoundTag compoundTag, HolderLookup.Provider provider) {
         DecorationData decorationData = this.getDecorationData();
         if (decorationData == null) {
-            Filament.LOGGER.error("No decoration formats for " + this.itemStack.getItem().getDescriptionId() + "!");
+            Filament.LOGGER.error("No decoration formats for {}!", this.itemStack.getItem().getDescriptionId());
         } else if (this.decorationHolder == null) {
             this.setupBehaviour(decorationData);
         }
@@ -197,11 +197,12 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     protected void destroyBlocks(ItemStack particleItem) {
         BlockState decorationBlockState = this.getBlockState();
         if (DecorationRegistry.isDecoration(decorationBlockState) && this.getDecorationData() != null) {
-            if (this.getDecorationData().hasBlocks()) {
-                Util.forEachRotated(this.getDecorationData().blocks(), this.getBlockPos(), this.getVisualRotationYInDegrees(), blockPos -> {
+            DecorationData data = this.getDecorationData();
+            if (data.hasBlocks()) {
+                Util.forEachRotated(data.blocks(), this.getBlockPos(), this.getVisualRotationYInDegrees(), blockPos -> {
                     if (this.getLevel() != null && DecorationRegistry.isDecoration(this.getLevel().getBlockState(blockPos))) {
-                        if (this.getDecorationData().properties().showBreakParticles)
-                            Util.showBreakParticle((ServerLevel) this.level, this.getDecorationData().properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+                        if (data.properties().showBreakParticles)
+                            Util.showBreakParticle((ServerLevel) this.level, data.properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
                         this.getLevel().removeBlock(blockPos, false);
                     }
                 });
@@ -210,10 +211,10 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
                 BlockPos blockPos = this.getBlockPos();
 
-                if (this.getDecorationData().properties().showBreakParticles)
+                if (data.properties().showBreakParticles)
                     Util.showBreakParticle((ServerLevel) this.level, this.getDecorationData().properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
 
-                SoundEvent breakSound = this.getDecorationData().properties().blockBase.defaultBlockState().getSoundType().getBreakSound();
+                SoundEvent breakSound = data.properties().blockBase.defaultBlockState().getSoundType().getBreakSound();
                 this.level.playSound(null, this.getBlockPos(),  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);
                 this.level.destroyBlock(this.getBlockPos(), true);
             }
