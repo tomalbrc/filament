@@ -26,10 +26,7 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
 
     public SimpleDecorationBlock(Properties properties, ResourceLocation decorationId) {
         super(properties, decorationId);
-
-        this.registerDefaultState(this.defaultBlockState()
-                .setValue(ROTATION, 0)
-        );
+        this.registerDefaultState(this.defaultBlockState().setValue(ROTATION, 0));
     }
 
     @Override

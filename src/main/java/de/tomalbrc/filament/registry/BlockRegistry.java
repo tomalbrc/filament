@@ -35,11 +35,16 @@ public class BlockRegistry {
 
     public static void register(InputStream inputStream) throws IOException {
         JsonElement element = JsonParser.parseReader(new InputStreamReader(inputStream));
-        BlockData data = Json.GSON.fromJson(element, BlockData.class);
+        try {
+            BlockData data = Json.GSON.fromJson(element, BlockData.class);
 
-        Util.handleComponentsCustom(element, data);
+            Util.handleComponentsCustom(element, data);
 
-        register(data);
+            register(data);
+        } catch (Exception e) {
+            Filament.LOGGER.error("Could not load file! Error: {}", String.valueOf(e.fillInStackTrace()));
+            Filament.LOGGER.info(element.getAsString());
+        }
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
