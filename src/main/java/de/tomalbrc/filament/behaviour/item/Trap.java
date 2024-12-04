@@ -24,6 +24,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -100,7 +101,7 @@ public class Trap implements ItemBehaviour<Trap.Config> {
     @Override
     public void modifyPolymerItemStack(Map<String, ResourceLocation> modelData, ItemStack original, ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
         if (modelData != null) {
-            itemStack.set(DataComponents.ITEM_MODEL, canSpawn(original) ? modelData.get("trapped") : modelData.get("default"));
+            itemStack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(), List.of(), List.of(canSpawn(original) ? "trapped" : "default"), List.of()));
         }
     }
 

@@ -10,6 +10,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -26,7 +27,8 @@ public class ComplexDecorationBlock extends DecorationBlock implements EntityBlo
     }
 
     @Override
-    public ItemStack getCloneItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
+    @NotNull
+    public ItemStack getCloneItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState, boolean includeData) {
         ItemStack stack;
         BlockEntity blockEntity = levelReader.getBlockEntity(blockPos);
         if (blockEntity instanceof DecorationBlockEntity decorationBlockEntity) {
@@ -37,7 +39,7 @@ public class ComplexDecorationBlock extends DecorationBlock implements EntityBlo
                 }
             }
         } else {
-            stack = super.getCloneItemStack(levelReader, blockPos, blockState);
+            stack = super.getCloneItemStack(levelReader, blockPos, blockState, includeData);
         }
         return stack;
     }

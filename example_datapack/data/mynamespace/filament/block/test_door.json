@@ -46,7 +46,7 @@
   },
   "itemResource": {
     "models" : {
-        "default": "minecraft:item/acacia_trapdoor"
+      "default": "minecraft:block/acacia_trapdoor_open"
     }
   },
   "behaviour": {

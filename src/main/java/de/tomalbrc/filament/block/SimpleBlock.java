@@ -9,7 +9,6 @@ import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -132,7 +131,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
             }
         }
 
-        return Mth.getSeed(blockPos);
+        return super.getSeed(blockState, blockPos);
     }
 
     @Override
@@ -348,8 +347,8 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     @NotNull
-    public ItemStack getCloneItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
-        ItemStack stack = super.getCloneItemStack(levelReader, blockPos, blockState);
+    public ItemStack getCloneItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState, boolean bl) {
+        ItemStack stack = super.getCloneItemStack(levelReader, blockPos, blockState, bl);
 
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {

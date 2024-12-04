@@ -84,11 +84,6 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Behaviour
         return this.decorationData.itemResource() == null ? Map.of() : Objects.requireNonNull(this.decorationData.itemResource()).models();
     }
 
-    @Override
-    protected ResourceLocation getModel() {
-        return this.decorationData.model();
-    }
-
     public static float getVisualRotationYInDegrees(Direction direction, int rotation) {
         int i = direction.getAxis().isVertical() ? 90 * direction.getAxisDirection().getStep() : 0;
         return (float) Mth.wrapDegrees(180 + direction.get2DDataValue() * 90 + rotation * 45 + i);

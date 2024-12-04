@@ -60,7 +60,6 @@ public final class BlockData extends Data {
         Reference2ReferenceArrayMap<BlockState, BlockStateMeta> val = new Reference2ReferenceArrayMap<>();
 
         if (blockResource.couldGenerate()) {
-            //val = BlockModelGenerator.generate(blockResource);
             throw new UnsupportedOperationException("Not implemented");
         } else if (blockResource.models() != null && this.blockModelType != null) {
             for (Map.Entry<String, PolymerBlockModel> entry : this.blockResource.models().entrySet()) {
@@ -69,16 +68,16 @@ public final class BlockData extends Data {
                     BlockState requestedState = type == null ? null : PolymerBlockResourceUtils.requestBlock(type, entry.getValue());
                     val.put(BuiltInRegistries.BLOCK.get(id).orElseThrow().value().defaultBlockState(), BlockStateMeta.of(type == null ? Blocks.BEDROCK.defaultBlockState() : requestedState, entry.getValue()));
                 } else {
-                    var state = blockState(String.format("%s[%s]", id, entry.getKey()));
+                    BlockState state = blockState(String.format("%s[%s]", id, entry.getKey()));
+                    BlockModelType type;
                     if (this.blockModelType.isMap()) {
-                        var type = safeBlockModelType(this.blockModelType.getOrDefault(state, BlockModelType.FULL_BLOCK));
-                        BlockState requestedState = type == null ? null : PolymerBlockResourceUtils.requestBlock(type, entry.getValue());
-                        val.put(state, BlockStateMeta.of(type == null ? Blocks.BEDROCK.defaultBlockState() : requestedState, entry.getValue()));
+                        type = safeBlockModelType(this.blockModelType.getOrDefault(state, BlockModelType.FULL_BLOCK));
                     } else {
-                        var type = safeBlockModelType(this.blockModelType.getRawValue());
-                        BlockState requestedState = type == null ? null : PolymerBlockResourceUtils.requestBlock(type, entry.getValue());
-                        val.put(state, BlockStateMeta.of(type == null ? Blocks.BEDROCK.defaultBlockState() : requestedState, entry.getValue()));
+                        type = safeBlockModelType(this.blockModelType.getRawValue());
                     }
+
+                    BlockState requestedState = type == null ? null : PolymerBlockResourceUtils.requestBlock(type, entry.getValue());
+                    val.put(state, BlockStateMeta.of(type == null ? Blocks.BEDROCK.defaultBlockState() : requestedState, entry.getValue()));
                 }
             }
         }

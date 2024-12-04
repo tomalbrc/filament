@@ -8,9 +8,11 @@ import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.block.SimpleBlockItem;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
+import de.tomalbrc.filament.generator.ItemAssetGenerator;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
 import de.tomalbrc.filament.util.Util;
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
@@ -43,7 +45,7 @@ public class BlockRegistry {
             register(data);
         } catch (Exception e) {
             Filament.LOGGER.error("Could not load file! Error: {}", String.valueOf(e.fillInStackTrace()));
-            Filament.LOGGER.info(element.getAsString());
+            Filament.LOGGER.info(element.toString());
         }
     }
 
@@ -66,6 +68,13 @@ public class BlockRegistry {
         BehaviourUtil.postInitBlock(item, customBlock, customBlock, data.behaviour());
 
         customBlock.postRegister();
+
+        var itemResources = data.itemResource() == null ? data.blockResource() : data.itemResource();
+        if (itemResources != null) {
+            PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder ->
+                    ItemAssetGenerator.create(resourcePackBuilder, data.id(), itemResources)
+            );
+        }
 
         REGISTERED_BLOCKS++;
     }

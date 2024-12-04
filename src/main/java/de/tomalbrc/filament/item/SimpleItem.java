@@ -28,6 +28,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -40,6 +41,9 @@ import xyz.nucleoid.packettweaker.PacketContext;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
+import static net.minecraft.core.component.DataComponents.CUSTOM_MODEL_DATA;
+import static net.minecraft.core.component.DataComponents.ITEM_MODEL;
 
 /**
  * Universal item, base for all filament items, with behaviour support
@@ -66,7 +70,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
         this.properties = itemData.properties();
     }
 
-    public SimpleItem(Block block, Item.Properties itemProperties, ItemProperties props, Item vanillaItem) {
+    public SimpleItem(Block block, Properties itemProperties, ItemProperties props, Item vanillaItem) {
         super(block, itemProperties);
 
         this.vanillaItem = vanillaItem;
@@ -87,7 +91,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
                 var result = codec.decode(RegistryOps.create(JsonOps.INSTANCE, registryInfoLookup), entry.getValue());
                 if (result.hasResultOrPartial()) {
                     DataComponentType type = entry.getKey();
-                    itemStack.set(type, (Object)result.getOrThrow().getFirst());
+                    itemStack.set(type, (Object) result.getOrThrow().getFirst());
                 }
             }
         }
@@ -120,8 +124,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
                 var res = itemBehaviour.releaseUsing(itemStack, level, livingEntity, useDuration);
-                if (res)
-                    return true;
+                if (res) return true;
             }
         }
         return false;
@@ -132,8 +135,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
                 boolean didUse = itemBehaviour.useOnRelease(itemStack);
-                if (didUse)
-                    return true;
+                if (didUse) return true;
             }
         }
         return false;
@@ -144,8 +146,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
                 var val = itemBehaviour.getUseDuration(itemStack, livingEntity);
-                if (val.isPresent())
-                    return val.get();
+                if (val.isPresent()) return val.get();
             }
         }
         return 0;
@@ -181,8 +182,19 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
     @Override
     public final ItemStack getPolymerItemStack(ItemStack itemStack, TooltipFlag tooltipType, PacketContext packetContext) {
         ItemStack stack = PolymerItemUtils.createItemStack(itemStack, tooltipType, packetContext);
-        ResourceLocation dataComponentModel = this.itemData != null ? this.itemData.components().get(DataComponents.ITEM_MODEL) : null;
-        stack.set(DataComponents.ITEM_MODEL, dataComponentModel != null ? dataComponentModel : this.getModel());
+
+        ResourceLocation dataComponentModel = null;
+        if (this.itemData != null && this.itemData.components().has(ITEM_MODEL)) {
+            dataComponentModel = this.itemData.components().get(ITEM_MODEL);
+        } else if (this.itemData != null) {
+            dataComponentModel = this.itemData.itemResource() == null ? itemData.vanillaItem().components().get(ITEM_MODEL) : null;
+        }
+        if (dataComponentModel != null) stack.set(ITEM_MODEL, dataComponentModel);
+
+        if (!itemStack.has(CUSTOM_MODEL_DATA)) {
+            CustomModelData customModelData = this.itemData != null && this.itemData.components().has(CUSTOM_MODEL_DATA) ? this.itemData.components().get(CUSTOM_MODEL_DATA) : getModel();
+            if (customModelData != null) stack.set(CUSTOM_MODEL_DATA, customModelData);
+        }
 
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
@@ -197,11 +209,9 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
         return this.itemData.itemResource() == null ? Map.of() : Objects.requireNonNull(this.itemData.itemResource()).models();
     }
 
-    protected ResourceLocation getModel() {
-        if (this.itemData.itemResource() != null)
-            return Objects.requireNonNull(this.itemData.itemResource()).models().get("default");
-
-        return vanillaItem.components().get(DataComponents.ITEM_MODEL);
+    @Nullable
+    protected CustomModelData getModel() {
+        return null;
     }
 
     @Override
