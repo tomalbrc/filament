@@ -187,7 +187,11 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
         if (this.itemData != null && this.itemData.components().has(ITEM_MODEL)) {
             dataComponentModel = this.itemData.components().get(ITEM_MODEL);
         } else if (this.itemData != null) {
-            dataComponentModel = this.itemData.itemResource() == null ? itemData.vanillaItem().components().get(ITEM_MODEL) : null;
+            if (this.itemData.itemModel() != null) {
+                dataComponentModel = this.itemData.itemModel();
+            } else {
+                dataComponentModel = this.itemData.itemResource() == null ? itemData.vanillaItem().components().get(ITEM_MODEL) : null;
+            }
         }
         if (dataComponentModel != null) stack.set(ITEM_MODEL, dataComponentModel);
 

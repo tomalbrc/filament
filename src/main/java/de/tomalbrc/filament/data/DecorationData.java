@@ -29,6 +29,7 @@ public final class DecorationData extends Data {
             @NotNull ResourceLocation id,
             @Nullable Item vanillaItem,
             @Nullable ItemResource itemResource,
+            @Nullable ResourceLocation itemModel,
             @Nullable BehaviourConfigMap behaviourConfig,
             @Nullable DataComponentMap components,
             @Nullable ResourceLocation itemGroup,
@@ -37,7 +38,7 @@ public final class DecorationData extends Data {
             @Nullable List<BlockConfig> blocks,
             @Nullable Vector2f size
     ) {
-        super(id, vanillaItem, itemResource, behaviourConfig, components, itemGroup);
+        super(id, vanillaItem, itemResource, itemModel, behaviourConfig, components, itemGroup);
         this.model = model;
         this.blocks = blocks;
         this.size = size;

@@ -35,6 +35,7 @@ public final class BlockData extends Data {
             @NotNull ResourceLocation id,
             @Nullable Item vanillaItem,
             @Nullable ItemResource itemResource,
+            @Nullable ResourceLocation itemModel,
             @Nullable BehaviourConfigMap behaviourConfig,
             @Nullable DataComponentMap components,
             @Nullable ResourceLocation itemGroup,
@@ -42,7 +43,7 @@ public final class BlockData extends Data {
             @Nullable BlockStateMappedProperty<BlockModelType> blockModelType,
             @Nullable BlockProperties properties
     ) {
-        super(id, vanillaItem, itemResource, behaviourConfig, components, itemGroup);
+        super(id, vanillaItem, itemResource, itemModel, behaviourConfig, components, itemGroup);
         this.blockResource = blockResource;
         this.blockModelType = blockModelType;
         this.properties = properties;

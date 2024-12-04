@@ -70,7 +70,7 @@ public class BlockRegistry {
         customBlock.postRegister();
 
         var itemResources = data.itemResource() == null ? data.blockResource() : data.itemResource();
-        if (itemResources != null) {
+        if (itemResources != null && data.itemModel() == null) {
             PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder ->
                     ItemAssetGenerator.create(resourcePackBuilder, data.id(), itemResources)
             );
