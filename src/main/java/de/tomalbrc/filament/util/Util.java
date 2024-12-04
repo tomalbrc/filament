@@ -104,7 +104,7 @@ public class Util {
                         for (int z = 0; z < size.z(); z++) {
                             Vector3f pos = new Vector3f(x, y, z).add(origin);
                             Vector3f offset = pos.mul(rotation % 90 != 0 ? Math.sqrt(2) : 1);
-                            offset.rotateY(Math.toRadians(rotation + 180));
+                            offset.rotateY(Math.toRadians(rotation + (FilamentConfig.getInstance().alternativeBlockPlacement ? 0 : 180)));
 
                             BlockPos blockPos = new BlockPos(originBlockPos).offset(-Math.round(offset.x), Math.round(offset.y), Math.round(offset.z));
                             consumer.accept(blockPos);
