@@ -1,5 +1,7 @@
 package de.tomalbrc.filament.util;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -11,13 +13,17 @@ public class FilamentConfig {
     static Path CONFIG_FILE_PATH = Constants.CONFIG_DIR.resolve("filament.json");
     static FilamentConfig instance;
 
-    public boolean emissive_shader = true;
+    @SerializedName("emissive_shader")
+    public boolean emissiveShader = true;
 
+    @SerializedName("commands")
     public boolean commands = true;
     public boolean trimArmorReplaceChainmail = false;
 
+    @SerializedName("prevent_adventure_mode_decoration_interaction")
     public boolean preventAdventureModeDecorationInteraction = true;
 
+    @SerializedName("alternative_block_placement")
     public boolean alternativeBlockPlacement = false;
 
     public static FilamentConfig getInstance() {
