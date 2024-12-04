@@ -17,6 +17,8 @@ public class FilamentConfig {
 
     public boolean preventAdventureModeDecorationInteraction = true;
 
+    public boolean alternativeBlockPlacement = false;
+
     public static FilamentConfig getInstance() {
         if (instance == null) {
             if (!load()) // only save if file wasn't just created
