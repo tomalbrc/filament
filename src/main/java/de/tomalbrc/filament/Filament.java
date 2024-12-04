@@ -43,7 +43,7 @@ public class Filament implements ModInitializer {
             });
         }
 
-        if (FilamentConfig.getInstance().emissive_shader) {
+        if (FilamentConfig.getInstance().emissiveShader) {
             FilamentShaderUtil.registerCallback();
         }
 
