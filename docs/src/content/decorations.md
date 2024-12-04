@@ -16,8 +16,10 @@ You can also set components similar to item configurations using the `components
 {
   "id": "mynamespace:clown_horn",
   "vanillaItem": "minecraft:paper",
-  "models": {
-    "default": "mynamespace:custom/misc/clown_horn"
+  "itemResource": {
+    "models": {
+      "default": "mynamespace:custom/misc/clown_horn"
+    }
   },
   "group": "mynamespace:mygroup",
   "properties": {

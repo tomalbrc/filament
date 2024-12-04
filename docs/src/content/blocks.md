@@ -88,9 +88,17 @@ An example for the `count` block-behaviour:
 
 ---
 
+## `itemModel`
+
+Path to an item model definition (in `assets/namespace/items/<name>.json`)
+This overwrites the itemResource field.
+
+
+---
+
 ## `itemResource`:
 
-An object that allows you provide different item-models which may be required by some item-behaviours.
+An object that allows you to provide different item-models which may be required by some item-behaviours.
 
 The `trapped` behaviour for example requires a model for the `trapped` key.
 

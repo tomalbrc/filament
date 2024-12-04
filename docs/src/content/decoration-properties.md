@@ -8,7 +8,11 @@ Example of properties:
   "properties": {
     "rotate": false,
     "rotateSmooth": false,
-    "placement": {"floor": true, "wall": false, "ceiling": false},
+    "placement": {
+      "floor": true, 
+      "wall": false, 
+      "ceiling": false
+    },
     "glow": false,
     "waterloggable": true,
     "solid": false,
