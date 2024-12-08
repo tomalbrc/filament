@@ -74,7 +74,7 @@ public class VirtualDestroyStage extends ElementHolder {
         if (self.getAttachment() == null || !self.getAttachment().getPos().equals(vecPos)) {
             // init display list
             ChunkAttachment.of(self, player.serverLevel(), vecPos);
-            self.destroyElements().get(0).setTranslation(new Vector3f());
+            self.destroyElements().getFirst().setTranslation(new Vector3f());
 
             if (state.getBlock() instanceof DecorationBlock decorationBlock1 && decorationBlock1.getDecorationData().hasBlocks()) {
                 for (int i1 = 0; i1 < decorationBlock1.getDecorationData().countBlocks(); i1++) {
@@ -122,8 +122,8 @@ public class VirtualDestroyStage extends ElementHolder {
         var itemModel =  """
                 {
                   "model": {
-                    "type": "minecraft:model"
-                    "model": "filament:special/destroy_stage_|ID|"
+                    "type": "minecraft:model",
+                    "model": "filament:item/special/destroy_stage_|ID|"
                   }
                 }
                 """;
