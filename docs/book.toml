@@ -3,7 +3,7 @@ authors = ["tomalbrc"]
 language = "en"
 multilingual = false
 src = "src"
-title = "Filament Documentation"
+title = "Filament Documentation (0.10.0)"
 
 # we be using mdbook
 
@@ -20,4 +20,4 @@ assets_version = "3.0.2" # do not edit: managed by `mdbook-admonish install`
 additional-css = ["./mdbook-admonish.css", "./custom.css"]
 
 [output.html.fold]
-enable = true
+enable = false
