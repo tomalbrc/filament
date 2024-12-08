@@ -123,7 +123,7 @@ public class VirtualDestroyStage extends ElementHolder {
                 {
                   "model": {
                     "type": "minecraft:model"
-                    "model": "filament:item/special/destroy_stage_|ID|"
+                    "model": "filament:special/destroy_stage_|ID|"
                   }
                 }
                 """;
