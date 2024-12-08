@@ -58,10 +58,7 @@ public class VirtualDestroyStage extends ElementHolder {
         this.tick();
     }
 
-
-
-    @SuppressWarnings("SameReturnValue")
-    public static boolean updateState(ServerPlayer player, BlockPos pos, BlockState state, int i) {
+    public static void updateState(ServerPlayer player, BlockPos pos, BlockState state, int i) {
         final VirtualDestroyStage self = ((ServerGamePacketListenerExtF) player.connection).filament$getVirtualDestroyStage();
 
         if (i == -1 || (!(state.getBlock() instanceof Marker && (state.getBlock() instanceof DecorationBlock decorationBlock && decorationBlock.getDecorationData().hasBlocks())))) {
@@ -69,7 +66,7 @@ public class VirtualDestroyStage extends ElementHolder {
             if (self.getAttachment() != null) {
                 self.destroy();
             }
-            return true;
+            return;
         }
 
         var vecPos = Vec3.atCenterOf(pos);
@@ -98,7 +95,6 @@ public class VirtualDestroyStage extends ElementHolder {
 
         self.setState(i);
 
-        return true;
     }
 
     public static void destroy(@Nullable ServerPlayer player) {
@@ -123,9 +119,19 @@ public class VirtualDestroyStage extends ElementHolder {
                 }
                 """;
 
+        var itemModel =  """
+                {
+                  "model": {
+                    "type": "minecraft:model"
+                    "model": "filament:item/special/destroy_stage_|ID|"
+                  }
+                }
+                """;
+
         PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(x -> {
             for (var i = 0; i < DESTROY_STAGE_MODELS.length; i++) {
                 x.addData("assets/filament/models/item/special/destroy_stage_" + i + ".json", model.replace("|ID|", "" + i).getBytes(StandardCharsets.UTF_8));
+                x.addData("assets/filament/items/special/destroy_stage_" + i + ".json", itemModel.replace("|ID|", "" + i).getBytes(StandardCharsets.UTF_8));
             }
         });
     }
