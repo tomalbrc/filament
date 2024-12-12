@@ -224,6 +224,7 @@ public class Util {
         }
 
         itemDisplayElement.setDisplayWidth(size.x * 2.f);
+        itemDisplayElement.setDisplayHeight(size.y * 2.f);
 
         itemDisplayElement.setTransformation(matrix4f);
         itemDisplayElement.setModelTransformation(data.properties().display);
