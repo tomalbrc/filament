@@ -11,6 +11,7 @@ import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.registry.ModelRegistry;
 import eu.pb4.polymer.virtualentity.api.attachment.EntityAttachment;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -46,15 +47,17 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
     }
 
     @Inject(method = "onEquipItem", at = @At(value = "HEAD"))
-    private void filament$customOnEquipItem(EquipmentSlot equipmentSlot, ItemStack itemStack, ItemStack itemStack2, CallbackInfo ci) {
-        boolean isHandSlot = (equipmentSlot == EquipmentSlot.MAINHAND || equipmentSlot == EquipmentSlot.OFFHAND);
-
-        if (itemStack2.getItem() instanceof SimpleItem simpleItem && CosmeticUtil.isCosmetic(itemStack2) && !isHandSlot) {
-            filament$destroyHolder(simpleItem.get(Behaviours.COSMETIC).getConfig().slot.getName());
+    private void filament$customOnEquipItem(EquipmentSlot equipmentSlot, ItemStack oldItemStack, ItemStack newItemStack, CallbackInfo ci) {
+        if (oldItemStack.getItem() instanceof SimpleItem simpleItem && CosmeticUtil.isCosmetic(oldItemStack)) {
+            var component = oldItemStack.get(DataComponents.EQUIPPABLE);
+            var slot = component == null ? simpleItem.get(Behaviours.COSMETIC).getConfig().slot : component.slot();
+            filament$destroyHolder(slot == null ? simpleItem.get(Behaviours.COSMETIC).getConfig().slot.getName() : slot.getName());
         }
 
-        if (itemStack.getItem() instanceof SimpleItem simpleItem && CosmeticUtil.isCosmetic(itemStack) && isHandSlot) {
-            filament$addHolder(LivingEntity.class.cast(this), itemStack.getItem(), itemStack, simpleItem.get(Behaviours.COSMETIC).getConfig().slot.getName());
+        if (newItemStack.getItem() instanceof SimpleItem simpleItem && CosmeticUtil.isCosmetic(newItemStack)) {
+            var component = newItemStack.get(DataComponents.EQUIPPABLE);
+            var slot = component == null ? simpleItem.get(Behaviours.COSMETIC).getConfig().slot : component.slot();
+            filament$addHolder(LivingEntity.class.cast(this), newItemStack.getItem(), newItemStack, slot.getName());
         }
     }
 
