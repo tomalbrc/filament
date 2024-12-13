@@ -43,7 +43,6 @@ public class BlockProperties extends ItemProperties {
         if (!this.collision) props.noCollission();
 
         if (this.solid) props.forceSolidOn();
-        else props.forceSolidOff();
 
         props.isValidSpawn((blockState,blockGetter,blockPos,entityType) -> this.allowsSpawning);
         props.pushReaction(this.pushReaction);
