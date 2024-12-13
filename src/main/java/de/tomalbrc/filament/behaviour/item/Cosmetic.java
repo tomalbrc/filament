@@ -24,7 +24,7 @@ public class Cosmetic implements ItemBehaviour<Cosmetic.Config> {
 
     public static class Config {
         /**
-         * The equipment slot for the cosmetic (head, chest).
+         * The equipment slot for the cosmetic
          */
         public EquipmentSlot slot;
 

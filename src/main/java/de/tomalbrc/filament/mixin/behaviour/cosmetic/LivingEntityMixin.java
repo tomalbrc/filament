@@ -48,6 +48,10 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
 
     @Inject(method = "onEquipItem", at = @At(value = "HEAD"))
     private void filament$customOnEquipItem(EquipmentSlot equipmentSlot, ItemStack oldItemStack, ItemStack newItemStack, CallbackInfo ci) {
+        if (equipmentSlot == EquipmentSlot.HEAD) {
+            return;
+        }
+
         if (oldItemStack.getItem() instanceof SimpleItem simpleItem && CosmeticUtil.isCosmetic(oldItemStack)) {
             var component = oldItemStack.get(DataComponents.EQUIPPABLE);
             var slot = component == null ? simpleItem.get(Behaviours.COSMETIC).getConfig().slot : component.slot();
