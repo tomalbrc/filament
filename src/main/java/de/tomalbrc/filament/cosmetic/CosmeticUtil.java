@@ -17,8 +17,9 @@ public class CosmeticUtil {
 
     public static Cosmetic.Config getCosmeticData(Item item) {
         Cosmetic.Config cosmeticData = null;
-        if (item instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.COSMETIC)) {
-            cosmeticData = simpleItem.get(Behaviours.COSMETIC).getConfig();
+        Cosmetic cosmetic;
+        if (item instanceof SimpleItem simpleItem && (cosmetic = simpleItem.get(Behaviours.COSMETIC)) != null) {
+            cosmeticData = cosmetic.getConfig();
         }
         return cosmeticData;
     }
