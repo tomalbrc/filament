@@ -12,5 +12,14 @@
   },
   "properties": {
     "stackSize": 1
+  },
+  "components": {
+    "minecraft:equippable": {
+      "slot": "chest",
+      "equip_sound": "minecraft:block.creaking_heart.spawn",
+      "dispensable": true,
+      "swappable": true,
+      "damage_on_hurt": true
+    }
   }
 }
