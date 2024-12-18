@@ -5,6 +5,7 @@ import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.decoration.holder.DecorationHolder;
 import de.tomalbrc.filament.decoration.util.SeatEntity;
 import de.tomalbrc.filament.registry.EntityRegistry;
+import de.tomalbrc.filament.util.FilamentConfig;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -54,7 +55,7 @@ public class Seat implements DecorationBehaviour<Seat.SeatConfig> {
         seatEntity.setPos(this.seatTranslation(decorationBlockEntity, seat).add(decorationBlockEntity.getDecorationHolder().getPos()));
         player.level().addFreshEntity(seatEntity);
         player.startRiding(seatEntity);
-        seatEntity.setYRot((decorationBlockEntity.getVisualRotationYInDegrees() - seat.direction));
+        seatEntity.setYRot((decorationBlockEntity.getVisualRotationYInDegrees() - seat.direction + (FilamentConfig.getInstance().alternativeBlockPlacement ? 180 : 0)));
     }
 
     public boolean hasSeatedPlayer(DecorationBlockEntity decorationBlockEntity, Seat.SeatMeta seat) {
