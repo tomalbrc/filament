@@ -2,7 +2,6 @@ package de.tomalbrc.filament.cosmetic;
 
 import de.tomalbrc.filament.behaviour.item.Cosmetic;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
-import eu.pb4.polymer.virtualentity.api.VirtualEntityUtils;
 import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import net.minecraft.server.level.ServerPlayer;
@@ -11,6 +10,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.function.Consumer;
 
 public class CosmeticHolder extends ElementHolder {
     private final LivingEntity entity;
@@ -21,8 +22,12 @@ public class CosmeticHolder extends ElementHolder {
 
     private float bodyYaw;
 
-    public CosmeticHolder(LivingEntity entity, ItemStack itemStack) {
+    private final Consumer<ServerGamePacketListenerImpl> startWatchingCallback;
+
+    public CosmeticHolder(LivingEntity entity, ItemStack itemStack, Consumer<ServerGamePacketListenerImpl> startWatchingCallback) {
         super();
+
+        this.startWatchingCallback = startWatchingCallback;
 
         this.entity = entity;
 
@@ -100,7 +105,7 @@ public class CosmeticHolder extends ElementHolder {
     public boolean startWatching(ServerGamePacketListenerImpl player) {
         var ret = super.startWatching(player);
 
-        player.send(VirtualEntityUtils.createRidePacket(this.entity.getId(), this.displayElement.getEntityIds()));
+        this.startWatchingCallback.accept(player);
 
         return ret;
     }

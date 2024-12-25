@@ -10,10 +10,14 @@ import de.tomalbrc.filament.cosmetic.CosmeticInterface;
 import de.tomalbrc.filament.cosmetic.CosmeticUtil;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.registry.ModelRegistry;
+import eu.pb4.polymer.virtualentity.api.ElementHolder;
+import eu.pb4.polymer.virtualentity.api.VirtualEntityUtils;
 import eu.pb4.polymer.virtualentity.api.attachment.EntityAttachment;
+import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
+import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -30,14 +34,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 @Mixin(value = LivingEntity.class)
 public abstract class LivingEntityMixin implements CosmeticInterface {
     @Unique
-    private final Map<String, CosmeticHolder> filamentCosmeticHolder = new Object2ObjectOpenHashMap<>();
+    private final IntArraySet displays = new IntArraySet();
 
     @Unique
-    private final Map<String, AnimatedCosmeticHolder> filamentAnimatedCosmeticHolder = new Object2ObjectOpenHashMap<>();
+    private final Map<String, ElementHolder> filamentCosmeticHolder = new Object2ObjectOpenHashMap<>();
 
     @Inject(method = "getEquipmentSlotForItem", at = @At(value = "HEAD"), cancellable = true)
     private void filament$customGetEquipmentSlotForItem(ItemStack itemStack, CallbackInfoReturnable<EquipmentSlot> cir) {
@@ -53,6 +58,10 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
 
     @Inject(method = "onEquipItem", at = @At(value = "HEAD"))
     private void filament$customOnEquipItem(EquipmentSlot equipmentSlot, ItemStack oldItemStack, ItemStack newItemStack, CallbackInfo ci) {
+        if (equipmentSlot == EquipmentSlot.HEAD) {
+            return;
+        }
+
         if (oldItemStack.getItem() instanceof SimpleItem simpleItem && CosmeticUtil.isCosmetic(oldItemStack)) {
             var slot = simpleItem.get(Behaviours.COSMETIC).getConfig().slot;
             if (slot == equipmentSlot) filament$destroyHolder(slot.getName());
@@ -120,12 +129,13 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
     @Unique
     @Override
     public void filament$destroyHolder(String slot) {
-        if (filamentAnimatedCosmeticHolder.containsKey(slot)) {
-            filamentAnimatedCosmeticHolder.get(slot).getAttachment().destroy();
-            filamentAnimatedCosmeticHolder.get(slot).destroy();
-            filamentAnimatedCosmeticHolder.remove(slot);
-        }
         if (filamentCosmeticHolder.containsKey(slot)) {
+            var holder = filamentCosmeticHolder.get(slot);
+
+            for (VirtualElement element : holder.getElements()) {
+                displays.removeAll(element.getEntityIds());
+            }
+
             filamentCosmeticHolder.get(slot).getAttachment().destroy();
             filamentCosmeticHolder.get(slot).destroy();
             filamentCosmeticHolder.remove(slot);
