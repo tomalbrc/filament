@@ -3,6 +3,7 @@ package de.tomalbrc.filament.mixin.behaviour.cosmetic;
 import de.tomalbrc.filament.cosmetic.CosmeticInterface;
 import de.tomalbrc.filament.cosmetic.CosmeticUtil;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,6 +17,10 @@ public abstract class ServerPlayerMixin implements CosmeticInterface {
         if ((Object)this instanceof ServerPlayer serverPlayer) {
             var slots = serverPlayer.getArmorSlots();
             for (ItemStack item : slots) {
+                if (serverPlayer.getEquipmentSlotForItem(item) == EquipmentSlot.HEAD) {
+                    continue;
+                }
+
                 if (!item.isEmpty() && CosmeticUtil.isCosmetic(item)) {
                     filament$destroyHolder(serverPlayer.getEquipmentSlotForItem(item).getName());
                     filament$addHolder(serverPlayer, item.getItem(), item, serverPlayer.getEquipmentSlotForItem(item).getName());
@@ -29,6 +34,10 @@ public abstract class ServerPlayerMixin implements CosmeticInterface {
         if ((Object)this instanceof ServerPlayer serverPlayer) {
             var slots = serverPlayer.getArmorSlots();
             for (ItemStack item : slots) {
+                if (serverPlayer.getEquipmentSlotForItem(item) == EquipmentSlot.HEAD) {
+                    continue;
+                }
+
                 if (!item.isEmpty() && CosmeticUtil.isCosmetic(item)) {
                     filament$destroyHolder(serverPlayer.getEquipmentSlotForItem(item).getName());
                     filament$addHolder(serverPlayer, item.getItem(), item, serverPlayer.getEquipmentSlotForItem(item).getName());

@@ -143,7 +143,7 @@ public class Util {
             public void attack(ServerPlayer player) {
                 ServerLevel serverLevel = element.getHolder().getAttachment().getWorld();
                 BlockPos blockPos = BlockPos.containing(element.getHolder().getAttachment().getPos());
-                player.gameMode.handleBlockBreakAction(blockPos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, Direction.UP, serverLevel.getMaxBuildHeight(), 0);
+                player.gameMode.handleBlockBreakAction(blockPos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, Direction.UP, serverLevel.getMaxY(), 0);
             }
         });
 
@@ -170,7 +170,7 @@ public class Util {
             public void attack(ServerPlayer player) {
                 ServerLevel serverLevel = element.getHolder().getAttachment().getWorld();
                 BlockPos blockPos = BlockPos.containing(element.getHolder().getAttachment().getPos());
-                player.gameMode.handleBlockBreakAction(blockPos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, Direction.UP, serverLevel.getMaxBuildHeight(), 0);
+                player.gameMode.handleBlockBreakAction(blockPos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, Direction.UP, serverLevel.getMaxY(), 0);
             }
         });
         element.setSize(1.f, 1.f);

@@ -9,10 +9,15 @@ import de.tomalbrc.filament.cosmetic.CosmeticInterface;
 import de.tomalbrc.filament.cosmetic.CosmeticUtil;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.registry.ModelRegistry;
+import eu.pb4.polymer.virtualentity.api.ElementHolder;
+import eu.pb4.polymer.virtualentity.api.VirtualEntityUtils;
 import eu.pb4.polymer.virtualentity.api.attachment.EntityAttachment;
+import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
+import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -29,14 +34,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 @Mixin(value = LivingEntity.class)
 public abstract class LivingEntityMixin implements CosmeticInterface {
     @Unique
-    private final Map<String, CosmeticHolder> filamentCosmeticHolder = new Object2ObjectOpenHashMap<>();
+    private final IntArraySet displays = new IntArraySet();
 
     @Unique
-    private final Map<String, AnimatedCosmeticHolder> filamentAnimatedCosmeticHolder = new Object2ObjectOpenHashMap<>();
+    private final Map<String, ElementHolder> filamentCosmeticHolder = new Object2ObjectOpenHashMap<>();
 
     @Inject(method = "getEquipmentSlotForItem", at = @At(value = "HEAD"), cancellable = true)
     private void filament$customGetEquipmentSlotForItem(ItemStack itemStack, CallbackInfoReturnable<EquipmentSlot> cir) {
@@ -86,42 +92,54 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
     public void filament$addHolder(LivingEntity livingEntity, Item simpleItem, ItemStack itemStack, String slot) {
         Cosmetic.Config cosmeticData = CosmeticUtil.getCosmeticData(simpleItem);
 
-        if (cosmeticData.model != null) {
-            if (!filamentAnimatedCosmeticHolder.containsKey(slot)) {
-                var animatedCosmeticHolder = new AnimatedCosmeticHolder(livingEntity, ModelRegistry.getModel(cosmeticData.model));
-                EntityAttachment.ofTicking(animatedCosmeticHolder, livingEntity);
+        if (cosmeticData.model != null && !filamentCosmeticHolder.containsKey(slot)) {
+            Consumer<ServerGamePacketListenerImpl> cb = (player) -> {
+                player.send(VirtualEntityUtils.createRidePacket(livingEntity.getId(), this.displays.toIntArray()));
+            };
+            var animatedCosmeticHolder = new AnimatedCosmeticHolder(livingEntity, ModelRegistry.getModel(cosmeticData.model), cb);
+            EntityAttachment.ofTicking(animatedCosmeticHolder, livingEntity);
 
-                if (livingEntity instanceof ServerPlayer serverPlayer)
-                    animatedCosmeticHolder.startWatching(serverPlayer);
-
-                if (cosmeticData.autoplay != null) {
-                    animatedCosmeticHolder.getAnimator().playAnimation(cosmeticData.autoplay);
-                }
-                filamentAnimatedCosmeticHolder.put(slot, animatedCosmeticHolder);
+            for (VirtualElement element : animatedCosmeticHolder.getElements()) {
+                displays.addAll(element.getEntityIds());
             }
+
+            if (livingEntity instanceof ServerPlayer serverPlayer)
+                animatedCosmeticHolder.startWatching(serverPlayer);
+
+            if (cosmeticData.autoplay != null) {
+                animatedCosmeticHolder.getAnimator().playAnimation(cosmeticData.autoplay);
+            }
+
+            filamentCosmeticHolder.put(slot, animatedCosmeticHolder);
         }
-        else {
-            if (!filamentCosmeticHolder.containsKey(slot)) {
-                var cosmeticHolder = new CosmeticHolder(livingEntity, itemStack);
-                EntityAttachment.ofTicking(cosmeticHolder, livingEntity);
+        else if (!filamentCosmeticHolder.containsKey(slot)) {
+            Consumer<ServerGamePacketListenerImpl> cb = (player) -> {
+                player.send(VirtualEntityUtils.createRidePacket(livingEntity.getId(), this.displays.toIntArray()));
+            };
+            var cosmeticHolder = new CosmeticHolder(livingEntity, itemStack, cb);
+            EntityAttachment.ofTicking(cosmeticHolder, livingEntity);
 
-                if (livingEntity instanceof ServerPlayer serverPlayer)
-                    cosmeticHolder.startWatching(serverPlayer);
-
-                filamentCosmeticHolder.put(slot, cosmeticHolder);
+            for (VirtualElement element : cosmeticHolder.getElements()) {
+                displays.addAll(element.getEntityIds());
             }
+
+            if (livingEntity instanceof ServerPlayer serverPlayer)
+                cosmeticHolder.startWatching(serverPlayer);
+
+            filamentCosmeticHolder.put(slot, cosmeticHolder);
         }
     }
 
     @Unique
     @Override
     public void filament$destroyHolder(String slot) {
-        if (filamentAnimatedCosmeticHolder.containsKey(slot)) {
-            filamentAnimatedCosmeticHolder.get(slot).getAttachment().destroy();
-            filamentAnimatedCosmeticHolder.get(slot).destroy();
-            filamentAnimatedCosmeticHolder.remove(slot);
-        }
         if (filamentCosmeticHolder.containsKey(slot)) {
+            var holder = filamentCosmeticHolder.get(slot);
+
+            for (VirtualElement element : holder.getElements()) {
+                displays.removeAll(element.getEntityIds());
+            }
+
             filamentCosmeticHolder.get(slot).getAttachment().destroy();
             filamentCosmeticHolder.get(slot).destroy();
             filamentCosmeticHolder.remove(slot);
