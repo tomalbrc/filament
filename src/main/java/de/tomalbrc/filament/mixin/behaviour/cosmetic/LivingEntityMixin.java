@@ -89,31 +89,32 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
     public void filament$addHolder(LivingEntity livingEntity, Item simpleItem, ItemStack itemStack, String slot) {
         Cosmetic.Config cosmeticData = CosmeticUtil.getCosmeticData(simpleItem);
 
-        if (cosmeticData.model != null) {
-            if (!filamentAnimatedCosmeticHolder.containsKey(slot)) {
-                var animatedCosmeticHolder = new AnimatedCosmeticHolder(livingEntity, ModelRegistry.getModel(cosmeticData.model));
-                EntityAttachment.ofTicking(animatedCosmeticHolder, livingEntity);
+        ElementHolder holder = null;
+        Consumer<ServerGamePacketListenerImpl> cb = (player) -> {
+            player.send(VirtualEntityUtils.createRidePacket(livingEntity.getId(), this.displays.toIntArray()));
+        };
 
-                if (livingEntity instanceof ServerPlayer serverPlayer)
-                    animatedCosmeticHolder.startWatching(serverPlayer);
-
-                if (cosmeticData.autoplay != null) {
-                    animatedCosmeticHolder.getAnimator().playAnimation(cosmeticData.autoplay);
-                }
-                filamentAnimatedCosmeticHolder.put(slot, animatedCosmeticHolder);
-            }
+        if (cosmeticData.model != null && !filamentCosmeticHolder.containsKey(slot)) {
+            holder = new AnimatedCosmeticHolder(livingEntity, ModelRegistry.getModel(cosmeticData.model), cb);
         }
-        else {
-            if (!filamentCosmeticHolder.containsKey(slot)) {
-                var cosmeticHolder = new CosmeticHolder(livingEntity, itemStack);
-                EntityAttachment.ofTicking(cosmeticHolder, livingEntity);
-
-                if (livingEntity instanceof ServerPlayer serverPlayer)
-                    cosmeticHolder.startWatching(serverPlayer);
-
-                filamentCosmeticHolder.put(slot, cosmeticHolder);
-            }
+        else if (!filamentCosmeticHolder.containsKey(slot)) {
+            holder = new CosmeticHolder(livingEntity, itemStack, cb);
         }
+
+        EntityAttachment.ofTicking(holder, livingEntity);
+
+        for (VirtualElement element : holder.getElements()) {
+            displays.addAll(element.getEntityIds());
+        }
+
+        if (livingEntity instanceof ServerPlayer serverPlayer)
+            holder.startWatching(serverPlayer);
+
+        if (cosmeticData.autoplay != null && holder instanceof AnimatedCosmeticHolder animatedHolder) {
+            animatedHolder.getAnimator().playAnimation(cosmeticData.autoplay);
+        }
+
+        filamentCosmeticHolder.put(slot, holder);
     }
 
     @Unique

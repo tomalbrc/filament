@@ -63,8 +63,8 @@ public class Armor implements ItemBehaviour<Armor.Config> {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Item item, Level level, Player player, InteractionHand interactionHand) {
-        if (item instanceof Equipable equipable) {
-            return equipable.swapWithEquipmentSlot(item, level, player, interactionHand);
+        if (item instanceof Equipable) {
+            return Cosmetic.swapWithEquipmentSlot(item, level, player, interactionHand);
         }
         return ItemBehaviour.super.use(item, level, player, interactionHand);
     }
