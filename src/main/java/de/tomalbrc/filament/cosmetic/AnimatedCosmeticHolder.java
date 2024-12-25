@@ -3,11 +3,13 @@ package de.tomalbrc.filament.cosmetic;
 import de.tomalbrc.bil.core.holder.entity.EntityHolder;
 import de.tomalbrc.bil.core.holder.wrapper.DisplayWrapper;
 import de.tomalbrc.bil.core.model.Model;
-import eu.pb4.polymer.virtualentity.api.VirtualEntityUtils;
+import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+
+import java.util.function.Consumer;
 
 public class AnimatedCosmeticHolder extends EntityHolder {
     private final LivingEntity entity;
@@ -16,10 +18,27 @@ public class AnimatedCosmeticHolder extends EntityHolder {
 
     private float bodyYaw;
 
-    public AnimatedCosmeticHolder(LivingEntity entity, Model model) {
-        super(entity, model);
+    private final Consumer<ServerGamePacketListenerImpl> startWatchingCallback;
 
+    public AnimatedCosmeticHolder(LivingEntity entity, Model model, Consumer<ServerGamePacketListenerImpl> startWatchingCallback) {
+        super(entity, model);
+        this.startWatchingCallback = startWatchingCallback;
         this.entity = entity;
+    }
+
+    @Override
+    public int getVehicleId() {
+        return -1;
+    }
+
+    @Override
+    public boolean addAdditionalDisplay(DisplayElement element) {
+        if (this.additionalDisplays.add(element)) {
+            this.addElement(element);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -80,7 +99,7 @@ public class AnimatedCosmeticHolder extends EntityHolder {
     public boolean startWatching(ServerGamePacketListenerImpl player) {
         var ret = super.startWatching(player);
 
-        player.send(VirtualEntityUtils.createRidePacket(this.entity.getId(), this.getDisplayIds()));
+        this.startWatchingCallback.accept(player);
 
         return ret;
     }
