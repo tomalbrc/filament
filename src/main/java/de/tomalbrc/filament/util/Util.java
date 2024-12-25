@@ -129,13 +129,18 @@ public class Util {
         element.setHandler(new VirtualElement.InteractionHandler() {
             @Override
             public void interactAt(ServerPlayer player, InteractionHand hand, Vec3 pos) {
-                if (player.gameMode.getGameModeForPlayer() != GameType.ADVENTURE)
+                ServerLevel serverLevel = element.getHolder().getAttachment().getWorld();
+                BlockPos blockPos = BlockPos.containing(element.getHolder().getAttachment().getPos());
+                if (serverLevel.mayInteract(player, blockPos)) {
                     blockEntity.interact(player, hand, blockEntity.getBlockPos().getCenter().subtract(0, 0.5f, 0).add(pos));
+                }
             }
 
             @Override
             public void attack(ServerPlayer player) {
-                if (player.gameMode.getGameModeForPlayer() != GameType.ADVENTURE) {
+                ServerLevel serverLevel = element.getHolder().getAttachment().getWorld();
+                BlockPos blockPos = BlockPos.containing(element.getHolder().getAttachment().getPos());
+                if (serverLevel.mayInteract(player, blockPos)) {
                     blockEntity.destroyStructure(player != null && !player.isCreative());
                 }
             }
@@ -162,8 +167,10 @@ public class Util {
         element.setHandler(new VirtualElement.InteractionHandler() {
             @Override
             public void attack(ServerPlayer player) {
-                if (player.gameMode.getGameModeForPlayer() != GameType.ADVENTURE) {
-                    element.getHolder().getAttachment().getWorld().destroyBlock(BlockPos.containing(element.getHolder().getAttachment().getPos()), false);
+                ServerLevel serverLevel = element.getHolder().getAttachment().getWorld();
+                BlockPos blockPos = BlockPos.containing(element.getHolder().getAttachment().getPos());
+                if (serverLevel.mayInteract(player, blockPos)) {
+                    serverLevel.destroyBlock(blockPos, false);
                 }
             }
         });
