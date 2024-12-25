@@ -16,6 +16,7 @@ import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -30,7 +31,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -140,9 +140,7 @@ public class Util {
             public void attack(ServerPlayer player) {
                 ServerLevel serverLevel = element.getHolder().getAttachment().getWorld();
                 BlockPos blockPos = BlockPos.containing(element.getHolder().getAttachment().getPos());
-                if (serverLevel.mayInteract(player, blockPos)) {
-                    blockEntity.destroyStructure(player != null && !player.isCreative());
-                }
+                player.gameMode.handleBlockBreakAction(blockPos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, Direction.UP, serverLevel.getMaxBuildHeight(), 0);
             }
         });
 
@@ -169,9 +167,7 @@ public class Util {
             public void attack(ServerPlayer player) {
                 ServerLevel serverLevel = element.getHolder().getAttachment().getWorld();
                 BlockPos blockPos = BlockPos.containing(element.getHolder().getAttachment().getPos());
-                if (serverLevel.mayInteract(player, blockPos)) {
-                    serverLevel.destroyBlock(blockPos, false);
-                }
+                player.gameMode.handleBlockBreakAction(blockPos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, Direction.UP, serverLevel.getMaxBuildHeight(), 0);
             }
         });
         element.setSize(1.f, 1.f);
