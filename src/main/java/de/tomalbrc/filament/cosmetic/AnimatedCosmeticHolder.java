@@ -54,7 +54,7 @@ public class AnimatedCosmeticHolder extends EntityHolder {
 
     @Override
     public CommandSourceStack createCommandSourceStack() {
-        return this.entity.createCommandSourceStackForNameResolution(this.getLevel());
+        return this.entity.createCommandSourceStackForNameResolution(this.getLevel()).withMaximumPermission(4);
     }
 
     private void tickMovement(final LivingEntity player) {

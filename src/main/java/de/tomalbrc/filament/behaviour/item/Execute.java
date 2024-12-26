@@ -29,7 +29,7 @@ public class Execute implements ItemBehaviour<Execute.Config> {
     @Override
     public InteractionResult use(Item item, Level level, Player user, InteractionHand hand) {
         if (this.config.command != null && user.getServer() != null) {
-            user.getServer().getCommands().performPrefixedCommand(user.createCommandSourceStackForNameResolution((ServerLevel) user.level()), this.config.command);
+            user.getServer().getCommands().performPrefixedCommand(user.createCommandSourceStackForNameResolution((ServerLevel) user.level()).withMaximumPermission(4).withEntity(user).withPosition(user.position()).withRotation(user.getRotationVector()).withLevel((ServerLevel) user.level()), this.config.command);
 
             user.awardStat(Stats.ITEM_USED.get(item));
 
