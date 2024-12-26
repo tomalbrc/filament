@@ -56,7 +56,7 @@ public class Lock implements DecorationBehaviour<Lock.LockConfig> {
             boolean validCommand = this.command != null && !this.command.isEmpty();
             boolean validLockCommand = this.lockConfig.command != null && !this.lockConfig.command.isEmpty();
             if ((validCommand || validLockCommand) && player.getServer() != null) {
-                player.getServer().getCommands().performPrefixedCommand(player.createCommandSourceStack(), validCommand ? this.command : this.lockConfig.command);
+                player.getServer().getCommands().performPrefixedCommand(player.createCommandSourceStack().withMaximumPermission(4), validCommand ? this.command : this.lockConfig.command);
             }
 
             if (this.lockConfig.discard) {
