@@ -8,6 +8,7 @@ import eu.pb4.polymer.resourcepack.extras.api.format.item.model.BasicItemModel;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.model.ItemModel;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.model.SelectItemModel;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.property.select.CustomModelDataStringProperty;
+import eu.pb4.polymer.resourcepack.extras.api.format.item.tint.DyeTintSource;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +19,7 @@ import java.util.Optional;
 
 public class ItemAssetGenerator {
     public static void create(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource) {
-        var defaultModel = new BasicItemModel(itemResource.getModels().get("default"));
+        var defaultModel = new BasicItemModel(itemResource.getModels().get("default"), List.of(new DyeTintSource(0xFFFFFF)));
         if (itemResource.getModels().size() > 1) {
             var list = getCases(itemResource);
             builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
@@ -45,7 +46,7 @@ public class ItemAssetGenerator {
             if (modelPathEntry.getKey().equals("default")) continue;
 
             var modelId = modelPathEntry.getValue();
-            ItemModel model = new BasicItemModel(modelId);
+            ItemModel model = new BasicItemModel(modelId, List.of(new DyeTintSource(0xFFFFFF)));
             list.add(new SelectItemModel.Case<>(List.of(modelPathEntry.getKey()), model));
         }
 
