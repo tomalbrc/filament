@@ -1,16 +1,21 @@
 # Decoration Examples
 
 ### Animated chest with solid 1x1 solid collision:
-```json
+```json5
 {
   "id": "mynamespace:example_chest",
-  "model": "mynamespace:custom/furniture/chests/example_chest",
+  "itemResource": {
+    "models": {
+      "default": "mynamespace:custom/furniture/chests/example_chest"
+    }
+  },
   "properties": {
-    "rotate": true
+    "rotate": true, // to allow 90° rotations
+    "rotateSmooth": true // to allow 45° rotations
   },
   "behaviour": {
     "animation": {
-      "model": "myFilamentNamespace:example_chest"
+      "model": "my_filament_namespace:example_chest"
     },
     "container": {
       "name": "Example Chest",
@@ -29,9 +34,9 @@
 }
 ```
 
-The `animation` behaviour gets used for animations by the container behaviour.
+The `animation` behaviour gets used for animations by various behaviours such as the `container` behaviour.
 
-It gets loaded from a filament datapack that contains the referenced model using the provided namespace
+The blockbench model gets loaded from a filament datapack that contains the referenced model using the provided namespace
 
 The `lock` behaviour also supports an animation using the `animation` behaviour
 

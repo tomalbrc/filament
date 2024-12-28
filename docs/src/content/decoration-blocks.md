@@ -1,23 +1,18 @@
 # Blocks
 
-The `blocks` field allows to use different blocks as solid hitboxes instead of ckient-side interaction entities and multiple blocks/multiblock decorations.
-
-`block` currently doesnt have any effect, barrier blocks will always be used!
-
+The `blocks` field allows to specify where barriers blocks should be placed for the decoration, instead of client-side interaction entities.
 It also allows for gaps:
-```json
+```json5
 {
   "blocks": [
     {
       "origin": [0.0, 0.0, 0.0],
-      "size": [1.0, 1.0, 1.0],
-      "block": "minecraft:barrier"
+      "size": [1.0, 1.0, 1.0]
     },
     {
       "origin": [2.0, 2.0, 2.0],
-      "size": [1.0, 1.0, 1.0],
-      "block": "minecraft:barrier"
-    },
+      "size": [1.0, 1.0, 1.0]
+    }
     // Add more block config objects as needed
   ]
 }
@@ -29,8 +24,7 @@ It also allows for gaps:
   "blocks": [
     {
       "origin": [0.0, 0.0, 0.0],
-      "size": [1.0, 2.0, 1.0],
-      "block": "minecraft:barrier"
+      "size": [1.0, 2.0, 1.0]
     }
   ]
 }

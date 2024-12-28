@@ -1,6 +1,6 @@
 # Decoration Behaviours
 
-Example of all behaviour fields for decorations:
+Example of some behaviours for decorations:
 
 ```json
 {
@@ -44,18 +44,9 @@ Example of all behaviour fields for decorations:
         "filterTags": null
       }
     ],
-    "fuel": {
-      "value": 10
-    },
-    "food": {
-      "hunger": 2,
-      "saturation": 1.0,
-      "canAlwaysEat": true,
-      "fastfood": true
-    },
     "cosmetic": {
       "slot": "head",
-      "model": "mynamespace:custom/models/clown_backpack_animated",
+      "model": "mynamespace:clown_backpack_animated",
       "autoplay": "idle",
       "scale": [1.5, 1.5, 1.5],
       "translation": [0.0, 0.5, 0.0]
@@ -67,17 +58,37 @@ Example of all behaviour fields for decorations:
 
 ## `animation` behaviour
 
-Defines animation behaviours for decorations.
+Defines an animation behaviour for decorations. Supports ajmodel/bbmodels.
+
+Models are placed in `data/mynamespace/filament/model/mymodel.bbmodel`.
+
+You would reference it as `mynamespace:mymodel` in the `model` field.
 
 ### Fields:
 - `model`: The name of the animated model associated with this animation (if applicable).
 - `autoplay`: The name of the animation to autoplay (if specified).
 
+### Example:
+```json
+{
+  "animation": {
+    "model": "mynamespace:mymodel",
+    "autoplay": "myAnimationName"
+  }
+}
+```
+
 ---
 
 ## `container` behaviour
 
-Defines container behaviours for decorations.
+Defines a container behaviour for decorations.
+
+Dropper/Hopper support is not implemented yet as of filament 0.10.7
+
+Allows to create chests, trashcans, etc.
+
+Works with the `animation` behaviour to play an animation defined in the bbmodel/ajmodel.
 
 ### Fields:
 - `name`: The name displayed in the container UI.
@@ -86,11 +97,86 @@ Defines container behaviours for decorations.
 - `openAnimation`: The name of the animation to play when the container is opened (if applicable).
 - `closeAnimation`: The name of the animation to play when the container is closed (if applicable).
 
+### Example:
+```json
+{
+  "container": {
+    "name": "Example Container",
+    "size": 9,
+    "purge": false,
+    "openAnimation": "openAnimation",
+    "closeAnimation": "closeAnimation"
+  }
+}
+```
+
 ---
 
-## `lock` behaviour
+## `interact_execute` behaviour
 
-Defines lock behaviours for decorations.
+Allows you to run a command lamps that either switch on/off or cycle through a list of light levels on player interaction.
+
+### Fields:
+- `on`: Light level to use for the 'on' state
+- `off`: Light level to use for the 'off' state
+- `cycle`: List of light levels to cycle through.
+
+### On/off lamp example:
+```json
+{
+  "lock": {
+    "on": 15,
+    "off": 0
+  }
+}
+```
+### Cycling lamp example:
+```json
+{
+  "lock": {
+    "cycle": [0, 2, 4, 6, 8, 10, 12, 14]
+  }
+}
+```
+
+---
+
+## `lamp` behaviour
+
+Allows you to create lamps that either switch on/off or cycle through a list of light levels on player interaction.
+
+### Fields:
+- `on`: Light level to use for the 'on' state
+- `off`: Light level to use for the 'off' state
+- `cycle`: List of light levels to cycle through. 
+
+### On/off lamp example:
+```json
+{
+  "lock": {
+    "on": 15,
+    "off": 0
+  }
+}
+```
+### Cycling lamp example:
+```json
+{
+  "lock": {
+    "cycle": [0, 2, 4, 6, 8, 10, 12, 14]
+  }
+}
+```
+
+---
+
+## `interact_execute` / `lock` behaviour
+
+This behaviour is available under 2 names, `interact_execute` and `lock`. The name `lock` exists to keep compatibility with older versions of filament / filament configs.  
+
+Defines a behaviour that runs a command, for decorations.
+
+It's an analog to the `execute` item behaviour.
 
 ### Fields:
 - `key`: The identifier of the key required to unlock.
@@ -103,17 +189,33 @@ Defines lock behaviours for decorations.
 
 ## `seat` behaviour
 
-Defines seating behaviours for decorations.
+Defines a seating behaviour for decorations.
+
+For chairs, benches, etc.
 
 ### Fields:
 - `offset`: The player seating offset.
 - `direction`: The rotation offset of the seat in degrees. Defaults to `180`
 
+### Single seat example:
+```json
+{
+  "seat": [
+    {
+      "offset": [0.0, 0.0, 0.0],
+      "direction": 0.0
+    }
+  ]
+}
+```
+
 ---
 
 ## `showcase` behaviour
 
-Defines showcase behaviours for decorations.
+Defines a showcase behaviour for decorations.
+
+Allows you to create shelves / item-frame like decorations.
 
 ### Fields:
 - `offset`: Offset for positioning the showcased item.
@@ -123,11 +225,29 @@ Defines showcase behaviours for decorations.
 - `filterItems`: Items to allow.
 - `filterTags`: Items with given item tags to allow.
 
+Single item showcase example:
+```json
+{
+  "showcase": [
+    {
+      "offset": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "type": "item",
+      "filterItems": ["minecraft:paper"],
+      "filterTags": ["minecraft:tag_example"]
+    }
+  ]
+}
+```
+
 ---
 
 ## `cosmetic` behaviour
 
 Defines cosmetic behaviours for decorations, supporting animated Blockbench models for chestplates and simple item models.
+
+Cosmetics are worn on the player using item display entities (except for the head slot)
 
 ### Fields:
 - `slot`: The equipment slot for the cosmetic (head or chest).
@@ -136,3 +256,15 @@ Defines cosmetic behaviours for decorations, supporting animated Blockbench mode
 - `scale`: Scale of the chest cosmetic. Defaults to `[1 1 1]`
 - `translation`: Translation of the chest cosmetic. Defaults to `[0 0 0]`.
 
+### Backpack example:
+```json
+{
+  "cosmetic": {
+    "slot": "chest",
+    "model": "mynamespace:clown_backpack_animated",
+    "autoplay": "idle",
+    "scale": [1.5, 1.5, 1.5],
+    "translation": [0.0, 0.5, 0.0]
+  }
+}
+```
