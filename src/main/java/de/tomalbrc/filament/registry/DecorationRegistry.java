@@ -91,7 +91,7 @@ public class DecorationRegistry {
         BehaviourUtil.postInitItem(item, item, data.behaviour());
 
         var resourceProvider = data.itemResource() == null ? new ItemResource(Map.of("default", data.model()), null, null) : data.itemResource();
-        if (resourceProvider != null) {
+        if (resourceProvider != null && data.itemModel() == null && resourceProvider.getModels() != null) {
             PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder ->
                     ItemAssetGenerator.create(resourcePackBuilder, data.id(), resourceProvider)
             );
