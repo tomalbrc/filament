@@ -19,14 +19,16 @@ import java.util.Optional;
 
 public class ItemAssetGenerator {
     public static void create(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource) {
-        var defaultModel = new BasicItemModel(itemResource.getModels().get("default"), List.of(new DyeTintSource(0xFFFFFF)));
+        var def = itemResource.getModels().get("default");
+        var defaultModel = new BasicItemModel(def == null ? itemResource.getModels().values().iterator().next() : def, List.of(new DyeTintSource(0xFFFFFF)));
         if (itemResource.getModels().size() > 1) {
             var list = getCases(itemResource);
             builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
                     new SelectItemModel<>(
                             new SelectItemModel.Switch<>(
                                     new CustomModelDataStringProperty(0),
-                                    list),
+                                    list
+                            ),
                             Optional.of(defaultModel)
                     ), ItemAsset.Properties.DEFAULT).toJson().getBytes(StandardCharsets.UTF_8)
             );
