@@ -54,8 +54,8 @@ public class Cosmetic implements ItemBehaviour<Cosmetic.Config> {
                 }
 
                 ItemStack itemStack3 = itemStack2.isEmpty() ? itemStack : itemStack2.copyAndClear();
-                itemStack.consume(1, player);
                 ItemStack itemStack4 = itemStack.copy();
+                itemStack.consume(1, player);
                 player.setItemSlot(equipmentSlot, itemStack4.copyWithCount(1));
                 return InteractionResultHolder.sidedSuccess(itemStack3, level.isClientSide());
             } else {
