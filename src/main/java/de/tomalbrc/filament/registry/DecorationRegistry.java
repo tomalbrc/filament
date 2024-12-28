@@ -93,7 +93,7 @@ public class DecorationRegistry {
         var resourceProvider = data.itemResource() == null ? new ItemResource(Map.of("default", data.model()), null, null) : data.itemResource();
         if (resourceProvider != null && data.itemModel() == null && resourceProvider.getModels() != null) {
             PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder ->
-                    ItemAssetGenerator.create(resourcePackBuilder, data.id(), resourceProvider)
+                    ItemAssetGenerator.create(resourcePackBuilder, data.id(), resourceProvider, data.vanillaItem().components().has(DataComponents.DYED_COLOR))
             );
         }
 

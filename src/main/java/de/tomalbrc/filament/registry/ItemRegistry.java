@@ -12,6 +12,7 @@ import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -56,7 +57,7 @@ public class ItemRegistry {
         var itemResources = data.itemResource();
         if (itemResources != null && data.itemModel() == null && itemResources.getModels() != null) {
             PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder ->
-                    ItemAssetGenerator.create(resourcePackBuilder, data.id(), itemResources)
+                    ItemAssetGenerator.create(resourcePackBuilder, data.id(), itemResources, data.vanillaItem().components().has(DataComponents.DYED_COLOR))
             );
         }
 

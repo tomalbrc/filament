@@ -18,9 +18,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class ItemAssetGenerator {
-    public static void create(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource) {
+    public static void create(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource, boolean tint) {
         var def = itemResource.getModels().get("default");
-        var defaultModel = new BasicItemModel(def == null ? itemResource.getModels().values().iterator().next() : def, List.of(new DyeTintSource(0xFFFFFF)));
+        var defaultModel = new BasicItemModel(def == null ? itemResource.getModels().values().iterator().next() : def, tint ? List.of(new DyeTintSource(0xFFFFFF)) : List.of());
         if (itemResource.getModels().size() > 1) {
             var list = getCases(itemResource);
             builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
