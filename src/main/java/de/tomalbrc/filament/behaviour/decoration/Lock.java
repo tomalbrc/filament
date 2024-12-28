@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.behaviour.decoration;
 
+import de.tomalbrc.bil.api.AnimatedHolder;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import net.minecraft.core.HolderLookup;
@@ -46,10 +47,9 @@ public class Lock implements DecorationBehaviour<Lock.LockConfig> {
                 mainHandItem.shrink(1);
             }
 
-            // TODO: FIX LOCK ANIMATION
-            //if (this.lock.unlockAnimation != null && !lock.unlockAnimation.isEmpty() && decorationBlockEntity instanceof AjDecorationBlockEntity ajDecorationEntity) {
-            //    decorationBlockEntity.play(lock.unlockAnimation);
-            //}
+            if (this.lockConfig.unlockAnimation != null && !lockConfig.unlockAnimation.isEmpty() && decorationBlockEntity.getDecorationHolder() instanceof AnimatedHolder animatedHolder) {
+                animatedHolder.getAnimator().playAnimation(lockConfig.unlockAnimation);
+            }
 
             this.unlocked = true;
 
