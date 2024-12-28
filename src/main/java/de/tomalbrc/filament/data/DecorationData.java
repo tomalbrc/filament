@@ -103,6 +103,15 @@ public record DecorationData(
         return this.behaviourConfig != null && this.behaviourConfig.has(Behaviours.COSMETIC);
     }
 
+
+    public boolean isLightEnabled() {
+        return properties().mayBeLightSource() || behaviourConfig().has(Behaviours.LAMP);
+    }
+
+    public boolean hasLightBehaviours() {
+        return behaviourConfig != null && behaviourConfig.has(Behaviours.LAMP);
+    }
+
     public record BlockConfig(Vector3f origin,
                        Vector3f size,
                        BlockState block) { }
