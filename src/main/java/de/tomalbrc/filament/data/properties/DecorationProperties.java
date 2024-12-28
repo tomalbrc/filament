@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.data.properties;
 
+import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -27,6 +28,7 @@ public class DecorationProperties extends BlockProperties {
     @Override
     public BlockBehaviour.Properties toBlockProperties() {
         BlockBehaviour.Properties props = super.toBlockProperties();
+        props.lightLevel((state) -> state.getValue(DecorationBlock.LIGHT_LEVEL));
         return props.dynamicShape().noOcclusion();
     }
 
