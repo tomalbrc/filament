@@ -112,35 +112,6 @@ Works with the `animation` behaviour to play an animation defined in the bbmodel
 
 ---
 
-## `interact_execute` behaviour
-
-Allows you to run a command lamps that either switch on/off or cycle through a list of light levels on player interaction.
-
-### Fields:
-- `on`: Light level to use for the 'on' state
-- `off`: Light level to use for the 'off' state
-- `cycle`: List of light levels to cycle through.
-
-### On/off lamp example:
-```json
-{
-  "lock": {
-    "on": 15,
-    "off": 0
-  }
-}
-```
-### Cycling lamp example:
-```json
-{
-  "lock": {
-    "cycle": [0, 2, 4, 6, 8, 10, 12, 14]
-  }
-}
-```
-
----
-
 ## `lamp` behaviour
 
 Allows you to create lamps that either switch on/off or cycle through a list of light levels on player interaction.

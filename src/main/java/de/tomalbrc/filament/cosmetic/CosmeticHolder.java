@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
@@ -15,7 +16,7 @@ import java.util.function.Consumer;
 
 public class CosmeticHolder extends ElementHolder {
     private final LivingEntity entity;
-    private final DisplayElement displayElement;
+    private final ItemDisplayElement displayElement;
 
     private double prevX = 0;
     private double prevZ = 0;
@@ -37,6 +38,7 @@ public class CosmeticHolder extends ElementHolder {
         if (cosmeticData != null) {
             this.displayElement.setTranslation(cosmeticData.translation);
             this.displayElement.setScale(cosmeticData.scale);
+            this.displayElement.setModelTransformation(ItemDisplayContext.HEAD);
         }
 
         this.displayElement.setTeleportDuration(1);
