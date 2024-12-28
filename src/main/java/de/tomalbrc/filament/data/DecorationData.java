@@ -125,6 +125,13 @@ public final class DecorationData extends Data {
                 "itemGroup=" + group + ']';
     }
 
+    public boolean isLightEnabled() {
+        return properties().mayBeLightSource() || behaviour().has(Behaviours.LAMP);
+    }
+
+    public boolean hasLightBehaviours() {
+        return behaviour().has(Behaviours.LAMP);
+    }
 
     public record BlockConfig(Vector3f origin,
                               Vector3f size,

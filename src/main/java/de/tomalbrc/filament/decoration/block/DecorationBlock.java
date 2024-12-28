@@ -49,18 +49,18 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
         // todo
         //FlammableBlockRegistry.getDefaultInstance().add(this, 5, 10);
 
-        this.registerDefaultState(this.stateDefinition.any()
-                .setValue(LIGHT_LEVEL, 0)
-                .setValue(WATERLOGGED, false)
-        );
+        var data = getDecorationData();
+        var state = this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(LIGHT_LEVEL, !data.hasLightBehaviours() && data.properties().mayBeLightSource() && !data.properties().lightEmission.isMap() ? data.properties().lightEmission.getRawValue() : 0);
+        this.registerDefaultState(state);
     }
+
 
     public DecorationData getDecorationData() {
         return DecorationRegistry.getDecorationDefinition(this.decorationId);
     }
 
     @Override
-    public boolean forceLightUpdates(BlockState blockState) { return blockState.getValue(LIGHT_LEVEL) > 0; }
+    public boolean forceLightUpdates(BlockState blockState) { return blockState.hasProperty(LIGHT_LEVEL) && blockState.getValue(LIGHT_LEVEL) > 0; }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
