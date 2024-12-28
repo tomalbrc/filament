@@ -2,7 +2,6 @@ package de.tomalbrc.filament.decoration.util;
 
 import eu.pb4.polymer.core.api.entity.PolymerEntity;
 import eu.pb4.polymer.virtualentity.api.tracker.EntityTrackedData;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,8 +15,6 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 
 public class SeatEntity extends Entity implements PolymerEntity {
-    private Direction direction = Direction.UP;
-
     public SeatEntity(EntityType type, Level world) {
         super(type, world);
         this.setInvisible(true);
@@ -53,7 +50,7 @@ public class SeatEntity extends Entity implements PolymerEntity {
 
     @Override
     public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
-        return Vec3.atBottomCenterOf(this.getOnPos()).relative(this.direction, 1);
+        return Vec3.atBottomCenterOf(this.getOnPos());
     }
 
     @Override
