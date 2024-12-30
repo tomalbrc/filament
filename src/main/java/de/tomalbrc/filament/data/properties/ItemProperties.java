@@ -18,6 +18,7 @@ public class ItemProperties {
     public int stackSize = 64;
     public List<String> lore;
     public boolean fireResistant;
+    public boolean copyComponents;
 
     public void appendHoverText(List<Component> tooltip) {
         if (this.lore != null)

@@ -38,6 +38,12 @@ public class ItemRegistry {
             properties.component(component.type(), component.value());
         }
 
+        if (data.properties().copyComponents) {
+            for (TypedDataComponent component : data.vanillaItem().components()) {
+                properties.component(component.type(), component.value());
+            }
+        }
+
         SimpleItem item = new SimpleItem(null, properties, data, data.vanillaItem());
 
         BehaviourUtil.postInitItem(item, item, data.behaviourConfig());

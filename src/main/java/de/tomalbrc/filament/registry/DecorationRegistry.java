@@ -78,6 +78,12 @@ public class DecorationRegistry {
             properties.component(component.type(), component.value());
         }
 
+        if (data.properties().copyComponents) {
+            for (TypedDataComponent component : data.vanillaItem().components()) {
+                properties.component(component.type(), component.value());
+            }
+        }
+
         if (data.behaviourConfig() != null && data.isContainer()) {
             Container.ContainerConfig container = data.behaviourConfig().get(Behaviours.CONTAINER);
             if (container.canPickup)
