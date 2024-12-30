@@ -35,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Universal item, base for all filament items, with behaviour support
@@ -191,7 +192,9 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
             }
         }
 
-        return this.modelData != null ? this.modelData.get("default").value() : -1;
+        return this.modelData != null ?
+                this.modelData.get("default").value() : itemData.components().has(DataComponents.CUSTOM_DATA) ?
+                Objects.requireNonNull(itemData.components().get(DataComponents.CUSTOM_MODEL_DATA)).value() : -1;
     }
 
     @Override
