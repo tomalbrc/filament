@@ -26,6 +26,9 @@ public class FilamentConfig {
     @SerializedName("alternative_block_placement")
     public boolean alternativeBlockPlacement = false;
 
+    @SerializedName("alternative_cosmetic_placement")
+    public boolean alternativeCosmeticPlacement = false;
+
     public static FilamentConfig getInstance() {
         if (instance == null) {
             if (!load()) // only save if file wasn't just created
