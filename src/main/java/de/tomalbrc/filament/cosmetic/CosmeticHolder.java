@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.cosmetic;
 
 import de.tomalbrc.filament.behaviour.item.Cosmetic;
+import de.tomalbrc.filament.util.FilamentConfig;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
@@ -8,8 +9,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 import java.util.function.Consumer;
 
@@ -37,6 +40,10 @@ public class CosmeticHolder extends ElementHolder {
         if (cosmeticData != null) {
             this.displayElement.setTranslation(cosmeticData.translation);
             this.displayElement.setScale(cosmeticData.scale);
+            if (FilamentConfig.getInstance().alternativeCosmeticPlacement) {
+                this.displayElement.setModelTransformation(ItemDisplayContext.HEAD);
+                this.displayElement.setTranslation(new Vector3f(0, 2.5f,0));
+            }
         }
 
         this.displayElement.setTeleportDuration(1);
