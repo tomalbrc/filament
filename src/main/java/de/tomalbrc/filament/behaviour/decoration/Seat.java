@@ -85,7 +85,7 @@ public class Seat implements DecorationBehaviour<Seat.SeatConfig> {
     }
 
     public Vec3 seatTranslation(DecorationBlockEntity decorationBlockEntity, Seat.SeatMeta seat) {
-        Vec3 v3 = new Vec3(seat.offset).subtract(0, 0.3, 0).yRot((float) Math.toRadians(decorationBlockEntity.getVisualRotationYInDegrees()+180));
+        Vec3 v3 = new Vec3(seat.offset).subtract(0, 0.3, 0).yRot((float) Math.toRadians(decorationBlockEntity.getVisualRotationYInDegrees()+(FilamentConfig.getInstance().alternativeBlockPlacement ? 0 : 180)));
         return new Vec3(-v3.x, v3.y, v3.z);
     }
 
