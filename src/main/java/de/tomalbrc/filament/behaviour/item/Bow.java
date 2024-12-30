@@ -42,6 +42,7 @@ public class Bow implements ItemBehaviour<Bow.Config> {
     }
 
     @Override
+    @NotNull
     public Optional<Integer> getEnchantmentValue() {
         return Optional.of(1);
     }

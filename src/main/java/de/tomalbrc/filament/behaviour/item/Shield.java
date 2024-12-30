@@ -50,7 +50,7 @@ public class Shield implements ItemBehaviour<Shield.Config> {
     }
 
     @Override
-    public EquipmentSlot getEquipmentSlot() {
+    public @NotNull EquipmentSlot getEquipmentSlot() {
         return EquipmentSlot.OFFHAND;
     }
 

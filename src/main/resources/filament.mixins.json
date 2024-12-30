@@ -24,6 +24,8 @@
     "behaviour.cosmetic.ServerPlayerMixin",
     "behaviour.crop.BeeMixin",
     "behaviour.crop.HarvestFarmlandMixin",
+    "behaviour.elytra.LivingEntityMixin",
+    "behaviour.elytra.PlayerMixin",
     "behaviour.oxidizable.WeatheringCopperMixin",
     "behaviour.shield.LivingEntityMixin",
     "behaviour.shield.PlayerMixin",

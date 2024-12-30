@@ -70,7 +70,7 @@ public class Armor implements ItemBehaviour<Armor.Config> {
     }
 
     @Override
-    public EquipmentSlot getEquipmentSlot() {
+    public @NotNull EquipmentSlot getEquipmentSlot() {
         return this.config.slot;
     }
 

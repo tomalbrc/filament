@@ -65,7 +65,7 @@ public class Cosmetic implements ItemBehaviour<Cosmetic.Config> {
     }
 
     @Override
-    public EquipmentSlot getEquipmentSlot() {
+    public @NotNull EquipmentSlot getEquipmentSlot() {
         return this.config.slot;
     }
 

@@ -2,7 +2,6 @@ package de.tomalbrc.filament.mixin.behaviour.cosmetic;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import de.tomalbrc.filament.behaviour.Behaviours;
-import de.tomalbrc.filament.behaviour.item.Armor;
 import de.tomalbrc.filament.behaviour.item.Cosmetic;
 import de.tomalbrc.filament.cosmetic.AnimatedCosmeticHolder;
 import de.tomalbrc.filament.cosmetic.CosmeticHolder;
@@ -44,18 +43,15 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
     @Unique
     private final Map<String, ElementHolder> filamentCosmeticHolder = new Object2ObjectOpenHashMap<>();
 
+    // COSMETIC, ARMOR, ELYTRA
     @Inject(method = "getEquipmentSlotForItem", at = @At(value = "HEAD"), cancellable = true)
     private void filament$customGetEquipmentSlotForItem(ItemStack itemStack, CallbackInfoReturnable<EquipmentSlot> cir) {
-        Cosmetic.Config cosmetic = CosmeticUtil.getCosmeticData(itemStack);
-        if (cosmetic != null) {
-            cir.setReturnValue(cosmetic.slot);
-        }
-        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.ARMOR))  {
-            Armor.Config armor = simpleItem.get(Behaviours.ARMOR).getConfig();
-            cir.setReturnValue(armor.slot);
+        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.getEquipmentSlot() != EquipmentSlot.MAINHAND)  {
+            cir.setReturnValue(simpleItem.getEquipmentSlot());
         }
     }
 
+    // ARMOR
     @Inject(method = "onEquipItem", at = @At(value = "HEAD"))
     private void filament$customOnEquipItem(EquipmentSlot equipmentSlot, ItemStack oldItemStack, ItemStack newItemStack, CallbackInfo ci) {
         if (equipmentSlot == EquipmentSlot.HEAD) {
@@ -76,6 +72,7 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
         }
     }
 
+    // ARMOR
     @Inject(method = "doHurtEquipment", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/entity/LivingEntity;getItemBySlot(Lnet/minecraft/world/entity/EquipmentSlot;)Lnet/minecraft/world/item/ItemStack;", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void filament$customOnDoHurtEquipment(DamageSource damageSource, float f, EquipmentSlot[] equipmentSlots, CallbackInfo ci, @Local ItemStack itemStack, @Local EquipmentSlot equipmentSlot) {
         if (!(itemStack.getItem() instanceof ArmorItem) && itemStack.getItem() instanceof SimpleItem && itemStack.canBeHurtBy(damageSource)) {
@@ -84,6 +81,7 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
         }
     }
 
+    // COSMETIC
     @Inject(method = "remove", at = @At(value = "HEAD"))
     private void filament$onRemove(Entity.RemovalReason removalReason, CallbackInfo ci) {
         var self = LivingEntity.class.cast(this);

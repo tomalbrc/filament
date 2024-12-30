@@ -13,10 +13,12 @@ import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.core.api.item.PolymerItemUtils;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -163,6 +165,31 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
         }
         this.properties.appendHoverText(list);
         super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
+    }
+
+    @Override
+    public boolean isValidRepairItem(ItemStack itemStack, ItemStack itemStack2) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                var valid = itemBehaviour.isValidRepairItem(itemStack, itemStack2);
+                if (valid)
+                    return true;
+            }
+        }
+        return super.isValidRepairItem(itemStack, itemStack2);
+    }
+
+    @Override
+    @NotNull
+    public Holder<SoundEvent> getEquipSound() {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                var sound = itemBehaviour.getEquipSound();
+                if (sound != null)
+                    return sound;
+            }
+        }
+        return Equipable.super.getEquipSound();
     }
 
     @Override

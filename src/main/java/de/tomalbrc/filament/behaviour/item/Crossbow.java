@@ -75,7 +75,7 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config> {
     }
 
     @Override
-    public Optional<Integer> getEnchantmentValue() {
+    public @NotNull Optional<Integer> getEnchantmentValue() {
         return Optional.of(1);
     }
 
