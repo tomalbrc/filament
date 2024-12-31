@@ -34,14 +34,14 @@ public class ItemRegistry {
 
         Item.Properties properties = data.properties().toItemProperties(data.behaviourConfig());
 
-        for (TypedDataComponent component : data.components()) {
-            properties.component(component.type(), component.value());
-        }
-
         if (data.properties().copyComponents) {
             for (TypedDataComponent component : data.vanillaItem().components()) {
                 properties.component(component.type(), component.value());
             }
+        }
+
+        for (TypedDataComponent component : data.components()) {
+            properties.component(component.type(), component.value());
         }
 
         SimpleItem item = new SimpleItem(null, properties, data, data.vanillaItem());

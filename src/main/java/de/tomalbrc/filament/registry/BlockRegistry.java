@@ -43,15 +43,16 @@ public class BlockRegistry {
         SimpleBlock customBlock = new SimpleBlock(blockProperties, data);
 
         Item.Properties itemProperties = data.properties().toItemProperties();
-        for (TypedDataComponent component : data.components()) {
-            itemProperties.component(component.type(), component.value());
-        }
-
         if (data.properties().copyComponents) {
             for (TypedDataComponent component : data.vanillaItem().components()) {
                 itemProperties.component(component.type(), component.value());
             }
         }
+
+        for (TypedDataComponent component : data.components()) {
+            itemProperties.component(component.type(), component.value());
+        }
+
 
         SimpleBlockItem item = new SimpleBlockItem(itemProperties, customBlock, data);
         BehaviourUtil.postInitItem(item, item, data.behaviourConfig());

@@ -73,15 +73,14 @@ public class DecorationRegistry {
         BlockRegistry.registerBlock(data.id(), block);
 
         Item.Properties properties = data.properties().toItemProperties();
-
-        for (TypedDataComponent component : data.components()) {
-            properties.component(component.type(), component.value());
-        }
-
         if (data.properties().copyComponents) {
             for (TypedDataComponent component : data.vanillaItem().components()) {
                 properties.component(component.type(), component.value());
             }
+        }
+
+        for (TypedDataComponent component : data.components()) {
+            properties.component(component.type(), component.value());
         }
 
         if (data.behaviourConfig() != null && data.isContainer()) {
