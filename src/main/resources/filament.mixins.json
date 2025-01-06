@@ -15,7 +15,6 @@
     "StateDefinitionBuilderMixin",
     "WorldLoaderMixin",
     "behaviour.FuelValuesMixin",
-    "behaviour.PlayerMixin",
     "behaviour.banner.LoomMenu$5Mixin",
     "behaviour.banner.LoomMenuMixin",
     "behaviour.bow.MobMixin",
