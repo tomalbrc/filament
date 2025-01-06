@@ -55,7 +55,7 @@ public class CanSurvive implements BlockBehaviour<CanSurvive.Config> {
             }
         }
 
-        return this.config.solidOnly && belowState.isSolid();
+        return false;
     }
 
     private boolean test(Direction.Axis axis, BlockPos blockPos, LevelReader levelReader, BlockState blockState) {
@@ -98,6 +98,5 @@ public class CanSurvive implements BlockBehaviour<CanSurvive.Config> {
     public static class Config {
         public List<Block> blocks;
         public List<ResourceLocation> tags;
-        public boolean solidOnly = false;
     }
 }
