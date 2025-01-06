@@ -6,6 +6,7 @@ import de.tomalbrc.filament.command.DyeCommand;
 import de.tomalbrc.filament.command.HatCommand;
 import de.tomalbrc.filament.command.PickCommand;
 import de.tomalbrc.filament.data.ItemGroupData;
+import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.*;
 import de.tomalbrc.filament.util.*;
@@ -46,8 +47,8 @@ public class Filament implements ModInitializer {
 
         PolymerBlockUtils.BREAKING_PROGRESS_UPDATE.register(VirtualDestroyStage::updateState);
         PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
-            if (player instanceof ServerPlayer serverPlayer) {
-                ((VirtualDestroyStage.ServerGamePacketListenerExtF) serverPlayer.connection).filament$getVirtualDestroyStage().setState(-1);
+            if (state.getBlock() instanceof DecorationBlock && !world.isClientSide()) {
+                ((VirtualDestroyStage.ServerGamePacketListenerExtF) ((ServerPlayer)player).connection).filament$getVirtualDestroyStage().setState(-1);
             }
         });
 
