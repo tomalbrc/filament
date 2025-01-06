@@ -7,6 +7,7 @@ import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
+import de.tomalbrc.filament.util.Translations;
 import de.tomalbrc.filament.util.Util;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
@@ -50,6 +51,7 @@ public class ItemRegistry {
 
         var item = ItemRegistry.registerItem(key(data.id()), (newProps) -> new SimpleItem(null, newProps, data, data.vanillaItem()), properties, data.group() != null ? data.group() : Constants.ITEM_GROUP_ID);
         BehaviourUtil.postInitItem(item, item, data.behaviour());
+        Translations.add(item, data);
 
         REGISTERED_ITEMS++;
     }
