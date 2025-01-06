@@ -39,6 +39,7 @@ public class Behaviours {
     public static final BehaviourType<Slab, Slab.SlabConfig> SLAB = registerBehaviour("slab", Slab.class);
     public static final BehaviourType<Trapdoor, Trapdoor.Config> TRAPDOOR = registerBehaviour("trapdoor", Trapdoor.class);
     public static final BehaviourType<Door, Door.Config> DOOR = registerBehaviour("door", Door.class);
+    public static final BehaviourType<Sapling, Sapling.Config> SAPLING = registerBehaviour("sapling", Sapling.class);
     public static final BehaviourType<SimpleWaterloggable, SimpleWaterloggable.Config> SIMPLE_WATERLOGGABLE = registerBehaviour("simple_waterloggable", SimpleWaterloggable.class);
     public static final BehaviourType<Repeater, Repeater.RepeaterConfig> REPEATER = registerBehaviour("repeater", Repeater.class);
     public static final BehaviourType<Powersource, Powersource.PowersourceConfig> POWERSOURCE = registerBehaviour("powersource", Powersource.class);
