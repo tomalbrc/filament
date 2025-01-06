@@ -111,15 +111,14 @@ public class Sapling implements BlockBehaviour<Sapling.Config>, BonemealableBloc
 
     @Override
     public boolean isBonemealSuccess(Level level, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
+        if (level instanceof ServerLevel serverLevel && blockState.getBlock() instanceof SimpleBlock polymerBlock && !(polymerBlock.getPolymerBlockState(blockState, PacketContext.of()).getBlock() instanceof BonemealableBlock)) {
+            Util.handleBoneMealEffects(serverLevel, blockPos);
+        }
         return level.random.nextFloat() < config.bonemealGrowthChance;
     }
 
     @Override
     public void performBonemeal(ServerLevel serverLevel, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
-        if (blockState.getBlock() instanceof SimpleBlock polymerBlock && !(polymerBlock.getPolymerBlockState(blockState, PacketContext.of()).getBlock() instanceof BonemealableBlock)) {
-            Util.handleBoneMealEffects(serverLevel, blockPos);
-        }
-
         this.grow(serverLevel, blockPos, blockState, randomSource);
     }
 
