@@ -27,7 +27,7 @@ public class Strippable implements BlockBehaviour<Strippable.StrippableConfig> {
 
     @Override
     public void init(Item item, Block block, BehaviourHolder behaviourHolder) {
-        StrippableRegistry.add(block, config.replacement);
+        StrippableRegistry.add(block, config.replacement, config.lootTable);
     }
 
     public static class StrippableConfig {
@@ -35,5 +35,9 @@ public class Strippable implements BlockBehaviour<Strippable.StrippableConfig> {
          * Replacement block
          */
         public ResourceLocation replacement;
+        /**
+         * Loot to drop when a block is stripped
+         */
+        public ResourceLocation lootTable;
     }
 }
