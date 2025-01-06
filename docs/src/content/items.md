@@ -75,10 +75,11 @@ Defines a set of vanilla minecraft components like `minecraft:food`, `minecraft:
 Here is a basic example of an item configuration:
 
 ~~~admonish example
-```json
+```json5
 {
   "id": "mynamespace:clown_horn",
   "vanillaItem": "minecraft:paper",
+  "itemModel": "minecraft:mymodel", // optional and only available in >= 1.21.4
   "itemResource": {
     "models": {
       "default": "mynamespace:custom/misc/clown_horn"

@@ -2,7 +2,8 @@
 
 [Introduction](README.md)
 
-- [Using filament](usage.md)
+- [Using filament](USAGE.md)
+- [Oraxen / ItemsAdder compatibility](THIRD-PARTY-COMPAT.md)
 - [Developers](DEVELOPERS.md)
 - [Creating content](content/README.md)
     - [Item Groups](content/item-groups.md)
@@ -21,3 +22,10 @@
         - [Blocks](content/decoration-blocks.md)
         - [Simple and complex decorations](content/decoration-complex.md)
         - [Decoration Examples](content/decoration-examples.md)
+- [Tutorials](tutorial/README.md)
+  - [Armor](tutorial/ARMOR.md)
+  - [Cosmetic](tutorial/ARMOR.md)
+  - [Simple block](tutorial/ARMOR.md)
+  - [Simple item](tutorial/ARMOR.md)
+  - [Sword](tutorial/ARMOR.md)
+  - [Armor](tutorial/ARMOR.md)
