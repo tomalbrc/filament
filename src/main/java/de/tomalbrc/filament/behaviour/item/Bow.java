@@ -26,7 +26,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
- * Fuel behaviour
+ * Bow behaviour
  */
 public class Bow implements ItemBehaviour<Bow.Config> {
     private final Config config;

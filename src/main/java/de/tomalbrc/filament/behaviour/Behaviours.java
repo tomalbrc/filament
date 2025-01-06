@@ -35,6 +35,7 @@ public class Behaviours {
     public static final BehaviourType<Count, Count.CountConfig> COUNT = registerBehaviour("count", Count.class);
     public static final BehaviourType<Crop, Crop.Config> CROP = registerBehaviour("crop", Crop.class);
     public static final BehaviourType<Budding, Budding.Config> BUDDING = registerBehaviour("budding", Budding.class);
+    public static final BehaviourType<Enchantable, Enchantable.Config> ENCHANTABLE = registerBehaviour("enchantable", Enchantable.class);
     public static final BehaviourType<Facing, Facing.Config> FACING = registerBehaviour("facing", Facing.class);
     public static final BehaviourType<HorizontalFacing, HorizontalFacing.Config> HORIZONTAL_FACING = registerBehaviour("horizontal_facing", HorizontalFacing.class);
     public static final BehaviourType<Powerlevel, Powerlevel.PowerlevelConfig> POWERLEVEL = registerBehaviour("powerlevel", Powerlevel.class);

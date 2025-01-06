@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Food behaviour for edible items
+ * Legacy from 1.20, use food or edible component in 1.21.x
  */
 public class Food implements ItemBehaviour<Food.FoodConfig> {
     private final FoodConfig config;
