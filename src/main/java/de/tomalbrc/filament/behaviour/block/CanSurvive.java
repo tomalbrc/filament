@@ -31,6 +31,7 @@ public class CanSurvive implements BlockBehaviour<CanSurvive.Config> {
         return this.config;
     }
 
+    @Override
     public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
         Direction.Axis axis = getAxisOrNull(blockState);
         if (axis != null) {
@@ -96,6 +97,6 @@ public class CanSurvive implements BlockBehaviour<CanSurvive.Config> {
     public static class Config {
         public List<Block> blocks;
         public List<ResourceLocation> tags;
-        public boolean solidOnly = true;
+        public boolean solidOnly = false;
     }
 }
