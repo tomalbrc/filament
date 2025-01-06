@@ -14,14 +14,14 @@ The Items category contains items such as food, instruments, hats, armour, weapo
 ---
 
 ## Blocks:
-Blocks with a custom texture, ranges from simple blocks, to slabs, doors, trapdoors, crops, ores, and more. 
+Blocks with a custom texture, ranges from simple blocks, to slabs, doors, trapdoors, crops, saplings, ores, and more. 
 
 [More info...](blocks.md)
 
 ---
 
 ## Decorations:
-Blocks that rotate by 45° with multi-block and waterlogging support.
-For everything that a block would not suffice for.
+Blocks that rotate by 45° with multi-block, waterlogging support, seats, showcases and more!
+For everything that a normal block would not suffice for.
 
 [More info...](decorations.md)

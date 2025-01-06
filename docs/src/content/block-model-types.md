@@ -24,8 +24,9 @@ top_slab_waterlogged | 5
 bottom_slab | 5
 bottom_slab_waterlogged | 5
 
+See the [polymer documentation](https://polymer.pb4.eu/latest/polymer-blocks/basics/) for more infos about the properties of the block model types
 
-When choosing blocks that break instantly on the client, like plant blocks, the destroyTime property in the block config has to be 0 as well.
+When choosing blocks that break instantly on the client, like plant_block or tripwire_block for example, the destroyTime property in the block config has to be 0 as well.
 
 You can map the `blockModelType` field of block configs to blockstates, this allows you to change the hitbox of the block depending on the block-state.
 

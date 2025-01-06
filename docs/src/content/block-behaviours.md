@@ -166,6 +166,34 @@ You can make farmer villagers able to plant the seeds using the item tag `villag
 
 ---
 
+### `sapling` behaviour
+
+Makes your block behave like vanilla saplings, growing based on random ticks and bonemealable.
+
+All identifiers for the configured_placements are optional, they will only get used when configured.
+
+You add your own configured placement for trees using vanilla datapack mechanics.
+
+#### Checkout the example datapack for the test_tree block!
+
+- **Block-State-Properties to provide models for**:
+  - `stage`: 0 to 1. You can provide a single model to use for both states, use `default` as key in that case.
+
+- **Fields**:
+  - `tree`: Identifier for a configured_placement (add via datapack or use vanilla ones)
+  - `minLightLevel`: Defaults to `9`
+  - `secondaryChance`: Chance between 0 and 1 for `secondaryMegaTree` or `secondaryFlowers` placement to be used. Defaults to `0`
+  - `randomTickGrowthChance`: Defaults to `0.15`
+  - `bonemealGrowthChance`: Defaults to `0.45`
+  - `megaTree`: Identifier for a configured_placement. Will get used for 2x2 sapling placements
+  - `secondaryMegaTree`: Identifier for a configured_placement. Alternative to `megaTree` based on `secondaryChance`
+  - `tree`: Identifier for a configured_placement. Normal tree without flower
+  - `secondaryTree`: Identifier for a configured_placement. Alternative to `tree` based on `secondaryChance`
+  - `flowers`: Identifier for a configured_placement. Used when there is a flower neaby.
+  - `secondaryFlowers`: Identifier for a configured_placement. Alternative to `flowers` based on `secondaryChance`
+
+---
+
 ### `can_survive` behaviour
 
 Checks for the block below with one of the configured block tags or blocks list.
@@ -180,7 +208,6 @@ Useful for bushes/plants/crops/flowers and more
     - Example: `blocks: ["minecraft:stone", "minecraft:sand"]`
   - `tags`: List of block-tags this block can survive on. 
     - Example: `tags: ["minecraft:dirt", "minecraft:sculk_replaceable"]`
-  - `solidOnly`: Only checks if the supporting block is solid. Requires `blocks` and `tags` to be empty.
 
 ---
 
@@ -188,13 +215,22 @@ Useful for bushes/plants/crops/flowers and more
 
 Defines the block as a redstone power source.
 
-The `value` field can map to a block-state, like many other block-related fields.
+The `value` field can map to a block-state, like many other block related fields.
 
 Example:
 ```json
-"value": {
-  "age=0": 0,
-  "age=1": 15
+{
+  "value": {
+    "age=0": 0,
+    "age=1": 15
+  }
+}
+```
+
+Example with constant value:
+```json
+{
+  "value": 15
 }
 ```
 
@@ -236,7 +272,8 @@ Supplies a `powerlevel` blockstate and changes to it depending on the input reds
 Defines the block as strippable, replacing it with another block when interacted with an axe.
 
 - **Fields**:
-    - `replacement`: The identifier of the block to replace the current block with (e.g., "minecraft:stone").
+    - `replacement`: The identifier of the block to replace the current block with. Example: `minecraft:stone`
+    - `lootTable`: Identifier for a loot table to use when the block is stripped. Example: `minecraft:bell`
 
 ---
 
@@ -304,7 +341,6 @@ The values of the `min` and `max` fields can be mapped to block-states.
 Example:
 ```json
 {
-  ...,
   "behaviour": {
     "drop_xp": {
       "min": {
@@ -322,9 +358,20 @@ Example:
 }
 ```
 
+Example with constant values:
+```json
+{
+  "behaviour": {
+    "drop_xp": 6
+  }
+}
+```
+
 - **Fields**:
   - `min`: Minimum amount of XP to drop
   - `max`: Maximum amount of XP to drop
+
+---
 
 ### `oxidizable` behaviour
 
@@ -333,6 +380,8 @@ Defines the block as oxidizing block, similar to the vanilla copper blocks, rand
 - **Fields**:
   - `replacement`: The identifier of the block to replace the current block with (e.g., "minecraft:stone").
   - `weatherState`: The current weathering state of this block. Can be `unaffected`, `exposed`, `weathered`, `oxidized`. Defaults to `unaffected`. A `weatherState` of `oxidized` will not oxidize any further.
+
+---
 
 ### `budding` behaviour
 
@@ -345,3 +394,5 @@ If the blocks in `grows` have directional/facing block state properties, they di
   - `chance`: Chance of the block to grow another block or move a block to the next growth stage in percent, from 0 to 100. Defaults to 20
   - `sides`: List of sides blocks can grow out. Can be `north`, `south`, `east`, `west`, `up` or `down`. Defaults to all directions
   - `grows`: List of id's of blocks for the grow stages. Example: `["minecraft:chain", "minecraft:end_rod"]`
+
+---
