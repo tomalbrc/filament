@@ -8,6 +8,7 @@ import de.tomalbrc.filament.generator.ItemAssetGenerator;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
+import de.tomalbrc.filament.util.Translations;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -53,6 +54,7 @@ public class ItemRegistry {
 
         var item = ItemRegistry.registerItem(key(data.id()), (newProps) -> new SimpleItem(null, newProps, data, data.vanillaItem()), properties, data.group() != null ? data.group() : Constants.ITEM_GROUP_ID);
         BehaviourUtil.postInitItem(item, item, data.behaviour());
+        Translations.add(item, data);
 
         var itemResources = data.itemResource();
         if (itemResources != null && data.itemModel() == null && itemResources.getModels() != null) {

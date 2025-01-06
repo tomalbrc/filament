@@ -11,6 +11,7 @@ import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.generator.ItemAssetGenerator;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
+import de.tomalbrc.filament.util.Translations;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -67,6 +68,7 @@ public class BlockRegistry {
         SimpleBlockItem item = ItemRegistry.registerItem(ItemRegistry.key(data.id()), (newProps) -> new SimpleBlockItem(newProps, customBlock, data), itemProperties, data.group() != null ? data.group() : Constants.BLOCK_GROUP_ID);
         BehaviourUtil.postInitItem(item, item, data.behaviour());
         BehaviourUtil.postInitBlock(item, customBlock, customBlock, data.behaviour());
+        Translations.add(item, customBlock, data);
 
         customBlock.postRegister();
 

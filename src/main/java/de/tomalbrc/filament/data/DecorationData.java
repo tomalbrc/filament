@@ -16,6 +16,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
@@ -28,6 +29,7 @@ public final class DecorationData extends Data {
     public DecorationData(
             @NotNull ResourceLocation id,
             @Nullable Item vanillaItem,
+            @Nullable Map<String, String> translations,
             @Nullable ItemResource itemResource,
             @Nullable ResourceLocation itemModel,
             @Nullable BehaviourConfigMap behaviourConfig,
@@ -38,7 +40,7 @@ public final class DecorationData extends Data {
             @Nullable List<BlockConfig> blocks,
             @Nullable Vector2f size
     ) {
-        super(id, vanillaItem, itemResource, itemModel, behaviourConfig, components, itemGroup);
+        super(id, vanillaItem, translations, itemResource, itemModel, behaviourConfig, components, itemGroup);
         this.model = model;
         this.blocks = blocks;
         this.size = size;

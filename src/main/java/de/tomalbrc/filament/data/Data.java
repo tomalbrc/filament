@@ -17,6 +17,7 @@ import java.util.Map;
 public abstract class Data {
     protected final @NotNull ResourceLocation id;
     protected final @Nullable Item vanillaItem;
+    protected final @Nullable Map<String, String> translations;
     protected final @Nullable ItemResource itemResource;
     protected final @Nullable ResourceLocation itemModel;
     protected final @Nullable BehaviourConfigMap behaviour;
@@ -24,9 +25,19 @@ public abstract class Data {
     protected final @Nullable ResourceLocation group;
     transient protected Map<DataComponentType<?>, JsonObject> additionalComponents;
 
-    protected Data(@NotNull ResourceLocation id, @Nullable Item vanillaItem, @Nullable ItemResource itemResource, @Nullable ResourceLocation itemModel, @Nullable BehaviourConfigMap behaviour, @Nullable DataComponentMap components, @Nullable ResourceLocation group) {
+    protected Data(
+            @NotNull ResourceLocation id,
+            @Nullable Item vanillaItem,
+            @Nullable Map<String, String> translations,
+            @Nullable ItemResource itemResource,
+            @Nullable ResourceLocation itemModel,
+            @Nullable BehaviourConfigMap behaviour,
+            @Nullable DataComponentMap components,
+            @Nullable ResourceLocation group
+    ) {
         this.id = id;
         this.vanillaItem = vanillaItem;
+        this.translations = translations;
         this.itemResource = itemResource;
         this.itemModel = itemModel;
         this.behaviour = behaviour;
@@ -54,6 +65,10 @@ public abstract class Data {
             return Items.PAPER;
         }
         return vanillaItem;
+    }
+
+    public @Nullable Map<String, String> translations() {
+        return translations;
     }
 
     public @Nullable ItemResource itemResource() {

@@ -9,6 +9,7 @@ import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
@@ -18,6 +19,7 @@ public final class ItemData extends Data {
     public ItemData(
             @NotNull ResourceLocation id,
             @Nullable Item vanillaItem,
+            @Nullable Map<String, String> translations,
             @Nullable ItemResource itemResource,
             @Nullable ResourceLocation itemModel,
             @Nullable BehaviourConfigMap behaviourConfig,
@@ -25,7 +27,7 @@ public final class ItemData extends Data {
             @Nullable DataComponentMap components,
             @Nullable ResourceLocation itemGroup
     ) {
-        super(id, vanillaItem, itemResource, itemModel, behaviourConfig, components, itemGroup);
+        super(id, vanillaItem, translations, itemResource, itemModel, behaviourConfig, components, itemGroup);
         this.properties = properties;
     }
 

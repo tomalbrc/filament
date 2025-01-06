@@ -16,6 +16,7 @@ import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.generator.ItemAssetGenerator;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
+import de.tomalbrc.filament.util.Translations;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
@@ -89,6 +90,7 @@ public class DecorationRegistry {
 
         var item = ItemRegistry.registerItem(ItemRegistry.key(data.id()), (newProps) -> new DecorationItem(block, data, newProps), properties, data.group() != null ? data.group() : Constants.DECORATION_GROUP_ID);
         BehaviourUtil.postInitItem(item, item, data.behaviour());
+        Translations.add(item, block, data);
 
         var resourceProvider = data.itemResource() == null ? new ItemResource(Map.of("default", data.model()), null, null) : data.itemResource();
         if (resourceProvider != null && data.itemModel() == null && resourceProvider.getModels() != null) {
