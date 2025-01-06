@@ -12,6 +12,9 @@ import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
+import de.tomalbrc.filament.util.Translations;
+import de.tomalbrc.filament.util.Util;
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -96,6 +99,7 @@ public class DecorationRegistry {
         DecorationItem item = new DecorationItem(block, data, properties);
         BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
         ItemRegistry.registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.DECORATION_GROUP_ID);
+        Translations.add(item, block, data);
 
         REGISTERED_DECORATIONS++;
     }

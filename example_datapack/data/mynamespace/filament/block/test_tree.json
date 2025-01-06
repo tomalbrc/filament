@@ -5,6 +5,9 @@
       "default": "minecraft:item/beetroot_seeds"
     }
   },
+  "translations": {
+    "en_us": "§6Test Tree"
+  },
   "blockResource": {
     "__comment": "you can also provide a model for state=1",
     "models" : {

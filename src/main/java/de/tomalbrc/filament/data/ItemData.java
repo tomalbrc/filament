@@ -14,10 +14,13 @@ import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
+
 @SuppressWarnings("unused")
 public record ItemData(
         @NotNull ResourceLocation id,
         @Nullable Item vanillaItem,
+        @Nullable Map<String, String> translations,
         @Nullable ItemResource itemResource,
         @SerializedName("behaviour")
         @Nullable BehaviourConfigMap behaviourConfig,

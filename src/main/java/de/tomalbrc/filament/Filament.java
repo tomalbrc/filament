@@ -31,6 +31,7 @@ public class Filament implements ModInitializer {
     public void onInitialize() {
         PolymerResourcePackUtils.markAsRequired();
         Behaviours.init();
+        Translations.init();
         EntityRegistry.register();
 
         if (FilamentConfig.getInstance().commands) {

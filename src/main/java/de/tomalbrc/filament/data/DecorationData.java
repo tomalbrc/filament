@@ -19,6 +19,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public record DecorationData(
@@ -27,6 +28,7 @@ public record DecorationData(
         @Nullable ItemResource itemResource,
 
         @Nullable Item vanillaItem,
+        @Nullable Map<String, String> translations,
 
         @Nullable List<BlockConfig> blocks,
 

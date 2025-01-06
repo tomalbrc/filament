@@ -30,6 +30,7 @@ import java.util.Map;
 public record BlockData(
         @NotNull ResourceLocation id,
         @Nullable Item vanillaItem,
+        @Nullable Map<String, String> translations,
         @NotNull BlockResource blockResource,
         @Nullable ItemResource itemResource,
         @Nullable BlockStateMappedProperty<BlockModelType> blockModelType,
