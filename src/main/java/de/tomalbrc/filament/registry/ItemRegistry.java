@@ -47,7 +47,7 @@ public class ItemRegistry {
 
         SimpleItem item = new SimpleItem(null, properties, data, data.vanillaItem());
         BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
-        Translations.add(item, data);
+        Translations.add(item, null, data);
 
         registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.ITEM_GROUP_ID);
 
