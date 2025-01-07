@@ -13,8 +13,6 @@ import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
 import de.tomalbrc.filament.util.Translations;
-import de.tomalbrc.filament.util.Util;
-import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;

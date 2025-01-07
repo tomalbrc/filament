@@ -9,8 +9,6 @@ import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
 import de.tomalbrc.filament.util.Translations;
-import de.tomalbrc.filament.util.Util;
-import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
@@ -26,11 +24,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Map;
 
 public class BlockRegistry {
-    private static final Map<ResourceLocation, Map<String, String>> blockNames = new HashMap<>();
     public static int REGISTERED_BLOCKS = 0;
 
     public static void register(InputStream inputStream) throws IOException {

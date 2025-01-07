@@ -14,7 +14,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -22,7 +23,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.Map;
 import java.util.Optional;
@@ -111,7 +111,7 @@ public class Sapling implements BlockBehaviour<Sapling.Config>, BonemealableBloc
 
     @Override
     public boolean isBonemealSuccess(Level level, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
-        if (level instanceof ServerLevel serverLevel && blockState.getBlock() instanceof SimpleBlock polymerBlock && !(polymerBlock.getPolymerBlockState(blockState, PacketContext.of()).getBlock() instanceof BonemealableBlock)) {
+        if (level instanceof ServerLevel serverLevel && blockState.getBlock() instanceof SimpleBlock polymerBlock && !(polymerBlock.getPolymerBlockState(blockState).getBlock() instanceof BonemealableBlock)) {
             Util.handleBoneMealEffects(serverLevel, blockPos);
         }
         return level.random.nextFloat() < config.bonemealGrowthChance;
