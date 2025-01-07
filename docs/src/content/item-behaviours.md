@@ -305,3 +305,24 @@ Defines behaviour for items capable of shooting custom projectiles or being shot
 ## `shield` behaviour
 
 Makes the item usable as shield.
+
+---
+
+## `enchantable` behaviour
+
+Backport of the `minecraft:enchantable` component introduced in 1.21.2, only available for 1.21.1.
+
+### Fields:
+- `value`: Enchantability value. Defaults to `1`
+
+Example:
+
+```json
+{
+  "behaviour": {
+    "enchantable": {
+      "value": 1
+    }
+  }
+}
+```
