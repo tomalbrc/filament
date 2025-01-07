@@ -51,7 +51,7 @@ public class ItemRegistry {
 
         var item = ItemRegistry.registerItem(key(data.id()), (newProps) -> new SimpleItem(null, newProps, data, data.vanillaItem()), properties, data.group() != null ? data.group() : Constants.ITEM_GROUP_ID);
         BehaviourUtil.postInitItem(item, item, data.behaviour());
-        Translations.add(item, data);
+        Translations.add(item, null, data);
 
         REGISTERED_ITEMS++;
     }
