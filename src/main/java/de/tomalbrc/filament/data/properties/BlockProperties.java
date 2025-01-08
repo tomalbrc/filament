@@ -42,6 +42,8 @@ public class BlockProperties extends ItemProperties {
         if (this.transparent) props.noOcclusion();
         if (!this.collision) props.noCollission();
 
+        props.mapColor(blockBase.defaultMapColor());
+
         if (this.solid) props.forceSolidOn();
         else props.forceSolidOff();
 
