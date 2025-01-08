@@ -47,12 +47,6 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
         return this.config;
     }
 
-    @Override
-    @NotNull
-    public Optional<Integer> getEnchantmentValue() {
-        return Optional.of(1);
-    }
-
     protected void shoot(ServerLevel serverLevel, LivingEntity livingEntity, InteractionHand interactionHand, ItemStack itemStack, List<ItemStack> list, float f, boolean fullPower) {
         float spread = EnchantmentHelper.processProjectileSpread(serverLevel, itemStack, livingEntity, 0.0f);
         float i = list.size() == 1 ? 0.0f : 2.0f * spread / (float)(list.size() - 1);

@@ -81,12 +81,6 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
     }
 
     @Override
-    public @NotNull Optional<Integer> getEnchantmentValue() {
-        return Optional.of(1);
-    }
-
-
-    @Override
     public InteractionResultHolder<ItemStack> use(Item item, Level level, Player player, InteractionHand interactionHand) {
         ItemStack itemStack = player.getItemInHand(interactionHand);
         ChargedProjectiles chargedProjectiles = itemStack.get(DataComponents.CHARGED_PROJECTILES);
