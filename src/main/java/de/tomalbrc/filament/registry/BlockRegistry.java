@@ -51,8 +51,7 @@ public class BlockRegistry {
         for (TypedDataComponent component : data.components()) {
             itemProperties.component(component.type(), component.value());
         }
-
-
+        
         SimpleBlockItem item = new SimpleBlockItem(itemProperties, customBlock, data);
         BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
         BehaviourUtil.postInitBlock(item, customBlock, customBlock, data.behaviourConfig());
