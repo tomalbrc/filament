@@ -3,7 +3,7 @@
   "blockModelType": "full_block",
   "blockResource": {
     "models": {
-      "default": "minecraft:item/custom/block/arcanery/amethyst_bricks"
+      "default": "minecraft:custom/block/arcanery/amethyst_bricks"
     }
   },
   "behaviour": {

@@ -2,8 +2,8 @@
   "id": "mynamespace:half_slab",
   "blockResource": {
     "models" : {
-      "waterlogged=false": "minecraft:item/custom/block/dirt/dirt_slab",
-      "waterlogged=true": "minecraft:item/custom/block/dirt/dirt_slab"
+      "waterlogged=false": "minecraft:custom/block/dirt/dirt_slab",
+      "waterlogged=true": "minecraft:custom/block/dirt/dirt_slab"
     }
   },
   "itemResource": {

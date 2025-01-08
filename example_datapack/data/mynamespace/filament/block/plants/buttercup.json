@@ -2,7 +2,7 @@
   "id": "mynamespace:buttercup",
   "blockResource": {
     "models" : {
-      "default": "minecraft:item/custom/block/plants/buttercup"
+      "default": "minecraft:custom/block/plants/buttercup"
     }
   },
   "blockModelType": "plant_block",

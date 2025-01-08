@@ -2,16 +2,16 @@
   "id": "mynamespace:amethyst_crystal_display",
   "blockResource": {
     "models": {
-      "powerlevel=0": "minecraft:item/custom/block/arcanery/display/amethyst_crystal_display_0",
-      "powerlevel=1": "minecraft:item/custom/block/arcanery/display/amethyst_crystal_display_1",
-      "powerlevel=2": "minecraft:item/custom/block/arcanery/display/amethyst_crystal_display_2",
-      "powerlevel=3": "minecraft:item/custom/block/arcanery/display/amethyst_crystal_display_3",
-      "powerlevel=4": "minecraft:item/custom/block/arcanery/display/amethyst_crystal_display_4",
-      "powerlevel=5": "minecraft:item/custom/block/arcanery/display/amethyst_crystal_display_5",
-      "powerlevel=6": "minecraft:item/custom/block/arcanery/display/amethyst_crystal_display_6",
-      "powerlevel=7": "minecraft:item/custom/block/arcanery/display/amethyst_crystal_display_7",
-      "powerlevel=8": "minecraft:item/custom/block/arcanery/display/amethyst_crystal_display_8",
-      "powerlevel=9": "minecraft:item/custom/block/arcanery/display/amethyst_crystal_display_9"
+      "powerlevel=0": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_0",
+      "powerlevel=1": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_1",
+      "powerlevel=2": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_2",
+      "powerlevel=3": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_3",
+      "powerlevel=4": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_4",
+      "powerlevel=5": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_5",
+      "powerlevel=6": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_6",
+      "powerlevel=7": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_7",
+      "powerlevel=8": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_8",
+      "powerlevel=9": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_9"
     }
   },
   "itemResource": {

@@ -2,8 +2,8 @@
   "id": "mynamespace:dirt_slab",
   "blockResource": {
     "models" : {
-        "type=top": "minecraft:item/custom/block/dirt/dirt_slab_top",
-        "type=bottom": "minecraft:item/custom/block/dirt/dirt_slab",
+        "type=top": "minecraft:custom/block/dirt/dirt_slab_top",
+        "type=bottom": "minecraft:custom/block/dirt/dirt_slab",
         "type=double": "minecraft:block/dirt"
     }
   },
