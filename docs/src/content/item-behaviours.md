@@ -251,15 +251,29 @@ Allows to specify a power multiplier for shooting power. Supports firework rocke
 
 **Make sure to use `minecraft:bow` as `vanillaItem` in order for the item model overrides to work properly!**
 
-
 - **Fields**:
   - `powerMultiplier`: The power multiplier. Defaults to `3`
   - `supportedProjectiles`: List of supported items in the inventory for use with the bow. Defaults to `["minecraft:arrow", "minecraft:spectral_arrow"]`
   - `supportedHeldProjectiles`: List of supported items for use when in main/offhand. Defaults to `["minecraft:arrow", "minecraft:spectral_arrow", "minecraft:firework_rocket"]`
   - `shootSound`: The sound when shooting a projectile. Default to `minecraft:entity.arrow.shoot`
 
+
 <br>
-<br>
+This behaviour can automatically generate the item model predicate overrides for bows (item assets in `items` in 1.21.4).
+
+In order to automatically generate an item model for bows, you have to provide models for `default`, `pulling_0`, `pulling_1` and `pulling_2` in the `itemResource` field:
+```json5
+{
+  "itemResource":  {
+    "models": {
+      "default": "minecraft:custom/bow/custombow",
+      "pulling_0": "minecraft:custom/bow/custombow_pulling_0",
+      "pulling_1": "minecraft:custom/bow/custombow_pulling_1",
+      "pulling_2": "minecraft:custom/bow/custombow_pulling_2"
+    }
+  }
+}
+```
 
 ---
 
@@ -271,6 +285,23 @@ Allows to specify a power multiplier for shooting power.
 
 **Make sure to use `minecraft:crossbow` as `vanillaItem` in order for the item model overrides to work properly!**
 
+This behaviour can automatically generate the item model predicate overrides for crossbows (item assets in `items` in 1.21.4).
+
+In order to automatically generate an item model for crossbows, you have to provide models for `default`, `pulling_0`, `pulling_1`, `pulling_2`, `arrow` and `rocket` in the `itemResource` field:
+```json5
+{
+  "itemResource": {
+    "models": {
+      "default": "minecraft:custom/crossbow/crossy1", // model without projectile
+      "pulling_0": "minecraft:custom/crossbow/crossy1_pulling_0",
+      "pulling_1": "minecraft:custom/crossbow/crossy1_pulling_1",
+      "pulling_2": "minecraft:custom/crossbow/crossy1_pulling_2",
+      "arrow": "minecraft:custom/crossbow/crossy1_arrow", // model with projectile
+      "rocket": "minecraft:custom/crossbow/crossy1_rocket" // model with projectile
+    }
+  }
+}
+```
 
 ### Fields:
 - `powerMultiplier`: The power multiplier. Defaults to `1`
@@ -305,6 +336,40 @@ Defines behaviour for items capable of shooting custom projectiles or being shot
 ## `shield` behaviour
 
 Makes the item usable as shield.
+
+This behaviour can automatically generate the item model predicate overrides for shields (item assets in `items` in 1.21.4).
+
+In order to automatically generate an item model for shields, you have to provide models for `default` and `blocking` in the `itemResource` field:
+```json
+{
+  "itemResource": {
+    "models": {
+      "default": "minecraft:custom/shield/shield1",
+      "blocking": "minecraft:custom/shield/shield1_blocking"
+    }
+  }
+}
+```
+
+---
+
+## `fishing_rod` behaviour
+
+Makes the item behave like a fishing rod!
+
+This behaviour can automatically generate the item model predicate overrides for fishing rods (item assets in `items` in 1.21.4).
+
+In order to automatically generate an item model for fishing rods, you have to provide models for `default` and `cast` in the `itemResource` field:
+```json
+{
+  "itemResource": {
+    "models": {
+      "default": "minecraft:custom/rod/fire_rod",
+      "cast": "minecraft:custom/rod/fire_rod_cast"
+    }
+  }
+}
+```
 
 ---
 

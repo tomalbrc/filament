@@ -37,6 +37,9 @@ The files can also be located in subfolders for better organization:
 
 Blockbench and Animated-Java models for decorations are supported using the [blockbench import library](https://github.com/tomalbrc/blockbench-import-library)
 
+In versions 1.21.4 and higher, filament will automatically generate the item asset json under `namespace/items/itemname.json`.
+You can provide your own item asset models using the `itemModel` field of an item (in the root structure of an item config) or by providing an item_model components using the `components` field.
+
 ---
 
 ## Common fields
@@ -69,6 +72,6 @@ You can for example just use `/give @s mynamespace:myitem` instead of having to 
 
 For clients that don't have any mods or polymer installed, the item show up as the `vanillaItem` in the config for your content, but with all components correctly applied with your custom models.
 
-In 1.21.1, custom model data will be automatically generated. You can also set the vanilla custom model data components in the `components` field of a config to use your own values.
+In 1.21.1, custom model data override predicates will be automatically generated. You can also set the vanilla custom model data components in the `components` field of a config to use your own values.
 This is not necessary in version 1.21.2 and above.
 For 1.21.4, the new item model will be automatically generated. You can set the `itemModel` to prevent that.

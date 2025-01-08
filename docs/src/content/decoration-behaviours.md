@@ -6,8 +6,10 @@ Example of some behaviours for decorations:
 {
   "id": "mynamespace:clown_horn",
   "vanillaItem": "minecraft:paper",
-  "models": {
-    "default": "mynamespace:custom/misc/clown_horn"
+  "itemResource": {
+    "models": {
+      "default": "mynamespace:custom/misc/clown_horn"
+    }
   },
   "behaviour": {
     "animation": {
