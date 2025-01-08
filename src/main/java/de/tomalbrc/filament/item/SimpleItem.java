@@ -210,7 +210,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
         if (dataComponentModel != null) stack.set(ITEM_MODEL, dataComponentModel);
 
         if (!itemStack.has(CUSTOM_MODEL_DATA)) {
-            CustomModelData customModelData = this.itemData != null && this.itemData.components().has(CUSTOM_MODEL_DATA) ? this.itemData.components().get(CUSTOM_MODEL_DATA) : getModel();
+            CustomModelData customModelData = this.itemData != null && this.itemData.components().has(CUSTOM_MODEL_DATA) ? this.itemData.components().get(CUSTOM_MODEL_DATA) : null;
             if (customModelData != null) stack.set(CUSTOM_MODEL_DATA, customModelData);
         }
 
@@ -225,11 +225,6 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
 
     protected Map<String, ResourceLocation> getModelMap() {
         return this.itemData.itemResource() == null ? Map.of() : Objects.requireNonNull(this.itemData.itemResource()).models();
-    }
-
-    @Nullable
-    protected CustomModelData getModel() {
-        return null;
     }
 
     @Override

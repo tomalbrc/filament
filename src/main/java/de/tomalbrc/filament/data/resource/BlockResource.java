@@ -18,7 +18,11 @@ public record BlockResource(Map<String, PolymerBlockModel> models,
     public Map<String, ResourceLocation> getModels() {
         var map = new Object2ObjectOpenHashMap<String, ResourceLocation>();
         for (Map.Entry<String, PolymerBlockModel> entry : models.entrySet()) {
-            map.put(entry.getKey(), entry.getValue().model());
+            var model = entry.getValue().model();
+            var itemPath = "item/";
+            if (model.getPath().startsWith(itemPath))
+                model = model.withPath(model.getPath().substring(0, itemPath.length()));
+            map.put(entry.getKey(), model);
         }
         return map;
     }

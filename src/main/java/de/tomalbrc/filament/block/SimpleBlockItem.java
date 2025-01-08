@@ -5,10 +5,8 @@ import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.item.SimpleItem;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.block.Block;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -23,14 +21,6 @@ public class SimpleBlockItem extends SimpleItem implements PolymerItem, Behaviou
 
     @Override
     protected Map<String, ResourceLocation> getModelMap() {
-        return this.blockData.itemResource() == null ? Map.of() : Objects.requireNonNull(this.blockData.itemResource()).models();
-    }
-
-    @Override
-    protected CustomModelData getModel() {
-        if (this.blockData.itemResource() != null)
-            return null; // default model, not modified
-        else
-            return new CustomModelData(List.of(), List.of(), List.of(this.blockData.blockResource().models().entrySet().iterator().next().getKey()), List.of());
+        return this.blockData.itemResource() == null ? this.blockData.blockResource().getModels() : Objects.requireNonNull(this.blockData.itemResource()).models();
     }
 }
