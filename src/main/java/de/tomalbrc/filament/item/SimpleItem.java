@@ -153,6 +153,20 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
     }
 
     @Override
+    @NotNull
+    public ItemUseAnimation getUseAnimation(ItemStack itemStack) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                var val = itemBehaviour.getUseAnimation(itemStack);
+                if (val != ItemUseAnimation.NONE)
+                    return val;
+            }
+        }
+
+        return ItemUseAnimation.NONE;
+    }
+
+    @Override
     public boolean hurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
         return this.components().has(DataComponents.TOOL);
     }

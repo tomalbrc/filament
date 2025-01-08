@@ -1,12 +1,12 @@
 package de.tomalbrc.filament.behaviour.item;
 
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
-import de.tomalbrc.filament.mixin.behaviour.strippable.AxeItemAccessor;
-import de.tomalbrc.filament.registry.StrippableRegistry;
-import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.core.BlockPos;
+import de.tomalbrc.filament.behaviour.ItemPredicateModelProvider;
+import de.tomalbrc.filament.data.Data;
+import de.tomalbrc.filament.generator.ItemAssetGenerator;
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -16,21 +16,16 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.FishingRodItem;
-import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.WeatheringCopper;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
+import java.util.Objects;
 
-public class FishingRod implements ItemBehaviour<FishingRod.Config> {
+public class FishingRod implements ItemBehaviour<FishingRod.Config>, ItemPredicateModelProvider {
     private final Config config;
 
     public FishingRod(Config config) {
@@ -67,6 +62,16 @@ public class FishingRod implements ItemBehaviour<FishingRod.Config> {
         }
 
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public void generate(Data data) {
+        PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder ->
+                ItemAssetGenerator.createFishingRod(
+                        resourcePackBuilder, data.id(),
+                        Objects.requireNonNull(data.itemResource()), data.vanillaItem().components().has(DataComponents.DYED_COLOR)
+                )
+        );
     }
 
     public static class Config {}

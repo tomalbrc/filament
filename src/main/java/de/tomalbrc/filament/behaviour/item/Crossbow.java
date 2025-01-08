@@ -4,7 +4,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.behaviour.ItemPredicateModelProvider;
+import de.tomalbrc.filament.data.Data;
+import de.tomalbrc.filament.generator.ItemAssetGenerator;
 import de.tomalbrc.filament.item.SimpleItem;
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.HolderLookup;
@@ -41,13 +45,14 @@ import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
  * Fuel behaviour
  */
-public class Crossbow implements ItemBehaviour<Crossbow.Config> {
+public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateModelProvider {
     private final CrossbowItem.ChargingSounds sounds;
 
     private final Config config;
@@ -241,6 +246,11 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config> {
         return Optional.of(getChargeDuration(itemStack, livingEntity) + 3);
     }
 
+    @Override
+    public ItemUseAnimation getUseAnimation(ItemStack itemStack) {
+        return ItemUseAnimation.CROSSBOW;
+    }
+
     public static int getChargeDuration(ItemStack itemStack, LivingEntity livingEntity) {
         float f = EnchantmentHelper.modifyCrossbowChargingTime(itemStack, livingEntity, 1.25F);
         return Mth.floor(f * 20.0F);
@@ -292,13 +302,24 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config> {
         };
     }
 
+    @Override
+    public void generate(Data data) {
+        PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder ->
+            ItemAssetGenerator.createCrossbow(
+                resourcePackBuilder, data.id(),
+                Objects.requireNonNull(data.itemResource()), data.vanillaItem().components().has(DataComponents.DYED_COLOR)
+            )
+        );
+    }
+
+
     public static class Config {
         /**
          * Power multiplier for the projectile
          */
         public float powerMultiplier = 1.f;
 
-        public List<ResourceLocation> supportedProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"));
+        public List<ResourceLocation> supportedProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"), ResourceLocation.withDefaultNamespace("firework_rocket"));
         public List<ResourceLocation> supportedHeldProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"), ResourceLocation.withDefaultNamespace("firework_rocket"));
 
         public SoundEvent shootSound = SoundEvents.CROSSBOW_SHOOT;

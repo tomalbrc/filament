@@ -7,18 +7,12 @@ import de.tomalbrc.filament.behaviour.BehaviourUtil;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.decoration.Container;
 import de.tomalbrc.filament.data.DecorationData;
-import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.decoration.DecorationItem;
 import de.tomalbrc.filament.decoration.block.ComplexDecorationBlock;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import de.tomalbrc.filament.generator.ItemAssetGenerator;
-import de.tomalbrc.filament.util.Constants;
-import de.tomalbrc.filament.util.Json;
-import de.tomalbrc.filament.util.Translations;
-import de.tomalbrc.filament.util.Util;
-import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
+import de.tomalbrc.filament.util.*;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -92,12 +86,7 @@ public class DecorationRegistry {
         BehaviourUtil.postInitItem(item, item, data.behaviour());
         Translations.add(item, block, data);
 
-        var resourceProvider = data.itemResource() == null ? new ItemResource(Map.of("default", data.model()), null, null) : data.itemResource();
-        if (resourceProvider != null && data.itemModel() == null && resourceProvider.getModels() != null) {
-            PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder ->
-                    ItemAssetGenerator.create(resourcePackBuilder, data.id(), resourceProvider, data.vanillaItem().components().has(DataComponents.DYED_COLOR))
-            );
-        }
+        RPUtil.create(item, data);
 
         REGISTERED_DECORATIONS++;
     }

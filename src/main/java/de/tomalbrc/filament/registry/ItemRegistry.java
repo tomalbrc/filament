@@ -4,16 +4,10 @@ import com.google.gson.JsonParser;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
 import de.tomalbrc.filament.data.ItemData;
-import de.tomalbrc.filament.generator.ItemAssetGenerator;
 import de.tomalbrc.filament.item.SimpleItem;
-import de.tomalbrc.filament.util.Constants;
-import de.tomalbrc.filament.util.Json;
-import de.tomalbrc.filament.util.Translations;
-import de.tomalbrc.filament.util.Util;
-import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
+import de.tomalbrc.filament.util.*;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -56,12 +50,7 @@ public class ItemRegistry {
         BehaviourUtil.postInitItem(item, item, data.behaviour());
         Translations.add(item, null, data);
 
-        var itemResources = data.itemResource();
-        if (itemResources != null && data.itemModel() == null && itemResources.getModels() != null) {
-            PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder ->
-                    ItemAssetGenerator.create(resourcePackBuilder, data.id(), itemResources, data.vanillaItem().components().has(DataComponents.DYED_COLOR))
-            );
-        }
+        RPUtil.create(item, data);
 
         REGISTERED_ITEMS++;
     }
