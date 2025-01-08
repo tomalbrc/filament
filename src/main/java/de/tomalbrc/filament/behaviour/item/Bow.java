@@ -159,7 +159,7 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
 
     @Override
     public void generate(Data data) {
-        PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder ->
+        PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder ->
                 ItemAssetGenerator.createBow(
                         resourcePackBuilder, data.id(),
                         Objects.requireNonNull(data.itemResource()), data.vanillaItem().components().has(DataComponents.DYED_COLOR)

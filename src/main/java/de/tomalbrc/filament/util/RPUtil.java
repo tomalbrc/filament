@@ -15,16 +15,18 @@ public class RPUtil {
     public static void create(SimpleItem item, Data data) {
         var itemResources = data.itemResource();
         if (itemResources != null && data.itemModel() == null && itemResources.getModels() != null && !data.components().has(DataComponents.ITEM_MODEL)) {
-            for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> entry : item.getBehaviours()) {
-                if (entry.getValue() instanceof ItemPredicateModelProvider modelProvider) {
-                    modelProvider.generate(data);
-                    return;
+            if (itemResources.models().size() > 1) {
+                for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> entry : item.getBehaviours()) {
+                    if (entry.getValue() instanceof ItemPredicateModelProvider modelProvider) {
+                        modelProvider.generate(data);
+                        return;
+                    }
                 }
             }
 
             // todo: models for "breaking" stage of item (using dur. component) ..?
 
-            PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder ->
+            PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder ->
                 ItemAssetGenerator.createDefault(
                     resourcePackBuilder, data.id(),
                     itemResources, data.vanillaItem().components().has(DataComponents.DYED_COLOR)
