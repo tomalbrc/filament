@@ -28,4 +28,4 @@
   - [Simple block](tutorial/ARMOR.md)
   - [Simple item](tutorial/ARMOR.md)
   - [Sword](tutorial/ARMOR.md)
-  - [Armor](tutorial/ARMOR.md)
+  - [Tree](tutorial/TREE.md)
