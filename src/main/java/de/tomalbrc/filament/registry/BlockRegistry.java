@@ -6,9 +6,7 @@ import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.block.SimpleBlockItem;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
-import de.tomalbrc.filament.util.Constants;
-import de.tomalbrc.filament.util.Json;
-import de.tomalbrc.filament.util.Translations;
+import de.tomalbrc.filament.util.*;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
@@ -51,7 +49,7 @@ public class BlockRegistry {
         for (TypedDataComponent component : data.components()) {
             itemProperties.component(component.type(), component.value());
         }
-        
+
         SimpleBlockItem item = new SimpleBlockItem(itemProperties, customBlock, data);
         BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
         BehaviourUtil.postInitBlock(item, customBlock, customBlock, data.behaviourConfig());
@@ -61,6 +59,8 @@ public class BlockRegistry {
         ItemRegistry.registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.BLOCK_GROUP_ID);
 
         customBlock.postRegister();
+
+        RPUtil.create(item, data);
 
         REGISTERED_BLOCKS++;
     }
