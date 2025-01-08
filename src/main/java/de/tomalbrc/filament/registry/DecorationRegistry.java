@@ -10,7 +10,10 @@ import de.tomalbrc.filament.decoration.block.ComplexDecorationBlock;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import de.tomalbrc.filament.util.*;
+import de.tomalbrc.filament.util.Constants;
+import de.tomalbrc.filament.util.Json;
+import de.tomalbrc.filament.util.RPUtil;
+import de.tomalbrc.filament.util.Translations;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -97,7 +100,7 @@ public class DecorationRegistry {
         ItemRegistry.registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.DECORATION_GROUP_ID);
         Translations.add(item, block, data);
 
-        RPUtil.create(item, data);
+        RPUtil.create(item, data.id(), data.itemResource());
 
         REGISTERED_DECORATIONS++;
     }

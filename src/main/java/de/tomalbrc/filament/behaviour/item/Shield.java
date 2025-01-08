@@ -2,10 +2,11 @@ package de.tomalbrc.filament.behaviour.item;
 
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.behaviour.ItemPredicateModelProvider;
-import de.tomalbrc.filament.data.Data;
+import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.generator.ItemAssetGenerator;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -19,7 +20,6 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -50,7 +50,7 @@ public class Shield implements ItemBehaviour<Shield.Config>, ItemPredicateModelP
     @Override
     public InteractionResultHolder<ItemStack> use(Item self, Level level, Player player, InteractionHand interactionHand) {
         player.startUsingItem(interactionHand);
-        return InteractionResultHolder.consume(itemStack);
+        return InteractionResultHolder.consume(player.getItemInHand(interactionHand));
     }
 
     @Override
@@ -59,17 +59,12 @@ public class Shield implements ItemBehaviour<Shield.Config>, ItemPredicateModelP
     }
 
     @Override
-    public ItemUseAnimation getUseAnimation(ItemStack itemStack) {
-        return ItemUseAnimation.BLOCK;
-    }
-
-    @Override
-    public void generate(Data data) {
-        PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder ->
-                ItemAssetGenerator.createShield(
-                        resourcePackBuilder, data.id(),
-                        Objects.requireNonNull(data.itemResource())
-                )
+    public void generate(ResourceLocation id, ItemResource itemResource) {
+        PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder ->
+            ItemAssetGenerator.createShield(
+                resourcePackBuilder, id,
+                itemResource
+            )
         );
     }
 

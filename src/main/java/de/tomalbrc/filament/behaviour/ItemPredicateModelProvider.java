@@ -1,7 +1,8 @@
 package de.tomalbrc.filament.behaviour;
 
-import de.tomalbrc.filament.data.Data;
+import de.tomalbrc.filament.data.resource.ItemResource;
+import net.minecraft.resources.ResourceLocation;
 
 public interface ItemPredicateModelProvider {
-    void generate(Data data);
+    void generate(ResourceLocation id, ItemResource itemResource);
 }

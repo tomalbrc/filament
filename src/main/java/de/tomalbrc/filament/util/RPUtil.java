@@ -2,34 +2,33 @@ package de.tomalbrc.filament.util;
 
 import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.behaviour.BehaviourType;
+import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.behaviour.ItemPredicateModelProvider;
-import de.tomalbrc.filament.data.Data;
-import de.tomalbrc.filament.generator.ItemAssetGenerator;
+import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.item.SimpleItem;
-import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
 
 public class RPUtil {
-    public static void create(SimpleItem item, Data data) {
-        var itemResources = data.itemResource();
-        if (itemResources != null && data.itemModel() == null && itemResources.getModels() != null && !data.components().has(DataComponents.ITEM_MODEL)) {
+    public static void create(SimpleItem item, ResourceLocation id, ItemResource itemResource) {
+        if (itemResource != null && itemResource.models() != null && itemResource.models().size() > 1 && !item.components().has(DataComponents.CUSTOM_MODEL_DATA)) {
             for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> entry : item.getBehaviours()) {
                 if (entry.getValue() instanceof ItemPredicateModelProvider modelProvider) {
-                    modelProvider.generate(data);
+                    modelProvider.generate(id, itemResource);
                     return;
                 }
             }
-
-            // todo: models for "breaking" stage of item (using dur. component) ..?
-
-            PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder ->
-                ItemAssetGenerator.createDefault(
-                    resourcePackBuilder, data.id(),
-                    itemResources, data.vanillaItem().components().has(DataComponents.DYED_COLOR)
-                )
-            );
         }
+    }
+
+    public static boolean useGeneratedModel(BehaviourMap behaviourMap) {
+        for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> entry : behaviourMap) {
+            if (entry.getValue() instanceof ItemPredicateModelProvider) {
+                return true;
+            }
+        }
+        return false;
     }
 }

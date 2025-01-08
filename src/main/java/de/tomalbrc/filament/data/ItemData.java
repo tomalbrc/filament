@@ -2,8 +2,10 @@ package de.tomalbrc.filament.data;
 
 import com.google.gson.annotations.SerializedName;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
+import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.data.resource.ItemResource;
+import de.tomalbrc.filament.util.RPUtil;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -56,10 +58,14 @@ public record ItemData(
         return vanillaItem;
     }
 
-    public Object2ObjectOpenHashMap<String, PolymerModelData> requestModels() {
+    public Object2ObjectOpenHashMap<String, PolymerModelData> requestModels(BehaviourMap behaviourMap) {
         Object2ObjectOpenHashMap<String, PolymerModelData> map = new Object2ObjectOpenHashMap<>();
         if (itemResource != null) {
-            itemResource.models().forEach((key, value) -> map.put(key, PolymerResourcePackUtils.requestModel(this.vanillaItem == null ? Items.PAPER : this.vanillaItem, value)));
+            if (itemResource.models().size() > 1 && RPUtil.useGeneratedModel(behaviourMap)) {
+                map.put("default", PolymerResourcePackUtils.requestModel(this.vanillaItem == null ? Items.PAPER : this.vanillaItem, id().withPrefix("item/")));
+            } else {
+                itemResource.models().forEach((key, value) -> map.put(key, PolymerResourcePackUtils.requestModel(this.vanillaItem == null ? Items.PAPER : this.vanillaItem, value)));
+            }
         }
         return map.isEmpty() ? null : map;
     }

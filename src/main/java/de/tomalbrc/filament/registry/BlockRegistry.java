@@ -6,7 +6,10 @@ import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.block.SimpleBlockItem;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
-import de.tomalbrc.filament.util.*;
+import de.tomalbrc.filament.util.Constants;
+import de.tomalbrc.filament.util.Json;
+import de.tomalbrc.filament.util.RPUtil;
+import de.tomalbrc.filament.util.Translations;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
@@ -60,7 +63,7 @@ public class BlockRegistry {
 
         customBlock.postRegister();
 
-        RPUtil.create(item, data);
+        RPUtil.create(item, data.id(), data.itemResource());
 
         REGISTERED_BLOCKS++;
     }

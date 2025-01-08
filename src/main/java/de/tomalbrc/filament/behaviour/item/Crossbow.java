@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.ItemPredicateModelProvider;
-import de.tomalbrc.filament.data.Data;
+import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.generator.ItemAssetGenerator;
 import de.tomalbrc.filament.item.SimpleItem;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
@@ -44,8 +44,6 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -243,11 +241,6 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
         return Optional.of(getChargeDuration(itemStack, livingEntity) + 3);
     }
 
-    @Override
-    public ItemUseAnimation getUseAnimation(ItemStack itemStack) {
-        return ItemUseAnimation.CROSSBOW;
-    }
-
     public static int getChargeDuration(ItemStack itemStack, LivingEntity livingEntity) {
         float f = EnchantmentHelper.modifyCrossbowChargingTime(itemStack, livingEntity, 1.25F);
         return Mth.floor(f * 20.0F);
@@ -300,11 +293,11 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
     }
 
     @Override
-    public void generate(Data data) {
-        PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder ->
+    public void generate(ResourceLocation id, ItemResource itemResource) {
+        PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder ->
             ItemAssetGenerator.createCrossbow(
-                resourcePackBuilder, data.id(),
-                Objects.requireNonNull(data.itemResource()), data.vanillaItem().components().has(DataComponents.DYED_COLOR)
+                resourcePackBuilder, id,
+                itemResource
             )
         );
     }

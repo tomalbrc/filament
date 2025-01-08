@@ -63,7 +63,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
         this.vanillaItem = vanillaItem;
         this.itemData = itemData;
         this.properties = itemData.properties();
-        this.modelData = this.itemData.requestModels();
+        this.modelData = this.itemData.requestModels(behaviours);
     }
 
     public SimpleItem(Block block, Item.Properties itemProperties, ItemProperties props, Item vanillaItem) {
@@ -143,20 +143,6 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
             }
         }
         return 0;
-    }
-
-    @Override
-    @NotNull
-    public ItemUseAnimation getUseAnimation(ItemStack itemStack) {
-        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
-            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
-                var val = itemBehaviour.getUseAnimation(itemStack);
-                if (val != ItemUseAnimation.NONE)
-                    return val;
-            }
-        }
-
-        return ItemUseAnimation.NONE;
     }
 
     @Override

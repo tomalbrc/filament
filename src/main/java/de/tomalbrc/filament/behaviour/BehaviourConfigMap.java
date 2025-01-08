@@ -34,6 +34,10 @@ public class BehaviourConfigMap {
         }
     }
 
+    public Map<BehaviourType<? extends Behaviour<?>,?>, Object> getBehaviourConfigMap() {
+        return this.behaviourConfigMap;
+    }
+
     public boolean isEmpty() {
         return this.behaviourConfigMap.isEmpty();
     }
