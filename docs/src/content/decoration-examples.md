@@ -44,7 +44,11 @@ The `lock` behaviour also supports an animation using the `animation` behaviour
 ```json
 {
   "id": "mynamespace:beach_umbrella_top",
-  "model": "mynamespace:custom/furniture/umbrella/beach_umbrella_top",
+  "itemResource": {
+    "models": {
+      "default": "mynamespace:custom/furniture/umbrella/beach_umbrella_top"
+    }
+  },
   "vanillaItem": "minecraft:leather_horse_armor",
   "properties": {
     "rotate": true,
