@@ -21,7 +21,6 @@ import java.util.Objects;
 
 @SuppressWarnings("unused")
 public final class DecorationData extends Data {
-    private final @Nullable ResourceLocation model;
     private final @Nullable List<BlockConfig> blocks;
     private final @Nullable Vector2f size;
     private final @Nullable DecorationProperties properties;
@@ -36,12 +35,10 @@ public final class DecorationData extends Data {
             @Nullable DataComponentMap components,
             @Nullable ResourceLocation itemGroup,
             @Nullable DecorationProperties properties,
-            @Nullable ResourceLocation model,
             @Nullable List<BlockConfig> blocks,
             @Nullable Vector2f size
     ) {
         super(id, vanillaItem, translations, itemResource, itemModel, behaviourConfig, components, itemGroup);
-        this.model = model;
         this.blocks = blocks;
         this.size = size;
         this.properties = properties;
@@ -81,15 +78,6 @@ public final class DecorationData extends Data {
         boolean groundOnly = !this.properties().placement.wall() && !this.properties().placement.ceiling();
 
         return groundOnly && !canBeDyed && !hasBehaviour && (singleBlock || this.size != null);
-    }
-
-    public @NotNull ResourceLocation model() {
-        if (model == null) {
-            assert itemResource != null;
-            return itemResource.models().get("default");
-        } else {
-            return model;
-        }
     }
 
     public @Nullable List<BlockConfig> blocks() {
