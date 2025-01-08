@@ -1,14 +1,16 @@
 {
   "id": "mynamespace:buttercup",
   "blockResource": {
-    "models" : {
+    "models": {
       "default": "minecraft:custom/block/plants/buttercup"
     }
   },
   "blockModelType": "plant_block",
   "behaviour": {
     "can_survive": {
-      "tags": ["minecraft:dirt"]
+      "tags": [
+        "minecraft:dirt"
+      ]
     }
   },
   "properties": {

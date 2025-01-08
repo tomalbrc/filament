@@ -6,7 +6,7 @@
       "default": "minecraft:custom/hats/magic_hat"
     }
   },
-  "behaviour":  {
+  "behaviour": {
     "cosmetic": {
       "slot": "head"
     }

@@ -1,14 +1,17 @@
 {
   "id": "mynamespace:budding_testblock",
   "blockResource": {
-    "models" : {
+    "models": {
       "default": "minecraft:block/bedrock"
     }
   },
   "behaviour": {
     "budding": {
       "chance": 50,
-      "grows": ["minecraft:chain", "minecraft:end_rod"]
+      "grows": [
+        "minecraft:chain",
+        "minecraft:end_rod"
+      ]
     }
   },
   "blockModelType": "full_block",

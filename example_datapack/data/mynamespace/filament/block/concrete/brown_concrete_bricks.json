@@ -1,13 +1,13 @@
 {
-   "id" : "mynamespace:brown_concrete_bricks",
-   "blockResource": {
-      "models" : {
-         "default" : "minecraft:custom/block/concrete/brown_concrete_bricks"
-      }
-   },
-   "properties" : {
-      "blockBase" : "minecraft:brown_concrete",
-      "itemBase" : "minecraft:paper"
-   },
-   "blockModelType" : "full_block"
+  "id": "mynamespace:brown_concrete_bricks",
+  "blockResource": {
+    "models": {
+      "default": "minecraft:custom/block/concrete/brown_concrete_bricks"
+    }
+  },
+  "properties": {
+    "blockBase": "minecraft:brown_concrete",
+    "itemBase": "minecraft:paper"
+  },
+  "blockModelType": "full_block"
 }

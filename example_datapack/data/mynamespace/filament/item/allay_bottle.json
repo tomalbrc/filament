@@ -1,7 +1,7 @@
 {
   "id": "mynamespace:allay_bottle",
   "vanillaItem": "minecraft:diamond",
-  "itemResource":  {
+  "itemResource": {
     "models": {
       "default": "minecraft:custom/traps/allay_bottle",
       "trapped": "minecraft:custom/traps/allay_bottle_trapped"
@@ -13,9 +13,13 @@
   },
   "behaviour": {
     "trap": {
-      "types": ["minecraft:allay"],
+      "types": [
+        "minecraft:allay"
+      ],
       "useDuration": 120,
-      "requiredEffects": ["minecraft:weakness"]
+      "requiredEffects": [
+        "minecraft:weakness"
+      ]
     }
   }
 }

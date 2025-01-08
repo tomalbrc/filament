@@ -1,20 +1,38 @@
 {
   "id": "mynamespace:darkoak_chair_with_cushion",
-  "model": "minecraft:custom/furniture/chairs/darkoak_chair_with_cushion",
+  "itemResource": {
+    "models": {
+      "default": "minecraft:custom/furniture/chairs/darkoak_chair_with_cushion"
+    }
+  },
   "vanillaItem": "minecraft:leather_horse_armor",
   "properties": {
     "rotate": true,
-	"rotateSmooth": true
+    "rotateSmooth": true
   },
   "behaviour": {
-    "seat": [{
-      "offset": [0, 0.5, -0.05]
-    }]
+    "seat": [
+      {
+        "offset": [
+          0,
+          0.5,
+          -0.05
+        ]
+      }
+    ]
   },
   "blocks": [
     {
-      "origin": [0,0,0],
-      "size": [1,1,1]
+      "origin": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        1,
+        1,
+        1
+      ]
     }
   ]
 }

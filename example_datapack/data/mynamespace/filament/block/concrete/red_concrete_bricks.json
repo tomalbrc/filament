@@ -1,13 +1,13 @@
 {
-   "id" : "mynamespace:red_concrete_bricks",
-   "blockResource": {
-      "models" : {
-         "default" : "minecraft:custom/block/concrete/red_concrete_bricks"
-      }
-   },
-   "properties" : {
-      "blockBase" : "minecraft:red_concrete",
-      "itemBase" : "minecraft:paper"
-   },
-   "blockModelType" : "full_block"
+  "id": "mynamespace:red_concrete_bricks",
+  "blockResource": {
+    "models": {
+      "default": "minecraft:custom/block/concrete/red_concrete_bricks"
+    }
+  },
+  "properties": {
+    "blockBase": "minecraft:red_concrete",
+    "itemBase": "minecraft:paper"
+  },
+  "blockModelType": "full_block"
 }

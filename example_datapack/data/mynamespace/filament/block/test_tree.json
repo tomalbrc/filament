@@ -1,5 +1,5 @@
 {
-  "id" : "mynamespace:test_tree",
+  "id": "mynamespace:test_tree",
   "itemResource": {
     "models": {
       "default": "minecraft:item/beetroot_seeds"
@@ -10,18 +10,18 @@
   },
   "blockResource": {
     "__comment": "you can also provide a model for state=1",
-    "models" : {
-      "stage=0" : "minecraft:block/beetroots_stage0"
+    "models": {
+      "stage=0": "minecraft:block/beetroots_stage0"
     }
   },
-  "properties" : {
+  "properties": {
     "transparent": true,
     "solid": false,
     "replaceable": false,
     "destroyTime": 0,
     "pushReaction": "destroy"
   },
-  "blockModelType" : "tripwire_block",
+  "blockModelType": "tripwire_block",
   "behaviour": {
     "sapling": {
       "minLightLevel": 9,
@@ -36,7 +36,9 @@
       "secondaryFlowers": "minecraft:fancy_oak_bees_005"
     },
     "can_survive": {
-      "tags": ["minecraft:dirt"]
+      "tags": [
+        "minecraft:dirt"
+      ]
     }
   }
 }

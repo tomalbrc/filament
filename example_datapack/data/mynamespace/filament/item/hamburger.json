@@ -10,11 +10,11 @@
     "stackSize": 1
   },
   "behaviour": {
-      "food": {
-          "fastfood": false,
-          "hunger": 1,
-          "saturation": 0.2,
-          "meat": true
-      }
+    "food": {
+      "fastfood": false,
+      "hunger": 1,
+      "saturation": 0.2,
+      "meat": true
+    }
   }
 }

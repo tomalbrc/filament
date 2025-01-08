@@ -13,17 +13,17 @@
   },
   "components": {
     "minecraft:tool": {
-      "default_mining_speed":1.0,
-      "damage_per_block":2,
-      "rules":[
+      "default_mining_speed": 1.0,
+      "damage_per_block": 2,
+      "rules": [
         {
-          "speed":15,
-          "correct_for_drops":true,
-          "blocks":"#sword_efficient"
+          "speed": 15,
+          "correct_for_drops": true,
+          "blocks": "#sword_efficient"
         },
         {
-          "speed":1.5,
-          "blocks":"cobweb"
+          "speed": 1.5,
+          "blocks": "cobweb"
         }
       ]
     }

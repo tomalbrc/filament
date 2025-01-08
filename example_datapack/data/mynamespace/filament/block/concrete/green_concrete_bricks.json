@@ -1,13 +1,13 @@
 {
-   "id" : "mynamespace:green_concrete_bricks",
-   "blockResource": {
-      "models" : {
-         "default" : "minecraft:custom/block/concrete/green_concrete_bricks"
-      }
-   },
-   "properties" : {
-      "blockBase" : "minecraft:green_concrete",
-      "itemBase" : "minecraft:paper"
-   },
-   "blockModelType" : "full_block"
+  "id": "mynamespace:green_concrete_bricks",
+  "blockResource": {
+    "models": {
+      "default": "minecraft:custom/block/concrete/green_concrete_bricks"
+    }
+  },
+  "properties": {
+    "blockBase": "minecraft:green_concrete",
+    "itemBase": "minecraft:paper"
+  },
+  "blockModelType": "full_block"
 }

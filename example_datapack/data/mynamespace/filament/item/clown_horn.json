@@ -1,7 +1,7 @@
 {
   "id": "mynamespace:clown_horn",
   "vanillaItem": "minecraft:paper",
-  "itemResource":{
+  "itemResource": {
     "models": {
       "default": "minecraft:custom/misc/clown_horn"
     }

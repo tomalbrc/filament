@@ -1,13 +1,25 @@
 {
   "id": "mynamespace:large_darkoak_cabinet",
-  "model": "minecraft:custom/furniture/boards/large_darkoak_cabinet",
+  "itemResource": {
+    "models": {
+      "default": "minecraft:custom/furniture/boards/large_darkoak_cabinet"
+    }
+  },
   "properties": {
     "rotate": true
   },
   "blocks": [
     {
-      "origin": [0,0,0],
-      "size": [2,3,1]
+      "origin": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        2,
+        3,
+        1
+      ]
     }
   ]
 }

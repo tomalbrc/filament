@@ -1,15 +1,27 @@
 {
   "id": "starforge:small_darkoak_shelf",
-  "model": "minecraft:custom/furniture/shelves/small_darkoak_shelf",
+  "itemResource": {
+    "models": {
+      "default": "minecraft:custom/furniture/shelves/small_darkoak_shelf"
+    }
+  },
   "properties": {
-      "placement": {
-          "wall": true
-      }
+    "placement": {
+      "wall": true
+    }
   },
   "blocks": [
     {
-      "origin": [0,0,0],
-      "size": [2,1,1]
+      "origin": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        2,
+        1,
+        1
+      ]
     }
   ]
 }

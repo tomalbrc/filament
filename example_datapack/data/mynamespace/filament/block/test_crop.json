@@ -1,34 +1,38 @@
 {
-  "id" : "mynamespace:test_crop",
+  "id": "mynamespace:test_crop",
   "itemResource": {
     "models": {
       "default": "minecraft:item/beetroot_seeds"
     }
   },
   "blockResource": {
-    "models" : {
-      "age=0" : "minecraft:block/beetroots_stage0",
-      "age=1" : "minecraft:block/beetroots_stage1",
-      "age=2" : "minecraft:block/beetroots_stage2",
-      "age=3" : "minecraft:block/beetroots_stage3"
+    "models": {
+      "age=0": "minecraft:block/beetroots_stage0",
+      "age=1": "minecraft:block/beetroots_stage1",
+      "age=2": "minecraft:block/beetroots_stage2",
+      "age=3": "minecraft:block/beetroots_stage3"
     }
   },
-  "properties" : {
-    "blockBase" : "minecraft:sugar_cane",
+  "properties": {
+    "blockBase": "minecraft:sugar_cane",
     "transparent": true,
     "solid": false,
     "replaceable": false,
     "destroyTime": 0,
     "pushReaction": "destroy"
   },
-  "blockModelType" : "tripwire_block",
+  "blockModelType": "tripwire_block",
   "behaviour": {
     "crop": {
       "maxAge": 4
     },
     "can_survive": {
-      "blocks": ["minecraft:farmland"],
-      "tags": ["minecraft:dirt"]
+      "blocks": [
+        "minecraft:farmland"
+      ],
+      "tags": [
+        "minecraft:dirt"
+      ]
     }
   }
 }

@@ -1,6 +1,10 @@
 {
   "id": "mynamespace:example_chest",
-  "model": "minecraft:custom/furniture/chests/example_chest",
+  "itemResource": {
+    "models": {
+      "default": "minecraft:custom/furniture/chests/example_chest"
+    }
+  },
   "properties": {
     "rotate": true
   },
@@ -18,8 +22,16 @@
   },
   "blocks": [
     {
-      "origin": [0,0,0],
-      "size": [1,1,1]
+      "origin": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        1,
+        1,
+        1
+      ]
     }
   ]
 }

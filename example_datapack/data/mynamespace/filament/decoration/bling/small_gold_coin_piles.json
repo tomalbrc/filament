@@ -1,6 +1,10 @@
 {
   "id": "mynamespace:small_gold_coin_piles",
-  "model": "minecraft:custom/furniture/misc/small_gold_coin_piles",
+  "itemResource": {
+    "models": {
+      "default": "minecraft:custom/furniture/misc/small_gold_coin_piles"
+    }
+  },
   "properties": {
     "rotate": true,
     "rotateSmooth": true

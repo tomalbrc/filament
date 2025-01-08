@@ -1,9 +1,12 @@
 {
   "id": "mynamespace:test_bow",
   "vanillaItem": "minecraft:bow",
-  "itemResource":  {
+  "itemResource": {
     "models": {
-      "default": "minecraft:custom/bow/custombow"
+      "default": "minecraft:custom/bow/custombow",
+      "pulling_0": "minecraft:custom/bow/custombow_pulling_0",
+      "pulling_1": "minecraft:custom/bow/custombow_pulling_1",
+      "pulling_2": "minecraft:custom/bow/custombow_pulling_2"
     }
   },
   "properties": {

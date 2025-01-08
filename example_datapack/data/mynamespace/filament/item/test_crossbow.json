@@ -1,7 +1,7 @@
 {
   "id": "mynamespace:test_crossbow",
   "vanillaItem": "minecraft:crossbow",
-  "itemResource":  {
+  "itemResource": {
     "models": {
       "default": "minecraft:custom/crossbow"
     }

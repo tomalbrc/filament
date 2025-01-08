@@ -1,15 +1,15 @@
 {
   "id": "mynamespace:dirt_slab",
   "blockResource": {
-    "models" : {
-        "type=top": "minecraft:custom/block/dirt/dirt_slab_top",
-        "type=bottom": "minecraft:custom/block/dirt/dirt_slab",
-        "type=double": "minecraft:block/dirt"
+    "models": {
+      "type=top": "minecraft:custom/block/dirt/dirt_slab_top",
+      "type=bottom": "minecraft:custom/block/dirt/dirt_slab",
+      "type=double": "minecraft:block/dirt"
     }
   },
   "itemResource": {
-    "models" : {
-        "default": "minecraft:custom/block/dirt/dirt_slab"
+    "models": {
+      "default": "minecraft:custom/block/dirt/dirt_slab"
     }
   },
   "behaviour": {

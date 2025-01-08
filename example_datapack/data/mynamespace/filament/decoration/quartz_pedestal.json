@@ -1,21 +1,43 @@
 {
   "id": "mynamespace:quartz_pedestal",
-  "model": "minecraft:custom/furniture/displays/quartz_pedastal",
+  "itemResource": {
+    "models": {
+      "default": "minecraft:custom/furniture/displays/quartz_pedastal"
+    }
+  },
   "properties": {
     "rotate": true,
     "rotateSmooth": true
   },
   "behaviour": {
-    "showcase": [{
-      "offset": [0, 1.05, 0],
-      "scale": [0.45, 0.45, 0.45],
-      "type": "dynamic"
-    }]
+    "showcase": [
+      {
+        "offset": [
+          0,
+          1.05,
+          0
+        ],
+        "scale": [
+          0.45,
+          0.45,
+          0.45
+        ],
+        "type": "dynamic"
+      }
+    ]
   },
   "blocks": [
     {
-      "origin": [0,0,0],
-      "size": [1,1,1]
+      "origin": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        1,
+        1,
+        1
+      ]
     }
   ]
 }
