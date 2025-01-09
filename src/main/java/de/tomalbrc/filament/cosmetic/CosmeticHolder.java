@@ -4,6 +4,12 @@ import de.tomalbrc.filament.behaviour.item.Cosmetic;
 import de.tomalbrc.filament.util.FilamentConfig;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
+import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBundlePacket;
+import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.util.Mth;
@@ -14,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class CosmeticHolder extends ElementHolder {
@@ -26,6 +33,8 @@ public class CosmeticHolder extends ElementHolder {
     private float bodyYaw;
 
     private final Consumer<ServerGamePacketListenerImpl> startWatchingCallback;
+
+    boolean hidden = false;
 
     public CosmeticHolder(LivingEntity entity, ItemStack itemStack, Consumer<ServerGamePacketListenerImpl> startWatchingCallback) {
         super();
@@ -59,19 +68,21 @@ public class CosmeticHolder extends ElementHolder {
         this.tickMovement(this.entity);
 
         if (this.entity.getPose() == Pose.SWIMMING) {
-            if (this.entity instanceof ServerPlayer serverPlayer && this.getWatchingPlayers().contains(serverPlayer.connection)) {
-                this.stopWatching(serverPlayer);
+            if (!hidden) {
+                hideForAll(this);
+                hidden = true;
             }
         } else {
-            if (this.entity instanceof ServerPlayer serverPlayer && !this.getWatchingPlayers().contains(serverPlayer.connection)) {
-                this.startWatching(serverPlayer);
+            if (hidden) {
+                showForAll(this);
+                hidden = false;
             }
 
             this.displayElement.setYaw(this.bodyYaw);
             this.displayElement.setPitch(this.entity.isShiftKeyDown() ? 25 : 0);
 
             if (FilamentConfig.getInstance().alternativeCosmeticPlacement) {
-                this.displayElement.setTranslation(new Vector3f(0, this.entity.isShiftKeyDown() ? 1.325f : 1.25f,this.entity.isShiftKeyDown() ? 0.15f : 0));
+                this.displayElement.setTranslation(new Vector3f(0, this.entity.isShiftKeyDown() ? 1.325f : 1.25f, this.entity.isShiftKeyDown() ? 0.15f : 0));
             }
             else {
                 Cosmetic.Config cosmeticData = CosmeticUtil.getCosmeticData(this.displayElement.getItem());
@@ -132,9 +143,24 @@ public class CosmeticHolder extends ElementHolder {
     @Override
     public boolean startWatching(ServerGamePacketListenerImpl player) {
         var ret = super.startWatching(player);
-
         this.startWatchingCallback.accept(player);
-
         return ret;
+    }
+
+    public static void hideForAll(ElementHolder elementHolder) {
+        for (ServerGamePacketListenerImpl player : elementHolder.getWatchingPlayers()) {
+            player.send(new ClientboundRemoveEntitiesPacket(elementHolder.getEntityIds()));
+        }
+    }
+
+    public static void showForAll(ElementHolder elementHolder) {
+        for (ServerGamePacketListenerImpl player : elementHolder.getWatchingPlayers()) {
+            var packets = new ObjectArrayList<Packet<? super ClientGamePacketListener>>();
+            for (VirtualElement e : elementHolder.getElements()) {
+                Objects.requireNonNull(packets);
+                e.startWatching(player.player, packets::add);
+            }
+            player.send(new ClientboundBundlePacket(packets));
+        }
     }
 }
