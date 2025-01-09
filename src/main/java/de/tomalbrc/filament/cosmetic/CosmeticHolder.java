@@ -75,6 +75,9 @@ public class CosmeticHolder extends ElementHolder {
         } else {
             if (hidden) {
                 showForAll(this);
+                for (ServerGamePacketListenerImpl player : this.getWatchingPlayers()) {
+                    startWatchingCallback.accept(player);
+                }
                 hidden = false;
             }
 
