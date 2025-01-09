@@ -26,6 +26,7 @@
     "behaviour.crop.HarvestFarmlandMixin",
     "behaviour.elytra.LivingEntityMixin",
     "behaviour.elytra.PlayerMixin",
+    "behaviour.fishing_rod.FishingHookMixin",
     "behaviour.oxidizable.WeatheringCopperMixin",
     "behaviour.shield.LivingEntityMixin",
     "behaviour.shield.PlayerMixin",
