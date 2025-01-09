@@ -79,7 +79,7 @@ public class ItemAssetGenerator {
 
         JsonArray overrides = new JsonArray();
 
-        overrides.add(createOverride(1, cast.toString(), null));
+        overrides.add(createOverride("cast", cast.toString(), 1));
 
         rodModel.add("overrides", overrides);
 
