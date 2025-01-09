@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -41,7 +42,8 @@ public class CosmeticHolder extends ElementHolder {
             this.displayElement.setScale(cosmeticData.scale);
             if (FilamentConfig.getInstance().alternativeCosmeticPlacement) {
                 this.displayElement.setModelTransformation(ItemDisplayContext.HEAD);
-                this.displayElement.setTranslation(new Vector3f(0, 2.5f,0));
+                this.displayElement.setTranslation(new Vector3f(0, 1.25f,0));
+                this.displayElement.setScale(new Vector3f(0.625f));
             }
         }
 
@@ -55,7 +57,27 @@ public class CosmeticHolder extends ElementHolder {
         super.onTick();
 
         this.tickMovement(this.entity);
-        this.displayElement.setYaw(this.bodyYaw);
+
+        if (this.entity.getPose() == Pose.SWIMMING) {
+            if (this.entity instanceof ServerPlayer serverPlayer && this.getWatchingPlayers().contains(serverPlayer.connection)) {
+                this.stopWatching(serverPlayer);
+            }
+        } else {
+            if (this.entity instanceof ServerPlayer serverPlayer && !this.getWatchingPlayers().contains(serverPlayer.connection)) {
+                this.startWatching(serverPlayer);
+            }
+
+            this.displayElement.setYaw(this.bodyYaw);
+            this.displayElement.setPitch(this.entity.isShiftKeyDown() ? 25 : 0);
+
+            if (FilamentConfig.getInstance().alternativeCosmeticPlacement) {
+                this.displayElement.setTranslation(new Vector3f(0, this.entity.isShiftKeyDown() ? 1.325f : 1.25f,this.entity.isShiftKeyDown() ? 0.15f : 0));
+            }
+            else {
+                Cosmetic.Config cosmeticData = CosmeticUtil.getCosmeticData(this.displayElement.getItem());
+                this.displayElement.setTranslation(cosmeticData.translation.add(new Vector3f(0, 0, this.entity.isShiftKeyDown() ? 0.15f : 0)));
+            }
+        }
 
         this.prevX = this.entity.getX();
         this.prevZ = this.entity.getZ();
