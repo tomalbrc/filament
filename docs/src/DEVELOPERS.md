@@ -10,7 +10,7 @@ When referencing a custom behaviour in a config file you will have to specify th
 
 You can checkout [TSA: Decorations](https://github.com/tomalbrc/tsa-decorations/blob/main/src/main/java/de/tomalbrc/decorations/carpentry/CarpentryBehaviour.java) for an example Decoration Behaviour implementation or one of the various built-in behaviours. 
 
-~~~admonish Example for the 'instrument' item-behaviour
+Example for the 'instrument' item-behaviour
 ```java
 public class Instrument implements ItemBehaviour<Instrument.Config> {
     private final Config config;
@@ -53,9 +53,9 @@ public class Instrument implements ItemBehaviour<Instrument.Config> {
     }
 }
 ```
-~~~
 
-~~~admonish Registering it
+
+Registering it
 ```java
 public static final BehaviourType<Instrument, Instrument.Config> INSTRUMENT = registerBehaviour("instrument", Instrument.class);
 
@@ -63,7 +63,6 @@ private static <T extends Behaviour<E>,E> BehaviourType<T, E> registerBehaviour(
     return BehaviourRegistry.registerBehaviour(ResourceLocation.fromNamespaceAndPath(MOD_ID, name), type);
 }
 ```
-~~~
 
 ---
 
