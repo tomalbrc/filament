@@ -26,6 +26,7 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -38,6 +39,10 @@ import java.util.function.Consumer;
 
 @Mixin(value = LivingEntity.class)
 public abstract class LivingEntityMixin implements CosmeticInterface {
+    @Shadow public abstract ItemStack getItemBySlot(EquipmentSlot equipmentSlot);
+
+    @Shadow public abstract EquipmentSlot getEquipmentSlotForItem(ItemStack itemStack);
+
     @Unique
     private final IntArraySet displays = new IntArraySet();
 
@@ -64,10 +69,21 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
             if (slot == equipmentSlot) filament$destroyHolder(slot.getName());
         }
 
+        // hotswap case
+        {
+            if (oldItemStack.isEmpty() && !CosmeticUtil.isCosmetic(this.getItemBySlot(this.getEquipmentSlotForItem(newItemStack)))) {
+                var component = newItemStack.get(DataComponents.EQUIPPABLE);
+                if (component != null) {
+                    filament$destroyHolder(component.slot().getName());
+                }
+            }
+        }
+
         if (newItemStack.getItem() instanceof SimpleItem simpleItem && CosmeticUtil.isCosmetic(newItemStack)) {
             var component = newItemStack.get(DataComponents.EQUIPPABLE);
             var slot = component == null ? simpleItem.get(Behaviours.COSMETIC).getConfig().slot : component.slot();
-            if (slot == equipmentSlot) {
+            // normal & hotswap case
+            if (slot == equipmentSlot || (oldItemStack.isEmpty() && !CosmeticUtil.isCosmetic(newItemStack) && equipmentSlot == EquipmentSlot.MAINHAND && CosmeticUtil.isCosmetic(this.getItemBySlot(this.getEquipmentSlotForItem(newItemStack))))) {
                 filament$destroyHolder(slot.getName());
                 filament$addHolder(LivingEntity.class.cast(this), newItemStack.getItem(), newItemStack, slot.getName());
             }
