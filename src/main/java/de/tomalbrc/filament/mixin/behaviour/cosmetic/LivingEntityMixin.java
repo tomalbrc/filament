@@ -25,6 +25,7 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -37,6 +38,10 @@ import java.util.function.Consumer;
 
 @Mixin(value = LivingEntity.class)
 public abstract class LivingEntityMixin implements CosmeticInterface {
+    @Shadow public abstract EquipmentSlot getEquipmentSlotForItem(ItemStack itemStack);
+
+    @Shadow public abstract ItemStack getItemBySlot(EquipmentSlot equipmentSlot);
+
     @Unique
     private final IntArraySet displays = new IntArraySet();
 
@@ -63,9 +68,17 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
             if (slot == equipmentSlot) filament$destroyHolder(slot.getName());
         }
 
+        // hotswap case
+        {
+            if (oldItemStack.isEmpty() && !CosmeticUtil.isCosmetic(this.getItemBySlot(this.getEquipmentSlotForItem(newItemStack)))) {
+                var slot = this.getEquipmentSlotForItem(newItemStack);
+                filament$destroyHolder(slot.getName());
+            }
+        }
+
         if (newItemStack.getItem() instanceof SimpleItem simpleItem && CosmeticUtil.isCosmetic(newItemStack)) {
             var slot = simpleItem.get(Behaviours.COSMETIC).getConfig().slot;
-            if (slot == equipmentSlot) {
+            if (slot == equipmentSlot || (oldItemStack.isEmpty() && equipmentSlot != EquipmentSlot.MAINHAND)) {
                 filament$destroyHolder(slot.getName());
                 filament$addHolder(LivingEntity.class.cast(this), newItemStack.getItem(), newItemStack, slot.getName());
             }
