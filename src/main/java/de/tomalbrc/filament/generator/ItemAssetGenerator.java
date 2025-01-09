@@ -5,6 +5,7 @@ import eu.pb4.polymer.resourcepack.api.AssetPaths;
 import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.ItemAsset;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.model.*;
+import eu.pb4.polymer.resourcepack.extras.api.format.item.property.bool.FishingRodCastProperty;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.property.bool.UsingItemProperty;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.property.numeric.UseDurationProperty;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.property.select.ChargeTypeProperty;
@@ -113,7 +114,7 @@ public class ItemAssetGenerator {
         var defaultModel = new BasicItemModel(itemResource.getModels().get("default"), tint ? List.of(new DyeTintSource(0xFFFFFF)) : List.of());
         var cast = new BasicItemModel(itemResource.getModels().get("cast"), tint ? List.of(new DyeTintSource(0xFFFFFF)) : List.of());
         builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
-                new ConditionItemModel(new UsingItemProperty(), cast, defaultModel),
+                new ConditionItemModel(new FishingRodCastProperty(), cast, defaultModel),
                 ItemAsset.Properties.DEFAULT).toJson().getBytes(StandardCharsets.UTF_8)
         );
     }
