@@ -51,7 +51,7 @@ public class Lock implements DecorationBehaviour<Lock.LockConfig> {
                 animatedHolder.getAnimator().playAnimation(lockConfig.unlockAnimation);
             }
 
-            this.unlocked = true;
+            this.unlocked = !noItemNoKey;
 
             boolean validCommand = this.command != null && !this.command.isEmpty();
             boolean validLockCommand = this.lockConfig.command != null && !this.lockConfig.command.isEmpty();
