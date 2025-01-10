@@ -126,7 +126,7 @@ Allows you to create lamps that either switch on/off or cycle through a list of 
 ### On/off lamp example:
 ```json
 {
-  "lock": {
+  "lamp": {
     "on": 15,
     "off": 0
   }
@@ -135,7 +135,7 @@ Allows you to create lamps that either switch on/off or cycle through a list of 
 ### Cycling lamp example:
 ```json
 {
-  "lock": {
+  "lamp": {
     "cycle": [0, 2, 4, 6, 8, 10, 12, 14]
   }
 }
@@ -145,11 +145,14 @@ Allows you to create lamps that either switch on/off or cycle through a list of 
 
 ## `interact_execute` / `lock` behaviour
 
-This behaviour is available under 2 names, `interact_execute` and `lock`. The name `lock` exists to keep compatibility with older versions of filament / filament configs.  
 
 Defines a behaviour that runs a command, for decorations.
 
+This behaviour is available under 2 names, `interact_execute` and `lock`. The name `lock` exists to keep compatibility with older versions of filament / filament configs.  
+
 It's an analog to the `execute` item behaviour.
+
+The command will only run once if a key is specified
 
 ### Fields:
 - `key`: The identifier of the key required to unlock.
