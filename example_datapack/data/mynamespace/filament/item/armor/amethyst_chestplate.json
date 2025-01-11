@@ -1,6 +1,6 @@
 {
   "id": "mynamespace:amethyst_chestplate",
-  "displayName": { "en_us": "§dAmethyst Chestplate" },
+  "translations": { "en_us": "§dAmethyst Chestplate" },
   "vanillaItem": "minecraft:leather_chestplate",
   "properties": {
     "durability": 10,

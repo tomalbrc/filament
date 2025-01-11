@@ -1,6 +1,6 @@
 {
   "id": "mynamespace:striped_beach_umbrella_top",
-  "displayName": { "en_us": "§aStriped Beach Umbrella Top" },
+  "translations": { "en_us": "§aStriped Beach Umbrella Top" },
   "model": "minecraft:custom/furniture/umbrella/striped_beach_umbrella_top",
   "vanillaItem": "minecraft:leather_horse_armor",
   "properties": {
