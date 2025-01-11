@@ -9,7 +9,7 @@
     "en_us": "§6Test Tree"
   },
   "blockResource": {
-    "__comment": "you can also provide a model for state=1",
+    "__comment": "you can also provide a model for stage=1",
     "models": {
       "stage=0": "minecraft:block/beetroots_stage0"
     }
