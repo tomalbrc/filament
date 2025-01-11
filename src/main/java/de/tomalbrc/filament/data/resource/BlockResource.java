@@ -19,9 +19,6 @@ public record BlockResource(Map<String, PolymerBlockModel> models,
         var map = new Object2ObjectOpenHashMap<String, ResourceLocation>();
         for (Map.Entry<String, PolymerBlockModel> entry : models.entrySet()) {
             var model = entry.getValue().model();
-            var itemPath = "item/";
-            if (model.getPath().startsWith(itemPath))
-                model = model.withPath(model.getPath().substring(0, itemPath.length()));
             map.put(entry.getKey(), model);
         }
         return map;
