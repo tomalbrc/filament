@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.data.resource;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
@@ -14,6 +15,14 @@ public record ItemResource(Map<String, ResourceLocation> models,
 
     @Override
     public Map<String, ResourceLocation> getModels() {
-        return this.models;
+        var map = new Object2ObjectOpenHashMap<String, ResourceLocation>();
+        for (Map.Entry<String, ResourceLocation> entry : models.entrySet()) {
+            var model = entry.getValue();
+            var itemPath = "item/";
+            if (model.getPath().startsWith(itemPath))
+                model = model.withPath(model.getPath().substring(0, itemPath.length()));
+            map.put(entry.getKey(), model);
+        }
+        return map;
     }
 }
