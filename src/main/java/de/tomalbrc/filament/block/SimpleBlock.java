@@ -93,7 +93,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     public BlockState getPolymerBreakEventBlockState(BlockState state, PacketContext packetContext) {
-        return this.breakEventState;
+        return Blocks.AIR.defaultBlockState();
     }
 
     private void forEach(Consumer<de.tomalbrc.filament.api.behaviour.BlockBehaviour<?>> consumer) {
