@@ -5,12 +5,10 @@
         "##"
     ],
     "key": {
-        "#": {
-            "item": "minecraft:white_concrete"
-        }
+        "#": "minecraft:white_concrete"
     },
     "result": {
-        "item": "mynamespace:white_concrete_bricks",
+        "id": "mynamespace:white_concrete_bricks",
         "count": 4
     }
 }

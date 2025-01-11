@@ -5,12 +5,10 @@
         "##"
     ],
     "key": {
-        "#": {
-            "item": "minecraft:amethyst_block"
-        }
+        "#": "minecraft:amethyst_block"
     },
     "result": {
-        "item": "mynamespace:amethyst_bricks",
+        "id": "mynamespace:amethyst_bricks",
         "count": 4
     }
 }

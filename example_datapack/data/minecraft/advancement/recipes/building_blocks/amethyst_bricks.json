@@ -1,12 +1,12 @@
 {
     "parent": "minecraft:recipes/root",
     "criteria": {
-        "has_polished_amethyst": {
+        "has_amethyst_block": {
             "conditions": {
                 "items": [
                     {
                         "items": [
-                            "mynamespace:polished_amethyst"
+                            "minecraft:amethyst_block"
                         ]
                     }
                 ]
@@ -23,7 +23,7 @@
     "requirements": [
         [
             "has_the_recipe",
-            "has_polished_amethyst"
+            "has_amethyst_block"
         ]
     ],
     "rewards": {
