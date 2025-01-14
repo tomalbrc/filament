@@ -1,0 +1,39 @@
+{
+  "id": "mynamespace:test_horizontal_directional",
+  "itemResource": {
+    "models": {
+      "default": "minecraft:block/furnace"
+    }
+  },
+  "translations": {
+    "en_us": "§7Fake Furnace"
+  },
+  "blockResource": {
+    "models": {
+      "facing=north": { "model": "minecraft:block/furnace", "y": 0 },
+      "facing=south": { "model": "minecraft:block/furnace", "y": 180 },
+      "facing=east": { "model": "minecraft:block/furnace", "y": 90 },
+      "facing=west": { "model": "minecraft:block/furnace", "y": 270 }
+    }
+  },
+  "properties": {
+    "transparent": false,
+    "solid": true,
+    "replaceable": false,
+    "destroyTime": 1.5
+  },
+  "blockModelType": "full_block",
+  "behaviour": {
+    "horizontal_facing": {},
+    "falling_block": {
+      "delayAfterPlace": 5,
+      "heavy": true,
+      "damagePerBlock": 3.5,
+      "maxDamage": 40,
+      "disableDrops": false,
+      "silent": false,
+      "landSound": "minecraft:block.anvil.land",
+      "canBeDamaged": false
+    }
+  }
+}

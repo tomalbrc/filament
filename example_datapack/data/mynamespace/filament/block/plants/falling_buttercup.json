@@ -8,8 +8,6 @@
   "blockModelType": "plant_block",
   "behaviour": {
     "falling_block": {
-      "dustColor": 16777215,
-      "dustScale": 1.0,
       "delayAfterPlace": 2,
       "heavy": true,
       "damagePerBlock": 2.0,
