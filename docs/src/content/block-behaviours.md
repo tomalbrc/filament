@@ -218,19 +218,28 @@ Defines the block as a redstone power source.
 The `value` field can map to a block-state, like many other block related fields.
 
 Example:
-```json
+```json5
+
 {
-  "value": {
-    "age=0": 0,
-    "age=1": 15
+  "behaviour": {
+    "powersource": {
+      "value": {
+        "age=0": 0,
+        "age=1": 15
+      }
+    }
   }
 }
 ```
 
 Example with constant value:
-```json
+```json5
 {
-  "value": 15
+  "behaviour": {
+    "powersource": {
+      "value": 5
+    }
+  }
 }
 ```
 
