@@ -7,7 +7,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -28,7 +31,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public interface BlockBehaviour<T> extends Behaviour<T> {
     default void init(Item item, Block block, BehaviourHolder behaviourHolder) {
 
@@ -123,6 +126,9 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
     default void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
     }
 
+    default void animateTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource randomSource) {
+    }
+
     default void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
     }
 
@@ -140,5 +146,16 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
 
     default Optional<Long> getSeed(BlockState blockState, BlockPos blockPos) {
         return Optional.empty();
+    }
+
+    @Nullable
+    default DamageSource getFallDamageSource(Entity entity) {
+        return null;
+    }
+
+    default void onLand(Level level, BlockPos blockPos, BlockState blockState, BlockState blockState2, FallingBlockEntity fallingBlockEntity) {
+    }
+
+    default void onBrokenAfterFall(Level level, BlockPos blockPos, FallingBlockEntity fallingBlockEntity) {
     }
 }

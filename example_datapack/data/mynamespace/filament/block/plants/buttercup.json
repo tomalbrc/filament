@@ -16,6 +16,8 @@
   "properties": {
     "destroyTime": 0,
     "blockBase": "minecraft:dandelion",
-    "pushReaction": "destroy"
+    "pushReaction": "destroy",
+    "transparent": true,
+    "solid": false
   }
 }
