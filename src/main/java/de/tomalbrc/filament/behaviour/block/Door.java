@@ -13,6 +13,7 @@ import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -204,8 +205,8 @@ public class Door implements BlockBehaviour<Door.Config> {
         return blockState2.getBlock() instanceof SimpleBlock simpleBlock && simpleBlock.has(Behaviours.DOOR);
     }
 
-    private void playSound(@Nullable Entity entity, Level level, BlockPos blockPos, boolean bl) {
-        level.playSound(entity, blockPos, bl ? this.config.openSound : this.config.closeSound, SoundSource.BLOCKS, 1.0f, level.getRandom().nextFloat() * 0.1f + 0.9f);
+    private void playSound(@Nullable Entity entity, Level level, BlockPos blockPos, boolean open) {
+        level.playSound(entity, blockPos, SoundEvent.createVariableRangeEvent(open ? this.config.openSound : this.config.closeSound), SoundSource.BLOCKS, 1.0f, level.getRandom().nextFloat() * 0.1f + 0.9f);
     }
 
     @Override
@@ -222,6 +223,7 @@ public class Door implements BlockBehaviour<Door.Config> {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public Optional<Long> getSeed(BlockState blockState, BlockPos blockPos) {
         return Optional.of(Mth.getSeed(blockPos.getX(), blockPos.below(blockState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.LOWER ? 0 : 1).getY(), blockPos.getZ()));
     }
@@ -303,7 +305,7 @@ public class Door implements BlockBehaviour<Door.Config> {
     public static class Config {
         public boolean canOpenByWindCharge = true;
         public boolean canOpenByHand = true;
-        public SoundEvent openSound = SoundEvents.WOODEN_DOOR_OPEN;
-        public SoundEvent closeSound = SoundEvents.WOODEN_DOOR_CLOSE;
+        public ResourceLocation openSound = SoundEvents.WOODEN_DOOR_OPEN.location();
+        public ResourceLocation closeSound = SoundEvents.WOODEN_DOOR_CLOSE.location();
     }
 }

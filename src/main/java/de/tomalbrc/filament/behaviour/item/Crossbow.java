@@ -62,9 +62,9 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
     public Crossbow(Config config) {
         this.config = config;
         this.sounds = new CrossbowItem.ChargingSounds(
-                Optional.of(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(config.loadingStartSound)),
-                Optional.of(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(config.loadingMiddleSound)),
-                Optional.of(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(config.loadingEndSound))
+                Optional.of(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvent.createVariableRangeEvent(config.loadingStartSound))),
+                Optional.of(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvent.createVariableRangeEvent(config.loadingMiddleSound))),
+                Optional.of(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvent.createVariableRangeEvent(config.loadingEndSound)))
         );
     }
 
@@ -131,7 +131,7 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
 
         projectile.shoot(vector3f.x(), vector3f.y(), vector3f.z(), f, g);
         float l = getShotPitch(livingEntity.getRandom(), i);
-        livingEntity.level().playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), this.config.shootSound, livingEntity.getSoundSource(), 1.0F, l);
+        livingEntity.level().playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), SoundEvent.createVariableRangeEvent(this.config.shootSound), livingEntity.getSoundSource(), 1.0F, l);
     }
 
     private static Vector3f getProjectileShotVector(LivingEntity livingEntity, Vec3 vec3, float f) {
@@ -322,10 +322,10 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
         public List<ResourceLocation> supportedProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"), ResourceLocation.withDefaultNamespace("firework_rocket"));
         public List<ResourceLocation> supportedHeldProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"), ResourceLocation.withDefaultNamespace("firework_rocket"));
 
-        public SoundEvent shootSound = SoundEvents.CROSSBOW_SHOOT;
+        public ResourceLocation shootSound = SoundEvents.CROSSBOW_SHOOT.location();
 
-        public SoundEvent loadingStartSound = SoundEvents.CROSSBOW_LOADING_START.value();
-        public SoundEvent loadingMiddleSound = SoundEvents.CROSSBOW_LOADING_MIDDLE.value();
-        public SoundEvent loadingEndSound = SoundEvents.CROSSBOW_LOADING_END.value();
+        public ResourceLocation loadingStartSound = SoundEvents.CROSSBOW_LOADING_START.value().location();
+        public ResourceLocation loadingMiddleSound = SoundEvents.CROSSBOW_LOADING_MIDDLE.value().location();
+        public ResourceLocation loadingEndSound = SoundEvents.CROSSBOW_LOADING_END.value().location();
     }
 }
