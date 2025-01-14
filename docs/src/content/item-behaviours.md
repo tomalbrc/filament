@@ -74,7 +74,7 @@ Example with some behaviours set:
 ## `armor` behaviour
 <img class="right" src="../img/armor.png" alt="armor">
 
-Defines armour item behaviours, utilizing the Fancypants shader via Polymer.
+Defines armour item behaviours, using the Fancypants shader via Polymer.
 
 As of filament 0.7 it is possible to use armor trims to render custom armor, to enable this, set the `trim` flag to `true`.
 
@@ -95,7 +95,7 @@ As of filament 0.7 it is possible to use armor trims to render custom armor, to 
 ### Fields:
 - `slot`: The equipment slot for the armour piece (e.g., head, chest, legs, or feet).
 - `texture`: The resource location of the texture associated with the armour. Example: `mynamespace:amethyst`
-- `trim`: Flag wether to use trim-based armor instead of shaders
+- `trim`: Flag whether to use trim-based armor instead of shaders
 
 <br>
 <br>

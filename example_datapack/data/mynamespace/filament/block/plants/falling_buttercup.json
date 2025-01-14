@@ -10,7 +10,7 @@
     "falling_block": {
       "delayAfterPlace": 2,
       "heavy": true,
-      "damagePerBlock": 2.0,
+      "damagePerDistance": 2.0,
       "maxDamage": 40,
       "disableDrops": false,
       "silent": false,

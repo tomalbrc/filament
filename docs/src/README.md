@@ -2,7 +2,7 @@
 
 filament allows for a data driven way to add items, blocks and decorations/furniture to your farbic-based minecraft server.
 
-Checkout [usage](USAGE.md) or "[creating content](content/README.md)" or the [example datapack](https://github.com/tomalbrc/filament/tree/1.21/example_datapack/) in the GitHub repo to get started!
+Checkout [usage](USAGE.md) or "[creating content](content)" or the [example datapack](https://github.com/tomalbrc/filament/tree/main/example_datapack/) in the GitHub repo to get started!
 
 ---
 

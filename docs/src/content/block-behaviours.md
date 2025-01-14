@@ -396,3 +396,42 @@ If the blocks in `grows` have directional/facing block state properties, they di
   - `grows`: List of id's of blocks for the grow stages. Example: `["minecraft:chain", "minecraft:end_rod"]`
 
 ---
+
+### `falling_block` behaviour
+
+Makes the block a gravity affected/falling block like sand or anvils.
+
+**Fields**:
+- `delayAfterPlace`: Delay in ticks before the block falls. Defaults to 2
+- `heavy`: To cause anvil-like damage. Defaults to false
+- `damagePerDistance`: Accumulated damage per block fallen
+- `maxDamage`: Maximum damage a falling block can deal
+- `disableDrops`: Prevent the block from being placed when it falls
+- `silent`: Flag whether sounds are played when the block falls or breaks
+- `landSound`: Sound played when the block lands
+- `breakSound`: Sound played when the block breaks
+- `canBeDamaged`: Flag whether the block should be placed as the block in `damagedBlock`
+- `damagedBlock`: New block to use when the falling block 'breaks'. Will copy applicable block state properties
+- `baseBreakChance`: Chance for the block to break into the block in `damagedBlock` on its own
+- `breakChancePerDistance`: Chance increase per block fallen for the block to break into the block in `damagedBlock`
+
+
+**Example**:
+```json5
+{
+  "falling_block": {
+    "delayAfterPlace": 2, // delay in ticks before the block falls
+    "heavy": true, // to cause anvil-like damage
+    "damagePerDistance": 2.0, // accumulated damage per block fallen
+    "maxDamage": 40, // maximum damage
+    "disableDrops": false, // prevent the block from being placed
+    "silent": false, // no sounds
+    "landSound": "minecraft:block.anvil.land",
+    "breakSound": "minecraft:block.anvil.destroy",
+    "canBeDamaged": true, // flag wether the block should be placed as the block in "damagedBlock"
+    "damagedBlock": "minecraft:diamond_block", // new block to use, will copy applicable block state property
+    "baseBreakChance": 0.05, // chance for the block to "break" to the block in "damagedBlock"
+    "breakChancePerDistance": 0.05 // chance increase per block fallen
+  }
+}
+```
