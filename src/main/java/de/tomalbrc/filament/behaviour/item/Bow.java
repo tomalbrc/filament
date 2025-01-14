@@ -105,7 +105,7 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
             this.shoot(serverLevel, player, player.getUsedItemHand(), itemStack, list, currentPower * config.powerMultiplier, currentPower == 1.0f);
         }
 
-        level.playSound(null, player.getX(), player.getY(), player.getZ(), config.shootSound, SoundSource.PLAYERS, 1.0f, 1.0f / (level.getRandom().nextFloat() * 0.4f + 1.2f) + currentPower * 0.5f);
+        level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvent.createVariableRangeEvent(config.shootSound), SoundSource.PLAYERS, 1.0f, 1.0f / (level.getRandom().nextFloat() * 0.4f + 1.2f) + currentPower * 0.5f);
         player.awardStat(Stats.ITEM_USED.get(itemStack.getItem()));
     }
 
@@ -168,6 +168,6 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
         public List<ResourceLocation> supportedProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"));
         public List<ResourceLocation> supportedHeldProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"), ResourceLocation.withDefaultNamespace("firework_rocket"));
 
-        public SoundEvent shootSound = SoundEvents.ARROW_SHOOT;
+        public ResourceLocation shootSound = SoundEvents.ARROW_SHOOT.location();
     }
 }

@@ -11,6 +11,8 @@ import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -98,7 +100,7 @@ public class Trapdoor implements BlockBehaviour<Trapdoor.Config>, SimpleWaterlog
     }
 
     protected void playSound(@Nullable Player player, Level level, BlockPos blockPos, boolean open) {
-        level.playSound(player, blockPos, open ? this.config.openSound : this.config.closeSound, SoundSource.BLOCKS, 1.0f, level.getRandom().nextFloat() * 0.1f + 0.9f);
+        level.playSound(player, blockPos, SoundEvent.createVariableRangeEvent(open ? this.config.openSound : this.config.closeSound), SoundSource.BLOCKS, 1.0f, level.getRandom().nextFloat() * 0.1f + 0.9f);
         level.gameEvent(player, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, blockPos);
     }
 
@@ -226,7 +228,7 @@ public class Trapdoor implements BlockBehaviour<Trapdoor.Config>, SimpleWaterlog
     public static class Config {
         public boolean canOpenByWindCharge = true;
         public boolean canOpenByHand = true;
-        public SoundEvent openSound = SoundEvents.WOODEN_TRAPDOOR_OPEN;
-        public SoundEvent closeSound = SoundEvents.WOODEN_TRAPDOOR_CLOSE;
+        public ResourceLocation openSound = SoundEvents.WOODEN_TRAPDOOR_OPEN.location();
+        public ResourceLocation closeSound = SoundEvents.WOODEN_TRAPDOOR_CLOSE.location();
     }
 }
