@@ -38,6 +38,7 @@ public class Behaviours {
     public static final BehaviourType<Budding, Budding.Config> BUDDING = registerBehaviour("budding", Budding.class);
     public static final BehaviourType<Enchantable, Enchantable.Config> ENCHANTABLE = registerBehaviour("enchantable", Enchantable.class);
     public static final BehaviourType<Facing, Facing.Config> FACING = registerBehaviour("facing", Facing.class);
+    public static final BehaviourType<FallingBlock, FallingBlock.Config> FALLING_BLOCK = registerBehaviour("falling_block", FallingBlock.class);
     public static final BehaviourType<HorizontalFacing, HorizontalFacing.Config> HORIZONTAL_FACING = registerBehaviour("horizontal_facing", HorizontalFacing.class);
     public static final BehaviourType<Powerlevel, Powerlevel.PowerlevelConfig> POWERLEVEL = registerBehaviour("powerlevel", Powerlevel.class);
     public static final BehaviourType<Slab, Slab.SlabConfig> SLAB = registerBehaviour("slab", Slab.class);

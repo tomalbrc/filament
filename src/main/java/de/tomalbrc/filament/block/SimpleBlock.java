@@ -13,7 +13,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -34,7 +37,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class SimpleBlock extends Block implements PolymerTexturedBlock, BehaviourHolder, SimpleWaterloggedBlock, BonemealableBlock, WeatheringCopper {
+public class SimpleBlock extends Block implements PolymerTexturedBlock, BehaviourHolder, SimpleWaterloggedBlock, BonemealableBlock, WeatheringCopper, Fallable {
     protected Map<BlockState, BlockData.BlockStateMeta> stateMap;
     protected final BlockState breakEventState;
     protected final BlockData blockData;
@@ -123,7 +126,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     protected long getSeed(BlockState blockState, BlockPos blockPos) {
-        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+        if (this.getBehaviours() != null) for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.getSeed(blockState, blockPos);
                 if (res != null && res.isPresent())
@@ -132,6 +135,32 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
         }
 
         return Mth.getSeed(blockPos);
+    }
+
+    @Override
+    public void onLand(Level level, BlockPos blockPos, BlockState blockState, BlockState blockState2, FallingBlockEntity fallingBlockEntity) {
+        if (this.getBehaviours() != null)
+            this.forEach(x -> x.onLand(level, blockPos, blockState, blockState2, fallingBlockEntity));
+    }
+
+    @Override
+    public void onBrokenAfterFall(Level level, BlockPos blockPos, FallingBlockEntity fallingBlockEntity) {
+        if (this.getBehaviours() != null)
+            this.forEach(x -> x.onBrokenAfterFall(level, blockPos, fallingBlockEntity));
+    }
+
+    @Override
+    @NotNull
+    public DamageSource getFallDamageSource(Entity entity) {
+        if (this.getBehaviours() != null) for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
+                var res = blockBehaviour.getFallDamageSource(entity);
+                if (res != null)
+                    return res;
+            }
+        }
+
+        return Fallable.super.getFallDamageSource(entity);
     }
 
     @Override
@@ -398,6 +427,11 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     @Override
     protected void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
         this.forEach(x -> x.randomTick(blockState, serverLevel, blockPos, randomSource));
+    }
+
+    @Override
+    public void animateTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource randomSource) {
+        this.forEach(x -> x.animateTick(blockState, level, blockPos, randomSource));
     }
 
     // bonemealable impl

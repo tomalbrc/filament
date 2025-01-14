@@ -1,0 +1,33 @@
+{
+  "id": "mynamespace:falling_buttercup",
+  "blockResource": {
+    "models": {
+      "default": "minecraft:custom/block/plants/buttercup"
+    }
+  },
+  "blockModelType": "plant_block",
+  "behaviour": {
+    "falling_block": {
+      "dustColor": 16777215,
+      "dustScale": 1.0,
+      "delayAfterPlace": 2,
+      "heavy": true,
+      "damagePerBlock": 2.0,
+      "maxDamage": 40,
+      "disableDrops": false,
+      "silent": false,
+      "landSound": "minecraft:block.anvil.land",
+      "breakSound": "minecraft:block.anvil.destroy",
+      "canBeDamaged": true,
+      "damagedBlock": "minecraft:diamond_block",
+      "baseBreakChance": 0.05,
+      "breakChancePerDistance": 0.05
+    }
+  },
+  "properties": {
+    "destroyTime": 0,
+    "blockBase": "minecraft:dandelion",
+    "transparent": true,
+    "solid": false
+  }
+}
