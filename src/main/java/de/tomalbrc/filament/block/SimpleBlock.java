@@ -424,11 +424,6 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
         this.forEach(x -> x.randomTick(blockState, serverLevel, blockPos, randomSource));
     }
 
-    @Override
-    public void animateTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource randomSource) {
-        this.forEach(x -> x.animateTick(blockState, level, blockPos, randomSource));
-    }
-
     // bonemealable impl
 
     @Override

@@ -3,13 +3,11 @@ package de.tomalbrc.filament.behaviour.block;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.ParticleUtils;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.Level;
@@ -54,16 +52,6 @@ public class FallingBlock implements BlockBehaviour<FallingBlock.Config> {
         }
     }
 
-    @Override
-    public void animateTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource randomSource) {
-        if (randomSource.nextInt(16) == 0) {
-            BlockPos blockPos2 = blockPos.below();
-            if (net.minecraft.world.level.block.FallingBlock.isFree(level.getBlockState(blockPos2))) {
-                ParticleUtils.spawnParticleBelow(level, blockPos, randomSource, new DustParticleOptions(config.dustColor, config.dustScale));
-            }
-        }
-    }
-
     private void falling(FallingBlockEntity fallingBlockEntity) {
         if (config.heavy)
             fallingBlockEntity.setHurtsEntities(config.damagePerDistance, config.maxDamage);
@@ -84,8 +72,6 @@ public class FallingBlock implements BlockBehaviour<FallingBlock.Config> {
     }
 
     public static class Config {
-        int dustColor = 0xFF_FF_FF;
-        float dustScale = 1.f;
         int delayAfterPlace = 2;
         boolean heavy = false;
         public float damagePerDistance = 2.f;

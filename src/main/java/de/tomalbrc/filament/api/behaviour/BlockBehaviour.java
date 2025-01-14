@@ -126,9 +126,6 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
     default void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
     }
 
-    default void animateTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource randomSource) {
-    }
-
     default void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
     }
 
