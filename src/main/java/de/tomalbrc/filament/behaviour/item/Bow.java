@@ -168,6 +168,6 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
         public List<ResourceLocation> supportedProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"));
         public List<ResourceLocation> supportedHeldProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"), ResourceLocation.withDefaultNamespace("firework_rocket"));
 
-        public ResourceLocation shootSound = SoundEvents.ARROW_SHOOT.location();
+        public ResourceLocation shootSound = SoundEvents.ARROW_SHOOT.getLocation();
     }
 }

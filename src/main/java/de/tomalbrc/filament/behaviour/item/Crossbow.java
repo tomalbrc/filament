@@ -312,10 +312,10 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
         public List<ResourceLocation> supportedProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"), ResourceLocation.withDefaultNamespace("firework_rocket"));
         public List<ResourceLocation> supportedHeldProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"), ResourceLocation.withDefaultNamespace("firework_rocket"));
 
-        public ResourceLocation shootSound = SoundEvents.CROSSBOW_SHOOT.location();
+        public ResourceLocation shootSound = SoundEvents.CROSSBOW_SHOOT.getLocation();
 
-        public ResourceLocation loadingStartSound = SoundEvents.CROSSBOW_LOADING_START.value().location();
-        public ResourceLocation loadingMiddleSound = SoundEvents.CROSSBOW_LOADING_MIDDLE.value().location();
-        public ResourceLocation loadingEndSound = SoundEvents.CROSSBOW_LOADING_END.value().location();
+        public ResourceLocation loadingStartSound = SoundEvents.CROSSBOW_LOADING_START.value().getLocation();
+        public ResourceLocation loadingMiddleSound = SoundEvents.CROSSBOW_LOADING_MIDDLE.value().getLocation();
+        public ResourceLocation loadingEndSound = SoundEvents.CROSSBOW_LOADING_END.value().getLocation();
     }
 }

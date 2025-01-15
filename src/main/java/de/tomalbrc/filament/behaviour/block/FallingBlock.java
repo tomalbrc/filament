@@ -11,8 +11,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,14 +33,14 @@ public class FallingBlock implements BlockBehaviour<FallingBlock.Config> {
     }
 
     @Override
-    public BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
-        scheduledTickAccess.scheduleTick(blockPos, blockState.getBlock(), config.delayAfterPlace);
-        return BlockBehaviour.super.updateShape(blockState, levelReader, scheduledTickAccess, blockPos, direction, blockPos2, blockState2, randomSource);
+    public BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) {
+        levelAccessor.scheduleTick(blockPos, blockState.getBlock(), config.delayAfterPlace);
+        return BlockBehaviour.super.updateShape(blockState, direction, blockState2, levelAccessor, blockPos, blockPos2);
     }
 
     @Override
     public void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
-        if (net.minecraft.world.level.block.FallingBlock.isFree(serverLevel.getBlockState(blockPos.below())) && blockPos.getY() >= serverLevel.getMinY()) {
+        if (net.minecraft.world.level.block.FallingBlock.isFree(serverLevel.getBlockState(blockPos.below())) && blockPos.getY() >= serverLevel.getMinBuildHeight()) {
             FallingBlockEntity fallingBlockEntity = FallingBlockEntity.fall(serverLevel, blockPos, blockState);
 
             if (config.disableDrops)
@@ -78,8 +77,8 @@ public class FallingBlock implements BlockBehaviour<FallingBlock.Config> {
         public int maxDamage = 40;
         boolean disableDrops = false;
         boolean silent = false;
-        ResourceLocation breakSound = SoundEvents.ANVIL_BREAK.location();
-        ResourceLocation landSound = SoundEvents.ANVIL_LAND.location();
+        ResourceLocation breakSound = SoundEvents.ANVIL_BREAK.getLocation();
+        ResourceLocation landSound = SoundEvents.ANVIL_LAND.getLocation();
         public boolean canBeDamaged = false;
         public ResourceLocation damagedBlock = null;
         public float baseBreakChance = 0.05f;
