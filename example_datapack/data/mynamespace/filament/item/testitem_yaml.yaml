@@ -6,7 +6,7 @@ properties:
 behaviour:
   compostable:
     chance: 50
-  stripper: ~
+  stripper: {}
 components:
   minecraft:tool:
     default_mining_speed: 1.0
