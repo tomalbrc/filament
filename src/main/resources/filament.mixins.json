@@ -31,6 +31,7 @@
     "behaviour.shield.PlayerMixin",
     "behaviour.strippable.AxeItemAccessor",
     "behaviour.strippable.AxeItemMixin",
+    "behaviour.tnt.PrimedTntMixin",
     "behaviour.trap.MobMixin",
     "behaviour.trim.ItemStackPacketCodecMixin",
     "behaviour.trim.RegistryDataLoaderMixin",

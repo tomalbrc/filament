@@ -4,15 +4,11 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
 import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.item.SimpleItem;
-import de.tomalbrc.filament.util.Constants;
-import de.tomalbrc.filament.util.Json;
-import de.tomalbrc.filament.util.RPUtil;
-import de.tomalbrc.filament.util.Translations;
+import de.tomalbrc.filament.util.*;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 
@@ -21,7 +17,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Map;
 
 public class ItemRegistry {
     public static int REGISTERED_ITEMS = 0;
