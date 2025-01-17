@@ -65,8 +65,6 @@ java {
 }
 
 jar {
-    archiveClassifier = 'slim'
-
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }
