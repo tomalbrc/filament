@@ -11,6 +11,10 @@ loom {
     accessWidenerPath = file("src/main/resources/filament.accesswidener")
 }
 
+configurations {
+    shadow
+}
+
 repositories {
     maven { url 'https://maven.tomalbrc.de' }
     maven { url 'https://maven.nucleoid.xyz' }
@@ -72,16 +76,18 @@ jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }
-    dependsOn shadowJar
 }
 
 shadowJar {
     configurations = [project.configurations.shadow]
     zip64 true
-    relocate 'org.yaml.snakeyaml', 'de.tomabrc.filament.snakeyaml'
+    relocate 'org.yaml.snakeyaml', 'de.tomalbrc.filament.snakeyaml'
 }
 
-remapJar { dependsOn(shadowJar) }
+remapJar {
+    dependsOn(shadowJar)
+    input.set(shadowJar.archivePath)
+}
 
 // configure the maven publication
 publishing {
