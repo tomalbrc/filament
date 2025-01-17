@@ -34,15 +34,15 @@ public abstract class FallingBlockEntityMixin extends Entity {
             assert behaviour != null;
 
             var conf = behaviour.getConfig();
-            if (conf.canBeDamaged) {
+            if (conf.canBeDamaged.getValue(this.blockState)) {
                 int value = Mth.ceil(f - 1.0F);
-                float h = (float)Math.min(Mth.floor((float)value * conf.damagePerDistance), conf.maxDamage);
+                float h = (float)Math.min(Mth.floor((float)value * conf.damagePerDistance.getValue(this.blockState)), conf.maxDamage.getValue(this.blockState));
 
-                if (h > 0.0F && this.random.nextFloat() < conf.baseBreakChance + (float)value * conf.breakChancePerDistance) {
+                if (h > 0.0F && this.random.nextFloat() < conf.baseBreakChance.getValue(this.blockState) + (float)value * conf.breakChancePerDistance.getValue(this.blockState)) {
                     if (conf.damagedBlock == null) {
                         this.cancelDrop = true;
                     } else {
-                        this.blockState = BuiltInRegistries.BLOCK.get(conf.damagedBlock).withPropertiesOf(this.blockState);
+                        this.blockState = BuiltInRegistries.BLOCK.get(conf.damagedBlock.getValue(this.blockState)).withPropertiesOf(this.blockState);
                     }
                     cir.setReturnValue(false);
                 }

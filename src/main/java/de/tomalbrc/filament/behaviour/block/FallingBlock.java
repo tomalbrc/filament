@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.behaviour.block;
 
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
+import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -29,12 +30,12 @@ public class FallingBlock implements BlockBehaviour<FallingBlock.Config> {
 
     @Override
     public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
-        level.scheduleTick(blockPos, blockState.getBlock(), config.delayAfterPlace);
+        level.scheduleTick(blockPos, blockState.getBlock(), config.delayAfterPlace.getValue(blockState));
     }
 
     @Override
     public BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) {
-        levelAccessor.scheduleTick(blockPos, blockState.getBlock(), config.delayAfterPlace);
+        levelAccessor.scheduleTick(blockPos, blockState.getBlock(), config.delayAfterPlace.getValue(blockState));
         return BlockBehaviour.super.updateShape(blockState, direction, blockState2, levelAccessor, blockPos, blockPos2);
     }
 
@@ -43,7 +44,7 @@ public class FallingBlock implements BlockBehaviour<FallingBlock.Config> {
         if (net.minecraft.world.level.block.FallingBlock.isFree(serverLevel.getBlockState(blockPos.below())) && blockPos.getY() >= serverLevel.getMinBuildHeight()) {
             FallingBlockEntity fallingBlockEntity = FallingBlockEntity.fall(serverLevel, blockPos, blockState);
 
-            if (config.disableDrops)
+            if (config.disableDrops.getValue(blockState))
                 fallingBlockEntity.disableDrop();
 
             fallingBlockEntity.setSilent(true);
@@ -52,36 +53,37 @@ public class FallingBlock implements BlockBehaviour<FallingBlock.Config> {
     }
 
     private void falling(FallingBlockEntity fallingBlockEntity) {
-        if (config.heavy)
-            fallingBlockEntity.setHurtsEntities(config.damagePerDistance, config.maxDamage);
+        if (config.heavy.getValue(fallingBlockEntity.getBlockState()))
+            fallingBlockEntity.setHurtsEntities(config.damagePerDistance.getValue(fallingBlockEntity.getBlockState()), config.maxDamage.getValue(fallingBlockEntity.getBlockState()));
     }
 
     @Override
     public void onLand(Level level, BlockPos blockPos, BlockState blockState, BlockState blockState2, FallingBlockEntity fallingBlockEntity) {
-        if (!config.silent) {
-            level.playSound(null, blockPos, SoundEvent.createVariableRangeEvent(config.landSound), SoundSource.BLOCKS);
+        if (!config.silent.getValue(blockState)) {
+            level.playSound(null, blockPos, SoundEvent.createVariableRangeEvent(config.landSound.getValue(blockState2)), SoundSource.BLOCKS);
         }
     }
 
     @Override
     public void onBrokenAfterFall(Level level, BlockPos blockPos, FallingBlockEntity fallingBlockEntity) {
-        if (!config.silent) {
-            level.playSound(null, blockPos, SoundEvent.createVariableRangeEvent(config.breakSound), SoundSource.BLOCKS);
+        var bs = level.getBlockState(blockPos);
+        if (!config.silent.getValue(bs)) {
+            level.playSound(null, blockPos, SoundEvent.createVariableRangeEvent(config.breakSound.getValue(bs)), SoundSource.BLOCKS);
         }
     }
 
     public static class Config {
-        int delayAfterPlace = 2;
-        boolean heavy = false;
-        public float damagePerDistance = 2.f;
-        public int maxDamage = 40;
-        boolean disableDrops = false;
-        boolean silent = false;
-        ResourceLocation breakSound = SoundEvents.ANVIL_BREAK.getLocation();
-        ResourceLocation landSound = SoundEvents.ANVIL_LAND.getLocation();
-        public boolean canBeDamaged = false;
-        public ResourceLocation damagedBlock = null;
-        public float baseBreakChance = 0.05f;
-        public float breakChancePerDistance = 0.05f;
+        BlockStateMappedProperty<Integer> delayAfterPlace = BlockStateMappedProperty.of(2);
+        BlockStateMappedProperty<Boolean> heavy = BlockStateMappedProperty.of(false);
+        public BlockStateMappedProperty<Float> damagePerDistance = BlockStateMappedProperty.of(2.f);
+        public BlockStateMappedProperty<Integer> maxDamage = BlockStateMappedProperty.of(40);
+        BlockStateMappedProperty<Boolean> disableDrops = BlockStateMappedProperty.of(false);
+        BlockStateMappedProperty<Boolean> silent = BlockStateMappedProperty.of(false);
+        BlockStateMappedProperty<ResourceLocation> breakSound = BlockStateMappedProperty.of(SoundEvents.ANVIL_BREAK.getLocation());
+        BlockStateMappedProperty<ResourceLocation> landSound = BlockStateMappedProperty.of(SoundEvents.ANVIL_LAND.getLocation());
+        public BlockStateMappedProperty<Boolean> canBeDamaged = BlockStateMappedProperty.of(false);
+        public BlockStateMappedProperty<ResourceLocation> damagedBlock = null;
+        public BlockStateMappedProperty<Float> baseBreakChance = BlockStateMappedProperty.of(0.05f);
+        public BlockStateMappedProperty<Float> breakChancePerDistance = BlockStateMappedProperty.of(0.05f);
     }
 }
