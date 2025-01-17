@@ -1,0 +1,8 @@
+id: mynamespace:striped_towel
+vanilla_item: minecraft:leather_horse_armor
+item_resource:
+  models:
+    default: minecraft:custom/furniture/misc/striped_towel
+properties:
+  rotate: true
+  rotate_smooth: true

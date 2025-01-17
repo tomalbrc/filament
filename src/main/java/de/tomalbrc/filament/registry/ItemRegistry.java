@@ -8,7 +8,6 @@ import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
 import de.tomalbrc.filament.util.RPUtil;
 import de.tomalbrc.filament.util.Translations;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -61,7 +60,7 @@ public class ItemRegistry {
         ItemGroupRegistry.addItem(itemGroup, item);
     }
 
-    public static class ItemDataReloadListener implements SimpleSynchronousResourceReloadListener {
+    public static class ItemDataReloadListener implements FilamentSynchronousResourceReloadListener {
         static private boolean printedInfo = false;
 
         @Override
@@ -71,16 +70,13 @@ public class ItemRegistry {
 
         @Override
         public void onResourceManagerReload(ResourceManager resourceManager) {
-            var resources = resourceManager.listResources("filament/item", path -> path.getPath().endsWith(".json"));
-            for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
-                try (var reader = new InputStreamReader(entry.getValue().open())) {
-                    ItemData data = Json.GSON.fromJson(reader, ItemData.class);
-                    ItemRegistry.register(data);
-                } catch (IOException | IllegalStateException e) {
-                    Filament.LOGGER.error("Failed to load item resource \"{}\".", entry.getKey(), e);
+            load("filament/item", null, resourceManager, (id, inputStream) -> {
+                try {
+                    ItemRegistry.register(inputStream);
+                } catch (IOException e) {
+                    Filament.LOGGER.error("Failed to load item resource \"{}\".", id, e);
                 }
-            }
-
+            });
             if (!printedInfo) {
                 for (String s : Arrays.asList("Filament items registered: " + REGISTERED_ITEMS, "Filament blocks registered: " + BlockRegistry.REGISTERED_BLOCKS, "Filament decorations registered: " + DecorationRegistry.REGISTERED_DECORATIONS, "Filament decoration block entities registered: " + DecorationRegistry.REGISTERED_BLOCK_ENTITIES)) {
                     Filament.LOGGER.info(s);

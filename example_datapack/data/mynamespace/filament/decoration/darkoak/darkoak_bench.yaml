@@ -1,0 +1,16 @@
+id: mynamespace:darkoak_bench
+item_resource:
+  models:
+    default: minecraft:custom/furniture/benches/darkoak_bench
+properties:
+  rotate: true
+  rotate_smooth: true
+behaviour:
+  seat:
+    - offset: [0, 0.42, 0]
+    - offset: [1, 0.42, 0]
+blocks:
+  - origin: [0, 0, 0]
+    size: [1, 1, 1]
+  - origin: [1, 0, 0]
+    size: [1, 1, 1]

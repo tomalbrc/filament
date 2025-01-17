@@ -6,16 +6,11 @@ import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.block.SimpleBlockItem;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
-import de.tomalbrc.filament.util.Constants;
-import de.tomalbrc.filament.util.Json;
-import de.tomalbrc.filament.util.RPUtil;
-import de.tomalbrc.filament.util.Translations;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import de.tomalbrc.filament.util.*;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -25,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 public class BlockRegistry {
     public static int REGISTERED_BLOCKS = 0;
@@ -72,7 +66,7 @@ public class BlockRegistry {
         Registry.register(BuiltInRegistries.BLOCK, identifier, block);
     }
 
-    public static class BlockDataReloadListener implements SimpleSynchronousResourceReloadListener {
+    public static class BlockDataReloadListener implements FilamentSynchronousResourceReloadListener {
         @Override
         public ResourceLocation getFabricId() {
             return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, Constants.MOD_ID);
@@ -80,16 +74,13 @@ public class BlockRegistry {
 
         @Override
         public void onResourceManagerReload(ResourceManager resourceManager) {
-            var resources = resourceManager.listResources("filament/block", path -> path.getPath().endsWith(".json"));
-            for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
-
-                try (var reader = new InputStreamReader(entry.getValue().open())) {
-                    BlockData data = Json.GSON.fromJson(reader, BlockData.class);
-                    BlockRegistry.register(data);
-                } catch (IOException | IllegalStateException e) {
-                    Filament.LOGGER.error("Failed to load block resource \"{}\".", entry.getKey());
+            load("filament/block", null, resourceManager, (id, inputStream) -> {
+                try {
+                    BlockRegistry.register(inputStream);
+                } catch (IOException e) {
+                    Filament.LOGGER.error("Failed to load block resource \"{}\".", id);
                 }
-            }
+            });
         }
     }
 }

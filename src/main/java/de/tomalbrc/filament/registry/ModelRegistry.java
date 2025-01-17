@@ -5,9 +5,9 @@ import de.tomalbrc.bil.file.loader.AjModelLoader;
 import de.tomalbrc.bil.file.loader.BbModelLoader;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.util.Constants;
+import de.tomalbrc.filament.util.FilamentSynchronousResourceReloadListener;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -23,7 +23,7 @@ public class ModelRegistry {
         return ajmodels.get(model);
     }
 
-    public static class AjModelReloadListener implements SimpleSynchronousResourceReloadListener {
+    public static class AjModelReloadListener implements FilamentSynchronousResourceReloadListener {
         @Override
         public ResourceLocation getFabricId() {
             return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "ajmodel");
@@ -38,11 +38,11 @@ public class ModelRegistry {
                     Model model = entry.getKey().getPath().endsWith(".ajmodel") ? new AjModelLoader().load(inputStream, entry.getKey().getPath()) : new BbModelLoader().load(inputStream, entry.getKey().getPath());
                     ajmodels.put(sanitize(entry.getKey()), model);
                 } catch (IOException | IllegalStateException e) {
-                    Filament.LOGGER.error("Failed to load decoration resource \"" + entry.getKey() + "\".");
+                    Filament.LOGGER.error("Failed to load decoration resource \"{}\".", entry.getKey());
                 }
             }
 
-            Filament.LOGGER.info("filament models registered: " + ajmodels.size());
+            Filament.LOGGER.info("filament models registered: {}", ajmodels.size());
         }
     }
 

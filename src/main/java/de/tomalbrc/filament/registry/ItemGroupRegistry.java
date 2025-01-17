@@ -4,12 +4,12 @@ import com.google.gson.reflect.TypeToken;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.ItemGroupData;
 import de.tomalbrc.filament.util.Constants;
+import de.tomalbrc.filament.util.FilamentSynchronousResourceReloadListener;
 import de.tomalbrc.filament.util.Json;
 import eu.pb4.placeholders.api.TextParserUtils;
 import eu.pb4.polymer.core.api.item.PolymerItemGroupUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -61,7 +61,7 @@ public class ItemGroupRegistry {
         }
     }
 
-    public static class ItemGroupDataReloadListener implements SimpleSynchronousResourceReloadListener {
+    public static class ItemGroupDataReloadListener implements FilamentSynchronousResourceReloadListener {
         @Override
         public ResourceLocation getFabricId() {
             return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "item_groups");
@@ -69,14 +69,13 @@ public class ItemGroupRegistry {
 
         @Override
         public void onResourceManagerReload(ResourceManager resourceManager) {
-            var resources = resourceManager.listResources("filament", path -> path.getPath().endsWith("item-groups.json"));
-            for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
+            load("filament", "item-groups", resourceManager, (id, inputStream) -> {
                 try {
-                    ItemGroupRegistry.register(entry.getValue().open());
-                } catch (IOException | IllegalStateException e) {
-                    Filament.LOGGER.error("Failed to load item group \"" + entry.getKey() + "\".");
+                    ItemGroupRegistry.register(inputStream);
+                } catch (IOException e) {
+                    Filament.LOGGER.error("Failed to load item group config \"{}\".", id);
                 }
-            }
+            });
         }
     }
 }
