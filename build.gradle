@@ -42,7 +42,7 @@ dependencies {
 
     modImplementation include('me.lucko:fabric-permissions-api:0.3.1')
 
-    implementation 'org.yaml:snakeyaml:2.0'
+    shadow implementation('org.yaml:snakeyaml:2.0')
 }
 
 processResources {
@@ -69,6 +69,8 @@ java {
 }
 
 jar {
+    archiveClassifier = 'slim'
+
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }
@@ -76,8 +78,12 @@ jar {
 }
 
 shadowJar {
+    configurations = [project.configurations.shadow]
+    zip64 true
     relocate 'org.yaml.snakeyaml', 'de.tomabrc.filament.snakeyaml'
 }
+
+remapJar { dependsOn(shadowJar) }
 
 // configure the maven publication
 publishing {
