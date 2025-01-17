@@ -20,5 +20,13 @@
   },
   "properties": {
     "stackSize": 1
+  },
+  "components": {
+    "minecraft:equippable": {
+      "slot": "chest",
+      "swappable": true,
+      "damage_on_hurt": true,
+      "equip_on_interact": false
+    }
   }
 }
