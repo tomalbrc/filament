@@ -42,6 +42,6 @@ Example: `<lang:'mymod.lore.mylore'>`
 
 ### `fireResistant`:
 
-Boolean (true/false) wether the item is fire resistant.
+Boolean (true/false) wether the item is fire-resistant.
 
 Defaults to `false`

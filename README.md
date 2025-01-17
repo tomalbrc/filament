@@ -2,7 +2,7 @@
 
 Filament simplifies the process of adding custom content to Fabric-based Minecraft servers.
 
-It allows server owners or content creators to add new items, blocks, and decorations without writing a single line of code. Everything is data driven via json files, just configure a block, item, decoration or armor and you are ready to go!
+It allows server owners or content creators to add new items, blocks, and decorations without writing a single line of code. Everything is data driven via json files, just configure a block, item, decoration or armor, and you are ready to go!
 
 Clients connecting to servers using Filament don't need to install any mods, they can connect using vanilla clients.
 
@@ -12,7 +12,7 @@ Since most things are packet based, especially decorations, the performance impa
 
 You should use [polymers auto-host capability](https://polymer.pb4.eu/latest/user/resource-pack-hosting/) to host the resourcepack, no 3rd party server needed!
 
-TLDR: ItemsAdder / Oraxen alternative for fabric. Doesn't handle datapack files such as item-tags / block-tags, etc (bring your own datapack).
+TLDR: ItemsAdder / Oraxen alternative for fabric. Doesn't handle datapack files such as item-tags / block-tags, etc. (bring your own datapack).
 
 ## Features
 

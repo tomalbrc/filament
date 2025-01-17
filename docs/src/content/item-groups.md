@@ -34,7 +34,7 @@ The id of the item shown as the Creative Tab Icon.
 
 ### `literal`
 
-The name displayed for the item group - supports Placeholder API's basic text formatting. By default a translatable string is used for resource-packs, using the `id` of the item-group.
+The name displayed for the item group - supports Placeholder API's basic text formatting. By default, a translatable string is used for resource-packs, using the `id` of the item-group.
 
 
 The translation key looks like this: `mynamespace.itemGroup.mygroup` for an `id` of `mynamespace:mygroup`.

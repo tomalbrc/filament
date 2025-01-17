@@ -1,6 +1,6 @@
 # Examples
 
-See the datapack in the github repository for more examples!
+See the datapack in the GitHub repository for more examples!
 
 https://github.com/tomalbrc/filament/tree/1.21/example_datapack
 

@@ -318,7 +318,7 @@ Trapdoor like block.
 ### `door` behaviour
 
 Door-like "block" that is 2 blocks high.
-Comes with all door block state properties (hinge, open, powered, etc)
+Comes with all door block state properties (hinge, open, powered, etc.)
 
 - **Block-State-Properties to provide models for**:
   - `facing`: north, south, east, west, up, down
@@ -402,7 +402,7 @@ If the blocks in `grows` have directional/facing block state properties, they di
 - **Fields**:
   - `chance`: Chance of the block to grow another block or move a block to the next growth stage in percent, from 0 to 100. Defaults to 20
   - `sides`: List of sides blocks can grow out. Can be `north`, `south`, `east`, `west`, `up` or `down`. Defaults to all directions
-  - `grows`: List of id's of blocks for the grow stages. Example: `["minecraft:chain", "minecraft:end_rod"]`
+  - `grows`: List of id's of blocks for the growth stages. Example: `["minecraft:chain", "minecraft:end_rod"]`
 
 ---
 

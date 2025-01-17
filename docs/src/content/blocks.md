@@ -66,14 +66,13 @@ Defaults to `minecraft:paper`
 
 An object that allows you to provide different block models for each block-state-property that may be provided by a block behaviour.
 
-For now it is only possible to provide block models directly, support for just textures is planned for a future version.
+For now, it is only possible to provide block models directly, support for just textures is planned for a future version.
 
 The keys work similar to the vanilla blockstate files in resourcepacks, you specify the model to use based on the block-state.
 
 An example for the `count` block-behaviour:
 ```json
 {
-  ...,
   "blockResource": {
     "models": {
       "count=1": "mynamespace:custom/block/stone/pebbles_1",
@@ -81,8 +80,7 @@ An example for the `count` block-behaviour:
       "count=3": "mynamespace:custom/block/stone/pebbles_3",
       "count=4": "mynamespace:custom/block/stone/pebbles_4"
     }
-  },
-  ...
+  }
 }
 ```
 

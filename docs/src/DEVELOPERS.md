@@ -8,7 +8,7 @@ Custom behaviours can be registered using the `BehaviourRegistry`.
 
 When referencing a custom behaviour in a config file you will have to specify the whole id of the behaviour, by default filament parses behaviours without namespace in the filament namespace.
 
-You can checkout [TSA: Decorations](https://github.com/tomalbrc/tsa-decorations/blob/main/src/main/java/de/tomalbrc/decorations/carpentry/CarpentryBehaviour.java) for an example Decoration Behaviour implementation or one of the various built-in behaviours. 
+You can check out [TSA: Decorations](https://github.com/tomalbrc/tsa-decorations/blob/main/src/main/java/de/tomalbrc/decorations/carpentry/CarpentryBehaviour.java) for an example Decoration Behaviour implementation or one of the various built-in behaviours. 
 
 Example for the 'instrument' item-behaviour
 ```java
@@ -76,7 +76,7 @@ Blockbench models require an additional identifier for the model which are used 
 public class MyMod implements ModInitializer {
     @Override
     public void onInitialize() {
-        FilamentLoader.loadModels("my-modid", ResourceLocation.of(...));
+        FilamentLoader.loadModels("my-modid", "mynamespace");
         FilamentLoader.loadItems("my-modid");
         FilamentLoader.loadBlocks("my-modid");
         FilamentLoader.loadDecorations("my-modid");
