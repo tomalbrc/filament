@@ -6,11 +6,6 @@
       "default": "minecraft:custom/hats/magic_hat"
     }
   },
-  "behaviour": {
-    "cosmetic": {
-      "slot": "head"
-    }
-  },
   "properties": {
     "stackSize": 1
   },

@@ -1,5 +1,7 @@
 # Decoration Examples
 
+> **Note**: All fields support either camelCase or snake_case!
+
 ### Animated chest with solid 1x1 solid collision:
 ```json5
 {
@@ -32,6 +34,29 @@
     }
   ]
 }
+```
+
+YAML:
+```yaml
+id: mynamespace:example_chest
+item_resource:
+  models:
+    default: mynamespace:custom/furniture/chests/example_chest
+properties:
+  rotate: true
+  rotate_smooth: true
+behaviour:
+  animation:
+    model: my_filament_namespace:example_chest
+  container:
+    name: Example Chest
+    size: 36
+    purge: false
+    open_animation: open
+    close_animation: close
+blocks:
+  - origin: [0, 0, 0]
+    size: [1, 1, 1]
 ```
 
 The `animation` behaviour gets used for animations by various behaviours such as the `container` behaviour.

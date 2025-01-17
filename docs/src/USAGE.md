@@ -13,9 +13,11 @@ data/
 |   |-- filament/
 |   |   |-- item/
 |   |   |   |-- <item_config>.json
+|   |   |   |-- <item_config>.yaml
 |   |   |
 |   |   |-- block/
 |   |   |   |-- <block_config>.json
+|   |   |   |-- <block_config>.yaml
 |   |   |
 |   |   |-- decoration/
 |   |   |   |-- <decoration_configs>.json
@@ -35,6 +37,8 @@ So a configuration file path for a new block could look like this:
 The files can also be located in subfolders for better organization:
 `MyDatapack/data/<namespace>/filament/block/stone_like/myblock.json`
 
+Filament supports yaml files as of 0.12.0.
+
 Blockbench and Animated-Java models for decorations are supported using the [blockbench import library](https://github.com/tomalbrc/blockbench-import-library)
 
 In versions 1.21.4 and higher, filament will automatically generate the item asset json under `namespace/items/itemname.json`.
@@ -45,6 +49,8 @@ You can provide your own item asset models using the `itemModel` field of an ite
 ## Common fields
 
 Item-, block- and decoration configuration files share some common fields.
+
+> **Note**: All fields support either camelCase or snake_case!
 
 Those are:
 
