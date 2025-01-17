@@ -58,6 +58,6 @@ public class DropXp implements BlockBehaviour<DropXp.Config> {
 
     public static class Config {
         public BlockStateMappedProperty<Integer> min = BlockStateMappedProperty.of(0);
-        public BlockStateMappedProperty<Integer> max = BlockStateMappedProperty.of(0);
+        public BlockStateMappedProperty<Integer> max = BlockStateMappedProperty.of(4);
     }
 }
