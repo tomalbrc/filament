@@ -46,6 +46,7 @@ public class Behaviours {
     public static final BehaviourType<Repeater, Repeater.RepeaterConfig> REPEATER = registerBehaviour("repeater", Repeater.class);
     public static final BehaviourType<Powersource, Powersource.PowersourceConfig> POWERSOURCE = registerBehaviour("powersource", Powersource.class);
     public static final BehaviourType<Strippable, Strippable.StrippableConfig> STRIPPABLE = registerBehaviour("strippable", Strippable.class);
+    public static final BehaviourType<Tnt, Tnt.Config> TNT = registerBehaviour("tnt", Tnt.class);
     public static final BehaviourType<DropXp, DropXp.Config> DROP_XP = registerBehaviour("drop_xp", DropXp.class);
     public static final BehaviourType<Oxidizable, Oxidizable.Config> OXIDIZABLE = registerBehaviour("oxidizable", Oxidizable.class);
 

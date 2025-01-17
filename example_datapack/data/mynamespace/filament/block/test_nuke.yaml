@@ -1,0 +1,12 @@
+id: mynamespace:test_nuke
+block_resource:
+  models:
+    default: minecraft:custom/block/concrete/red_concrete_bricks
+properties:
+  block_base: minecraft:red_concrete
+  item_base: minecraft:paper
+block_model_type: full_block
+behaviour:
+  tnt:
+    explosion_power: 75
+    fuse_time: 160

@@ -6,12 +6,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -83,6 +85,10 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
     default void onExplosionHit(BlockState blockState, ServerLevel level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
     }
 
+    default boolean dropFromExplosion(Explosion explosion) {
+        return true;
+    }
+
     default BlockState rotate(BlockState blockState, Rotation rotation) {
         return null;
     }
@@ -141,6 +147,14 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
         return InteractionResult.PASS;
     }
 
+    @Nullable
+    default InteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        return null;
+    }
+
+    default void onProjectileHit(Level level, BlockState blockState, BlockHitResult blockHitResult, Projectile projectile) {
+    }
+
     default Optional<Long> getSeed(BlockState blockState, BlockPos blockPos) {
         return Optional.empty();
     }
@@ -154,5 +168,9 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
     }
 
     default void onBrokenAfterFall(Level level, BlockPos blockPos, FallingBlockEntity fallingBlockEntity) {
+    }
+
+    default void wasExploded(ServerLevel serverLevel, BlockPos blockPos, Explosion explosion) {
+
     }
 }
