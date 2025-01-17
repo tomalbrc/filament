@@ -9,7 +9,6 @@ import de.tomalbrc.filament.block.SimpleBlockItem;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.*;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -80,7 +79,7 @@ public class BlockRegistry {
         return Registry.register(BuiltInRegistries.BLOCK, resourceKey, block);
     }
 
-    public static class BlockDataReloadListener implements SimpleSynchronousResourceReloadListener {
+    public static class BlockDataReloadListener implements FilamentSynchronousResourceReloadListener {
         @Override
         public ResourceLocation getFabricId() {
             return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, Constants.MOD_ID);
@@ -88,14 +87,13 @@ public class BlockRegistry {
 
         @Override
         public void onResourceManagerReload(ResourceManager resourceManager) {
-            var resources = resourceManager.listResources("filament/block", path -> path.getPath().endsWith(".json"));
-            for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
-                try (var input = entry.getValue().open()) {
-                    BlockRegistry.register(input);
-                } catch (IOException | IllegalStateException e) {
-                    Filament.LOGGER.error("Failed to load block resource \"{}\".", entry.getKey());
+            load("filament/block", null, resourceManager, (id, inputStream) -> {
+                try {
+                    BlockRegistry.register(inputStream);
+                } catch (IOException e) {
+                    Filament.LOGGER.error("Failed to load block resource \"{}\".", id);
                 }
-            }
+            });
         }
     }
 }

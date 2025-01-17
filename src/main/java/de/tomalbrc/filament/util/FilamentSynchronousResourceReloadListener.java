@@ -1,0 +1,87 @@
+package de.tomalbrc.filament.util;
+
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.JsonParser;
+import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.registry.ItemRegistry;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.yaml.snakeyaml.Yaml;
+
+import java.io.*;
+import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
+public interface FilamentSynchronousResourceReloadListener extends SimpleSynchronousResourceReloadListener {
+    default void loadJson(@NotNull String root, @Nullable String endsWith, @NotNull ResourceManager resourceManager, @NotNull BiConsumer<ResourceLocation, InputStream> onRead) {
+        var resources = resourceManager.listResources(root, path -> path.getPath().endsWith((endsWith == null ? "" : endsWith) + ".json"));
+        for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
+            try (InputStream inputStream = entry.getValue().open()) {
+                Gson gson = new Gson();
+                Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+                Map<String, Object> document = gson.fromJson(new InputStreamReader(inputStream), mapType);
+                if (document != null) {
+                    document = Json.camelToSnakeCase(document);
+                }
+                InputStream stream = new ByteArrayInputStream(gson.toJson(document).getBytes(StandardCharsets.UTF_8));
+                onRead.accept(entry.getKey(), stream);
+            } catch (IOException | IllegalStateException e) {
+                error(entry.getKey(), e);
+            }
+        }
+    }
+
+    default void loadYaml(@NotNull String root, @Nullable String endsWith, @NotNull ResourceManager resourceManager, @NotNull BiConsumer<ResourceLocation, InputStream> onRead) {
+        var resources = resourceManager.listResources(root, path -> path.getPath().endsWith((endsWith == null ? "" : endsWith) + ".yaml"));
+        for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
+            try (InputStream inputStream = entry.getValue().open()) {
+                Yaml yaml = new Yaml();
+                var documents = yaml.loadAll(inputStream);
+                for (Object document : documents) {
+                    if (document instanceof Map) {
+                        @SuppressWarnings("unchecked")
+                        var d = (Map<String, Object>) document;
+                        document = Json.camelToSnakeCase(d);
+                    }
+                    String jsonString = Json.GSON.toJson(document);
+                    InputStream stream = new ByteArrayInputStream(jsonString.getBytes(StandardCharsets.UTF_8));
+                    onRead.accept(entry.getKey(), stream);
+                }
+            } catch (IOException | IllegalStateException e) {
+                error(entry.getKey(), e);
+            }
+        }
+    }
+
+    default void load(@NotNull String root, @Nullable String endsWith, @NotNull ResourceManager resourceManager, @NotNull BiConsumer<ResourceLocation, InputStream> onRead) {
+        loadYaml(root, endsWith, resourceManager, onRead);
+        loadJson(root, endsWith, resourceManager, onRead);
+    }
+
+    default void error(ResourceLocation resourceLocation, Exception e) {
+        Filament.LOGGER.error("Failed to load resource \"{}\".", resourceLocation, e);
+    }
+
+    private static List<String> convertYamlToGson(Iterator<Object> documents, Gson gson) {
+        List<String> jsonDocuments = new ArrayList<>();
+
+        while (documents.hasNext()) {
+            Object document = documents.next();
+            String json = gson.toJson(document);
+            jsonDocuments.add(json);
+        }
+
+        return jsonDocuments;
+    }
+}

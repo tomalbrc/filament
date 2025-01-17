@@ -2,7 +2,6 @@ package de.tomalbrc.filament.util;
 
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.AbstractPackResources;
 import net.minecraft.server.packs.FilePackResources;
@@ -13,7 +12,7 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class FilamentAssetReloadListener implements SimpleSynchronousResourceReloadListener {
+public class FilamentAssetReloadListener implements FilamentSynchronousResourceReloadListener {
     Consumer<ResourcePackBuilder> lastConsumer = null;
 
     @Override

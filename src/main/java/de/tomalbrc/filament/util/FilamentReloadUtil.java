@@ -6,13 +6,13 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import java.util.List;
 
 public class FilamentReloadUtil {
-    private static final List<SimpleSynchronousResourceReloadListener> reloadListenerList = new ObjectArrayList<>();
+    private static final List<FilamentSynchronousResourceReloadListener> reloadListenerList = new ObjectArrayList<>();
 
-    public static void registerEarlyReloadListener(SimpleSynchronousResourceReloadListener listener) {
+    public static void registerEarlyReloadListener(FilamentSynchronousResourceReloadListener listener) {
         reloadListenerList.add(listener);
     }
 
-    public static List<SimpleSynchronousResourceReloadListener> getReloadListeners() {
+    public static List<FilamentSynchronousResourceReloadListener> getReloadListeners() {
         return reloadListenerList;
     }
 }

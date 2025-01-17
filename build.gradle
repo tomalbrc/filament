@@ -1,6 +1,7 @@
 plugins {
     id 'fabric-loom' version '1.8-SNAPSHOT'
     id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 version = project.mod_version + "+" + project.minecraft_version
@@ -36,6 +37,8 @@ dependencies {
     modImplementation include("de.tomalbrc:blockbench-import-library:${project.bil_version}")
 
     modImplementation include("eu.pb4:placeholder-api:${project.papi_version}")
+
+    implementation 'org.yaml:snakeyaml:2.0'
 }
 
 processResources {
@@ -65,6 +68,11 @@ jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }
+    dependsOn shadowJar
+}
+
+shadowJar {
+    relocate 'org.yaml.snakeyaml', 'de.tomabrc.filament.snakeyaml'
 }
 
 // configure the maven publication

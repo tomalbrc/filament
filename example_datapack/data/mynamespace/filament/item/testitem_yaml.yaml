@@ -1,0 +1,19 @@
+id: mynamespace:testitem_yaml
+vanilla_item: minecraft:debug_stick
+properties:
+  durability: 20
+  stack_size: 1
+behaviour:
+  compostable:
+    chance: 50
+  stripper: ~
+components:
+  minecraft:tool:
+    default_mining_speed: 1.0
+    damage_per_block: 2
+    rules:
+      - speed: 15
+        correct_for_drops: true
+        blocks: '#sword_efficient'
+      - speed: 1.5
+        blocks: 'cobweb'

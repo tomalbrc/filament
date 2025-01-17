@@ -15,7 +15,6 @@ import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.util.*;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -129,7 +128,7 @@ public class DecorationRegistry {
     }
 
 
-    public static class DecorationDataReloadListener implements SimpleSynchronousResourceReloadListener {
+    public static class DecorationDataReloadListener implements FilamentSynchronousResourceReloadListener {
         @Override
         public ResourceLocation getFabricId() {
             return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "decorations");
@@ -137,15 +136,13 @@ public class DecorationRegistry {
 
         @Override
         public void onResourceManagerReload(ResourceManager resourceManager) {
-            var resources = resourceManager.listResources("filament/decoration", path -> path.getPath().endsWith(".json"));
-            for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
-                try (var reader = new InputStreamReader(entry.getValue().open())) {
-                    DecorationData data = Json.GSON.fromJson(reader, DecorationData.class);
-                    DecorationRegistry.register(data);
-                } catch (IOException | IllegalStateException e) {
-                    Filament.LOGGER.error("Failed to load decoration resource \"{}\".", entry.getKey());
+            load("filament/decoration", null, resourceManager, (id, inputStream) -> {
+                try {
+                    DecorationRegistry.register(inputStream);
+                } catch (IOException e) {
+                    Filament.LOGGER.error("Failed to load decoration resource \"{}\".", id);
                 }
-            }
+            });
         }
     }
 }

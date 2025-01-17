@@ -41,6 +41,7 @@ import java.util.Optional;
 public class Json {
     public static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
+            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .registerTypeHierarchyAdapter(BlockState.class, new BlockStateDeserializer())
             .registerTypeHierarchyAdapter(EquipmentSlot.class, new EquipmentSlotDeserializer())
             .registerTypeHierarchyAdapter(Vector3f.class, new Vector3fDeserializer())
@@ -59,6 +60,33 @@ public class Json {
             .registerTypeHierarchyAdapter(BlockStateMappedProperty.class, new BlockStateMappedPropertyDeserializer<>())
             .registerTypeHierarchyAdapter(PolymerBlockModel.class, new PolymerBlockModelDeserializer())
             .create();
+
+    public static Map<String, Object> camelToSnakeCase(Map<String, Object> map) {
+        Map<String, Object> result = new HashMap<>();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String key = camelToSnake(entry.getKey());
+            Object value = entry.getValue();
+            if (value instanceof Map<?, ?> map1) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> nestedMap = (Map<String, Object>) map1;
+                value = camelToSnakeCase(nestedMap);
+            }
+            result.put(key, value);
+        }
+        return result;
+    }
+
+    private static String camelToSnake(String key) {
+        StringBuilder snakeCase = new StringBuilder();
+        for (int i = 0; i < key.length(); i++) {
+            char c = key.charAt(i);
+            if (Character.isUpperCase(c) && i > 0) {
+                snakeCase.append('_');
+            }
+            snakeCase.append(Character.toLowerCase(c));
+        }
+        return snakeCase.toString();
+    }
 
     public static class BlockStateMappedPropertyDeserializer<T> implements JsonDeserializer<BlockStateMappedProperty<T>> {
         @Override
@@ -82,11 +110,12 @@ public class Json {
             Type propertyType = typeOfT.getActualTypeArguments()[0];
             return new ParameterizedType() {
                 @Override
-                public Type[] getActualTypeArguments() {
+                public Type @NotNull [] getActualTypeArguments() {
                     return new Type[]{String.class, propertyType};
                 }
 
                 @Override
+                @NotNull
                 public Type getRawType() {
                     return Map.class;
                 }
