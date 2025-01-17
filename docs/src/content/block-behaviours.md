@@ -215,7 +215,7 @@ Useful for bushes/plants/crops/flowers and more
 
 Defines the block as a redstone power source.
 
-The `value` field can map to a block-state, like many other block related fields.
+> **Note**: The field of this behaviour can be mapped to a block-state.
 
 Example:
 ```json5
@@ -410,6 +410,8 @@ If the blocks in `grows` have directional/facing block state properties, they di
 
 Makes the block a gravity affected/falling block like sand or anvils.
 
+> **Note**: All fields of this behaviour can be mapped to a block-state.
+
 **Fields**:
 - `delayAfterPlace`: Delay in ticks before the block falls. Defaults to 2
 - `heavy`: To cause anvil-like damage. Defaults to false
@@ -444,3 +446,15 @@ Makes the block a gravity affected/falling block like sand or anvils.
   }
 }
 ```
+
+### `tnt` behaviour
+
+With this behaviour the block can be lit with flint and steel or redstone to spawn a TNT entity with the blockstate of this block.
+
+> **Note**: All fields of this behaviour can be mapped to a block-state.
+
+**Fields**:
+  - unstable: Flag whether the block explodes when a player tries to break it. Defaults to `false`
+  - explosionPower: Explosion power. Defaults to `4.0`
+  - fuseTime: Fuse time (delay until the tnt entity explodes). Defaults to `80`
+  - primeSound: Sound to play when the block is primed. Defaults to `minecraft:entity.tnt.primed`
