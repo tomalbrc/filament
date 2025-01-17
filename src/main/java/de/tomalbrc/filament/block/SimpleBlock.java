@@ -32,6 +32,8 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -201,18 +203,18 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
         if (!blockState.isAir() && explosion.getBlockInteraction() != Explosion.BlockInteraction.TRIGGER_BLOCK) {
             Block block = blockState.getBlock();
             boolean bl = explosion.getIndirectSourceEntity() instanceof Player;
-            if (block.dropFromExplosion(explosion)) {
+            if (block.dropFromExplosion(explosion) && level instanceof ServerLevel serverLevel) {
                 BlockEntity blockEntity = blockState.hasBlockEntity() ? level.getBlockEntity(blockPos) : null;
-                LootParams.Builder builder = (new LootParams.Builder(level)).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockPos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockEntity).withOptionalParameter(LootContextParams.THIS_ENTITY, explosion.getDirectSourceEntity());
+                LootParams.Builder builder = (new LootParams.Builder(serverLevel)).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockPos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockEntity).withOptionalParameter(LootContextParams.THIS_ENTITY, explosion.getDirectSourceEntity());
                 if (explosion.getBlockInteraction() == Explosion.BlockInteraction.DESTROY_WITH_DECAY) {
                     builder.withParameter(LootContextParams.EXPLOSION_RADIUS, explosion.radius());
                 }
 
-                blockState.spawnAfterBreak(level, blockPos, ItemStack.EMPTY, bl);
+                blockState.spawnAfterBreak(serverLevel, blockPos, ItemStack.EMPTY, bl);
                 blockState.getDrops(builder).forEach((itemStack) -> biConsumer.accept(itemStack, blockPos));
             }
 
-            this.wasExploded(level, blockPos, explosion); // switch up order to support mapped blockstate properties in block behaviours (tnt example)
+            block.wasExploded(level, blockPos, explosion); // flip order so we can get blockState for mapped block state props in block behaviours
             level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 3);
         }
     }
