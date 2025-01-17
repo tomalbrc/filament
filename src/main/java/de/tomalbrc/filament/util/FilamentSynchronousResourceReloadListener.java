@@ -2,9 +2,7 @@ package de.tomalbrc.filament.util;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.google.gson.JsonParser;
 import de.tomalbrc.filament.Filament;
-import de.tomalbrc.filament.registry.ItemRegistry;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -13,15 +11,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public interface FilamentSynchronousResourceReloadListener extends SimpleSynchronousResourceReloadListener {
     default void loadJson(@NotNull String root, @Nullable String endsWith, @NotNull ResourceManager resourceManager, @NotNull BiConsumer<ResourceLocation, InputStream> onRead) {
@@ -29,7 +26,8 @@ public interface FilamentSynchronousResourceReloadListener extends SimpleSynchro
         for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
             try (InputStream inputStream = entry.getValue().open()) {
                 Gson gson = new Gson();
-                Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+                Type mapType = new TypeToken<Map<String, Object>>() {
+                }.getType();
                 Map<String, Object> document = gson.fromJson(new InputStreamReader(inputStream), mapType);
                 if (document != null) {
                     document = Json.camelToSnakeCase(document);
@@ -43,7 +41,10 @@ public interface FilamentSynchronousResourceReloadListener extends SimpleSynchro
     }
 
     default void loadYaml(@NotNull String root, @Nullable String endsWith, @NotNull ResourceManager resourceManager, @NotNull BiConsumer<ResourceLocation, InputStream> onRead) {
-        var resources = resourceManager.listResources(root, path -> path.getPath().endsWith((endsWith == null ? "" : endsWith) + ".yaml"));
+        var resources = resourceManager.listResources(root, path ->
+                path.getPath().endsWith((endsWith == null ? "" : endsWith) + ".yaml") ||
+                        path.getPath().endsWith((endsWith == null ? "" : endsWith) + ".yml"));
+
         for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
             try (InputStream inputStream = entry.getValue().open()) {
                 Yaml yaml = new Yaml();
@@ -71,17 +72,5 @@ public interface FilamentSynchronousResourceReloadListener extends SimpleSynchro
 
     default void error(ResourceLocation resourceLocation, Exception e) {
         Filament.LOGGER.error("Failed to load resource \"{}\".", resourceLocation, e);
-    }
-
-    private static List<String> convertYamlToGson(Iterator<Object> documents, Gson gson) {
-        List<String> jsonDocuments = new ArrayList<>();
-
-        while (documents.hasNext()) {
-            Object document = documents.next();
-            String json = gson.toJson(document);
-            jsonDocuments.add(json);
-        }
-
-        return jsonDocuments;
     }
 }
