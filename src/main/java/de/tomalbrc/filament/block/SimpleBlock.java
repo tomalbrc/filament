@@ -12,16 +12,20 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -29,6 +33,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -192,7 +197,43 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     public void onExplosionHit(BlockState blockState, Level level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
         if (this.getBehaviours() != null)
             this.forEach(x -> x.onExplosionHit(blockState, level, blockPos, explosion, biConsumer));
-        super.onExplosionHit(blockState, level, blockPos, explosion, biConsumer);
+
+        if (!blockState.isAir() && explosion.getBlockInteraction() != Explosion.BlockInteraction.TRIGGER_BLOCK) {
+            Block block = blockState.getBlock();
+            boolean bl = explosion.getIndirectSourceEntity() instanceof Player;
+            if (block.dropFromExplosion(explosion)) {
+                BlockEntity blockEntity = blockState.hasBlockEntity() ? level.getBlockEntity(blockPos) : null;
+                LootParams.Builder builder = (new LootParams.Builder(level)).withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockPos)).withParameter(LootContextParams.TOOL, ItemStack.EMPTY).withOptionalParameter(LootContextParams.BLOCK_ENTITY, blockEntity).withOptionalParameter(LootContextParams.THIS_ENTITY, explosion.getDirectSourceEntity());
+                if (explosion.getBlockInteraction() == Explosion.BlockInteraction.DESTROY_WITH_DECAY) {
+                    builder.withParameter(LootContextParams.EXPLOSION_RADIUS, explosion.radius());
+                }
+
+                blockState.spawnAfterBreak(level, blockPos, ItemStack.EMPTY, bl);
+                blockState.getDrops(builder).forEach((itemStack) -> biConsumer.accept(itemStack, blockPos));
+            }
+
+            this.wasExploded(level, blockPos, explosion); // switch up order to support mapped blockstate properties in block behaviours (tnt example)
+            level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 3);
+        }
+    }
+
+    @Override
+    public void wasExploded(Level serverLevel, BlockPos blockPos, Explosion explosion) {
+        if (this.getBehaviours() != null)
+            this.forEach(x -> x.wasExploded((ServerLevel)serverLevel, blockPos, explosion));
+    }
+
+    @Override
+    public boolean dropFromExplosion(Explosion explosion) {
+        if (this.getBehaviours() != null) for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
+                var res = blockBehaviour.dropFromExplosion(explosion);
+                if (!res)
+                    return false;
+            }
+        }
+
+        return super.dropFromExplosion(explosion);
     }
 
     @Override
@@ -426,7 +467,8 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     protected void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
-        this.forEach(x -> x.randomTick(blockState, serverLevel, blockPos, randomSource));
+        if (this.getBehaviours() != null)
+            this.forEach(x -> x.randomTick(blockState, serverLevel, blockPos, randomSource));
     }
 
     // bonemealable impl
@@ -490,11 +532,28 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
                     return res;
             }
         }
-        return InteractionResult.PASS;
+        return super.useWithoutItem(blockState, level, blockPos, player, blockHitResult);
+    }
+
+    @Override
+    @NotNull
+    public ItemInteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
+                var res = blockBehaviour.useItemOn(itemStack, blockState, level, blockPos, player, interactionHand, blockHitResult);
+                if (res != null && res.consumesAction())
+                    return res;
+            }
+        }
+        return super.useItemOn(itemStack, blockState, level, blockPos, player, interactionHand, blockHitResult);
+    }
+
+    public void onProjectileHit(Level level, BlockState blockState, BlockHitResult blockHitResult, Projectile projectile) {
+        if (this.getBehaviours() != null)
+            this.forEach(x -> x.onProjectileHit(level, blockState, blockHitResult, projectile));
     }
 
     // --- oxidization
-
 
     @Override
     public void changeOverTime(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
