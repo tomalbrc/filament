@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.util;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
@@ -9,6 +10,7 @@ import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
@@ -30,10 +32,16 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -59,6 +67,43 @@ public class Json {
             .registerTypeHierarchyAdapter(BlockStateMappedProperty.class, new BlockStateMappedPropertyDeserializer<>())
             .registerTypeHierarchyAdapter(PolymerBlockModel.class, new PolymerBlockModelDeserializer())
             .create();
+
+    public static List<InputStream> yamlToJson(InputStream inputStream) {
+        Yaml yaml = new Yaml();
+        var documents = yaml.loadAll(inputStream);
+        List<InputStream> list = new ObjectArrayList<>();
+        for (Object document : documents) {
+            if (document instanceof Map) {
+                @SuppressWarnings("unchecked")
+                var d = (Map<String, Object>) document;
+                document = Json.camelToSnakeCase(d);
+            }
+            String jsonString = Json.GSON.toJson(document);
+            InputStream stream = new ByteArrayInputStream(jsonString.getBytes(StandardCharsets.UTF_8));
+            list.add(stream);
+        }
+        return list;
+    }
+
+    public static InputStream camelToSnakeCase(InputStream inputStream) {
+        Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
+        var json = JsonParser.parseReader(new InputStreamReader(inputStream));
+        InputStream stream;
+        if (json.isJsonObject()) {
+            Type mapType = new TypeToken<Map<String, Object>>() {
+            }.getType();
+            Map<String, Object> document = gson.fromJson(json, mapType);
+            if (document != null) {
+                document = Json.camelToSnakeCase(document);
+            }
+            stream = new ByteArrayInputStream(gson.toJson(document).getBytes(StandardCharsets.UTF_8));
+        }
+        else {
+            stream = new ByteArrayInputStream(gson.toJson(json).getBytes(StandardCharsets.UTF_8));
+        }
+
+        return stream;
+    }
 
     public static Map<String, Object> camelToSnakeCase(Map<String, Object> map) {
         Map<String, Object> result = new HashMap<>();
