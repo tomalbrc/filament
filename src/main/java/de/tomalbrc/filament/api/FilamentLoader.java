@@ -6,10 +6,12 @@ import de.tomalbrc.filament.registry.BlockRegistry;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.registry.ItemRegistry;
 import de.tomalbrc.filament.registry.ModelRegistry;
+import de.tomalbrc.filament.util.Json;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.function.Consumer;
@@ -20,7 +22,15 @@ public class FilamentLoader {
         Behaviours.init();
         search(modid, f -> {
             try {
-                BlockRegistry.register(Files.newInputStream(f));
+                if (f.endsWith(".yaml") || f.endsWith(".yml")) {
+                    var list = Json.yamlToJson(Files.newInputStream(f));
+                    for (InputStream stream : list) {
+                        BlockRegistry.register(stream);
+                    }
+                }
+                else {
+                    BlockRegistry.register(Json.camelToSnakeCase(Files.newInputStream(f)));
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -31,7 +41,15 @@ public class FilamentLoader {
         Behaviours.init();
         search(modid, f -> {
             try {
-                ItemRegistry.register(Files.newInputStream(f));
+                if (f.endsWith(".yaml") || f.endsWith(".yml")) {
+                    var list = Json.yamlToJson(Files.newInputStream(f));
+                    for (InputStream stream : list) {
+                        ItemRegistry.register(stream);
+                    }
+                }
+                else {
+                    ItemRegistry.register(Json.camelToSnakeCase(Files.newInputStream(f)));
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -42,7 +60,15 @@ public class FilamentLoader {
         Behaviours.init();
         search(modid, f -> {
             try {
-                DecorationRegistry.register(Files.newInputStream(f));
+                if (f.endsWith(".yaml") || f.endsWith(".yml")) {
+                    var list = Json.yamlToJson(Files.newInputStream(f));
+                    for (InputStream stream : list) {
+                        DecorationRegistry.register(stream);
+                    }
+                }
+                else {
+                    DecorationRegistry.register(Json.camelToSnakeCase(Files.newInputStream(f)));
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -72,6 +98,8 @@ public class FilamentLoader {
 
     private static void search(String modid, Consumer<Path> registry, String path) {
         search(modid, registry, path, ".json");
+        search(modid, registry, path, ".yaml");
+        search(modid, registry, path, ".yml");
     }
 
     private static void search(String modid, Consumer<Path> registry, String path, String ext) {

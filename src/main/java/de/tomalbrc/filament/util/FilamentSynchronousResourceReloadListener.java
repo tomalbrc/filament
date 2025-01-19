@@ -1,7 +1,9 @@
 package de.tomalbrc.filament.util;
 
 import com.google.common.reflect.TypeToken;
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 import de.tomalbrc.filament.Filament;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -10,7 +12,6 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -26,7 +27,7 @@ public interface FilamentSynchronousResourceReloadListener extends SimpleSynchro
         var resources = resourceManager.listResources(root, path -> path.getPath().endsWith((endsWith == null ? "" : endsWith) + ".json"));
         for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
             try (InputStream inputStream = entry.getValue().open()) {
-                Gson gson = new Gson();
+                Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
                 var json = JsonParser.parseReader(new InputStreamReader(inputStream));
                 InputStream stream;
                 if (json.isJsonObject()) {
@@ -56,16 +57,8 @@ public interface FilamentSynchronousResourceReloadListener extends SimpleSynchro
 
         for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
             try (InputStream inputStream = entry.getValue().open()) {
-                Yaml yaml = new Yaml();
-                var documents = yaml.loadAll(inputStream);
-                for (Object document : documents) {
-                    if (document instanceof Map) {
-                        @SuppressWarnings("unchecked")
-                        var d = (Map<String, Object>) document;
-                        document = Json.camelToSnakeCase(d);
-                    }
-                    String jsonString = Json.GSON.toJson(document);
-                    InputStream stream = new ByteArrayInputStream(jsonString.getBytes(StandardCharsets.UTF_8));
+                var list = Json.yamlToJson(inputStream);
+                for (InputStream stream : list) {
                     onRead.accept(entry.getKey(), stream);
                 }
             } catch (IOException | IllegalStateException e) {
