@@ -13,9 +13,6 @@ public class FilamentConfig {
     static Path CONFIG_FILE_PATH = Constants.CONFIG_DIR.resolve("filament.json");
     static FilamentConfig instance;
 
-    @SerializedName("emissive_shader")
-    public boolean emissiveShader = true;
-
     @SerializedName("commands")
     public boolean commands = true;
 

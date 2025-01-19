@@ -45,10 +45,6 @@ public class Filament implements ModInitializer {
             });
         }
 
-        if (FilamentConfig.getInstance().emissiveShader) {
-            FilamentShaderUtil.registerCallback();
-        }
-
         PolymerBlockUtils.BREAKING_PROGRESS_UPDATE.register(VirtualDestroyStage::updateState);
         PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
             if (state.getBlock() instanceof DecorationBlock && !world.isClientSide()) {
