@@ -32,14 +32,14 @@ public interface FilamentSynchronousResourceReloadListener extends SimpleSynchro
                 if (json.isJsonObject()) {
                     Type mapType = new TypeToken<Map<String, Object>>() {
                     }.getType();
-                    Map<String, Object> document = gson.fromJson(JsonParser.parseReader(new InputStreamReader(inputStream)), mapType);
+                    Map<String, Object> document = gson.fromJson(json, mapType);
                     if (document != null) {
                         document = Json.camelToSnakeCase(document);
                     }
                     stream = new ByteArrayInputStream(gson.toJson(document).getBytes(StandardCharsets.UTF_8));
                 }
                 else {
-                    stream = inputStream;
+                    stream = new ByteArrayInputStream(gson.toJson(json).getBytes(StandardCharsets.UTF_8));
                 }
 
                 onRead.accept(entry.getKey(), stream);
