@@ -2,6 +2,7 @@ package de.tomalbrc.filament.util;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 import de.tomalbrc.filament.Filament;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resources.ResourceLocation;
@@ -26,13 +27,21 @@ public interface FilamentSynchronousResourceReloadListener extends SimpleSynchro
         for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
             try (InputStream inputStream = entry.getValue().open()) {
                 Gson gson = new Gson();
-                Type mapType = new TypeToken<Map<String, Object>>() {
-                }.getType();
-                Map<String, Object> document = gson.fromJson(new InputStreamReader(inputStream), mapType);
-                if (document != null) {
-                    document = Json.camelToSnakeCase(document);
+                var json = JsonParser.parseReader(new InputStreamReader(inputStream));
+                InputStream stream;
+                if (json.isJsonObject()) {
+                    Type mapType = new TypeToken<Map<String, Object>>() {
+                    }.getType();
+                    Map<String, Object> document = gson.fromJson(JsonParser.parseReader(new InputStreamReader(inputStream)), mapType);
+                    if (document != null) {
+                        document = Json.camelToSnakeCase(document);
+                    }
+                    stream = new ByteArrayInputStream(gson.toJson(document).getBytes(StandardCharsets.UTF_8));
                 }
-                InputStream stream = new ByteArrayInputStream(gson.toJson(document).getBytes(StandardCharsets.UTF_8));
+                else {
+                    stream = inputStream;
+                }
+
                 onRead.accept(entry.getKey(), stream);
             } catch (IOException | IllegalStateException e) {
                 error(entry.getKey(), e);
