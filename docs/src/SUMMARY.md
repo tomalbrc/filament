@@ -22,7 +22,7 @@
         - [Blocks](content/decoration-blocks.md)
         - [Simple and complex decorations](content/decoration-complex.md)
         - [Decoration Examples](content/decoration-examples.md)
-- [Tutorials](tutorial)
+- [Tutorials](tutorial/README.md)
   - [Armor](tutorial/ARMOR.md)
   - [Cosmetic](tutorial/COSMETIC.md)
   - [Simple block](tutorial/SIMPLE-BLOCK.md)
