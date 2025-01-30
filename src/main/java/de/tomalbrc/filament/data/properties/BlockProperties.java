@@ -1,10 +1,15 @@
 package de.tomalbrc.filament.data.properties;
 
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})
 public class BlockProperties extends ItemProperties {
@@ -28,6 +33,8 @@ public class BlockProperties extends ItemProperties {
 
     public PushReaction pushReaction = PushReaction.NORMAL;
 
+    public ResourceLocation lootTable = null;
+
     public BlockBehaviour.Properties toBlockProperties() {
         BlockBehaviour.Properties props = BlockBehaviour.Properties.of();
         props.sound(this.blockBase.defaultBlockState().getSoundType());
@@ -41,6 +48,10 @@ public class BlockProperties extends ItemProperties {
         if (this.replaceable) props.replaceable();
         if (this.transparent) props.noOcclusion();
         if (!this.collision) props.noCollission();
+
+        if (this.lootTable != null) props.overrideLootTable(Optional.of(ResourceKey.create(Registries.LOOT_TABLE, this.lootTable)));
+
+        props.mapColor(blockBase.defaultMapColor());
 
         if (this.solid) props.forceSolidOn();
         else props.forceSolidOff();
