@@ -7,3 +7,5 @@ accessible method net/minecraft/world/level/block/DoublePlantBlock preventDropFr
 accessible method net/minecraft/world/item/ProjectileWeaponItem draw (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/LivingEntity;)Ljava/util/List;
 accessible method net/minecraft/world/item/CrossbowItem tryLoadProjectiles (Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;)Z
 accessible method net/minecraft/world/item/CrossbowItem getPowerForTime (ILnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/LivingEntity;)F
+
+accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties drops Lnet/minecraft/resources/ResourceKey;

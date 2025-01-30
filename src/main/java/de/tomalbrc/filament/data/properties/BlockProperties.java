@@ -9,8 +9,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
-
 @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})
 public class BlockProperties extends ItemProperties {
     public static final BlockProperties EMPTY = new BlockProperties();
@@ -49,7 +47,7 @@ public class BlockProperties extends ItemProperties {
         if (this.transparent) props.noOcclusion();
         if (!this.collision) props.noCollission();
 
-        if (this.lootTable != null) props.overrideLootTable(Optional.of(ResourceKey.create(Registries.LOOT_TABLE, this.lootTable)));
+        if (this.lootTable != null) props.drops = ResourceKey.create(Registries.LOOT_TABLE, this.lootTable);
 
         props.mapColor(blockBase.defaultMapColor());
 
