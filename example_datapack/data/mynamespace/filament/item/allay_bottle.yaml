@@ -1,9 +1,12 @@
 id: mynamespace:allay_bottle
 vanilla_item: minecraft:diamond
 item_resource:
-  models:
-    default: minecraft:custom/traps/allay_bottle
-    trapped: minecraft:custom/traps/allay_bottle_trapped
+  parent: item/generated
+  textures:
+    default:
+      layer0: item/traps/allay_bottle
+    trapped:
+      layer0: item/traps/allay_bottle_trapped
 properties:
   durability: 20
   stack_size: 1
