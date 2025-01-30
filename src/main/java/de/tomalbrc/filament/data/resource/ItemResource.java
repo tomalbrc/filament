@@ -1,15 +1,25 @@
 package de.tomalbrc.filament.data.resource;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
 
-public record ItemResource(Map<String, ResourceLocation> models,
-                           Map<String, ResourceLocation> textures,
-                           Map<String, ResourceLocation> vanilla) implements ResourceProvider {
+public class ItemResource implements ResourceProvider {
+    private final Map<String, ResourceLocation> models = new Object2ObjectArrayMap<>();
+    private ResourceLocation parent;
+    private Map<String, Map<String, ResourceLocation>> textures;
+
+    public ResourceLocation parent() {
+        return parent;
+    }
+
+    public Map<String, Map<String, ResourceLocation>> textures() {
+        return textures;
+    }
 
     public boolean couldGenerate() {
-        return this.textures != null && this.textures.containsKey("default");
+        return models.isEmpty() && textures != null && parent != null;
     }
 
     @Override

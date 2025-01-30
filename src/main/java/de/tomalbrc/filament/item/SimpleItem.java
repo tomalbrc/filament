@@ -224,7 +224,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
     }
 
     protected Map<String, ResourceLocation> getModelMap() {
-        return this.itemData.itemResource() == null ? Map.of() : Objects.requireNonNull(this.itemData.itemResource()).models();
+        return this.itemData.itemResource() == null ? Map.of() : Objects.requireNonNull(this.itemData.itemResource()).getModels();
     }
 
     @Override

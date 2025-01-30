@@ -7,11 +7,12 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.Map;
 
 public record BlockResource(Map<String, PolymerBlockModel> models,
-                           Map<String, ResourceLocation> textures,
+                           ResourceLocation parent,
+                           Map<String, PolymerBlockModel> textures,
                            Map<String, ResourceLocation> vanilla) implements ResourceProvider {
 
     public boolean couldGenerate() {
-        return this.textures != null;
+        return models == null && textures != null && parent != null;
     }
 
     @Override
