@@ -6,15 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
 
-public record BlockResource(Map<String, PolymerBlockModel> models,
-                           ResourceLocation parent,
-                           Map<String, PolymerBlockModel> textures,
-                           Map<String, ResourceLocation> vanilla) implements ResourceProvider {
-
-    public boolean couldGenerate() {
-        return models == null && textures != null && parent != null;
-    }
-
+public record BlockResource(Map<String, PolymerBlockModel> models) implements ResourceProvider {
     @Override
     public Map<String, ResourceLocation> getModels() {
         var map = new Object2ObjectOpenHashMap<String, ResourceLocation>();

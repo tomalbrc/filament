@@ -80,7 +80,7 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Behaviour
 
     @Override
     protected Map<String, ResourceLocation> getModelMap() {
-        return this.decorationData.itemResource() == null ? Map.of() : Objects.requireNonNull(this.decorationData.itemResource()).models();
+        return this.decorationData.itemResource() == null ? Map.of() : Objects.requireNonNull(this.decorationData.itemResource()).getModels();
     }
 
     public static float getVisualRotationYInDegrees(Direction direction, int rotation) {

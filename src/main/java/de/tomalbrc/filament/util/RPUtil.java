@@ -1,7 +1,6 @@
 package de.tomalbrc.filament.util;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.behaviour.BehaviourType;
@@ -66,7 +65,7 @@ public class RPUtil {
                     }
                     object.add("textures", textures);
 
-                    x.addData("assets/" + modelId.getNamespace() + "/" + modelId.getPath(), object.getAsString().getBytes(StandardCharsets.UTF_8));
+                    x.addData("assets/" + modelId.getNamespace() + "/models/" + modelId.getPath() + ".json", Json.GSON.toJson(object).getBytes(StandardCharsets.UTF_8));
                 });
                 itemResource.getModels().put(entry.getKey(), modelId);
             }

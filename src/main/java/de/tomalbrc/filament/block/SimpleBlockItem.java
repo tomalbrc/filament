@@ -21,6 +21,6 @@ public class SimpleBlockItem extends SimpleItem implements PolymerItem, Behaviou
 
     @Override
     protected Map<String, ResourceLocation> getModelMap() {
-        return this.blockData.itemResource() == null ? this.blockData.blockResource().getModels() : Objects.requireNonNull(this.blockData.itemResource()).models();
+        return this.blockData.itemResource() == null ? this.blockData.blockResource().getModels() : Objects.requireNonNull(this.blockData.itemResource()).getModels();
     }
 }

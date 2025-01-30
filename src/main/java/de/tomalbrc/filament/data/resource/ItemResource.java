@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class ItemResource implements ResourceProvider {
     private final Map<String, ResourceLocation> models = new Object2ObjectArrayMap<>();
-    private ResourceLocation parent;
+    private ResourceLocation parent = ResourceLocation.withDefaultNamespace("item/generated");
     private Map<String, Map<String, ResourceLocation>> textures;
 
     public ResourceLocation parent() {
