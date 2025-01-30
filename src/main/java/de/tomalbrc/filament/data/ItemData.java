@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 public record ItemData(
@@ -59,6 +60,10 @@ public record ItemData(
     }
 
     public Object2ObjectOpenHashMap<String, PolymerModelData> requestModels(BehaviourMap behaviourMap) {
+        if (itemResource != null && itemResource.couldGenerate()) {
+            RPUtil.createItemModels(id(), Objects.requireNonNull(itemResource));
+        }
+
         Object2ObjectOpenHashMap<String, PolymerModelData> map = new Object2ObjectOpenHashMap<>();
         if (itemResource != null) {
             if (itemResource.models().size() > 1 && RPUtil.useGeneratedModel(behaviourMap)) {

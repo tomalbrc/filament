@@ -71,10 +71,7 @@ public record BlockData(
     public Map<BlockState, BlockStateMeta> createStandardStateMap() {
         Reference2ReferenceArrayMap<BlockState, BlockStateMeta> val = new Reference2ReferenceArrayMap<>();
 
-        if (blockResource.couldGenerate()) {
-            //val = BlockModelGenerator.generate(blockResource);
-            throw new UnsupportedOperationException("Not implemented");
-        } else if (blockResource.models() != null && this.blockModelType != null) {
+        if (blockResource.models() != null && this.blockModelType != null) {
             for (Map.Entry<String, PolymerBlockModel> entry : this.blockResource.models().entrySet()) {
                 if (entry.getKey().equals("default")) {
                     var type = safeBlockModelType(this.blockModelType.getRawValue());
