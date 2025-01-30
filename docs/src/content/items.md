@@ -23,13 +23,13 @@ Here is a basic example of an item configuration:
     }
   },
   "properties": {
-    ...
+    // your properties here, like stackSize, durability and more!
   },
   "behaviour": {
-    ...
+    // your behaviours here
   },
   "components": {
-    ...
+    // your components here
   }
 }
 ```
@@ -47,7 +47,7 @@ Your custom ID in the format `namespace:item_name`
 
 ## `vanillaItem`
 
-The vanilla item to "overwrite". Filament (through Polymer) will create `custom_model_data` IDs for the generated resource pack. Your custom item will not inherit any other properties server-side from the vanilla item other than appearance, if the `itemResource` field is not set. For interaction purposes on the client, it is important to choose the appropriate vanilla item to use here.
+The vanilla item to "overwrite". Filament (through Polymer) will create `custom_model_data` IDs for the generated resource pack. Your custom item will not inherit any other properties server-side from the vanilla item other than appearance. For interaction purposes on the client, it is important to choose the appropriate vanilla item to use here.
 
 ---
 
@@ -69,10 +69,29 @@ Specifies the resource(s) for the item model. Depending on the item's behaviour(
 **Fields**:
   - `models`: An object containing model definitions.
     - `default`: The default model for the item.
-    - Additional keys may be required depending on the item's behaviour (e.g., `trapped` for a trap behaviour).
-  - `textures` (upcoming in future versions): An object containing texture definitions.
-    - `default`: The default texture for the item.
+    - Additional keys may be required depending on the item's behaviour (e.g., `trapped` for a trap behaviour or `pulling_0`, `pulling_1`, `pulling_2` for bows).
+  - `parent`: Parent of the item model if generated from textures
+  - `textures`: An object containing texture definitions.
+    - `default`: The textures for the default model of the item.
+      - `layer0`: 
     - Additional keys may be required depending on the item's behaviour.
+
+Example for automatic model generation based on textures:
+```yaml
+item_resource:
+  parent: item/generated
+  textures:
+    default:
+      layer0: item/traps/allay_bottle
+    trapped:
+      layer0: item/traps/allay_bottle_trapped
+```
+This automatically creates:
+- The item asset in `assets/<namespace>/items/<item-id>`
+- Item model in `assets/<namespace>/models/item/<item-id>_default`
+- Item model in `assets/<namespace>/models/item/<item-id>_trapped`
+
+The same method works for bows or crossbow models, for example - just make sure to use the correct parent for the rotation in hand, etc.
 
 ---
 

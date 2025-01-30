@@ -12,7 +12,8 @@ All properties (excluding the shared item and decoration properties):
     "explosionResistance": 10,
     "destroyTime": 5,
     "redstoneConductor": false,
-    "lightEmission": 0
+    "lightEmission": 0,
+    "lootTable": "minecraft:block/dirt"
   }
 }
 ```
@@ -113,3 +114,11 @@ Defaults to `true`
 Specifies how the block reacts to being pushed by a piston. Possible values include normal, destroy, block
 
 Defaults to `normal`
+
+### `lootTable`:
+
+Allows to override the default loot table
+
+Example: `minecraft:block/dirt`
+
+Defaults to `<namespace>:block/<blockname>`. So for a block "mynamespace:myblock" the default would be `mynamespace:block/myblock`
