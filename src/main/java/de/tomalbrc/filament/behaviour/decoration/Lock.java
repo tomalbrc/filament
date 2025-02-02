@@ -15,6 +15,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 /**
  * Lock behaviour for decoration
  */
@@ -53,10 +55,17 @@ public class Lock implements DecorationBehaviour<Lock.LockConfig> {
 
             this.unlocked = !noItemNoKey;
 
-            boolean validCommand = this.command != null && !this.command.isEmpty();
+            var commands = commands();
+            boolean validCommand = commands != null;
             boolean validLockCommand = this.lockConfig.command != null && !this.lockConfig.command.isEmpty();
             if ((validCommand || validLockCommand) && player.getServer() != null) {
-                player.getServer().getCommands().performPrefixedCommand(player.createCommandSourceStack().withMaximumPermission(4), validCommand ? this.command : this.lockConfig.command);
+                if (validCommand) {
+                    for (String cmd : commands) {
+                        player.getServer().getCommands().performPrefixedCommand(player.createCommandSourceStack().withSource(player.server).withMaximumPermission(4), cmd);
+                    }
+                } else {
+                    player.getServer().getCommands().performPrefixedCommand(player.createCommandSourceStack().withSource(player.server).withMaximumPermission(4), this.lockConfig.command);
+                }
             }
 
             if (this.lockConfig.discard) {
@@ -89,6 +98,10 @@ public class Lock implements DecorationBehaviour<Lock.LockConfig> {
         compoundTag.put("Lock", lockTag);
     }
 
+    private List<String> commands() {
+        return getConfig().commands == null ? this.getConfig().command == null ? null : List.of(this.getConfig().command) : getConfig().commands;
+    }
+
     public static class LockConfig {
 
         /**
@@ -117,5 +130,7 @@ public class Lock implements DecorationBehaviour<Lock.LockConfig> {
          * `formats modify @e[entitySpecifier] Lock.Command set value "say hello"`
          */
         public String command = null;
+        public List<String> commands = null;
+
     }
 }
