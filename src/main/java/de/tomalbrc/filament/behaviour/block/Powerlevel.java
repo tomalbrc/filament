@@ -60,8 +60,8 @@ public class Powerlevel implements BlockBehaviour<Powerlevel.PowerlevelConfig> {
         if (!level.isClientSide) {
             int power = blockState.getValue(POWERS[Math.max(0, config.max-1)]);
             int signal = level.getBestNeighborSignal(blockPos);
-            if (signal > this.config.max-1)
-                signal = this.config.max-1;
+            if (signal > this.config.max)
+                signal = this.config.max;
 
             if (signal != power) {
                 level.scheduleTick(blockPos, blockState.getBlock(), 1);
