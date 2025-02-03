@@ -44,9 +44,9 @@ import java.util.function.Consumer;
 public abstract class LivingEntityMixin implements CosmeticInterface {
     @Shadow public abstract ItemStack getItemBySlot(EquipmentSlot equipmentSlot);
 
-    @Shadow public abstract Iterable<ItemStack> getArmorSlots();
-
     @Shadow public abstract EquipmentSlot getEquipmentSlotForItem(ItemStack itemStack);
+
+    @Shadow public abstract Iterable<ItemStack> getArmorSlots();
 
     @Unique
     private final IntArraySet displays = new IntArraySet();
@@ -59,7 +59,7 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
     @Unique
     private double filamentPrevZ = 0;
     @Unique
-    private double filamentBodyYaw;
+    private double filamentBodyYaw = 0;
 
     @Unique
     boolean filamentEquipAfterLoad = true;
