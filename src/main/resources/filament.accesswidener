@@ -9,3 +9,5 @@ accessible method net/minecraft/world/item/CrossbowItem tryLoadProjectiles (Lnet
 accessible method net/minecraft/world/item/CrossbowItem getPowerForTime (ILnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/LivingEntity;)F
 
 accessible field net/minecraft/world/entity/item/PrimedTnt explosionPower F
+
+accessible field net/minecraft/world/item/HoeItem TILLABLES Ljava/util/Map;

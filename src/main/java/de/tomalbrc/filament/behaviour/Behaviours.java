@@ -13,10 +13,10 @@ import net.minecraft.resources.ResourceLocation;
 public class Behaviours {
     // Item
     public static final BehaviourType<Cosmetic, Cosmetic.Config> COSMETIC = registerBehaviour("cosmetic", Cosmetic.class);
-    public static final BehaviourType<Execute, Execute.Config> EXECUTE = registerBehaviour("execute", Execute.class);
     public static final BehaviourType<Food, Food.FoodConfig> FOOD = registerBehaviour("food", Food.class);
     public static final BehaviourType<Compostable, Compostable.CompostableConfig> COMPOSTABLE = registerBehaviour("compostable", Compostable.class);
     public static final BehaviourType<Fuel, Fuel.Config> FUEL = registerBehaviour("fuel", Fuel.class);
+    public static final BehaviourType<Hoe, Hoe.Config> HOE = registerBehaviour("hoe", Hoe.class);
     public static final BehaviourType<Instrument, Instrument.Config> INSTRUMENT = registerBehaviour("instrument", Instrument.class);
     public static final BehaviourType<Shoot, Shoot.ShootConfig> SHOOT = registerBehaviour("shoot", Shoot.class);
     public static final BehaviourType<Bow, Bow.Config> BOW = registerBehaviour("bow", Bow.class);
@@ -27,6 +27,9 @@ public class Behaviours {
     public static final BehaviourType<Trap, Trap.Config> TRAP = registerBehaviour("trap", Trap.class);
     public static final BehaviourType<BannerPattern, BannerPattern.Config> BANNER_PATTERN = registerBehaviour("banner_pattern", BannerPattern.class);
     public static final BehaviourType<VillagerFood, VillagerFood.Config> VILLAGER_FOOD = registerBehaviour("villager_food", VillagerFood.class);
+
+    // Item + Block
+    public static final BehaviourType<Execute, Execute.Config> EXECUTE = registerBehaviour("execute", Execute.class);
 
     // Block
     public static final BehaviourType<CanSurvive, CanSurvive.Config> CAN_SURVIVE = registerBehaviour("can_survive", CanSurvive.class);
