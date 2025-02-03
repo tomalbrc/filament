@@ -5,18 +5,15 @@ import de.tomalbrc.bil.core.holder.wrapper.DisplayWrapper;
 import de.tomalbrc.bil.core.model.Model;
 import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.function.Consumer;
 
 public class AnimatedCosmeticHolder extends EntityHolder {
     private final LivingEntity entity;
-    private double prevX = 0;
-    private double prevZ = 0;
-
-    private float bodyYaw;
 
     private final Consumer<ServerGamePacketListenerImpl> startWatchingCallback;
 
@@ -41,58 +38,20 @@ public class AnimatedCosmeticHolder extends EntityHolder {
         }
     }
 
+    private CosmeticInterface access() {
+        return (CosmeticInterface) this.entity;
+    }
+
     @Override
     protected void updateElement(DisplayWrapper<?> display) {
         display.element().ignorePositionUpdates();
+        display.element().setYaw(access().filament$bodyYaw());
         super.updateElement(display);
-
-        display.element().setYaw(this.bodyYaw);
-
-        this.prevX = this.entity.getX();
-        this.prevZ = this.entity.getZ();
     }
 
     @Override
     public CommandSourceStack createCommandSourceStack() {
         return this.entity.createCommandSourceStack().withMaximumPermission(4);
-    }
-
-    private void tickMovement(final LivingEntity player) {
-        float yaw = this.entity.getYRot();
-        double i = player.getX() - this.prevX;
-        double d = player.getZ() - this.prevZ;
-        float f = (float)(i * i + d * d);
-        float g = this.bodyYaw;
-        if (f > 0.0025f) {
-            // Using internal Mojang math utils here
-            float l = (float) Mth.atan2(d, i) * Mth.RAD_TO_DEG - 90.0F;
-            float m = Mth.abs(Mth.wrapDegrees(yaw) - l);
-            if (95.f < m && m < 265.f) {
-                g = l - 180.f;
-            } else {
-                g = l;
-            }
-        }
-
-        this.turnBody(g, yaw);
-    }
-
-    public void turnBody(float bodyRotation, float yaw) {
-        float f = Mth.wrapDegrees(bodyRotation - this.bodyYaw);
-        this.bodyYaw += f * 0.3F;
-        float g = Mth.wrapDegrees(yaw - this.bodyYaw);
-        if (g < -75.0F) {
-            g = -75.0F;
-        }
-
-        if (g >= 75.0F) {
-            g = 75.0F;
-        }
-
-        this.bodyYaw = yaw - g;
-        if (g * g > 2500.0F) {
-            this.bodyYaw += g * 0.2F;
-        }
     }
 
     @Override
@@ -104,13 +63,7 @@ public class AnimatedCosmeticHolder extends EntityHolder {
         return ret;
     }
 
-    @Override
-    public void onTick() {
-        super.onTick();
-
-        this.tickMovement(this.entity);
-
-        // manual ticking
-        //this.onAsyncTick();
+    public Vec3 getPos() {
+        return this.entity instanceof ServerPlayer ? this.entity.position() : this.entity.getEyePosition();
     }
 }

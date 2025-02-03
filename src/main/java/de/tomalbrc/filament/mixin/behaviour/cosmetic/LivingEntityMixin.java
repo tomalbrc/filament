@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.mixin.behaviour.cosmetic;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.item.Cosmetic;
 import de.tomalbrc.filament.cosmetic.AnimatedCosmeticHolder;
@@ -17,10 +18,12 @@ import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -42,11 +45,23 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
 
     @Shadow public abstract ItemStack getItemBySlot(EquipmentSlot equipmentSlot);
 
+    @Shadow public abstract Iterable<ItemStack> getArmorSlots();
+
     @Unique
     private final IntArraySet displays = new IntArraySet();
 
     @Unique
     private final Map<String, ElementHolder> filamentCosmeticHolder = new Object2ObjectOpenHashMap<>();
+
+    @Unique
+    private double filamentPrevX = 0;
+    @Unique
+    private double filamentPrevZ = 0;
+    @Unique
+    private double filamentBodyYaw;
+
+    @Unique
+    boolean filamentEquipAfterLoad = true;
 
     // COSMETIC, ARMOR, ELYTRA
     @Inject(method = "getEquipmentSlotForItem", at = @At(value = "HEAD"), cancellable = true)
@@ -121,9 +136,14 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
             holder = new CosmeticHolder(livingEntity, itemStack, cb);
         }
 
+        if (holder == null) {
+            Filament.LOGGER.error("Could not create cosmetic holder");
+            return;
+        }
+
         EntityAttachment.ofTicking(holder, livingEntity);
 
-        for (VirtualElement element : holder.getElements()) {
+        if (holder.getElements() != null) for (VirtualElement element : holder.getElements()) {
             displays.addAll(element.getEntityIds());
         }
 
@@ -147,9 +167,80 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
                 displays.removeAll(element.getEntityIds());
             }
 
-            filamentCosmeticHolder.get(slot).getAttachment().destroy();
+            var attachment = filamentCosmeticHolder.get(slot).getAttachment();
+            if (attachment != null) {
+                attachment.destroy();
+            }
             filamentCosmeticHolder.get(slot).destroy();
             filamentCosmeticHolder.remove(slot);
         }
+    }
+
+    @Inject(method = "tick", at = @At("RETURN"))
+    private void rotationTick(CallbackInfo ci) {
+        var self = LivingEntity.class.cast(this);
+        var isPlayer = (self instanceof Player);
+
+        if (filamentEquipAfterLoad && !isPlayer) {
+            for (ItemStack stack : this.getArmorSlots()) {
+                if (CosmeticUtil.isCosmetic(stack)) {
+                    filament$addHolder(self, stack.getItem(), stack, self.getEquipmentSlotForItem(stack).getName());
+                }
+            }
+            filamentEquipAfterLoad = false;
+        }
+
+        if (!filamentCosmeticHolder.isEmpty() && (filamentPrevX != 0 && filamentPrevZ != 0) && isPlayer)
+            filament$tickMovement(self);
+        else
+            this.filamentBodyYaw = self.yBodyRot;
+
+        filamentPrevX = self.getX();
+        filamentPrevZ = self.getZ();
+    }
+
+    @Unique
+    private void filament$tickMovement(final LivingEntity entity) {
+        double yaw = entity.getYRot();
+        double i = entity.getX() - this.filamentPrevX;
+        double d = entity.getZ() - this.filamentPrevZ;
+        double f = (float)(i * i + d * d);
+        double g = this.filamentBodyYaw;
+        if (f > 0.0025) {
+            double l = Math.atan2(d, i) * (double)Mth.RAD_TO_DEG - 90.;
+            double m = Math.abs(Mth.wrapDegrees(yaw) - l);
+            if (95. < m && m < 265.) {
+                g = l - 180.;
+            } else {
+                g = l;
+            }
+        }
+
+        this.filament$turnBody(g, yaw);
+    }
+
+    @Unique
+    public void filament$turnBody(double bodyRotation, double yaw) {
+        double f = Mth.wrapDegrees(bodyRotation - this.filamentBodyYaw);
+        this.filamentBodyYaw += f * 0.3F;
+        double g = Mth.wrapDegrees(yaw - this.filamentBodyYaw);
+        if (g < -75.) {
+            g = -75.;
+        }
+
+        if (g >= 75.) {
+            g = 75.;
+        }
+
+        this.filamentBodyYaw = yaw - g;
+        if (g * g > 2500.) { // > 50°
+            this.filamentBodyYaw += g * 0.25;
+        }
+    }
+
+    @Override
+    @Unique
+    public float filament$bodyYaw() {
+        return (float) filamentBodyYaw;
     }
 }
