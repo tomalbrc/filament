@@ -138,8 +138,9 @@ Defines cosmetic item behaviour for either the head or chestplate slot, supporti
 Executes a command on item use with the player as source, located at the player.
 
 ### Fields:
-- `consumes`: Indicates whether the execution consumes the item. Defaults to `false`
+- `consumes`: Flag whether the item is consumed after running the command(s). Defaults to `false`
 - `command`: The command string to execute. Empty by default
+- `commands`: List of commands to execute. Empty by default
 - `sound`: Optional sound effect to play during execution. Empty by default
 
 <br>
@@ -182,6 +183,18 @@ Defines fuel behaviour for items, specifying their value used in furnaces and si
 
 - **Fields**:
   - `value`: The value associated with the fuel, determining burn duration. Defaults to `10`
+
+<br>
+<br>
+
+---
+
+## `hoe` behaviour
+
+Gives the item the ability to till farmland, like vanilla hoes do, using 1 durability.
+
+- **Fields**:
+  - `sound`: Sound to play. Default to the vanilla hoe tilling sound `minecraft:item.hoe.till`
 
 <br>
 <br>

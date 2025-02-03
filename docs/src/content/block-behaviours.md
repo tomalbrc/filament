@@ -98,7 +98,7 @@ While possible, you probably don't want to combine `powersource` with `repeater`
 ---
 # Behaviours
 
-### `axis` behaviour
+## `axis` behaviour
 
 Gives the block an `axis` property/block-state similar to wooden logs/pillars and handles placement.
 
@@ -107,7 +107,7 @@ Gives the block an `axis` property/block-state similar to wooden logs/pillars an
 
 ---
 
-### `count` behaviour
+## `count` behaviour
 
 Gives the block a `count` property/block-state.
 
@@ -118,7 +118,7 @@ Works similar to turtle eggs or candles, allows you to place "multiple blocks/it
 
 ---
 
-### `facing` behaviour
+## `facing` behaviour
 
 Gives the block a `facing` property/block-state similar to wooden logs/pillars and handles placement.
 
@@ -127,7 +127,7 @@ Gives the block a `facing` property/block-state similar to wooden logs/pillars a
 
 ---
 
-### `horizontal_facing` behaviour
+## `horizontal_facing` behaviour
 
 Gives the block a `facing` property/block-state similar to furnaces and handles placement.
 Does not support up and down facing directions.
@@ -137,7 +137,7 @@ Does not support up and down facing directions.
 
 ---
 
-### `crop` behaviour
+## `crop` behaviour
 
 Makes the block behave like a crop, bonemeable, growing, minimum light requirement, etc.
 Also gives a growth bonus similar to vanilla crops, which check for farmland blocks in a 3x3 area centered below the crop block.
@@ -166,7 +166,7 @@ You can make farmer villagers able to plant the seeds using the item tag `villag
 
 ---
 
-### `sapling` behaviour
+## `sapling` behaviour
 
 Makes your block behave like vanilla saplings, growing based on random ticks and bonemealable.
 
@@ -194,7 +194,7 @@ You add your own configured placement for trees using vanilla datapack mechanics
 
 ---
 
-### `can_survive` behaviour
+## `can_survive` behaviour
 
 Checks for the block below with one of the configured block tags or blocks list.
 The block will break off, similar to flowers or crops, when the block below them is not supported.
@@ -211,7 +211,7 @@ Useful for bushes/plants/crops/flowers and more
 
 ---
 
-### `powersource` behaviour
+## `powersource` behaviour
 
 Defines the block as a redstone power source.
 
@@ -248,7 +248,7 @@ Example with constant value:
 
 ---
 
-### `repeater` behaviour
+## `repeater` behaviour
 
 Defines the block as a redstone repeater with configurable delay and loss.
 
@@ -263,7 +263,7 @@ Defines the block as a redstone repeater with configurable delay and loss.
 
 ---
 
-### `powerlevel` behaviour
+## `powerlevel` behaviour
 
 Supplies a `powerlevel` blockstate and changes to it depending on the input redstone signal.
 
@@ -276,7 +276,7 @@ Supplies a `powerlevel` blockstate and changes to it depending on the input reds
 
 ---
 
-### `strippable` behaviour
+## `strippable` behaviour
 
 Defines the block as strippable, replacing it with another block when interacted with an axe.
 
@@ -286,7 +286,7 @@ Defines the block as strippable, replacing it with another block when interacted
 
 ---
 
-### `slab` behaviour
+## `slab` behaviour
 
 Defines the block as slab, top, bottom, double, with placements, waterloggable.
 
@@ -296,7 +296,7 @@ Defines the block as slab, top, bottom, double, with placements, waterloggable.
 
 ---
 
-### `trapdoor` behaviour
+## `trapdoor` behaviour
 
 Trapdoor like block.
 
@@ -315,7 +315,7 @@ Trapdoor like block.
 
 ---
 
-### `door` behaviour
+## `door` behaviour
 
 Door-like "block" that is 2 blocks high.
 Comes with all door block state properties (hinge, open, powered, etc.)
@@ -335,13 +335,13 @@ Comes with all door block state properties (hinge, open, powered, etc.)
 
 ---
 
-### `simple_waterloggable` behaviour
+## `simple_waterloggable` behaviour
 
 Simple waterloggable block.
 
 ---
 
-### `drop_xp` behaviour
+## `drop_xp` behaviour
 
 Makes the block drop xp when being mined without the silk-touch enchantment.
 
@@ -382,7 +382,20 @@ Example with constant values:
 
 ---
 
-### `oxidizable` behaviour
+## `execute` behaviour
+
+Executes a command on block interaction from console as player (@s).
+
+### Fields:
+- `consumes`: Flag whether the block should be broken after running the command(s). Defaults to `false`
+- `dropBlock`: Flag whether the block should drop items when broken. Defaults to `false`
+- `command`: The command string to execute. Empty by default
+- `commands`: List of commands to execute. Empty by default
+- `sound`: Optional sound effect to play during execution. Empty by default
+
+---
+
+## `oxidizable` behaviour
 
 Defines the block as oxidizing block, similar to the vanilla copper blocks, randomly replacing it with another block when it "ages". Can be reverted/scraped by axes and resets with lightning bolts like vanilla copper blocks.
 
@@ -392,7 +405,7 @@ Defines the block as oxidizing block, similar to the vanilla copper blocks, rand
 
 ---
 
-### `budding` behaviour
+## `budding` behaviour
 
 With this behaviour the blocks grows other blocks, similar to budding amethyst blocks.
 The sides, blocks and chance can be configured.
@@ -406,7 +419,7 @@ If the blocks in `grows` have directional/facing block state properties, they di
 
 ---
 
-### `falling_block` behaviour
+## `falling_block` behaviour
 
 Makes the block a gravity affected/falling block like sand or anvils.
 
@@ -447,7 +460,7 @@ Makes the block a gravity affected/falling block like sand or anvils.
 }
 ```
 
-### `tnt` behaviour
+## `tnt` behaviour
 
 With this behaviour the block can be lit with flint and steel or redstone to spawn a TNT entity with the blockstate of this block.
 
