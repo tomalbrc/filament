@@ -31,7 +31,7 @@ public class Behaviours {
     public static final BehaviourType<VillagerFood, VillagerFood.Config> VILLAGER_FOOD = registerBehaviour("villager_food", VillagerFood.class);
 
     // Item + Block
-    public static final BehaviourType<Execute, Execute.Config> EXECUTE = registerBehaviour("execute", Execute.class);
+    public static final BehaviourType<Execute, Execute.ExecuteConfig> EXECUTE = registerBehaviour("execute", Execute.class);
 
     // Block
     public static final BehaviourType<CanSurvive, CanSurvive.Config> CAN_SURVIVE = registerBehaviour("can_survive", CanSurvive.class);

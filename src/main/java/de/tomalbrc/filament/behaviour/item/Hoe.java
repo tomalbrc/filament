@@ -69,6 +69,6 @@ public class Hoe implements ItemBehaviour<Hoe.Config> {
     }
 
     public static class Config {
-        public ResourceLocation sound = SoundEvents.HOE_TILL.location();
+        public ResourceLocation sound = SoundEvents.HOE_TILL.getLocation();
     }
 }
