@@ -8,4 +8,6 @@ public interface CosmeticInterface {
     void filament$addHolder(LivingEntity livingEntity, Item item, ItemStack itemStack, String slot);
 
     void filament$destroyHolder(String slot);
+
+    float filament$bodyYaw();
 }
