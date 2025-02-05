@@ -5,6 +5,7 @@ import com.mojang.datafixers.schemas.Schema;
 import com.mojang.datafixers.types.Type;
 import de.tomalbrc.filament.decoration.util.SeatEntity;
 import de.tomalbrc.filament.item.BaseProjectileEntity;
+import de.tomalbrc.filament.item.TridentEntity;
 import de.tomalbrc.filament.util.Constants;
 import eu.pb4.polymer.core.api.block.PolymerBlockUtils;
 import eu.pb4.polymer.core.api.entity.PolymerEntityUtils;
@@ -25,9 +26,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import java.util.Map;
 
 public class EntityRegistry {
-    public static final EntityType<BaseProjectileEntity> BASE_PROJECTILE = registerEntity("projectile", EntityType.Builder.of(BaseProjectileEntity::new, MobCategory.MISC).sized(2.f, 3.3f));
-
-    public static final EntityType<SeatEntity> SEAT_ENTITY =  registerEntity("decoration_seat", EntityType.Builder.of(SeatEntity::new, MobCategory.MISC).noSummon());
+    public static final EntityType<BaseProjectileEntity> BASE_PROJECTILE = registerEntity("projectile", EntityType.Builder.of(BaseProjectileEntity::new, MobCategory.MISC).sized(0.5f, 0.5f).noSummon());
+    public static final EntityType<TridentEntity> FILAMENT_TRIDENT = registerEntity("trident", EntityType.Builder.of(TridentEntity::new, MobCategory.MISC).sized(0.5f, 0.5f).eyeHeight(0.13f).noSummon());
+    public static final EntityType<SeatEntity> SEAT_ENTITY =  registerEntity("decoration_seat", EntityType.Builder.of(SeatEntity::new, MobCategory.MISC).noSummon().updateInterval(20));
 
     public static void register() {
     }
