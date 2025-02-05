@@ -185,8 +185,9 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
 
         if (filamentEquipAfterLoad && !isPlayer) {
             for (ItemStack stack : this.getArmorSlots()) {
-                if (CosmeticUtil.isCosmetic(stack)) {
-                    filament$addHolder(self, stack.getItem(), stack, self.getEquipmentSlotForItem(stack).getName());
+                var slot = self.getEquipmentSlotForItem(stack);
+                if (CosmeticUtil.isCosmetic(stack) && slot != EquipmentSlot.HEAD) {
+                    filament$addHolder(self, stack.getItem(), stack, slot.getName());
                 }
             }
             filamentEquipAfterLoad = false;
