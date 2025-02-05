@@ -45,7 +45,7 @@ public class RPUtil {
             PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder ->
                 ItemAssetGenerator.createDefault(
                     resourcePackBuilder, data.id(),
-                        finalItemResources, data.vanillaItem().components().has(DataComponents.DYED_COLOR)
+                        finalItemResources
                 )
             );
         }

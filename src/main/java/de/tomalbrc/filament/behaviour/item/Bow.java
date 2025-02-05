@@ -6,7 +6,6 @@ import de.tomalbrc.filament.behaviour.ItemPredicateModelProvider;
 import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.generator.ItemAssetGenerator;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -162,7 +161,7 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
         PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder ->
                 ItemAssetGenerator.createBow(
                         resourcePackBuilder, data.id(),
-                        Objects.requireNonNull(data.itemResource()), data.vanillaItem().components().has(DataComponents.DYED_COLOR)
+                        Objects.requireNonNull(data.itemResource())
                 )
         );
     }

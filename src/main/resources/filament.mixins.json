@@ -30,7 +30,8 @@
     "behaviour.shield.PlayerMixin",
     "behaviour.strippable.AxeItemAccessor",
     "behaviour.strippable.AxeItemMixin",
-    "behaviour.trap.MobMixin"
+    "behaviour.trap.MobMixin",
+    "behaviour.trident.ThrownTridentAccessor"
   ],
   "injectors": {
     "defaultRequire": 1,
