@@ -147,6 +147,8 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
             displays.addAll(element.getEntityIds());
         }
 
+        holder.getWatchingPlayers().forEach(cb);
+
         if (livingEntity instanceof ServerPlayer serverPlayer)
             holder.startWatching(serverPlayer);
 
