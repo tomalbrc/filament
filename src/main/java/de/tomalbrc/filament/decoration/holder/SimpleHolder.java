@@ -2,6 +2,7 @@ package de.tomalbrc.filament.decoration.holder;
 
 import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
 import de.tomalbrc.filament.registry.DecorationRegistry;
+import de.tomalbrc.filament.util.DecorationUtil;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.attachment.ChunkAttachment;
@@ -12,7 +13,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class SimpleHolder extends ElementHolder {
-    private InteractionElement interactionElement;
     private ItemDisplayElement displayElement;
 
     public SimpleHolder() {
@@ -32,11 +32,11 @@ public class SimpleHolder extends ElementHolder {
         if (DecorationRegistry.isDecoration(blockState) && this.displayElement == null) {
             SimpleDecorationBlock decorationBlock = (SimpleDecorationBlock) blockState.getBlock();
 
-            this.displayElement = Util.decorationItemDisplay(decorationBlock.getDecorationData(), Direction.UP, Util.SEGMENTED_ANGLE8.toDegrees(blockState.getValue(SimpleDecorationBlock.ROTATION)));
+            this.displayElement = DecorationUtil.decorationItemDisplay(decorationBlock.getDecorationData(), Direction.UP, Util.SEGMENTED_ANGLE8.toDegrees(blockState.getValue(SimpleDecorationBlock.ROTATION)));
             this.addElement(displayElement);
 
             if (!decorationBlock.getDecorationData().hasBlocks()) {
-                this.interactionElement = Util.decorationInteraction(decorationBlock.getDecorationData());
+                InteractionElement interactionElement = DecorationUtil.decorationInteraction(decorationBlock.getDecorationData());
                 this.addElement(interactionElement);
             }
         }

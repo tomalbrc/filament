@@ -8,6 +8,7 @@ import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.registry.DecorationRegistry;
+import de.tomalbrc.filament.util.DecorationUtil;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import net.minecraft.ChatFormatting;
@@ -137,7 +138,7 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Behaviour
             if (decorationData.hasBlocks()) {
                 int finalRotation = rotation;
                 Direction finalDirection = direction;
-                Util.forEachRotated(decorationData.blocks(), relativeBlockPos, angle, blockPos2 -> {
+                DecorationUtil.forEachRotated(decorationData.blocks(), relativeBlockPos, angle, blockPos2 -> {
                     level.destroyBlock(blockPos2, false);
 
                     BlockPlaceContext blockPlaceContext = new BlockPlaceContext(player, useOnContext.getHand(), itemStack, new BlockHitResult(useOnContext.getClickLocation(), useOnContext.getClickedFace(), blockPos2, useOnContext.isInside()));
@@ -221,7 +222,7 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Behaviour
 
         if (decorationData.hasBlocks()) {
             boolean[] canPlace = new boolean[]{true};
-            Util.forEachRotated(decorationData.blocks(), blockPos, angle, blockPos2 -> {
+            DecorationUtil.forEachRotated(decorationData.blocks(), blockPos, angle, blockPos2 -> {
                 if (!level.getBlockState(blockPos2).canBeReplaced()) {
                     canPlace[0] = false;
                 }

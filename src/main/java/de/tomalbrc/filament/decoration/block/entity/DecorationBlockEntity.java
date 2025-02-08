@@ -12,6 +12,7 @@ import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.holder.DecorationHolder;
 import de.tomalbrc.filament.decoration.util.BlockEntityWithElementHolder;
 import de.tomalbrc.filament.registry.DecorationRegistry;
+import de.tomalbrc.filament.util.DecorationUtil;
 import de.tomalbrc.filament.util.FilamentConfig;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
@@ -199,10 +200,10 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         if (DecorationRegistry.isDecoration(decorationBlockState) && this.getDecorationData() != null) {
             DecorationData data = this.getDecorationData();
             if (data.hasBlocks()) {
-                Util.forEachRotated(data.blocks(), this.getBlockPos(), this.getVisualRotationYInDegrees(), blockPos -> {
+                DecorationUtil.forEachRotated(data.blocks(), this.getBlockPos(), this.getVisualRotationYInDegrees(), blockPos -> {
                     if (this.getLevel() != null && DecorationRegistry.isDecoration(this.getLevel().getBlockState(blockPos))) {
                         if (data.properties().showBreakParticles)
-                            Util.showBreakParticle((ServerLevel) this.level, data.properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+                            DecorationUtil.showBreakParticle((ServerLevel) this.level, data.properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
                         this.getLevel().removeBlock(blockPos, true);
                     }
                 });
@@ -212,7 +213,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
                 BlockPos blockPos = this.getBlockPos();
 
                 if (data.properties().showBreakParticles)
-                    Util.showBreakParticle((ServerLevel) this.level, this.getDecorationData().properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+                    DecorationUtil.showBreakParticle((ServerLevel) this.level, this.getDecorationData().properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
 
                 SoundEvent breakSound = data.properties().blockBase.defaultBlockState().getSoundType().getBreakSound();
                 this.level.playSound(null, this.getBlockPos(),  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);

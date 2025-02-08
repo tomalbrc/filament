@@ -4,7 +4,7 @@ import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.data.properties.DecorationProperties;
 import de.tomalbrc.filament.data.resource.ItemResource;
-import de.tomalbrc.filament.util.Util;
+import de.tomalbrc.filament.util.DecorationUtil;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -72,7 +72,7 @@ public final class DecorationData extends Data {
     }
 
     public boolean isSimple() {
-        boolean singleBlock = (!this.hasBlocks() || Util.barrierDimensions(Objects.requireNonNull(this.blocks()), 0).equals(1, 1));
+        boolean singleBlock = (!this.hasBlocks() || DecorationUtil.barrierDimensions(Objects.requireNonNull(this.blocks()), 0).equals(1, 1));
         boolean hasBehaviour = !this.behaviour().isEmpty();
         boolean canBeDyed = this.vanillaItem != null && (vanillaItem == Items.LEATHER_HORSE_ARMOR || vanillaItem == Items.FIREWORK_STAR);
         boolean groundOnly = !this.properties().placement.wall() && !this.properties().placement.ceiling();

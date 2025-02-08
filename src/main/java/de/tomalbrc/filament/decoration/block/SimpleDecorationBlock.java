@@ -2,6 +2,7 @@ package de.tomalbrc.filament.decoration.block;
 
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.holder.SimpleHolder;
+import de.tomalbrc.filament.util.DecorationUtil;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
@@ -55,7 +56,7 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
             level.playSound(null, blockPos,  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
         if (data.properties().showBreakParticles)
-            Util.showBreakParticle((ServerLevel) level, data.properties().useItemParticles ? BuiltInRegistries.ITEM.get(this.decorationId).orElseThrow().value().getDefaultInstance() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+            DecorationUtil.showBreakParticle((ServerLevel) level, data.properties().useItemParticles ? BuiltInRegistries.ITEM.get(this.decorationId).orElseThrow().value().getDefaultInstance() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
 
         if (!level.isClientSide() && data.properties().drops && blockState.getBlock() instanceof SimpleDecorationBlock) {
             for (ItemStack drop : this.getDrops()) {

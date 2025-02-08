@@ -85,7 +85,7 @@ public class VirtualDestroyStage extends ElementHolder {
                 if (blockEntity instanceof DecorationBlockEntity decorationBlockEntity) {
                     final AtomicInteger index = new AtomicInteger();
                     final DecorationBlockEntity finalDecorationBlockEntity = decorationBlockEntity.isMain() ? decorationBlockEntity : decorationBlockEntity.getMainBlockEntity();
-                    Util.forEachRotated(finalDecorationBlockEntity.getDecorationData().blocks(), finalDecorationBlockEntity.getBlockPos(), finalDecorationBlockEntity.getVisualRotationYInDegrees(), rotPos -> {
+                    DecorationUtil.forEachRotated(finalDecorationBlockEntity.getDecorationData().blocks(), finalDecorationBlockEntity.getBlockPos(), finalDecorationBlockEntity.getVisualRotationYInDegrees(), rotPos -> {
                         BlockPos op = rotPos.subtract(pos);
                         self.destroyElements.get(index.getAndIncrement()).setTranslation(new Vector3f(op.getX(), op.getY(), op.getZ()));
                     });
@@ -98,7 +98,7 @@ public class VirtualDestroyStage extends ElementHolder {
     }
 
     public static void destroy(@Nullable ServerPlayer player) {
-        if (player != null && player.connection != null) {
+        if (player != null && !player.hasDisconnected()) {
             ((ServerGamePacketListenerExtF) player.connection).filament$getVirtualDestroyStage().destroy();
         }
     }
