@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.mixin;
 
-import de.tomalbrc.filament.util.Util;
+import de.tomalbrc.filament.util.BlockUtil;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import net.minecraft.core.BlockPos;
@@ -43,8 +43,8 @@ public abstract class BlockItemMixin {
             BlockPos clickedPos = pos.relative(context.getClickedFace().getOpposite());
             BlockState clickedState = context.getLevel().getBlockState(clickedPos);
 
-            if (clickedState.getBlock() instanceof PolymerBlock polymerBlock && polymerBlock.getPolymerBlockState(clickedState, PacketContext.of(player)).getBlock() instanceof NoteBlock) {
-                Util.playBlockPlaceSound(player, pos, placementState.getSoundType());
+            if (clickedState.getBlock() instanceof PolymerBlock polymerBlock && polymerBlock.getPolymerBlockState(clickedState, PacketContext.create(player)).getBlock() instanceof NoteBlock) {
+                BlockUtil.playBlockPlaceSound(player, pos, placementState.getSoundType());
             }
         }
     }

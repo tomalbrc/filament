@@ -11,8 +11,8 @@ import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.data.properties.ItemProperties;
+import de.tomalbrc.filament.util.BlockUtil;
 import de.tomalbrc.filament.util.Json;
-import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.core.api.item.PolymerItemUtils;
 import net.minecraft.core.component.DataComponentType;
@@ -276,7 +276,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
         }
 
         if (context.getPlayer() instanceof ServerPlayer player) {
-            Util.handleBlockPlaceEffects(player, context.getHand(), context.getClickedPos(), state.getSoundType());
+            BlockUtil.handleBlockPlaceEffects(player, context.getHand(), context.getClickedPos(), state.getSoundType());
         }
 
         return true;

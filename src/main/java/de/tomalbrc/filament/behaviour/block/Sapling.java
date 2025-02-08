@@ -4,7 +4,7 @@ import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.data.BlockData;
-import de.tomalbrc.filament.util.Util;
+import de.tomalbrc.filament.util.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -111,8 +111,8 @@ public class Sapling implements BlockBehaviour<Sapling.Config>, BonemealableBloc
 
     @Override
     public boolean isBonemealSuccess(Level level, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
-        if (level instanceof ServerLevel serverLevel && blockState.getBlock() instanceof SimpleBlock polymerBlock && !(polymerBlock.getPolymerBlockState(blockState, PacketContext.of()).getBlock() instanceof BonemealableBlock)) {
-            Util.handleBoneMealEffects(serverLevel, blockPos);
+        if (level instanceof ServerLevel serverLevel && blockState.getBlock() instanceof SimpleBlock polymerBlock && !(polymerBlock.getPolymerBlockState(blockState, PacketContext.create()).getBlock() instanceof BonemealableBlock)) {
+            BlockUtil.handleBoneMealEffects(serverLevel, blockPos);
         }
         return level.random.nextFloat() < config.bonemealGrowthChance;
     }
