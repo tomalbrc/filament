@@ -6,8 +6,7 @@
     }
   },
   "properties": {
-    "blockBase": "minecraft:pink_concrete",
-    "itemBase": "minecraft:paper"
+    "blockBase": "minecraft:pink_concrete"
   },
   "blockModelType": "full_block"
 }

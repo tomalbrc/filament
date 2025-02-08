@@ -6,8 +6,7 @@
     }
   },
   "properties": {
-    "blockBase": "minecraft:gray_concrete",
-    "itemBase": "minecraft:paper"
+    "blockBase": "minecraft:gray_concrete"
   },
   "blockModelType": "full_block"
 }

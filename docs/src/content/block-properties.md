@@ -7,7 +7,6 @@ All properties (excluding the shared item and decoration properties):
 {
   "properties": {
     "blockBase": "minecraft:stone",
-    "itemBase": "minecraft:paper",
     "requiresTool": true,
     "explosionResistance": 10,
     "destroyTime": 5,

@@ -6,8 +6,7 @@
     }
   },
   "properties": {
-    "blockBase": "minecraft:magenta_concrete",
-    "itemBase": "minecraft:paper"
+    "blockBase": "minecraft:magenta_concrete"
   },
   "blockModelType": "full_block"
 }

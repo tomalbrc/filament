@@ -24,8 +24,7 @@
   "blockModelType": "full_block",
   "properties": {
     "redstoneConductor": false,
-    "blockBase": "minecraft:amethyst_block",
-    "itemBase": "minecraft:paper"
+    "blockBase": "minecraft:amethyst_block"
   },
   "behaviour": {
     "repeater": {

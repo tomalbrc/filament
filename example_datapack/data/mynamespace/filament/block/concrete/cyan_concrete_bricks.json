@@ -6,8 +6,7 @@
     }
   },
   "properties": {
-    "blockBase": "minecraft:cyan_concrete",
-    "itemBase": "minecraft:paper"
+    "blockBase": "minecraft:cyan_concrete"
   },
   "blockModelType": "full_block"
 }

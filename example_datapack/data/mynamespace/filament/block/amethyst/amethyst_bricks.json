@@ -13,7 +13,6 @@
     }
   },
   "properties": {
-    "blockBase": "minecraft:amethyst_block",
-    "itemBase": "minecraft:paper"
+    "blockBase": "minecraft:amethyst_block"
   }
 }

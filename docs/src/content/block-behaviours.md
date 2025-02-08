@@ -53,8 +53,7 @@ Example of a block with behaviours set:
   "blockModelType": "full_block",
   "properties": {
     "destroyTime": 0,
-    "blockBase": "minecraft:stone",
-    "itemBase": "minecraft:paper"
+    "blockBase": "minecraft:stone"
   },
   "behaviour": {
     "powersource": {

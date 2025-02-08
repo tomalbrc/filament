@@ -16,7 +16,6 @@
   },
   "blockModelType": "full_block",
   "properties": {
-    "blockBase": "minecraft:stripped_acacia_wood",
-    "itemBase": "minecraft:paper"
+    "blockBase": "minecraft:stripped_acacia_wood"
   }
 }

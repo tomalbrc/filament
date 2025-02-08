@@ -90,7 +90,6 @@ The `size` field creates an interaction entity with a custom size instead of the
 ```json
 {
   "id": "mynamespace:pile_of_gold_ingots",
-  "model": "mynamespace:custom/deco/misc/pile_of_gold_ingots",
   "itemResource": {
     "models": {
         "default": "mynamespace:custom/deco/misc/pile_of_gold_ingots"
