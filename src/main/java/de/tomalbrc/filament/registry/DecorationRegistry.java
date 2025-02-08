@@ -18,7 +18,6 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -67,6 +66,11 @@ public class DecorationRegistry {
         decorationBlocks.put(data.id(), block);
 
         Item.Properties properties = data.properties().toItemProperties();
+        if (data.properties().copyComponents) {
+            for (TypedDataComponent component : data.vanillaItem().components()) {
+                properties.component(component.type(), component.value());
+            }
+        }
         for (TypedDataComponent component : data.components()) {
             properties.component(component.type(), component.value());
         }

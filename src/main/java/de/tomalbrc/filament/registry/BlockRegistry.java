@@ -15,7 +15,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -24,7 +23,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Map;
 import java.util.function.Function;
 
 public class BlockRegistry {
@@ -54,6 +52,11 @@ public class BlockRegistry {
         SimpleBlock customBlock = BlockRegistry.registerBlock(key(data.id()), (props)-> new SimpleBlock(props, data), blockProperties);
 
         Item.Properties itemProperties = data.properties().toItemProperties();
+        if (data.properties().copyComponents) {
+            for (TypedDataComponent component : data.vanillaItem().components()) {
+                itemProperties.component(component.type(), component.value());
+            }
+        }
         for (TypedDataComponent component : data.components()) {
             itemProperties.component(component.type(), component.value());
         }

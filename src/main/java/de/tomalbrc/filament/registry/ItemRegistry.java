@@ -12,7 +12,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 
@@ -20,7 +19,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.function.Function;
 
 public class ItemRegistry {
@@ -40,6 +38,12 @@ public class ItemRegistry {
         if (BuiltInRegistries.ITEM.containsKey(data.id())) return;
 
         Item.Properties properties = data.properties().toItemProperties(data.behaviour());
+
+        if (data.properties().copyComponents) {
+            for (TypedDataComponent component : data.vanillaItem().components()) {
+                properties.component(component.type(), component.value());
+            }
+        }
 
         for (TypedDataComponent component : data.components()) {
             properties.component(component.type(), component.value());
