@@ -130,7 +130,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
                     return val.get();
             }
         }
-        return 0;
+        return super.getEnchantmentValue();
     }
 
     @Override
@@ -142,7 +142,8 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
                     return val.get();
             }
         }
-        return 0;
+
+        return super.getUseDuration(itemStack, livingEntity);
     }
 
     @Override
