@@ -149,7 +149,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
                 if (val.isPresent()) return val.get();
             }
         }
-        return 0;
+        return super.getUseDuration(itemStack, livingEntity);
     }
 
     @Override
@@ -163,7 +163,7 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
             }
         }
 
-        return ItemUseAnimation.NONE;
+        return super.getUseAnimation(itemStack);
     }
 
     @Override
