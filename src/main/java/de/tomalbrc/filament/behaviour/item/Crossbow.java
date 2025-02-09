@@ -307,7 +307,8 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
         PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder ->
             ItemAssetGenerator.createCrossbow(
                 resourcePackBuilder, data.id(),
-                Objects.requireNonNull(data.itemResource())
+                Objects.requireNonNull(data.itemResource()),
+                    data.components().has(DataComponents.DYED_COLOR) || data.vanillaItem().components().has(DataComponents.DYED_COLOR)
             )
         );
     }

@@ -22,11 +22,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class ItemAssetGenerator {
-    public static void createDefault(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource) {
+    public static void createDefault(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource, boolean tint) {
         var def = itemResource.getModels().get("default");
-        var defaultModel = new BasicItemModel(def == null ? itemResource.getModels().values().iterator().next() : def, List.of(new DyeTintSource(0xFFFFFF)));
+        var defaultModel = new BasicItemModel(def == null ? itemResource.getModels().values().iterator().next() : def, !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
         if (itemResource.getModels().size() > 1) {
-            var list = getCases(itemResource);
+            var list = getCases(itemResource, tint);
             builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
                     new SelectItemModel<>(
                             new SelectItemModel.Switch<>(
@@ -45,25 +45,25 @@ public class ItemAssetGenerator {
     }
 
     @NotNull
-    private static ObjectArrayList<SelectItemModel.Case<String>> getCases(ResourceProvider itemResource) {
+    private static ObjectArrayList<SelectItemModel.Case<String>> getCases(ResourceProvider itemResource, boolean tint) {
         var list = new ObjectArrayList<SelectItemModel.Case<String>>();
 
         for (var modelPathEntry : itemResource.getModels().entrySet()) {
             if (modelPathEntry.getKey().equals("default")) continue;
 
             var modelId = modelPathEntry.getValue();
-            ItemModel model = new BasicItemModel(modelId, List.of(new DyeTintSource(0xFFFFFF)));
+            ItemModel model = new BasicItemModel(modelId, !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
             list.add(new SelectItemModel.Case<>(List.of(modelPathEntry.getKey()), model));
         }
 
         return list;
     }
 
-    public static void createBow(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource) {
-        var defaultModel = new BasicItemModel(itemResource.getModels().get("default"),List.of(new DyeTintSource(0xFFFFFF)));
-        var pulling_0 = new BasicItemModel(itemResource.getModels().get("pulling_0"), List.of(new DyeTintSource(0xFFFFFF)));
-        var pulling_1 = new BasicItemModel(itemResource.getModels().get("pulling_1"), List.of(new DyeTintSource(0xFFFFFF)));
-        var pulling_2 = new BasicItemModel(itemResource.getModels().get("pulling_2"), List.of(new DyeTintSource(0xFFFFFF)));
+    public static void createBow(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource, boolean tint) {
+        var defaultModel = new BasicItemModel(itemResource.getModels().get("default"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
+        var pulling_0 = new BasicItemModel(itemResource.getModels().get("pulling_0"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
+        var pulling_1 = new BasicItemModel(itemResource.getModels().get("pulling_1"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
+        var pulling_2 = new BasicItemModel(itemResource.getModels().get("pulling_2"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
 
         var rangeModelBuilder = RangeDispatchItemModel.builder(new UseDurationProperty(false)).scale(0.05f);
         rangeModelBuilder.entry(0.65f, pulling_1);
@@ -76,13 +76,13 @@ public class ItemAssetGenerator {
         );
     }
 
-    public static void createCrossbow(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource) {
-        var defaultModel = new BasicItemModel(itemResource.getModels().get("default"), List.of(new DyeTintSource(0xFFFFFF)));
-        var rocket = new BasicItemModel(itemResource.getModels().get("rocket"), List.of(new DyeTintSource(0xFFFFFF)));
-        var arrow = new BasicItemModel(itemResource.getModels().get("arrow"), List.of(new DyeTintSource(0xFFFFFF)));
-        var pulling_0 = new BasicItemModel(itemResource.getModels().get("pulling_0"), List.of(new DyeTintSource(0xFFFFFF)));
-        var pulling_1 = new BasicItemModel(itemResource.getModels().get("pulling_1"), List.of(new DyeTintSource(0xFFFFFF)));
-        var pulling_2 = new BasicItemModel(itemResource.getModels().get("pulling_2"), List.of(new DyeTintSource(0xFFFFFF)));
+    public static void createCrossbow(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource, boolean tint) {
+        var defaultModel = new BasicItemModel(itemResource.getModels().get("default"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
+        var rocket = new BasicItemModel(itemResource.getModels().get("rocket"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
+        var arrow = new BasicItemModel(itemResource.getModels().get("arrow"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
+        var pulling_0 = new BasicItemModel(itemResource.getModels().get("pulling_0"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
+        var pulling_1 = new BasicItemModel(itemResource.getModels().get("pulling_1"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
+        var pulling_2 = new BasicItemModel(itemResource.getModels().get("pulling_2"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFFFF)));
 
         var rangeModelBuilder = RangeDispatchItemModel.builder(new UseDurationProperty(false)).scale(0.05f);
         rangeModelBuilder.entry(0.58f, pulling_1);
@@ -110,18 +110,18 @@ public class ItemAssetGenerator {
         );
     }
 
-    public static void createFishingRod(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource) {
-        var defaultModel = new BasicItemModel(itemResource.getModels().get("default"), List.of(new DyeTintSource(0xFFFFFF)));
-        var cast = new BasicItemModel(itemResource.getModels().get("cast"), List.of(new DyeTintSource(0xFFFFFF)));
+    public static void createFishingRod(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource, boolean tint) {
+        var defaultModel = new BasicItemModel(itemResource.getModels().get("default"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
+        var cast = new BasicItemModel(itemResource.getModels().get("cast"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
         builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
                 new ConditionItemModel(new FishingRodCastProperty(), cast, defaultModel),
                 ItemAsset.Properties.DEFAULT).toJson().getBytes(StandardCharsets.UTF_8)
         );
     }
 
-    public static void createTrident(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource) {
-        var defaultModel = new BasicItemModel(itemResource.getModels().get("default"), List.of(new DyeTintSource(0xFFFFFF)));
-        var throwing = new BasicItemModel(itemResource.getModels().get("throwing"), List.of(new DyeTintSource(0xFFFFFF)));
+    public static void createTrident(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource, boolean tint) {
+        var defaultModel = new BasicItemModel(itemResource.getModels().get("default"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
+        var throwing = new BasicItemModel(itemResource.getModels().get("throwing"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
 
         builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
                 new ConditionItemModel(new UsingItemProperty(), throwing, defaultModel),

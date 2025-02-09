@@ -43,10 +43,12 @@ public class RPUtil {
 
             ResourceProvider finalItemResources = itemResources;
             PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder ->
-                ItemAssetGenerator.createDefault(
-                    resourcePackBuilder, data.id(),
-                        finalItemResources
-                )
+                    ItemAssetGenerator.createDefault(
+                            resourcePackBuilder,
+                            data.id(),
+                            finalItemResources,
+                            data.components().has(DataComponents.DYED_COLOR) || data.vanillaItem().components().has(DataComponents.DYED_COLOR)
+                    )
             );
         }
     }
