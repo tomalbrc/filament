@@ -4,9 +4,9 @@ import com.google.gson.JsonParseException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.data.BlockData;
+import de.tomalbrc.filament.util.FilamentBlockResourceUtils;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
-import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -187,17 +187,17 @@ public class Trapdoor implements BlockBehaviour<Trapdoor.Config>, SimpleWaterlog
     private BlockState dryState(BlockStateParser.BlockResult parsed, PolymerBlockModel blockModel) {
         BlockState requestedState = null;
         if (parsed.blockState().getValue(BlockStateProperties.HALF) == Half.TOP && !parsed.blockState().getValue(BlockStateProperties.OPEN)) {
-            requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.TOP_TRAPDOOR, blockModel);
+            requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.TOP_TRAPDOOR, blockModel);
         } else if (parsed.blockState().getValue(BlockStateProperties.HALF) == Half.BOTTOM && !parsed.blockState().getValue(BlockStateProperties.OPEN)) {
-            requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.BOTTOM_TRAPDOOR, blockModel);
+            requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.BOTTOM_TRAPDOOR, blockModel);
         } else if (parsed.blockState().getValue(BlockStateProperties.HORIZONTAL_FACING) == Direction.NORTH && parsed.blockState().getValue(BlockStateProperties.OPEN)) {
-            requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.NORTH_TRAPDOOR, blockModel);
+            requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.NORTH_TRAPDOOR, blockModel);
         } else if (parsed.blockState().getValue(BlockStateProperties.HORIZONTAL_FACING) == Direction.EAST && parsed.blockState().getValue(BlockStateProperties.OPEN)) {
-            requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.EAST_TRAPDOOR, blockModel);
+            requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.EAST_TRAPDOOR, blockModel);
         } else if (parsed.blockState().getValue(BlockStateProperties.HORIZONTAL_FACING) == Direction.SOUTH && parsed.blockState().getValue(BlockStateProperties.OPEN)) {
-            requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.SOUTH_TRAPDOOR, blockModel);
+            requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.SOUTH_TRAPDOOR, blockModel);
         } else if (parsed.blockState().getValue(BlockStateProperties.HORIZONTAL_FACING) == Direction.WEST && parsed.blockState().getValue(BlockStateProperties.OPEN)) {
-            requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.WEST_TRAPDOOR, blockModel);
+            requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.WEST_TRAPDOOR, blockModel);
         }
 
         return requestedState;
@@ -206,17 +206,17 @@ public class Trapdoor implements BlockBehaviour<Trapdoor.Config>, SimpleWaterlog
     private BlockState wetState(BlockStateParser.BlockResult parsed, PolymerBlockModel blockModel) {
         BlockState requestedState = null;
         if (parsed.blockState().getValue(BlockStateProperties.HALF) == Half.TOP && !parsed.blockState().getValue(BlockStateProperties.OPEN)) {
-            requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.TOP_TRAPDOOR_WATERLOGGED, blockModel);
+            requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.TOP_TRAPDOOR_WATERLOGGED, blockModel);
         } else if (parsed.blockState().getValue(BlockStateProperties.HALF) == Half.BOTTOM && !parsed.blockState().getValue(BlockStateProperties.OPEN)) {
-            requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.BOTTOM_TRAPDOOR_WATERLOGGED, blockModel);
+            requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.BOTTOM_TRAPDOOR_WATERLOGGED, blockModel);
         } else if (parsed.blockState().getValue(BlockStateProperties.HORIZONTAL_FACING) == Direction.NORTH && parsed.blockState().getValue(BlockStateProperties.OPEN)) {
-            requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.NORTH_TRAPDOOR_WATERLOGGED, blockModel);
+            requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.NORTH_TRAPDOOR_WATERLOGGED, blockModel);
         } else if (parsed.blockState().getValue(BlockStateProperties.HORIZONTAL_FACING) == Direction.EAST && parsed.blockState().getValue(BlockStateProperties.OPEN)) {
-            requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.EAST_TRAPDOOR_WATERLOGGED, blockModel);
+            requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.EAST_TRAPDOOR_WATERLOGGED, blockModel);
         } else if (parsed.blockState().getValue(BlockStateProperties.HORIZONTAL_FACING) == Direction.SOUTH && parsed.blockState().getValue(BlockStateProperties.OPEN)) {
-            requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.SOUTH_TRAPDOOR_WATERLOGGED, blockModel);
+            requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.SOUTH_TRAPDOOR_WATERLOGGED, blockModel);
         } else if (parsed.blockState().getValue(BlockStateProperties.HORIZONTAL_FACING) == Direction.WEST && parsed.blockState().getValue(BlockStateProperties.OPEN)) {
-            requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.WEST_TRAPDOOR_WATERLOGGED, blockModel);
+            requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.WEST_TRAPDOOR_WATERLOGGED, blockModel);
         }
 
         return requestedState;
