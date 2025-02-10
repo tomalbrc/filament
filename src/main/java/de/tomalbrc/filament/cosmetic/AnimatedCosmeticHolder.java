@@ -80,8 +80,7 @@ public class AnimatedCosmeticHolder extends EntityHolder {
                 showForAll(this);
 
                 var packet = VirtualEntityUtils.createRidePacket(entity.getId(), ((EntityExt)entity).polymerVE$getVirtualRidden());
-                if (entity instanceof ServerPlayer serverPlayer)
-                    serverPlayer.connection.send(packet);
+                this.sendPacket(packet);
 
                 hidden = false;
             }
