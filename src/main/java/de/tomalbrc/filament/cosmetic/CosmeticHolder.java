@@ -6,6 +6,7 @@ import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.VirtualEntityUtils;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
+import eu.pb4.polymer.virtualentity.impl.EntityExt;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -68,6 +69,8 @@ public class CosmeticHolder extends ElementHolder {
             if (hidden) {
                 showForAll(this);
                 VirtualEntityUtils.addVirtualPassenger(this.entity, this.getEntityIds().toIntArray());
+                var packet = VirtualEntityUtils.createRidePacket(entity.getId(), ((EntityExt)entity).polymerVE$getVirtualRidden());
+                this.sendPacket(packet);
                 hidden = false;
             }
 
