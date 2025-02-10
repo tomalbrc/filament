@@ -6,20 +6,14 @@ import de.tomalbrc.bil.core.model.Model;
 import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-
-import java.util.function.Consumer;
 
 public class AnimatedCosmeticHolder extends EntityHolder {
     private final LivingEntity entity;
 
-    private final Consumer<ServerGamePacketListenerImpl> startWatchingCallback;
-
-    public AnimatedCosmeticHolder(LivingEntity entity, Model model, Consumer<ServerGamePacketListenerImpl> startWatchingCallback) {
+    public AnimatedCosmeticHolder(LivingEntity entity, Model model) {
         super(entity, model);
-        this.startWatchingCallback = startWatchingCallback;
         this.entity = entity;
     }
 
@@ -52,15 +46,6 @@ public class AnimatedCosmeticHolder extends EntityHolder {
     @Override
     public CommandSourceStack createCommandSourceStack() {
         return this.entity.createCommandSourceStack().withMaximumPermission(4);
-    }
-
-    @Override
-    public boolean startWatching(ServerGamePacketListenerImpl player) {
-        var ret = super.startWatching(player);
-
-        this.startWatchingCallback.accept(player);
-
-        return ret;
     }
 
     public Vec3 getPos() {

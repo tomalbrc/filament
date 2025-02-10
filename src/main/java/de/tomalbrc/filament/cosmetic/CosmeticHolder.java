@@ -3,6 +3,7 @@ package de.tomalbrc.filament.cosmetic;
 import de.tomalbrc.filament.behaviour.item.Cosmetic;
 import de.tomalbrc.filament.util.FilamentConfig;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
+import eu.pb4.polymer.virtualentity.api.VirtualEntityUtils;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -20,13 +21,10 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.util.Objects;
-import java.util.function.Consumer;
 
 public class CosmeticHolder extends ElementHolder {
     private final LivingEntity entity;
     private final ItemDisplayElement displayElement;
-
-    private final Consumer<ServerGamePacketListenerImpl> startWatchingCallback;
 
     boolean hidden = false;
 
@@ -34,10 +32,8 @@ public class CosmeticHolder extends ElementHolder {
         return (CosmeticInterface) this.entity;
     }
 
-    public CosmeticHolder(LivingEntity entity, ItemStack itemStack, Consumer<ServerGamePacketListenerImpl> startWatchingCallback) {
+    public CosmeticHolder(LivingEntity entity, ItemStack itemStack) {
         super();
-
-        this.startWatchingCallback = startWatchingCallback;
 
         this.entity = entity;
 
@@ -64,15 +60,14 @@ public class CosmeticHolder extends ElementHolder {
     public void onTick() {
         if (this.entity.getPose() == Pose.SWIMMING) {
             if (!hidden) {
+                VirtualEntityUtils.removeVirtualPassenger(this.entity, this.getEntityIds().toIntArray());
                 hideForAll(this);
                 hidden = true;
             }
         } else {
             if (hidden) {
                 showForAll(this);
-                for (ServerGamePacketListenerImpl player : this.getWatchingPlayers()) {
-                    startWatchingCallback.accept(player);
-                }
+                VirtualEntityUtils.addVirtualPassenger(this.entity, this.getEntityIds().toIntArray());
                 hidden = false;
             }
 
@@ -92,13 +87,6 @@ public class CosmeticHolder extends ElementHolder {
 
     @Override
     protected void notifyElementsOfPositionUpdate(Vec3 newPos, Vec3 delta) {
-    }
-
-    @Override
-    public boolean startWatching(ServerGamePacketListenerImpl player) {
-        var ret = super.startWatching(player);
-        this.startWatchingCallback.accept(player);
-        return ret;
     }
 
     public static void hideForAll(ElementHolder elementHolder) {
