@@ -78,6 +78,7 @@ public class AnimatedCosmeticHolder extends EntityHolder {
             if (hidden) {
                 showForAll(this);
 
+                this.updatePosition();
                 var packet = VirtualEntityUtils.createRidePacket(entity.getId(), ((EntityExt)entity).polymerVE$getVirtualRidden());
                 this.sendPacket(packet);
 

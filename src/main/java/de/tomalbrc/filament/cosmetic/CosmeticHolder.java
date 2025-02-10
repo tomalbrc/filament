@@ -61,14 +61,13 @@ public class CosmeticHolder extends ElementHolder {
     public void onTick() {
         if (this.entity.getPose() == Pose.SWIMMING) {
             if (!hidden) {
-                VirtualEntityUtils.removeVirtualPassenger(this.entity, this.getEntityIds().toIntArray());
                 hideForAll(this);
                 hidden = true;
             }
         } else {
             if (hidden) {
                 showForAll(this);
-                VirtualEntityUtils.addVirtualPassenger(this.entity, this.getEntityIds().toIntArray());
+                this.updatePosition();
                 var packet = VirtualEntityUtils.createRidePacket(entity.getId(), ((EntityExt)entity).polymerVE$getVirtualRidden());
                 this.sendPacket(packet);
                 hidden = false;
