@@ -9,6 +9,7 @@ import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import de.tomalbrc.filament.data.resource.BlockResource;
 import de.tomalbrc.filament.data.resource.ItemResource;
+import de.tomalbrc.filament.util.FilamentBlockResourceUtils;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
@@ -75,7 +76,7 @@ public record BlockData(
             for (Map.Entry<String, PolymerBlockModel> entry : this.blockResource.models().entrySet()) {
                 if (entry.getKey().equals("default")) {
                     var type = safeBlockModelType(this.blockModelType.getRawValue());
-                    BlockState requestedState = type == null ? null : PolymerBlockResourceUtils.requestBlock(type, entry.getValue());
+                    BlockState requestedState = type == null ? null : FilamentBlockResourceUtils.requestBlock(type, entry.getValue());
                     val.put(BuiltInRegistries.BLOCK.get(id).defaultBlockState(), BlockStateMeta.of(type == null ? Blocks.BEDROCK.defaultBlockState() : requestedState, entry.getValue()));
                 }
                 else {
@@ -86,7 +87,7 @@ public record BlockData(
                         val.put(state, BlockStateMeta.of(type == null ? Blocks.BEDROCK.defaultBlockState() : requestedState, entry.getValue()));
                     } else {
                         var type = safeBlockModelType(this.blockModelType.getRawValue());
-                        BlockState requestedState = type == null ? null : PolymerBlockResourceUtils.requestBlock(type, entry.getValue());
+                        BlockState requestedState = type == null ? null : FilamentBlockResourceUtils.requestBlock(type, entry.getValue());
                         val.put(state, BlockStateMeta.of(type == null ? Blocks.BEDROCK.defaultBlockState() : requestedState, entry.getValue()));
                     }
                 }

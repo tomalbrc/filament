@@ -4,9 +4,9 @@ import com.google.gson.JsonParseException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.data.BlockData;
+import de.tomalbrc.filament.util.FilamentBlockResourceUtils;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
-import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -152,11 +152,11 @@ public class Slab implements BlockBehaviour<Slab.SlabConfig>, SimpleWaterloggedB
 
             BlockState requestedState;
             if (parsed.blockState().getValue(SlabBlock.TYPE) == SlabType.TOP) {
-                requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.TOP_SLAB, blockModel);
+                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.TOP_SLAB, blockModel);
             } else if (parsed.blockState().getValue(SlabBlock.TYPE) == SlabType.BOTTOM) {
-                requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.BOTTOM_SLAB, blockModel);
+                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.BOTTOM_SLAB, blockModel);
             } else {
-                requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.FULL_BLOCK, blockModel);
+                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.FULL_BLOCK, blockModel);
             }
 
             map.put(parsed.blockState(), BlockData.BlockStateMeta.of(requestedState, blockModel));
@@ -165,7 +165,7 @@ public class Slab implements BlockBehaviour<Slab.SlabConfig>, SimpleWaterloggedB
         for (Map.Entry<BlockState, BlockData.BlockStateMeta> entry : map.entrySet()) {
             var blockState = entry.getValue().blockState();
             if (blockState.hasProperty(SlabBlock.WATERLOGGED) && !blockState.getValue(SlabBlock.WATERLOGGED) && blockState.hasProperty(SlabBlock.TYPE) && blockState.getValue(SlabBlock.TYPE) != SlabType.DOUBLE) {
-                var res = PolymerBlockResourceUtils.requestBlock(blockState.getValue(SlabBlock.TYPE) == SlabType.TOP ? BlockModelType.TOP_SLAB_WATERLOGGED : BlockModelType.BOTTOM_SLAB_WATERLOGGED, entry.getValue().polymerBlockModel());
+                var res = FilamentBlockResourceUtils.requestBlock(blockState.getValue(SlabBlock.TYPE) == SlabType.TOP ? BlockModelType.TOP_SLAB_WATERLOGGED : BlockModelType.BOTTOM_SLAB_WATERLOGGED, entry.getValue().polymerBlockModel());
                 map.put(entry.getKey().setValue(SlabBlock.WATERLOGGED, true), BlockData.BlockStateMeta.of(res, entry.getValue().polymerBlockModel()));
             }
         }

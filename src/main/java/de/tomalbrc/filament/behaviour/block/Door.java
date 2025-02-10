@@ -6,9 +6,9 @@ import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.data.BlockData;
+import de.tomalbrc.filament.util.FilamentBlockResourceUtils;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
-import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -260,33 +260,33 @@ public class Door implements BlockBehaviour<Door.Config> {
 
         if (parsed.blockState().getValue(BlockStateProperties.OPEN) && parsed.blockState().getValue(BlockStateProperties.DOOR_HINGE) == DoorHingeSide.RIGHT) {
             if (parsed.blockState().getValue(BlockStateProperties.HORIZONTAL_FACING) == Direction.NORTH) {
-                requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.WEST_DOOR, blockModel);
+                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.WEST_DOOR, blockModel);
             } else if (parsed.blockState().getValue(BlockStateProperties.HORIZONTAL_FACING) == Direction.EAST) {
-                requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.NORTH_DOOR, blockModel);
+                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.NORTH_DOOR, blockModel);
             } else if (parsed.blockState().getValue(BlockStateProperties.HORIZONTAL_FACING) == Direction.SOUTH) {
-                requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.EAST_DOOR, blockModel);
+                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.EAST_DOOR, blockModel);
             } else if (parsed.blockState().getValue(BlockStateProperties.HORIZONTAL_FACING) == Direction.WEST) {
-                requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.SOUTH_DOOR, blockModel);
+                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.SOUTH_DOOR, blockModel);
             }
         } else if (parsed.blockState().getValue(BlockStateProperties.OPEN) && parsed.blockState().getValue(BlockStateProperties.DOOR_HINGE) == DoorHingeSide.LEFT) {
             if (parsed.blockState().getValue(BlockStateProperties.HORIZONTAL_FACING) == Direction.NORTH) {
-                requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.EAST_DOOR, blockModel);
+                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.EAST_DOOR, blockModel);
             } else if (parsed.blockState().getValue(BlockStateProperties.HORIZONTAL_FACING) == Direction.EAST) {
-                requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.SOUTH_DOOR, blockModel);
+                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.SOUTH_DOOR, blockModel);
             } else if (parsed.blockState().getValue(BlockStateProperties.HORIZONTAL_FACING) == Direction.SOUTH) {
-                requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.WEST_DOOR, blockModel);
+                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.WEST_DOOR, blockModel);
             } else if (parsed.blockState().getValue(BlockStateProperties.HORIZONTAL_FACING) == Direction.WEST) {
-                requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.NORTH_DOOR, blockModel);
+                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.NORTH_DOOR, blockModel);
             }
         } else {
             if (parsed.blockState().getValue(BlockStateProperties.HORIZONTAL_FACING) == Direction.NORTH) {
-                requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.NORTH_DOOR, blockModel);
+                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.NORTH_DOOR, blockModel);
             } else if (parsed.blockState().getValue(BlockStateProperties.HORIZONTAL_FACING) == Direction.EAST) {
-                requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.EAST_DOOR, blockModel);
+                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.EAST_DOOR, blockModel);
             } else if (parsed.blockState().getValue(BlockStateProperties.HORIZONTAL_FACING) == Direction.SOUTH) {
-                requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.SOUTH_DOOR, blockModel);
+                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.SOUTH_DOOR, blockModel);
             } else if (parsed.blockState().getValue(BlockStateProperties.HORIZONTAL_FACING) == Direction.WEST) {
-                requestedState = PolymerBlockResourceUtils.requestBlock(BlockModelType.WEST_DOOR, blockModel);
+                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.WEST_DOOR, blockModel);
             }
         }
 
