@@ -4,8 +4,10 @@ import de.tomalbrc.bil.core.holder.entity.EntityHolder;
 import de.tomalbrc.bil.core.holder.wrapper.DisplayWrapper;
 import de.tomalbrc.bil.core.model.Model;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
+import eu.pb4.polymer.virtualentity.api.VirtualEntityUtils;
 import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
+import eu.pb4.polymer.virtualentity.impl.EntityExt;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.protocol.Packet;
@@ -19,18 +21,14 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Objects;
-import java.util.function.Consumer;
 
 public class AnimatedCosmeticHolder extends EntityHolder {
     private final LivingEntity entity;
 
-    private final Consumer<ServerGamePacketListenerImpl> startWatchingCallback;
-
     boolean hidden = false;
 
-    public AnimatedCosmeticHolder(LivingEntity entity, Model model, Consumer<ServerGamePacketListenerImpl> startWatchingCallback) {
+    public AnimatedCosmeticHolder(LivingEntity entity, Model model) {
         super(entity, model);
-        this.startWatchingCallback = startWatchingCallback;
         this.entity = entity;
     }
 
@@ -65,15 +63,6 @@ public class AnimatedCosmeticHolder extends EntityHolder {
         return this.entity.createCommandSourceStackForNameResolution(this.getLevel()).withMaximumPermission(4);
     }
 
-    @Override
-    public boolean startWatching(ServerGamePacketListenerImpl player) {
-        var ret = super.startWatching(player);
-
-        this.startWatchingCallback.accept(player);
-
-        return ret;
-    }
-
     public Vec3 getPos() {
         return this.entity instanceof ServerPlayer ? this.entity.position() : this.entity.getEyePosition();
     }
@@ -83,14 +72,17 @@ public class AnimatedCosmeticHolder extends EntityHolder {
         if (this.entity.getPose() == Pose.SWIMMING || this.entity.getPose() == Pose.SLEEPING) {
             if (!hidden) {
                 hideForAll(this);
+
                 hidden = true;
             }
         } else {
             if (hidden) {
                 showForAll(this);
-                for (ServerGamePacketListenerImpl player : this.getWatchingPlayers()) {
-                    startWatchingCallback.accept(player);
-                }
+
+                var packet = VirtualEntityUtils.createRidePacket(entity.getId(), ((EntityExt)entity).polymerVE$getVirtualRidden());
+                if (entity instanceof ServerPlayer serverPlayer)
+                    serverPlayer.connection.send(packet);
+
                 hidden = false;
             }
         }

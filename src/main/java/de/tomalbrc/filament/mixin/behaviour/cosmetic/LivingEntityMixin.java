@@ -13,12 +13,10 @@ import de.tomalbrc.filament.registry.ModelRegistry;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.VirtualEntityUtils;
 import eu.pb4.polymer.virtualentity.api.attachment.EntityAttachment;
-import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
-import it.unimi.dsi.fastutil.ints.IntArraySet;
+import eu.pb4.polymer.virtualentity.impl.EntityExt;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -38,7 +36,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Map;
-import java.util.function.Consumer;
 
 @Mixin(value = LivingEntity.class)
 public abstract class LivingEntityMixin implements CosmeticInterface {
@@ -47,9 +44,6 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
     @Shadow public abstract EquipmentSlot getEquipmentSlotForItem(ItemStack itemStack);
 
     @Shadow public abstract Iterable<ItemStack> getArmorSlots();
-
-    @Unique
-    private final IntArraySet displays = new IntArraySet();
 
     @Unique
     private final Map<String, ElementHolder> filamentCosmeticHolder = new Object2ObjectOpenHashMap<>();
@@ -129,15 +123,12 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
         Cosmetic.Config cosmeticData = CosmeticUtil.getCosmeticData(simpleItem);
 
         ElementHolder holder = null;
-        Consumer<ServerGamePacketListenerImpl> cb = (player) -> {
-            player.send(VirtualEntityUtils.createRidePacket(livingEntity.getId(), this.displays.toIntArray()));
-        };
 
         if (cosmeticData.model != null && !filamentCosmeticHolder.containsKey(slot)) {
-            holder = new AnimatedCosmeticHolder(livingEntity, ModelRegistry.getModel(cosmeticData.model), cb);
+            holder = new AnimatedCosmeticHolder(livingEntity, ModelRegistry.getModel(cosmeticData.model));
         }
         else if (!filamentCosmeticHolder.containsKey(slot)) {
-            holder = new CosmeticHolder(livingEntity, itemStack, cb);
+            holder = new CosmeticHolder(livingEntity, itemStack);
         }
 
         if (holder == null) {
@@ -147,14 +138,14 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
 
         EntityAttachment.ofTicking(holder, livingEntity);
 
-        if (holder.getElements() != null) for (VirtualElement element : holder.getElements()) {
-            displays.addAll(element.getEntityIds());
-        }
-
-        holder.getWatchingPlayers().forEach(cb);
-
         if (livingEntity instanceof ServerPlayer serverPlayer)
             holder.startWatching(serverPlayer);
+
+        VirtualEntityUtils.addVirtualPassenger(livingEntity, holder.getEntityIds().toIntArray());
+
+        var packet = VirtualEntityUtils.createRidePacket(livingEntity.getId(), ((EntityExt)livingEntity).polymerVE$getVirtualRidden());
+        if (livingEntity instanceof ServerPlayer serverPlayer)
+            serverPlayer.connection.send(packet);
 
         if (cosmeticData.autoplay != null && holder instanceof AnimatedCosmeticHolder animatedHolder) {
             animatedHolder.getAnimator().playAnimation(cosmeticData.autoplay);
@@ -169,9 +160,7 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
         if (filamentCosmeticHolder.containsKey(slot)) {
             var holder = filamentCosmeticHolder.get(slot);
 
-            for (VirtualElement element : holder.getElements()) {
-                displays.removeAll(element.getEntityIds());
-            }
+            VirtualEntityUtils.removeVirtualPassenger(LivingEntity.class.cast(this), holder.getEntityIds().toIntArray());
 
             var attachment = filamentCosmeticHolder.get(slot).getAttachment();
             if (attachment != null) {
