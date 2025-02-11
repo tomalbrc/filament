@@ -80,7 +80,7 @@ public class CosmeticHolder extends ElementHolder {
             }
             else {
                 Cosmetic.Config cosmeticData = CosmeticUtil.getCosmeticData(this.displayElement.getItem());
-                this.displayElement.setTranslation(cosmeticData.translation.add(new Vector3f(0, 0, this.entity.isShiftKeyDown() ? 0.15f : 0)));
+                this.displayElement.setTranslation(cosmeticData.translation.add(new Vector3f(0, 0, this.entity.isShiftKeyDown() ? 0.15f : 0), new Vector3f()));
             }
         }
 

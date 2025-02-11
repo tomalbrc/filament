@@ -74,6 +74,6 @@ public class Shovel implements ItemBehaviour<Shovel.Config> {
     }
 
     public static class Config {
-        public ResourceLocation sound = SoundEvents.SHOVEL_FLATTEN.location();
+        public ResourceLocation sound = SoundEvents.SHOVEL_FLATTEN.getLocation();
     }
 }

@@ -77,6 +77,6 @@ public class Shears implements ItemBehaviour<Shears.Config> {
     }
 
     public static class Config {
-        public ResourceLocation sound = SoundEvents.GROWING_PLANT_CROP.location();
+        public ResourceLocation sound = SoundEvents.GROWING_PLANT_CROP.getLocation();
     }
 }
