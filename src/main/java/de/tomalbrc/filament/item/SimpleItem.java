@@ -265,9 +265,10 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
             if (res.consumesAction()) {
                 return res;
             }
+            return InteractionResult.FAIL;
         }
 
-        return InteractionResult.FAIL;
+        return useOnContext.getItemInHand().has(DataComponents.CONSUMABLE) ? super.use(useOnContext.getLevel(), useOnContext.getPlayer(), useOnContext.getHand()) : InteractionResult.FAIL;
     }
 
     @Override
