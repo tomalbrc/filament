@@ -3,7 +3,7 @@ authors = ["tomalbrc"]
 language = "en"
 multilingual = false
 src = "src"
-title = "Filament Documentation (0.12.3)"
+title = "Filament Documentation (0.12.7)"
 
 # we be using mdbook
 
