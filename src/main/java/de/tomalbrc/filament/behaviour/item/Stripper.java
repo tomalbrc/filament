@@ -5,7 +5,9 @@ import de.tomalbrc.filament.mixin.behaviour.strippable.AxeItemAccessor;
 import de.tomalbrc.filament.registry.StrippableRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -67,7 +69,7 @@ public class Stripper implements ItemBehaviour<Stripper.Config> {
         }
 
         if (replacementBlock != null) {
-            level.playSound(null, blockPos, SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1.0F, 1.0F);
+            level.playSound(null, blockPos, SoundEvent.createVariableRangeEvent(config.sound), SoundSource.BLOCKS, 1.0F, 1.0F);
             return replacementBlock.withPropertiesOf(blockState);
         } else {
             Optional<BlockState> opt = WeatheringCopper.getPrevious(blockState);
@@ -88,5 +90,7 @@ public class Stripper implements ItemBehaviour<Stripper.Config> {
         }
     }
 
-    public static class Config {}
+    public static class Config {
+        public ResourceLocation sound = SoundEvents.AXE_STRIP.location();
+    }
 }
