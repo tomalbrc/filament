@@ -11,12 +11,10 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.HoeItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -34,11 +32,6 @@ public class Hoe implements ItemBehaviour<Hoe.Config> {
     @NotNull
     public Hoe.Config getConfig() {
         return this.config;
-    }
-
-    @Override
-    public Optional<Integer> getUseDuration(ItemStack itemStack, LivingEntity livingEntity) {
-        return Optional.of(72000);
     }
 
     @Override

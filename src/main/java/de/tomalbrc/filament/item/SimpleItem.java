@@ -305,6 +305,20 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
         return true;
     }
 
+    @Override
+    public boolean mineBlock(ItemStack itemStack, Level level, BlockState blockState, BlockPos blockPos, LivingEntity livingEntity) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                var res = itemBehaviour.mineBlock(itemStack, level, blockState, blockPos, livingEntity);
+                if (res) {
+                    return true;
+                }
+            }
+        }
+
+        return super.mineBlock(itemStack, level, blockState, blockPos, livingEntity);
+    }
+
     public ItemData getItemData() {
         return this.itemData;
     }

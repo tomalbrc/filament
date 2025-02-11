@@ -3,6 +3,7 @@ package de.tomalbrc.filament.api.behaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import net.minecraft.core.Holder;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -82,5 +84,9 @@ public interface ItemBehaviour<T> extends Behaviour<T> {
     @Nullable
     default Holder<SoundEvent> getEquipSound() {
         return null;
+    }
+
+    default boolean mineBlock(ItemStack itemStack, Level level, BlockState blockState, BlockPos blockPos, LivingEntity livingEntity) {
+        return false;
     }
 }
