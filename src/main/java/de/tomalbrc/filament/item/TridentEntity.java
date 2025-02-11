@@ -7,8 +7,10 @@ import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.VirtualEntityUtils;
 import eu.pb4.polymer.virtualentity.api.attachment.EntityAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
+import eu.pb4.polymer.virtualentity.api.tracker.EntityTrackedData;
 import eu.pb4.polymer.virtualentity.mixin.accessors.DisplayEntityAccessor;
 import eu.pb4.polymer.virtualentity.mixin.accessors.ItemDisplayEntityAccessor;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -23,6 +25,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
@@ -31,7 +35,6 @@ import java.util.function.Consumer;
 public class TridentEntity extends ThrownTrident implements PolymerEntity {
     protected final ElementHolder holder = new ElementHolder();
     protected final InteractionElement interactionElement = InteractionElement.redirect(this);
-
 
     @Override
     public void setXRot(float x) {
@@ -94,13 +97,11 @@ public class TridentEntity extends ThrownTrident implements PolymerEntity {
 
     @Override
     public void modifyRawTrackedData(List<SynchedEntityData.DataValue<?>> data, ServerPlayer player, boolean initial) {
-        //data.add(SynchedEntityData.DataValue.create(EntityTrackedData.FLAGS, (byte) (1 << EntityTrackedData.INVISIBLE_FLAG_INDEX)));
-        //data.add(SynchedEntityData.DataValue.create(EntityTrackedData.NO_GRAVITY, true));
+        data.add(SynchedEntityData.DataValue.create(EntityTrackedData.FLAGS, (byte) (1 << EntityTrackedData.INVISIBLE_FLAG_INDEX)));
         data.add(SynchedEntityData.DataValue.create(ItemDisplayEntityAccessor.getITEM(), getPickupItem()));
         data.add(SynchedEntityData.DataValue.create(DisplayEntityAccessor.getTELEPORT_DURATION(), 2));
-        //data.add(SynchedEntityData.DataValue.create(DisplayEntityAccessor.getLEFT_ROTATION(), new Quaternionf().rotateX(-Mth.HALF_PI).rotateY(Mth.PI).normalize()));
-        //data.add(SynchedEntityData.DataValue.create(DisplayEntityAccessor.getTRANSLATION(), new Vector3f(0.5f, 0.5f, -0.5f)));
-        //data.add(SynchedEntityData.DataValue.create(SlimeEntityAccessor.getSLIME_SIZE(), 0));
+        data.add(SynchedEntityData.DataValue.create(DisplayEntityAccessor.getLEFT_ROTATION(), new Quaternionf().rotateZ(Mth.HALF_PI).rotateX(-Mth.HALF_PI).rotateY(Mth.PI).normalize()));
+        data.add(SynchedEntityData.DataValue.create(DisplayEntityAccessor.getTRANSLATION(), new Vector3f(0.f, -1.0f, 0.f).rotateX(-Mth.HALF_PI)));
     }
 
     @Override
@@ -118,5 +119,19 @@ public class TridentEntity extends ThrownTrident implements PolymerEntity {
         super.tick();
         if (!isInGround())
             updateRotation();
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
+        if (compoundTag.contains("TridentXRot")) super.setXRot(compoundTag.getFloat("TridentXRot"));
+        if (compoundTag.contains("TridentYRot")) super.setYRot(compoundTag.getFloat("TridentYRot"));
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag compoundTag) {
+        super.addAdditionalSaveData(compoundTag);
+        compoundTag.putFloat("TridentXRot", getXRot());
+        compoundTag.putFloat("TridentYRot", getYRot());
     }
 }
