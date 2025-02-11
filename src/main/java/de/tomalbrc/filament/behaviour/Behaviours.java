@@ -23,6 +23,8 @@ public class Behaviours {
     public static final BehaviourType<Crossbow, Crossbow.Config> CROSSBOW = registerBehaviour("crossbow", Crossbow.class);
     public static final BehaviourType<Shield, Shield.Config> SHIELD = registerBehaviour("shield", Shield.class);
     public static final BehaviourType<FishingRod, FishingRod.Config> FISHING_ROD = registerBehaviour("fishing_rod", FishingRod.class);
+    public static final BehaviourType<Shears, Shears.Config> SHEARS = registerBehaviour("shears", Shears.class);
+    public static final BehaviourType<Shovel, Shovel.Config> SHOVEL = registerBehaviour("shovel", Shovel.class);
     public static final BehaviourType<Stripper, Stripper.Config> STRIPPER = registerBehaviour("stripper", Stripper.class);
     public static final BehaviourType<Trap, Trap.Config> TRAP = registerBehaviour("trap", Trap.class);
     public static final BehaviourType<Trident, Trident.Config> TRIDENT = registerBehaviour("trident", Trident.class);

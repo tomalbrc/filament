@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.api.behaviour;
 
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -61,5 +63,9 @@ public interface ItemBehaviour<T> extends Behaviour<T> {
 
     default int modifyPolymerArmorColor(ItemStack itemStack, @Nullable ServerPlayer player, int color) {
         return color;
+    }
+
+    default boolean mineBlock(ItemStack itemStack, Level level, BlockState blockState, BlockPos blockPos, LivingEntity livingEntity) {
+        return false;
     }
 }

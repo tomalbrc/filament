@@ -15,6 +15,7 @@ import de.tomalbrc.filament.util.BlockUtil;
 import de.tomalbrc.filament.util.Json;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.core.api.item.PolymerItemUtils;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -280,5 +281,19 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
         }
 
         return true;
+    }
+
+    @Override
+    public boolean mineBlock(ItemStack itemStack, Level level, BlockState blockState, BlockPos blockPos, LivingEntity livingEntity) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                var res = itemBehaviour.mineBlock(itemStack, level, blockState, blockPos, livingEntity);
+                if (res) {
+                    return true;
+                }
+            }
+        }
+
+        return super.mineBlock(itemStack, level, blockState, blockPos, livingEntity);
     }
 }
