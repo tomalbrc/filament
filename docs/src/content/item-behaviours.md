@@ -196,8 +196,24 @@ Gives the item the ability to till farmland, like vanilla hoes do, using 1 durab
 - **Fields**:
   - `sound`: Sound to play. Default to the vanilla hoe tilling sound `minecraft:item.hoe.till`
 
-<br>
-<br>
+
+---
+
+## `shovel` behaviour
+
+Gives the item the ability to change blocks to path blocks, like vanilla shovels do, using 1 durability.
+
+- **Fields**:
+  - `sound`: Sound to play. Default to the vanilla shovel sound
+
+---
+
+## `shears` behaviour
+
+Gives the item the ability to shears blocks & plants, like vanilla shears do, using 1 durability.
+
+- **Fields**:
+  - `sound`: Sound to play. Default to the vanilla plant shearing sound
 
 ---
 
@@ -220,7 +236,9 @@ Defines instrument behaviour for items, similar to goat horns.
 
 Gives the item the ability to strip Logs/scrape copper blocks, like an axe. Uses 1 durability.
 
-<br>
+
+- **Fields**:
+  - `sound`: Sound to play. Default to the vanilla axe strip sound
 
 ---
 
