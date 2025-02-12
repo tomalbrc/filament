@@ -3,6 +3,7 @@ package de.tomalbrc.filament.registry;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
 import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.block.SimpleBlockItem;
@@ -74,6 +75,8 @@ public class BlockRegistry {
         customBlock.postRegister();
 
         RPUtil.create(item, data);
+
+        FilamentRegistrationEvents.BLOCK.invoker().registered(data, item, customBlock);
     }
 
     public static ResourceKey<Block> key(ResourceLocation id) {

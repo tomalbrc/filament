@@ -2,6 +2,7 @@ package de.tomalbrc.filament.mixin.behaviour.cosmetic;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.api.event.FilamentCosmeticEvents;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.item.Cosmetic;
 import de.tomalbrc.filament.cosmetic.AnimatedCosmeticHolder;
@@ -36,6 +37,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Map;
+import java.util.Objects;
 
 @Mixin(value = LivingEntity.class)
 public abstract class LivingEntityMixin implements CosmeticInterface {
@@ -75,8 +77,11 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
 
         if (oldItemStack.getItem() instanceof SimpleItem simpleItem && CosmeticUtil.isCosmetic(oldItemStack)) {
             var component = oldItemStack.get(DataComponents.EQUIPPABLE);
-            var slot = component == null ? simpleItem.get(Behaviours.COSMETIC).getConfig().slot : component.slot();
-            if (slot == equipmentSlot) filament$destroyHolder(slot.getName());
+            var slot = component == null ? Objects.requireNonNull(simpleItem.get(Behaviours.COSMETIC)).getConfig().slot : component.slot();
+            if (slot == equipmentSlot) {
+                filament$destroyHolder(slot.getName());
+                FilamentCosmeticEvents.UNEQUIPPED.invoker().unequipped(LivingEntity.class.cast(this), oldItemStack, newItemStack);
+            }
         }
 
         // hotswap case
@@ -85,17 +90,20 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
                 var component = newItemStack.get(DataComponents.EQUIPPABLE);
                 if (component != null) {
                     filament$destroyHolder(component.slot().getName());
+                    FilamentCosmeticEvents.UNEQUIPPED.invoker().unequipped(LivingEntity.class.cast(this), oldItemStack, newItemStack);
                 }
             }
         }
 
         if (newItemStack.getItem() instanceof SimpleItem simpleItem && CosmeticUtil.isCosmetic(newItemStack)) {
             var component = newItemStack.get(DataComponents.EQUIPPABLE);
-            var slot = component == null ? simpleItem.get(Behaviours.COSMETIC).getConfig().slot : component.slot();
+            var slot = component == null ? Objects.requireNonNull(simpleItem.get(Behaviours.COSMETIC)).getConfig().slot : component.slot();
             // normal & hotswap case
             if (slot == equipmentSlot || (oldItemStack.isEmpty() && !CosmeticUtil.isCosmetic(newItemStack) && equipmentSlot == EquipmentSlot.MAINHAND && CosmeticUtil.isCosmetic(this.getItemBySlot(this.getEquipmentSlotForItem(newItemStack))))) {
                 filament$destroyHolder(slot.getName());
+                FilamentCosmeticEvents.UNEQUIPPED.invoker().unequipped(LivingEntity.class.cast(this), oldItemStack, newItemStack);
                 filament$addHolder(LivingEntity.class.cast(this), newItemStack.getItem(), newItemStack, slot.getName());
+                FilamentCosmeticEvents.EQUIPPED.invoker().unequipped(LivingEntity.class.cast(this), oldItemStack, newItemStack);
             }
         }
     }
@@ -105,6 +113,10 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
         if (!(itemStack.getItem() instanceof ArmorItem) && itemStack.getItem() instanceof SimpleItem && itemStack.canBeHurtBy(damageSource)) {
             int i = (int)Math.max(1.0F, f / 4.0F);
             itemStack.hurtAndBreak(i, (LivingEntity)(Object)this, equipmentSlot);
+            if (itemStack.isEmpty() && CosmeticUtil.isCosmetic(itemStack)) {
+                FilamentCosmeticEvents.UNEQUIPPED.invoker().unequipped(LivingEntity.class.cast(this), itemStack, ItemStack.EMPTY);
+                filament$destroyHolder(equipmentSlot.getName());
+            }
         }
     }
 
@@ -112,8 +124,10 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
     private void filament$onRemove(Entity.RemovalReason removalReason, CallbackInfo ci) {
         var self = LivingEntity.class.cast(this);
         for (ItemStack itemStack : self.getArmorSlots()) {
-            if (CosmeticUtil.isCosmetic(itemStack))
+            if (CosmeticUtil.isCosmetic(itemStack)) {
                 filament$destroyHolder(self.getEquipmentSlotForItem(itemStack).getName());
+                FilamentCosmeticEvents.UNEQUIPPED.invoker().unequipped(LivingEntity.class.cast(this), itemStack, ItemStack.EMPTY);
+            }
         }
     }
 
@@ -181,6 +195,7 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
                 var slot = self.getEquipmentSlotForItem(stack);
                 if (CosmeticUtil.isCosmetic(stack) && slot != EquipmentSlot.HEAD) {
                     filament$addHolder(self, stack.getItem(), stack, slot.getName());
+                    FilamentCosmeticEvents.EQUIPPED.invoker().unequipped(LivingEntity.class.cast(this), ItemStack.EMPTY, stack);
                 }
             }
             filamentEquipAfterLoad = false;

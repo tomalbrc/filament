@@ -2,6 +2,7 @@ package de.tomalbrc.filament.registry;
 
 import com.google.gson.JsonParser;
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
 import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.item.SimpleItem;
@@ -56,8 +57,9 @@ public class ItemRegistry {
         var item = ItemRegistry.registerItem(key(data.id()), (newProps) -> new SimpleItem(null, newProps, data, data.vanillaItem()), properties, data.group() != null ? data.group() : Constants.ITEM_GROUP_ID, data.itemTags());
         BehaviourUtil.postInitItem(item, item, data.behaviour());
         Translations.add(item, null, data);
-
         RPUtil.create(item, data);
+
+        FilamentRegistrationEvents.ITEM.invoker().registered(data, item);
     }
 
     public static ResourceKey<Item> key(ResourceLocation id) {
