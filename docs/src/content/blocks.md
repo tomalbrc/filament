@@ -13,10 +13,12 @@ You can also set components for the block-item, similar to item configurations u
 ## Contents
 
 Blocks like candles or turtle eggs, with mutiple blocks in 1:
-```json
+```json5
 {
   "id": "mynamespace:pebbles",
   "vanillaItem": "minecraft:paper",
+  "itemTags": ["minecraft:enchantable/durability"], // optional item tags
+  "blockTags": ["minecraft:dirt"], // optional block tags
   "blockResource": {
     "models": {
       "count=1": "mynamespace:custom/block/stone/pebbles_1",
@@ -37,7 +39,7 @@ Blocks like candles or turtle eggs, with mutiple blocks in 1:
   },
   "group": "mynamespace:myblockgroup",
   "components": {
-    ...
+    // ...
   }
 }
 ```
@@ -103,14 +105,12 @@ The `trapped` behaviour for example requires a model for the `trapped` key.
 Example
 ```json
 {
-  ...,
   "itemResource": {
     "models": {
-      "default": "mynamespace:custom/trap/allay_trap"
+      "default": "mynamespace:custom/trap/allay_trap",
       "trapped": "mynamespace:custom/trap/allay_trap_filled"
     }
-  },
-  ...
+  }
 }
 
 ```
@@ -144,7 +144,6 @@ An object with minecraft components used for the item.
 Example:
 ```json
 {
-    ...
     "components": {
     "minecraft:tool": {
       "default_mining_speed":1.0,
@@ -161,7 +160,6 @@ Example:
         }
       ]
     }
-  },
-  ...
+  }
 }
 ```

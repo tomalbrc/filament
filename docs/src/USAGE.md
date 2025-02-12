@@ -38,11 +38,15 @@ The files can also be located in subfolders for better organization:
 `MyDatapack/data/<namespace>/filament/block/stone_like/myblock.json`
 
 Filament supports yaml files as of 0.12.0.
+You can also decide whether you want to use snake_case or camelCase for all fields. For example, you can use either `vanillaItem` or `vanilla_item` or `itemResource` or `item_resource`
 
 Blockbench and Animated-Java models for decorations are supported using the [blockbench import library](https://github.com/tomalbrc/blockbench-import-library)
 
-In versions 1.21.4 and higher, filament will automatically generate the item asset json under `namespace/items/itemname.json`.
-You can provide your own item asset models using the `itemModel` field of an item (in the root structure of an item config) or by providing an item_model components using the `components` field.
+In minecraft versions 1.21.4 and higher, filament will automatically generate the item asset json under `namespace/items/itemname.json`, using the values in the `itemResource`.
+Some item-behaviour can also generate item-specific item asset models, for example the bow pulling states or a cast fishing.
+
+You can also provide your own item asset models using the `itemModel` field of an item (in the root structure of an item config) or by providing an item_model components using the `components` field.
+This will prevent the automatic generation of an item asset model.
 
 ---
 
@@ -50,7 +54,7 @@ You can provide your own item asset models using the `itemModel` field of an ite
 
 Item-, block- and decoration configuration files share some common fields.
 
-> **Note**: All fields support either camelCase or snake_case!
+> **Note**: All fields support either camelCase or snake_case! You can choose!
 
 Those are:
 
@@ -59,6 +63,33 @@ Those are:
 - `blockResource`: Here you can specify models for different blocks-states or just a single model for simple blocks.
 - `itemResource`: Specifies the model of the item. Some item-behaviours may require you to provide models for their "states" (i.e. the `trap` behaviour) 
 - `properties`: Properties differ for each config type, but all share the [item properties](content/item-properties.md).
+- `itemTags`: Item tags of the item/block-item/decoration-item. 
+- `blockTags`: Block tag of the block/decoration-block (not supported for items)
+
+Items, Blocks and Decorations also allow to set item/block tags in the config file.
+Example:
+```json
+{
+  "id": "mynamespace:example_item",
+  "vanillaItem": "minecraft:paper",
+  "itemTags": ["enchantable/durability"],
+  "itemResource": {
+    "models": {
+      "default": "example:item/example_item"
+    }
+  },
+  "properties": {
+    "durability": 100,
+    "stackSize": 1
+  },
+  "behaviour": {
+    "enchantable": {
+      "value": 1
+    }
+  }
+}
+```
+
 
 ## Behaviours 
 

@@ -36,6 +36,7 @@ Example:
 ```json
 {
   "id": "mynamespace:half_slab",
+  "blockTags": ["minecraft:climbable"],
   "blockResource": {
     "models" : {
       "waterlogged=false": "minecraft:custom/block/dirt/dirt_slab",

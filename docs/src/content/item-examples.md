@@ -52,6 +52,7 @@ behaviour:
 {
   "id": "mynamespace:allay_bottle",
   "vanillaItem": "minecraft:carrot_on_a_stick",
+  "itemTags": ["enchantable/durability"],
   "itemResource": {
     "models": {
       "default": "mynamespace:custom/traps/allay_bottle",

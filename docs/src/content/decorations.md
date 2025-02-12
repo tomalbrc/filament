@@ -16,6 +16,8 @@ You can also set components similar to item configurations using the `components
 {
   "id": "mynamespace:clown_horn",
   "vanillaItem": "minecraft:paper",
+  "itemTags": ["minecraft:enchantable/trident"], // optional item tags
+  "blockTags": ["minecraft:dirt"], // optional block tags
   "itemResource": {
     "models": {
       "default": "mynamespace:custom/misc/clown_horn"
