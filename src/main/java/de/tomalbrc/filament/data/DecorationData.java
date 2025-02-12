@@ -18,12 +18,14 @@ import org.joml.Vector3f;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 @SuppressWarnings("unused")
 public final class DecorationData extends Data {
     private final @Nullable List<BlockConfig> blocks;
     private final @Nullable Vector2f size;
     private final @Nullable DecorationProperties properties;
+    private final @Nullable Set<ResourceLocation> blockTags;
 
     public DecorationData(
             @NotNull ResourceLocation id,
@@ -34,14 +36,17 @@ public final class DecorationData extends Data {
             @Nullable BehaviourConfigMap behaviourConfig,
             @Nullable DataComponentMap components,
             @Nullable ResourceLocation itemGroup,
+            @Nullable Set<ResourceLocation> itemTags,
+            @Nullable Set<ResourceLocation> blockTags,
             @Nullable DecorationProperties properties,
             @Nullable List<BlockConfig> blocks,
             @Nullable Vector2f size
     ) {
-        super(id, vanillaItem, translations, itemResource, itemModel, behaviourConfig, components, itemGroup);
+        super(id, vanillaItem, translations, itemResource, itemModel, behaviourConfig, components, itemGroup, itemTags);
         this.blocks = blocks;
         this.size = size;
         this.properties = properties;
+        this.blockTags = blockTags;
     }
 
     @NotNull
@@ -121,6 +126,10 @@ public final class DecorationData extends Data {
 
     public boolean hasLightBehaviours() {
         return behaviour().has(Behaviours.LAMP);
+    }
+
+    public @Nullable Set<ResourceLocation> blockTags() {
+        return this.blockTags;
     }
 
     public record BlockConfig(Vector3f origin,

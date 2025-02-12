@@ -25,12 +25,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 @SuppressWarnings("unused")
 public final class BlockData extends Data {
     private final @NotNull BlockResource blockResource;
     private final @Nullable BlockStateMappedProperty<BlockModelType> blockModelType;
     private final @Nullable BlockProperties properties;
+    private final @Nullable Set<ResourceLocation> blockTags;
 
     public BlockData(
             @NotNull ResourceLocation id,
@@ -43,12 +45,14 @@ public final class BlockData extends Data {
             @Nullable ResourceLocation itemGroup,
             @NotNull BlockResource blockResource,
             @Nullable BlockStateMappedProperty<BlockModelType> blockModelType,
-            @Nullable BlockProperties properties
+            @Nullable BlockProperties properties,
+            @Nullable Set<ResourceLocation> itemTags
     ) {
-        super(id, vanillaItem, translations, itemResource, itemModel, behaviourConfig, components, itemGroup);
+        super(id, vanillaItem, translations, itemResource, itemModel, behaviourConfig, components, itemGroup, itemTags);
         this.blockResource = blockResource;
         this.blockModelType = blockModelType;
         this.properties = properties;
+        this.blockTags = itemTags;
     }
 
     @NotNull
@@ -116,6 +120,10 @@ public final class BlockData extends Data {
 
     public @Nullable BlockStateMappedProperty<BlockModelType> blockModelType() {
         return blockModelType;
+    }
+
+    public @Nullable Set<ResourceLocation> blockTags() {
+        return this.blockTags;
     }
 
     @Override

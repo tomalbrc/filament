@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 @SuppressWarnings("unused")
 public final class ItemData extends Data {
@@ -25,9 +26,10 @@ public final class ItemData extends Data {
             @Nullable BehaviourConfigMap behaviourConfig,
             @Nullable ItemProperties properties,
             @Nullable DataComponentMap components,
-            @Nullable ResourceLocation itemGroup
+            @Nullable ResourceLocation itemGroup,
+            @Nullable Set<ResourceLocation> itemTags
     ) {
-        super(id, vanillaItem, translations, itemResource, itemModel, behaviourConfig, components, itemGroup);
+        super(id, vanillaItem, translations, itemResource, itemModel, behaviourConfig, components, itemGroup, itemTags);
         this.properties = properties;
     }
 

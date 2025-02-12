@@ -6,6 +6,7 @@ import de.tomalbrc.filament.behaviour.BehaviourUtil;
 import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.util.*;
+import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -14,15 +15,18 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
 import java.util.function.Function;
 
 public class ItemRegistry {
-    public static int REGISTERED_ITEMS = 0;
+    public static Map<ResourceLocation, Collection<ResourceLocation>> ITEMS_TAGS = new Object2ReferenceOpenHashMap<>();
 
     public static void register(InputStream inputStream) throws IOException {
         var element = JsonParser.parseReader(new InputStreamReader(inputStream));
@@ -49,23 +53,23 @@ public class ItemRegistry {
             properties.component(component.type(), component.value());
         }
 
-        var item = ItemRegistry.registerItem(key(data.id()), (newProps) -> new SimpleItem(null, newProps, data, data.vanillaItem()), properties, data.group() != null ? data.group() : Constants.ITEM_GROUP_ID);
+        var item = ItemRegistry.registerItem(key(data.id()), (newProps) -> new SimpleItem(null, newProps, data, data.vanillaItem()), properties, data.group() != null ? data.group() : Constants.ITEM_GROUP_ID, data.itemTags());
         BehaviourUtil.postInitItem(item, item, data.behaviour());
         Translations.add(item, null, data);
 
         RPUtil.create(item, data);
-
-        REGISTERED_ITEMS++;
     }
 
     public static ResourceKey<Item> key(ResourceLocation id) {
         return ResourceKey.create(Registries.ITEM, id);
     }
 
-    public static <T extends Item> T registerItem(ResourceKey<Item> identifier, Function<Item.Properties, T> function, Item.Properties properties, ResourceLocation itemGroup) {
+    public static <T extends Item> T registerItem(ResourceKey<Item> identifier, Function<Item.Properties, T> function, Item.Properties properties, ResourceLocation itemGroup, @Nullable Collection<ResourceLocation> tags) {
         T item = function.apply(properties.setId(identifier));
         Registry.register(BuiltInRegistries.ITEM, identifier, item);
         ItemGroupRegistry.addItem(itemGroup, item);
+
+        ITEMS_TAGS.put(identifier.location(), tags);
 
         return item;
     }
@@ -88,7 +92,7 @@ public class ItemRegistry {
                 }
             });
             if (!printedInfo) {
-                for (String s : Arrays.asList("Filament items registered: " + REGISTERED_ITEMS, "Filament blocks registered: " + BlockRegistry.REGISTERED_BLOCKS, "Filament decorations registered: " + DecorationRegistry.REGISTERED_DECORATIONS, "Filament decoration block entities registered: " + DecorationRegistry.REGISTERED_BLOCK_ENTITIES)) {
+                for (String s : Arrays.asList("Filament items registered: " + ITEMS_TAGS.size(), "Filament blocks registered: " + BlockRegistry.BLOCKS_TAGS.size(), "Filament decorations registered: " + DecorationRegistry.REGISTERED_DECORATIONS, "Filament decoration block entities registered: " + DecorationRegistry.REGISTERED_BLOCK_ENTITIES)) {
                     Filament.LOGGER.info(s);
                 }
                 printedInfo = true;

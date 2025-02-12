@@ -62,7 +62,7 @@ public class DecorationRegistry {
 
         BlockBehaviour.Properties blockProperties = data.properties().toBlockProperties();
 
-        var block = BlockRegistry.registerBlock(BlockRegistry.key(data.id()), getBlockCreator(data), blockProperties);
+        var block = BlockRegistry.registerBlock(BlockRegistry.key(data.id()), getBlockCreator(data), blockProperties, data.blockTags());
         decorationBlocks.put(data.id(), block);
 
         Item.Properties properties = data.properties().toItemProperties();
@@ -85,7 +85,7 @@ public class DecorationRegistry {
             properties.component(DataComponents.DYED_COLOR, new DyedItemColor(0xdaad6d, false));
         }
 
-        var item = ItemRegistry.registerItem(ItemRegistry.key(data.id()), (newProps) -> new DecorationItem(block, data, newProps), properties, data.group() != null ? data.group() : Constants.DECORATION_GROUP_ID);
+        var item = ItemRegistry.registerItem(ItemRegistry.key(data.id()), (newProps) -> new DecorationItem(block, data, newProps), properties, data.group() != null ? data.group() : Constants.DECORATION_GROUP_ID, data.itemTags());
         BehaviourUtil.postInitItem(item, item, data.behaviour());
         Translations.add(item, block, data);
 

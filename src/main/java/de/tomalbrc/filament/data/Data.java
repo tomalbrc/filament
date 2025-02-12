@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Set;
 
 public abstract class Data {
     protected final @NotNull ResourceLocation id;
@@ -23,6 +24,8 @@ public abstract class Data {
     protected final @Nullable BehaviourConfigMap behaviour;
     protected final @Nullable DataComponentMap components;
     protected final @Nullable ResourceLocation group;
+    protected final @Nullable Set<ResourceLocation> itemTags;
+
     transient protected Map<DataComponentType<?>, JsonObject> additionalComponents;
 
     protected Data(
@@ -33,8 +36,9 @@ public abstract class Data {
             @Nullable ResourceLocation itemModel,
             @Nullable BehaviourConfigMap behaviour,
             @Nullable DataComponentMap components,
-            @Nullable ResourceLocation group
-    ) {
+            @Nullable ResourceLocation group,
+            @Nullable Set<ResourceLocation> itemTags
+            ) {
         this.id = id;
         this.vanillaItem = vanillaItem;
         this.translations = translations;
@@ -43,6 +47,7 @@ public abstract class Data {
         this.behaviour = behaviour;
         this.components = components;
         this.group = group;
+        this.itemTags = itemTags;
     }
 
     public void putAdditional(DataComponentType<?> s, JsonObject jsonObject) {
@@ -90,4 +95,6 @@ public abstract class Data {
     public @Nullable ResourceLocation group() {
         return group;
     }
+
+    public @Nullable Set<ResourceLocation> itemTags() { return this.itemTags; }
 }
