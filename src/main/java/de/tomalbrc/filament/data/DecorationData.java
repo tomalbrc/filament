@@ -21,6 +21,7 @@ import org.joml.Vector3f;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public record DecorationData(
         @NotNull ResourceLocation id,
@@ -40,7 +41,9 @@ public record DecorationData(
         @Nullable BehaviourConfigMap behaviourConfig,
         @Nullable DataComponentMap components,
         @SerializedName("group")
-        @Nullable ResourceLocation itemGroup
+        @Nullable ResourceLocation itemGroup,
+        @Nullable Set<ResourceLocation> itemTags,
+        @Nullable Set<ResourceLocation> blockTags
 ) {
     @Override
     @NotNull

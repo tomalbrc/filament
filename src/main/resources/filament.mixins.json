@@ -10,6 +10,7 @@
     "ItemFrameAccessor",
     "LevelChunkMixin",
     "MappedRegistryMixin",
+    "ReferenceMixin",
     "ReloadableServerResourcesMixin",
     "ServerGamePacketListenerImplMixin",
     "StateDefinitionBuilderMixin",

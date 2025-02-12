@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 @SuppressWarnings("unused")
 public record ItemData(
@@ -30,7 +31,8 @@ public record ItemData(
         @Nullable ItemProperties properties,
         @Nullable DataComponentMap components,
         @SerializedName("group")
-        @Nullable ResourceLocation itemGroup
+        @Nullable ResourceLocation itemGroup,
+        @Nullable Set<ResourceLocation> itemTags
 ) {
     @Override
     @NotNull

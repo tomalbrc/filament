@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Set;
 
 
 public record BlockData(
@@ -40,7 +41,9 @@ public record BlockData(
         @Nullable BehaviourConfigMap behaviourConfig,
         @Nullable DataComponentMap components,
         @SerializedName("group")
-        @Nullable ResourceLocation itemGroup
+        @Nullable ResourceLocation itemGroup,
+        @Nullable Set<ResourceLocation> itemTags,
+        @Nullable Set<ResourceLocation> blockTags
         ) {
     @Override
     @NotNull

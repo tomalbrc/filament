@@ -67,7 +67,7 @@ public class DecorationRegistry {
         }
 
         decorationBlocks.put(data.id(), block);
-        BlockRegistry.registerBlock(data.id(), block);
+        BlockRegistry.registerBlock(data.id(), block, data.blockTags());
 
         Item.Properties properties = data.properties().toItemProperties();
         if (data.properties().copyComponents) {
@@ -92,7 +92,7 @@ public class DecorationRegistry {
 
         DecorationItem item = new DecorationItem(block, data, properties);
         BehaviourUtil.postInitItem(item, item, data.behaviourConfig());
-        ItemRegistry.registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.DECORATION_GROUP_ID);
+        ItemRegistry.registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.DECORATION_GROUP_ID, data.itemTags());
         Translations.add(item, block, data);
 
         RPUtil.create(item, data.id(), data.itemResource());

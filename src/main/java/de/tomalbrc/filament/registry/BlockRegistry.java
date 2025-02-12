@@ -7,6 +7,7 @@ import de.tomalbrc.filament.block.SimpleBlockItem;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.*;
+import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -15,14 +16,18 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 import java.nio.charset.StandardCharsets;
 
 public class BlockRegistry {
-    public static int REGISTERED_BLOCKS = 0;
+    public static Map<ResourceLocation, Collection<ResourceLocation>> BLOCKS_TAGS = new Object2ReferenceOpenHashMap<>();
 
     public static void register(InputStream inputStream) throws IOException {
         register(Json.GSON.fromJson(new InputStreamReader(inputStream, StandardCharsets.UTF_8), BlockData.class));
@@ -52,17 +57,16 @@ public class BlockRegistry {
         BehaviourUtil.postInitBlock(item, customBlock, customBlock, data.behaviourConfig());
         Translations.add(item, customBlock, data);
 
-        BlockRegistry.registerBlock(data.id(), customBlock);
-        ItemRegistry.registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.BLOCK_GROUP_ID);
+        BlockRegistry.registerBlock(data.id(), customBlock, data.blockTags());
+        ItemRegistry.registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.BLOCK_GROUP_ID, data.itemTags());
 
         customBlock.postRegister();
 
         RPUtil.create(item, data.id(), data.itemResource());
-
-        REGISTERED_BLOCKS++;
     }
 
-    public static void registerBlock(ResourceLocation identifier, Block block) {
+    public static void registerBlock(ResourceLocation identifier, Block block, @Nullable Set<ResourceLocation> blockTags) {
+        BLOCKS_TAGS.put(identifier, blockTags);
         Registry.register(BuiltInRegistries.BLOCK, identifier, block);
     }
 
