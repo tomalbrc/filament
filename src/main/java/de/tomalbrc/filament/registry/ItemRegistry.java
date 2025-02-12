@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.registry;
 
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
 import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.item.SimpleItem;
@@ -50,6 +51,8 @@ public class ItemRegistry {
 
         registerItem(data.id(), item, data.itemGroup() != null ? data.itemGroup() : Constants.ITEM_GROUP_ID, data.itemTags());
         RPUtil.create(item, data.id(), data.itemResource());
+
+        FilamentRegistrationEvents.ITEM.invoker().registered(data, item);
     }
 
     public static void registerItem(ResourceLocation identifier, Item item, ResourceLocation itemGroup, @Nullable Collection<ResourceLocation> tags) {

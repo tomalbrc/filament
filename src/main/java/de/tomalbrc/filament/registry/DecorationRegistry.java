@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.registry;
 
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.decoration.Container;
@@ -97,7 +98,7 @@ public class DecorationRegistry {
 
         RPUtil.create(item, data.id(), data.itemResource());
 
-        REGISTERED_DECORATIONS++;
+        FilamentRegistrationEvents.DECORATION.invoker().registered(data, item, (DecorationBlock)block);
     }
 
     public static DecorationData getDecorationDefinition(ResourceLocation resourceLocation) {

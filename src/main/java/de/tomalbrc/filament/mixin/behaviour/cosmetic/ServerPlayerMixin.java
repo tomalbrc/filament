@@ -1,9 +1,11 @@
 package de.tomalbrc.filament.mixin.behaviour.cosmetic;
 
+import de.tomalbrc.filament.api.event.FilamentCosmeticEvents;
 import de.tomalbrc.filament.cosmetic.CosmeticInterface;
 import de.tomalbrc.filament.cosmetic.CosmeticUtil;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,7 +25,9 @@ public abstract class ServerPlayerMixin implements CosmeticInterface {
 
                 if (!item.isEmpty() && CosmeticUtil.isCosmetic(item)) {
                     filament$destroyHolder(serverPlayer.getEquipmentSlotForItem(item).getName());
+                    FilamentCosmeticEvents.UNEQUIPPED.invoker().unequipped(LivingEntity.class.cast(this), item, ItemStack.EMPTY);
                     filament$addHolder(serverPlayer, item.getItem(), item, serverPlayer.getEquipmentSlotForItem(item).getName());
+                    FilamentCosmeticEvents.EQUIPPED.invoker().unequipped(LivingEntity.class.cast(this), ItemStack.EMPTY, item);
                 }
             }
         }
@@ -40,7 +44,9 @@ public abstract class ServerPlayerMixin implements CosmeticInterface {
 
                 if (!item.isEmpty() && CosmeticUtil.isCosmetic(item)) {
                     filament$destroyHolder(serverPlayer.getEquipmentSlotForItem(item).getName());
+                    FilamentCosmeticEvents.UNEQUIPPED.invoker().unequipped(LivingEntity.class.cast(this), item, ItemStack.EMPTY);
                     filament$addHolder(serverPlayer, item.getItem(), item, serverPlayer.getEquipmentSlotForItem(item).getName());
+                    FilamentCosmeticEvents.EQUIPPED.invoker().unequipped(LivingEntity.class.cast(this), ItemStack.EMPTY, item);
                 }
             }
         }

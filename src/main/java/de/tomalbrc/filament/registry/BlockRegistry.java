@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.registry;
 
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
 import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.block.SimpleBlockItem;
@@ -63,6 +64,12 @@ public class BlockRegistry {
         customBlock.postRegister();
 
         RPUtil.create(item, data.id(), data.itemResource());
+
+        FilamentRegistrationEvents.BLOCK.invoker().registered(data, item, customBlock);
+    }
+
+    public static ResourceKey<Block> key(ResourceLocation id) {
+        return ResourceKey.create(Registries.BLOCK, id);
     }
 
     public static void registerBlock(ResourceLocation identifier, Block block, @Nullable Set<ResourceLocation> blockTags) {
