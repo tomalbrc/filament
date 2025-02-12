@@ -29,8 +29,6 @@ public abstract class ReferenceMixin<T> {
 
     @Inject(method = "bindTags", at = @At("HEAD"), cancellable = true)
     private void dd(Collection<TagKey<T>> collection, CallbackInfo ci) {
-        System.out.println("1 "+key.registryKey().location());
-        System.out.println("2 "+BuiltInRegistries.ITEM.key().location());
         if (this.key != null && this.key.registryKey().location() == BuiltInRegistries.ITEM.key().location() && ItemRegistry.ITEMS_TAGS.containsKey(this.key.location())) {
             // inject tags
             Set<TagKey<T>> modifiableCopy = new ObjectArraySet<>(collection);
@@ -43,7 +41,7 @@ public abstract class ReferenceMixin<T> {
             this.tags = modifiableCopy;
             ci.cancel();
 
-        } else if (this.key != null && this.key.registryKey().location() == BuiltInRegistries.BLOCK.key().registry() && BlockRegistry.BLOCKS_TAGS.containsKey(this.key.location())) {
+        } else if (this.key != null && this.key.registryKey().location() == BuiltInRegistries.BLOCK.key().location() && BlockRegistry.BLOCKS_TAGS.containsKey(this.key.location())) {
             // inject tags
             Set<TagKey<T>> modifiableCopy = new ObjectArraySet<>(collection);
             var tags = BlockRegistry.BLOCKS_TAGS.get(this.key.location());
