@@ -22,10 +22,10 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-import java.nio.charset.StandardCharsets;
 
 public class BlockRegistry {
     public static Map<ResourceLocation, Collection<ResourceLocation>> BLOCKS_TAGS = new Object2ReferenceOpenHashMap<>();
@@ -66,10 +66,6 @@ public class BlockRegistry {
         RPUtil.create(item, data.id(), data.itemResource());
 
         FilamentRegistrationEvents.BLOCK.invoker().registered(data, item, customBlock);
-    }
-
-    public static ResourceKey<Block> key(ResourceLocation id) {
-        return ResourceKey.create(Registries.BLOCK, id);
     }
 
     public static void registerBlock(ResourceLocation identifier, Block block, @Nullable Set<ResourceLocation> blockTags) {
