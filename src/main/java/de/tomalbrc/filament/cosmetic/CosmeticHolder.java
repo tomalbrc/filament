@@ -59,7 +59,7 @@ public class CosmeticHolder extends ElementHolder {
 
     @Override
     public void onTick() {
-        if (this.entity.getPose() == Pose.SWIMMING || this.entity.getPose() == Pose.SLEEPING) {
+        if (this.entity.getPose() == Pose.SWIMMING || this.entity.getPose() == Pose.SLEEPING || (this.entity instanceof  ServerPlayer serverPlayer && serverPlayer.isSpectator())) {
             if (!hidden) {
                 hideForAll(this);
                 hidden = true;
