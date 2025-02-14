@@ -52,7 +52,7 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithM
 
     @Override
     protected void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
-        if (!bl) {
+        if (!bl && !blockState.is(blockState2.getBlock())) {
             DecorationData data = this.getDecorationData();
             if (!data.hasBlocks()) {
                 SoundEvent breakSound = data.properties().blockBase.defaultBlockState().getSoundType().getBreakSound();
