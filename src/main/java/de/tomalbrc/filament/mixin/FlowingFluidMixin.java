@@ -40,7 +40,6 @@ public abstract class FlowingFluidMixin {
     @Inject(method = "canMaybePassThrough", at = @At("RETURN"), cancellable = true)
     private void filament$canMaybePassThrough(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Direction direction, BlockPos blockPos2, BlockState blockState2, FluidState fluidState, CallbackInfoReturnable<Boolean> cir) {
         // pass-thu but only non-waterloggable blocks and non-solid
-        if (filament$passes(blockState)) cir.setReturnValue(true);
         if (filament$passes(blockState2)) cir.setReturnValue(true);
     }
 
