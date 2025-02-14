@@ -52,17 +52,19 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithM
 
     @Override
     protected void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
-        DecorationData data = this.getDecorationData();
-        if (!data.hasBlocks()) {
-            SoundEvent breakSound = data.properties().blockBase.defaultBlockState().getSoundType().getBreakSound();
-            level.playSound(null, blockPos,  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);
-        }
-        if (data.properties().showBreakParticles)
-            Util.showBreakParticle((ServerLevel) level, blockPos, data.properties().useItemParticles ? BuiltInRegistries.ITEM.get(this.decorationId).getDefaultInstance() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+        if (!bl) {
+            DecorationData data = this.getDecorationData();
+            if (!data.hasBlocks()) {
+                SoundEvent breakSound = data.properties().blockBase.defaultBlockState().getSoundType().getBreakSound();
+                level.playSound(null, blockPos,  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);
+            }
+            if (data.properties().showBreakParticles)
+                Util.showBreakParticle((ServerLevel) level, blockPos, data.properties().useItemParticles ? BuiltInRegistries.ITEM.get(this.decorationId).getDefaultInstance() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
 
-        if (!level.isClientSide() && data.properties().drops && blockState.getBlock() instanceof SimpleDecorationBlock) {
-            for (ItemStack drop : this.getDrops()) {
-                Util.spawnAtLocation(level, blockPos.getCenter(), drop);
+            if (!level.isClientSide() && data.properties().drops && blockState.getBlock() instanceof SimpleDecorationBlock) {
+                for (ItemStack drop : this.getDrops()) {
+                    Util.spawnAtLocation(level, blockPos.getCenter(), drop);
+                }
             }
         }
 
