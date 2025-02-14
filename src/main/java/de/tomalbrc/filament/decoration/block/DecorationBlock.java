@@ -78,7 +78,7 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
 
     @Override
     public void onExplosionHit(BlockState blockState, ServerLevel level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
-        if (!blockState.isAir() && explosion.getBlockInteraction() != Explosion.BlockInteraction.TRIGGER_BLOCK) {
+        if (!blockState.isAir()) {
             this.removeDecoration(level, blockPos, null);
         }
     }
@@ -95,6 +95,8 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         if (blockEntity instanceof DecorationBlockEntity decorationBlockEntity) {
             decorationBlockEntity.destroyStructure(player == null || !player.isCreative());
+        } else {
+            level.destroyBlock(blockPos, false);
         }
     }
 
