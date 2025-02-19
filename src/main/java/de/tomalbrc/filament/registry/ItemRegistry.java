@@ -58,6 +58,7 @@ public class ItemRegistry {
     public static void registerItem(ResourceLocation identifier, Item item, ResourceLocation itemGroup, @Nullable Collection<ResourceLocation> tags) {
         Registry.register(BuiltInRegistries.ITEM, identifier, item);
         ItemGroupRegistry.addItem(itemGroup, item);
+        ITEMS_TAGS.put(identifier, tags);
     }
 
     public static class ItemDataReloadListener implements FilamentSynchronousResourceReloadListener {
