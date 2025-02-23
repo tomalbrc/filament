@@ -87,7 +87,7 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
 
         if (CosmeticUtil.isCosmetic(oldItemStack)) {
             var component = oldItemStack.get(DataComponents.EQUIPPABLE);
-            var slot = component == null ? Objects.requireNonNull(simpleItem.get(Behaviours.COSMETIC)).getConfig().slot : component.slot();
+            var slot = component == null ? Objects.requireNonNull(((SimpleItem)oldItemStack.getItem()).get(Behaviours.COSMETIC)).getConfig().slot : component.slot();
             if (slot == equipmentSlot) {
                 filament$destroyHolder(slot.getName());
                 FilamentCosmeticEvents.UNEQUIPPED.invoker().unequipped(LivingEntity.class.cast(this), oldItemStack, newItemStack);
@@ -107,8 +107,8 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
 
         if (CosmeticUtil.isCosmetic(newItemStack)) {
             var component = newItemStack.get(DataComponents.EQUIPPABLE);
-            var slot = component == null ? Objects.requireNonNull(simpleItem.get(Behaviours.COSMETIC)).getConfig().slot : component.slot();
-            if (slot == equipmentSlot || (oldItemStack.isEmpty() && equipmentSlot != EquipmentSlot.MAINHAND)) {
+            var slot = component == null ? Objects.requireNonNull(((SimpleItem)newItemStack.getItem()).get(Behaviours.COSMETIC)).getConfig().slot : component.slot();
+            if (slot == equipmentSlot || oldItemStack.isEmpty()) {
                 filament$destroyHolder(slot.getName());
                 FilamentCosmeticEvents.UNEQUIPPED.invoker().unequipped(LivingEntity.class.cast(this), oldItemStack, newItemStack);
                 filament$addHolder(LivingEntity.class.cast(this), newItemStack.getItem(), newItemStack, slot.getName());

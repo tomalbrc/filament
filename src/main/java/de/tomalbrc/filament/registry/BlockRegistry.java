@@ -12,14 +12,12 @@ import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.*;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -64,8 +62,6 @@ public class BlockRegistry {
             for (TypedDataComponent component : data.vanillaItem().components()) {
                 itemProperties.component(component.type(), component.value());
             }
-            if (data.vanillaItem() instanceof ArmorItem armorItem)
-                itemProperties.component(DataComponents.ATTRIBUTE_MODIFIERS, armorItem.getDefaultAttributeModifiers());
         }
         for (TypedDataComponent component : data.components()) {
             itemProperties.component(component.type(), component.value());

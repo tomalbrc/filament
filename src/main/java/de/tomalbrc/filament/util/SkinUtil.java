@@ -9,13 +9,12 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ItemLore;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 
@@ -32,24 +31,19 @@ public class SkinUtil {
         });
     }
 
-    public static ItemStack wrap(ItemStack itemStack, ItemStack mod, ServerPlayer player) {
+    public static ItemStack wrap(ItemStack itemStack, ItemStack mod, PacketContext context) {
         if (itemStack.has(FilamentComponents.SKIN_DATA_COMPONENT)) {
             var wrappedItemStack = itemStack.get(FilamentComponents.SKIN_DATA_COMPONENT).copy();
-            if (wrappedItemStack != null && !wrappedItemStack.isEmpty()) {
+            if (!wrappedItemStack.isEmpty()) {
                 // important
                 var oldWrapped = wrappedItemStack;
                 if (wrappedItemStack.getItem() instanceof PolymerItem polymerItem) {
-                    wrappedItemStack = polymerItem.getPolymerItemStack(wrappedItemStack, TooltipFlag.NORMAL, player.registryAccess(), player);
+                    wrappedItemStack = polymerItem.getPolymerItemStack(wrappedItemStack, TooltipFlag.NORMAL, context);
                 }
                 else wrappedItemStack = wrappedItemStack.copy();
 
                 for (DataComponentType type : COMPONENTS_TO_COPY) {
                     wrappedItemStack.set(type, itemStack.get(type));
-                }
-
-                if (itemStack.getItem() instanceof ArmorItem armorItem) {
-                    // todo: merge with existing attributes..?!
-                    wrappedItemStack.set(DataComponents.ATTRIBUTE_MODIFIERS, armorItem.getDefaultAttributeModifiers());
                 }
 
                 wrappedItemStack.set(DataComponents.ITEM_NAME, mod.getHoverName());

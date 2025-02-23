@@ -15,6 +15,7 @@ import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 public class ClientItemCommand {
     public static LiteralCommandNode<CommandSourceStack> register() {
@@ -30,7 +31,7 @@ public class ClientItemCommand {
             var handItem = player.getItemInHand(InteractionHand.MAIN_HAND);
             var isPolymerItem = handItem.getItem() instanceof PolymerItem;
             if (handItem.getItem() instanceof PolymerItem polymerItem) {
-                handItem = polymerItem.getPolymerItemStack(handItem, TooltipFlag.NORMAL, player.registryAccess(), player);
+                handItem = polymerItem.getPolymerItemStack(handItem, TooltipFlag.NORMAL, PacketContext.create(player));
             }
             ItemStack.CODEC.encodeStart(RegistryOps.create(JsonOps.INSTANCE, player.registryAccess()), handItem).ifSuccess(jsonElement -> context.getSource().sendSuccess(() -> Component.literal("Client Item: ").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN)).append(Component.literal(jsonElement.toString()).withStyle(ChatFormatting.WHITE)), false));
             DataComponentMap.CODEC.encodeStart(RegistryOps.create(JsonOps.INSTANCE, player.registryAccess()), handItem.getComponents()).ifSuccess(jsonElement -> context.getSource().sendSuccess(() -> Component.literal("Components: ").setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)).append(Component.literal(jsonElement.toString()).setStyle(Style.EMPTY.withColor(ChatFormatting.WHITE))), false));
