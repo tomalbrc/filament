@@ -9,6 +9,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -24,9 +25,10 @@ public abstract class ItemMixin {
         if (!itemStack2.isEmpty() && !itemStack2.has(FilamentComponents.SKIN_DATA_COMPONENT) && !itemStack.isEmpty() && (itemStack.has(FilamentComponents.SKIN_COMPONENT) && itemStack2.is(itemStack.get(FilamentComponents.SKIN_COMPONENT)))) { // overlay / add as skin
             itemStack2.set(FilamentComponents.SKIN_DATA_COMPONENT, itemStack.copyWithCount(1));
 
-            if (player.getEquipmentSlotForItem(itemStack) != EquipmentSlot.MAINHAND) {
-                player.onEquipItem(player.getEquipmentSlotForItem(itemStack), itemStack, itemStack2);
+            if (filament$isWearing(player, itemStack2)) {
+                player.onEquipItem(player.getEquipmentSlotForItem(itemStack2), itemStack, itemStack2);
             }
+
             itemStack.consume(1, player);
 
             cir.setReturnValue(itemStack.isEmpty());
@@ -34,7 +36,7 @@ public abstract class ItemMixin {
             slot.set(itemStack.get(FilamentComponents.SKIN_DATA_COMPONENT));
             var old = itemStack.remove(FilamentComponents.SKIN_DATA_COMPONENT);
 
-            if (player.getEquipmentSlotForItem(itemStack) != EquipmentSlot.MAINHAND) {
+            if (filament$isWearing(player, itemStack)) {
                 player.onEquipItem(player.getEquipmentSlotForItem(itemStack), old, itemStack2);
             }
 
@@ -54,7 +56,7 @@ public abstract class ItemMixin {
                 var stack = itemStack.get(FilamentComponents.SKIN_DATA_COMPONENT).copy();
                 var old = itemStack.remove(FilamentComponents.SKIN_DATA_COMPONENT);
 
-                if (player.getEquipmentSlotForItem(itemStack) != EquipmentSlot.MAINHAND) {
+                if (filament$isWearing(player, itemStack)) {
                     player.onEquipItem(player.getEquipmentSlotForItem(itemStack), old, itemStack2);
                 }
 
@@ -78,7 +80,7 @@ public abstract class ItemMixin {
                     // just insert (the item to skin "picks up" the skin by
                     // right-clicking a skin with the item to skin in the cursor slot
                     var old = itemStack2.set(FilamentComponents.SKIN_DATA_COMPONENT, itemStack.copyWithCount(1));
-                    if (player.getEquipmentSlotForItem(itemStack) != EquipmentSlot.MAINHAND) {
+                    if (filament$isWearing(player, itemStack)) {
                         player.onEquipItem(player.getEquipmentSlotForItem(itemStack), old, itemStack2);
                     }
 
@@ -87,5 +89,15 @@ public abstract class ItemMixin {
                 }
             }
         }
+    }
+
+    @Unique
+    private static boolean filament$isWearing(Player player, ItemStack itemStack) {
+        for (ItemStack stack : player.getArmorSlots()) {
+            if (stack == itemStack) {
+                return true;
+            }
+        }
+        return false;
     }
 }
