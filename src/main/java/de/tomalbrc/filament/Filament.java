@@ -33,8 +33,10 @@ public class Filament implements ModInitializer {
     @Override
     public void onInitialize() {
         PolymerResourcePackUtils.markAsRequired();
-        Behaviours.init();
-        Translations.init();
+        FilamentComponents.register();
+        Behaviours.register();
+        SkinUtil.registerEventHandler();
+        Translations.registerEventHandler();
         EntityRegistry.register();
 
         if (FilamentConfig.getInstance().commands) {

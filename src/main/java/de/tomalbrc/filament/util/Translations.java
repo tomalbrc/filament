@@ -30,7 +30,7 @@ public class Translations {
         translations.get(locale).put(translationId, text);
     }
 
-    public static void init() {
+    public static void registerEventHandler() {
         PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder -> {
             for (Map.Entry<String, Map<Pair<Item, Block>, String>> entry : translations.entrySet()) {
                 JsonObject object = new JsonObject();

@@ -32,7 +32,8 @@
     "behaviour.strippable.AxeItemAccessor",
     "behaviour.strippable.AxeItemMixin",
     "behaviour.trap.MobMixin",
-    "behaviour.trident.ThrownTridentAccessor"
+    "behaviour.trident.ThrownTridentAccessor",
+    "component.skin.ItemMixin"
   ],
   "injectors": {
     "defaultRequire": 1,

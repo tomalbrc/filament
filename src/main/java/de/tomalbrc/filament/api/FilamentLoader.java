@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 @SuppressWarnings("unused")
 public class FilamentLoader {
     public static void loadBlocks(String modid) {
-        Behaviours.init();
+        Behaviours.register();
         search(modid, f -> {
             try {
                 if (f.endsWith(".yaml") || f.endsWith(".yml")) {
@@ -38,7 +38,7 @@ public class FilamentLoader {
     }
 
     public static void loadItems(String modid) {
-        Behaviours.init();
+        Behaviours.register();
         search(modid, f -> {
             try {
                 if (f.endsWith(".yaml") || f.endsWith(".yml")) {
@@ -57,7 +57,7 @@ public class FilamentLoader {
     }
 
     public static void loadDecorations(String modid) {
-        Behaviours.init();
+        Behaviours.register();
         search(modid, f -> {
             try {
                 if (f.endsWith(".yaml") || f.endsWith(".yml")) {
@@ -76,7 +76,7 @@ public class FilamentLoader {
     }
 
     public static void loadModels(String modid, String namespace) {
-        Behaviours.init();
+        Behaviours.register();
         search(modid, f -> {
             try {
                 if (f.getFileName() != null)
