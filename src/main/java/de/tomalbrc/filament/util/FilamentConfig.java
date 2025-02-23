@@ -14,7 +14,7 @@ public class FilamentConfig {
     static FilamentConfig instance;
 
     @SerializedName("emissive_shader")
-    public boolean emissiveShader = true;
+    public boolean emissiveShader = false;
 
     @SerializedName("commands")
     public boolean commands = true;
