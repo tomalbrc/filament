@@ -177,6 +177,9 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
         if (filamentCosmeticHolder.containsKey(slot)) {
             var holder = filamentCosmeticHolder.get(slot);
 
+            // remove add. virtual pass.
+            VirtualEntityUtils.removeVirtualPassenger(LivingEntity.class.cast(this), holder.getEntityIds().toIntArray());
+
             var attachment = filamentCosmeticHolder.get(slot).getAttachment();
             if (attachment != null) {
                 attachment.destroy();
