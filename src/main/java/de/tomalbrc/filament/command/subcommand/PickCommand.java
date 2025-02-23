@@ -1,7 +1,6 @@
-package de.tomalbrc.filament.command;
+package de.tomalbrc.filament.command.subcommand;
 
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
@@ -17,13 +16,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 public class PickCommand {
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode<CommandSourceStack> pickNode = Commands
-                .literal("pick").requires(Permissions.require("filament.command.pick", 2))
+    public static LiteralCommandNode<CommandSourceStack> register() {
+        return Commands
+                .literal("pick").requires(Permissions.require("filament.command.pick", 3))
                 .executes(PickCommand::execute)
                 .build();
-
-        dispatcher.getRoot().addChild(pickNode);
     }
 
     private static int execute(CommandContext<CommandSourceStack> context) {

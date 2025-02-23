@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Function;
@@ -50,8 +51,6 @@ public class ItemRegistry {
             for (TypedDataComponent component : data.vanillaItem().components()) {
                 properties.component(component.type(), component.value());
             }
-            if (data.vanillaItem() instanceof ArmorItem armorItem)
-                properties.component(DataComponents.ATTRIBUTE_MODIFIERS, armorItem.getDefaultAttributeModifiers());
         }
 
         for (TypedDataComponent component : data.components()) {
@@ -81,8 +80,6 @@ public class ItemRegistry {
     }
 
     public static class ItemDataReloadListener implements FilamentSynchronousResourceReloadListener {
-        static private boolean printedInfo = false;
-
         @Override
         public ResourceLocation getFabricId() {
             return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "items");
@@ -97,12 +94,6 @@ public class ItemRegistry {
                     Filament.LOGGER.error("Failed to load item resource \"{}\".", id, e);
                 }
             });
-            if (!printedInfo) {
-                for (String s : Arrays.asList("Filament items registered: " + ITEMS_TAGS.size(), "Filament blocks registered: " + BlockRegistry.BLOCKS_TAGS.size(), "Filament decorations registered: " + DecorationRegistry.REGISTERED_DECORATIONS, "Filament decoration block entities registered: " + DecorationRegistry.REGISTERED_BLOCK_ENTITIES)) {
-                    Filament.LOGGER.info(s);
-                }
-                printedInfo = true;
-            }
         }
     }
 }

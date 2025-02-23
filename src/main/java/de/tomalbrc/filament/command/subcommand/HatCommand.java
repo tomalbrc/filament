@@ -1,7 +1,7 @@
-package de.tomalbrc.filament.command;
+package de.tomalbrc.filament.command.subcommand;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -9,11 +9,11 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 
 public class HatCommand {
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static LiteralCommandNode<CommandSourceStack> register() {
         var hatNode = Commands
                 .literal("hat").requires(Permissions.require("filament.command.hat", 1));
 
-        dispatcher.register(hatNode.executes(HatCommand::execute));
+        return hatNode.executes(HatCommand::execute).build();
     }
 
     private static int execute(CommandContext<CommandSourceStack> context) {
