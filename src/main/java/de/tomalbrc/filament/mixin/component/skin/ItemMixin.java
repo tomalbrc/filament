@@ -1,7 +1,6 @@
 package de.tomalbrc.filament.mixin.component.skin;
 
 import de.tomalbrc.filament.registry.FilamentComponents;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
@@ -71,8 +70,8 @@ public abstract class ItemMixin {
                     slot.set(old);
                     slotAccess.set(itemStack2Copy);
 
-                    if (player.getEquipmentSlotForItem(itemStack) != EquipmentSlot.MAINHAND) {
-                        player.onEquipItem(player.getEquipmentSlotForItem(itemStack), old, itemStack2Copy);
+                    if (filament$isWearing(player, itemStack2Copy)) {
+                        player.onEquipItem(player.getEquipmentSlotForItem(itemStack2Copy), old, itemStack2Copy);
                     }
 
                     cir.setReturnValue(true);
