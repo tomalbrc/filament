@@ -1,9 +1,9 @@
-package de.tomalbrc.filament.command;
+package de.tomalbrc.filament.command.subcommand;
 
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.tomalbrc.filament.util.Util;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.commands.CommandSourceStack;
@@ -17,14 +17,14 @@ import java.util.Optional;
 import static com.mojang.brigadier.arguments.StringArgumentType.getString;
 
 public class DyeCommand {
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static LiteralCommandNode<CommandSourceStack> register() {
         var dyeNode = Commands
                 .literal("dye").requires(Permissions.require("filament.command.dye", 1));
 
         var colorArg = Commands.argument("color", StringArgumentType
                 .string());
 
-        dispatcher.register(dyeNode.then(colorArg.executes(DyeCommand::execute)));
+        return dyeNode.then(colorArg.executes(DyeCommand::execute)).build();
     }
 
     private static int execute(CommandContext<CommandSourceStack> context) {

@@ -2,9 +2,7 @@ package de.tomalbrc.filament;
 
 import com.mojang.logging.LogUtils;
 import de.tomalbrc.filament.behaviour.Behaviours;
-import de.tomalbrc.filament.command.DyeCommand;
-import de.tomalbrc.filament.command.HatCommand;
-import de.tomalbrc.filament.command.PickCommand;
+import de.tomalbrc.filament.command.FilamentCommand;
 import de.tomalbrc.filament.data.ItemGroupData;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
@@ -38,9 +36,7 @@ public class Filament implements ModInitializer {
 
         if (FilamentConfig.getInstance().commands) {
             CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> {
-                HatCommand.register(dispatcher);
-                DyeCommand.register(dispatcher);
-                PickCommand.register(dispatcher);
+                FilamentCommand.register(dispatcher);
             });
         }
 
