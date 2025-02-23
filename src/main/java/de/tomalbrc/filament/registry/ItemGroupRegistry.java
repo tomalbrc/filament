@@ -13,7 +13,6 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -22,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
-import java.util.Map;
 
 public class ItemGroupRegistry {
     public static final Object2ObjectLinkedOpenHashMap<ResourceLocation, List<Item>> TAB_GROUP_ITEMS = new Object2ObjectLinkedOpenHashMap<>();
@@ -69,7 +67,7 @@ public class ItemGroupRegistry {
 
         @Override
         public void onResourceManagerReload(ResourceManager resourceManager) {
-            load("filament", "item-groups", resourceManager, (id, inputStream) -> {
+            load(Constants.MOD_ID, "item-groups", resourceManager, (id, inputStream) -> {
                 try {
                     ItemGroupRegistry.register(inputStream);
                 } catch (IOException e) {

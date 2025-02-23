@@ -3,13 +3,13 @@ package de.tomalbrc.filament.mixin.behaviour.cosmetic;
 import com.llamalad7.mixinextras.sugar.Local;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentCosmeticEvents;
-import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.item.Cosmetic;
 import de.tomalbrc.filament.cosmetic.AnimatedCosmeticHolder;
 import de.tomalbrc.filament.cosmetic.CosmeticHolder;
 import de.tomalbrc.filament.cosmetic.CosmeticInterface;
 import de.tomalbrc.filament.cosmetic.CosmeticUtil;
 import de.tomalbrc.filament.item.SimpleItem;
+import de.tomalbrc.filament.registry.FilamentComponents;
 import de.tomalbrc.filament.registry.ModelRegistry;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.VirtualEntityUtils;
@@ -36,7 +36,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Map;
-import java.util.Objects;
 
 @Mixin(value = LivingEntity.class)
 public abstract class LivingEntityMixin implements CosmeticInterface {
@@ -62,7 +61,14 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
     // COSMETIC, ARMOR, ELYTRA
     @Inject(method = "getEquipmentSlotForItem", at = @At(value = "HEAD"), cancellable = true)
     private void filament$customGetEquipmentSlotForItem(ItemStack itemStack, CallbackInfoReturnable<EquipmentSlot> cir) {
-        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.getEquipmentSlot() != EquipmentSlot.MAINHAND)  {
+        if (itemStack.has(FilamentComponents.SKIN_DATA_COMPONENT)) {
+            var wrapped = itemStack.get(FilamentComponents.SKIN_DATA_COMPONENT);
+            if (wrapped.getItem() instanceof SimpleItem simpleItem && simpleItem.getEquipmentSlot() != EquipmentSlot.MAINHAND) {
+                cir.setReturnValue(simpleItem.getEquipmentSlot());
+                return;
+            }
+        }
+        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.getEquipmentSlot() != EquipmentSlot.MAINHAND) {
             cir.setReturnValue(simpleItem.getEquipmentSlot());
         }
     }
@@ -74,8 +80,8 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
             return;
         }
 
-        if (oldItemStack.getItem() instanceof SimpleItem simpleItem && CosmeticUtil.isCosmetic(oldItemStack)) {
-            var slot = simpleItem.get(Behaviours.COSMETIC).getConfig().slot;
+        if (CosmeticUtil.isCosmetic(oldItemStack)) {
+            EquipmentSlot slot = this.getEquipmentSlotForItem(oldItemStack);
             if (slot == equipmentSlot) {
                 filament$destroyHolder(slot.getName());
                 FilamentCosmeticEvents.UNEQUIPPED.invoker().unequipped(LivingEntity.class.cast(this), oldItemStack, newItemStack);
@@ -91,8 +97,9 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
             }
         }
 
-        if (newItemStack.getItem() instanceof SimpleItem simpleItem && CosmeticUtil.isCosmetic(newItemStack)) {
-            var slot = simpleItem.get(Behaviours.COSMETIC).getConfig().slot;
+        var newIsCosmetic = CosmeticUtil.isCosmetic(newItemStack);
+        if (newIsCosmetic) {
+            var slot = this.getEquipmentSlotForItem(newItemStack);
             if (slot == equipmentSlot || (oldItemStack.isEmpty() && equipmentSlot != EquipmentSlot.MAINHAND)) {
                 filament$destroyHolder(slot.getName());
                 FilamentCosmeticEvents.UNEQUIPPED.invoker().unequipped(LivingEntity.class.cast(this), oldItemStack, newItemStack);
@@ -130,7 +137,7 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
     @Unique
     @Override
     public void filament$addHolder(LivingEntity livingEntity, Item simpleItem, ItemStack itemStack, String slot) {
-        Cosmetic.Config cosmeticData = CosmeticUtil.getCosmeticData(simpleItem);
+        Cosmetic.Config cosmeticData = CosmeticUtil.getCosmeticData(itemStack);
 
         ElementHolder holder = null;
 

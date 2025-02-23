@@ -72,6 +72,6 @@ public class Behaviours {
         return BehaviourRegistry.registerBehaviour(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, name), type);
     }
 
-    public static void init() {
+    public static void register() {
     }
 }

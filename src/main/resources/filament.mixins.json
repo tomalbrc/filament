@@ -38,7 +38,8 @@
     "behaviour.trap.MobMixin",
     "behaviour.trim.ItemStackPacketCodecMixin",
     "behaviour.trim.RegistryDataLoaderMixin",
-    "behaviour.trim.SmithingTrimRecipeMixin"
+    "behaviour.trim.SmithingTrimRecipeMixin",
+    "component.skin.ItemMixin"
   ],
   "injectors": {
     "defaultRequire": 1,

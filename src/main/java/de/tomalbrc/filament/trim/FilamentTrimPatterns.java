@@ -2,6 +2,7 @@ package de.tomalbrc.filament.trim;
 
 import com.mojang.serialization.Lifecycle;
 import de.tomalbrc.filament.behaviour.item.Armor;
+import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.FilamentConfig;
 import de.tomalbrc.filament.util.Json;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
@@ -168,7 +169,7 @@ public class FilamentTrimPatterns {
                 Component.literal("-"),
                 false // decal
         );
-        return registry.register(key, armorTrimPattern, new RegistrationInfo(Optional.of(new KnownPack("filament", "filament", SharedConstants.getCurrentVersion().getId())), Lifecycle.stable()));
+        return registry.register(key, armorTrimPattern, new RegistrationInfo(Optional.of(new KnownPack(Constants.MOD_ID, Constants.MOD_ID, SharedConstants.getCurrentVersion().getId())), Lifecycle.stable()));
     }
 
     private static ResourceKey<TrimPattern> of(ResourceLocation resourceLocation) {
