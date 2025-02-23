@@ -81,7 +81,7 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
 
     @Inject(method = "onEquipItem", at = @At(value = "HEAD"))
     private void filament$customOnEquipItem(EquipmentSlot equipmentSlot, ItemStack oldItemStack, ItemStack newItemStack, CallbackInfo ci) {
-        if (equipmentSlot == EquipmentSlot.HEAD) {
+        if (equipmentSlot == EquipmentSlot.HEAD || equipmentSlot == EquipmentSlot.OFFHAND || equipmentSlot == EquipmentSlot.MAINHAND) {
             return;
         }
 
