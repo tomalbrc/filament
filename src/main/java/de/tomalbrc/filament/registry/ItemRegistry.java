@@ -9,12 +9,14 @@ import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.util.*;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,6 +50,8 @@ public class ItemRegistry {
             for (TypedDataComponent component : data.vanillaItem().components()) {
                 properties.component(component.type(), component.value());
             }
+            if (data.vanillaItem() instanceof ArmorItem armorItem)
+                properties.component(DataComponents.ATTRIBUTE_MODIFIERS, armorItem.getDefaultAttributeModifiers());
         }
 
         for (TypedDataComponent component : data.components()) {

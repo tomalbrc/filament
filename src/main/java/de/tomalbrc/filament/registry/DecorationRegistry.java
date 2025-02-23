@@ -20,6 +20,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.DyedItemColor;
@@ -71,6 +72,8 @@ public class DecorationRegistry {
             for (TypedDataComponent component : data.vanillaItem().components()) {
                 properties.component(component.type(), component.value());
             }
+            if (data.vanillaItem() instanceof ArmorItem armorItem)
+                properties.component(DataComponents.ATTRIBUTE_MODIFIERS, armorItem.getDefaultAttributeModifiers());
         }
         for (TypedDataComponent component : data.components()) {
             properties.component(component.type(), component.value());
