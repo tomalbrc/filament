@@ -35,7 +35,7 @@ public class SkinUtil {
     public static ItemStack wrap(ItemStack itemStack, ItemStack mod, ServerPlayer player) {
         if (itemStack.has(FilamentComponents.SKIN_DATA_COMPONENT)) {
             var wrappedItemStack = itemStack.get(FilamentComponents.SKIN_DATA_COMPONENT).copy();
-            if (wrappedItemStack != null && !wrappedItemStack.isEmpty()) {
+            if (!wrappedItemStack.isEmpty()) {
                 // important
                 var oldWrapped = wrappedItemStack;
                 if (wrappedItemStack.getItem() instanceof PolymerItem polymerItem) {
