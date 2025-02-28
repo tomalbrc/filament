@@ -1,6 +1,8 @@
 # Decoration Examples
 
-> **Note**: All fields support either camelCase or snake_case!
+~~~admonish info
+All fields support either camelCase or snake_case!
+~~~
 
 ### Animated chest with solid 1x1 solid collision:
 ```json5

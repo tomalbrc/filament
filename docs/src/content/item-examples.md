@@ -4,7 +4,9 @@ See the datapack in the GitHub repository for more examples!
 
 https://github.com/tomalbrc/filament/tree/main/example_datapack
 
-> **Note**: All fields support either camelCase or snake_case!
+~~~admonish info
+All fields support either camelCase or snake_case!
+~~~
 
 ### Clown horn intrument:
 **JSON**:

@@ -181,8 +181,8 @@ Makes the item edible for villagers (for villager breeding).
 
 Defines fuel behaviour for items, specifying their value used in furnaces and similar item-burning blocks.
 
-- **Fields**:
-  - `value`: The value associated with the fuel, determining burn duration. Defaults to `10`
+### Fields:
+- `value`: The value associated with the fuel, determining burn duration. Defaults to `10`
 
 <br>
 <br>
@@ -193,8 +193,8 @@ Defines fuel behaviour for items, specifying their value used in furnaces and si
 
 Gives the item the ability to till farmland, like vanilla hoes do, using 1 durability.
 
-- **Fields**:
-  - `sound`: Sound to play. Default to the vanilla hoe tilling sound `minecraft:item.hoe.till`
+### Fields:
+- `sound`: Sound to play. Default to the vanilla hoe tilling sound `minecraft:item.hoe.till`
 
 
 ---
@@ -203,8 +203,8 @@ Gives the item the ability to till farmland, like vanilla hoes do, using 1 durab
 
 Gives the item the ability to change blocks to path blocks, like vanilla shovels do, using 1 durability.
 
-- **Fields**:
-  - `sound`: Sound to play. Default to the vanilla shovel sound
+### Fields:
+- `sound`: Sound to play. Default to the vanilla shovel sound
 
 ---
 
@@ -212,8 +212,8 @@ Gives the item the ability to change blocks to path blocks, like vanilla shovels
 
 Gives the item the ability to shears blocks & plants, like vanilla shears do, using 1 durability.
 
-- **Fields**:
-  - `sound`: Sound to play. Default to the vanilla plant shearing sound
+### Fields:
+- `sound`: Sound to play. Default to the vanilla plant shearing sound
 
 ---
 
@@ -222,10 +222,10 @@ Gives the item the ability to shears blocks & plants, like vanilla shears do, us
 
 Defines instrument behaviour for items, similar to goat horns.
 
-- **Fields**:
-  - `sound`: The sound associated with the instrument. Empty by default
-  - `range`: The range of the instrument. Defaults to `0`
-  - `useDuration`: Delay in ticks for using the instrument. Defaults to `0`
+### Fields:
+- `sound`: The sound associated with the instrument. Empty by default
+- `range`: The range of the instrument. Defaults to `0`
+- `useDuration`: Delay in ticks for using the instrument. Defaults to `0`
 
 <br>
 <br>
@@ -237,8 +237,8 @@ Defines instrument behaviour for items, similar to goat horns.
 Gives the item the ability to strip Logs/scrape copper blocks, like an axe. Uses 1 durability.
 
 
-- **Fields**:
-  - `sound`: Sound to play. Default to the vanilla axe strip sound
+### Fields:
+- `sound`: Sound to play. Default to the vanilla axe strip sound
 
 ---
 
@@ -247,11 +247,11 @@ Gives the item the ability to strip Logs/scrape copper blocks, like an axe. Uses
 
 Defines trap behaviour for items capable of trapping specific entity types.
 
-- **Fields**:
-  - `types`: List of allowed entity types to trap. Example: `["minecraft:silverfish", "minecraft:spider"]`
-  - `requiredEffects`: List of required effects for the trap. Example: `["minecraft:weakness"]`
-  - `chance`: Chance of the trap triggering (`0`-`100`). Defaults to `50`
-  - `useDuration`: Use cooldown for the trap item. Defaults to `0`
+### Fields:
+- `types`: List of allowed entity types to trap. Example: `["minecraft:silverfish", "minecraft:spider"]`
+- `requiredEffects`: List of required effects for the trap. Example: `["minecraft:weakness"]`
+- `chance`: Chance of the trap triggering (`0`-`100`). Defaults to `50`
+- `useDuration`: Use cooldown for the trap item. Defaults to `0`
 
 <br>
 <br>
@@ -265,8 +265,8 @@ Allows you to assign a banner pattern to an item for use in Looms.
 
 See the `mynamespace:bannertestitem` item config in the example datapack in the GitHub repo.
 
-- **Fields**:
-  - `id`: The id of your banner_pattern in your datapack. Empty by default
+### Fields:
+- `id`: The id of your banner_pattern in your datapack. Empty by default
 
 <br>
 <br>
@@ -282,11 +282,11 @@ Allows to specify a power multiplier for shooting power. Supports firework rocke
 
 **Make sure to use `minecraft:bow` as `vanillaItem` in order for the item model overrides to work properly!**
 
-- **Fields**:
-  - `powerMultiplier`: The power multiplier. Defaults to `3`
-  - `supportedProjectiles`: List of supported items in the inventory for use with the bow. Defaults to `["minecraft:arrow", "minecraft:spectral_arrow"]`
-  - `supportedHeldProjectiles`: List of supported items for use when in main/offhand. Defaults to `["minecraft:arrow", "minecraft:spectral_arrow", "minecraft:firework_rocket"]`
-  - `shootSound`: The sound when shooting a projectile. Default to `minecraft:entity.arrow.shoot`
+### Fields:
+- `powerMultiplier`: The power multiplier. Defaults to `3`
+- `supportedProjectiles`: List of supported items in the inventory for use with the bow. Defaults to `["minecraft:arrow", "minecraft:spectral_arrow"]`
+- `supportedHeldProjectiles`: List of supported items for use when in main/offhand. Defaults to `["minecraft:arrow", "minecraft:spectral_arrow", "minecraft:firework_rocket"]`
+- `shootSound`: The sound when shooting a projectile. Default to `minecraft:entity.arrow.shoot`
 
 
 <br>
@@ -305,6 +305,8 @@ In order to automatically generate an item model for bows, you have to provide m
   }
 }
 ```
+
+Alternatively, you can use the `itemModel` field to provide your own item asset model
 
 ---
 
@@ -334,6 +336,8 @@ In order to automatically generate an item model for crossbows, you have to prov
 }
 ```
 
+Alternatively, you can use the `itemModel` field to provide your own item asset model.
+
 ### Fields:
 - `powerMultiplier`: The power multiplier. Defaults to `1`
 - `supportedProjectiles`: List of supported items in the inventory for use with the crossbow. Defaults to `["minecraft:arrow", "minecraft:spectral_arrow"]`
@@ -351,6 +355,10 @@ In order to automatically generate an item model for crossbows, you have to prov
 ## `shoot` behaviour
 
 Defines behaviour for items capable of shooting custom projectiles or being shot themselves.
+
+~~~admonish warning
+This behaviour is deprecated. Use `bow`, `crossbow` or `trident`
+~~~
 
 ### Fields:
 - `consumes`: Indicates whether shooting consumes the item. Defaults to `false`
@@ -382,6 +390,8 @@ In order to automatically generate an item model for shields, you have to provid
 }
 ```
 
+Alternatively, you can use the `itemModel` field to provide your own item asset model
+
 ---
 
 ## `fishing_rod` behaviour
@@ -401,6 +411,34 @@ In order to automatically generate an item model for fishing rods, you have to p
   }
 }
 ```
+
+Alternatively, you can use the `itemModel` field to provide your own item asset model
+
+---
+
+## `trident` behaviour
+
+~~~admonish warning
+This behaviour is experimental and only supported in minecraft 1.21.4 or later
+~~~
+
+Makes the item behave like a trident!
+
+This behaviour can automatically generate the item model predicate overrides for tridents.
+
+In order to automatically generate an item model for tridents, you will have to provide models for `default` and `cast` in the `itemResource` field:
+```json
+{
+  "itemResource": {
+    "models": {
+      "default": "minecraft:custom/trident/nether_trident",
+      "throwing": "minecraft:custom/trident/nether_trident_throwing"
+    }
+  }
+}
+```
+
+Alternatively, you can use the `itemModel` field to provide your own item asset model
 
 ---
 

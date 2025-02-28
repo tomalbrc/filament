@@ -214,7 +214,9 @@ Useful for bushes/plants/crops/flowers and more
 
 Defines the block as a redstone power source.
 
-> **Note**: The field of this behaviour can be mapped to a block-state.
+~~~admonish info
+The field of this behaviour can be mapped to a block-state.
+~~~
 
 Example:
 ```json5
@@ -344,7 +346,9 @@ Simple waterloggable block.
 
 Makes the block drop xp when being mined without the silk-touch enchantment.
 
+~~~admonish info
 The values of the `min` and `max` fields can be mapped to block-states.
+~~~
 
 Example:
 ```json
@@ -422,7 +426,9 @@ If the blocks in `grows` have directional/facing block state properties, they di
 
 Makes the block a gravity affected/falling block like sand or anvils.
 
-> **Note**: All fields of this behaviour can be mapped to a block-state.
+~~~admonish info
+All fields of this behaviour can be mapped to a block-state.
+~~~
 
 **Fields**:
 - `delayAfterPlace`: Delay in ticks before the block falls. Defaults to 2
@@ -463,7 +469,9 @@ Makes the block a gravity affected/falling block like sand or anvils.
 
 With this behaviour the block can be lit with flint and steel or redstone to spawn a TNT entity with the blockstate of this block.
 
-> **Note**: All fields of this behaviour can be mapped to a block-state.
+~~~admonish info
+All fields of this behaviour can be mapped to a block-state.
+~~~
 
 **Fields**:
   - unstable: Flag whether the block explodes when a player tries to break it. Defaults to `false`

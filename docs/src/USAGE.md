@@ -54,7 +54,9 @@ This will prevent the automatic generation of an item asset model.
 
 Item-, block- and decoration configuration files share some common fields.
 
-> **Note**: All fields support either camelCase or snake_case! You can choose!
+~~~admonish info
+All fields support either camelCase or snake_case! You can choose!
+~~~
 
 Those are:
 
