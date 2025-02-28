@@ -1,8 +1,7 @@
 ## Adding a custom tree / sapling
 
-TODO:
-- Blockbench model / texture
-- Where to save both in the resourcepack
-- Creating the config
-- datapack / configured_placement
-- Enabling autohost
+~~~admonish info
+This section of the documentation is incomplete. Contributions are welcome!
+Feel free to contribute on [GitHub](https://github.com/tomalbrc/filament).
+For now, use the example_datapack in the GitHub repo.
+~~~

@@ -1,5 +1,7 @@
 # Third party compatibility
 
+# Oraxen/ItemsAdder
+
 Filament has 2 options to make 
 1. Decoration `blocks` and `seat` rotations (`seat` behaviour) more similar to that of Oraxen / ItemsAdder - filaments placement for those is rotated by 180° b default.
 2. Change the display of cosmetics on the player, this uses the "head" as display context of the item. It also moves the backpack up, since filament uses item display entities instead of armor stands.
@@ -9,3 +11,13 @@ Those 2 options in filament.json are:
 - `alternative_cosmetic_placement`
 
 While filament does not support reading YAML files of third party mods/plugins, it should be possible to write a conversion script.
+
+# WorldEdit
+
+Everything should be fully compatible, the only known bug is decorations not appearing or being removed when cloning or moving an area. This can be fixed by a server restart
+
+---
+
+Client-side mod for improved rotation (less delay) of cosmetics:
+https://modrinth.com/mod/smoother-server-cosmetics
+by AmoAsterVT!

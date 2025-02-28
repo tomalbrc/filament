@@ -90,8 +90,41 @@ Example:
 }
 ```
 
+# Components
 
-## Behaviours 
+Filament comes with 2 components that any item to be skinned (visually) by any other item.
+
+You can for example create a diamond pickaxe skin that can be applied to a wooden pickaxe or a diamond. The wooden pickaxe would look like a diamond pickaxe but function like a wooden pickaxe. You could also allow the diamond pickaxe skin to be applied to shovels too!
+
+Filament cosmetics are also supported, which allows you to create cosmetic skins! 
+
+Player can simply drag a skin onto the item they want the skin applied to.
+
+## Skin Component Format
+
+The `filament:skin` component works similar to the `minecraft:repairable` component. You can either specify a list of items or an item-tag, for which item you want the skin to be applicable for.
+
+```json
+{
+  "components": {
+    "filament:skin": ["minecraft:wooden_pickaxe", "iron_pickaxe"]
+  }
+}
+```
+
+You can also use item-tags:
+```json
+{
+  "components": {
+    "filament:skin": "#minecraft:pickaxes"
+  }
+}
+```
+
+
+For everything else, use behaviours as described below.
+
+# Behaviours 
 
 Custom content is driven by something called `behaviours` in filament. 
 
@@ -101,7 +134,7 @@ This means that items, blocks and decorations are all capable of all item behavi
 
 Block behaviours are not compatible with decorations and vice versa.
 
-## Genuinely modded content!
+# Genuinely modded content!
 
 On the server-side of things, all your custom items and blocks are genuinely modded, meaning they have their own id, instead of 'just' being vanilla items with components, only obtainable via recipes for example.
 
@@ -111,4 +144,5 @@ For clients that don't have any mods or polymer installed, the item show up as t
 
 In 1.21.1, custom model data override predicates will be automatically generated. You can also set the vanilla custom model data components in the `components` field of a config to use your own values.
 This is not necessary in version 1.21.2 and above.
-For 1.21.4, the new item model will be automatically generated. You can set the `itemModel` to prevent that.
+
+For 1.21.4, the new item model will be automatically generated. You can set the `itemModel` field in the root of an item config to prevent that.

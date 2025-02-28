@@ -422,3 +422,23 @@ Example:
   }
 }
 ```
+
+---
+
+## `repairable` behaviour
+
+Backport of the `minecraft:repairable` component introduced in 1.21.2, only available for 1.21.1.
+
+### Fields:
+- `items`: List of items and or item-tags
+
+Example:
+```json
+{
+  "behaviour": {
+    "repairable": {
+      "items": ["minecraft:honeycomb", "#minecraft:candles"]
+    }
+  }
+}
+```
