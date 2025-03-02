@@ -353,19 +353,4 @@ public class SimpleItem extends BlockItem implements PolymerItem, Equipable, Beh
 
         return attackBonus;
     }
-
-    @Override
-    @Nullable
-    public DamageSource getDamageSource(LivingEntity livingEntity) {
-        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
-            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
-                var res = itemBehaviour.getDamageSource(livingEntity);
-                if (res != null) {
-                    return res;
-                }
-            }
-        }
-
-        return super.getDamageSource(livingEntity);
-    }
 }

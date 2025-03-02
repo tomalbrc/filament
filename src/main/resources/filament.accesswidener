@@ -12,4 +12,4 @@ accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties
 
 accessible field net/minecraft/world/item/HoeItem TILLABLES Ljava/util/Map;
 
-accessible method net/minecraft/world/item/MaceItem knockback (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/entity/Entity;)V
+accessible method net/minecraft/world/item/MaceItem knockback (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;)V
