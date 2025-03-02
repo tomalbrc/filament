@@ -11,3 +11,5 @@ accessible method net/minecraft/world/item/CrossbowItem getPowerForTime (ILnet/m
 accessible field net/minecraft/world/entity/item/PrimedTnt explosionPower F
 
 accessible field net/minecraft/world/item/HoeItem TILLABLES Ljava/util/Map;
+
+accessible method net/minecraft/world/item/MaceItem knockback (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/entity/Entity;)V

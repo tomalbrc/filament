@@ -24,6 +24,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -169,11 +171,26 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
 
     @Override
     public boolean hurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                var res = itemBehaviour.hurtEnemy(itemStack, livingEntity, livingEntity2);
+                if (res.isPresent()) {
+                    return res.orElseThrow();
+                }
+            }
+        }
+
         return this.components().has(DataComponents.TOOL);
     }
 
     @Override
     public void postHurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                itemBehaviour.postHurtEnemy(itemStack, livingEntity, livingEntity2);
+            }
+        }
+
         if (this.components().has(DataComponents.TOOL))
             itemStack.hurtAndBreak(1, livingEntity2, EquipmentSlot.MAINHAND);
     }
@@ -296,5 +313,33 @@ public class SimpleItem extends BlockItem implements PolymerItem, BehaviourHolde
         }
 
         return super.mineBlock(itemStack, level, blockState, blockPos, livingEntity);
+    }
+
+    /// Entity Damaging behaviours
+    @Override
+    public float getAttackDamageBonus(Entity entity, float f, DamageSource damageSource) {
+        float attackBonus = super.getAttackDamageBonus(entity, f, damageSource);
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                attackBonus += itemBehaviour.getAttackDamageBonus(entity, f, damageSource);
+            }
+        }
+
+        return attackBonus;
+    }
+
+    @Override
+    @Nullable
+    public DamageSource getDamageSource(LivingEntity livingEntity) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
+                var res = itemBehaviour.getDamageSource(livingEntity);
+                if (res != null) {
+                    return res;
+                }
+            }
+        }
+
+        return super.getDamageSource(livingEntity);
     }
 }
