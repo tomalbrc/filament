@@ -71,11 +71,17 @@ public interface ItemBehaviour<T> extends Behaviour<T> {
         return false;
     }
 
-    Optional<Boolean> hurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2);
+    default Optional<Boolean> hurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
+        return Optional.empty();
+    }
 
-    void postHurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2);
+    default void postHurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {}
 
-    float getAttackDamageBonus(Entity entity, float f, DamageSource damageSource);
+    default float getAttackDamageBonus(Entity entity, float f, DamageSource damageSource) {
+        return 0.f;
+    }
 
-    @Nullable DamageSource getDamageSource(LivingEntity livingEntity);
+    default @Nullable DamageSource getDamageSource(LivingEntity livingEntity) {
+        return null;
+    }
 }
