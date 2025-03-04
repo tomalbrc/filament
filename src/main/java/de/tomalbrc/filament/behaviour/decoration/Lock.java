@@ -39,7 +39,7 @@ public class Lock implements DecorationBehaviour<Lock.LockConfig> {
     public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
         if (this.unlocked) return InteractionResult.PASS;
 
-        Item key = this.lockConfig.key == null ? null : BuiltInRegistries.ITEM.get(this.lockConfig.key).orElseThrow().value();
+        Item key = this.lockConfig.key == null ? null : BuiltInRegistries.ITEM.getValue(this.lockConfig.key);
         ItemStack mainHandItem = player.getItemInHand(InteractionHand.MAIN_HAND);
         boolean hasHandItem = !mainHandItem.isEmpty();
         boolean holdsKeyAndIsValid = hasHandItem && key != null && mainHandItem.is(key);

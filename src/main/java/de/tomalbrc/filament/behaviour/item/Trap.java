@@ -54,14 +54,14 @@ public class Trap implements ItemBehaviour<Trap.Config> {
     public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
         var bucketData = itemStack.get(DataComponents.BUCKET_ENTITY_DATA);
         if (bucketData != null && bucketData.contains("Type")) {
-            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(bucketData.copyTag().getString("Type"))).orElseThrow().value();
+            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(ResourceLocation.parse(bucketData.copyTag().getString("Type")));
             list.add(Component.literal("Contains ").append(Component.translatable(type.getDescriptionId()))); // todo: make "Contains " translateable?
         } else {
             if (this.config.requiredEffects != null) {
                 list.add(Component.literal("Requires effects: "));
                 for (int i = 0; i < this.config.requiredEffects.size(); i++) {
                     var e = this.config.requiredEffects.get(i);
-                    list.add(Component.literal("› ").append(Component.translatable(BuiltInRegistries.MOB_EFFECT.get(e).orElseThrow().value().getDescriptionId()))); // todo: make "Contains " translateable?
+                    list.add(Component.literal("› ").append(Component.translatable(Objects.requireNonNull(BuiltInRegistries.MOB_EFFECT.getValue(e)).getDescriptionId()))); // todo: make "Contains " translateable?
                 }
             }
             list.add(Component.literal("Chance: " + this.config.chance + "%"));
@@ -114,7 +114,7 @@ public class Trap implements ItemBehaviour<Trap.Config> {
         if (bucketData != null) {
             var compoundTag = bucketData.copyTag();
 
-            EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(compoundTag.getString("Type"))).orElseThrow().value();
+            EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.getValue(ResourceLocation.parse(compoundTag.getString("Type")));
             Entity entity = entityType.spawn(serverLevel, blockPos.above(1), EntitySpawnReason.BUCKET);
             if (entity instanceof Mob mob) {
                 this.loadFromTag(mob, compoundTag);

@@ -12,7 +12,7 @@ public class StrippableRegistry {
     private static final Map<Block, Pair<ResourceLocation, ResourceLocation>> strippables = new Reference2ObjectArrayMap<>();
 
     public static Block get(Block block) {
-        return BuiltInRegistries.BLOCK.get(strippables.get(block).getFirst()).orElseThrow().value();
+        return BuiltInRegistries.BLOCK.getValue(strippables.get(block).getFirst());
     }
 
     public static ResourceLocation getLootTable(Block block) {

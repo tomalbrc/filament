@@ -72,7 +72,7 @@ public final class BlockData extends Data {
                 if (entry.getKey().equals("default")) {
                     var type = safeBlockModelType(this.blockModelType.getRawValue());
                     BlockState requestedState = type == null ? null : FilamentBlockResourceUtils.requestBlock(type, entry.getValue());
-                    val.put(BuiltInRegistries.BLOCK.get(id).orElseThrow().value().defaultBlockState(), BlockStateMeta.of(type == null ? Blocks.BEDROCK.defaultBlockState() : requestedState, entry.getValue()));
+                    val.put(BuiltInRegistries.BLOCK.getValue(id).defaultBlockState(), BlockStateMeta.of(type == null ? Blocks.BEDROCK.defaultBlockState() : requestedState, entry.getValue()));
                 } else {
                     BlockState state = blockState(String.format("%s[%s]", id, entry.getKey()));
                     BlockModelType type;

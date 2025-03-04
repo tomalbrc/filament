@@ -128,7 +128,7 @@ public class DecorationUtil {
     }
 
     public static ItemDisplayElement decorationItemDisplay(DecorationData data, Direction direction, float rotation) {
-        ItemDisplayElement itemDisplayElement = new ItemDisplayElement(BuiltInRegistries.ITEM.get(data.id()).orElseThrow().value());
+        ItemDisplayElement itemDisplayElement = new ItemDisplayElement(BuiltInRegistries.ITEM.getValue(data.id()));
         itemDisplayElement.setTeleportDuration(1);
 
         if (data != null && data.properties().glow) {

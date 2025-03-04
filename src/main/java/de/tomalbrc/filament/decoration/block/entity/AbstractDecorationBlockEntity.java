@@ -71,7 +71,7 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
         }
 
         if (this.itemStack == null || this.itemStack.isEmpty()) {
-            this.itemStack = BuiltInRegistries.ITEM.get(((DecorationBlock)this.getBlockState().getBlock()).getDecorationData().id()).orElseThrow().value().getDefaultInstance();
+            this.itemStack = BuiltInRegistries.ITEM.getValue(((DecorationBlock)this.getBlockState().getBlock()).getDecorationData().id()).getDefaultInstance();
         }
 
         if (!this.isMain())

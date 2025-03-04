@@ -17,7 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
@@ -66,7 +65,7 @@ public class Shoot implements ItemBehaviour<Shoot.ShootConfig> {
                 projectile.setXRot(user.getXRot());
                 projectile.setDeltaMovement(deltaMovement.x, deltaMovement.y, deltaMovement.z);
 
-                ItemStack projItem = this.config.projectile != null ? BuiltInRegistries.ITEM.get(this.config.projectile).orElseThrow().value().getDefaultInstance() : itemStack.copyWithCount(1);
+                ItemStack projItem = this.config.projectile != null ? BuiltInRegistries.ITEM.getValue(this.config.projectile).getDefaultInstance() : itemStack.copyWithCount(1);
                 projectile.setProjectileStack(projItem);
                 projectile.setPickupStack(projItem);
                 projectile.setOwner(user);
@@ -78,7 +77,7 @@ public class Shoot implements ItemBehaviour<Shoot.ShootConfig> {
             }
 
             level.addFreshEntity(projectile);
-            level.playSound(null, projectile, this.config.sound != null ? BuiltInRegistries.SOUND_EVENT.get(this.config.sound).orElseThrow().value() : SoundEvents.TRIDENT_THROW.value(), SoundSource.NEUTRAL, 1.0F, 1.0F);
+            level.playSound(null, projectile, this.config.sound != null ? BuiltInRegistries.SOUND_EVENT.getValue(this.config.sound) : SoundEvents.TRIDENT_THROW.value(), SoundSource.NEUTRAL, 1.0F, 1.0F);
             if (!user.isCreative() && this.config.consumes) {
                 itemStack.shrink(1);
             }

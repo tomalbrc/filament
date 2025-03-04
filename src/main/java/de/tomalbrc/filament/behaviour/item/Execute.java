@@ -48,7 +48,7 @@ public class Execute implements ItemBehaviour<Execute.Config>, BlockBehaviour<Ex
 
             if (this.config.sound != null) {
                 var sound = this.config.sound;
-                level.playSound(null, user, BuiltInRegistries.SOUND_EVENT.get(sound).orElseThrow().value(), SoundSource.NEUTRAL, 1.0F, 1.0F);
+                level.playSound(null, user, BuiltInRegistries.SOUND_EVENT.getValue(sound), SoundSource.NEUTRAL, 1.0F, 1.0F);
             }
 
             if (this.config.consumes) {
@@ -87,7 +87,7 @@ public class Execute implements ItemBehaviour<Execute.Config>, BlockBehaviour<Ex
             }
             if (this.config.sound != null) {
                 var sound = this.config.sound;
-                user.serverLevel().playSound(null, user, BuiltInRegistries.SOUND_EVENT.get(sound).orElseThrow().value(), SoundSource.NEUTRAL, 1.0F, 1.0F);
+                user.serverLevel().playSound(null, user, BuiltInRegistries.SOUND_EVENT.getValue(sound), SoundSource.NEUTRAL, 1.0F, 1.0F);
             }
 
             if (this.config.consumes) {

@@ -43,7 +43,7 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
 
     public List<ItemStack> getDrops() {
         if (this.getDecorationData().properties().drops) {
-            return List.of(BuiltInRegistries.ITEM.get(this.decorationId).orElseThrow().value().getDefaultInstance());
+            return List.of(BuiltInRegistries.ITEM.getValue(this.decorationId).getDefaultInstance());
         }
         return List.of();
     }
@@ -58,7 +58,7 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
             }
 
             if (data.properties().showBreakParticles)
-                DecorationUtil.showBreakParticle((ServerLevel) level, data.properties().useItemParticles ? BuiltInRegistries.ITEM.get(this.decorationId).orElseThrow().value().getDefaultInstance() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+                DecorationUtil.showBreakParticle((ServerLevel) level, data.properties().useItemParticles ? BuiltInRegistries.ITEM.getValue(this.decorationId).getDefaultInstance() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
 
             if (!level.isClientSide() && data.properties().drops && blockState.getBlock() instanceof SimpleDecorationBlock) {
                 for (ItemStack drop : this.getDrops()) {

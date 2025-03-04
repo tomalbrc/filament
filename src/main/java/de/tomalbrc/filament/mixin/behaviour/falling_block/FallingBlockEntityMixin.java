@@ -42,7 +42,7 @@ public abstract class FallingBlockEntityMixin extends Entity {
                     if (conf.damagedBlock == null) {
                         this.cancelDrop = true;
                     } else {
-                        this.blockState = BuiltInRegistries.BLOCK.get(conf.damagedBlock.getValue(this.blockState)).orElseThrow().value().withPropertiesOf(this.blockState);
+                        this.blockState = BuiltInRegistries.BLOCK.getValue(conf.damagedBlock.getValue(this.blockState)).withPropertiesOf(this.blockState);
                     }
                     cir.setReturnValue(false);
                 }
