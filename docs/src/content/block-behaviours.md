@@ -161,8 +161,7 @@ You can make farmer villagers able to plant the seeds using the item tag `villag
 - `age`: 0...maxAge-1
 ~~~
 
-~~~admonish info
-### Config Fields:
+~~~admonish info "Fields"
 - `maxAge`: maximum age steps of this block (from 0 to maxAge-1). Defaults to 4.
 - `minLightLevel`: Minimum light level this crop needs to survive. Defaults to 8.
 - `bonusRadius`: Radius to check for bonus blocks for. Defaults to 1.
@@ -189,8 +188,7 @@ You add your own configured placement for trees using vanilla datapack mechanics
 - `stage`: 0 to 1. You can provide a single model to use for both states, use `default` as key in that case.
 ~~~
 
-~~~admonish info
-### Config Fields:
+~~~admonish info "Fields"
 - `tree`: Identifier for a configured_placement (add via datapack or use vanilla ones)
 - `minLightLevel`: Defaults to `9`
 - `secondaryChance`: Chance between 0 and 1 for `secondaryMegaTree` or `secondaryFlowers` placement to be used. Defaults to `0`
@@ -215,8 +213,7 @@ The behaviour will automatically check for and apply any `facing` or `axis` bloc
 
 Useful for bushes/plants/crops/flowers and more
 
-~~~admonish info
-### Config Fields:
+~~~admonish info "Fields"
   - `blocks`: List of blocks this block can survive on. 
     - Example: `blocks: ["minecraft:stone", "minecraft:sand"]`
   - `tags`: List of block-tags this block can survive on. 
