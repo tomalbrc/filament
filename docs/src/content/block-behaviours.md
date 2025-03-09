@@ -161,7 +161,7 @@ You can make farmer villagers able to plant the seeds using the item tag `villag
 - `age`: 0...maxAge-1
 ~~~
 
-~~~admonish info "Fields"
+~~~admonish info "Configuration Fields"
 - `maxAge`: maximum age steps of this block (from 0 to maxAge-1). Defaults to 4.
 - `minLightLevel`: Minimum light level this crop needs to survive. Defaults to 8.
 - `bonusRadius`: Radius to check for bonus blocks for. Defaults to 1.
@@ -188,7 +188,7 @@ You add your own configured placement for trees using vanilla datapack mechanics
 - `stage`: 0 to 1. You can provide a single model to use for both states, use `default` as key in that case.
 ~~~
 
-~~~admonish info "Fields"
+~~~admonish info "Configuration Fields"
 - `tree`: Identifier for a configured_placement (add via datapack or use vanilla ones)
 - `minLightLevel`: Defaults to `9`
 - `secondaryChance`: Chance between 0 and 1 for `secondaryMegaTree` or `secondaryFlowers` placement to be used. Defaults to `0`
@@ -213,7 +213,7 @@ The behaviour will automatically check for and apply any `facing` or `axis` bloc
 
 Useful for bushes/plants/crops/flowers and more
 
-~~~admonish info "Fields"
+~~~admonish info "Configuration Fields"
   - `blocks`: List of blocks this block can survive on. 
     - Example: `blocks: ["minecraft:stone", "minecraft:sand"]`
   - `tags`: List of block-tags this block can survive on. 
@@ -226,7 +226,7 @@ Useful for bushes/plants/crops/flowers and more
 
 Defines the block as a redstone power source.
 
-~~~admonish info "Fields"
+~~~admonish info "Configuration Fields"
 - `value`: The redstone power value the block emits (can be mapped). Defaults to 15
 ~~~
 
@@ -268,7 +268,7 @@ The field of this behaviour can be mapped to a block-state.
 
 Defines the block as a redstone repeater with configurable delay and loss.
 
-~~~admonish info "Fields"
+~~~admonish info "Configuration Fields"
 - `delay`: Delay in ticks. Defaults to 0
 - `loss`: Power loss during transfer. Defaults to 0
 ~~~
@@ -284,7 +284,7 @@ Defines the block as a redstone repeater with configurable delay and loss.
 
 Supplies a `powerlevel` blockstate and changes to it depending on the input redstone signal.
 
-~~~admonish info "Fields"
+~~~admonish info "Configuration Fields"
 - `max`: Maximum powerlevel this block can display
 ~~~
 
@@ -298,7 +298,7 @@ Supplies a `powerlevel` blockstate and changes to it depending on the input reds
 
 Defines the block as strippable, replacing it with another block when interacted with an axe.
 
-~~~admonish info "Fields"
+~~~admonish info "Configuration Fields"
 - `replacement`: The identifier of the block to replace the current block with. Example: `minecraft:stone`
 - `lootTable`: Identifier for a loot table to use when the block is stripped. Example: `minecraft:bell`
 ~~~
@@ -327,7 +327,7 @@ Trapdoor like block.
 - `waterlogged`: true, false
 ~~~
 
-~~~admonish info "Fields"
+~~~admonish info "Configuration Fields"
 - `canOpenByWindCharge`: Whether the trapdoor can be opened by a wind charge. Defaults to `true`
 - `canOpenByHand`: Whether the trapdoor can be opened by hand. Defaults to `true`
 - `openSound`: Open sound. Defaults to wooden trapdoor open sound.
@@ -348,7 +348,7 @@ Comes with all door block state properties (hinge, open, powered, etc.)
 - `hinge`: left, right
 ~~~
 
-~~~admonish info "Fields"
+~~~admonish info "Configuration Fields"
 - `canOpenByWindCharge`: Whether the door can be opened by a wind charge. Defaults to `true`
 - `canOpenByHand`: Whether the door can be opened by hand. Defaults to `true`
 - `openSound`: Open sound. Defaults to wooden door open sound.
@@ -367,7 +367,7 @@ Simple waterloggable block.
 
 Makes the block drop xp when being mined without the silk-touch enchantment.
 
-~~~admonish info "Fields"
+~~~admonish info "Configuration Fields"
 - `min`: Minimum amount of XP to drop
 - `max`: Maximum amount of XP to drop
 ~~~
@@ -413,7 +413,7 @@ The values of the `min` and `max` fields can be mapped to block-states.
 
 Executes a command on block interaction from console as player (@s).
 
-~~~admonish info "Fields"
+~~~admonish info "Configuration Fields"
 - `consumes`: Flag whether the block should be broken after running the command(s). Defaults to `false`
 - `dropBlock`: Flag whether the block should drop items when broken. Defaults to `false`
 - `command`: The command string to execute. Empty by default
@@ -427,7 +427,7 @@ Executes a command on block interaction from console as player (@s).
 
 Defines the block as oxidizing block, similar to the vanilla copper blocks, randomly replacing it with another block when it "ages". Can be reverted/scraped by axes and resets with lightning bolts like vanilla copper blocks.
 
-~~~admonish info "Fields"
+~~~admonish info "Configuration Fields"
   - `replacement`: The identifier of the block to replace the current block with (e.g., "minecraft:stone").
   - `weatherState`: The current weathering state of this block. Can be `unaffected`, `exposed`, `weathered`, `oxidized`. Defaults to `unaffected`. A `weatherState` of `oxidized` will not oxidize any further.
 ~~~
@@ -441,7 +441,7 @@ The sides, blocks and chance can be configured.
 
 If the blocks in `grows` have directional/facing block state properties, they direction of the side the block is growing from will be set.
 
-~~~admonish info "Fields"
+~~~admonish info "Configuration Fields"
 - `chance`: Chance of the block to grow another block or move a block to the next growth stage in percent, from 0 to 100. Defaults to 20
 - `sides`: List of sides blocks can grow out. Can be `north`, `south`, `east`, `west`, `up` or `down`. Defaults to all directions
 - `grows`: List of id's of blocks for the growth stages. Example: `["minecraft:chain", "minecraft:end_rod"]`
@@ -457,7 +457,7 @@ Makes the block a gravity affected/falling block like sand or anvils.
 All fields of this behaviour can be mapped to a block-state.
 ~~~
 
-~~~admonish info "Fields"
+~~~admonish info "Configuration Fields"
 - `delayAfterPlace`: Delay in ticks before the block falls. Defaults to 2
 - `heavy`: To cause anvil-like damage. Defaults to false
 - `damagePerDistance`: Accumulated damage per block fallen
@@ -501,7 +501,7 @@ With this behaviour the block can be lit with flint and steel or redstone to spa
 All fields of this behaviour can be mapped to a block-state.
 ~~~
 
-~~~admonish info "Fields"
+~~~admonish info "Configuration Fields"
 - unstable: Flag whether the block explodes when a player tries to break it. Defaults to `false`
 - explosionPower: Explosion power. Defaults to `4.0`
 - fuseTime: Fuse time (delay until the tnt entity explodes). Defaults to `80`
