@@ -1,6 +1,6 @@
 # Decoration Examples
 
-~~~admonish info
+~~~admonish tip
 All fields support either camelCase or snake_case!
 ~~~
 

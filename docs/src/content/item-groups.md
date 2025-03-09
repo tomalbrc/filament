@@ -5,6 +5,7 @@ You can add custom item-groups for your items/blocks and decorations.
 This can be done by adding an `item-groups.json` file in the root of the `filament` directory of your datapack.
 
 Here is an example of an `item-groups.json` file:
+~~~admonish example
 ```json
 [
   {
@@ -18,6 +19,7 @@ Here is an example of an `item-groups.json` file:
   }
 ]
 ```
+~~~
 
 ## Fields
 
@@ -40,16 +42,20 @@ The name displayed for the item group - supports Placeholder API's basic text fo
 The translation key looks like this: `mynamespace.itemGroup.mygroup` for an `id` of `mynamespace:mygroup`.
 
 So an `en_US.json` for a resrouce-pack might look like this:
+~~~admonish example
 ```json
 {
   "mynamespace.itemGroup.mygroup": "My Group"
 }
 ```
+~~~
 
 or for german (`de_DE.json`):
 
+~~~admonish example
 ```json
 {
   "mynamespace.itemGroup.mygroup": "Meine Gruppe"
 }
 ```
+~~~

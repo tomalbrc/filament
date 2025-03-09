@@ -66,7 +66,8 @@ This overwrites the itemResource field.
 
 Specifies the resource(s) for the item model. Depending on the item's behaviour(s), it may use additional keys/fields in `itemResource`.
 
-**Fields**:
+~~~admonish info
+### Fields:
   - `models`: An object containing model definitions.
     - `default`: The default model for the item.
     - Additional keys may be required depending on the item's behaviour (e.g., `trapped` for a trap behaviour or `pulling_0`, `pulling_1`, `pulling_2` for bows).
@@ -75,8 +76,10 @@ Specifies the resource(s) for the item model. Depending on the item's behaviour(
     - `default`: The textures for the default model of the item.
       - `layer0`: 
     - Additional keys may be required depending on the item's behaviour.
+~~~
 
 Example for automatic model generation based on textures:
+~~~admonish example
 ```yaml
 item_resource:
   parent: item/generated
@@ -86,6 +89,8 @@ item_resource:
     trapped:
       layer0: item/traps/allay_bottle_trapped
 ```
+~~~
+
 This automatically creates:
 - The item asset in `assets/<namespace>/items/<item-id>`
 - Item model in `assets/<namespace>/models/item/<item-id>_default`

@@ -32,7 +32,7 @@ You can map the `blockModelType` field of block configs to blockstates, this all
 
 In some cases, for example when using the `simple_waterloggable` behaviour, you might want to specify the waterlogged state for your custom block.
 
-Example:
+~~~admonish example
 ```json
 {
   "id": "mynamespace:half_slab",
@@ -60,3 +60,4 @@ Example:
   }
 }
 ```
+~~~

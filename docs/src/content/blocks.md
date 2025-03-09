@@ -13,6 +13,7 @@ You can also set components for the block-item, similar to item configurations u
 ## Contents
 
 Blocks like candles or turtle eggs, with mutiple blocks in 1:
+~~~admonish example
 ```json5
 {
   "id": "mynamespace:pebbles",
@@ -43,6 +44,7 @@ Blocks like candles or turtle eggs, with mutiple blocks in 1:
   }
 }
 ```
+~~~
 
 The fields `id`, `blockResource`, and `blockModelType` are required to be set.
 
@@ -53,7 +55,9 @@ The fields `id`, `blockResource`, and `blockModelType` are required to be set.
 ## `id` (required): 
 Identifier of the block and its item.
 
+~~~admonish example
 Example: `mynamespace:myblock`
+~~~
 
 ---
 
@@ -73,6 +77,7 @@ For now, it is only possible to provide block models directly, support for just 
 The keys work similar to the vanilla blockstate files in resourcepacks, you specify the model to use based on the block-state.
 
 An example for the `count` block-behaviour:
+~~~admonish example
 ```json
 {
   "blockResource": {
@@ -85,6 +90,7 @@ An example for the `count` block-behaviour:
   }
 }
 ```
+~~~
 
 ---
 
@@ -102,7 +108,7 @@ An object that allows you to provide different item-models which may be required
 
 The `trapped` behaviour for example requires a model for the `trapped` key.
 
-Example
+~~~admonish example
 ```json
 {
   "itemResource": {
@@ -112,8 +118,8 @@ Example
     }
   }
 }
-
 ```
+~~~
 
 ---
 
@@ -121,7 +127,9 @@ Example
 
 The block model to use/retexture. See [Block Model Types](block-model-types.md) for a list of options.
 
-***For some block behaviours like `slab` it may be required to leave this field empty!***
+~~~admonish warning
+For some block behaviours like `slab` it may be required to leave this field empty!
+~~~
 
 ---
 
@@ -141,7 +149,7 @@ Defines the item-group for this blocks' item. See [Item Groups](item-groups.md) 
 
 An object with minecraft components used for the item.
 
-Example:
+~~~admonish example
 ```json
 {
     "components": {
@@ -163,3 +171,4 @@ Example:
   }
 }
 ```
+~~~

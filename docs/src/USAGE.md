@@ -54,7 +54,7 @@ This will prevent the automatic generation of an item asset model.
 
 Item-, block- and decoration configuration files share some common fields.
 
-~~~admonish info
+~~~admonish tip
 All fields support either camelCase or snake_case! You can choose!
 ~~~
 
@@ -69,7 +69,8 @@ Those are:
 - `blockTags`: Block tag of the block/decoration-block (not supported for items)
 
 Items, Blocks and Decorations also allow to set item/block tags in the config file.
-Example:
+
+~~~admonish example
 ```json
 {
   "id": "mynamespace:example_item",
@@ -91,6 +92,7 @@ Example:
   }
 }
 ```
+~~~
 
 # Components
 

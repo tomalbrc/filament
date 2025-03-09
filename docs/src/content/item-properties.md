@@ -4,6 +4,7 @@ Item properties are shared between all content types: Items, blocks and decorati
 All properties are optional.
 
 Example with all properties set:
+~~~admonish example
 ```json
 {
   "id": "mynamespace:clown_horn",
@@ -19,6 +20,7 @@ Example with all properties set:
   }
 }
 ```
+~~~
 
 ### `durability`:
 
@@ -36,12 +38,14 @@ Defaults to `64`
 
 List of strings to use as item lore. Supports PlaceholderAPI's simple text formatting.
 
+~~~admonish example
 Example: `<c:red>MyLore</c>`
 
 Example: `<lang:'mymod.lore.mylore'>`
+~~~
 
 ### `fireResistant`:
 
-Boolean (true/false) wether the item is fire-resistant.
+Boolean (true/false) whether the item is fire-resistant.
 
 Defaults to `false`

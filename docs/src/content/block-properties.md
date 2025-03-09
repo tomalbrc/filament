@@ -50,7 +50,7 @@ Defaults to `0`
 
 Boolean (true/false) indicating whether the block can conduct redstone signals.
 
-~~~admonish info
+~~~admonish tip
 All fields of this property can be mapped to a block-state.
 ~~~
 
@@ -73,11 +73,13 @@ Defaults to `true`
 
 Light level this block emits.
 
-~~~admonish info
+~~~admonish tip
 All fields of this property can be mapped to a block-state.
 ~~~
 
 The value of this property can be mapped to a blockstate like this:
+
+~~~admonish example
 ```json5
 {
   "properties": {
@@ -89,6 +91,7 @@ The value of this property can be mapped to a blockstate like this:
   }
 }
 ```
+~~~
 
 Defaults to `0`
 
@@ -126,4 +129,6 @@ Allows to override the default loot table
 
 Example: `minecraft:block/dirt`
 
-Defaults to `<namespace>:block/<blockname>`. So for a block "mynamespace:myblock" the default would be `mynamespace:block/myblock`
+Defaults to `<namespace>:block/<blockname>`. 
+
+So for a block "mynamespace:myblock", the default would be `mynamespace:block/myblock`

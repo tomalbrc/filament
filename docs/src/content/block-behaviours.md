@@ -95,14 +95,17 @@ The block acts as a redstone powersource of level 15 and a repeater/relay and is
 While possible, you probably don't want to combine `powersource` with `repeater` for actual blocks/items for obvious reasons.
 
 ---
+
 # Behaviours
 
 ## `axis` behaviour
 
 Gives the block an `axis` property/block-state similar to wooden logs/pillars and handles placement.
 
-- **Block-State-Properties to provide models for**:
-  - `axis`: x, y, z
+~~~admonish info
+### Block-State-Properties to provide models for:
+- `axis`: x, y, z
+~~~
 
 ---
 
@@ -112,8 +115,10 @@ Gives the block a `count` property/block-state.
 
 Works similar to turtle eggs or candles, allows you to place "multiple blocks/items" into one block.
 
-- **Block-State-Properties to provide models for**:
-  - `count`: 1...max
+~~~admonish info
+### Block-State-Properties to provide models for:
+- `count`: 1...max
+~~~
 
 ---
 
@@ -121,8 +126,10 @@ Works similar to turtle eggs or candles, allows you to place "multiple blocks/it
 
 Gives the block a `facing` property/block-state similar to wooden logs/pillars and handles placement.
 
-- **Block-State-Properties to provide models for**:
+~~~admonish info
+### Block-State-Properties to provide models for:
   - `facing`: north, east, south, west, up, down
+~~~
 
 ---
 
@@ -131,8 +138,10 @@ Gives the block a `facing` property/block-state similar to wooden logs/pillars a
 Gives the block a `facing` property/block-state similar to furnaces and handles placement.
 Does not support up and down facing directions.
 
-- **Block-State-Properties to provide models for**:
-  - `facing`: north, east, south, west
+~~~admonish info
+### Block-State-Properties to provide models for:
+- `facing`: north, east, south, west
+~~~
 
 ---
 
@@ -152,16 +161,20 @@ For bee pollination, use the block tag `bee_growables`.
 
 You can make farmer villagers able to plant the seeds using the item tag `villager_plantable_seeds`. Villagers will only work on crops that are on top of farmland blocks (vanilla limitation).
 
-- **Block-State-Properties to provide models for**:
-  - `age`: 0...maxAge-1
+~~~admonish info
+### Block-State-Properties to provide models for:
+- `age`: 0...maxAge-1
+~~~
 
-- **Fields**:
-  - `maxAge`: maximum age steps of this block (from 0 to maxAge-1). Defaults to 4.
-  - `minLightLevel`: Minimum light level this crop needs to survive. Defaults to 8.
-  - `bonusRadius`: Radius to check for bonus blocks for. Defaults to 1.
-  - `bonusBlock`: Bonus block to check for. More bonus blocks means faster growth. Defaults to `minecraft:farmland`.
-  - `villagerInteraction`: Allows farmer villagers to break and plant the custom crop. Defaults to `true`.
-  - `beeInteraction`: Allows bees to pollinate the crop to increase its age. Defaults to `true`.
+~~~admonish info
+### Config Fields:
+- `maxAge`: maximum age steps of this block (from 0 to maxAge-1). Defaults to 4.
+- `minLightLevel`: Minimum light level this crop needs to survive. Defaults to 8.
+- `bonusRadius`: Radius to check for bonus blocks for. Defaults to 1.
+- `bonusBlock`: Bonus block to check for. More bonus blocks means faster growth. Defaults to `minecraft:farmland`.
+- `villagerInteraction`: Allows farmer villagers to break and plant the custom crop. Defaults to `true`.
+- `beeInteraction`: Allows bees to pollinate the crop to increase its age. Defaults to `true`.
+~~~
 
 ---
 
@@ -173,23 +186,29 @@ All identifiers for the configured_placements are optional, they will only get u
 
 You add your own configured placement for trees using vanilla datapack mechanics.
 
+~~~admonish tip
 #### Checkout the example datapack for the test_tree block!
+~~~
 
-- **Block-State-Properties to provide models for**:
-  - `stage`: 0 to 1. You can provide a single model to use for both states, use `default` as key in that case.
+~~~admonish info
+### Block-State-Properties to provide models for:
+- `stage`: 0 to 1. You can provide a single model to use for both states, use `default` as key in that case.
+~~~
 
-- **Fields**:
-  - `tree`: Identifier for a configured_placement (add via datapack or use vanilla ones)
-  - `minLightLevel`: Defaults to `9`
-  - `secondaryChance`: Chance between 0 and 1 for `secondaryMegaTree` or `secondaryFlowers` placement to be used. Defaults to `0`
-  - `randomTickGrowthChance`: Defaults to `0.15`
-  - `bonemealGrowthChance`: Defaults to `0.45`
-  - `megaTree`: Identifier for a configured_placement. Will get used for 2x2 sapling placements
-  - `secondaryMegaTree`: Identifier for a configured_placement. Alternative to `megaTree` based on `secondaryChance`
-  - `tree`: Identifier for a configured_placement. Normal tree without flower
-  - `secondaryTree`: Identifier for a configured_placement. Alternative to `tree` based on `secondaryChance`
-  - `flowers`: Identifier for a configured_placement. Used when there is a flower neaby.
-  - `secondaryFlowers`: Identifier for a configured_placement. Alternative to `flowers` based on `secondaryChance`
+~~~admonish info
+### Config Fields:
+- `tree`: Identifier for a configured_placement (add via datapack or use vanilla ones)
+- `minLightLevel`: Defaults to `9`
+- `secondaryChance`: Chance between 0 and 1 for `secondaryMegaTree` or `secondaryFlowers` placement to be used. Defaults to `0`
+- `randomTickGrowthChance`: Defaults to `0.15`
+- `bonemealGrowthChance`: Defaults to `0.45`
+- `megaTree`: Identifier for a configured_placement. Will get used for 2x2 sapling placements
+- `secondaryMegaTree`: Identifier for a configured_placement. Alternative to `megaTree` based on `secondaryChance`
+- `tree`: Identifier for a configured_placement. Normal tree without flower
+- `secondaryTree`: Identifier for a configured_placement. Alternative to `tree` based on `secondaryChance`
+- `flowers`: Identifier for a configured_placement. Used when there is a flower neaby.
+- `secondaryFlowers`: Identifier for a configured_placement. Alternative to `flowers` based on `secondaryChance`
+~~~
 
 ---
 
@@ -202,11 +221,13 @@ The behaviour will automatically check for and apply any `facing` or `axis` bloc
 
 Useful for bushes/plants/crops/flowers and more
 
-- **Fields**:
+~~~admonish info
+### Config Fields:
   - `blocks`: List of blocks this block can survive on. 
     - Example: `blocks: ["minecraft:stone", "minecraft:sand"]`
   - `tags`: List of block-tags this block can survive on. 
     - Example: `tags: ["minecraft:dirt", "minecraft:sculk_replaceable"]`
+~~~
 
 ---
 
@@ -215,10 +236,15 @@ Useful for bushes/plants/crops/flowers and more
 Defines the block as a redstone power source.
 
 ~~~admonish info
+### Fields:
+- `value`: The redstone power value the block emits (can be mapped). Defaults to 15
+~~~
+
+~~~admonish tip
 The field of this behaviour can be mapped to a block-state.
 ~~~
 
-Example:
+~~~admonish example
 ```json5
 
 {
@@ -232,7 +258,9 @@ Example:
   }
 }
 ```
+~~~
 
+~~~admonish example
 Example with constant value:
 ```json5
 {
@@ -243,9 +271,7 @@ Example with constant value:
   }
 }
 ```
-
-- **Fields**:
-    - `value`: The redstone power value the block emits (can be mapped). Defaults to 15
+~~~
 
 ---
 
@@ -253,14 +279,17 @@ Example with constant value:
 
 Defines the block as a redstone repeater with configurable delay and loss.
 
-- **Fields**:
-    - `delay`: Delay in ticks. Defaults to 0
-    - `loss`: Power loss during transfer. Defaults to 0
+~~~admonish info
+### Fields:
+- `delay`: Delay in ticks. Defaults to 0
+- `loss`: Power loss during transfer. Defaults to 0
+~~~
 
-
-- **Block-State-Properties to provide models for**:
-  - `powered`: true, false
-  - `facing`: north, east, south, west, up, down
+~~~admonish info
+### Block-State-Properties to provide models for:
+- `powered`: true, false
+- `facing`: north, east, south, west, up, down
+~~~
 
 ---
 
@@ -268,12 +297,15 @@ Defines the block as a redstone repeater with configurable delay and loss.
 
 Supplies a `powerlevel` blockstate and changes to it depending on the input redstone signal.
 
-- **Fields**:
-  - `max`: Maximum powerlevel this block can display
+~~~admonish info
+### Fields:
+- `max`: Maximum powerlevel this block can display
+~~~
 
-
-- **Block-State-Properties to provide models for**:
-  - `powerlevel`: 0...max-1
+~~~admonish info
+### Block-State-Properties to provide models for:
+- `powerlevel`: 0...max-1
+~~~
 
 ---
 
@@ -281,9 +313,11 @@ Supplies a `powerlevel` blockstate and changes to it depending on the input reds
 
 Defines the block as strippable, replacing it with another block when interacted with an axe.
 
-- **Fields**:
-    - `replacement`: The identifier of the block to replace the current block with. Example: `minecraft:stone`
-    - `lootTable`: Identifier for a loot table to use when the block is stripped. Example: `minecraft:bell`
+~~~admonish info
+### Fields:
+- `replacement`: The identifier of the block to replace the current block with. Example: `minecraft:stone`
+- `lootTable`: Identifier for a loot table to use when the block is stripped. Example: `minecraft:bell`
+~~~
 
 ---
 
@@ -291,9 +325,11 @@ Defines the block as strippable, replacing it with another block when interacted
 
 Defines the block as slab, top, bottom, double, with placements, waterloggable.
 
-- **Block-State-Properties to provide models for**:
-  - `type`: top, bottom, double
-  - `waterlogged`: true, false
+~~~admonish info
+### Block-State-Properties to provide models for:
+- `type`: top, bottom, double
+- `waterlogged`: true, false
+~~~
 
 ---
 
@@ -301,18 +337,21 @@ Defines the block as slab, top, bottom, double, with placements, waterloggable.
 
 Trapdoor like block.
 
-- **Block-State-Properties to provide models for**:
-  - `facing`: north, south, east, west, up, down
-  - `half`: top, bottom
-  - `open`: true, false
-  - `waterlogged`: true, false
+~~~admonish info
+### Block-State-Properties to provide models for:
+- `facing`: north, south, east, west, up, down
+- `half`: top, bottom
+- `open`: true, false
+- `waterlogged`: true, false
+~~~
 
-
-- **Fields**:
-  - `canOpenByWindCharge`: Whether the trapdoor can be opened by a wind charge. Defaults to `true`
-  - `canOpenByHand`: Whether the trapdoor can be opened by hand. Defaults to `true`
-  - `openSound`: Open sound. Defaults to wooden trapdoor open sound.
-  - `closeSound` = Close sound. Defaults to wooden trapdoor close sound.
+~~~admonish info
+### Fields:
+- `canOpenByWindCharge`: Whether the trapdoor can be opened by a wind charge. Defaults to `true`
+- `canOpenByHand`: Whether the trapdoor can be opened by hand. Defaults to `true`
+- `openSound`: Open sound. Defaults to wooden trapdoor open sound.
+- `closeSound` = Close sound. Defaults to wooden trapdoor close sound.
+~~~
 
 ---
 
@@ -321,18 +360,21 @@ Trapdoor like block.
 Door-like "block" that is 2 blocks high.
 Comes with all door block state properties (hinge, open, powered, etc.)
 
-- **Block-State-Properties to provide models for**:
-  - `facing`: north, south, east, west, up, down
-  - `half`: lower, upper
-  - `open`: true, false
-  - `hinge`: left, right
+~~~admonish info
+### Block-State-Properties to provide models for:
+- `facing`: north, south, east, west, up, down
+- `half`: lower, upper
+- `open`: true, false
+- `hinge`: left, right
+~~~
 
-
-- **Fields**:
-  - `canOpenByWindCharge`: Whether the door can be opened by a wind charge. Defaults to `true`
-  - `canOpenByHand`: Whether the door can be opened by hand. Defaults to `true`
-  - `openSound`: Open sound. Defaults to wooden door open sound.
-  - `closeSound` = Close sound. Defaults to wooden door close sound.
+~~~admonish info
+### Fields:
+- `canOpenByWindCharge`: Whether the door can be opened by a wind charge. Defaults to `true`
+- `canOpenByHand`: Whether the door can be opened by hand. Defaults to `true`
+- `openSound`: Open sound. Defaults to wooden door open sound.
+- `closeSound` = Close sound. Defaults to wooden door close sound.
+~~~
 
 ---
 
@@ -347,10 +389,16 @@ Simple waterloggable block.
 Makes the block drop xp when being mined without the silk-touch enchantment.
 
 ~~~admonish info
+### Fields:
+- `min`: Minimum amount of XP to drop
+- `max`: Maximum amount of XP to drop
+~~~
+
+~~~admonish tip
 The values of the `min` and `max` fields can be mapped to block-states.
 ~~~
 
-Example:
+~~~admonish example
 ```json
 {
   "behaviour": {
@@ -369,7 +417,9 @@ Example:
   }
 }
 ```
+~~~
 
+~~~admonish example
 Example with constant values:
 ```json
 {
@@ -378,10 +428,7 @@ Example with constant values:
   }
 }
 ```
-
-- **Fields**:
-  - `min`: Minimum amount of XP to drop
-  - `max`: Maximum amount of XP to drop
+~~~
 
 ---
 
@@ -389,12 +436,14 @@ Example with constant values:
 
 Executes a command on block interaction from console as player (@s).
 
+~~~admonish info
 ### Fields:
 - `consumes`: Flag whether the block should be broken after running the command(s). Defaults to `false`
 - `dropBlock`: Flag whether the block should drop items when broken. Defaults to `false`
 - `command`: The command string to execute. Empty by default
 - `commands`: List of commands to execute. Empty by default
 - `sound`: Optional sound effect to play during execution. Empty by default
+~~~
 
 ---
 
@@ -402,9 +451,11 @@ Executes a command on block interaction from console as player (@s).
 
 Defines the block as oxidizing block, similar to the vanilla copper blocks, randomly replacing it with another block when it "ages". Can be reverted/scraped by axes and resets with lightning bolts like vanilla copper blocks.
 
-- **Fields**:
+~~~admonish info
+### Fields:
   - `replacement`: The identifier of the block to replace the current block with (e.g., "minecraft:stone").
   - `weatherState`: The current weathering state of this block. Can be `unaffected`, `exposed`, `weathered`, `oxidized`. Defaults to `unaffected`. A `weatherState` of `oxidized` will not oxidize any further.
+~~~
 
 ---
 
@@ -415,10 +466,12 @@ The sides, blocks and chance can be configured.
 
 If the blocks in `grows` have directional/facing block state properties, they direction of the side the block is growing from will be set.
 
-- **Fields**:
-  - `chance`: Chance of the block to grow another block or move a block to the next growth stage in percent, from 0 to 100. Defaults to 20
-  - `sides`: List of sides blocks can grow out. Can be `north`, `south`, `east`, `west`, `up` or `down`. Defaults to all directions
-  - `grows`: List of id's of blocks for the growth stages. Example: `["minecraft:chain", "minecraft:end_rod"]`
+~~~admonish info
+### Fields:
+- `chance`: Chance of the block to grow another block or move a block to the next growth stage in percent, from 0 to 100. Defaults to 20
+- `sides`: List of sides blocks can grow out. Can be `north`, `south`, `east`, `west`, `up` or `down`. Defaults to all directions
+- `grows`: List of id's of blocks for the growth stages. Example: `["minecraft:chain", "minecraft:end_rod"]`
+~~~
 
 ---
 
@@ -426,11 +479,12 @@ If the blocks in `grows` have directional/facing block state properties, they di
 
 Makes the block a gravity affected/falling block like sand or anvils.
 
-~~~admonish info
+~~~admonish tip
 All fields of this behaviour can be mapped to a block-state.
 ~~~
 
-**Fields**:
+~~~admonish info
+### Fields:
 - `delayAfterPlace`: Delay in ticks before the block falls. Defaults to 2
 - `heavy`: To cause anvil-like damage. Defaults to false
 - `damagePerDistance`: Accumulated damage per block fallen
@@ -443,9 +497,9 @@ All fields of this behaviour can be mapped to a block-state.
 - `damagedBlock`: New block to use when the falling block 'breaks'. Will copy applicable block state properties
 - `baseBreakChance`: Chance for the block to break into the block in `damagedBlock` on its own
 - `breakChancePerDistance`: Chance increase per block fallen for the block to break into the block in `damagedBlock`
+~~~
 
-
-**Example**:
+~~~admonish example
 ```json5
 {
   "falling_block": {
@@ -464,17 +518,20 @@ All fields of this behaviour can be mapped to a block-state.
   }
 }
 ```
+~~~
 
 ## `tnt` behaviour
 
 With this behaviour the block can be lit with flint and steel or redstone to spawn a TNT entity with the blockstate of this block.
 
-~~~admonish info
+~~~admonish tip
 All fields of this behaviour can be mapped to a block-state.
 ~~~
 
-**Fields**:
-  - unstable: Flag whether the block explodes when a player tries to break it. Defaults to `false`
-  - explosionPower: Explosion power. Defaults to `4.0`
-  - fuseTime: Fuse time (delay until the tnt entity explodes). Defaults to `80`
-  - primeSound: Sound to play when the block is primed. Defaults to `minecraft:entity.tnt.primed`
+~~~admonish info
+### Fields:
+- unstable: Flag whether the block explodes when a player tries to break it. Defaults to `false`
+- explosionPower: Explosion power. Defaults to `4.0`
+- fuseTime: Fuse time (delay until the tnt entity explodes). Defaults to `80`
+- primeSound: Sound to play when the block is primed. Defaults to `minecraft:entity.tnt.primed`
+~~~

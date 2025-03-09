@@ -12,6 +12,7 @@ You can also set components similar to item configurations using the `components
 
 ## Contents
 
+~~~admonish example
 ```json5
 {
   "id": "mynamespace:clown_horn",
@@ -39,6 +40,7 @@ You can also set components similar to item configurations using the `components
   }
 }
 ```
+~~~
 
 The file contents are very similar to that of blocks, except for additional behaviours exclusive to decorations.
 

@@ -2,6 +2,7 @@
 
 The `blocks` field allows to specify where barriers blocks should be placed for the decoration, instead of client-side interaction entities.
 It also allows for gaps:
+~~~admonish example
 ```json5
 {
   "blocks": [
@@ -17,8 +18,10 @@ It also allows for gaps:
   ]
 }
 ```
+~~~
 
 2 block high block configuration:
+~~~admonish example
 ```json
 {
   "blocks": [
@@ -29,3 +32,4 @@ It also allows for gaps:
   ]
 }
 ```
+~~~

@@ -4,10 +4,11 @@ See the datapack in the GitHub repository for more examples!
 
 https://github.com/tomalbrc/filament/tree/main/example_datapack
 
-~~~admonish info
+~~~admonish tip
 All fields support either camelCase or snake_case!
 ~~~
 
+~~~admonish example
 ### Clown horn intrument:
 **JSON**:
 ```json
@@ -133,3 +134,4 @@ components:
     damage_on_hurt: true
     equip_on_interact: false
 ```
+~~~
