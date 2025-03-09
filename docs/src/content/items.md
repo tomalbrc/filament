@@ -66,8 +66,7 @@ This overwrites the itemResource field.
 
 Specifies the resource(s) for the item model. Depending on the item's behaviour(s), it may use additional keys/fields in `itemResource`.
 
-~~~admonish info
-### Fields:
+~~~admonish info "Fields"
   - `models`: An object containing model definitions.
     - `default`: The default model for the item.
     - Additional keys may be required depending on the item's behaviour (e.g., `trapped` for a trap behaviour or `pulling_0`, `pulling_1`, `pulling_2` for bows).

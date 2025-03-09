@@ -71,8 +71,7 @@ Models are placed in `data/mynamespace/filament/model/mymodel.bbmodel`.
 
 You would reference it as `mynamespace:mymodel` in the `model` field.
 
-~~~admonish info
-### Fields:
+~~~admonish info "Fields"
 - `model`: The name of the animated model associated with this animation (if applicable).
 - `autoplay`: The name of the animation to autoplay (if specified).
 ~~~
@@ -100,8 +99,7 @@ Allows to create chests, trashcans, etc.
 
 Works with the `animation` behaviour to play an animation defined in the bbmodel/ajmodel.
 
-~~~admonish info
-### Fields:
+~~~admonish info "Fields"
 - `name`: The name displayed in the container UI.
 - `size`: The size of the container, has to be 5 slots or a multiple of 9, up to 6 rows of 9 slots.
 - `purge`: Indicates whether the container's contents should be cleared when no player is viewing the inventory.
@@ -129,15 +127,13 @@ Works with the `animation` behaviour to play an animation defined in the bbmodel
 
 Allows you to create lamps that either switch on/off or cycle through a list of light levels on player interaction.
 
-~~~admonish info
-### Fields:
+~~~admonish info "Fields"
 - `on`: Light level to use for the 'on' state
 - `off`: Light level to use for the 'off' state
 - `cycle`: List of light levels to cycle through. 
 ~~~
 
-~~~admonish example
-Simple on / off lamp
+~~~admonish example "Simple on / off lamp"
 ```json
 {
   "lamp": {
@@ -148,8 +144,7 @@ Simple on / off lamp
 ```
 ~~~
 
-~~~admonish example
-Cycling lamp:
+~~~admonish example "Cycling lamp"
 ```json
 {
   "lamp": {
@@ -171,8 +166,7 @@ It's an analog to the `execute` item behaviour.
 
 The command will only run once if a key is specified
 
-~~~admonish info
-### Fields:
+~~~admonish info "Fields"
 - `key`: The identifier of the key required to unlock.
 - `consumeKey`: Determines whether the key should be consumed upon unlocking.
 - `discard`: Specifies whether the lock utility should be discarded after unlocking.
@@ -188,14 +182,12 @@ Defines a seating behaviour for decorations.
 
 For chairs, benches, etc.
 
-~~~admonish info
-### Fields:
+~~~admonish info "Fields"
 - `offset`: The player seating offset.
 - `direction`: The rotation offset of the seat in degrees. Defaults to `180`
 ~~~
 
-~~~admonish example
-Single seat
+~~~admonish example "Single seat"
 ```json
 {
   "seat": [
@@ -216,8 +208,7 @@ Defines a showcase behaviour for decorations.
 
 Allows you to create shelves / item-frame like decorations.
 
-~~~admonish info
-### Fields:
+~~~admonish info "Fields"
 - `offset`: Offset for positioning the showcased item.
 - `scale`: Scale of the showcased item.
 - `rotation`: Rotation of the showcased item.
@@ -226,8 +217,7 @@ Allows you to create shelves / item-frame like decorations.
 - `filterTags`: Items with given item tags to allow.
 ~~~
 
-~~~admonish example
-Single item showcase
+~~~admonish example "Single item showcase"
 ```json
 {
   "showcase": [
@@ -252,8 +242,7 @@ Defines cosmetic behaviours for decorations, supporting animated Blockbench mode
 
 Cosmetics are worn on the player using item display entities (except for the head slot)
 
-~~~admonish info
-### Fields:
+~~~admonish info "Fields"
 - `slot`: The equipment slot for the cosmetic (head or chest).
 - `model`: Optional, the resource location of the animated blockbench or animated-java model for the cosmetic.
 - `autoplay`: Optional, the name of the animation to autoplay, which should be loopable.
@@ -261,8 +250,7 @@ Cosmetics are worn on the player using item display entities (except for the hea
 - `translation`: Translation of the chest cosmetic. Defaults to `[0 0 0]`.
 ~~~
 
-~~~admonish example
-Backpack
+~~~admonish example "Backpack"
 ```json
 {
   "cosmetic": {

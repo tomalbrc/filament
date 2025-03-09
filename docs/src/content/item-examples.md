@@ -8,9 +8,8 @@ https://github.com/tomalbrc/filament/tree/main/example_datapack
 All fields support either camelCase or snake_case!
 ~~~
 
-~~~admonish example
-### Clown horn intrument:
-**JSON**:
+~~~admonish example "Clown horn intrument"
+**JSON**
 ```json
 {
   "id": "mynamespace:clown_horn",
@@ -48,8 +47,9 @@ behaviour:
     range: 64
     use_duration: 60
 ```
+~~~
 
-### Allay trap:
+~~~admonish example "Allay trap"
 **JSON**:
 ```json
 {
@@ -92,8 +92,9 @@ behaviour:
       - minecraft:allay
     use_duration: 120
 ```
+~~~
 
-### Hat (can be put into inventory/swapped like normal helmets)
+~~~admonish example "Hat (can be put into inventory/swapped like normal helmets)"
 **JSON**:
 ```json
 {
