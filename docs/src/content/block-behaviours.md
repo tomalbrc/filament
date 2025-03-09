@@ -102,8 +102,7 @@ While possible, you probably don't want to combine `powersource` with `repeater`
 
 Gives the block an `axis` property/block-state similar to wooden logs/pillars and handles placement.
 
-~~~admonish info
-### Block-State-Properties to provide models for:
+~~~admonish info "Block-State-Properties to provide models for"
 - `axis`: x, y, z
 ~~~
 
@@ -115,8 +114,7 @@ Gives the block a `count` property/block-state.
 
 Works similar to turtle eggs or candles, allows you to place "multiple blocks/items" into one block.
 
-~~~admonish info
-### Block-State-Properties to provide models for:
+~~~admonish info "Block-State-Properties to provide models for"
 - `count`: 1...max
 ~~~
 
@@ -126,8 +124,7 @@ Works similar to turtle eggs or candles, allows you to place "multiple blocks/it
 
 Gives the block a `facing` property/block-state similar to wooden logs/pillars and handles placement.
 
-~~~admonish info
-### Block-State-Properties to provide models for:
+~~~admonish info "Block-State-Properties to provide models for"
   - `facing`: north, east, south, west, up, down
 ~~~
 
@@ -138,8 +135,7 @@ Gives the block a `facing` property/block-state similar to wooden logs/pillars a
 Gives the block a `facing` property/block-state similar to furnaces and handles placement.
 Does not support up and down facing directions.
 
-~~~admonish info
-### Block-State-Properties to provide models for:
+~~~admonish info "Block-State-Properties to provide models for"
 - `facing`: north, east, south, west
 ~~~
 
@@ -161,8 +157,7 @@ For bee pollination, use the block tag `bee_growables`.
 
 You can make farmer villagers able to plant the seeds using the item tag `villager_plantable_seeds`. Villagers will only work on crops that are on top of farmland blocks (vanilla limitation).
 
-~~~admonish info
-### Block-State-Properties to provide models for:
+~~~admonish info "Block-State-Properties to provide models for"
 - `age`: 0...maxAge-1
 ~~~
 
@@ -190,8 +185,7 @@ You add your own configured placement for trees using vanilla datapack mechanics
 #### Checkout the example datapack for the test_tree block!
 ~~~
 
-~~~admonish info
-### Block-State-Properties to provide models for:
+~~~admonish info "Block-State-Properties to provide models for"
 - `stage`: 0 to 1. You can provide a single model to use for both states, use `default` as key in that case.
 ~~~
 
@@ -282,8 +276,7 @@ Defines the block as a redstone repeater with configurable delay and loss.
 - `loss`: Power loss during transfer. Defaults to 0
 ~~~
 
-~~~admonish info
-### Block-State-Properties to provide models for:
+~~~admonish info "Block-State-Properties to provide models for"
 - `powered`: true, false
 - `facing`: north, east, south, west, up, down
 ~~~
@@ -298,8 +291,7 @@ Supplies a `powerlevel` blockstate and changes to it depending on the input reds
 - `max`: Maximum powerlevel this block can display
 ~~~
 
-~~~admonish info
-### Block-State-Properties to provide models for:
+~~~admonish info "Block-State-Properties to provide models for"
 - `powerlevel`: 0...max-1
 ~~~
 
@@ -320,8 +312,7 @@ Defines the block as strippable, replacing it with another block when interacted
 
 Defines the block as slab, top, bottom, double, with placements, waterloggable.
 
-~~~admonish info
-### Block-State-Properties to provide models for:
+~~~admonish info "Block-State-Properties to provide models for"
 - `type`: top, bottom, double
 - `waterlogged`: true, false
 ~~~
@@ -332,8 +323,7 @@ Defines the block as slab, top, bottom, double, with placements, waterloggable.
 
 Trapdoor like block.
 
-~~~admonish info
-### Block-State-Properties to provide models for:
+~~~admonish info "Block-State-Properties to provide models for"
 - `facing`: north, south, east, west, up, down
 - `half`: top, bottom
 - `open`: true, false
@@ -354,8 +344,7 @@ Trapdoor like block.
 Door-like "block" that is 2 blocks high.
 Comes with all door block state properties (hinge, open, powered, etc.)
 
-~~~admonish info
-### Block-State-Properties to provide models for:
+~~~admonish info "Block-State-Properties to provide models for"
 - `facing`: north, south, east, west, up, down
 - `half`: lower, upper
 - `open`: true, false
