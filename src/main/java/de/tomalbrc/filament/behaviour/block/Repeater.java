@@ -109,9 +109,9 @@ public class Repeater implements BlockBehaviour<Repeater.RepeaterConfig> {
         int power = blockState.getValue(SIGNAL);
         int inputPower = this.getInputSignal(serverLevel, blockPos, blockState);
         if (powered && inputPower <= 0) {
-            serverLevel.setBlock(blockPos, blockState.setValue(POWERED, false).setValue(SIGNAL, 0), 3);
+            serverLevel.setBlockAndUpdate(blockPos, blockState.setValue(POWERED, false).setValue(SIGNAL, 0));
         } else if (!powered || power != inputPower) {
-            serverLevel.setBlock(blockPos, blockState.setValue(POWERED, true).setValue(SIGNAL, inputPower), 3);
+            serverLevel.setBlockAndUpdate(blockPos, blockState.setValue(POWERED, true).setValue(SIGNAL, inputPower));
 
             if (inputPower <= 0) {
                 serverLevel.scheduleTick(blockPos, blockState.getBlock(), this.config.delay, TickPriority.VERY_HIGH);
