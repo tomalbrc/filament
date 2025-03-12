@@ -91,9 +91,9 @@ public class Mace implements ItemBehaviour<Mace.Config> {
                 }
 
                 if (livingEntity.level() instanceof ServerLevel serverLevel) {
-                    return fallDistanceMul + EnchantmentHelper.modifyFallBasedDamage(serverLevel, livingEntity.getWeaponItem(), entity, damageSource, 0.0F) * fallDistance;
+                    return (fallDistanceMul + EnchantmentHelper.modifyFallBasedDamage(serverLevel, livingEntity.getWeaponItem(), entity, damageSource, 0.0F) * fallDistance) * config.damageMultiplier;
                 } else {
-                    return fallDistanceMul;
+                    return fallDistanceMul * config.damageMultiplier;
                 }
             }
         } else {
@@ -112,5 +112,6 @@ public class Mace implements ItemBehaviour<Mace.Config> {
     }
 
     public static class Config {
+        public float damageMultiplier = 1.0f;
     }
 }
