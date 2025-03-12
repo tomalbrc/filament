@@ -39,7 +39,8 @@
     "behaviour.trim.ItemStackPacketCodecMixin",
     "behaviour.trim.RegistryDataLoaderMixin",
     "behaviour.trim.SmithingTrimRecipeMixin",
-    "component.skin.ItemMixin"
+    "component.skin.ItemMixin",
+    "component.skin.ItemStackMixin"
   ],
   "injectors": {
     "defaultRequire": 1,
