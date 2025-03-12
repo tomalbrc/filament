@@ -464,7 +464,7 @@ Alternatively, you can use the `itemModel` field to provide your own item asset 
 
 ---
 
-## `trident` behaviour
+## `mace` behaviour
 
 Makes the item behave like a mace!
 
@@ -476,7 +476,9 @@ Makes the item behave like a mace!
 ```json
 {
   "behaviour": {
-    "mace": {}
+    "mace": {
+      "damageMultiplier": 1.0
+    }
   }
 }
 ```
