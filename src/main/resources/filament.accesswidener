@@ -13,3 +13,8 @@ accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties
 accessible field net/minecraft/world/item/HoeItem TILLABLES Ljava/util/Map;
 
 accessible method net/minecraft/world/item/MaceItem knockback (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;)V
+
+
+accessible field net/minecraft/server/packs/FilePackResources zipFileAccess Lnet/minecraft/server/packs/FilePackResources$SharedZipFileAccess;
+accessible method net/minecraft/server/packs/FilePackResources addPrefix (Ljava/lang/String;)Ljava/lang/String;
+accessible method net/minecraft/server/packs/FilePackResources$SharedZipFileAccess getOrCreateZipFile ()Ljava/util/zip/ZipFile;

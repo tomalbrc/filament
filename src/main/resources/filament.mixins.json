@@ -5,7 +5,6 @@
   "mixins": [
     "BlockItemMixin",
     "BucketItemMixin",
-    "FilePackResourcesMixin",
     "FlowingFluidMixin",
     "ItemFrameAccessor",
     "LevelChunkMixin",
