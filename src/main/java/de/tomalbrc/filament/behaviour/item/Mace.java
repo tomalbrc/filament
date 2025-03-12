@@ -16,7 +16,6 @@ import net.minecraft.world.item.MaceItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -38,19 +37,15 @@ public class Mace implements ItemBehaviour<Mace.Config> {
 
     @Override
     public Optional<Boolean> hurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
-        if (MaceItem.canSmashAttack(livingEntity2)) {
-            ServerLevel serverLevel = (ServerLevel)livingEntity2.level();
-            livingEntity2.setDeltaMovement(livingEntity2.getDeltaMovement().with(Direction.Axis.Y, 0.01F));
-            if (livingEntity2 instanceof ServerPlayer serverPlayer) {
-                serverPlayer.currentImpulseImpactPos = this.calculateImpactPosition(serverPlayer);
-                serverPlayer.setIgnoreFallDamageFromCurrentImpulse(true);
-                serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
-            }
+        if (livingEntity2 instanceof ServerPlayer serverPlayer && MaceItem.canSmashAttack(livingEntity2)) {
+            ServerLevel serverLevel = serverPlayer.serverLevel();
+            serverPlayer.setDeltaMovement(livingEntity2.getDeltaMovement().with(Direction.Axis.Y, 0.01F));
+            serverPlayer.currentImpulseImpactPos = this.calculateImpactPosition(serverPlayer);
+            serverPlayer.setIgnoreFallDamageFromCurrentImpulse(true);
+            serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
 
             if (livingEntity.onGround()) {
-                if (livingEntity2 instanceof ServerPlayer serverPlayer) {
-                    serverPlayer.setSpawnExtraParticlesOnFall(true);
-                }
+                serverPlayer.setSpawnExtraParticlesOnFall(true);
 
                 SoundEvent soundEvent = livingEntity2.fallDistance > 5.0F ? SoundEvents.MACE_SMASH_GROUND_HEAVY : SoundEvents.MACE_SMASH_GROUND;
                 serverLevel.playSound(null, livingEntity2.getX(), livingEntity2.getY(), livingEntity2.getZ(), soundEvent, livingEntity2.getSoundSource(), 1.0F, 1.0F);
@@ -58,7 +53,7 @@ public class Mace implements ItemBehaviour<Mace.Config> {
                 serverLevel.playSound(null, livingEntity2.getX(), livingEntity2.getY(), livingEntity2.getZ(), SoundEvents.MACE_SMASH_AIR, livingEntity2.getSoundSource(), 1.0F, 1.0F);
             }
 
-            MaceItem.knockback(serverLevel, livingEntity2, livingEntity);
+            MaceItem.knockback(serverLevel, serverPlayer, livingEntity);
         }
 
         return Optional.of(true);
@@ -99,12 +94,6 @@ public class Mace implements ItemBehaviour<Mace.Config> {
         } else {
             return 0.0F;
         }
-    }
-
-    @Override
-    @Nullable
-    public DamageSource getDamageSource(LivingEntity livingEntity) {
-        return MaceItem.canSmashAttack(livingEntity) ? livingEntity.damageSources().mace(livingEntity) : null;
     }
 
     private Vec3 calculateImpactPosition(ServerPlayer serverPlayer) {
