@@ -29,6 +29,7 @@
     "behaviour.elytra.PlayerMixin",
     "behaviour.falling_block.FallingBlockEntityMixin",
     "behaviour.fishing_rod.FishingHookMixin",
+    "behaviour.grass_spread.SpreadingSnowyDirtBlockAccessor",
     "behaviour.oxidizable.WeatheringCopperMixin",
     "behaviour.shield.LivingEntityMixin",
     "behaviour.shield.PlayerMixin",
