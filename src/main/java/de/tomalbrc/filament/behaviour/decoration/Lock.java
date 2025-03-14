@@ -59,12 +59,16 @@ public class Lock implements DecorationBehaviour<Lock.LockConfig> {
             boolean validCommand = commands != null;
             boolean validLockCommand = this.lockConfig.command != null && !this.lockConfig.command.isEmpty();
             if ((validCommand || validLockCommand) && player.getServer() != null) {
+                var css = player.createCommandSourceStack().withSource(player.server).withMaximumPermission(4);
+                if (getConfig().atBlock)
+                    css.withPosition(decorationBlockEntity.getBlockPos().getCenter());
+
                 if (validCommand) {
                     for (String cmd : commands) {
-                        player.getServer().getCommands().performPrefixedCommand(player.createCommandSourceStack().withSource(player.server).withMaximumPermission(4), cmd);
+                        player.getServer().getCommands().performPrefixedCommand(css, cmd);
                     }
                 } else {
-                    player.getServer().getCommands().performPrefixedCommand(player.createCommandSourceStack().withSource(player.server).withMaximumPermission(4), this.lockConfig.command);
+                    player.getServer().getCommands().performPrefixedCommand(css, this.lockConfig.command);
                 }
             }
 
@@ -132,5 +136,6 @@ public class Lock implements DecorationBehaviour<Lock.LockConfig> {
         public String command = null;
         public List<String> commands = null;
 
+        public boolean atBlock = false;
     }
 }

@@ -84,8 +84,11 @@ public class Execute implements ItemBehaviour<Execute.ExecuteConfig>, BlockBehav
         var cmds = commands();
         if (cmds != null && user.getServer() != null) {
             for (String cmd : cmds) {
-                user.getServer().getCommands().performPrefixedCommand(
-                        user.createCommandSourceStack().withSource(user.getServer()).withMaximumPermission(4), cmd);
+                var css = user.createCommandSourceStack().withSource(user.getServer()).withMaximumPermission(4);
+                if (config.atBlock)
+                    css.withPosition(blockPos.getCenter());
+
+                user.getServer().getCommands().performPrefixedCommand(css, cmd);
             }
             if (this.config.sound != null) {
                 var sound = this.config.sound;
@@ -107,6 +110,8 @@ public class Execute implements ItemBehaviour<Execute.ExecuteConfig>, BlockBehav
 
         public String command;
         public List<String> commands;
+
+        public boolean atBlock = false;
 
         public boolean dropBlock = false;
 
