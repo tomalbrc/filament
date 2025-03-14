@@ -158,20 +158,21 @@ Allows you to create lamps that either switch on/off or cycle through a list of 
 
 ## `interact_execute` / `lock` behaviour
 
-Defines a behaviour that runs a command, for decorations.
+Defines a behaviour that runs a command, for decorations, optionally with a key item.
 
-This behaviour is available under 2 names, `interact_execute` and `lock`. The name `lock` exists to keep compatibility with older versions of filament / filament configs.  
+This behaviour is available under 2 names, `interact_execute` and `lock`. The name `lock` exists to keep compatibility with older versions of filament / filament configs.
 
 It's an analog to the `execute` item behaviour.
 
-The command will only run once if a key is specified
+The command will only run once if a key is specified, the key can be empty to always run the commands/animations on interaction.
 
 ~~~admonish info "Configurable Fields"
-- `key`: The identifier of the key required to unlock.
+- `key`: The identifier of the key required to unlock. Optional, if left empty the unlockAnimation will play (if applicable) and the commands will be run and the decoration will be discarded based on the `discard` flag.
 - `consumeKey`: Determines whether the key should be consumed upon unlocking.
-- `discard`: Specifies whether the lock utility should be discarded after unlocking.
-- `unlockAnimation`: Name of the animation to play upon successful unlocking (if applicable).
+- `discard`: Specifies whether the decoration should be destroyed after interacting with it.
+- `unlockAnimation`: Name of the animation to play upon successful unlocking with a key (if applicable).
 - `command`: Command to execute when the lock is successfully unlocked (if specified).
+- `atBlock`: false/true flag whether the command should be run at the blocks' position
 ~~~
 
 ---
