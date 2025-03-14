@@ -76,4 +76,7 @@ public class Behaviours {
 
     public static void register() {
     }
+
+    // for compat. with older mods
+    public static void init() {}
 }
