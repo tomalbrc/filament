@@ -8,6 +8,7 @@ import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import de.tomalbrc.filament.data.resource.BlockResource;
 import de.tomalbrc.filament.data.resource.ItemResource;
+import de.tomalbrc.filament.data.resource.ResourceProvider;
 import de.tomalbrc.filament.util.FilamentBlockResourceUtils;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
@@ -117,6 +118,11 @@ public final class BlockData extends Data {
 
     public @NotNull BlockResource blockResource() {
         return blockResource;
+    }
+
+    @Override
+    public @NotNull ResourceProvider preferredResource() {
+        return blockResource();
     }
 
     public @Nullable BlockStateMappedProperty<BlockModelType> blockModelType() {

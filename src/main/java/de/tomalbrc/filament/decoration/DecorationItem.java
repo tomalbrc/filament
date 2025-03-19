@@ -2,11 +2,11 @@ package de.tomalbrc.filament.decoration;
 
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
+import de.tomalbrc.filament.block.SimpleBlockItem;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.util.DecorationUtil;
 import de.tomalbrc.filament.util.Util;
@@ -15,8 +15,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -27,24 +27,20 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ItemContainerContents;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
-public class DecorationItem extends SimpleItem implements PolymerItem, BehaviourHolder {
+public class DecorationItem extends SimpleBlockItem implements PolymerItem, BehaviourHolder {
     final private DecorationData decorationData;
 
     public DecorationItem(Block block, DecorationData decorationData, Item.Properties properties) {
-        super(block, properties, decorationData.properties(), decorationData.vanillaItem());
+        super(properties, decorationData.properties(), block, decorationData);
         this.initBehaviours(decorationData.behaviour());
         this.decorationData = decorationData;
     }
@@ -77,11 +73,6 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Behaviour
         }
 
         super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
-    }
-
-    @Override
-    protected Map<String, ResourceLocation> getModelMap() {
-        return this.decorationData.itemResource() == null ? Map.of() : Objects.requireNonNull(this.decorationData.itemResource()).getModels();
     }
 
     public static float getVisualRotationYInDegrees(Direction direction, int rotation) {
@@ -135,72 +126,13 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Behaviour
         if (player == null || !this.mayPlace(player, direction, itemStack, relativeBlockPos) || !propertyPlaceCheck) {
             return InteractionResult.FAIL;
         } else if (this.canPlaceAt(level, relativeBlockPos, angle) && itemStack.getItem() instanceof DecorationItem) {
-            if (decorationData.hasBlocks()) {
-                int finalRotation = rotation;
-                Direction finalDirection = direction;
-                DecorationUtil.forEachRotated(decorationData.blocks(), relativeBlockPos, angle, blockPos2 -> {
-                    level.destroyBlock(blockPos2, false);
-
-                    BlockPlaceContext blockPlaceContext = new BlockPlaceContext(player, useOnContext.getHand(), itemStack, new BlockHitResult(useOnContext.getClickLocation(), useOnContext.getClickedFace(), blockPos2, useOnContext.isInside()));
-                    BlockState blockState = DecorationRegistry.getDecorationBlock(decorationData.id()).getStateForPlacement(blockPlaceContext);
-                    assert blockState != null;
-
-                    if (decorationData.properties().mayBeLightSource()) {
-                        blockState = blockState.setValue(DecorationBlock.LIGHT_LEVEL, decorationData.properties().lightEmission.getValue(blockState));
-                    }
-
-                    if (!decorationData.properties().waterloggable)
-                        blockState = blockState.setValue(DecorationBlock.WATERLOGGED, false);
-
-                    if (decorationData.isSimple()) {
-                        blockState = blockState.setValue(SimpleDecorationBlock.ROTATION, (finalRotation + 4) % 8);
-                    }
-
-                    level.setBlockAndUpdate(blockPos2, blockState);
-
-                    if (!decorationData.isSimple() && level.getBlockEntity(blockPos2) instanceof DecorationBlockEntity decorationBlockEntity) {
-                        decorationBlockEntity.setMain(new BlockPos(blockPos2).subtract(relativeBlockPos));
-                        decorationBlockEntity.setItem(itemStack.copyWithCount(1));
-                        decorationBlockEntity.setRotation(finalRotation);
-                        decorationBlockEntity.setDirection(finalDirection);
-                        decorationBlockEntity.setupBehaviour(decorationData);
-                        decorationBlockEntity.attach((ServerLevel) level);
-                    }
-                });
-            } else {
-                BlockPlaceContext blockPlaceContext = new BlockPlaceContext(player, useOnContext.getHand(), itemStack, new BlockHitResult(useOnContext.getClickLocation(), useOnContext.getClickedFace(), useOnContext.getClickedPos(), useOnContext.isInside()));
-
-                BlockState blockState = DecorationRegistry.getDecorationBlock(decorationData.id()).getStateForPlacement(blockPlaceContext);
-                assert blockState != null;
-
-                if (!decorationData.properties().waterloggable) {
-                    blockState = blockState.setValue(DecorationBlock.WATERLOGGED, false);
-                }
-
-                if (decorationData.properties().mayBeLightSource()) {
-                    blockState = blockState.setValue(DecorationBlock.LIGHT_LEVEL, decorationData.properties().lightEmission.getValue(blockState));
-                }
-
-                if (decorationData.isSimple()) {
-                    blockState = blockState.setValue(SimpleDecorationBlock.ROTATION, (rotation + 4) % 8);
-                }
-
-                level.setBlockAndUpdate(relativeBlockPos, blockState);
-                if (!decorationData.isSimple() && level.getBlockEntity(relativeBlockPos) instanceof DecorationBlockEntity decorationBlockEntity) {
-                    decorationBlockEntity.setMain(BlockPos.ZERO);
-                    decorationBlockEntity.setItem(itemStack.copyWithCount(1));
-                    decorationBlockEntity.setRotation(rotation);
-                    decorationBlockEntity.setDirection(direction);
-                    decorationBlockEntity.setupBehaviour(decorationData);
-                    decorationBlockEntity.attach((ServerLevel) level);
-                }
-            }
+            DecorationItem.place(itemStack, level, blockPos, direction, rotation);
 
             player.startUsingItem(useOnContext.getHand());
             itemStack.shrink(1);
 
-            SoundEvent breakSound = this.getDecorationData().properties().blockBase.defaultBlockState().getSoundType().getPlaceSound();
-            level.playSound(null, blockPos,  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);
+            SoundEvent placeSound = this.getDecorationData().properties().blockBase.defaultBlockState().getSoundType().getPlaceSound();
+            level.playSound(null, blockPos,  placeSound, SoundSource.BLOCKS, 1.0F, 1.0F);
 
             return InteractionResult.SUCCESS_SERVER;
         }
@@ -231,5 +163,71 @@ public class DecorationItem extends SimpleItem implements PolymerItem, Behaviour
         }
 
         return true;
+    }
+
+    public static void place(ItemStack itemStack, Level level, BlockPos blockPos, Direction direction, int rotation) {
+        float angle = DecorationItem.getVisualRotationYInDegrees(direction, rotation);
+
+        if (!(itemStack.getItem() instanceof  DecorationItem)) {
+            Filament.LOGGER.error("Tried to place non-decoration item as decoration! Item: {}", BuiltInRegistries.ITEM.getKey(itemStack.getItem()));
+        }
+
+        DecorationData decorationData = ((DecorationItem)itemStack.getItem()).decorationData;
+        if (decorationData.hasBlocks() && decorationData.countBlocks() == 0)
+            Filament.LOGGER.warn("Found block data with potentially invalid blocks for {} while trying to place", decorationData.id());
+
+        if (decorationData.hasBlocks()) {
+            DecorationUtil.forEachRotated(decorationData.blocks(), blockPos, angle, blockPos2 -> {
+                level.destroyBlock(blockPos2, false);
+
+                BlockState blockState = DecorationRegistry.getDecorationBlock(decorationData.id()).defaultBlockState();
+
+                if (decorationData.properties().mayBeLightSource()) {
+                    blockState = blockState.setValue(DecorationBlock.LIGHT_LEVEL, decorationData.properties().lightEmission.getValue(blockState));
+                }
+
+                if (!decorationData.properties().waterloggable)
+                    blockState = blockState.setValue(DecorationBlock.WATERLOGGED, false);
+
+                if (decorationData.isSimple()) {
+                    blockState = blockState.setValue(SimpleDecorationBlock.ROTATION, (rotation + 4) % 8);
+                }
+
+                level.setBlockAndUpdate(blockPos2, blockState);
+
+                if (!decorationData.isSimple() && level.getBlockEntity(blockPos2) instanceof DecorationBlockEntity decorationBlockEntity) {
+                    decorationBlockEntity.setMain(new BlockPos(blockPos2).subtract(blockPos));
+                    decorationBlockEntity.setItem(itemStack.copyWithCount(1));
+                    decorationBlockEntity.setRotation(rotation);
+                    decorationBlockEntity.setDirection(direction);
+                    decorationBlockEntity.setupBehaviour(decorationData);
+                    decorationBlockEntity.attach((ServerLevel) level);
+                }
+            });
+        } else {
+            BlockState blockState = DecorationRegistry.getDecorationBlock(decorationData.id()).defaultBlockState();
+
+            if (!decorationData.properties().waterloggable) {
+                blockState = blockState.setValue(DecorationBlock.WATERLOGGED, false);
+            }
+
+            if (decorationData.properties().mayBeLightSource()) {
+                blockState = blockState.setValue(DecorationBlock.LIGHT_LEVEL, decorationData.properties().lightEmission.getValue(blockState));
+            }
+
+            if (decorationData.isSimple()) {
+                blockState = blockState.setValue(SimpleDecorationBlock.ROTATION, (rotation + 4) % 8);
+            }
+
+            level.setBlockAndUpdate(blockPos, blockState);
+            if (!decorationData.isSimple() && level.getBlockEntity(blockPos) instanceof DecorationBlockEntity decorationBlockEntity) {
+                decorationBlockEntity.setMain(BlockPos.ZERO);
+                decorationBlockEntity.setItem(itemStack.copyWithCount(1));
+                decorationBlockEntity.setRotation(rotation);
+                decorationBlockEntity.setDirection(direction);
+                decorationBlockEntity.setupBehaviour(decorationData);
+                decorationBlockEntity.attach((ServerLevel) level);
+            }
+        }
     }
 }

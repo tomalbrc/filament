@@ -67,7 +67,7 @@ public class BlockRegistry {
             itemProperties.component(component.type(), component.value());
         }
 
-        SimpleBlockItem item = ItemRegistry.registerItem(ItemRegistry.key(data.id()), (newProps) -> new SimpleBlockItem(newProps, customBlock, data), itemProperties, data.group() != null ? data.group() : Constants.BLOCK_GROUP_ID, data.itemTags());
+        SimpleBlockItem item = ItemRegistry.registerItem(ItemRegistry.key(data.id()), (newProps) -> new SimpleBlockItem(newProps, data.properties(), customBlock, data), itemProperties, data.group() != null ? data.group() : Constants.BLOCK_GROUP_ID, data.itemTags());
         BehaviourUtil.postInitItem(item, item, data.behaviour());
         BehaviourUtil.postInitBlock(item, customBlock, customBlock, data.behaviour());
         Translations.add(item, customBlock, data);

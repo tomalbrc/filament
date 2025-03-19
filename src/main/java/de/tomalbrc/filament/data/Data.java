@@ -3,6 +3,7 @@ package de.tomalbrc.filament.data;
 import com.google.gson.JsonObject;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.resource.ItemResource;
+import de.tomalbrc.filament.data.resource.ResourceProvider;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentType;
@@ -78,6 +79,10 @@ public abstract class Data {
 
     public @Nullable ItemResource itemResource() {
         return itemResource;
+    }
+
+    public @Nullable ResourceProvider preferredResource() {
+        return itemResource();
     }
 
     public @Nullable ResourceLocation itemModel() {

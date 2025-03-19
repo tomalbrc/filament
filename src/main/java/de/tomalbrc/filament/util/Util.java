@@ -4,9 +4,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.Data;
+import de.tomalbrc.filament.item.FilamentItem;
+import eu.pb4.polymer.core.api.item.PolymerItemUtils;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.SegmentedAnglePrecision;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -14,12 +17,18 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static net.minecraft.core.component.DataComponents.CUSTOM_MODEL_DATA;
+import static net.minecraft.core.component.DataComponents.ITEM_MODEL;
 
 public class Util {
     public static final SegmentedAnglePrecision SEGMENTED_ANGLE8 = new SegmentedAnglePrecision(3); // 3 bits precision = 8
@@ -85,5 +94,30 @@ public class Util {
                 data.putAdditional(DataComponents.JUKEBOX_PLAYABLE, comp.getAsJsonObject("jukebox_playable"));
             }
         }
+    }
+
+    public static ItemStack filamentItemStack(ItemStack itemStack, TooltipFlag tooltipType, PacketContext packetContext, FilamentItem filamentItem) {
+        ItemStack stack = PolymerItemUtils.createItemStack(itemStack, tooltipType, packetContext);
+
+        ResourceLocation dataComponentModel = null;
+        if (filamentItem.getData() != null && filamentItem.getData().components().has(ITEM_MODEL)) {
+            dataComponentModel = filamentItem.getData().components().get(ITEM_MODEL);
+        } else if (filamentItem.getData() != null) {
+            if (filamentItem.getData().itemModel() != null) {
+                dataComponentModel = filamentItem.getData().itemModel();
+            } else {
+                dataComponentModel = filamentItem.getData().itemResource() == null ? filamentItem.getData().vanillaItem().components().get(ITEM_MODEL) : null;
+            }
+        }
+        if (dataComponentModel != null) stack.set(ITEM_MODEL, dataComponentModel);
+
+        if (!itemStack.has(CUSTOM_MODEL_DATA)) {
+            CustomModelData customModelData = filamentItem.getData() != null && filamentItem.getData().components().has(CUSTOM_MODEL_DATA) ? filamentItem.getData().components().get(CUSTOM_MODEL_DATA) : null;
+            if (customModelData != null) stack.set(CUSTOM_MODEL_DATA, customModelData);
+        }
+
+        filamentItem.getDelegate().modifyPolymerItemStack(filamentItem.getModelMap(), itemStack, stack, tooltipType, packetContext.getRegistryWrapperLookup(), packetContext.getPlayer());
+
+        return stack;
     }
 }
