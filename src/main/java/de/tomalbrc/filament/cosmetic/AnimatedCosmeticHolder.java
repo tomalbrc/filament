@@ -68,6 +68,10 @@ public class AnimatedCosmeticHolder extends EntityHolder {
 
     @Override
     public void onTick() {
+        if (this.entity.isDeadOrDying() || entity.isRemoved()) {
+            destroy();
+        }
+
         if (this.entity.getPose() == Pose.SWIMMING || this.entity.getPose() == Pose.SLEEPING || (this.entity instanceof  ServerPlayer serverPlayer && serverPlayer.isSpectator())) {
             if (!hidden) {
                 hideForAll(this);
