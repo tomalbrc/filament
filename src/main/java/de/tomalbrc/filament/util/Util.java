@@ -18,7 +18,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import xyz.nucleoid.packettweaker.PacketContext;
@@ -27,7 +26,6 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static net.minecraft.core.component.DataComponents.CUSTOM_MODEL_DATA;
 import static net.minecraft.core.component.DataComponents.ITEM_MODEL;
 
 public class Util {
@@ -106,15 +104,10 @@ public class Util {
             if (filamentItem.getData().itemModel() != null) {
                 dataComponentModel = filamentItem.getData().itemModel();
             } else {
-                dataComponentModel = filamentItem.getData().itemResource() == null ? filamentItem.getData().vanillaItem().components().get(ITEM_MODEL) : null;
+                dataComponentModel = filamentItem.getData().preferredResource() == null ? filamentItem.getData().vanillaItem().components().get(ITEM_MODEL) : null;
             }
         }
         if (dataComponentModel != null) stack.set(ITEM_MODEL, dataComponentModel);
-
-        if (!itemStack.has(CUSTOM_MODEL_DATA)) {
-            CustomModelData customModelData = filamentItem.getData() != null && filamentItem.getData().components().has(CUSTOM_MODEL_DATA) ? filamentItem.getData().components().get(CUSTOM_MODEL_DATA) : null;
-            if (customModelData != null) stack.set(CUSTOM_MODEL_DATA, customModelData);
-        }
 
         filamentItem.getDelegate().modifyPolymerItemStack(filamentItem.getModelMap(), itemStack, stack, tooltipType, packetContext.getRegistryWrapperLookup(), packetContext.getPlayer());
 
