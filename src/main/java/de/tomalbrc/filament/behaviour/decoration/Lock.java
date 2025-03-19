@@ -61,7 +61,7 @@ public class Lock implements DecorationBehaviour<Lock.LockConfig> {
             if ((validCommand || validLockCommand) && player.getServer() != null) {
                 var css = player.createCommandSourceStack().withSource(player.server).withMaximumPermission(4);
                 if (getConfig().atBlock)
-                    css.withPosition(decorationBlockEntity.getBlockPos().getCenter());
+                    css = css.withPosition(decorationBlockEntity.getBlockPos().getCenter());
 
                 if (validCommand) {
                     for (String cmd : commands) {

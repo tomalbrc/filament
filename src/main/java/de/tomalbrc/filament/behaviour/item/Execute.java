@@ -84,7 +84,7 @@ public class Execute implements ItemBehaviour<Execute.Config>, BlockBehaviour<Ex
             for (String cmd : cmds) {
                 var css = user.createCommandSourceStack().withSource(user.getServer()).withMaximumPermission(4);
                 if (config.atBlock)
-                    css.withPosition(blockPos.getCenter());
+                    css = css.withPosition(blockPos.getCenter());
 
                 user.getServer().getCommands().performPrefixedCommand(css, cmd);
             }
