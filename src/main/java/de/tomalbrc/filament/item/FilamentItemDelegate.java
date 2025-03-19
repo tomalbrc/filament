@@ -43,7 +43,7 @@ public class FilamentItemDelegate {
 
     @Nullable
     public Data data() {
-        return holder instanceof SimpleItem simpleItem ? simpleItem.getData() : holder instanceof SimpleBlockItem blockItem ? blockItem.getData() : null;
+        return holder instanceof FilamentItem filamentItem ? filamentItem.getData() : holder instanceof SimpleBlockItem blockItem ? blockItem.getData() : null;
     }
 
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack itemStack, int i) {

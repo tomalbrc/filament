@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.mixin.behaviour.bow;
 
 import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.item.SimpleItem;
 import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.entity.player.Inventory;
@@ -49,11 +50,11 @@ public abstract class PlayerMixin {
 
     @Unique
     private Predicate<ItemStack> filament$getPred(ItemStack itemStack) {
-        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.BOW)) {
-            return simpleItem.get(Behaviours.BOW).supportedProjectiles();
+        if (itemStack.getItem() instanceof FilamentItem filamentItem && filamentItem.has(Behaviours.BOW)) {
+            return filamentItem.get(Behaviours.BOW).supportedProjectiles();
         }
-        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.CROSSBOW)) {
-            return simpleItem.get(Behaviours.CROSSBOW).supportedProjectiles();
+        if (itemStack.getItem() instanceof FilamentItem filamentItem && filamentItem.has(Behaviours.CROSSBOW)) {
+            return filamentItem.get(Behaviours.CROSSBOW).supportedProjectiles();
         }
 
         return (itemStack1) -> false;
@@ -61,11 +62,11 @@ public abstract class PlayerMixin {
 
     @Unique
     private Predicate<ItemStack> filament$getHeldPred(ItemStack itemStack) {
-        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.BOW)) {
-            return simpleItem.get(Behaviours.BOW).supportedHeldProjectiles();
+        if (itemStack.getItem() instanceof FilamentItem filamentItem && filamentItem.has(Behaviours.BOW)) {
+            return filamentItem.get(Behaviours.BOW).supportedHeldProjectiles();
         }
-        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.CROSSBOW)) {
-            return simpleItem.get(Behaviours.CROSSBOW).supportedHeldProjectiles();
+        if (itemStack.getItem() instanceof FilamentItem filamentItem && filamentItem.has(Behaviours.CROSSBOW)) {
+            return filamentItem.get(Behaviours.CROSSBOW).supportedHeldProjectiles();
         }
 
         return (itemStack1) -> false;
@@ -73,6 +74,6 @@ public abstract class PlayerMixin {
 
     @Unique
     private boolean filament$bowOrCrossbow(ItemStack itemStack) {
-        return itemStack.getItem() instanceof SimpleItem simpleItem && (simpleItem.has(Behaviours.BOW) || simpleItem.has(Behaviours.CROSSBOW));
+        return itemStack.getItem() instanceof FilamentItem filamentItem && (filamentItem.has(Behaviours.BOW) || filamentItem.has(Behaviours.CROSSBOW));
     }
 }

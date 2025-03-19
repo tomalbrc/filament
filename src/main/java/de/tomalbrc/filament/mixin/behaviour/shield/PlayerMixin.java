@@ -2,6 +2,7 @@ package de.tomalbrc.filament.mixin.behaviour.shield;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.item.SimpleItem;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,6 +19,6 @@ public abstract class PlayerMixin extends LivingEntity {
 
     @ModifyExpressionValue(method = "hurtCurrentlyUsedShield", at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z"))
     private boolean filament$customShield(boolean original) {
-        return original || this.getUseItem().getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.SHIELD);
+        return original || this.getUseItem().getItem() instanceof FilamentItem filamentItem && filamentItem.has(Behaviours.SHIELD);
     }
 }

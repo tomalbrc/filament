@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.mixin.behaviour.shield;
 
 import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.item.SimpleItem;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -16,7 +17,7 @@ public abstract class LivingEntityMixin {
 
     @Inject(method = "isBlocking", at = @At(value = "RETURN"), cancellable = true)
     private void filament$customShieldBlocking(CallbackInfoReturnable<Boolean> cir) {
-        if (!cir.getReturnValue() && this.getUseItem().getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.SHIELD)) {
+        if (!cir.getReturnValue() && this.getUseItem().getItem() instanceof FilamentItem filamentItem && filamentItem.has(Behaviours.SHIELD)) {
             cir.setReturnValue(true);
         }
     }
