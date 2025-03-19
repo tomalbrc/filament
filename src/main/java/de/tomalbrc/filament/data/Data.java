@@ -2,6 +2,7 @@ package de.tomalbrc.filament.data;
 
 import com.google.gson.JsonObject;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
+import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.data.resource.ResourceProvider;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -61,6 +62,8 @@ public abstract class Data {
         if (this.additionalComponents == null) this.additionalComponents = new Object2ObjectOpenHashMap<>();
         return additionalComponents;
     }
+
+    public abstract @NotNull ItemProperties properties();
 
     public @NotNull ResourceLocation id() {
         return id;

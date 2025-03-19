@@ -37,28 +37,20 @@ import java.util.Map;
  * Simple item, base for filament items without block (+ decorations), with behaviour support
  */
 public class SimpleItem extends Item implements PolymerItem, FilamentItem, BehaviourHolder {
-    private ItemData itemData;
+    protected final Data data;
     protected final ItemProperties properties;
     protected final Item vanillaItem;
 
     protected final BehaviourMap behaviours = new BehaviourMap();
     protected final FilamentItemDelegate delegate;
 
-    public SimpleItem(Properties properties, ItemData itemData, Item vanillaItem) {
+    public SimpleItem(Properties properties, Data data, Item vanillaItem) {
         super(properties);
-        this.initBehaviours(itemData.behaviour());
+        this.initBehaviours(data.behaviour());
 
         this.vanillaItem = vanillaItem;
-        this.itemData = itemData;
-        this.properties = itemData.properties();
-        this.delegate = new FilamentItemDelegate(this);
-    }
-
-    public SimpleItem(Properties itemProperties, ItemProperties props, Item vanillaItem) {
-        super(itemProperties);
-
-        this.vanillaItem = vanillaItem;
-        this.properties = props;
+        this.data = data;
+        this.properties = data.properties();
         this.delegate = new FilamentItemDelegate(this);
     }
 
@@ -69,7 +61,7 @@ public class SimpleItem extends Item implements PolymerItem, FilamentItem, Behav
 
     @Override
     public Data getData() {
-        return this.itemData;
+        return this.data;
     }
 
     @Override
@@ -82,8 +74,8 @@ public class SimpleItem extends Item implements PolymerItem, FilamentItem, Behav
     public void verifyComponentsAfterLoad(ItemStack itemStack) {
         super.verifyComponentsAfterLoad(itemStack);
 
-        if (this.itemData != null) {
-            for (Map.Entry<DataComponentType<?>, JsonObject> entry : this.itemData.getAdditionalComponents().entrySet()) {
+        if (this.data != null) {
+            for (Map.Entry<DataComponentType<?>, JsonObject> entry : this.data.getAdditionalComponents().entrySet()) {
                 var codec = entry.getKey().codec();
                 assert codec != null;
 

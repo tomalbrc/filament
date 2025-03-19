@@ -1,11 +1,12 @@
 package de.tomalbrc.filament.item;
 
+import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.data.Data;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
 
-public interface FilamentItem {
+public interface FilamentItem extends BehaviourHolder {
     FilamentItemDelegate getDelegate();
 
     Data getData();

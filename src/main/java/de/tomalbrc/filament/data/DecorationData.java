@@ -49,6 +49,7 @@ public final class DecorationData extends Data {
         this.blockTags = blockTags;
     }
 
+    @Override
     @NotNull
     public DecorationProperties properties() {
         if (properties == null) {

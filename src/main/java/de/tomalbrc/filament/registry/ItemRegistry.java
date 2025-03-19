@@ -57,7 +57,7 @@ public class ItemRegistry {
             properties.component(component.type(), component.value());
         }
 
-        var item = ItemRegistry.registerItem(key(data.id()), (newProps) -> new SimpleItem(null, newProps, data, data.vanillaItem()), properties, data.group() != null ? data.group() : Constants.ITEM_GROUP_ID, data.itemTags());
+        var item = ItemRegistry.registerItem(key(data.id()), (newProps) -> new SimpleItem(newProps, data, data.vanillaItem()), properties, data.group() != null ? data.group() : Constants.ITEM_GROUP_ID, data.itemTags());
         BehaviourUtil.postInitItem(item, item, data.behaviour());
         Translations.add(item, null, data);
         RPUtil.create(item, data);

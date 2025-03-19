@@ -40,7 +40,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
     final private DecorationData decorationData;
 
     public DecorationItem(Block block, DecorationData decorationData, Item.Properties properties) {
-        super(properties, decorationData.properties(), block, decorationData);
+        super(properties, block, decorationData);
         this.initBehaviours(decorationData.behaviour());
         this.decorationData = decorationData;
     }

@@ -40,16 +40,14 @@ import java.util.List;
 import java.util.Map;
 
 public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentItem, BehaviourHolder {
-    private final Data blockData;
-    protected final ItemProperties properties;
+    private final Data data;
 
     protected final BehaviourMap behaviours = new BehaviourMap();
     protected final FilamentItemDelegate delegate;
 
-    public SimpleBlockItem(Properties properties, ItemProperties filamentItemProperties, Block block, Data data) {
+    public SimpleBlockItem(Properties properties, Block block, Data data) {
         super(block, properties);
-        this.blockData = data;
-        this.properties = filamentItemProperties;
+        this.data = data;
         this.initBehaviours(data.behaviour());
 
         this.delegate = new FilamentItemDelegate(this);
@@ -57,7 +55,7 @@ public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentI
 
     @Override
     public Data getData() {
-        return this.blockData;
+        return this.data;
     }
 
     @Override
@@ -149,7 +147,7 @@ public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentI
     @Override
     public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
         this.delegate.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
-        this.properties.appendHoverText(list);
+        this.data.properties().appendHoverText(list);
         super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
     }
 

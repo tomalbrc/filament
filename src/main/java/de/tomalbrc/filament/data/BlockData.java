@@ -57,6 +57,7 @@ public final class BlockData extends Data {
         this.blockTags = blockTags;
     }
 
+    @Override
     @NotNull
     public BlockProperties properties() {
         if (properties == null) {

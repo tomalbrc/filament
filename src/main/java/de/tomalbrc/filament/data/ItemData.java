@@ -33,6 +33,7 @@ public final class ItemData extends Data {
         this.properties = properties;
     }
 
+    @Override
     @NotNull
     public ItemProperties properties() {
         if (properties == null) {
