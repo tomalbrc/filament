@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@SuppressWarnings({"unused"})
 public interface ItemBehaviour<T> extends Behaviour<T> {
     default void init(Item item, BehaviourHolder behaviourHolder) {
     }
@@ -61,10 +60,6 @@ public interface ItemBehaviour<T> extends Behaviour<T> {
     }
 
     default void modifyPolymerItemStack(Map<String, ResourceLocation> models, ItemStack original, ItemStack replacement, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
-    }
-
-    default int modifyPolymerArmorColor(ItemStack itemStack, @Nullable ServerPlayer player, int color) {
-        return color;
     }
 
     default boolean mineBlock(ItemStack itemStack, Level level, BlockState blockState, BlockPos blockPos, LivingEntity livingEntity) {
