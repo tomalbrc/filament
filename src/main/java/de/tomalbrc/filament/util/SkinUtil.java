@@ -54,7 +54,7 @@ public class SkinUtil {
                     lore = new ItemLore(ObjectArrayList.of());
                 }
                 var component = Component.literal("Skin: ").setStyle(Style.EMPTY.withItalic(false).withColor(ChatFormatting.GRAY)).append(oldWrapped.getHoverName());
-                lore.lines().addFirst(component);
+                lore.withLineAdded(component);
 
                 wrappedItemStack.set(DataComponents.LORE, lore);
                 wrappedItemStack.setCount(itemStack.getCount());
