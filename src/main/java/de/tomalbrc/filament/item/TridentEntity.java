@@ -17,6 +17,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrownTrident;
@@ -56,8 +57,8 @@ public class TridentEntity extends ThrownTrident implements PolymerEntity {
         super.setPickupItemStack(stack);
     }
 
-    public TridentEntity(EntityType<? extends ThrownTrident> entityType, Level world) {
-        super(entityType, world);
+    public TridentEntity(EntityType<? extends Entity> entityType, Level world) {
+        super((EntityType<? extends ThrownTrident>) entityType, world);
         initHolder();
     }
 
