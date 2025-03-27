@@ -17,6 +17,9 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
@@ -86,7 +89,7 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
     @Override
     public void read(CompoundTag compoundTag, HolderLookup.Provider provider, DecorationBlockEntity blockEntity) {
         if (compoundTag.contains(SHOWCASE_KEY) && blockEntity.getOrCreateHolder() != null) {
-            CompoundTag showcaseTag = compoundTag.getCompound(SHOWCASE_KEY);
+            CompoundTag showcaseTag = compoundTag.getCompound(SHOWCASE_KEY).orElseThrow();
             DecorationHolder holder = (DecorationHolder) blockEntity.getDecorationHolder();
             if (holder == null)
                 return;
@@ -99,7 +102,8 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
                     Showcase.ShowcaseMeta showcaseMeta = showcase.config.get(i);
                     String key = ITEM + i;
                     if (showcaseTag.contains(key)) {
-                        setShowcaseItemStack(blockEntity, showcaseMeta, ItemStack.parseOptional(provider, showcaseTag.getCompound(key)));
+                        RegistryOps<Tag> registryOps = provider.createSerializationContext(NbtOps.INSTANCE);
+                        setShowcaseItemStack(blockEntity, showcaseMeta, showcaseTag.read(key, ItemStack.CODEC, registryOps).orElseThrow());
                     }
                 }
             }

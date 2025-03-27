@@ -10,10 +10,13 @@ import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.tracker.EntityTrackedData;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
@@ -149,7 +152,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
             Entity owner = this.getOwner();
             var damageSource = this.damageSources().trident(this, owner);
 
-            float damage = (float) this.getBaseDamage();
+            float damage = (float) baseDamage;
             if (target.hurtServer((ServerLevel) level(), damageSource, damage)) {
                 if (target.getType() != EntityType.ENDERMAN && this.getOwner() instanceof LivingEntity livingOwner) {
                     EnchantmentHelper.doPostAttackEffectsWithItemSource((ServerLevel) target.level(), livingOwner, damageSource, this.getWeaponItem());
@@ -185,13 +188,15 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
 
-        if (nbt.contains("Item", 10) && nbt.contains("PickupItem", 10)) {
-            this.projectileStack = ItemStack.parseOptional(this.registryAccess(), nbt.getCompound("Item"));
-            this.pickupStack = ItemStack.parseOptional(this.registryAccess(), nbt.getCompound("PickupItem"));
+        if (nbt.contains("Item") && nbt.contains("PickupItem")) {
+            RegistryOps<Tag> registryOps = this.registryAccess().createSerializationContext(NbtOps.INSTANCE);
+
+            this.projectileStack = nbt.read("Item", ItemStack.CODEC, registryOps).orElse(ItemStack.EMPTY);
+            this.pickupStack = nbt.read("PickupItem", ItemStack.CODEC, registryOps).orElse(ItemStack.EMPTY);
             this.createMainDisplayElement();
         }
 
-        this.dealtDamage = nbt.getBoolean("DealtDamage");
+        this.dealtDamage = nbt.getBoolean("DealtDamage").orElse(true);
     }
 
     @Override

@@ -23,14 +23,15 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 // shared behaviour delegate for SimpleItem and SimpleBlockItem - DecorationItem just inherits SimpleItem
@@ -96,14 +97,12 @@ public class FilamentItemDelegate {
         return fallback.get();
     }
 
-    public boolean hurtEnemy(ItemStack itemStack, LivingEntity attacker, LivingEntity target, Supplier<Boolean> fallback) {
+    public void hurtEnemy(ItemStack itemStack, LivingEntity attacker, LivingEntity target) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : holder.getBehaviours()) {
             if (entry.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
-                Optional<Boolean> res = itemBehaviour.hurtEnemy(itemStack, attacker, target);
-                if (res.isPresent()) return res.get();
+                itemBehaviour.hurtEnemy(itemStack, attacker, target);
             }
         }
-        return fallback.get();
     }
 
     public void postHurtEnemy(ItemStack itemStack, LivingEntity attacker, LivingEntity target) {
@@ -116,11 +115,10 @@ public class FilamentItemDelegate {
             itemStack.hurtAndBreak(1, target, EquipmentSlot.MAINHAND);
     }
 
-    public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext,
-                                List<Component> tooltipList, TooltipFlag flag) {
+    public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, TooltipDisplay tooltipDisplay, Consumer<Component> consumer, TooltipFlag tooltipFlag) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : holder.getBehaviours()) {
             if (entry.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
-                itemBehaviour.appendHoverText(itemStack, tooltipContext, tooltipList, flag);
+                itemBehaviour.appendHoverText(itemStack, tooltipContext, tooltipDisplay, consumer, tooltipFlag);
             }
         }
     }

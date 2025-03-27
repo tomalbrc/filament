@@ -30,11 +30,11 @@ public class DyeCommand {
     private static int execute(CommandContext<CommandSourceStack> context) {
         if (context.getSource().getPlayer() != null) {
             ItemStack item = context.getSource().getPlayer().getMainHandItem();
-            if (item != null && !item.isEmpty()) {
+            if (!item.isEmpty()) {
                 String hexColorString = getString(context, "color");
                 Optional<Integer> color = Util.validateAndConvertHexColor(hexColorString);
                 if (color.isPresent()) {
-                    item.set(DataComponents.DYED_COLOR, new DyedItemColor(color.get(), true));
+                    item.set(DataComponents.DYED_COLOR, new DyedItemColor(color.get()));
                     return Command.SINGLE_SUCCESS;
                 }
             }

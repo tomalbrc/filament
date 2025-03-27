@@ -21,8 +21,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.Vec3;
-import org.joml.*;
 import org.joml.Math;
+import org.joml.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -168,7 +168,7 @@ public class DecorationUtil {
         itemDisplayElement.setDisplayHeight(size.y * 2.f);
 
         itemDisplayElement.setTransformation(matrix4f);
-        itemDisplayElement.setModelTransformation(data.properties().display);
+        itemDisplayElement.setItemDisplayContext(data.properties().display);
 
         return itemDisplayElement;
     }

@@ -45,7 +45,7 @@ public class CosmeticHolder extends ElementHolder {
             this.displayElement.setTranslation(cosmeticData.translation);
             this.displayElement.setScale(cosmeticData.scale);
             if (FilamentConfig.getInstance().alternativeCosmeticPlacement) {
-                this.displayElement.setModelTransformation(ItemDisplayContext.HEAD);
+                this.displayElement.setItemDisplayContext(ItemDisplayContext.HEAD);
                 this.displayElement.setTranslation(new Vector3f(0, 1.25f,0));
                 this.displayElement.setScale(new Vector3f(0.625f));
             }

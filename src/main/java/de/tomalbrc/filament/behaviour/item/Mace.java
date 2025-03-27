@@ -18,8 +18,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-
 /**
  * Mace-like behaviour
  */
@@ -37,7 +35,7 @@ public class Mace implements ItemBehaviour<Mace.Config> {
     }
 
     @Override
-    public Optional<Boolean> hurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
+    public void hurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
         if (MaceItem.canSmashAttack(livingEntity2)) {
             ServerLevel serverLevel = (ServerLevel)livingEntity2.level();
             livingEntity2.setDeltaMovement(livingEntity2.getDeltaMovement().with(Direction.Axis.Y, 0.01F));
@@ -60,8 +58,6 @@ public class Mace implements ItemBehaviour<Mace.Config> {
 
             MaceItem.knockback(serverLevel, livingEntity2, livingEntity);
         }
-
-        return Optional.of(true);
     }
 
     @Override
@@ -80,7 +76,7 @@ public class Mace implements ItemBehaviour<Mace.Config> {
             if (!MaceItem.canSmashAttack(livingEntity)) {
                 return 0.0F;
             } else {
-                float fallDistance = livingEntity.fallDistance;
+                float fallDistance = (float) livingEntity.fallDistance;
                 float fallDistanceMul;
                 if (fallDistance <= 3.0F) {
                     fallDistanceMul = 4.0F * fallDistance;

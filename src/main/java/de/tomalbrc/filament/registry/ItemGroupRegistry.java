@@ -37,7 +37,7 @@ public class ItemGroupRegistry {
         if (TAB_GROUPS.containsKey(data.id())) return;
 
         CreativeModeTab group = new CreativeModeTab.Builder(null, -1)
-                .title(data.literal() == null ? Component.translatable(data.id().getNamespace()+".itemGroup."+data.id().getPath()): TextParserUtils.formatText(data.literal()))
+                .title(data.literal() == null ? Component.translatable(data.id().getNamespace()+".itemGroup."+data.id().getPath()) : TextParserUtils.formatNodesSafe(data.literal()).toText())
                 .icon(() -> BuiltInRegistries.ITEM.getValue(data.item()).getDefaultInstance())
                 .displayItems((parameters, output) -> TAB_GROUP_ITEMS.get(data.id()).forEach(output::accept))
                 .build();

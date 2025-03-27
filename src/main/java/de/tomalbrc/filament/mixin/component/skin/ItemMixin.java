@@ -1,6 +1,8 @@
 package de.tomalbrc.filament.mixin.component.skin;
 
 import de.tomalbrc.filament.registry.FilamentComponents;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
@@ -92,7 +94,8 @@ public abstract class ItemMixin {
 
     @Unique
     private static boolean filament$isWearing(Player player, ItemStack itemStack) {
-        for (ItemStack stack : player.getArmorSlots()) {
+        for (EquipmentSlot slot : EquipmentSlotGroup.ARMOR.slots()) {
+            ItemStack stack = player.getItemBySlot(slot);
             if (stack == itemStack) {
                 return true;
             }

@@ -2,11 +2,9 @@ package de.tomalbrc.filament.mixin.behaviour.fishing_rod;
 
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.item.FilamentItem;
-import de.tomalbrc.filament.item.SimpleItem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;

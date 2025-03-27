@@ -82,13 +82,10 @@ public class Lock implements DecorationBehaviour<Lock.LockConfig> {
 
     @Override
     public void read(CompoundTag compoundTag, HolderLookup.Provider provider, DecorationBlockEntity blockEntity) {
-        if (compoundTag.contains("Lock")) {
-            CompoundTag lock = compoundTag.getCompound("Lock");
-
-            if (compoundTag.contains("Command")) this.command = lock.getString("Command");
-
-            if (compoundTag.contains("Unlocked")) this.unlocked = lock.getBoolean("Unlocked");
-        }
+        compoundTag.getCompound("Lock").ifPresent(lock -> {
+            if (compoundTag.contains("Command")) this.command = lock.getString("Command").orElse(null);
+            if (compoundTag.contains("Unlocked")) this.unlocked = lock.getBoolean("Unlocked").orElse(false);
+        });
     }
 
     @Override

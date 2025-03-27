@@ -11,7 +11,6 @@ import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.util.DecorationUtil;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -26,15 +25,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.function.Consumer;
 
 public class DecorationItem extends SimpleBlockItem implements PolymerItem, BehaviourHolder {
     final private DecorationData decorationData;
@@ -50,29 +48,12 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, TooltipDisplay tooltipDisplay, Consumer<Component> consumer, TooltipFlag tooltipFlag) {
         if (this.decorationData.vanillaItem().components().has(DataComponents.DYED_COLOR) || this.decorationData.components().has(DataComponents.DYED_COLOR)) {
-            list.add(Component.literal("§9Dyeable"));
+            consumer.accept(Component.literal("§9Dyeable"));
         }
 
-        if (itemStack.has(DataComponents.CONTAINER)) {
-            Iterator<ItemStack> itemStackIterator = itemStack.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).nonEmptyItems().iterator();
-            int i = 0;
-            int j = 0;
-            while(itemStackIterator.hasNext()) {
-                ItemStack itemStack2 = itemStackIterator.next();
-                j++;
-                if (i <= 4) {
-                    i++;
-                    list.add(Component.translatable("container.shulkerBox.itemCount", itemStack2.getHoverName(), itemStack2.getCount()));
-                }
-            }
-            if (j - i > 0) {
-                list.add(Component.translatable("container.shulkerBox.more", j - i).withStyle(ChatFormatting.ITALIC));
-            }
-        }
-
-        super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
+        super.appendHoverText(itemStack, tooltipContext, tooltipDisplay, consumer, tooltipFlag);
     }
 
     public static float getVisualRotationYInDegrees(Direction direction, int rotation) {

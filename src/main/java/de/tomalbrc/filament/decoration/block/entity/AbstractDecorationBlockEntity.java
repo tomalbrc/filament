@@ -8,7 +8,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -54,20 +53,20 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
         if (!compoundTag.contains(VERSION)) {
             this.version = 1; // upgrade old format
             if (compoundTag.contains(MAIN)) {
-                var optional = NbtUtils.readBlockPos(compoundTag, MAIN);
+                var optional = compoundTag.read(MAIN, BlockPos.CODEC);
                 this.main = optional.orElse(this.main).subtract(this.worldPosition);
             }
         }
         else {
-            this.version = compoundTag.getInt(VERSION);
+            this.version = compoundTag.getInt(VERSION).orElse(1);
             if (compoundTag.contains(MAIN)) {
-                var optional = NbtUtils.readBlockPos(compoundTag, MAIN);
+                var optional = compoundTag.read(MAIN, BlockPos.CODEC);
                 this.main = optional.orElse(this.main);
             }
         }
 
         if (compoundTag.contains(ITEM)) {
-            this.itemStack = ItemStack.parseOptional(provider, compoundTag.getCompound(ITEM));
+            this.itemStack = ItemStack.parse(provider, compoundTag.getCompound(ITEM).orElseThrow()).orElseThrow();
         }
 
         if (this.itemStack == null || this.itemStack.isEmpty()) {
@@ -78,9 +77,9 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
             return;
 
         if (compoundTag.contains(ROTATION))
-            this.rotation = compoundTag.getInt(ROTATION);
+            this.rotation = compoundTag.getIntOr(ROTATION, 0);
         if (compoundTag.contains(DIRECTION))
-            this.direction = Direction.from3DDataValue(compoundTag.getInt(DIRECTION));
+            this.direction = Direction.from3DDataValue(compoundTag.getIntOr(DIRECTION, Direction.UP.get3DDataValue()));
     }
 
     @Override
@@ -105,7 +104,7 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
 
         if (this.main == null) this.main = BlockPos.ZERO;
 
-        compoundTag.put(MAIN, NbtUtils.writeBlockPos(this.main));
+        compoundTag.store(MAIN, BlockPos.CODEC, this.main);
         compoundTag.putInt(VERSION, this.version);
 
         if (this.isMain()) {

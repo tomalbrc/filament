@@ -3,7 +3,6 @@ package de.tomalbrc.filament.cosmetic;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.item.Cosmetic;
 import de.tomalbrc.filament.item.FilamentItem;
-import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.registry.FilamentComponents;
 import net.minecraft.world.item.ItemStack;
 

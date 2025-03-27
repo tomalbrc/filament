@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -111,7 +112,7 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
     }
 
     @Override
-    public boolean canPlaceLiquid(@Nullable Player player, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
+    public boolean canPlaceLiquid(@Nullable LivingEntity player, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
         if (DecorationRegistry.isDecoration(blockState)) {
             DecorationData data = ((DecorationBlock)blockState.getBlock()).getDecorationData();
             if (data != null && (data.properties().waterloggable || !data.properties().solid)) {

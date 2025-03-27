@@ -5,16 +5,16 @@ import de.tomalbrc.filament.behaviour.ItemPredicateModelProvider;
 import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.generator.ItemAssetGenerator;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -32,11 +32,6 @@ public class Shield implements ItemBehaviour<Shield.Config>, ItemPredicateModelP
     @NotNull
     public Shield.Config getConfig() {
         return this.config;
-    }
-
-    @Override
-    public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
-        BannerItem.appendHoverTextFromBannerBlockEntityTag(itemStack, list);
     }
 
     public Optional<Integer> getUseDuration(ItemStack itemStack, LivingEntity livingEntity) {

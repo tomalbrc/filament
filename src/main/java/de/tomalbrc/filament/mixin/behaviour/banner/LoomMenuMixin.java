@@ -3,7 +3,6 @@ package de.tomalbrc.filament.mixin.behaviour.banner;
 import com.google.common.collect.ImmutableList;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.item.FilamentItem;
-import de.tomalbrc.filament.item.SimpleItem;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;

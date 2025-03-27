@@ -1,7 +1,6 @@
 package de.tomalbrc.filament.util;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 
 import java.util.List;
 

@@ -5,6 +5,7 @@ import de.tomalbrc.filament.cosmetic.CosmeticInterface;
 import de.tomalbrc.filament.cosmetic.CosmeticUtil;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,12 +18,13 @@ public abstract class ServerPlayerMixin implements CosmeticInterface {
     @Inject(method = "initInventoryMenu", at = @At(value = "TAIL"))
     private void filament$onInitInventoryMenu(CallbackInfo ci) {
         if ((Object)this instanceof ServerPlayer serverPlayer) {
-            var slots = serverPlayer.getArmorSlots();
-            for (ItemStack item : slots) {
-                if (serverPlayer.getEquipmentSlotForItem(item) == EquipmentSlot.HEAD) {
+            var slots = EquipmentSlotGroup.ARMOR.slots();
+            for (EquipmentSlot slot : slots) {
+                if (slot == EquipmentSlot.HEAD) {
                     continue;
                 }
 
+                var item = serverPlayer.getItemBySlot(slot);
                 if (!item.isEmpty() && CosmeticUtil.isCosmetic(item)) {
                     filament$destroyHolder(serverPlayer.getEquipmentSlotForItem(item).getName());
                     FilamentCosmeticEvents.UNEQUIPPED.invoker().unequipped(LivingEntity.class.cast(this), item, ItemStack.EMPTY);
@@ -36,11 +38,13 @@ public abstract class ServerPlayerMixin implements CosmeticInterface {
     @Inject(method = "hasChangedDimension", at = @At("TAIL"))
     private void filament$onChangeDimension(CallbackInfo ci) {
         if ((Object)this instanceof ServerPlayer serverPlayer) {
-            var slots = serverPlayer.getArmorSlots();
-            for (ItemStack item : slots) {
-                if (serverPlayer.getEquipmentSlotForItem(item) == EquipmentSlot.HEAD) {
+            var slots = EquipmentSlotGroup.ARMOR.slots();
+            for (EquipmentSlot slot : slots) {
+                if (slot == EquipmentSlot.HEAD) {
                     continue;
                 }
+
+                var item = serverPlayer.getItemBySlot(slot);
 
                 if (!item.isEmpty() && CosmeticUtil.isCosmetic(item)) {
                     filament$destroyHolder(serverPlayer.getEquipmentSlotForItem(item).getName());

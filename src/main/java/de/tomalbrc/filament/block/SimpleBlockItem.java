@@ -6,7 +6,6 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.data.Data;
-import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.item.FilamentItemDelegate;
 import de.tomalbrc.filament.util.BlockUtil;
@@ -27,6 +26,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -36,8 +36,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.packettweaker.PacketContext;
 
-import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentItem, BehaviourHolder {
     private final Data data;
@@ -135,20 +135,15 @@ public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentI
     }
 
     @Override
-    public boolean hurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
-        return this.delegate.hurtEnemy(itemStack, livingEntity, livingEntity2, () -> this.components().has(DataComponents.TOOL));
-    }
-
-    @Override
     public void postHurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
         this.delegate.postHurtEnemy(itemStack, livingEntity, livingEntity2);
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
-        this.delegate.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
-        this.data.properties().appendHoverText(list);
-        super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
+    public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, TooltipDisplay tooltipDisplay, Consumer<Component> consumer, TooltipFlag tooltipFlag) {
+        this.delegate.appendHoverText(itemStack, tooltipContext, tooltipDisplay, consumer, tooltipFlag);
+        this.data.properties().appendHoverText(consumer);
+        super.appendHoverText(itemStack, tooltipContext, tooltipDisplay, consumer, tooltipFlag);
     }
 
     @Override

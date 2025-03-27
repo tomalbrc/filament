@@ -25,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.CustomModelData;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * Mob trap
@@ -51,20 +53,20 @@ public class Trap implements ItemBehaviour<Trap.Config> {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, TooltipDisplay tooltipDisplay, Consumer<Component> consumer, TooltipFlag tooltipFlag) {
         var bucketData = itemStack.get(DataComponents.BUCKET_ENTITY_DATA);
         if (bucketData != null && bucketData.contains("Type")) {
-            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(ResourceLocation.parse(bucketData.copyTag().getString("Type")));
-            list.add(Component.literal("Contains ").append(Component.translatable(type.getDescriptionId()))); // todo: make "Contains " translateable?
+            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(ResourceLocation.parse(bucketData.copyTag().getString("Type").orElse("minecraft:pig")));
+            consumer.accept(Component.literal("Contains ").append(Component.translatable(type.getDescriptionId()))); // todo: make "Contains " translateable?
         } else {
             if (this.config.requiredEffects != null) {
-                list.add(Component.literal("Requires effects: "));
+                consumer.accept(Component.literal("Requires effects: "));
                 for (int i = 0; i < this.config.requiredEffects.size(); i++) {
                     var e = this.config.requiredEffects.get(i);
-                    list.add(Component.literal("› ").append(Component.translatable(Objects.requireNonNull(BuiltInRegistries.MOB_EFFECT.getValue(e)).getDescriptionId()))); // todo: make "Contains " translateable?
+                    consumer.accept(Component.literal("› ").append(Component.translatable(Objects.requireNonNull(BuiltInRegistries.MOB_EFFECT.getValue(e)).getDescriptionId()))); // todo: make "Contains " translateable?
                 }
             }
-            list.add(Component.literal("Chance: " + this.config.chance + "%"));
+            consumer.accept(Component.literal("Chance: " + this.config.chance + "%"));
         }
     }
 
@@ -114,7 +116,7 @@ public class Trap implements ItemBehaviour<Trap.Config> {
         if (bucketData != null) {
             var compoundTag = bucketData.copyTag();
 
-            EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.getValue(ResourceLocation.parse(compoundTag.getString("Type")));
+            EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.getValue(ResourceLocation.parse(compoundTag.getString("Type").orElse("minecraft:pig")));
             Entity entity = entityType.spawn(serverLevel, blockPos.above(1), EntitySpawnReason.BUCKET);
             if (entity instanceof Mob mob) {
                 this.loadFromTag(mob, compoundTag);

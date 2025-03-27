@@ -9,6 +9,7 @@ import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 // For shared properties that make sense for both, item, blocks *and* decoration
 public class ItemProperties {
@@ -20,9 +21,9 @@ public class ItemProperties {
     public boolean fireResistant;
     public boolean copyComponents;
 
-    public void appendHoverText(List<Component> tooltip) {
+    public void appendHoverText(Consumer<Component> tooltip) {
         if (this.lore != null)
-            this.lore.forEach(line -> tooltip.add(TextParserUtils.formatText(line)));
+            this.lore.forEach(line -> tooltip.accept(TextParserUtils.formatNodesSafe(line).toText()));
     }
 
     public Item.Properties toItemProperties() {

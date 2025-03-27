@@ -259,16 +259,6 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public void spawnAfterBreak(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, boolean bl) {
-        super.spawnAfterBreak(blockState, serverLevel, blockPos, itemStack, bl);
-        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
-            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
-                blockBehaviour.spawnAfterBreak(blockState, serverLevel, blockPos, itemStack, bl);
-            }
-        }
-    }
-
-    @Override
     public boolean isSignalSource(BlockState blockState) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
@@ -366,10 +356,10 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public boolean canPlaceLiquid(@Nullable Player player, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
+    public boolean canPlaceLiquid(@Nullable LivingEntity livingEntity, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour && blockBehaviour instanceof SimpleWaterloggedBlock waterloggedBlock) {
-                return waterloggedBlock.canPlaceLiquid(player, blockGetter, blockPos, blockState, fluid);
+                return waterloggedBlock.canPlaceLiquid(livingEntity, blockGetter, blockPos, blockState, fluid);
             }
         }
         return !blockData.properties().solid;
@@ -406,9 +396,9 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    protected void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
-        this.forEach(x -> x.onRemove(blockState, level, blockPos, blockState2, bl));
-        super.onRemove(blockState, level, blockPos, blockState2, bl);
+    protected void spawnAfterBreak(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, boolean bl) {
+        this.forEach(x -> x.spawnAfterBreak(blockState, serverLevel, blockPos, itemStack, bl));
+        super.spawnAfterBreak(blockState, serverLevel, blockPos, itemStack, bl);
     }
 
     @Override

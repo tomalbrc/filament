@@ -1,22 +1,17 @@
 package de.tomalbrc.filament.behaviour.item;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.ItemPredicateModelProvider;
 import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.generator.ItemAssetGenerator;
 import de.tomalbrc.filament.item.FilamentItem;
-import de.tomalbrc.filament.item.SimpleItem;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
-import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -259,23 +254,6 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
 
     CrossbowItem.ChargingSounds getChargingSounds(ItemStack itemStack) {
         return EnchantmentHelper.pickHighestLevel(itemStack, EnchantmentEffectComponents.CROSSBOW_CHARGING_SOUNDS).orElse(this.sounds);
-    }
-
-    @Override
-    public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
-        ChargedProjectiles chargedProjectiles = itemStack.get(DataComponents.CHARGED_PROJECTILES);
-        if (chargedProjectiles != null && !chargedProjectiles.isEmpty()) {
-            ItemStack itemStack2 = chargedProjectiles.getItems().getFirst();
-            list.add(Component.translatable("item.minecraft.crossbow.projectile").append(CommonComponents.SPACE).append(itemStack2.getDisplayName()));
-            if (tooltipFlag.isAdvanced() && itemStack2.is(Items.FIREWORK_ROCKET)) {
-                List<Component> list2 = Lists.newArrayList();
-                Items.FIREWORK_ROCKET.appendHoverText(itemStack2, tooltipContext, list2, tooltipFlag);
-                if (!list2.isEmpty()) {
-                    list2.replaceAll(component -> Component.literal("  ").append(component).withStyle(ChatFormatting.GRAY));
-                    list.addAll(list2);
-                }
-            }
-        }
     }
 
     @Override

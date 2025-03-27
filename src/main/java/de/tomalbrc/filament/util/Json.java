@@ -6,6 +6,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import de.tomalbrc.bil.json.JSON;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
@@ -55,7 +56,7 @@ public class Json {
             .registerTypeHierarchyAdapter(Vector3f.class, new Vector3fDeserializer())
             .registerTypeHierarchyAdapter(Vector2f.class, new Vector2fDeserializer())
             .registerTypeHierarchyAdapter(Quaternionf.class, new QuaternionfDeserializer())
-            .registerTypeHierarchyAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
+            .registerTypeHierarchyAdapter(ResourceLocation.class, new JSON.ResourceLocationSerializer())
             .registerTypeHierarchyAdapter(BlockModelType.class, new BlockModelTypeDeserializer())
             .registerTypeHierarchyAdapter(ItemDisplayContext.class, new ItemDisplayContextDeserializer())
             .registerTypeHierarchyAdapter(DataComponentMap.class, new DataComponentsDeserializer())

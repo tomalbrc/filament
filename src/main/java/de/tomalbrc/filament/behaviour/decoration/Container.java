@@ -104,10 +104,7 @@ public class Container implements DecorationBehaviour<Container.ContainerConfig>
 
     @Override
     public void read(CompoundTag compoundTag, HolderLookup.Provider provider, DecorationBlockEntity decorationBlockEntity) {
-        CompoundTag compoundTag2 = compoundTag.getCompound("Container");
-        if (!compoundTag2.isEmpty()) {
-            ContainerHelper.loadAllItems(compoundTag2, container.items, provider);
-        }
+        compoundTag.getCompound("Container").ifPresent(x -> ContainerHelper.loadAllItems(x, container.items, provider));
     }
 
     @Override

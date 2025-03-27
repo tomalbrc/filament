@@ -13,7 +13,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -49,24 +48,24 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
     }
 
     @Override
-    protected void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
-        if (!bl && !blockState.is(blockState2.getBlock())) {
+    protected void spawnAfterBreak(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, boolean bl) {
+        if (!bl && !blockState.is(serverLevel.getBlockState(blockPos).getBlock())) {
             DecorationData data = this.getDecorationData();
             if (!data.hasBlocks()) {
                 SoundEvent breakSound = data.properties().blockBase.defaultBlockState().getSoundType().getBreakSound();
-                level.playSound(null, blockPos,  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);
+                serverLevel.playSound(null, blockPos,  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);
             }
 
             if (data.properties().showBreakParticles)
-                DecorationUtil.showBreakParticle((ServerLevel) level, data.properties().useItemParticles ? BuiltInRegistries.ITEM.getValue(this.decorationId).getDefaultInstance() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+                DecorationUtil.showBreakParticle(serverLevel, data.properties().useItemParticles ? BuiltInRegistries.ITEM.getValue(this.decorationId).getDefaultInstance() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
 
-            if (!level.isClientSide() && data.properties().drops && blockState.getBlock() instanceof SimpleDecorationBlock) {
+            if (data.properties().drops && blockState.getBlock() instanceof SimpleDecorationBlock) {
                 for (ItemStack drop : this.getDrops()) {
-                    Util.spawnAtLocation(level, blockPos.getCenter(), drop);
+                    Util.spawnAtLocation(serverLevel, blockPos.getCenter(), drop);
                 }
             }
         }
 
-        super.onRemove(blockState, level, blockPos, blockState2, bl);
+        super.spawnAfterBreak(blockState, serverLevel, blockPos, itemStack, bl);
     }
 }

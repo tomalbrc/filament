@@ -83,7 +83,7 @@ public class DecorationRegistry {
         }
 
         if (data.vanillaItem() == Items.LEATHER_HORSE_ARMOR || data.vanillaItem() == Items.FIREWORK_STAR) {
-            properties.component(DataComponents.DYED_COLOR, new DyedItemColor(0xdaad6d, false));
+            properties.component(DataComponents.DYED_COLOR, new DyedItemColor(0xdaad6d));
         }
 
         var item = ItemRegistry.registerItem(ItemRegistry.key(data.id()), (newProps) -> new DecorationItem(block, data, newProps), properties, data.group() != null ? data.group() : Constants.DECORATION_GROUP_ID, data.itemTags());

@@ -97,9 +97,6 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
         return null;
     }
 
-    default void spawnAfterBreak(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, boolean bl) {
-    }
-
     default boolean isSignalSource(BlockState blockState) {
         return false;
     }
@@ -118,7 +115,7 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
     default void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, LivingEntity livingEntity, ItemStack itemStack) {
     }
 
-    default void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
+    default void spawnAfterBreak(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, boolean bl) {
     }
 
     default boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
