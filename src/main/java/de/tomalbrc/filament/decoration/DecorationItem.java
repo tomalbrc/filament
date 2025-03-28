@@ -126,7 +126,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
         if (player == null || !this.mayPlace(player, direction, itemStack, relativeBlockPos) || !propertyPlaceCheck) {
             return InteractionResult.FAIL;
         } else if (this.canPlaceAt(level, relativeBlockPos, angle) && itemStack.getItem() instanceof DecorationItem) {
-            DecorationItem.place(itemStack, level, blockPos, direction, rotation);
+            DecorationItem.place(itemStack, level, relativeBlockPos, direction, rotation);
 
             player.startUsingItem(useOnContext.getHand());
             itemStack.shrink(1);
