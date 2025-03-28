@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.data;
 
+import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.data.properties.DecorationProperties;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @SuppressWarnings("unused")
 public final class DecorationData extends Data {
@@ -26,6 +28,7 @@ public final class DecorationData extends Data {
     private final @Nullable Vector2f size;
     private final @Nullable DecorationProperties properties;
     private final @Nullable Set<ResourceLocation> blockTags;
+    private final @Nullable Boolean itemFrame;
 
     public DecorationData(
             @NotNull ResourceLocation id,
@@ -40,13 +43,15 @@ public final class DecorationData extends Data {
             @Nullable Set<ResourceLocation> blockTags,
             @Nullable DecorationProperties properties,
             @Nullable List<BlockConfig> blocks,
-            @Nullable Vector2f size
+            @Nullable Vector2f size,
+            @Nullable Boolean itemFrame
     ) {
         super(id, vanillaItem, translations, itemResource, itemModel, behaviourConfig, components, itemGroup, itemTags);
         this.blocks = blocks;
         this.size = size;
         this.properties = properties;
         this.blockTags = blockTags;
+        this.itemFrame = itemFrame;
     }
 
     @Override
@@ -79,11 +84,12 @@ public final class DecorationData extends Data {
 
     public boolean isSimple() {
         boolean singleBlock = (!this.hasBlocks() || DecorationUtil.barrierDimensions(Objects.requireNonNull(this.blocks()), 0).equals(1, 1));
-        boolean hasBehaviour = !this.behaviour().isEmpty();
+        final AtomicBoolean hasDecorationBehaviour = new AtomicBoolean(false);
+        this.behaviour().forEach((a,b) -> {if (b instanceof DecorationBehaviour) hasDecorationBehaviour.set(true);});
         boolean canBeDyed = this.vanillaItem != null && (vanillaItem == Items.LEATHER_HORSE_ARMOR || vanillaItem == Items.FIREWORK_STAR);
         boolean groundOnly = !this.properties().placement.wall() && !this.properties().placement.ceiling();
 
-        return groundOnly && !canBeDyed && !hasBehaviour && (singleBlock || this.size != null);
+        return groundOnly && !canBeDyed && !hasDecorationBehaviour.get() && (singleBlock || this.size != null);
     }
 
     public @Nullable List<BlockConfig> blocks() {
@@ -92,6 +98,10 @@ public final class DecorationData extends Data {
 
     public @Nullable Vector2f size() {
         return size;
+    }
+
+    public @Nullable Boolean itemFrame() {
+        return this.itemFrame;
     }
 
     @Override

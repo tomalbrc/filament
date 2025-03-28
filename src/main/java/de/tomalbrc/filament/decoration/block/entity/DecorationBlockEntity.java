@@ -43,11 +43,13 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     @Nullable
     private ElementHolder decorationHolder;
 
-    public BehaviourMap getBehaviours() {
-        return this.behaviours;
-    }
     public DecorationBlockEntity(BlockPos pos, BlockState state) {
         super(pos, state);
+    }
+
+    @Override
+    public BehaviourMap getBehaviours() {
+        return this.behaviours;
     }
 
     @Override

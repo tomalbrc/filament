@@ -174,7 +174,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
 
         DecorationData decorationData = ((DecorationItem)itemStack.getItem()).decorationData;
         if (decorationData.hasBlocks() && decorationData.countBlocks() == 0)
-            Filament.LOGGER.warn("Found block data with potentially invalid blocks for {} while trying to place", decorationData.id());
+            Filament.LOGGER.warn("Found block data with potentially invalid blocks for {} while trying tof", decorationData.id());
 
         if (decorationData.hasBlocks()) {
             DecorationUtil.forEachRotated(decorationData.blocks(), blockPos, angle, blockPos2 -> {
