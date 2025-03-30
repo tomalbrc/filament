@@ -2,6 +2,7 @@ package de.tomalbrc.filament.decoration.util;
 
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.mixin.ItemFrameAccessor;
+import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.core.mixin.entity.ItemFrameEntityAccessor;
 import eu.pb4.polymer.virtualentity.api.elements.GenericEntityElement;
 import eu.pb4.polymer.virtualentity.api.tracker.DataTrackerLike;
@@ -14,11 +15,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.phys.Vec3;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.Objects;
 
-@SuppressWarnings("unused")
 public class ItemFrameElement extends GenericEntityElement {
     final private DecorationBlockEntity parent;
 
@@ -29,9 +31,14 @@ public class ItemFrameElement extends GenericEntityElement {
 
         this.sendTrackerUpdates();
 
+        var stack = source.getItem();
+        if (stack.getItem() instanceof PolymerItem polymerItem) {
+            stack = polymerItem.getPolymerItemStack(stack, TooltipFlag.NORMAL, PacketContext.create());
+        }
+
         this.dataTracker.set(EntityTrackedData.FLAGS, (byte) 0);
-        this.dataTracker.set(ItemFrameEntityAccessor.getITEM_STACK(), source.getItem());
-        this.dataTracker.set(ItemFrameAccessor.getDATA_ROTATION(), source.getRotation());
+        this.dataTracker.set(ItemFrameEntityAccessor.getITEM_STACK(), stack.copy());
+        this.dataTracker.set(ItemFrameAccessor.getDATA_ROTATION(), Math.max(source.getRotation(), 1));
         this.setInvisible(true);
 
         this.setInteractionHandler(new InteractionHandler() {
@@ -64,5 +71,4 @@ public class ItemFrameElement extends GenericEntityElement {
     protected DataTrackerLike createDataTracker() {
         return new SimpleDataTracker(EntityType.ITEM_FRAME);
     }
-
 }
