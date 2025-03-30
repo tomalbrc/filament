@@ -1,14 +1,19 @@
 package de.tomalbrc.filament.util;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.math.Axis;
+import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.DecorationData;
+import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -19,10 +24,13 @@ import net.minecraft.util.Brightness;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.Vec3;
-import org.joml.*;
 import org.joml.Math;
+import org.joml.*;
+import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 import java.util.Optional;
@@ -123,7 +131,7 @@ public class DecorationUtil {
 
     public static ItemDisplayElement decorationItemDisplay(DecorationBlockEntity blockEntity) {
         ItemDisplayElement display = decorationItemDisplay(blockEntity.getDecorationData(), blockEntity.getDirection(), blockEntity.getVisualRotationYInDegrees());
-        display.setItem(blockEntity.getItem().copyWithCount(1));
+        display.setItem(blockEntity.visualItemStack());
         return display;
     }
 
@@ -175,5 +183,36 @@ public class DecorationUtil {
 
     public static void showBreakParticle(ServerLevel level, ItemStack stack, float x, float y, float z) {
         level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, stack), x, y, z, 27, 0.125, 0.125, 0.125, 0.05);
+    }
+
+
+    public static ItemStack placementAdjustedItem(ItemStack itemStack, ItemResource itemResource, boolean wall, boolean ceiling) {
+        var converted = clientsideItem(itemStack);
+
+        if (wall && itemResource.getModels().containsKey("wall")) {
+            converted.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(ImmutableList.of(), ImmutableList.of(), ImmutableList.of("wall"), ImmutableList.of()));
+            return converted;
+        }
+
+        if (ceiling && itemResource.getModels().containsKey("ceiling")) {
+            converted.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(ImmutableList.of(), ImmutableList.of(), ImmutableList.of("ceiling"), ImmutableList.of()));
+            return converted;
+        }
+
+        if (itemResource.getModels().containsKey("floor")) {
+            converted.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(ImmutableList.of(), ImmutableList.of(), ImmutableList.of("floor"), ImmutableList.of()));
+            return converted;
+        }
+
+        converted.remove(DataComponents.CUSTOM_NAME);
+        return converted;
+    }
+
+    public static ItemStack clientsideItem(ItemStack itemStack) {
+        if (!(itemStack.getItem() instanceof PolymerItem)) {
+            return itemStack.copyWithCount(1);
+        } else {
+            return ((PolymerItem)itemStack.getItem()).getPolymerItemStack(itemStack, TooltipFlag.NORMAL, PacketContext.create(Filament.REGISTRY_ACCESS.compositeAccess()));
+        }
     }
 }

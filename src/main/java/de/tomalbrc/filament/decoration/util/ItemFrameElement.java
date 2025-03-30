@@ -31,7 +31,7 @@ public class ItemFrameElement extends GenericEntityElement {
 
         this.sendTrackerUpdates();
 
-        var stack = source.getItem();
+        var stack = source.visualItemStack();
         if (stack.getItem() instanceof PolymerItem polymerItem) {
             stack = polymerItem.getPolymerItemStack(stack, TooltipFlag.NORMAL, PacketContext.create());
         }
