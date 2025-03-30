@@ -18,6 +18,7 @@ import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.attachment.ChunkAttachment;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -195,6 +196,11 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
         return res;
     }
+
+    public ItemStack visualItemStack() {
+        return DecorationUtil.placementAdjustedItem(this.itemStack, this.getDecorationData().itemResource(), this.direction != Direction.DOWN && this.direction != Direction.UP, this.direction == Direction.DOWN);
+    }
+
 
     @Override
     protected void destroyBlocks(ItemStack particleItem) {
