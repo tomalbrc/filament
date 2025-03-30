@@ -45,3 +45,33 @@ You can also set components similar to item configurations using the `components
 The file contents are very similar to that of blocks, except for additional behaviours exclusive to decorations.
 
 Decorations do not support most of the block behaviours.
+
+You can specify different models for decorations when placed on walls, ceiling (underside of blocks) or on the floor.
+
+~~~admonish example
+```json
+{
+  "id": "mynamespace:small_gold_coin_piles",
+  "itemFrame": true,
+  "itemResource": {
+    "models": {
+      "default": "minecraft:item/diamond_sword",
+      "wall": "minecraft:custom/hats/backpack",
+      "ceiling": "minecraft:custom/furniture/misc/small_gold_coin_piles",
+      "floor": "minecraft:custom/furniture/misc/small_gold_coin_piles"
+    }
+  },
+  "properties": {
+    "rotate": true,
+    "rotateSmooth": true,
+    "placement": {
+      "wall": true,
+      "floor": true,
+      "ceiling": true
+    }
+  }
+}
+```
+~~~
+
+This will result in a decoration with different models in the Inventory, when placed on the floor, when placed on a wall and when placed on ceilings.

@@ -47,6 +47,33 @@ Defaults to `false`
 
 A set of options for placement options. Possible keys: "floor", "wall", "ceiling".
 
+You can specify different models for the different placements in the itemResource field.
+~~~admonish example
+```json
+{
+  "id": "mynamespace:small_gold_coin_piles",
+  "itemFrame": true,
+  "itemResource": {
+    "models": {
+      "default": "minecraft:item/diamond_sword",
+      "wall": "minecraft:custom/hats/backpack",
+      "ceiling": "minecraft:custom/furniture/misc/small_gold_coin_piles",
+      "floor": "minecraft:custom/furniture/misc/small_gold_coin_piles"
+    }
+  },
+  "properties": {
+    "rotate": true,
+    "rotateSmooth": true,
+    "placement": {
+      "wall": true,
+      "floor": true,
+      "ceiling": true
+    }
+  }
+}
+```
+~~~
+
 Default values:
 ```json
 {
@@ -123,3 +150,11 @@ Defaults to `true`
 Flag whether to show break particles at all.
 
 Defaults to `true`
+
+---
+
+### `itemFrame`
+
+Uses an item frame for decorations instead of either blocks or an interaction entity with an item display entity. 
+
+Defaults to `false`
