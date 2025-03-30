@@ -85,7 +85,9 @@ public final class DecorationData extends Data {
     public boolean isSimple() {
         boolean singleBlock = (!this.hasBlocks() || DecorationUtil.barrierDimensions(Objects.requireNonNull(this.blocks()), 0).equals(1, 1));
         final AtomicBoolean hasDecorationBehaviour = new AtomicBoolean(false);
-        this.behaviour().forEach((a,b) -> {if (b instanceof DecorationBehaviour) hasDecorationBehaviour.set(true);});
+        this.behaviour().forEach((a,b) -> {
+            if (DecorationBehaviour.class.isAssignableFrom(a.type())) hasDecorationBehaviour.set(true);
+        });
         boolean canBeDyed = this.vanillaItem != null && (vanillaItem == Items.LEATHER_HORSE_ARMOR || vanillaItem == Items.FIREWORK_STAR);
         boolean groundOnly = !this.properties().placement.wall() && !this.properties().placement.ceiling();
 
