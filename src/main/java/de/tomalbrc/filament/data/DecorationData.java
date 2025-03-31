@@ -10,6 +10,7 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,6 +30,7 @@ public final class DecorationData extends Data {
     private final @Nullable DecorationProperties properties;
     private final @Nullable Set<ResourceLocation> blockTags;
     private final @Nullable Boolean itemFrame;
+    private final @Nullable BlockState block;
 
     public DecorationData(
             @NotNull ResourceLocation id,
@@ -43,6 +45,7 @@ public final class DecorationData extends Data {
             @Nullable Set<ResourceLocation> blockTags,
             @Nullable DecorationProperties properties,
             @Nullable List<BlockConfig> blocks,
+            @Nullable BlockState block,
             @Nullable Vector2f size,
             @Nullable Boolean itemFrame
     ) {
@@ -52,6 +55,7 @@ public final class DecorationData extends Data {
         this.properties = properties;
         this.blockTags = blockTags;
         this.itemFrame = itemFrame;
+        this.block = block;
     }
 
     @Override
@@ -105,6 +109,11 @@ public final class DecorationData extends Data {
     public @Nullable Boolean itemFrame() {
         return this.itemFrame;
     }
+
+    public @NotNull BlockState block() {
+        return this.block != null ? this.block : Blocks.BARRIER.defaultBlockState();
+    }
+
 
     @Override
     public boolean equals(Object obj) {

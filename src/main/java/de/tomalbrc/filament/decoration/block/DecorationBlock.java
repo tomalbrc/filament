@@ -70,11 +70,17 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
 
     @Override
     public BlockState getPolymerBlockState(BlockState state, PacketContext packetContext) {
-        var passthrough = !getDecorationData().hasBlocks();
-        var block = passthrough ? state.getValue(DecorationBlock.WATERLOGGED) ? Blocks.WATER : Blocks.AIR : Blocks.BARRIER;
-        return state.getValue(DecorationBlock.WATERLOGGED) && !passthrough ?
-                block.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, true) :
-                block.defaultBlockState();
+        DecorationData decorationData = getDecorationData();
+        boolean passthrough = !decorationData.hasBlocks();
+        BlockState defaultState = passthrough ? state.getValue(DecorationBlock.WATERLOGGED) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState() : decorationData.block();
+
+        if (state.hasProperty(DecorationBlock.WATERLOGGED) && defaultState.hasProperty(DecorationBlock.WATERLOGGED)) {
+            return state.getValue(DecorationBlock.WATERLOGGED) && !passthrough ?
+                    defaultState.setValue(DecorationBlock.WATERLOGGED, true) :
+                    defaultState;
+        } else {
+            return defaultState;
+        }
     }
 
     @Override
@@ -107,7 +113,7 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
         if (!getDecorationData().hasBlocks()) {
             return Shapes.empty();
         } else {
-            return Shapes.block();
+            return super.getCollisionShape(blockState, blockGetter, blockPos, collisionContext);
         }
     }
 
