@@ -20,8 +20,9 @@ public class BlockProperties extends ItemProperties {
     public boolean requiresTool = true;
     public float explosionResistance = Float.MIN_VALUE;
     public float destroyTime = Float.MIN_VALUE;
+    public float jumpFactor = 1.f;
+    public Boolean isSuffocating = null;
     public BlockStateMappedProperty<Boolean> redstoneConductor = null;
-
     public BlockStateMappedProperty<Integer> lightEmission = null;
 
     public boolean transparent = false;
@@ -51,6 +52,9 @@ public class BlockProperties extends ItemProperties {
 
         if (this.lootTable != null) props.overrideLootTable(Optional.of(ResourceKey.create(Registries.LOOT_TABLE, this.lootTable)));
 
+        if (this.isSuffocating != null) props.isSuffocating((blockState,blockGetter,blockPos) -> this.isSuffocating);
+
+        props.jumpFactor(this.jumpFactor);
         props.mapColor(blockBase.defaultMapColor());
 
         if (this.solid) props.forceSolidOn();
