@@ -33,3 +33,18 @@ It also allows for gaps:
 }
 ```
 ~~~
+
+You can specify which block is used when specifying blocks with the `blocks` field using the `block` field. The default is `minecraft:barrier`
+~~~admonish example
+```json
+{
+  "block": "minecraft:chain[axis=y]",
+  "blocks": [
+    {
+      "origin": [0.0, 0.0, 0.0],
+      "size": [0.0, 2.0, 0.0]
+    }
+  ]
+}
+```
+~~~

@@ -20,7 +20,7 @@ All properties (excluding the shared item and decoration properties):
 ### `blockBase`:
 
 Specifies the base block for this block property. Must be a valid block identifier.
-This is used for sounds and particles.
+This is used for sounds, particles and the block color on maps.
 
 Defaults to `minecraft:stone`
 
@@ -96,9 +96,19 @@ The value of this property can be mapped to a blockstate like this:
 Defaults to `0`
 
 ### `transparent`:
-Flag indicating whether the block is transparent. Transparent blocks don't block light
+Flag indicating whether the block is transparent. Transparent blocks don't block light.
 
 Defaults to `false`
+
+### `isSuffocating`
+Flag wether the block causes suffocation damage.
+The default is unset.
+
+### `jumpFactor`
+Allows to change the bounciness or stickiness of the block.
+Set to a value below 1 to make the block act like honey, and above 1 to make it bouncy.
+
+Defaults to `1.0`
 
 ### `allowsSpawning`:
 Flag indicating whether mobs can spawn on this block.
