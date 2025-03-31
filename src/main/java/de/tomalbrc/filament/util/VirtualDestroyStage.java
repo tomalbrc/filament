@@ -4,7 +4,7 @@ import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
-import eu.pb4.polymer.virtualentity.api.attachment.ChunkAttachment;
+import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
@@ -73,7 +73,7 @@ public class VirtualDestroyStage extends ElementHolder {
 
         if (self.getAttachment() == null || !self.getAttachment().getPos().equals(vecPos)) {
             // init display list
-            ChunkAttachment.of(self, player.serverLevel(), vecPos);
+            BlockBoundAttachment.of(self, player.serverLevel(), vecPos);
             self.destroyElements().getFirst().setTranslation(new Vector3f());
 
             if (state.getBlock() instanceof DecorationBlock decorationBlock1 && decorationBlock1.getDecorationData().hasBlocks()) {

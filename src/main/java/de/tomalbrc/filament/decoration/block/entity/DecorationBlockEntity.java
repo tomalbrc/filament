@@ -16,7 +16,7 @@ import de.tomalbrc.filament.util.DecorationUtil;
 import de.tomalbrc.filament.util.FilamentConfig;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
-import eu.pb4.polymer.virtualentity.api.attachment.ChunkAttachment;
+import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -133,7 +133,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         if (this.isMain() && this.itemStack != null) {
             ElementHolder elementHolder = this.getOrCreateHolder();
             if (elementHolder.getAttachment() == null) {
-                new ChunkAttachment(elementHolder, chunk, this.getBlockPos().getCenter(), !(this.getDecorationHolder() instanceof DecorationHolder));
+                new BlockBoundAttachment(elementHolder, chunk, this.getBlockState(), this.getBlockPos(), this.getBlockPos().getCenter(), !(this.getDecorationHolder() instanceof DecorationHolder));
             }
         }
 
