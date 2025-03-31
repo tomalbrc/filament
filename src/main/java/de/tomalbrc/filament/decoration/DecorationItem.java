@@ -4,6 +4,7 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.block.SimpleBlockItem;
 import de.tomalbrc.filament.data.DecorationData;
+import de.tomalbrc.filament.data.properties.DecorationProperties;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
@@ -73,6 +74,8 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
             return InteractionResult.FAIL;
         }
 
+        DecorationProperties properties = decorationData.properties();
+
         var replaceable = useOnContext.getLevel().getBlockState(useOnContext.getClickedPos()).canBeReplaced();
 
         BlockPos blockPos = useOnContext.getClickedPos();
@@ -83,23 +86,27 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
         Level level = useOnContext.getLevel();
 
         int rotation = 0;
-        if (decorationData.properties().rotate) {
-            if (decorationData.properties().rotateSmooth) {
+        if (properties.rotate) {
+            if (properties.rotateSmooth) {
                 rotation = Util.SEGMENTED_ANGLE8.fromDegrees(useOnContext.getRotation()-180);
             } else {
                 rotation = Util.SEGMENTED_ANGLE8.fromDirection(useOnContext.getHorizontalDirection().getOpposite());
             }
         }
 
-        boolean propertyPlaceCheck = decorationData.properties().placement.canPlace(direction);
-        if (!propertyPlaceCheck && decorationData.properties().placement.floor() && !level.getBlockState(relativeBlockPos.relative(Direction.DOWN)).isAir()) {
+        boolean propertyPlaceCheck = properties.placement.canPlace(direction);
+        if (!propertyPlaceCheck && properties.placement.floor() && !level.getBlockState(relativeBlockPos.relative(Direction.DOWN)).isAir()) {
             direction = Direction.UP;
-            propertyPlaceCheck = decorationData.properties().placement.canPlace(direction);
+            propertyPlaceCheck = properties.placement.canPlace(direction);
         }
 
-        if (!propertyPlaceCheck && decorationData.properties().placement.ceiling() && !level.getBlockState(relativeBlockPos.relative(Direction.UP)).isAir()) {
+        if (!propertyPlaceCheck && properties.placement.ceiling() && !level.getBlockState(relativeBlockPos.relative(Direction.UP)).isAir()) {
             direction = Direction.DOWN;
-            propertyPlaceCheck = decorationData.properties().placement.canPlace(direction);
+            propertyPlaceCheck = properties.placement.canPlace(direction);
+        }
+
+        if (direction != Direction.UP && direction != Direction.DOWN) {
+            rotation = 0;
         }
 
         float angle = DecorationItem.getVisualRotationYInDegrees(direction, rotation);
@@ -112,8 +119,8 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
             player.startUsingItem(useOnContext.getHand());
             itemStack.shrink(1);
 
-            SoundEvent placeSound = this.getDecorationData().properties().blockBase.defaultBlockState().getSoundType().getPlaceSound();
-            level.playSound(null, blockPos,  placeSound, SoundSource.BLOCKS, 1.0F, 1.0F);
+            SoundEvent placeSound = properties.blockBase.defaultBlockState().getSoundType().getPlaceSound();
+            level.playSound(null, blockPos, placeSound, SoundSource.BLOCKS, 1.0F, 1.0F);
 
             return InteractionResult.SUCCESS_SERVER;
         }
