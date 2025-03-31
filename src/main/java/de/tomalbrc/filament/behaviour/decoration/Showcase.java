@@ -22,6 +22,9 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -62,24 +65,30 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
         if (!player.isSecondaryUseActive() && decorationBlockEntity.getDecorationHolder() instanceof DecorationHolder) {
             Showcase.ShowcaseMeta showcase = getClosestShowcase(decorationBlockEntity, location);
             ItemStack itemStack = player.getItemInHand(hand);
+            ItemStack showcaseStack = this.getShowcaseItemStack(showcase);
 
             if (this.canUseShowcaseItem(showcase, itemStack)) {
+                boolean changed = false;
                 if (!player.getItemInHand(hand).isEmpty()) {
-
-                    if (this.getShowcaseItemStack(showcase) != null) {
-                        Util.spawnAtLocation(decorationBlockEntity.getLevel(), decorationBlockEntity.getBlockPos().getCenter(), this.getShowcaseItemStack(showcase));
+                    changed = true;
+                    if (showcaseStack != null && !showcaseStack.isEmpty()) {
+                        Util.spawnAtLocation(decorationBlockEntity.getLevel(), location, showcaseStack);
                     }
 
                     this.setShowcaseItemStack(decorationBlockEntity, showcase, itemStack.copyWithCount(1));
                     itemStack.shrink(1);
-                } else if (this.getShowcaseItemStack(showcase) != null) {
-                    player.setItemInHand(hand, this.getShowcaseItemStack(showcase));
+                    player.level().playSound(null, location.x(), location.y(), location.z(), SoundEvent.createVariableRangeEvent(showcase.addItemSound), SoundSource.NEUTRAL, 1.0f, 1.0f);
+                } else if (showcaseStack != null && !showcaseStack.isEmpty()) {
+                    changed = true;
+                    player.setItemInHand(hand, showcaseStack);
                     this.setShowcaseItemStack(decorationBlockEntity, showcase, ItemStack.EMPTY);
+                    player.level().playSound(null, location.x(), location.y(), location.z(), SoundEvent.createVariableRangeEvent(showcase.removeItemSound), SoundSource.NEUTRAL, 1.0f, 1.0f);
                 }
 
-                decorationBlockEntity.setChanged();
-
-                return InteractionResult.CONSUME;
+                if (changed) {
+                    decorationBlockEntity.setChanged();
+                    return InteractionResult.CONSUME;
+                }
             }
         }
 
@@ -128,7 +137,7 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
 
     @Override
     public void destroy(DecorationBlockEntity decorationBlockEntity, boolean dropItem) {
-        if (decorationBlockEntity.getDecorationHolder() instanceof DecorationHolder decorationHolder) {
+        if (decorationBlockEntity.getDecorationHolder() instanceof DecorationHolder) {
             config.forEach(showcase -> {
                 ItemStack itemStack = getShowcaseItemStack(showcase);
                 if (itemStack != null && !itemStack.isEmpty()) {
@@ -182,7 +191,7 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
             newElement = this.createShowcase(decorationBlockEntity, showcase, itemStack);
             decorationBlockEntity.getDecorationHolder().addElement(newElement);
         } else {
-            if (element instanceof BlockDisplayElement blockDisplayElement && itemStack.getItem() instanceof BlockItem blockItem && (!(blockItem instanceof SimpleBlockItem DecorationItem))) {
+            if (element instanceof BlockDisplayElement blockDisplayElement && itemStack.getItem() instanceof BlockItem blockItem && !(blockItem instanceof SimpleBlockItem)) {
                 blockDisplayElement.setBlockState(blockItem.getBlock().defaultBlockState());
             } else if (element instanceof ItemDisplayElement itemDisplayElement) {
                 itemDisplayElement.setItem(itemStack);
@@ -306,6 +315,10 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
          * Items with given item tags to allow
          */
         public List<ResourceLocation> filterTags;
+
+        public ResourceLocation addItemSound = SoundEvents.ITEM_FRAME_ADD_ITEM.location();
+
+        public ResourceLocation removeItemSound = SoundEvents.ITEM_FRAME_REMOVE_ITEM.location();
     }
 
     public enum ShowcaseType {
