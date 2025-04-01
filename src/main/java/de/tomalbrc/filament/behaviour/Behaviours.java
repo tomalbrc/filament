@@ -60,6 +60,7 @@ public class Behaviours {
 
     // Decoration
     public static final BehaviourType<Animation, Animation.AnimationConfig> ANIMATION = registerBehaviour("animation", Animation.class);
+    public static final BehaviourType<Bed, Bed.Config> BED = registerBehaviour("bed", Bed.class);
     public static final BehaviourType<Container, Container.ContainerConfig> CONTAINER = registerBehaviour("container", Container.class);
     public static final BehaviourType<Lock, Lock.LockConfig> LOCK = registerBehaviour("lock", Lock.class); // this only exists for backwards compatibility
     public static final BehaviourType<Lock, Lock.LockConfig> INTERACT_EXECUTE = registerBehaviour("interact_execute", Lock.class);

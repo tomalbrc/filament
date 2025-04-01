@@ -17,6 +17,8 @@
     "behaviour.FuelValuesMixin",
     "behaviour.banner.LoomMenu$5Mixin",
     "behaviour.banner.LoomMenuMixin",
+    "behaviour.bed.LivingEntityMixin",
+    "behaviour.bed.ServerPlayerMixin",
     "behaviour.cosmetic.LivingEntityMixin",
     "behaviour.cosmetic.ServerPlayerMixin",
     "behaviour.crop.BeeMixin",
