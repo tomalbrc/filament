@@ -5,6 +5,7 @@ import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.util.VirtualDestroyStage;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
+import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -36,11 +37,10 @@ import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.function.BiConsumer;
 
-public abstract class DecorationBlock extends Block implements PolymerBlock, SimpleWaterloggedBlock, VirtualDestroyStage.Marker {
+public abstract class DecorationBlock extends Block implements PolymerBlock, BlockWithElementHolder, SimpleWaterloggedBlock, VirtualDestroyStage.Marker {
     final protected ResourceLocation decorationId;
 
     public static final IntegerProperty LIGHT_LEVEL = BlockStateProperties.LEVEL;
-
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public DecorationBlock(Properties properties, ResourceLocation decorationId) {
@@ -54,7 +54,6 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
         var state = this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(LIGHT_LEVEL, !data.hasLightBehaviours() && data.properties().mayBeLightSource() && !data.properties().lightEmission.isMap() ? data.properties().lightEmission.getRawValue() : 0);
         this.registerDefaultState(state);
     }
-
 
     public DecorationData getDecorationData() {
         return DecorationRegistry.getDecorationDefinition(this.decorationId);
@@ -74,13 +73,11 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
         boolean passthrough = !decorationData.hasBlocks();
         BlockState defaultState = passthrough ? state.getValue(DecorationBlock.WATERLOGGED) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState() : decorationData.block();
 
-        if (state.hasProperty(DecorationBlock.WATERLOGGED) && defaultState.hasProperty(DecorationBlock.WATERLOGGED)) {
-            return state.getValue(DecorationBlock.WATERLOGGED) && !passthrough ?
-                    defaultState.setValue(DecorationBlock.WATERLOGGED, true) :
-                    defaultState;
-        } else {
-            return defaultState;
+        if (state.hasProperty(DecorationBlock.WATERLOGGED) && defaultState.hasProperty(DecorationBlock.WATERLOGGED) && state.getValue(DecorationBlock.WATERLOGGED) && !passthrough) {
+            defaultState = defaultState.setValue(DecorationBlock.WATERLOGGED, true);
         }
+
+        return defaultState;
     }
 
     @Override

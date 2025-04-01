@@ -13,7 +13,7 @@ import java.util.Map;
 public final class FilamentBlockResourceUtils {
     private static final Map<BlockModelType, Map<PolymerBlockModel, BlockState>> MODEL_CACHE = new Object2ObjectArrayMap<>();
 
-    public static @Nullable BlockState requestBlock(BlockModelType type, PolymerBlockModel model) {
+    public static @Nullable BlockState requestBlock(BlockModelType type, PolymerBlockModel model, boolean virtual) {
         var list = MODEL_CACHE.computeIfAbsent(type,  x -> new Object2ReferenceArrayMap<>());
         for (Map.Entry<PolymerBlockModel, BlockState> entry : list.entrySet()) {
             if (entry.getKey().equals(model)) {
@@ -21,7 +21,13 @@ public final class FilamentBlockResourceUtils {
             }
         }
 
-        var state = PolymerBlockResourceUtils.requestBlock(type, model);
+        BlockState state;
+        if (virtual) {
+            state = PolymerBlockResourceUtils.requestEmpty(type);
+        } else {
+            state = PolymerBlockResourceUtils.requestBlock(type, model);
+        }
+
         list.put(model, state);
         return state;
     }

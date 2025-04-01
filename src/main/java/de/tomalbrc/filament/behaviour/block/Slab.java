@@ -155,11 +155,11 @@ public class Slab implements BlockBehaviour<Slab.SlabConfig>, SimpleWaterloggedB
 
             BlockState requestedState;
             if (parsed.blockState().getValue(SlabBlock.TYPE) == SlabType.TOP) {
-                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.TOP_SLAB, blockModel);
+                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.TOP_SLAB, blockModel, data.virtual());
             } else if (parsed.blockState().getValue(SlabBlock.TYPE) == SlabType.BOTTOM) {
-                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.BOTTOM_SLAB, blockModel);
+                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.BOTTOM_SLAB, blockModel, data.virtual());
             } else {
-                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.FULL_BLOCK, blockModel);
+                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.FULL_BLOCK, blockModel, data.virtual());
             }
 
             map.put(parsed.blockState(), BlockData.BlockStateMeta.of(requestedState, blockModel));
@@ -168,7 +168,7 @@ public class Slab implements BlockBehaviour<Slab.SlabConfig>, SimpleWaterloggedB
         for (Map.Entry<BlockState, BlockData.BlockStateMeta> entry : map.entrySet()) {
             var blockState = entry.getValue().blockState();
             if (blockState.hasProperty(SlabBlock.WATERLOGGED) && !blockState.getValue(SlabBlock.WATERLOGGED) && blockState.hasProperty(SlabBlock.TYPE) && blockState.getValue(SlabBlock.TYPE) != SlabType.DOUBLE) {
-                var res = FilamentBlockResourceUtils.requestBlock(blockState.getValue(SlabBlock.TYPE) == SlabType.TOP ? BlockModelType.TOP_SLAB_WATERLOGGED : BlockModelType.BOTTOM_SLAB_WATERLOGGED, entry.getValue().polymerBlockModel());
+                var res = FilamentBlockResourceUtils.requestBlock(blockState.getValue(SlabBlock.TYPE) == SlabType.TOP ? BlockModelType.TOP_SLAB_WATERLOGGED : BlockModelType.BOTTOM_SLAB_WATERLOGGED, entry.getValue().polymerBlockModel(), data.virtual());
                 map.put(entry.getKey().setValue(SlabBlock.WATERLOGGED, true), BlockData.BlockStateMeta.of(res, entry.getValue().polymerBlockModel()));
             }
         }

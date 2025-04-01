@@ -90,6 +90,10 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     public BlockState getPolymerBlockState(BlockState blockState, PacketContext packetContext) {
+        if (this.blockData.block() != null) {
+            return this.blockData.block();
+        }
+
         if (this.stateMap != null) for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 BlockState polyBlockState = blockBehaviour.getCustomPolymerBlockState(this.stateMap, blockState);

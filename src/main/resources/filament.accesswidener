@@ -20,3 +20,6 @@ accessible method net/minecraft/server/packs/FilePackResources addPrefix (Ljava/
 accessible method net/minecraft/server/packs/FilePackResources$SharedZipFileAccess getOrCreateZipFile ()Ljava/util/zip/ZipFile;
 
 accessible field net/minecraft/world/entity/projectile/AbstractArrow baseDamage D
+
+accessible field net/minecraft/world/entity/player/Player sleepCounter I
+accessible class net/minecraft/server/level/ServerPlayer$RespawnPosAngle

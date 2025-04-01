@@ -34,6 +34,8 @@ public final class BlockData extends Data {
     private final @Nullable BlockStateMappedProperty<BlockModelType> blockModelType;
     private final @Nullable BlockProperties properties;
     private final @Nullable Set<ResourceLocation> blockTags;
+    private final boolean virtual;
+    private final @Nullable BlockState block;
 
     public BlockData(
             @NotNull ResourceLocation id,
@@ -47,6 +49,8 @@ public final class BlockData extends Data {
             @NotNull BlockResource blockResource,
             @Nullable BlockStateMappedProperty<BlockModelType> blockModelType,
             @Nullable BlockProperties properties,
+            boolean virtual,
+            @Nullable BlockState block,
             @Nullable Set<ResourceLocation> itemTags,
             @Nullable Set<ResourceLocation> blockTags
     ) {
@@ -55,6 +59,8 @@ public final class BlockData extends Data {
         this.blockModelType = blockModelType;
         this.properties = properties;
         this.blockTags = blockTags;
+        this.virtual = virtual;
+        this.block = block;
     }
 
     @Override
@@ -66,6 +72,15 @@ public final class BlockData extends Data {
         return properties;
     }
 
+    public boolean virtual() {
+        return this.virtual;
+    }
+
+    @Nullable
+    public BlockState block() {
+        return this.block;
+    }
+
     public Map<BlockState, BlockStateMeta> createStandardStateMap() {
         Reference2ReferenceArrayMap<BlockState, BlockStateMeta> val = new Reference2ReferenceArrayMap<>();
 
@@ -73,7 +88,7 @@ public final class BlockData extends Data {
             for (Map.Entry<String, PolymerBlockModel> entry : this.blockResource.models().entrySet()) {
                 if (entry.getKey().equals("default")) {
                     var type = safeBlockModelType(this.blockModelType.getRawValue());
-                    BlockState requestedState = type == null ? null : FilamentBlockResourceUtils.requestBlock(type, entry.getValue());
+                    BlockState requestedState = type == null ? null : FilamentBlockResourceUtils.requestBlock(type, entry.getValue(), this.virtual());
                     val.put(BuiltInRegistries.BLOCK.getValue(id).defaultBlockState(), BlockStateMeta.of(type == null ? Blocks.BEDROCK.defaultBlockState() : requestedState, entry.getValue()));
                 } else {
                     BlockState state = blockState(String.format("%s[%s]", id, entry.getKey()));
@@ -84,7 +99,7 @@ public final class BlockData extends Data {
                         type = safeBlockModelType(this.blockModelType.getRawValue());
                     }
 
-                    BlockState requestedState = type == null ? null : FilamentBlockResourceUtils.requestBlock(type, entry.getValue());
+                    BlockState requestedState = type == null ? null : FilamentBlockResourceUtils.requestBlock(type, entry.getValue(), this.virtual());
                     val.put(state, BlockStateMeta.of(type == null ? Blocks.BEDROCK.defaultBlockState() : requestedState, entry.getValue()));
                 }
             }

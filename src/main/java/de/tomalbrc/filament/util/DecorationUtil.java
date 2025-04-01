@@ -182,7 +182,7 @@ public class DecorationUtil {
     }
 
     public static void showBreakParticle(ServerLevel level, ItemStack stack, float x, float y, float z) {
-        level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, stack), x, y, z, 27, 0.125, 0.125, 0.125, 0.05);
+        level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, stack), x, y, z, 27, 0.2, 0.2, 0.2, 0.05);
     }
 
 

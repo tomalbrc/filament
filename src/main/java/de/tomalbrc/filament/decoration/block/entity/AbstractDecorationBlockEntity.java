@@ -46,6 +46,10 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
         return (DecorationBlockEntity)this.level.getBlockEntity(new BlockPos(this.worldPosition).subtract(this.main));
     }
 
+    public BlockPos mainPosition() {
+        return new BlockPos(this.worldPosition).subtract(this.main);
+    }
+
     @Override
     protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
         super.loadAdditional(compoundTag, provider);

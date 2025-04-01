@@ -7,6 +7,7 @@ import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
 import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.block.SimpleBlockItem;
+import de.tomalbrc.filament.block.SimpleVirtualBlock;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.*;
@@ -55,7 +56,12 @@ public class BlockRegistry {
         BlockProperties properties = data.properties();
         BlockBehaviour.Properties blockProperties = properties.toBlockProperties();
 
-        SimpleBlock customBlock = BlockRegistry.registerBlock(key(data.id()), (props)-> new SimpleBlock(props, data), blockProperties, data.blockTags());
+        SimpleBlock customBlock;
+        if (data.virtual()) {
+            customBlock = BlockRegistry.registerBlock(key(data.id()), (props)-> new SimpleVirtualBlock(props, data), blockProperties, data.blockTags());
+        } else {
+            customBlock = BlockRegistry.registerBlock(key(data.id()), (props)-> new SimpleBlock(props, data), blockProperties, data.blockTags());
+        }
 
         Item.Properties itemProperties = data.properties().toItemProperties();
         if (data.properties().copyComponents) {
