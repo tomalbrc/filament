@@ -22,8 +22,8 @@ import java.util.Map;
 public class RPUtil {
     public static void create(BehaviourHolder behaviourHolder, Data data) {
         ResourceProvider itemResources = data.itemResource();
-        if (data.preferredResource() != data.itemResource() && data.preferredResource() != null) {
-            itemResources = data.preferredResource();
+        if (data.itemResource() == null && data instanceof BlockData blockData) {
+            itemResources = blockData.blockResource();
         }
 
         if (itemResources instanceof ItemResource ir && ir.couldGenerate()) {
