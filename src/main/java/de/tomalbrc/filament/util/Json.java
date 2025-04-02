@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.util;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -42,12 +43,11 @@ import java.io.InputStreamReader;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class Json {
+    private static final Set<String> BEHAVIOUR_ALIASES = ImmutableSet.of("behavior", "behaviors", "behaviours");
+
     public static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
@@ -87,6 +87,8 @@ public class Json {
         return list;
     }
 
+
+
     public static InputStream camelToSnakeCase(InputStream inputStream) {
         Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
         var json = JsonParser.parseReader(new InputStreamReader(inputStream));
@@ -110,7 +112,7 @@ public class Json {
     public static Map<String, Object> camelToSnakeCase(Map<String, Object> map) {
         Map<String, Object> result = new HashMap<>();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
-            String key = camelToSnake(entry.getKey());
+            String key = camelToSnakeCaseKey(entry.getKey());
             Object value = entry.getValue();
             if (value instanceof Map<?, ?> map1) {
                 @SuppressWarnings("unchecked")
@@ -122,7 +124,11 @@ public class Json {
         return result;
     }
 
-    private static String camelToSnake(String key) {
+    private static String camelToSnakeCaseKey(String key) {
+        if (BEHAVIOUR_ALIASES.contains(key)) {
+            return "behaviour";
+        }
+
         StringBuilder snakeCase = new StringBuilder();
         for (int i = 0; i < key.length(); i++) {
             char c = key.charAt(i);
