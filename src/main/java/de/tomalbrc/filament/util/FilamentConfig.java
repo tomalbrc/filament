@@ -13,6 +13,8 @@ public class FilamentConfig {
     static Path CONFIG_FILE_PATH = Constants.CONFIG_DIR.resolve("filament.json");
     static FilamentConfig instance;
 
+    public boolean debug = false;
+
     @SerializedName("commands")
     public boolean commands = true;
 
