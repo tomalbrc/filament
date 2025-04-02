@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -88,7 +89,6 @@ public class Json {
     }
 
 
-
     public static InputStream camelToSnakeCase(InputStream inputStream) {
         Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
         var json = JsonParser.parseReader(new InputStreamReader(inputStream));
@@ -101,8 +101,7 @@ public class Json {
                 document = Json.camelToSnakeCase(document);
             }
             stream = new ByteArrayInputStream(gson.toJson(document).getBytes(StandardCharsets.UTF_8));
-        }
-        else {
+        } else {
             stream = new ByteArrayInputStream(gson.toJson(json).getBytes(StandardCharsets.UTF_8));
         }
 
@@ -124,9 +123,19 @@ public class Json {
         return result;
     }
 
-    private static String camelToSnakeCaseKey(String key) {
-        if (BEHAVIOUR_ALIASES.contains(key)) {
+    @Nullable
+    private static String aliasReplace(String string) {
+        if (BEHAVIOUR_ALIASES.contains(string)) {
             return "behaviour";
+        }
+        return null;
+    }
+
+    @NotNull
+    private static String camelToSnakeCaseKey(String key) {
+        String replacement = aliasReplace(key);
+        if (replacement != null) {
+            return replacement;
         }
 
         StringBuilder snakeCase = new StringBuilder();
@@ -362,8 +371,11 @@ public class Json {
 
             if (result.resultOrPartial().isEmpty()) {
                 Filament.LOGGER.error("Skipping broken components; could not load: {}", jsonElement.getAsString());
-                Filament.LOGGER.error("Minecraft error message: {}",  result.error().orElseThrow().message());
+                Filament.LOGGER.error("Minecraft error message: {}", result.error().orElseThrow().message());
                 return null;
+            } else if (result.error().isPresent()) {
+                Filament.LOGGER.warn("Could not load some components: {}", jsonElement.getAsString());
+                Filament.LOGGER.warn("Minecraft error message: {}", result.error().orElseThrow().message());
             }
 
             return result.resultOrPartial().get().getFirst();
@@ -376,7 +388,7 @@ public class Json {
                 @NotNull
                 @SuppressWarnings("unchecked")
                 public <T> Optional<RegistryOps.RegistryInfo<T>> lookup(ResourceKey<? extends Registry<? extends T>> resourceKey) {
-                    return Optional.ofNullable((RegistryOps.RegistryInfo<T>)map.get(resourceKey));
+                    return Optional.ofNullable((RegistryOps.RegistryInfo<T>) map.get(resourceKey));
                 }
             };
         }
