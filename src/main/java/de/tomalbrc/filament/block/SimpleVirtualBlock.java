@@ -121,8 +121,7 @@ public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementH
         @Override
         protected void onAttachmentRemoved(HolderAttachment oldAttachment) {
             if (oldAttachment instanceof BlockAwareAttachment blockAwareAttachment && blockAwareAttachment.isPartOfTheWorld()) {
-                var pos = oldAttachment.getPos();
-                DecorationUtil.showBreakParticle(oldAttachment.getWorld(), this.displayStack, (float)pos.x(), (float)pos.y(), (float)pos.z());
+                DecorationUtil.showBreakParticleShaped(blockAwareAttachment.getWorld(), blockAwareAttachment.getBlockPos(), blockAwareAttachment.getBlockState(), this.displayStack);
             }
             super.onAttachmentRemoved(oldAttachment);
         }

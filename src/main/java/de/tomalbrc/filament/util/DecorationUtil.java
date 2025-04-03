@@ -26,8 +26,11 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomModelData;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.joml.Math;
 import org.joml.*;
 import xyz.nucleoid.packettweaker.PacketContext;
@@ -182,9 +185,41 @@ public class DecorationUtil {
     }
 
     public static void showBreakParticle(ServerLevel level, ItemStack stack, float x, float y, float z) {
-        level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, stack), x, y, z, 27, 0.2, 0.2, 0.2, 0.05);
+        showBreakParticle(level, Shapes.block(), stack, BlockPos.containing(x, y, z));
     }
 
+    public static void showBreakParticleShaped(ServerLevel level, BlockPos blockPos, BlockState blockState, ItemStack stack) {
+        if (blockState.isAir() || !blockState.shouldSpawnTerrainParticles()) {
+            return;
+        }
+        VoxelShape voxelShape = blockState.getShape(level, blockPos);
+        showBreakParticle(level, voxelShape, stack, blockPos);
+    }
+
+    public static void showBreakParticle(ServerLevel level, VoxelShape voxelShape, ItemStack stack, BlockPos blockPos) {
+        double dd = 0.25;
+        voxelShape.forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> {
+            double dx = Math.min(1.0, maxX - minX);
+            double dy = Math.min(1.0, maxY - minY);
+            double dz = Math.min(1.0, maxZ - minZ);
+            int nx = Math.max(2, Mth.ceil(dx / dd));
+            int ny = Math.max(2, Mth.ceil(dy / dd));
+            int nz = Math.max(2, Mth.ceil(dz / dd));
+            for (int iX = 0; iX < nx; ++iX) {
+                for (int iY = 0; iY < ny; ++iY) {
+                    for (int iZ = 0; iZ < nz; ++iZ) {
+                        double deltaX = ((double)iX + 0.5) / (double)nx;
+                        double deltaY = ((double)iY + 0.5) / (double)ny;
+                        double deltaZ = ((double)iZ + 0.5) / (double)nz;
+                        double xOffset = deltaX * dx + minX;
+                        double yOffset = deltaY * dy + minY;
+                        double zOffset = deltaZ * dz + minZ;
+                        level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, stack), (double)blockPos.getX() + xOffset, (double)blockPos.getY() + yOffset, (double)blockPos.getZ() + zOffset, 0, deltaX - 0.5, deltaY - 0.5, deltaZ - 0.5, 0.25);
+                    }
+                }
+            }
+        });
+    }
 
     public static ItemStack placementAdjustedItem(ItemStack itemStack, ItemResource itemResource, boolean wall, boolean ceiling) {
         var converted = clientsideItem(itemStack);
