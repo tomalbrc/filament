@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
@@ -59,7 +60,7 @@ public abstract class FlowingFluidMixin {
             }
 
             // let it overflow with liquid
-            levelAccessor.setBlock(blockPos, fluidState.createLegacyBlock(), 3);
+            levelAccessor.setBlock(blockPos, fluidState.createLegacyBlock(), Block.UPDATE_ALL);
         }
     }
 
