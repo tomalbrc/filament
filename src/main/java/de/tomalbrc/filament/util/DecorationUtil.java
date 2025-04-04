@@ -197,24 +197,24 @@ public class DecorationUtil {
     }
 
     public static void showBreakParticle(ServerLevel level, VoxelShape voxelShape, ItemStack stack, BlockPos blockPos) {
-        double dd = 0.25;
+        double div = 0.25;
         voxelShape.forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> {
             double dx = Math.min(1.0, maxX - minX);
             double dy = Math.min(1.0, maxY - minY);
             double dz = Math.min(1.0, maxZ - minZ);
-            int nx = Math.max(2, Mth.ceil(dx / dd));
-            int ny = Math.max(2, Mth.ceil(dy / dd));
-            int nz = Math.max(2, Mth.ceil(dz / dd));
+            int nx = Math.max(2, Mth.ceil(dx / div));
+            int ny = Math.max(2, Mth.ceil(dy / div));
+            int nz = Math.max(2, Mth.ceil(dz / div));
             for (int iX = 0; iX < nx; ++iX) {
                 for (int iY = 0; iY < ny; ++iY) {
                     for (int iZ = 0; iZ < nz; ++iZ) {
-                        double deltaX = ((double)iX + 0.5) / (double)nx;
-                        double deltaY = ((double)iY + 0.5) / (double)ny;
-                        double deltaZ = ((double)iZ + 0.5) / (double)nz;
+                        double deltaX = (iX + 0.5) / nx;
+                        double deltaY = (iY + 0.5) / ny;
+                        double deltaZ = (iZ + 0.5) / nz;
                         double xOffset = deltaX * dx + minX;
                         double yOffset = deltaY * dy + minY;
                         double zOffset = deltaZ * dz + minZ;
-                        level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, stack), (double)blockPos.getX() + xOffset, (double)blockPos.getY() + yOffset, (double)blockPos.getZ() + zOffset, 0, deltaX - 0.5, deltaY - 0.5, deltaZ - 0.5, 0.25);
+                        level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, stack), blockPos.getX() + xOffset, blockPos.getY() + yOffset, blockPos.getZ() + zOffset, 0, deltaX - 0.5, deltaY - 0.5, deltaZ - 0.5, 0.25);
                     }
                 }
             }

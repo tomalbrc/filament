@@ -43,6 +43,8 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Blo
     public static final IntegerProperty LIGHT_LEVEL = BlockStateProperties.LEVEL;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
+    protected final StateDefinition<Block, BlockState> stateDefinitionEx;
+
     public DecorationBlock(Properties properties, ResourceLocation decorationId) {
         super(properties);
         this.decorationId = decorationId;
@@ -50,9 +52,26 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Blo
         // todo
         //FlammableBlockRegistry.getDefaultInstance().add(this, 5, 10);
 
+        // the StateDefinition built too early, cant access DecorationData from within createBlockStateDefinition
+        StateDefinition.Builder<Block, BlockState> builder = new StateDefinition.Builder<>(this);
+        this.createBlockStateDefinition(builder);
+        this.stateDefinitionEx = builder.create(Block::defaultBlockState, BlockState::new);
+
         var data = getDecorationData();
-        var state = this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(LIGHT_LEVEL, !data.hasLightBehaviours() && data.properties().mayBeLightSource() && !data.properties().lightEmission.isMap() ? data.properties().lightEmission.getRawValue() : 0);
+        var state = this.stateDefinitionEx.any();
+        if (data.isLightEnabled()) {
+            state = state.setValue(LIGHT_LEVEL, !data.hasLightBehaviours() && data.properties().mayBeLightSource() && !data.properties().lightEmission.isMap() ? data.properties().lightEmission.getRawValue() : 0);
+        }
+        if (data.properties().waterloggable) {
+            state = state.setValue(WATERLOGGED, false);
+        }
         this.registerDefaultState(state);
+    }
+
+    @Override
+    @NotNull
+    public StateDefinition<Block, BlockState> getStateDefinition() {
+        return this.stateDefinitionEx;
     }
 
     public DecorationData getDecorationData() {
@@ -64,14 +83,26 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Blo
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(LIGHT_LEVEL, WATERLOGGED);
+        if (this.decorationId == null)
+            return;
+
+        DecorationData data = getDecorationData();
+        if (data != null) {
+            if (data.isLightEnabled()) {
+                builder.add(LIGHT_LEVEL);
+            }
+
+            if (data.properties().waterloggable) {
+                builder.add(WATERLOGGED);
+            }
+        }
     }
 
     @Override
     public BlockState getPolymerBlockState(BlockState state, PacketContext packetContext) {
         DecorationData decorationData = getDecorationData();
         boolean passthrough = !decorationData.hasBlocks();
-        BlockState defaultState = passthrough ? state.getValue(DecorationBlock.WATERLOGGED) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState() : decorationData.block();
+        BlockState defaultState = passthrough ? state.hasProperty(DecorationBlock.WATERLOGGED) && state.getValue(DecorationBlock.WATERLOGGED) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState() : decorationData.block();
 
         if (state.hasProperty(DecorationBlock.WATERLOGGED) && defaultState.hasProperty(DecorationBlock.WATERLOGGED) && state.getValue(DecorationBlock.WATERLOGGED) && !passthrough) {
             defaultState = defaultState.setValue(DecorationBlock.WATERLOGGED, true);
@@ -142,13 +173,13 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Blo
     @Override
     @NotNull
     public FluidState getFluidState(BlockState blockState) {
-        return blockState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(blockState);
+        return blockState.hasProperty(WATERLOGGED) && blockState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(blockState);
     }
 
     @Override
     @NotNull
     protected BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
-        if (blockState.getValue(WATERLOGGED)) {
+        if (blockState.hasProperty(WATERLOGGED) && blockState.getValue(WATERLOGGED)) {
             scheduledTickAccess.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelReader));
         }
 
@@ -162,6 +193,6 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Blo
         boolean bl = fluidState.isSource() && fluidState.getType() == Fluids.WATER;
         var res = super.getStateForPlacement(blockPlaceContext);
         assert res != null;
-        return res.setValue(WATERLOGGED, bl);
+        return res.hasProperty(WATERLOGGED) ? res.setValue(WATERLOGGED, bl) : res;
     }
 }
