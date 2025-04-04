@@ -28,7 +28,7 @@ public class DecorationProperties extends BlockProperties {
     @Override
     public BlockBehaviour.Properties toBlockProperties() {
         BlockBehaviour.Properties props = super.toBlockProperties();
-        props.lightLevel((state) -> state.getValue(DecorationBlock.LIGHT_LEVEL));
+        props.lightLevel((state) -> state.hasProperty(DecorationBlock.LIGHT_LEVEL) ? state.getValue(DecorationBlock.LIGHT_LEVEL) : 0);
         return props.dynamicShape().noOcclusion();
     }
 

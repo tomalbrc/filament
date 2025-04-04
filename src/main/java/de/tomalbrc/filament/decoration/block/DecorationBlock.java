@@ -42,6 +42,8 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
+    protected final StateDefinition<Block, BlockState> stateDefinitionEx;
+
     public DecorationBlock(Properties properties, ResourceLocation decorationId) {
         super(properties);
         this.decorationId = decorationId;
@@ -49,11 +51,27 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
         // todo
         //FlammableBlockRegistry.getDefaultInstance().add(this, 5, 10);
 
+        // the StateDefinition built too early, cant access DecorationData from within createBlockStateDefinition
+        StateDefinition.Builder<Block, BlockState> builder = new StateDefinition.Builder<>(this);
+        this.createBlockStateDefinition(builder);
+        this.stateDefinitionEx = builder.create(Block::defaultBlockState, BlockState::new);
+
         var data = getDecorationData();
-        var state = this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(LIGHT_LEVEL, !data.hasLightBehaviours() && data.properties().mayBeLightSource() && !data.properties().lightEmission.isMap() ? data.properties().lightEmission.getRawValue() : 0);
+        var state = this.stateDefinitionEx.any();
+        if (data.isLightEnabled()) {
+            state = state.setValue(LIGHT_LEVEL, !data.hasLightBehaviours() && data.properties().mayBeLightSource() && !data.properties().lightEmission.isMap() ? data.properties().lightEmission.getRawValue() : 0);
+        }
+        if (data.properties().waterloggable) {
+            state = state.setValue(WATERLOGGED, false);
+        }
         this.registerDefaultState(state);
     }
 
+    @Override
+    @NotNull
+    public StateDefinition<Block, BlockState> getStateDefinition() {
+        return this.stateDefinitionEx;
+    }
 
     public DecorationData getDecorationData() {
         return DecorationRegistry.getDecorationDefinition(this.decorationId);
@@ -64,13 +82,25 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(LIGHT_LEVEL, WATERLOGGED);
+        if (this.decorationId == null)
+            return;
+
+        DecorationData data = getDecorationData();
+        if (data != null) {
+            if (data.isLightEnabled()) {
+                builder.add(LIGHT_LEVEL);
+            }
+
+            if (data.properties().waterloggable) {
+                builder.add(WATERLOGGED);
+            }
+        }
     }
 
     @Override
     public BlockState getPolymerBlockState(BlockState state) {
         var passthrough = !getDecorationData().hasBlocks();
-        var block = passthrough ? state.getValue(DecorationBlock.WATERLOGGED) ? Blocks.WATER : Blocks.AIR : Blocks.BARRIER;
+        var block = passthrough ? state.hasProperty(DecorationBlock.WATERLOGGED) && state.getValue(DecorationBlock.WATERLOGGED) ? Blocks.WATER : Blocks.AIR : Blocks.BARRIER;
         return state.getValue(DecorationBlock.WATERLOGGED) && !passthrough ?
                 block.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, true) :
                 block.defaultBlockState();
@@ -138,13 +168,13 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
     @Override
     @NotNull
     public FluidState getFluidState(BlockState blockState) {
-        return blockState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(blockState);
+        return blockState.hasProperty(WATERLOGGED) && blockState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(blockState);
     }
 
     @Override
     @NotNull
     public BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) {
-        if (blockState.getValue(WATERLOGGED)) {
+        if (blockState.hasProperty(WATERLOGGED) && blockState.getValue(WATERLOGGED)) {
             levelAccessor.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
         }
 
@@ -158,6 +188,6 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
         boolean bl = fluidState.isSource() && fluidState.getType() == Fluids.WATER;
         var res = super.getStateForPlacement(blockPlaceContext);
         assert res != null;
-        return res.setValue(WATERLOGGED, bl);
+        return res.hasProperty(WATERLOGGED) ? res.setValue(WATERLOGGED, bl) : res;
     }
 }
