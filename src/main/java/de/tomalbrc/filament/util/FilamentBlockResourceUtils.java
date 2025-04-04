@@ -15,9 +15,11 @@ public final class FilamentBlockResourceUtils {
 
     public static @Nullable BlockState requestBlock(BlockModelType type, PolymerBlockModel model, boolean virtual) {
         var list = MODEL_CACHE.computeIfAbsent(type,  x -> new Object2ReferenceArrayMap<>());
-        for (Map.Entry<PolymerBlockModel, BlockState> entry : list.entrySet()) {
-            if (entry.getKey().equals(model)) {
-                return entry.getValue();
+        if (!virtual) {
+            for (Map.Entry<PolymerBlockModel, BlockState> entry : list.entrySet()) {
+                if (entry.getKey().equals(model)) {
+                    return entry.getValue();
+                }
             }
         }
 
@@ -28,7 +30,9 @@ public final class FilamentBlockResourceUtils {
             state = PolymerBlockResourceUtils.requestBlock(type, model);
         }
 
-        list.put(model, state);
+        if (!virtual)
+            list.put(model, state);
+
         return state;
     }
 }
