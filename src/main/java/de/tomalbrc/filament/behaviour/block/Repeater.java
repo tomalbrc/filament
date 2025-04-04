@@ -3,7 +3,6 @@ package de.tomalbrc.filament.behaviour.block;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.Behaviours;
-import de.tomalbrc.filament.data.BlockData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -20,8 +19,6 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.ticks.TickPriority;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
 
 /**
  * Block behaviour for redstone power source
@@ -134,9 +131,8 @@ public class Repeater implements BlockBehaviour<Repeater.RepeaterConfig> {
     }
 
     @Override
-    public BlockState getCustomPolymerBlockState(Map<BlockState, BlockData.BlockStateMeta> stateMap, BlockState blockState) {
-        blockState = blockState.setValue(SIGNAL, 0);
-        return stateMap.get(blockState).blockState();
+    public BlockState filteredBlockState(BlockState blockState) {
+        return blockState.setValue(SIGNAL, 0);
     }
 
     @Override

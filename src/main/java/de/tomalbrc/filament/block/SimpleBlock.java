@@ -94,14 +94,20 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
             return this.blockData.block();
         }
 
-        if (this.stateMap != null) for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+        if (this.stateMap != null) {
+            blockState = behaviourFilteredBlockState(blockState);
+        }
+
+        return this.stateMap != null && this.stateMap.get(blockState) != null ? this.stateMap.get(blockState).blockState() : Blocks.BEDROCK.defaultBlockState();
+    }
+
+    public BlockState behaviourFilteredBlockState(BlockState blockState) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
-                BlockState polyBlockState = blockBehaviour.getCustomPolymerBlockState(this.stateMap, blockState);
-                if (polyBlockState != null)
-                    return polyBlockState;
+                blockState = blockBehaviour.filteredBlockState(blockState);
             }
         }
-        return this.stateMap != null && this.stateMap.get(blockState) != null ? this.stateMap.get(blockState).blockState() : Blocks.BEDROCK.defaultBlockState();
+        return blockState;
     }
 
     private void forEach(Consumer<de.tomalbrc.filament.api.behaviour.BlockBehaviour<?>> consumer) {

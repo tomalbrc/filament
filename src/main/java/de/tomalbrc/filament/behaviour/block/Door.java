@@ -297,9 +297,8 @@ public class Door implements BlockBehaviour<Door.Config> {
     }
 
     @Override
-    public BlockState getCustomPolymerBlockState(Map<BlockState, BlockData.BlockStateMeta> stateMap, BlockState blockState) {
-        blockState = blockState.setValue(BlockStateProperties.POWERED, false);
-        return stateMap.get(blockState).blockState();
+    public BlockState filteredBlockState(BlockState blockState) {
+        return blockState.setValue(BlockStateProperties.POWERED, false);
     }
 
     public static class Config {

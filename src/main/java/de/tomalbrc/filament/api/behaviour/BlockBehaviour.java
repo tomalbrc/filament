@@ -132,8 +132,8 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
     default void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
     }
 
-    default BlockState getCustomPolymerBlockState(Map<BlockState, BlockData.BlockStateMeta> stateMap, BlockState blockState) {
-        return null;
+    default BlockState filteredBlockState(BlockState blockState) {
+        return blockState;
     }
 
     default ItemStack getCloneItemStack(ItemStack itemStack, LevelReader levelReader, BlockPos blockPos, BlockState blockState) {

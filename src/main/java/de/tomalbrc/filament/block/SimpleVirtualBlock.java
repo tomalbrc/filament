@@ -9,16 +9,18 @@ import eu.pb4.polymer.virtualentity.api.attachment.BlockAwareAttachment;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
 import eu.pb4.polymer.virtualentity.api.attachment.HolderAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
+import eu.pb4.polymer.virtualentity.mixin.accessors.ItemDisplayEntityAccessor;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomModelData;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.apache.http.annotation.Obsolete;
 import org.jetbrains.annotations.NotNull;
@@ -30,8 +32,7 @@ import xyz.nucleoid.packettweaker.PacketContext;
 import java.util.Map;
 
 public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementHolder {
-    Map<BlockState, String> cmdMap = new Reference2ObjectOpenHashMap<>();
-    protected Map<BlockState, BlockState> reverseStateMap = new Reference2ReferenceOpenHashMap<>();
+    private final Map<BlockData.BlockStateMeta, String> cmdMap = new Reference2ObjectOpenHashMap<>();
 
     public SimpleVirtualBlock(Properties properties, BlockData data) {
         super(properties, data);
@@ -41,16 +42,13 @@ public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementH
     public void postRegister() {
         super.postRegister();
 
-        for (Map.Entry<BlockState, BlockData.BlockStateMeta> entry : this.stateMap.entrySet()) {
-            for (Map.Entry<String, ResourceLocation> set2 : this.blockData.blockResource().getModels().entrySet()) {
-                boolean same = set2.getValue().equals(entry.getValue().polymerBlockModel().model());
+        for (Map.Entry<BlockState, BlockData.BlockStateMeta> stateMapEntry : this.stateMap.entrySet()) {
+            for (Map.Entry<String, ResourceLocation> blockResourceModelsEntry : this.blockData.blockResource().getModels().entrySet()) {
+                boolean same = blockResourceModelsEntry.getValue().equals(stateMapEntry.getValue().polymerBlockModel().model());
                 if (same) {
-                    this.cmdMap.put(entry.getKey(), set2.getKey());
+                    this.cmdMap.put(stateMapEntry.getValue(), blockResourceModelsEntry.getKey());
                 }
             }
-        }
-        for (Map.Entry<BlockState, BlockData.BlockStateMeta> entry : this.stateMap.entrySet()) {
-            this.reverseStateMap.put(entry.getValue().blockState(), entry.getKey());
         }
     }
 
@@ -83,7 +81,7 @@ public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementH
             this.displayElement.setScale(new Vector3f(1.0001f));
             this.displayElement.setDisplaySize(1.f, 1.f);
             this.displayElement.setInvisible(true);
-            update(blockState);
+            update(blockState, false);
             this.addElement(this.displayElement);
         }
 
@@ -91,21 +89,22 @@ public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementH
             return (BlockAwareAttachment) this.getAttachment();
         }
 
-        public void update(BlockState blockState) {
+        public void update(BlockState blockState, boolean update) {
+            var state = this.virtualBlock.behaviourFilteredBlockState(blockState);
+            var meta = this.virtualBlock.stateMap.get(state);
             this.displayStack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(
                     ImmutableList.of(),
                     ImmutableList.of(),
-                    ImmutableList.of(this.customModelDataSelector(blockState)),
+                    ImmutableList.of(this.virtualBlock.cmdMap.get(meta)),
                     ImmutableList.of()
             ));
 
-            var polymerBlockModel = this.virtualBlock.stateMap.get(blockState).polymerBlockModel();
+            var polymerBlockModel = meta.polymerBlockModel();
             this.displayElement.setLeftRotation(new Quaternionf().rotateX(polymerBlockModel.x() * Mth.DEG_TO_RAD).rotateY((polymerBlockModel.y() + 180.f) * Mth.DEG_TO_RAD));
-        }
-
-        private String customModelDataSelector(BlockState blockState) {
-            var newState = this.virtualBlock.getPolymerBlockState(blockState, PacketContext.create());
-            return this.virtualBlock.cmdMap.get(this.virtualBlock.reverseStateMap.get(newState));
+            if (update) {
+                this.displayElement.getDataTracker().setDirty(ItemDisplayEntityAccessor.getITEM(), true);
+                this.displayElement.tick();
+            }
         }
 
         @Override
@@ -114,16 +113,17 @@ public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementH
 
             var attachment = this.attachment();
             if (updateType == BlockBoundAttachment.BLOCK_STATE_UPDATE && attachment != null) {
-                this.update(attachment.getBlockState());
+                this.update(attachment.getBlockState(), true);
             }
         }
+    }
 
-        @Override
-        protected void onAttachmentRemoved(HolderAttachment oldAttachment) {
-            if (oldAttachment instanceof BlockAwareAttachment blockAwareAttachment && blockAwareAttachment.isPartOfTheWorld()) {
-                DecorationUtil.showBreakParticleShaped(blockAwareAttachment.getWorld(), blockAwareAttachment.getBlockPos(), blockAwareAttachment.getBlockState(), this.displayStack);
-            }
-            super.onAttachmentRemoved(oldAttachment);
+    @Override
+    protected void spawnDestroyParticles(Level level, Player player, BlockPos blockPos, BlockState blockState) {
+        var attachment = BlockBoundAttachment.get(player.level(), blockPos);
+        if (attachment != null && player.level() instanceof ServerLevel serverLevel) {
+            var holder = (VirtualBlockHolder)attachment.holder();
+            DecorationUtil.showBreakParticleShaped(serverLevel, blockPos, blockState, holder.displayStack);
         }
     }
 }

@@ -99,7 +99,7 @@ public class Sapling implements BlockBehaviour<Sapling.Config>, BonemealableBloc
 
     private void grow(ServerLevel serverLevel, BlockPos blockPos, BlockState blockState, RandomSource randomSource) {
         if (blockState.getValue(BlockStateProperties.STAGE) == 0) {
-            serverLevel.setBlock(blockPos, blockState.cycle(BlockStateProperties.STAGE), 4);
+            serverLevel.setBlock(blockPos, blockState.cycle(BlockStateProperties.STAGE), Block.UPDATE_CLIENTS);
         } else {
             this.treeGrower.growTree(serverLevel, serverLevel.getChunkSource().getGenerator(), blockPos, blockState, randomSource);
         }
