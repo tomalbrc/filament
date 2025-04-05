@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.decoration.block;
 
 import de.tomalbrc.filament.data.DecorationData;
-import de.tomalbrc.filament.decoration.holder.SimpleHolder;
+import de.tomalbrc.filament.decoration.holder.SimpleDecorationHolder;
 import de.tomalbrc.filament.util.DecorationUtil;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
@@ -39,7 +39,7 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
 
     @Nullable
     public ElementHolder createElementHolder(ServerLevel world, BlockPos pos, BlockState initialBlockState) {
-        return new SimpleHolder();
+        return new SimpleDecorationHolder();
     }
 
     public List<ItemStack> getDrops() {
