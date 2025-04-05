@@ -219,7 +219,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
             }
 
             this.wasExploded(level, blockPos, explosion); // switch up order to support mapped blockstate properties in block behaviours (tnt example)
-            level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 3);
+            level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
         }
     }
 
@@ -359,7 +359,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
         if (!blockData.properties().solid) {
             levelAccessor.destroyBlock(blockPos, true);
-            levelAccessor.setBlock(blockPos, fluidState.createLegacyBlock(), 0);
+            levelAccessor.setBlock(blockPos, fluidState.createLegacyBlock(), Block.UPDATE_ALL);
         }
 
         return !blockData.properties().solid;

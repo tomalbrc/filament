@@ -117,7 +117,7 @@ public class Door implements BlockBehaviour<Door.Config> {
 
     @Override
     public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, LivingEntity livingEntity, ItemStack itemStack) {
-        level.setBlock(blockPos.above(), blockState.setValue(BlockStateProperties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.UPPER), 3);
+        level.setBlock(blockPos.above(), blockState.setValue(BlockStateProperties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.UPPER), Block.UPDATE_ALL);
     }
 
     private boolean isSame(Block block) {
@@ -162,7 +162,7 @@ public class Door implements BlockBehaviour<Door.Config> {
             return InteractionResult.PASS;
         }
         blockState = blockState.cycle(BlockStateProperties.OPEN);
-        level.setBlock(blockPos, blockState, 10);
+        level.setBlock(blockPos, blockState, Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE);
         this.playSound(player, level, blockPos, blockState.getValue(BlockStateProperties.OPEN));
         level.gameEvent(player, this.isOpen(blockState) ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, blockPos);
         return InteractionResult.SUCCESS_SERVER;
@@ -176,7 +176,7 @@ public class Door implements BlockBehaviour<Door.Config> {
         if (!(blockState.getBlock() instanceof SimpleBlock simpleBlock && simpleBlock.has(Behaviours.DOOR)) || blockState.getValue(BlockStateProperties.OPEN) == bl) {
             return;
         }
-        level.setBlock(blockPos, blockState.setValue(BlockStateProperties.OPEN, bl), 10);
+        level.setBlock(blockPos, blockState.setValue(BlockStateProperties.OPEN, bl), Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE);
         this.playSound(entity, level, blockPos, bl);
         level.gameEvent(entity, bl ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, blockPos);
     }
@@ -190,7 +190,7 @@ public class Door implements BlockBehaviour<Door.Config> {
                 level.gameEvent(null, bl2 ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, blockPos);
             }
 
-            level.setBlock(blockPos, blockState.setValue(BlockStateProperties.POWERED, bl2).setValue(BlockStateProperties.OPEN, bl2), 2);
+            level.setBlock(blockPos, blockState.setValue(BlockStateProperties.POWERED, bl2).setValue(BlockStateProperties.OPEN, bl2), Block.UPDATE_CLIENTS);
         }
 
     }

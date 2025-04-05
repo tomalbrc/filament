@@ -17,6 +17,7 @@ import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -52,7 +53,7 @@ public class Stripper implements ItemBehaviour<Stripper.Config> {
                 CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer)player, blockPos, itemStack);
             }
 
-            level.setBlock(blockPos, optional, 11);
+            level.setBlock(blockPos, optional, Block.UPDATE_IMMEDIATE | Block.UPDATE_CLIENTS | Block.UPDATE_NEIGHBORS);
             level.gameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Context.of(player, optional));
             if (player != null) {
                 itemStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(useOnContext.getHand()));

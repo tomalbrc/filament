@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.mixin;
+package de.tomalbrc.filament.mixin.accessor;
 
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.decoration.ItemFrame;

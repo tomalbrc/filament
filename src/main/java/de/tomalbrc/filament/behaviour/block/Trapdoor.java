@@ -95,7 +95,7 @@ public class Trapdoor implements BlockBehaviour<Trapdoor.Config>, SimpleWaterlog
 
     private void toggle(BlockState blockState, Level level, BlockPos blockPos, @Nullable Player player) {
         BlockState blockState2 = blockState.cycle(BlockStateProperties.OPEN);
-        level.setBlock(blockPos, blockState2, 2);
+        level.setBlock(blockPos, blockState2, Block.UPDATE_CLIENTS);
         if (blockState2.getValue(BlockStateProperties.WATERLOGGED)) {
             level.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
@@ -118,7 +118,7 @@ public class Trapdoor implements BlockBehaviour<Trapdoor.Config>, SimpleWaterlog
                 blockState = blockState.setValue(BlockStateProperties.OPEN, bl2);
                 this.playSound(null, level, blockPos, bl2);
             }
-            level.setBlock(blockPos, blockState.setValue(BlockStateProperties.POWERED, bl2), 2);
+            level.setBlock(blockPos, blockState.setValue(BlockStateProperties.POWERED, bl2), Block.UPDATE_CLIENTS);
             if (blockState.getValue(BlockStateProperties.WATERLOGGED)) {
                 level.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
             }

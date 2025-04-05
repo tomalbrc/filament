@@ -77,7 +77,7 @@ public class Powerlevel implements BlockBehaviour<Powerlevel.PowerlevelConfig> {
             signal = this.config.max;
 
         if (signal != blockState.getValue(POWERS[Math.max(0, config.max-1)])) {
-            serverLevel.setBlock(blockPos, blockState.setValue(POWERS[Math.max(0, config.max-1)], signal), 2); // what does the 2 do..?
+            serverLevel.setBlock(blockPos, blockState.setValue(POWERS[Math.max(0, config.max-1)], signal), Block.UPDATE_CLIENTS);
         }
     }
 

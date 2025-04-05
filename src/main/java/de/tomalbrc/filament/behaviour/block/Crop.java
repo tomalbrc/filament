@@ -24,6 +24,8 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import org.jetbrains.annotations.NotNull;
 import xyz.nucleoid.packettweaker.PacketContext;
 
+import java.util.Objects;
+
 // todo: ravager interaction, bee interaction, villager interaction!
 public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
     public static final IntegerProperty[] AGES = {
@@ -88,7 +90,7 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
             if (i < this.config.maxAge-1) {
                 float f = getGrowthSpeed(blockState.getBlock(), serverLevel, blockPos);
                 if (randomSource.nextInt((int) (25.f / f) + 1) == 0) {
-                    serverLevel.setBlock(blockPos, blockState.setValue(AGES[Math.max(0, config.maxAge-1)], i + 1), 2);
+                    serverLevel.setBlock(blockPos, blockState.setValue(AGES[Math.max(0, config.maxAge-1)], i + 1), Block.UPDATE_CLIENTS);
                 }
             }
         }
@@ -105,7 +107,7 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
             i = j;
         }
 
-        level.setBlock(blockPos, blockState.setValue(AGES[Math.max(0, config.maxAge-1)], i), 2);
+        level.setBlock(blockPos, blockState.setValue(AGES[Math.max(0, config.maxAge-1)], i), Block.UPDATE_CLIENTS);
     }
 
     public BlockState incrementedAge(BlockState blockState) {
@@ -164,7 +166,7 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
     }
 
     private boolean isCrop(Block block1) {
-        return block1 instanceof SimpleBlock simpleBlock && simpleBlock.has(Behaviours.CROP) && simpleBlock.get(Behaviours.CROP).config == config;
+        return block1 instanceof SimpleBlock simpleBlock && simpleBlock.has(Behaviours.CROP) && Objects.requireNonNull(simpleBlock.get(Behaviours.CROP)).config == config;
     }
 
     protected boolean hasSufficientLight(LevelReader levelReader, BlockPos blockPos) {
