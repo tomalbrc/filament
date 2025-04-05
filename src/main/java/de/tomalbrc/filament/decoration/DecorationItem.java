@@ -31,6 +31,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -174,8 +176,15 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
                     blockState = blockState.setValue(DecorationBlock.LIGHT_LEVEL, decorationData.properties().lightEmission.getValue(blockState));
                 }
 
-                if (!decorationData.properties().waterloggable)
+                if (!decorationData.properties().waterloggable) {
                     blockState = blockState.setValue(DecorationBlock.WATERLOGGED, false);
+                }
+                else {
+                    FluidState fluidState = level.getFluidState(blockPos2);
+                    if (fluidState.is(Fluids.WATER) && fluidState.isSource()) {
+                        blockState = blockState.setValue(DecorationBlock.WATERLOGGED, true);
+                    }
+                }
 
                 if (decorationData.isSimple()) {
                     blockState = blockState.setValue(SimpleDecorationBlock.ROTATION, (rotation + 4) % 8);
@@ -197,6 +206,11 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
 
             if (!decorationData.properties().waterloggable) {
                 blockState = blockState.setValue(DecorationBlock.WATERLOGGED, false);
+            } else {
+                FluidState fluidState = level.getFluidState(blockPos);
+                if (fluidState.is(Fluids.WATER) && fluidState.isSource()) {
+                    blockState = blockState.setValue(DecorationBlock.WATERLOGGED, true);
+                }
             }
 
             if (decorationData.properties().mayBeLightSource()) {

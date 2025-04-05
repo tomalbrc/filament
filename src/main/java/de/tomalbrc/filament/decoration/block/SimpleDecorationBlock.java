@@ -12,7 +12,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -51,14 +53,6 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
     protected void spawnAfterBreak(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, boolean bl) {
         if (!bl && !blockState.is(serverLevel.getBlockState(blockPos).getBlock())) {
             DecorationData data = this.getDecorationData();
-            if (!data.hasBlocks()) {
-                SoundEvent breakSound = data.properties().blockBase.defaultBlockState().getSoundType().getBreakSound();
-                serverLevel.playSound(null, blockPos,  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);
-            }
-
-            if (data.properties().showBreakParticles)
-                DecorationUtil.showBreakParticle(serverLevel, data.properties().useItemParticles ? BuiltInRegistries.ITEM.getValue(this.decorationId).getDefaultInstance() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
-
             if (data.properties().drops && blockState.getBlock() instanceof SimpleDecorationBlock) {
                 for (ItemStack drop : this.getDrops()) {
                     Util.spawnAtLocation(serverLevel, blockPos.getCenter(), drop);
@@ -67,5 +61,19 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
         }
 
         super.spawnAfterBreak(blockState, serverLevel, blockPos, itemStack, bl);
+    }
+
+    @Override
+    protected void spawnDestroyParticles(Level level, Player player, BlockPos blockPos, BlockState blockState) {
+        if (!(level instanceof ServerLevel)) return;
+
+        DecorationData data = this.getDecorationData();
+        if (!data.hasBlocks()) {
+            SoundEvent breakSound = data.properties().blockBase.defaultBlockState().getSoundType().getBreakSound();
+            level.playSound(null, blockPos,  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);
+        }
+
+        if (data.properties().showBreakParticles)
+            DecorationUtil.showBreakParticle((ServerLevel) level, data.properties().useItemParticles ? BuiltInRegistries.ITEM.getValue(this.decorationId).getDefaultInstance() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
     }
 }

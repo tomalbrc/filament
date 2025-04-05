@@ -232,6 +232,8 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
     @Override
     public void destroyStructure(boolean dropItem) {
+        var visualStack = this.visualItemStack();
+
         if (!this.isMain()) {
             if (this.getLevel() != null && this.main != null && this.getLevel().getBlockEntity(this.getBlockPos().subtract(this.main)) instanceof DecorationBlockEntity mainBlockEntity) {
                 mainBlockEntity.destroyStructure(dropItem);
@@ -244,7 +246,6 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         }
 
         ItemStack thisItemStack = this.getItem();
-        ItemStack particleItem = this.getItem();
         if (thisItemStack != null && !thisItemStack.isEmpty()) {
             for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.behaviours) {
                 if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
@@ -257,13 +258,11 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             if (dropItem) {
                 Util.spawnAtLocation(this.getLevel(), this.getBlockPos().getCenter(), thisItemStack.copy());
             }
-
-            particleItem = thisItemStack.copyAndClear();
         }
 
         this.removeHolder(this.decorationHolder);
 
-        this.destroyBlocks(particleItem);
+        this.destroyBlocks(visualStack);
     }
 
     private void removeHolder(ElementHolder holder) {
