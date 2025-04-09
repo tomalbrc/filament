@@ -61,3 +61,5 @@ In some cases, for example when using the `simple_waterloggable` behaviour, you 
 }
 ```
 ~~~
+
+As of filament 0.16 it is possible to flag the block as virtual, to allow for an unlimited amount of block states. See [Blocks](blocks.md) for details.

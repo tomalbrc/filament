@@ -133,13 +133,25 @@ For some block behaviours like `slab` it may be required to leave this field emp
 
 ---
 
+## `virtual`:
+
+Flag whether the block should use an empty block model and virtual item display entity for the block. Block break particles will also be simulated on a packet-level, as the client-side block-model will be empty.
+
+This allows for an infinite amount of blocks, but keep in mind that display entities are much heavier on the client than simple blocks! Large amounts of those virtual blocks might lag out clients!
+
+This option might not work well with full block model types like `full_block`.
+
+Defaults to `false`
+
+---
+
 ## `properties`: 
 
 The properties of this block. See [Block Properties](block-properties.md) for details.
 
 ---
 
-### `group`
+## `group`
 
 Defines the item-group for this blocks' item. See [Item Groups](item-groups.md) for more information.
 
