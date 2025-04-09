@@ -18,6 +18,10 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBundlePacket;
+import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -52,10 +56,10 @@ public class DecorationUtil {
                     for (int y = 0; y < size.y(); y++) {
                         for (int z = 0; z < size.z(); z++) {
                             Vector3f pos = new Vector3f(x, y, z).add(origin);
-                            Vector3f offset = pos.mul(rotation % 90 != 0 ? org.joml.Math.sqrt(2) : 1);
-                            offset.rotateY(org.joml.Math.toRadians(rotation + (FilamentConfig.getInstance().alternativeBlockPlacement ? 0 : 180)));
+                            Vector3f offset = pos.mul(rotation % 90 != 0 ? Math.sqrt(2) : 1);
+                            offset.rotateY(Mth.DEG_TO_RAD * (rotation + (FilamentConfig.getInstance().alternativeBlockPlacement ? 0 : 180)));
 
-                            BlockPos blockPos = new BlockPos(originBlockPos).offset(-org.joml.Math.round(offset.x), org.joml.Math.round(offset.y), Math.round(offset.z));
+                            BlockPos blockPos = new BlockPos(originBlockPos).offset(-Math.round(offset.x), Math.round(offset.y), Math.round(offset.z));
                             consumer.accept(blockPos);
                         }
                     }
@@ -201,6 +205,7 @@ public class DecorationUtil {
 
     public static void showBreakParticle(ServerLevel level, VoxelShape voxelShape, ItemStack stack, BlockPos blockPos) {
         double div = 0.25;
+        List<Packet<? super ClientGamePacketListener>> packets = new ObjectArrayList<>();
         voxelShape.forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> {
             double dx = Math.min(1.0, maxX - minX);
             double dy = Math.min(1.0, maxY - minY);
@@ -217,11 +222,20 @@ public class DecorationUtil {
                         double xOffset = deltaX * dx + minX;
                         double yOffset = deltaY * dy + minY;
                         double zOffset = deltaZ * dz + minZ;
-                        level.sendParticles(new ItemParticleOption(ParticleTypes.ITEM, stack), blockPos.getX() + xOffset, blockPos.getY() + yOffset, blockPos.getZ() + zOffset, 0, deltaX - 0.5, deltaY - 0.5, deltaZ - 0.5, 0.25);
+                        packets.add(new ClientboundLevelParticlesPacket(new ItemParticleOption(ParticleTypes.ITEM, stack), true, false, blockPos.getX() + xOffset, blockPos.getY() + yOffset, blockPos.getZ() + zOffset, (float)deltaX - 0.5f, (float)deltaY - 0.5f, (float)deltaZ - 0.5f, 0.25f, 0));
                     }
                 }
             }
         });
+
+        if (!packets.isEmpty()) {
+            ClientboundBundlePacket bundlePacket = new ClientboundBundlePacket(packets);
+            for (ServerPlayer player : level.players()) {
+                if (player.position().distanceTo(blockPos.getCenter()) < 512) {
+                    player.connection.send(bundlePacket);
+                }
+            }
+        }
     }
 
     public static ItemStack placementAdjustedItem(ItemStack itemStack, ItemResource itemResource, boolean wall, boolean ceiling) {
