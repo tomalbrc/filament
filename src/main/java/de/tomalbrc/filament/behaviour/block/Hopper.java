@@ -132,7 +132,7 @@ public class Hopper implements BlockBehaviourWithEntity<Hopper.Config> {
             boolean fullBlockShape = blockState.isCollisionShapeFullBlock(level, blockPos) && !blockState.is(BlockTags.DOES_NOT_BLOCK_HOPPERS);
             if (!fullBlockShape) {
                 for (ItemEntity itemEntity : HopperBlockEntity.getItemsAtAndAbove(level, hopper)) {
-                    if (HopperBlockEntity.addItem(hopper, itemEntity)) {
+                    if (conf.canTake(itemEntity.getItem()) && HopperBlockEntity.addItem(hopper, itemEntity)) {
                         return true;
                     }
                 }
@@ -163,7 +163,7 @@ public class Hopper implements BlockBehaviourWithEntity<Hopper.Config> {
     private static boolean canTakeItemFromContainer(HopperBlockEntity hopperContainer, Container container2, ItemStack itemStack, int i, Direction direction) {
         var self = get(hopperContainer);
 
-        if (!container2.canTakeItem(hopperContainer, i, itemStack) || !self.canTake(itemStack)) {
+        if (!container2.canTakeItem(hopperContainer, i, itemStack) || !self.config.canTake(itemStack)) {
             return false;
         } else {
             return !(container2 instanceof WorldlyContainer worldlyContainer) || worldlyContainer.canTakeItemThroughFace(i, itemStack, direction);
@@ -172,31 +172,6 @@ public class Hopper implements BlockBehaviourWithEntity<Hopper.Config> {
 
     private static Hopper get(HopperBlockEntity hopperBlockEntity) {
         return ((SimpleBlock) hopperBlockEntity.getBlockState().getBlock()).get(Behaviours.HOPPER);
-    }
-
-    public boolean canTake(ItemStack itemStack) {
-        if (config.itemFilter == null) {
-            config.itemFilter = new ObjectArrayList<>();
-            config.itemTagFilter = new ObjectArrayList<>();
-            if (config.filterItems != null) {
-                for (String string : config.filterItems) {
-                    if (string.startsWith("#")) {
-                        config.itemTagFilter.add(TagKey.create(Registries.ITEM, ResourceLocation.parse(string.substring(1))));
-                    } else {
-                        config.itemFilter.add(BuiltInRegistries.ITEM.getValue(ResourceLocation.parse(string)));
-                    }
-                }
-            }
-        }
-
-        for (Item item : config.itemFilter) {
-            if (itemStack.is(item)) return true;
-        }
-        for (TagKey<Item> tagKey : config.itemTagFilter) {
-            if (itemStack.is(tagKey)) return true;
-        }
-
-        return config.itemTagFilter.isEmpty() && config.itemFilter.isEmpty();
     }
 
     @Override
@@ -288,5 +263,30 @@ public class Hopper implements BlockBehaviourWithEntity<Hopper.Config> {
 
         transient public List<Item> itemFilter;
         transient public List<TagKey<Item>> itemTagFilter;
+
+        public boolean canTake(ItemStack itemStack) {
+            if (this.itemFilter == null) {
+                this.itemFilter = new ObjectArrayList<>();
+                this.itemTagFilter = new ObjectArrayList<>();
+                if (this.filterItems != null) {
+                    for (String string : this.filterItems) {
+                        if (string.startsWith("#")) {
+                            this.itemTagFilter.add(TagKey.create(Registries.ITEM, ResourceLocation.parse(string.substring(1))));
+                        } else {
+                            this.itemFilter.add(BuiltInRegistries.ITEM.getValue(ResourceLocation.parse(string)));
+                        }
+                    }
+                }
+            }
+
+            for (Item item : this.itemFilter) {
+                if (itemStack.is(item)) return true;
+            }
+            for (TagKey<Item> tagKey : this.itemTagFilter) {
+                if (itemStack.is(tagKey)) return true;
+            }
+
+            return this.itemTagFilter.isEmpty() && this.itemFilter.isEmpty();
+        }
     }
 }
