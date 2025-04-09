@@ -34,7 +34,7 @@ import java.util.function.Consumer;
 
 public class TridentEntity extends ThrownTrident implements PolymerEntity {
     protected final ElementHolder holder = new ElementHolder();
-    protected final InteractionElement interactionElement = InteractionElement.redirect(this);
+    protected final InteractionElement interactionElement = new InteractionElement();
 
     @Override
     public void setXRot(float x) {
