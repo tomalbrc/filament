@@ -1,0 +1,37 @@
+{
+  "id": "mynamespace:test_hopper",
+  "itemResource": {
+    "models": {
+      "default": "minecraft:block/hopper_side"
+    }
+  },
+  "translations": {
+    "en_us": "§7Fake Hopper"
+  },
+  "blockResource": {
+    "models": {
+      "enabled=false,facing=north": { "model": "minecraft:block/hopper_side", "y": 0 },
+      "enabled=false,facing=south": { "model": "minecraft:block/hopper_side", "y": 180 },
+      "enabled=false,facing=east": { "model": "minecraft:block/hopper_side", "y": 90 },
+      "enabled=false,facing=west": { "model": "minecraft:block/hopper_side", "y": 270 },
+      "enabled=false,facing=down": { "model": "minecraft:block/hopper", "y": 0 },
+      "enabled=true,facing=north": { "model": "minecraft:block/hopper_side", "y": 0 },
+      "enabled=true,facing=south": { "model": "minecraft:block/hopper_side", "y": 180 },
+      "enabled=true,facing=east": { "model": "minecraft:block/hopper_side", "y": 90 },
+      "enabled=true,facing=west": { "model": "minecraft:block/hopper_side", "y": 270 },
+      "enabled=true,facing=down": { "model": "minecraft:block/hopper", "y": 0 }
+    }
+  },
+  "properties": {
+    "transparent": true,
+    "solid": true,
+    "replaceable": false,
+    "destroyTime": 1.5,
+    "isSuffocating": false
+  },
+  "blockModelType": "transparent_block",
+  "virtual": true,
+  "behaviour": {
+    "hopper": {}
+  }
+}

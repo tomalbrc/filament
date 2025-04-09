@@ -10,6 +10,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
@@ -426,7 +427,6 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
      * @param explosion
      */
     default void wasExploded(ServerLevel serverLevel, BlockPos blockPos, Explosion explosion) {
-
     }
 
     default Optional<Boolean> hasAnalogOutputSignal(BlockState blockState) {
@@ -435,5 +435,8 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
 
     default int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos) {
         return 0;
+    }
+
+    default void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity, InsideBlockEffectApplier insideBlockEffectApplier) {
     }
 }

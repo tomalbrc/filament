@@ -14,6 +14,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
@@ -613,5 +614,16 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
         }
 
         return max;
+    }
+
+
+    @Override
+    public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity, InsideBlockEffectApplier insideBlockEffectApplier) {
+        if (this.getBehaviours() != null) {
+            this.getBehaviours().forEach(behaviourTypeBehaviourEntry -> {
+                if (behaviourTypeBehaviourEntry.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviourWithEntity)
+                    blockBehaviourWithEntity.entityInside(blockState, level, blockPos, entity, insideBlockEffectApplier);
+            });
+        }
     }
 }

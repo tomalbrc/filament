@@ -45,6 +45,7 @@ public class Behaviours {
     public static final BehaviourType<FallingBlock, FallingBlock.Config> FALLING_BLOCK = registerBehaviour("falling_block", FallingBlock.class);
     public static final BehaviourType<Furnace, Furnace.Config> FURNACE = registerBehaviour("furnace", Furnace.class);
     public static final BehaviourType<GrassSpread, GrassSpread.Config> GRASS_SPREAD = registerBehaviour("grass_spread", GrassSpread.class);
+    public static final BehaviourType<Hopper, Hopper.Config> HOPPER = registerBehaviour("hopper", Hopper.class);
     public static final BehaviourType<HorizontalFacing, HorizontalFacing.Config> HORIZONTAL_FACING = registerBehaviour("horizontal_facing", HorizontalFacing.class);
     public static final BehaviourType<Powerlevel, Powerlevel.PowerlevelConfig> POWERLEVEL = registerBehaviour("powerlevel", Powerlevel.class);
     public static final BehaviourType<Slab, Slab.SlabConfig> SLAB = registerBehaviour("slab", Slab.class);

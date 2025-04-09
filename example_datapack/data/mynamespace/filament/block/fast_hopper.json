@@ -1,0 +1,39 @@
+{
+  "id": "mynamespace:fast_hopper",
+  "itemResource": {
+    "models": {
+      "default": "minecraft:block/furnace_on"
+    }
+  },
+  "translations": {
+    "en_us": "§Fast Hopper"
+  },
+  "blockResource": {
+    "models": {
+      "enabled=false,facing=north": { "model": "minecraft:block/furnace", "y": 0 },
+      "enabled=false,facing=south": { "model": "minecraft:block/furnace", "y": 180 },
+      "enabled=false,facing=east": { "model": "minecraft:block/furnace", "y": 90 },
+      "enabled=false,facing=west": { "model": "minecraft:block/furnace", "y": 270 },
+      "enabled=false,facing=down": { "model": "minecraft:block/furnace_on", "x": 90 },
+      "enabled=true,facing=north": { "model": "minecraft:block/furnace", "y": 0 },
+      "enabled=true,facing=south": { "model": "minecraft:block/furnace", "y": 180 },
+      "enabled=true,facing=east": { "model": "minecraft:block/furnace", "y": 90 },
+      "enabled=true,facing=west": { "model": "minecraft:block/furnace", "y": 270 },
+      "enabled=true,facing=down": { "model": "minecraft:block/furnace_on", "x": 90 }
+    }
+  },
+  "properties": {
+    "transparent": true,
+    "solid": true,
+    "replaceable": false,
+    "destroyTime": 1.5,
+    "isSuffocating": false
+  },
+  "blockModelType": "transparent_block",
+  "virtual": true,
+  "behaviour": {
+    "hopper": {
+      "cooldownTime": 4
+    }
+  }
+}
