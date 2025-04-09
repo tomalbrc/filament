@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @SuppressWarnings("unused")
 public final class DecorationData extends Data {
@@ -88,14 +87,14 @@ public final class DecorationData extends Data {
 
     public boolean isSimple() {
         boolean singleBlock = (!this.hasBlocks() || DecorationUtil.barrierDimensions(Objects.requireNonNull(this.blocks()), 0).equals(1, 1));
-        final AtomicBoolean hasDecorationBehaviour = new AtomicBoolean(false);
+        final Boolean[] hasDecorationBehaviour = new Boolean[]{false};
         this.behaviour().forEach((a,b) -> {
-            if (DecorationBehaviour.class.isAssignableFrom(a.type())) hasDecorationBehaviour.set(true);
+            if (DecorationBehaviour.class.isAssignableFrom(a.type())) hasDecorationBehaviour[0] = true;
         });
         boolean canBeDyed = this.vanillaItem != null && (vanillaItem == Items.LEATHER_HORSE_ARMOR || vanillaItem == Items.FIREWORK_STAR);
         boolean groundOnly = !this.properties().placement.wall() && !this.properties().placement.ceiling();
 
-        return groundOnly && !canBeDyed && !hasDecorationBehaviour.get() && (singleBlock || this.size != null);
+        return groundOnly && !canBeDyed && !hasDecorationBehaviour[0] && (singleBlock || this.size != null);
     }
 
     public @Nullable List<BlockConfig> blocks() {

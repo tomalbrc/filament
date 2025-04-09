@@ -256,6 +256,16 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
     }
 
     /**
+     * Called on removal to update neighbours
+     * @param blockState
+     * @param serverLevel
+     * @param blockPos
+     * @param bl
+     */
+    default void affectNeighborsAfterRemoval(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, boolean bl) {
+    }
+
+    /**
      *
      * @param blockState
      * @param serverLevel
@@ -417,5 +427,13 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
      */
     default void wasExploded(ServerLevel serverLevel, BlockPos blockPos, Explosion explosion) {
 
+    }
+
+    default Optional<Boolean> hasAnalogOutputSignal(BlockState blockState) {
+        return Optional.empty();
+    }
+
+    default int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos) {
+        return 0;
     }
 }

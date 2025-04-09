@@ -5,9 +5,7 @@ import com.google.gson.JsonParser;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
-import de.tomalbrc.filament.block.SimpleBlock;
-import de.tomalbrc.filament.block.SimpleBlockItem;
-import de.tomalbrc.filament.block.SimpleVirtualBlock;
+import de.tomalbrc.filament.block.*;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.*;
@@ -57,10 +55,19 @@ public class BlockRegistry {
         BlockBehaviour.Properties blockProperties = properties.toBlockProperties();
 
         SimpleBlock customBlock;
-        if (data.virtual()) {
-            customBlock = BlockRegistry.registerBlock(key(data.id()), (props)-> new SimpleVirtualBlock(props, data), blockProperties, data.blockTags());
+        // ok this is starting to get messy
+        if (data.requiresEntityBlock()) {
+            if (data.virtual()) {
+                customBlock = BlockRegistry.registerBlock(key(data.id()), (props)-> new SimpleVirtualBlockWithEntity(props, data), blockProperties, data.blockTags());
+            } else {
+                customBlock = BlockRegistry.registerBlock(key(data.id()), (props)-> new SimpleBlockWithEntity(props, data), blockProperties, data.blockTags());
+            }
         } else {
-            customBlock = BlockRegistry.registerBlock(key(data.id()), (props)-> new SimpleBlock(props, data), blockProperties, data.blockTags());
+            if (data.virtual()) {
+                customBlock = BlockRegistry.registerBlock(key(data.id()), (props)-> new SimpleVirtualBlock(props, data), blockProperties, data.blockTags());
+            } else {
+                customBlock = BlockRegistry.registerBlock(key(data.id()), (props)-> new SimpleBlock(props, data), blockProperties, data.blockTags());
+            }
         }
 
         Item.Properties itemProperties = data.properties().toItemProperties();

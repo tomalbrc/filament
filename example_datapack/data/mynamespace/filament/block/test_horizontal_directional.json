@@ -10,10 +10,14 @@
   },
   "blockResource": {
     "models": {
-      "facing=north": { "model": "minecraft:block/furnace", "y": 0 },
-      "facing=south": { "model": "minecraft:block/furnace", "y": 180 },
-      "facing=east": { "model": "minecraft:block/furnace", "y": 90 },
-      "facing=west": { "model": "minecraft:block/furnace", "y": 270 }
+      "lit=false,facing=north": { "model": "minecraft:block/furnace", "y": 0 },
+      "lit=false,facing=south": { "model": "minecraft:block/furnace", "y": 180 },
+      "lit=false,facing=east": { "model": "minecraft:block/furnace", "y": 90 },
+      "lit=false,facing=west": { "model": "minecraft:block/furnace", "y": 270 },
+      "lit=true,facing=north": { "model": "minecraft:block/furnace_on", "y": 0 },
+      "lit=true,facing=south": { "model": "minecraft:block/furnace_on", "y": 180 },
+      "lit=true,facing=east": { "model": "minecraft:block/furnace_on", "y": 90 },
+      "lit=true,facing=west": { "model": "minecraft:block/furnace_on", "y": 270 }
     }
   },
   "properties": {
@@ -25,6 +29,7 @@
   "blockModelType": "full_block",
   "behaviour": {
     "horizontal_facing": {},
+    "furnace": {},
     "falling_block": {
       "delayAfterPlace": 5,
       "heavy": true,

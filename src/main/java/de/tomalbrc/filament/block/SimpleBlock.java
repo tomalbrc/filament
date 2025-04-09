@@ -136,6 +136,12 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
+    public void affectNeighborsAfterRemoval(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, boolean bl) {
+        if (this.getBehaviours() != null)
+            this.forEach(x -> x.affectNeighborsAfterRemoval(blockState, serverLevel, blockPos, bl));
+    }
+
+    @Override
     protected long getSeed(BlockState blockState, BlockPos blockPos) {
         if (this.getBehaviours() != null) for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
@@ -580,5 +586,32 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public boolean hasAnalogOutputSignal(BlockState blockState) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
+                var res = blockBehaviour.hasAnalogOutputSignal(blockState);
+                if (res.isPresent())
+                    return res.orElseThrow();
+            }
+        }
+
+        return super.hasAnalogOutputSignal(blockState);
+    }
+
+    @Override
+    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos) {
+        int max = super.getAnalogOutputSignal(blockState, level, blockPos);
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
+                var res = blockBehaviour.getAnalogOutputSignal(blockState, level, blockPos);
+                if (res > max)
+                    max = res;
+            }
+        }
+
+        return max;
     }
 }

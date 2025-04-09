@@ -3,6 +3,7 @@ package de.tomalbrc.filament.data;
 import com.google.gson.JsonParseException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.api.behaviour.BlockBehaviourWithEntity;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
@@ -70,6 +71,14 @@ public final class BlockData extends Data {
             return BlockProperties.EMPTY;
         }
         return properties;
+    }
+
+    public boolean requiresEntityBlock() {
+        final Boolean[] flag = new Boolean[]{false};
+        behaviour().forEach((behaviourType,object)-> {
+            if (BlockBehaviourWithEntity.class.isAssignableFrom(behaviourType.type())) flag[0] = true;
+        });
+        return flag[0];
     }
 
     public boolean virtual() {

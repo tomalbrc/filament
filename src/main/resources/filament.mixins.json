@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "package": "de.tomalbrc.filament.mixin",
   "mixins": [
+    "BlockEntityTypeMixin",
     "BlockItemMixin",
     "BucketItemMixin",
     "FlowingFluidMixin",
