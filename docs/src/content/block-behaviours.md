@@ -361,6 +361,10 @@ Comes with all door block state properties (hinge, open, powered, etc.)
 
 Simple waterloggable block.
 
+~~~admonish info "Optional Block-State-Properties to provide models for (automatically handled)"
+- `waterlogged`: true, false
+~~~
+
 ---
 
 ## `drop_xp` behaviour
@@ -522,3 +526,43 @@ All fields of this behaviour can be mapped to a block-state.
 - fuseTime: Fuse time (delay until the tnt entity explodes). Defaults to `80`
 - primeSound: Sound to play when the block is primed. Defaults to `minecraft:entity.tnt.primed`
 ~~~
+
+---
+
+# Block behaviours with block entity
+The following block-behaviours require a block entity. They can not be pushed, so make sure the pushReaction in your block properties is set to `destroy`, `block` or `ignore`.
+
+---
+
+## `furnace` behaviour
+
+Furnace behaviour with menu.
+
+~~~admonish tip
+Combine this with the `horizontal_facing` behaviour for a vanilla-like furnace block!
+Checkout the example datapack to see how to configure it.
+~~~
+
+~~~admonish info "Block-State-Properties to provide models for"
+- `lit`: true, false
+~~~
+
+---
+
+## `hopper` behaviour
+
+Hopper behaviour with menu.
+
+~~~admonish info "Block-State-Properties to provide models for"
+- `facing`: north, south, east, west, down
+- `enabled`: true, false
+~~~
+
+~~~admonish info "Configurable Fields"
+- `filterItems`: List of items and/or item tags. Defaults is empty. Example: `["minecraft:diamond", "#minecraft:dirt"]` would allow for diamonds and all items with the `minecraft:dirt` item-tag.
+- `pickupItemEntities`: Flag whether item entities should be picked up. Defaults to `true`
+- `takeFromContainer`: Flag whether items from the container above should be taken. Defaults to `true`
+- `cooldownTime` Cooldown time before transfering a new item. Defaults to `8`
+~~~
+
+---
