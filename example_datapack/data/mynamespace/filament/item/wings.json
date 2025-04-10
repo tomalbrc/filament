@@ -1,5 +1,8 @@
 {
   "id": "mynamespace:wings",
+  "translations": {
+    "en_us": "Wings"
+  },
   "vanillaItem": "minecraft:feather",
   "behaviour": {
     "cosmetic": {

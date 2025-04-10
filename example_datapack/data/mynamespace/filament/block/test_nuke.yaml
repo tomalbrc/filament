@@ -1,4 +1,6 @@
 id: mynamespace:test_nuke
+translations:
+  en_us: Test Nuke
 block_resource:
   models:
     default: minecraft:custom/block/concrete/red_concrete_bricks

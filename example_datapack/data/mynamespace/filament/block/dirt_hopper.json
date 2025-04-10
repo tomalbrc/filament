@@ -6,7 +6,8 @@
     }
   },
   "translations": {
-    "en_us": "§7Fake Hopper 2"
+    "en_us": "Dirt Hopper",
+    "de_de": "Erdetrichter"
   },
   "blockResource": {
     "models": {
@@ -23,6 +24,7 @@
     }
   },
   "properties": {
+    "lore": ["Only allows dirt items! All kinds of dirt!"],
     "transparent": true,
     "solid": true,
     "replaceable": false,
@@ -35,5 +37,8 @@
     "hopper": {
       "filterItems": ["#minecraft:dirt"]
     }
+  },
+  "components": {
+    "minecraft:rarity": "rare"
   }
 }

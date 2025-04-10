@@ -1,5 +1,8 @@
 {
   "id": "mynamespace:test_crop",
+  "translations": {
+    "en_us": "Test Crop"
+  },
   "itemResource": {
     "models": {
       "default": "minecraft:item/beetroot_seeds"

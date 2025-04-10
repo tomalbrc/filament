@@ -1,5 +1,8 @@
 {
   "id": "mynamespace:test_trapdoor",
+  "translations": {
+    "en_us": "Test Trapdoor"
+  },
   "blockResource": {
     "models": {
       "open=true,half=bottom,facing=north": {

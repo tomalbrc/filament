@@ -6,7 +6,7 @@
     }
   },
   "translations": {
-    "en_us": "§6Test Tree"
+    "en_us": "Test Tree"
   },
   "blockResource": {
     "__comment": "you can also provide a model for stage=1",

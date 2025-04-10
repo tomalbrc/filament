@@ -1,5 +1,8 @@
 {
   "id": "mynamespace:bannertestitem",
+  "translations": {
+    "en_us": "Banner Test Item"
+  },
   "vanillaItem": "minecraft:paper",
   "itemResource": {
     "models": {

@@ -1,5 +1,8 @@
 {
   "id": "mynamespace:magic_hat",
+  "translations": {
+    "en_us": "Magic Hat"
+  },
   "vanillaItem": "minecraft:paper",
   "itemResource": {
     "models": {

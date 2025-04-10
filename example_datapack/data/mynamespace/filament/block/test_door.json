@@ -1,5 +1,8 @@
 {
   "id": "mynamespace:test_door",
+  "translations": {
+    "en_us": "Test Door"
+  },
   "blockResource": {
     "models": {
       "hinge=left,open=true,half=lower,facing=north": {

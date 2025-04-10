@@ -1,5 +1,8 @@
 {
   "id": "mynamespace:example_chest",
+  "translations": {
+    "en_us": "Example Chest"
+  },
   "itemResource": {
     "models": {
       "default": "minecraft:custom/furniture/chests/example_chest"

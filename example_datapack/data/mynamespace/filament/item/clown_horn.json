@@ -1,5 +1,8 @@
 {
   "id": "mynamespace:clown_horn",
+  "translations": {
+    "en_us": "Clown Horn"
+  },
   "vanillaItem": "minecraft:paper",
   "itemResource": {
     "models": {

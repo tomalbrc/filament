@@ -1,6 +1,9 @@
 {
   "id": "mynamespace:hamburger",
   "vanillaItem": "minecraft:diamond",
+  "translations": {
+    "en_us": "Hamburger"
+  },
   "itemResource": {
     "models": {
       "default": "minecraft:custom/food/hamburger"

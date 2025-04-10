@@ -1,5 +1,8 @@
 {
   "id": "mynamespace:dirt_slab",
+  "translations": {
+    "en_us": "Dirt Slab"
+  },
   "blockResource": {
     "models": {
       "type=top": "minecraft:custom/block/dirt/dirt_slab_top",

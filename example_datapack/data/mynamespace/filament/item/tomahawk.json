@@ -1,5 +1,8 @@
 {
   "id": "mynamespace:tomahawk",
+  "translations": {
+    "en_us": "Tomahawk"
+  },
   "vanillaItem": "minecraft:iron_axe",
   "properties": {
     "durability": 10,

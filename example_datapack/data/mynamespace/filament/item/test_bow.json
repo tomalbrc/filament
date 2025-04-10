@@ -1,6 +1,9 @@
 {
   "id": "mynamespace:test_bow",
   "vanillaItem": "minecraft:bow",
+  "translations": {
+    "en_us": "Test Bow"
+  },
   "itemResource": {
     "models": {
       "default": "minecraft:custom/bow/custombow",

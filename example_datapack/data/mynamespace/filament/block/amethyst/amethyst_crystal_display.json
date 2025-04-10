@@ -1,5 +1,8 @@
 {
   "id": "mynamespace:amethyst_crystal_display",
+  "translations": {
+    "en_us": "Amethyst Crystal Display"
+  },
   "blockResource": {
     "models": {
       "powerlevel=0": "minecraft:custom/block/arcanery/display/amethyst_crystal_display_0",

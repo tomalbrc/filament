@@ -1,6 +1,9 @@
 {
   "id": "mynamespace:backpack",
   "vanillaItem": "minecraft:paper",
+  "translations": {
+    "en_us": "Backpack"
+  },
   "itemResource": {
     "models": {
       "default": "minecraft:custom/hats/backpack"

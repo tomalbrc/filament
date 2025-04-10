@@ -1,5 +1,8 @@
 {
   "id": "mynamespace:budding_testblock",
+  "translations": {
+    "en_us": "Budding Testblock"
+  },
   "blockResource": {
     "models": {
       "default": "minecraft:block/bedrock"

@@ -1,7 +1,11 @@
 {
   "id": "mynamespace:testitem",
   "vanillaItem": "minecraft:debug_stick",
+  "translations": {
+    "en_us": "Test Item"
+  },
   "properties": {
+    "lore": ["Sword Efficient Tool", "(Can break blocks like swords can bamboo)"],
     "durability": 20,
     "stackSize": 1
   },

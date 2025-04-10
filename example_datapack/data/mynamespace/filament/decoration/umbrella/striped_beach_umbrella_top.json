@@ -1,5 +1,8 @@
 {
   "id": "mynamespace:striped_beach_umbrella_top",
+  "translations": {
+    "en_us": "Striped Umbrella"
+  },
   "itemResource": {
     "models": {
       "default": "minecraft:custom/furniture/umbrella/striped_beach_umbrella_top"

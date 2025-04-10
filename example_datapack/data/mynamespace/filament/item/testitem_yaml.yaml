@@ -1,5 +1,7 @@
 id: mynamespace:testitem_yaml
 vanilla_item: minecraft:debug_stick
+translations:
+  en_us: Test Item Yaml
 properties:
   durability: 20
   stack_size: 1

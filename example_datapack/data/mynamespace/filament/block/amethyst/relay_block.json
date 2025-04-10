@@ -1,5 +1,8 @@
 {
   "id": "mynamespace:relay_block",
+  "translations": {
+    "en_us": "Relay Block"
+  },
   "blockResource": {
     "models": {
       "facing=up,powered=false": "minecraft:custom/block/arcanery/relay/relay_up_off",

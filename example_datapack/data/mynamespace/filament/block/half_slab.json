@@ -1,5 +1,8 @@
 {
   "id": "mynamespace:half_slab",
+  "translations": {
+    "en_us": "Half Slab"
+  },
   "blockResource": {
     "models": {
       "waterlogged=false": "minecraft:custom/block/dirt/dirt_slab",

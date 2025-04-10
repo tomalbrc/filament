@@ -1,4 +1,6 @@
 id: mynamespace:allay_bottle
+translations:
+  en_us: Allay Bottle
 vanilla_item: minecraft:diamond
 item_resource:
   parent: item/generated
