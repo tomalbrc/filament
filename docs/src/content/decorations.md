@@ -61,6 +61,7 @@ You can specify different models for decorations when placed on walls, ceiling (
       "floor": "minecraft:custom/furniture/misc/small_gold_coin_piles"
     }
   },
+  "block": "minecraft:barrier",
   "properties": {
     "rotate": true,
     "rotateSmooth": true,
@@ -75,3 +76,7 @@ You can specify different models for decorations when placed on walls, ceiling (
 ~~~
 
 This will result in a decoration with different models in the Inventory, when placed on the floor, when placed on a wall and when placed on ceilings.
+
+The field `block` can be used to specify a different block to use instead of barrier blocks (only used when the decoration has blocks specified using the `blocks` field)
+
+The field `itemFrame` forces the decoration to use item-frames instead an item-display entity in combination with an interaction entity.
