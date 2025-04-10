@@ -32,6 +32,24 @@ Example of a blockResource entry for the `repeater` behaviour (can be found as r
   }
 }
 ```
+
+You can also provide rotations for the block model like so:
+```json
+{
+  "blockResource": {
+    "models": {
+      "lit=false,facing=north": { "model": "minecraft:block/furnace", "y": 0 },
+      "lit=false,facing=south": { "model": "minecraft:block/furnace", "y": 180 },
+      "lit=false,facing=east": { "model": "minecraft:block/furnace", "y": 90 },
+      "lit=false,facing=west": { "model": "minecraft:block/furnace", "y": 270 },
+      "lit=true,facing=north": { "model": "minecraft:block/furnace_on", "y": 0 },
+      "lit=true,facing=south": { "model": "minecraft:block/furnace_on", "y": 180 },
+      "lit=true,facing=east": { "model": "minecraft:block/furnace_on", "y": 90 },
+      "lit=true,facing=west": { "model": "minecraft:block/furnace_on", "y": 270 }
+    }
+  }
+}
+```
 ~~~
 </details>
 
