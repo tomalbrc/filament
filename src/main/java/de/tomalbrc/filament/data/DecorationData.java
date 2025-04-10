@@ -110,7 +110,7 @@ public record DecorationData(
 
 
     public boolean isLightEnabled() {
-        return properties().mayBeLightSource() || behaviourConfig().has(Behaviours.LAMP);
+        return properties().mayBeLightSource() || hasLightBehaviours();
     }
 
     public boolean hasLightBehaviours() {
