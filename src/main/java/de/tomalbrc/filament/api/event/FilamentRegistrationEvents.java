@@ -7,9 +7,11 @@ import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.decoration.DecorationItem;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
+import de.tomalbrc.filament.entity.EntityData;
 import de.tomalbrc.filament.item.SimpleItem;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
+import net.minecraft.world.entity.EntityType;
 
 public class FilamentRegistrationEvents {
     public static final Event<ItemRegistration> ITEM = EventFactory.createArrayBacked(ItemRegistration.class, (callbacks) -> (data, item) -> {
@@ -30,6 +32,17 @@ public class FilamentRegistrationEvents {
         }
     });
 
+    public static final Event<EntityRegistration> ENTITY = EventFactory.createArrayBacked(EntityRegistration.class, (callbacks) -> (data, entityType) -> {
+        for(EntityRegistration callback : callbacks) {
+            callback.registered(data, entityType);
+        }
+    });
+
+
+    @FunctionalInterface
+    public interface EntityRegistration {
+        void registered(EntityData data, EntityType<?> entityType);
+    }
 
     @FunctionalInterface
     public interface ItemRegistration {

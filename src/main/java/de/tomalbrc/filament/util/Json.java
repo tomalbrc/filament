@@ -10,6 +10,7 @@ import com.mojang.serialization.JsonOps;
 import de.tomalbrc.bil.json.JSON;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
+import de.tomalbrc.filament.behaviour.BehaviourList;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
@@ -25,6 +26,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.Block;
@@ -59,6 +61,7 @@ public class Json {
             .registerTypeHierarchyAdapter(Quaternionf.class, new QuaternionfDeserializer())
             .registerTypeHierarchyAdapter(ResourceLocation.class, new JSON.ResourceLocationSerializer())
             .registerTypeHierarchyAdapter(BlockModelType.class, new BlockModelTypeDeserializer())
+            .registerTypeHierarchyAdapter(MobCategory.class, new MobCategoryDeserializer())
             .registerTypeHierarchyAdapter(ItemDisplayContext.class, new ItemDisplayContextDeserializer())
             .registerTypeHierarchyAdapter(DataComponentMap.class, new DataComponentsDeserializer())
             .registerTypeHierarchyAdapter(PushReaction.class, new PushReactionDeserializer())
@@ -67,6 +70,7 @@ public class Json {
             .registerTypeHierarchyAdapter(Item.class, new RegistryDeserializer<>(BuiltInRegistries.ITEM))
             .registerTypeHierarchyAdapter(SoundEvent.class, new RegistryDeserializer<>(BuiltInRegistries.SOUND_EVENT))
             .registerTypeHierarchyAdapter(BehaviourConfigMap.class, new BehaviourConfigMap.Deserializer())
+            .registerTypeHierarchyAdapter(BehaviourList.class, new BehaviourList.Deserializer())
             .registerTypeHierarchyAdapter(BlockStateMappedProperty.class, new BlockStateMappedPropertyDeserializer<>())
             .registerTypeHierarchyAdapter(PolymerBlockModel.class, new PolymerBlockModelDeserializer())
             .create();
@@ -296,7 +300,7 @@ public class Json {
         @Override
         public BlockModelType deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
             if (!element.isJsonPrimitive() || !element.getAsJsonPrimitive().isString()) {
-                throw new JsonParseException("Expected string, got " + element);
+                throw new JsonParseException("Expected BlockModelType string, got " + element);
             }
 
             String value = element.getAsString().toUpperCase();
@@ -304,6 +308,22 @@ public class Json {
                 return BlockModelType.valueOf(value);
             } catch (IllegalArgumentException e) {
                 throw new JsonParseException("Invalid BlockModelType value: " + value, e);
+            }
+        }
+    }
+
+    private static class MobCategoryDeserializer implements JsonDeserializer<MobCategory> {
+        @Override
+        public MobCategory deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
+            if (!element.isJsonPrimitive() || !element.getAsJsonPrimitive().isString()) {
+                throw new JsonParseException("Expected MobCategory string, got " + element);
+            }
+
+            String value = element.getAsString().toUpperCase();
+            try {
+                return MobCategory.valueOf(value);
+            } catch (IllegalArgumentException e) {
+                throw new JsonParseException("Invalid MobCategory value: " + value, e);
             }
         }
     }

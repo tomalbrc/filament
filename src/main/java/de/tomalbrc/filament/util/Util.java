@@ -59,6 +59,7 @@ public class Util {
         ((RegistryUnfreezer) BuiltInRegistries.BLOCK).filament$unfreeze();
         ((RegistryUnfreezer) BuiltInRegistries.ITEM).filament$unfreeze();
         ((RegistryUnfreezer) BuiltInRegistries.BLOCK_ENTITY_TYPE).filament$unfreeze();
+        ((RegistryUnfreezer) BuiltInRegistries.ENTITY_TYPE).filament$unfreeze();
         ((RegistryUnfreezer) BuiltInRegistries.CREATIVE_MODE_TAB).filament$unfreeze();
 
         for (SimpleSynchronousResourceReloadListener listener : FilamentReloadUtil.getReloadListeners()) {
@@ -68,6 +69,7 @@ public class Util {
         ((RegistryUnfreezer)BuiltInRegistries.BLOCK).filament$freeze();
         ((RegistryUnfreezer)BuiltInRegistries.ITEM).filament$freeze();
         ((RegistryUnfreezer)BuiltInRegistries.BLOCK_ENTITY_TYPE).filament$freeze();
+        ((RegistryUnfreezer)BuiltInRegistries.ENTITY_TYPE).filament$freeze();
         ((RegistryUnfreezer)BuiltInRegistries.CREATIVE_MODE_TAB).filament$freeze();
     }
 
