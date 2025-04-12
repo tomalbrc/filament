@@ -3,7 +3,7 @@ package de.tomalbrc.filament.util;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import de.tomalbrc.filament.data.Data;
-import de.tomalbrc.filament.entity.EntityData;
+import de.tomalbrc.filament.data.EntityData;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import net.minecraft.world.entity.EntityType;

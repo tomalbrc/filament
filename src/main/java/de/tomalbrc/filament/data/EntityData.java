@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.entity;
+package de.tomalbrc.filament.data;
 
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.BehaviourList;

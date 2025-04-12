@@ -7,7 +7,7 @@ import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.decoration.DecorationItem;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
-import de.tomalbrc.filament.entity.EntityData;
+import de.tomalbrc.filament.data.EntityData;
 import de.tomalbrc.filament.item.SimpleItem;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;

@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.entity;
 
 import de.tomalbrc.filament.api.behaviour.EntityBehaviour;
+import de.tomalbrc.filament.data.EntityData;
 import de.tomalbrc.filament.registry.EntityRegistry;
 import eu.pb4.polymer.core.api.entity.PolymerEntity;
 import net.minecraft.core.BlockPos;
@@ -12,7 +13,10 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.JumpControl;
+import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -23,12 +27,12 @@ import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 
-public class FilamentMob extends PathfinderMob implements PolymerEntity {
+public class FilamentMob extends Animal implements PolymerEntity {
     EntityData data;
 
     @SuppressWarnings("unchecked")
     public FilamentMob(EntityType<? extends Entity> entityType, Level level) {
-        super((EntityType<? extends PathfinderMob>) entityType, level);
+        super((EntityType<? extends Animal>) entityType, level);
         this.data = getData();
         this.xpReward = data.properties().xpReward;
         registerGoals();
@@ -37,6 +41,9 @@ public class FilamentMob extends PathfinderMob implements PolymerEntity {
         this.noPhysics = data.properties().noPhysics;
 
         //this.setPathfindingMalus(PathType.BLOCKED);
+
+        this.moveControl = new MoveControl(this);
+        this.jumpControl = new JumpControl(this);
     }
 
 
@@ -89,8 +96,13 @@ public class FilamentMob extends PathfinderMob implements PolymerEntity {
     }
 
     @Override
+    public @Nullable AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
+        return null;
+    }
+
+    @Override
     public void aiStep() {
-        //if (data.properties().category == MobCategory.MONSTER) this.updateNoActionTime();
+        if (data.properties().category == MobCategory.MONSTER) this.updateNoActionTime();
 
         if (this.isAlive()) {
             boolean burn = data.properties().isSunSensitive && this.isSunBurnTick();
@@ -181,6 +193,11 @@ public class FilamentMob extends PathfinderMob implements PolymerEntity {
     }
 
     @Override
+    public boolean isFood(ItemStack itemStack) {
+        return false;
+    }
+
+    @Override
     public boolean canUsePortal(boolean bl) {
         if (!data.properties().canUsePortal) {
             return false;
@@ -191,6 +208,7 @@ public class FilamentMob extends PathfinderMob implements PolymerEntity {
 
     @Override
     public void modifyRawEntityAttributeData(List<ClientboundUpdateAttributesPacket.AttributeSnapshot> data, ServerPlayer player, boolean initial) {
+
         data.add(new ClientboundUpdateAttributesPacket.AttributeSnapshot(Attributes.MAX_HEALTH, 1.0, List.of()));
     }
 

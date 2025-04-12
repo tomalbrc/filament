@@ -2,14 +2,15 @@ package de.tomalbrc.filament.entity;
 
 import de.tomalbrc.bil.api.AnimatedHolder;
 import de.tomalbrc.bil.api.Animator;
+import de.tomalbrc.filament.data.EntityData;
 import net.minecraft.world.entity.LivingEntity;
 
 public class AnimationHelper {
     public static void updateWalkAnimation(LivingEntity entity, AnimatedHolder holder, EntityData.AnimationInfo animationInfo) {
         Animator animator = holder.getAnimator();
         if (entity.walkAnimation.isMoving() && entity.walkAnimation.speed() > 0.02) {
-            animator.playAnimation(animationInfo.walkAnimation(), 0);
             animator.pauseAnimation(animationInfo.idleAnimation());
+            animator.playAnimation(animationInfo.walkAnimation(), 0);
         } else {
             animator.pauseAnimation(animationInfo.walkAnimation());
             animator.playAnimation(animationInfo.idleAnimation(), 0);

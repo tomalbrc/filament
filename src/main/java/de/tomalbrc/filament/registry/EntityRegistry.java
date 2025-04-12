@@ -8,7 +8,7 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.decoration.util.SeatEntity;
 import de.tomalbrc.filament.entity.AnimatedFilamentMob;
-import de.tomalbrc.filament.entity.EntityData;
+import de.tomalbrc.filament.data.EntityData;
 import de.tomalbrc.filament.entity.FilamentMob;
 import de.tomalbrc.filament.item.BaseProjectileEntity;
 import de.tomalbrc.filament.item.TridentEntity;
