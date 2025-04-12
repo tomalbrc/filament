@@ -98,8 +98,10 @@ public class EntityRegistry {
         FabricDefaultAttributeRegistry.register(type, attributeBuilder.build());
 
         Translations.add(type, data);
-
         ENTITY_TAGS.put(data.id(), data.entityTags());
+        if (data.spawn() != null) {
+            data.spawn().add(type);
+        }
 
         FilamentRegistrationEvents.ENTITY.invoker().registered(data, type);
     }

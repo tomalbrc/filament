@@ -1,20 +1,44 @@
 {
-  "id": "mynamespace:axo",
-  "model": "mynamespace:example_chest",
+  "id": "mynamespace:penguin",
   "entityTags": [
     "can_breathe_underwater"
   ],
-  "entityType": "axolotl",
+  "entityType": "block_display",
   "translations": {
-    "en_us": "AxoMaxo"
+    "en_us": "Angry Penguin"
+  },
+  "animation": {
+    "model": "mynamespace:penguin",
+    "walk_animation": "walk",
+    "idle_animation": "idle"
   },
   "properties": {
     "size": [
       0.5,
-      1.8
+      0.6
     ],
-    "category": "monster",
-    "is_sun_sensitive": true
+    "category": "creature",
+    "xp_reward": 15,
+    "is_sun_sensitive": false,
+    "should_despawn_in_peaceful": true,
+    "invulnerable": false,
+    "fire_immune": false,
+    "no_save": false,
+    "no_summon": false,
+    "no_physics": false,
+    "can_use_portal": true,
+    "ambient_sound_interval": 80,
+    "sounds": {
+      "ambient": "entity.armadillo.ambient",
+      "hurt": "entity.armadillo.hurt",
+      "death": "entity.armadillo.death",
+      "swim_splash": "entity.generic.splash",
+      "swim": "entity.generic.swim",
+      "fall": {
+        "small": "entity.generic.small_fall",
+        "big": "entity.generic.big_fall"
+      }
+    }
   },
   "goals": [
     {
@@ -101,16 +125,17 @@
     "minecraft:attack_damage": 3.0,
     "minecraft:armor": 2.0,
     "minecraft:attack_range": 1.5,
-    "minecraft:spawn_reinforcements": 0.01
+    "minecraft:spawn_reinforcements": 0.5,
+    "minecraft:step_height": 0
   },
   "spawn": {
-    "weight": 40,
+    "weight": 20,
     "min_group_size": 2,
     "max_group_size": 4,
     "found_in_overworld": true,
     "found_in_nether": false,
     "found_in_end": false,
-    "biomes": ["desert"],
-    "biomeTags": ["c:desert"]
+    "biomes": ["snowy_taiga"],
+    "biomeTags": ["c:is_icy"]
   }
 }
