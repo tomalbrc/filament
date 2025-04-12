@@ -16,7 +16,7 @@ public class EntityData {
     private final @NotNull ResourceLocation id;
     private final @Nullable ResourceLocation entityType;
     private final @Nullable Map<String, String> translations;
-    private final @Nullable ResourceLocation model;
+    private final @Nullable AnimationInfo animation;
     private final @Nullable EntityProperties properties;
     private final @Nullable BehaviourConfigMap behaviour;
     private final @Nullable BehaviourList goals;
@@ -26,7 +26,7 @@ public class EntityData {
     protected EntityData(
             @NotNull ResourceLocation id,
             @Nullable Map<String, String> translations,
-            @Nullable ResourceLocation model,
+            @Nullable AnimationInfo animation,
             @Nullable ResourceLocation entityType,
             @Nullable EntityProperties properties,
             @Nullable BehaviourList goals,
@@ -36,7 +36,7 @@ public class EntityData {
     ) {
         this.id = id;
         this.translations = translations;
-        this.model = model;
+        this.animation = animation;
         this.entityType = entityType;
         this.properties = properties;
         this.behaviour = behaviour;
@@ -57,8 +57,8 @@ public class EntityData {
         return translations;
     }
 
-    public @Nullable ResourceLocation model() {
-        return model;
+    public @Nullable AnimationInfo animation() {
+        return animation;
     }
 
     public @NotNull BehaviourConfigMap behaviour() {
@@ -80,5 +80,13 @@ public class EntityData {
     @NotNull
     public BehaviourList goals() {
         return goals == null ? BehaviourList.EMPTY : goals;
+    }
+
+    public record AnimationInfo(
+            ResourceLocation model,
+            String idleAnimation,
+            String walkAnimation
+    ) {
+
     }
 }

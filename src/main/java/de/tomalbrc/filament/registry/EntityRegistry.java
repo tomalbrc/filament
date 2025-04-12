@@ -7,6 +7,7 @@ import com.mojang.datafixers.types.Type;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.decoration.util.SeatEntity;
+import de.tomalbrc.filament.entity.AnimatedFilamentMob;
 import de.tomalbrc.filament.entity.EntityData;
 import de.tomalbrc.filament.entity.FilamentMob;
 import de.tomalbrc.filament.item.BaseProjectileEntity;
@@ -66,7 +67,13 @@ public class EntityRegistry {
         var size = (data.properties().size == null || Objects.requireNonNull(data.properties().size).size() < 2) ? ImmutableList.of(1.f, 1.f) : data.properties().size;
         assert size != null;
 
-        var builder = EntityType.Builder.of(FilamentMob::new, data.properties().category).sized(size.getFirst(), size.getLast());
+        EntityType.Builder builder = null;
+        if (data.animation() != null && data.animation().model() != null) {
+            builder = EntityType.Builder.of(AnimatedFilamentMob::new, data.properties().category).sized(size.getFirst(), size.getLast());
+        } else {
+            builder = EntityType.Builder.of(FilamentMob::new, data.properties().category).sized(size.getFirst(), size.getLast());
+        }
+
         if (data.properties().fireImmune)
             builder.fireImmune();
         if (data.properties().noSave)
