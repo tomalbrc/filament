@@ -27,6 +27,9 @@ public class FilamentConfig {
     @SerializedName("alternative_cosmetic_placement")
     public boolean alternativeCosmeticPlacement = false;
 
+    @SerializedName("entity_module")
+    public boolean entityModule = true;
+
     public static FilamentConfig getInstance() {
         if (instance == null) {
             if (!load()) // only save if file wasn't just created

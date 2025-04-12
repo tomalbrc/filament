@@ -41,8 +41,6 @@ public class Filament implements ModInitializer {
         Translations.registerEventHandler();
         EntityRegistry.register();
 
-
-
         if (FilamentConfig.getInstance().commands) {
             CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> FilamentCommand.register(dispatcher));
         }
@@ -75,7 +73,8 @@ public class Filament implements ModInitializer {
         FilamentReloadUtil.registerEarlyReloadListener(new ItemRegistry.ItemDataReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new BlockRegistry.BlockDataReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new DecorationRegistry.DecorationDataReloadListener());
-        FilamentReloadUtil.registerEarlyReloadListener(new EntityRegistry.EntityDataReloadListener());
+        if (FilamentConfig.getInstance().entityModule)
+            FilamentReloadUtil.registerEarlyReloadListener(new EntityRegistry.EntityDataReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new ItemGroupRegistry.ItemGroupDataReloadListener());
 
         VirtualDestroyStage.destroy(null);

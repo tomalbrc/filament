@@ -17,6 +17,7 @@ import de.tomalbrc.filament.util.Json;
 import de.tomalbrc.filament.util.Translations;
 import eu.pb4.polymer.core.api.block.PolymerBlockUtils;
 import eu.pb4.polymer.core.api.entity.PolymerEntityUtils;
+import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.SharedConstants;
@@ -38,11 +39,14 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class EntityRegistry {
+    public static Map<ResourceLocation, Collection<ResourceLocation>> ENTITY_TAGS = new Object2ReferenceOpenHashMap<>();
+
     private static final Reference2ObjectOpenHashMap<ResourceLocation, EntityData> types = new Reference2ObjectOpenHashMap<>();
 
     public static final EntityType<BaseProjectileEntity> BASE_PROJECTILE = registerEntity("projectile", EntityType.Builder.of(BaseProjectileEntity::new, MobCategory.MISC).sized(0.5f, 0.5f).noSummon());
@@ -87,6 +91,8 @@ public class EntityRegistry {
         FabricDefaultAttributeRegistry.register(type, attributeBuilder.build());
 
         Translations.add(type, data);
+
+        ENTITY_TAGS.put(data.id(), data.entityTags());
 
         FilamentRegistrationEvents.ENTITY.invoker().registered(data, type);
     }
