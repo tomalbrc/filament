@@ -390,11 +390,11 @@ public class Json {
             DataResult<Pair<DataComponentMap, JsonElement>> result = DataComponentMap.CODEC.decode(RegistryOps.create(JsonOps.INSTANCE, registryInfoLookup), jsonElement);
 
             if (result.resultOrPartial().isEmpty()) {
-                Filament.LOGGER.error("Skipping broken components; could not load: {}", jsonElement.getAsString());
+                Filament.LOGGER.error("Skipping broken components; could not load: {}", jsonElement.toString());
                 Filament.LOGGER.error("Minecraft error message: {}", result.error().orElseThrow().message());
                 return null;
             } else if (result.error().isPresent()) {
-                Filament.LOGGER.warn("Could not load some components: {}", jsonElement.getAsString());
+                Filament.LOGGER.warn("Could not load some components: {}", jsonElement.toString());
                 Filament.LOGGER.warn("Minecraft error message: {}", result.error().orElseThrow().message());
             }
 
