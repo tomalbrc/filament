@@ -1,0 +1,126 @@
+{
+  "id": "mynamespace:unfriendly_golem",
+  "entityTags": [
+    "can_breathe_underwater"
+  ],
+  "entityType": "iron_golem",
+  "translations": {
+    "en_us": "Unfriendly Golem"
+  },
+  "properties": {
+    "size": [
+      0.5,
+      1.8
+    ],
+    "category": "monster",
+    "xp_reward": 5,
+    "is_sun_sensitive": true,
+    "should_despawn_in_peaceful": true,
+    "invulnerable": false,
+    "fire_immune": false,
+    "no_save": false,
+    "no_summon": false,
+    "no_physics": false,
+    "can_use_portal": true,
+    "ambient_sound_interval": 80,
+    "sounds": {
+      "ambient": "entity.armadillo.ambient",
+      "hurt": "entity.armadillo.hurt",
+      "death": "entity.armadillo.death",
+      "swim_splash": "entity.generic.splash",
+      "swim": "entity.generic.swim",
+      "fall": {
+        "small": "entity.generic.small_fall",
+        "big": "entity.generic.big_fall"
+      }
+    }
+  },
+  "goals": [
+    {
+      "type": "remove_block_goal",
+      "priority": 4,
+      "block": "turtle_egg",
+      "speed_modifier": 1.0,
+      "vertical_search_range": 3
+    },
+    {
+      "type": "look_at_mob_goal",
+      "priority": 8,
+      "target": "player",
+      "look_distance": 8.0,
+      "probability": 0.02
+    },
+    {
+      "type": "random_look_around_goal",
+      "priority": 8
+    },
+    {
+      "type": "melee_attack_goal",
+      "priority": 2,
+      "speed_modifier": 1.0,
+      "following_target_even_if_not_seen": false
+    },
+    {
+      "type": "move_through_village_goal",
+      "priority": 6,
+      "speed_modifier": 1.0,
+      "only_at_night": true,
+      "distance_to_poi": 8,
+      "can_deal_with_doors": true
+    },
+    {
+      "type": "water_avoiding_random_stroll_goal",
+      "priority": 7,
+      "speed_modifier": 1.0,
+      "probability": 0.001
+    },
+    {
+      "type": "hurt_by_target_goal",
+      "priority": 1,
+      "alert_others": [
+        "zombified_piglin"
+      ]
+    },
+    {
+      "type": "nearest_attackable_target_goal",
+      "priority": 2,
+      "target": "player",
+      "speed_modifier": 1.0,
+      "must_see": true,
+      "must_reach": false
+    },
+    {
+      "type": "nearest_attackable_target_goal",
+      "priority": 3,
+      "target": "villager",
+      "speed_modifier": 1.0,
+      "must_see": true,
+      "must_reach": false
+    },
+    {
+      "type": "nearest_attackable_target_goal",
+      "priority": 5,
+      "target": "iron_golem",
+      "speed_modifier": 1.0,
+      "must_see": true,
+      "must_reach": false
+    },
+    {
+      "type": "nearest_attackable_target_goal",
+      "priority": 5,
+      "target": "turtle",
+      "speed_modifier": 1.0,
+      "must_see": true,
+      "must_reach": false
+    }
+  ],
+  "attributes": {
+    "minecraft:follow_range": 35,
+    "minecraft:movement_speed": 0.23,
+    "minecraft:attack_damage": 3.0,
+    "minecraft:armor": 2.0,
+    "minecraft:attack_range": 1.5,
+    "minecraft:spawn_reinforcements": 0.5,
+    "minecraft:step_height": 0
+  }
+}
