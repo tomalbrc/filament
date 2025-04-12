@@ -148,3 +148,18 @@ Here is a basic example for a zombie-like entity with an Iron Golem model:
 }
 ```
 ~~~
+
+
+## Spawn Options
+
+The field `spawn` controls where or how your entity spawned in the world.
+
+- weight: Spawn weight. 10-50 are usually acceptable values 
+- minGroupSize: Min. amount of entities to spawn at once
+- maxGroupSize: Max. amount of entities to spawn at once
+- spawnsLike: List of entity types to spawn alike
+- biomes: List of biomes 
+- biomeTags: List of biome tags
+- foundInOverworld: Entity will only spawn in the overworld if set to true
+- foundInNether: Entity will only spawn in the nether if set to true
+- foundInEnd: Entity will only spawn in the end if set to true
