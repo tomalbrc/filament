@@ -25,6 +25,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.Item;
@@ -55,17 +56,18 @@ public class Json {
             .setPrettyPrinting()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .registerTypeHierarchyAdapter(BlockState.class, new BlockStateDeserializer())
-            .registerTypeHierarchyAdapter(EquipmentSlot.class, new EquipmentSlotDeserializer())
             .registerTypeHierarchyAdapter(Vector3f.class, new Vector3fDeserializer())
             .registerTypeHierarchyAdapter(Vector2f.class, new Vector2fDeserializer())
             .registerTypeHierarchyAdapter(Quaternionf.class, new QuaternionfDeserializer())
             .registerTypeHierarchyAdapter(ResourceLocation.class, new JSON.ResourceLocationSerializer())
-            .registerTypeHierarchyAdapter(BlockModelType.class, new BlockModelTypeDeserializer())
-            .registerTypeHierarchyAdapter(MobCategory.class, new MobCategoryDeserializer())
-            .registerTypeHierarchyAdapter(ItemDisplayContext.class, new ItemDisplayContextDeserializer())
             .registerTypeHierarchyAdapter(DataComponentMap.class, new DataComponentsDeserializer())
-            .registerTypeHierarchyAdapter(PushReaction.class, new PushReactionDeserializer())
-            .registerTypeHierarchyAdapter(WeatheringCopper.WeatherState.class, new WeatherStateDeserializer())
+            .registerTypeHierarchyAdapter(EquipmentSlot.class, new LowercaseEnumDeserializer<>(EquipmentSlot.class))
+            .registerTypeHierarchyAdapter(BlockModelType.class, new LowercaseEnumDeserializer<>(BlockModelType.class))
+            .registerTypeHierarchyAdapter(Difficulty.class, new LowercaseEnumDeserializer<>(Difficulty.class))
+            .registerTypeHierarchyAdapter(MobCategory.class, new LowercaseEnumDeserializer<>(MobCategory.class))
+            .registerTypeHierarchyAdapter(ItemDisplayContext.class, new LowercaseEnumDeserializer<>(ItemDisplayContext.class))
+            .registerTypeHierarchyAdapter(PushReaction.class, new LowercaseEnumDeserializer<>(PushReaction.class))
+            .registerTypeHierarchyAdapter(WeatheringCopper.WeatherState.class, new LowercaseEnumDeserializer<>(WeatheringCopper.WeatherState.class))
             .registerTypeHierarchyAdapter(Block.class, new RegistryDeserializer<>(BuiltInRegistries.BLOCK))
             .registerTypeHierarchyAdapter(Item.class, new RegistryDeserializer<>(BuiltInRegistries.ITEM))
             .registerTypeHierarchyAdapter(SoundEvent.class, new RegistryDeserializer<>(BuiltInRegistries.SOUND_EVENT))
@@ -209,18 +211,24 @@ public class Json {
         }
     }
 
-    public static class EquipmentSlotDeserializer implements JsonDeserializer<EquipmentSlot> {
-        @Override
-        public EquipmentSlot deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            String name = json.getAsString().toLowerCase();
+    public static class LowercaseEnumDeserializer<T extends Enum<T>> implements JsonDeserializer<T> {
 
-            for (EquipmentSlot slot : EquipmentSlot.values()) {
-                if (slot.name().equalsIgnoreCase(name)) {
-                    return slot;
+        private final Class<T> enumClass;
+
+        public LowercaseEnumDeserializer(Class<T> enumClass) {
+            this.enumClass = enumClass;
+        }
+
+        @Override
+        public T deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            String value = json.getAsString().toLowerCase();
+            for (T constant : enumClass.getEnumConstants()) {
+                if (constant.name().equalsIgnoreCase(value)) {
+                    return constant;
                 }
             }
 
-            throw new JsonParseException("Invalid EquipmentSlot value: " + name);
+            throw new JsonParseException("Invalid " + enumClass.getSimpleName() + " value: " + value);
         }
     }
 
@@ -293,86 +301,6 @@ public class Json {
             float y = jsonArray.get(1).getAsFloat();
 
             return new Vector2f(x, y);
-        }
-    }
-
-    private static class BlockModelTypeDeserializer implements JsonDeserializer<BlockModelType> {
-        @Override
-        public BlockModelType deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
-            if (!element.isJsonPrimitive() || !element.getAsJsonPrimitive().isString()) {
-                throw new JsonParseException("Expected BlockModelType string, got " + element);
-            }
-
-            String value = element.getAsString().toUpperCase();
-            try {
-                return BlockModelType.valueOf(value);
-            } catch (IllegalArgumentException e) {
-                throw new JsonParseException("Invalid BlockModelType value: " + value, e);
-            }
-        }
-    }
-
-    private static class MobCategoryDeserializer implements JsonDeserializer<MobCategory> {
-        @Override
-        public MobCategory deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
-            if (!element.isJsonPrimitive() || !element.getAsJsonPrimitive().isString()) {
-                throw new JsonParseException("Expected MobCategory string, got " + element);
-            }
-
-            String value = element.getAsString().toUpperCase();
-            try {
-                return MobCategory.valueOf(value);
-            } catch (IllegalArgumentException e) {
-                throw new JsonParseException("Invalid MobCategory value: " + value, e);
-            }
-        }
-    }
-
-    private static class ItemDisplayContextDeserializer implements JsonDeserializer<ItemDisplayContext> {
-        @Override
-        public ItemDisplayContext deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
-            if (!element.isJsonPrimitive() || !element.getAsJsonPrimitive().isString()) {
-                throw new JsonParseException("Expected string, got " + element);
-            }
-
-            String value = element.getAsString().toUpperCase();
-            try {
-                return ItemDisplayContext.valueOf(value);
-            } catch (IllegalArgumentException e) {
-                throw new JsonParseException("Invalid ItemDisplayContext value: " + value, e);
-            }
-        }
-    }
-
-    private static class PushReactionDeserializer implements JsonDeserializer<PushReaction> {
-        @Override
-        public PushReaction deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
-            if (!element.isJsonPrimitive() || !element.getAsJsonPrimitive().isString()) {
-                throw new JsonParseException("Expected string, got " + element);
-            }
-
-            String value = element.getAsString().toUpperCase();
-            try {
-                return PushReaction.valueOf(value);
-            } catch (IllegalArgumentException e) {
-                throw new JsonParseException("Invalid PushReaction value: " + value, e);
-            }
-        }
-    }
-
-    private static class WeatherStateDeserializer implements JsonDeserializer<WeatheringCopper.WeatherState> {
-        @Override
-        public WeatheringCopper.WeatherState deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
-            if (!element.isJsonPrimitive() || !element.getAsJsonPrimitive().isString()) {
-                throw new JsonParseException("Expected string, got " + element);
-            }
-
-            String value = element.getAsString().toUpperCase();
-            try {
-                return WeatheringCopper.WeatherState.valueOf(value);
-            } catch (IllegalArgumentException e) {
-                throw new JsonParseException("Invalid WeatherState value: " + value, e);
-            }
         }
     }
 
