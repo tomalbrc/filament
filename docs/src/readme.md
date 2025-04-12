@@ -1,6 +1,6 @@
 # Introduction
 
-filament allows for a data driven way to add items, blocks and decorations/furniture to your farbic-based minecraft server.
+filament allows for a data driven way to add items, blocks, decorations/furniture and even entities to your farbic-based minecraft server.
 
 Checkout [usage](usage.md) or "[creating content](content)" or the [example datapack](https://github.com/tomalbrc/filament/tree/main/example_datapack/) in the GitHub repo to get started!
 
@@ -12,7 +12,7 @@ Checkout [usage](usage.md) or "[creating content](content)" or the [example data
 
 ---
 
-There is also a test server that you can join with 1.20.5-1.21 clients to get a gimple of what is possible at
+There is also a test server that you can join with 1.21.4 clients to get a glimpse of what is possible at
 mc.tomalbrc.de, default minecraft java port
 
 ![test server](https://api.loohpjames.com/serverbanner.png?ip=mc.tomalbrc.de)

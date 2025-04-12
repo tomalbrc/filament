@@ -22,6 +22,9 @@ data/
 |   |   |-- decoration/
 |   |   |   |-- <decoration_configs>.json
 |   |   |
+|   |   |-- entity/
+|   |   |   |-- <entity_configs>.json
+|   |   |
 |   |   |-- model/
 |   |       |-- <blockbench_model>.bbmodel
 |   |       |-- <animated-java_model>.ajmodel

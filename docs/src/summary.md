@@ -3,6 +3,7 @@
 [Introduction](readme.md)
 
 - [Using filament](usage.md)
+- [Config](config.md)
 - [Oraxen / ItemsAdder compatibility](third-party-compat.md)
 - [Developers](developers.md)
 - [Creating content](content/readme.md)
@@ -22,6 +23,9 @@
         - [Blocks](content/decoration-blocks.md)
         - [Simple and complex decorations](content/decoration-complex.md)
         - [Decoration Examples](content/decoration-examples.md)
+    - [Entity](content/entities.md)
+        - [Properties](content/entity-properties.md)
+        - [Goals](content/entity-goals.md)
 - [Tutorials](tutorial/readme.md)
   - [Armor](tutorial/armor.md)
   - [Cosmetic](tutorial/cosmetic.md)
