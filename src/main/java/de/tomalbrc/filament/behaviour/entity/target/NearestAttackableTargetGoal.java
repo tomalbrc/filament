@@ -1,12 +1,20 @@
 package de.tomalbrc.filament.behaviour.entity.target;
 
 import de.tomalbrc.filament.api.behaviour.EntityBehaviour;
-import de.tomalbrc.filament.behaviour.entity.EntityClassMapGenerator;
 import de.tomalbrc.filament.entity.FilamentMob;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.EnumSet;
 
 /**
  * NearestAttackableTargetGoal
@@ -22,7 +30,7 @@ public class NearestAttackableTargetGoal implements EntityBehaviour<NearestAttac
     public void registerGoals(FilamentMob mob) {
         EntityBehaviour.super.registerGoals(mob);
 
-        mob.getTargetSelector().addGoal(config.priority, new net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal<>(mob, (Class<? extends LivingEntity>) EntityClassMapGenerator.getEntityClass(config.target), config.randomInterval, config.mustSee, config.mustReach, this::check));
+        mob.getTargetSelector().addGoal(config.priority, new NearestAttackableTargetGoalImpl(mob, BuiltInRegistries.ENTITY_TYPE.getValue(config.target), config.randomInterval, config.mustSee, config.mustReach, this::check));
     }
 
     boolean check(LivingEntity livingEntity, ServerLevel serverLevel) {
@@ -43,5 +51,57 @@ public class NearestAttackableTargetGoal implements EntityBehaviour<NearestAttac
         boolean mustReach = true;
         boolean ignoreBaby = false;
         boolean ignoreInWater = false;
+    }
+
+    public static class NearestAttackableTargetGoalImpl extends TargetGoal {
+        protected final EntityType<?> targetType;
+        protected final int randomInterval;
+        @Nullable
+        protected LivingEntity target;
+        protected TargetingConditions targetConditions;
+
+        public NearestAttackableTargetGoalImpl(Mob mob, EntityType<?> entityType, int interval, boolean mustSee, boolean mustReach, TargetingConditions.@Nullable Selector selector) {
+            super(mob, mustSee, mustReach);
+            this.targetType = entityType;
+            this.randomInterval = reducedTickDelay(interval);
+            this.setFlags(EnumSet.of(Flag.TARGET));
+            this.targetConditions = TargetingConditions.forCombat().range(this.getFollowDistance()).selector(selector);
+        }
+
+        public boolean canUse() {
+            if (this.randomInterval > 0 && this.mob.getRandom().nextInt(this.randomInterval) != 0) {
+                return false;
+            } else {
+                this.findTarget();
+                return this.target != null;
+            }
+        }
+
+        protected AABB getTargetSearchArea(double d) {
+            return this.mob.getBoundingBox().inflate(d, d, d);
+        }
+
+        protected void findTarget() {
+            ServerLevel serverLevel = getServerLevel(this.mob);
+            if (this.targetType != EntityType.PLAYER) {
+                this.target = serverLevel.getNearestEntity(this.mob.level().getEntitiesOfClass(Mob.class, this.getTargetSearchArea(this.getFollowDistance()), (livingEntity) -> livingEntity.getType() == this.targetType), this.getTargetConditions(), this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+            } else {
+                this.target = serverLevel.getNearestPlayer(this.getTargetConditions(), this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+            }
+
+        }
+
+        public void start() {
+            this.mob.setTarget(this.target);
+            super.start();
+        }
+
+        public void setTarget(@Nullable LivingEntity livingEntity) {
+            this.target = livingEntity;
+        }
+
+        private TargetingConditions getTargetConditions() {
+            return this.targetConditions.range(this.getFollowDistance());
+        }
     }
 }

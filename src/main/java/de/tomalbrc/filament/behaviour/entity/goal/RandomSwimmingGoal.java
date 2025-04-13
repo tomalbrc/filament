@@ -5,12 +5,12 @@ import de.tomalbrc.filament.entity.FilamentMob;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * WaterAvoidingRandomStrollGoal
+ * RandomSwimmingGoal
  */
-public class WaterAvoidingRandomStrollGoal implements EntityBehaviour<WaterAvoidingRandomStrollGoal.Config> {
+public class RandomSwimmingGoal implements EntityBehaviour<RandomSwimmingGoal.Config> {
     private final Config config;
 
-    public WaterAvoidingRandomStrollGoal(Config config) {
+    public RandomSwimmingGoal(Config config) {
         this.config = config;
     }
 
@@ -18,18 +18,18 @@ public class WaterAvoidingRandomStrollGoal implements EntityBehaviour<WaterAvoid
     public void registerGoals(FilamentMob mob) {
         EntityBehaviour.super.registerGoals(mob);
 
-        mob.getGoalSelector().addGoal(config.priority, new net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal(mob, config.speedModifier, config.probability));
+        mob.getGoalSelector().addGoal(config.priority, new net.minecraft.world.entity.ai.goal.RandomSwimmingGoal(mob, config.speedModifier, config.interval));
     }
 
     @Override
     @NotNull
-    public WaterAvoidingRandomStrollGoal.Config getConfig() {
+    public RandomSwimmingGoal.Config getConfig() {
         return this.config;
     }
 
     public static class Config {
         int priority;
         float speedModifier = 1.f;
-        float probability = 0.001f;
+        int interval = 240;
     }
 }

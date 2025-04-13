@@ -94,11 +94,10 @@ public class EntityData {
         return goals == null ? BehaviourList.EMPTY : goals;
     }
 
-    @NotNull
+    @Nullable
     public SpawnInfo spawn() {
         return spawn;
     }
-
 
     public record AnimationInfo(
             ResourceLocation model,

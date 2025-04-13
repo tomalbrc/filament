@@ -5,8 +5,10 @@ import de.tomalbrc.filament.data.EntityData;
 import de.tomalbrc.filament.registry.EntityRegistry;
 import eu.pb4.polymer.core.api.entity.PolymerEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -17,6 +19,7 @@ import net.minecraft.world.entity.ai.control.JumpControl;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -97,7 +100,8 @@ public class FilamentMob extends Animal implements PolymerEntity {
 
     @Override
     public @Nullable AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
-        return null;
+        var id = data.properties().offspring;
+        return (AgeableMob) BuiltInRegistries.ENTITY_TYPE.getValue(id).create(serverLevel, EntitySpawnReason.BREEDING);
     }
 
     @Override
@@ -128,6 +132,19 @@ public class FilamentMob extends Animal implements PolymerEntity {
         }
 
         super.aiStep();
+    }
+
+    @Override
+    public void customServerAiStep(ServerLevel serverLevel) {
+        super.customServerAiStep(serverLevel);
+
+        if (this.forcedAgeTimer > 0) {
+            if (this.forcedAgeTimer % 4 == 0) {
+                serverLevel.sendParticles(ParticleTypes.HAPPY_VILLAGER, this.getRandomX(1.0), this.getRandomY() + 0.5, this.getRandomZ(1.0), 0, 0.0, 0.0, 0.0, 0.0);
+            }
+
+            --this.forcedAgeTimer;
+        }
     }
 
     @Override
@@ -194,7 +211,28 @@ public class FilamentMob extends Animal implements PolymerEntity {
 
     @Override
     public boolean isFood(ItemStack itemStack) {
+        var food = data.properties().food;
+        if (food != null) {
+            for (ResourceLocation resourceLocation : food) {
+                if (itemStack.is(BuiltInRegistries.ITEM.getValue(resourceLocation)))
+                    return true;
+            }
+        }
         return false;
+    }
+
+    @Override
+    public void setInLove(@Nullable Player player) {
+        if (this.level() instanceof ServerLevel level) {
+            for (int i = 0; i < 7; ++i) {
+                double xOffset = this.random.nextGaussian() * 0.02;
+                double yOffset = this.random.nextGaussian() * 0.02;
+                double zOffset = this.random.nextGaussian() * 0.02;
+                level.sendParticles(ParticleTypes.HEART, this.getRandomX(1.0), this.getRandomY() + 0.5, this.getRandomZ(1.0), 0, xOffset, yOffset, zOffset, 0);
+            }
+        }
+
+        super.setInLove(player);
     }
 
     @Override
@@ -216,4 +254,26 @@ public class FilamentMob extends Animal implements PolymerEntity {
     //public void modifyRawTrackedData(List<SynchedEntityData.DataValue<?>> data, ServerPlayer player, boolean initial) {
         //BuiltInRegistries.ENTITY_TYPE.getValue(this.data.entityType());
     //}
+
+
+    @Override
+    public boolean canBeLeashed() {
+        return data.properties().canBeLeashed;
+    }
+
+    @Override
+    public boolean removeWhenFarAway(double d) {
+        return data.properties().despawnWhenFarAway && !this.isLeashed() && !this.hasCustomName();
+    }
+
+    @Override
+    public boolean canMate(Animal animal) {
+        if (animal == this) {
+            return false;
+        } else if (animal.getType() != this.getType()) {
+            return false;
+        } else {
+            return this.isInLove() && animal.isInLove();
+        }
+    }
 }

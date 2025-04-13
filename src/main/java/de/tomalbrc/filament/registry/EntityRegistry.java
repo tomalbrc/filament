@@ -6,9 +6,11 @@ import com.mojang.datafixers.DataFixUtils;
 import com.mojang.datafixers.types.Type;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
-import de.tomalbrc.filament.decoration.util.SeatEntity;
-import de.tomalbrc.filament.entity.AnimatedFilamentMob;
 import de.tomalbrc.filament.data.EntityData;
+import de.tomalbrc.filament.decoration.util.SeatEntity;
+import de.tomalbrc.filament.entity.AnimatedFilamentEnemyMob;
+import de.tomalbrc.filament.entity.AnimatedFilamentMob;
+import de.tomalbrc.filament.entity.FilamentEnemyMob;
 import de.tomalbrc.filament.entity.FilamentMob;
 import de.tomalbrc.filament.item.BaseProjectileEntity;
 import de.tomalbrc.filament.item.TridentEntity;
@@ -69,9 +71,9 @@ public class EntityRegistry {
 
         EntityType.Builder builder = null;
         if (data.animation() != null && data.animation().model() != null) {
-            builder = EntityType.Builder.of(AnimatedFilamentMob::new, data.properties().category).sized(size.getFirst(), size.getLast());
+            builder = EntityType.Builder.of(data.properties().forceEnemy ? AnimatedFilamentEnemyMob::new : AnimatedFilamentMob::new, data.properties().category).sized(size.getFirst(), size.getLast());
         } else {
-            builder = EntityType.Builder.of(FilamentMob::new, data.properties().category).sized(size.getFirst(), size.getLast());
+            builder = EntityType.Builder.of(data.properties().forceEnemy ? FilamentEnemyMob::new : FilamentMob::new, data.properties().category).sized(size.getFirst(), size.getLast());
         }
 
         if (data.properties().fireImmune)
