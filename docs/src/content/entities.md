@@ -1,8 +1,8 @@
 # Entities
 
-Filament allows you to add simple entities with custom attributes and some AI goals from the vanilla game.
+Filament allows you to add simple entities with custom attributes, custom blockbench model with animations and some AI goals from the vanilla game.
 
-~~~admonish example
+~~~admonish info
 The entity module is experimental and fields will change in between versions!
 
 You can disable the module in filaments config if you run into issues.
@@ -22,10 +22,10 @@ Here is a basic example for a zombie-like entity with an Iron Golem model:
 ```json
 {
   "id": "mynamespace:unfriendly_golem",
-  "entityTags": [
-    "can_breathe_underwater"
+  "entity_tags": [
+    "can_breathe_under_water"
   ],
-  "entityType": "iron_golem",
+  "entity_type": "iron_golem",
   "translations": {
     "en_us": "Unfriendly Golem"
   },
@@ -144,22 +144,48 @@ Here is a basic example for a zombie-like entity with an Iron Golem model:
     "minecraft:attack_range": 1.5,
     "minecraft:spawn_reinforcements": 0.5,
     "minecraft:step_height": 0
+  },
+  "spawn": {
+    "weight": 40,
+    "min_group_size": 2,
+    "max_group_size": 4,
+    "found_in_overworld": true,
+    "found_in_nether": false,
+    "found_in_end": false,
+    "biomes": ["desert"],
+    "biomeTags": ["c:desert"]
   }
 }
 ```
 ~~~
 
+## Model & Animations
+
+The model and animations are controlled using the `animation` field:
+```json
+{
+  "animation": {
+    "model": "mynamespace:penguin",
+    "walk_animation": "walk",
+    "idle_animation": "idle"
+  }
+}
+```
 
 ## Spawn Options
 
 The field `spawn` controls where or how your entity spawned in the world.
 
 - weight: Spawn weight. 10-50 are usually acceptable values 
-- minGroupSize: Min. amount of entities to spawn at once
-- maxGroupSize: Max. amount of entities to spawn at once
-- spawnsLike: List of entity types to spawn alike
+- min_group_size: Min. amount of entities to spawn at once
+- max_group_size: Max. amount of entities to spawn at once
+- spawn_like: List of entity types to spawn alike
 - biomes: List of biomes 
-- biomeTags: List of biome tags
-- foundInOverworld: Entity will only spawn in the overworld if set to true
-- foundInNether: Entity will only spawn in the nether if set to true
-- foundInEnd: Entity will only spawn in the end if set to true
+- biome_tags: List of biome tags
+- found_in_overworld: Entity will only spawn in the overworld if set to true
+- found_in_nether: Entity will only spawn in the nether if set to true
+- found_in_end: Entity will only spawn in the end if set to true
+
+~~~admonish info
+The category of the entity can change its spawn behaviour. "monster" entities will only spawn in dark places/at night!  
+~~~

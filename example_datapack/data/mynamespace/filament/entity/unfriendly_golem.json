@@ -12,6 +12,7 @@
       0.5,
       1.8
     ],
+    "force_enemy": true,
     "category": "monster",
     "xp_reward": 5,
     "is_sun_sensitive": true,

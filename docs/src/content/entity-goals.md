@@ -143,3 +143,176 @@ Targets the nearest valid entity.
 - `ignore_baby`: Ignores baby versions of the entity type.
 - `ignore_in_water`: Ignores targets in water.
 ~~~
+
+---
+
+## `break_door_goal`
+
+Allows the entity to break doors under certain difficulties.
+
+~~~admonish info "Configurable Fields"
+- `priority`: Determines execution order.
+- `door_break_time`: Time in ticks to break the door. Default: `240`.
+- `valid_difficulties`: List of difficulty levels where breaking is allowed (e.g. `["hard", "normal"]`).
+~~~
+
+---
+
+## `breed_goal`
+
+Enables breeding behavior with compatible entities.
+
+~~~admonish info "Configurable Fields"
+- `priority`: Determines execution order.
+- `speed_modifier`: Movement speed multiplier. Default: `1.0`.
+~~~
+
+---
+
+## `eat_block_goal`
+
+Allows the entity to consume a specific type of block, like sheep do
+
+~~~admonish info "Configurable Fields"
+- `priority`: Determines execution order.
+~~~
+
+---
+
+## `flee_sun_goal`
+
+Causes the entity to flee from sunlight.
+
+~~~admonish info "Configurable Fields"
+- `priority`: Determines execution order.
+- `speed_modifier`: Movement speed multiplier. Default: `1.0`.
+~~~
+
+---
+
+## `follow_boat_goal`
+
+Makes the entity follow a boat
+
+~~~admonish info "Configurable Fields"
+- `priority`: Determines execution order.
+~~~
+
+---
+
+## `follow_mob_goal`
+
+Enables following another mob
+
+~~~admonish info "Configurable Fields"
+- `priority`: Determines execution order.
+- `speed_modifier`: Movement speed multiplier. Default: `1.0`.
+- `stop_distance`: Max distance to stop following.
+- `area_size`: (needs docs)
+~~~
+
+---
+
+## `follow_parent_goal`
+
+Baby entity follow adult versions of itself.
+
+~~~admonish info "Configurable Fields"
+- `priority`: Determines execution order.
+- `speed_modifier`: Movement speed multiplier. Default: `1.0`.
+~~~
+
+---
+
+## `move_towards_target_goal`
+
+Moves the entity towards its targeted entity
+
+~~~admonish info "Configurable Fields"
+- `priority`: Determines execution order.
+- `speed_modifier`: Movement speed multiplier. Default: `1.0`.
+- `within`: Distance threshold for stopping.
+~~~
+
+---
+
+## `open_door_goal`
+
+Allows the entity to open and optionally close doors.
+
+~~~admonish info "Configurable Fields"
+- `priority`: Determines execution order.
+- `close_door`: If `true`, entity will close the door after opening. Default: `true`.
+~~~
+
+---
+
+## `panic_goal`
+
+Entity panics and runs when damaged.
+
+~~~admonish info "Configurable Fields"
+- `priority`: Determines execution order.
+- `speed_modifier`: Movement speed multiplier. Default: `1.0`.
+- `damage_type`: Trigger type for panic (e.g. `"minecraft:panic_causes"`).
+~~~
+
+---
+
+## `random_stroll_goal`
+
+Entity strolls randomly.
+
+~~~admonish info "Configurable Fields"
+- `priority`: Determines execution order.
+- `speed_modifier`: Movement speed multiplier. Default: `1.0`.
+- `interval`: Delay between strolls. Default: `240` ticks.
+- `check_no_action_time`: If `true`, strolling depends on idle time.
+~~~
+
+---
+
+## `random_swimming_goal`
+
+Entity swims randomly in water.
+
+~~~admonish info "Configurable Fields"
+- `priority`: Determines execution order.
+- `speed_modifier`: Movement speed multiplier. Default: `1.0`.
+- `interval`: Delay between swim actions. Default: `240` ticks.
+~~~
+
+---
+
+## `stroll_through_village_goal`
+
+Strolls through villages.
+
+~~~admonish info "Configurable Fields"
+- `priority`: Determines execution order.
+- `interval`: Delay between strolls. Default: `100` ticks.
+~~~
+
+---
+
+## `tempt_goal`
+
+Entity is lured by certain items or item tags.
+
+~~~admonish info "Configurable Fields"
+- `priority`: Determines execution order.
+- `speed_modifier`: Movement speed multiplier. Default: `1.0`.
+- `can_scare`: If `true`, entity may flee when startled.
+- `items`: Specific items that tempt the entity (e.g., `["minecraft:carrot"]`).
+- `item_tags`: Tags that group valid tempting items.
+~~~
+
+---
+
+## `try_find_water_goal`
+
+Entity tries to find a nearby water source.
+
+~~~admonish info "Configurable Fields"
+- `priority`: Determines execution order.
+~~~

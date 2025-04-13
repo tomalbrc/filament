@@ -1,9 +1,9 @@
 {
   "id": "mynamespace:penguin",
-  "entityTags": [
+  "entity_tags": [
     "can_breathe_underwater"
   ],
-  "entityType": "block_display",
+  "entity_type": "block_display",
   "translations": {
     "en_us": "Angry Penguin"
   },
@@ -27,6 +27,10 @@
     "no_summon": false,
     "no_physics": false,
     "can_use_portal": true,
+    "can_be_leashed": true,
+    "despawn_when_far_away": false,
+    "offspring": "pig",
+    "food": ["sugar_cane"],
     "ambient_sound_interval": 80,
     "sounds": {
       "ambient": "entity.armadillo.ambient",
@@ -41,6 +45,15 @@
     }
   },
   "goals": [
+    {
+      "type": "breed_goal",
+      "priority": 4
+    },
+    {
+      "type": "tempt_goal",
+      "priority": 4,
+      "items": ["sugar_cane"]
+    },
     {
       "type": "remove_block_goal",
       "priority": 4,
@@ -121,6 +134,7 @@
   ],
   "attributes": {
     "minecraft:follow_range": 35,
+    "minecraft:tempt_range": 10,
     "minecraft:movement_speed": 0.23,
     "minecraft:attack_damage": 3.0,
     "minecraft:armor": 2.0,

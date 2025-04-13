@@ -4,7 +4,7 @@
   "entityTags": [
     "can_breathe_underwater"
   ],
-  "entityType": "axolotl",
+  "entity_type": "axolotl",
   "translations": {
     "en_us": "AxoMaxo"
   },
