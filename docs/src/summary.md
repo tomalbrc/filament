@@ -23,7 +23,7 @@
         - [Blocks](content/decoration-blocks.md)
         - [Simple and complex decorations](content/decoration-complex.md)
         - [Decoration Examples](content/decoration-examples.md)
-    - [Entity](content/entities.md)
+    - [Entities](content/entities.md)
         - [Properties](content/entity-properties.md)
         - [Goals](content/entity-goals.md)
 - [Tutorials](tutorial/readme.md)

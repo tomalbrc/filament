@@ -6,30 +6,36 @@ Example:
 ```json
 {
   "properties": {
-    "size": [0.6, 1.95],
-    "category": "monster",
+    "size": [
+      0.5,
+      0.6
+    ],
+    "category": "creature",
+    "xp_reward": 15,
+    "is_sun_sensitive": false,
+    "should_despawn_in_peaceful": true,
+    "invulnerable": false,
+    "fire_immune": false,
+    "no_save": false,
+    "no_summon": false,
+    "no_physics": false,
+    "can_use_portal": true,
+    "can_be_leashed": true,
+    "despawn_when_far_away": false,
+    "offspring": "pig",
+    "food": ["sugar_cane"],
+    "ambient_sound_interval": 80,
     "sounds": {
-      "ambient": "minecraft:entity.zombie.ambient",
-      "swim": "minecraft:entity.generic.swim",
-      "swimSplash": "minecraft:entity.generic.splash",
-      "hurt": "minecraft:entity.zombie.hurt",
-      "death": "minecraft:entity.zombie.death",
+      "ambient": "entity.armadillo.ambient",
+      "hurt": "entity.armadillo.hurt",
+      "death": "entity.armadillo.death",
+      "swim_splash": "entity.generic.splash",
+      "swim": "entity.generic.swim",
       "fall": {
-        "small": "minecraft:entity.generic.small_fall",
-        "big": "minecraft:entity.generic.big_fall"
+        "small": "entity.generic.small_fall",
+        "big": "entity.generic.big_fall"
       }
-    },
-    "ambient_sound_interval": 120,
-    "xp_reward": 10,
-    "is_sun_sensitive": true,
-    "can_pickup_loot": true,
-    "should_despawn_in_peaceful": false,
-    "invulnerable": true,
-    "fire_immune": true,
-    "no_physics": true,
-    "no_save": true,
-    "no_summon": true,
-    "can_use_portal": true
+    }
   }
 }
 ```
