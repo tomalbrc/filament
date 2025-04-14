@@ -26,6 +26,7 @@
     "behaviour.cosmetic.ServerPlayerMixin",
     "behaviour.crop.BeeMixin",
     "behaviour.crop.HarvestFarmlandMixin",
+    "behaviour.execute.ServerGamePacketListenerImplMixin",
     "behaviour.falling_block.FallingBlockEntityMixin",
     "behaviour.fishing_rod.FishingHookMixin",
     "behaviour.grass_spread.SpreadingSnowyDirtBlockAccessor",

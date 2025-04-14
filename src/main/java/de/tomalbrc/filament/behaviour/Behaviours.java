@@ -38,6 +38,7 @@ public class Behaviours {
 
     // Item + Block
     public static final BehaviourType<Execute, Execute.Config> EXECUTE = registerBehaviour("execute", Execute.class);
+    public static final BehaviourType<Execute, Execute.Config> EXECUTE_ATTACK = registerBehaviour("execute_attack", Execute.class);
 
     // Block
     public static final BehaviourType<CanSurvive, CanSurvive.Config> CAN_SURVIVE = registerBehaviour("can_survive", CanSurvive.class);

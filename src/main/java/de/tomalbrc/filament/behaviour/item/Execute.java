@@ -39,21 +39,7 @@ public class Execute implements ItemBehaviour<Execute.Config>, BlockBehaviour<Ex
         var cmds = commands();
 
         if (cmds != null && user.getServer() != null && user instanceof ServerPlayer serverPlayer) {
-            for (String cmd : cmds) {
-                user.getServer().getCommands().performPrefixedCommand(
-                        serverPlayer.createCommandSourceStack().withSource(user.getServer()).withMaximumPermission(4), cmd);
-            }
-
-            user.awardStat(Stats.ITEM_USED.get(item));
-
-            if (this.config.sound != null) {
-                var sound = this.config.sound;
-                level.playSound(null, user, BuiltInRegistries.SOUND_EVENT.getValue(sound), SoundSource.NEUTRAL, 1.0F, 1.0F);
-            }
-
-            if (this.config.consumes) {
-                user.getItemInHand(hand).shrink(1);
-            }
+            runCommandItem(serverPlayer, item, hand);
             return InteractionResult.CONSUME;
         }
 
@@ -78,7 +64,28 @@ public class Execute implements ItemBehaviour<Execute.Config>, BlockBehaviour<Ex
         return BlockBehaviour.super.useItemOn(itemStack, blockState, level, blockPos, player, interactionHand, blockHitResult);
     }
 
-    private void runCommandBlock(ServerPlayer user, BlockPos blockPos) {
+    public void runCommandItem(ServerPlayer serverPlayer, Item item, InteractionHand hand) {
+        var cmds = commands();
+        if (cmds != null && serverPlayer.getServer() != null) {
+            for (String cmd : cmds) {
+                serverPlayer.getServer().getCommands().performPrefixedCommand(
+                        serverPlayer.createCommandSourceStack().withSource(serverPlayer.getServer()).withMaximumPermission(4), cmd);
+            }
+
+            serverPlayer.awardStat(Stats.ITEM_USED.get(item));
+
+            if (this.config.sound != null) {
+                var sound = this.config.sound;
+                serverPlayer.level().playSound(null, serverPlayer, BuiltInRegistries.SOUND_EVENT.getValue(sound), SoundSource.NEUTRAL, 1.0F, 1.0F);
+            }
+
+            if (this.config.consumes) {
+                serverPlayer.getItemInHand(hand).shrink(1);
+            }
+        }
+    }
+
+    public void runCommandBlock(ServerPlayer user, BlockPos blockPos) {
         var cmds = commands();
         if (cmds != null && user.getServer() != null) {
             for (String cmd : cmds) {

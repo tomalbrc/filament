@@ -2,6 +2,8 @@ package de.tomalbrc.filament;
 
 import com.mojang.logging.LogUtils;
 import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.behaviour.item.Execute;
+import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.command.FilamentCommand;
 import de.tomalbrc.filament.data.ItemGroupData;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
@@ -51,7 +53,16 @@ public class Filament implements ModInitializer {
                 ((VirtualDestroyStage.ServerGamePacketListenerExtF) ((ServerPlayer)player).connection).filament$getVirtualDestroyStage().setState(-1);
             }
         });
+        PlayerBlockBreakEvents.BEFORE.register((level, player, blockPos, blockState, blockEntity) -> {
+            if (blockState.getBlock() instanceof SimpleBlock simpleBlock && player instanceof ServerPlayer serverPlayer) {
+                Execute ex = simpleBlock.get(Behaviours.EXECUTE_ATTACK);
+                if (ex != null) {
+                    ex.runCommandBlock(serverPlayer, blockPos);
+                }
+            }
 
+            return blockState.getBlock() instanceof SimpleBlock && player.getAbilities().mayBuild;
+        });
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
             if (!world.isClientSide() && hand == InteractionHand.MAIN_HAND) {
                 BlockPos pos = hitResult.getBlockPos();
