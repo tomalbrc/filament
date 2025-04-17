@@ -23,8 +23,6 @@ public class AnimatedHolder extends PositionedHolder {
         super((ServerLevel) blockEntity.getLevel(), blockEntity.getBlockPos().getCenter(), model);
         this.decorationBlockEntity = blockEntity;
 
-        this.updateCullingBox();
-
         if (this.decorationBlockEntity.has(Behaviours.ANIMATION)) {
             Animation.AnimationConfig animation = this.decorationBlockEntity.getDecorationData(). behaviour().get(Behaviours.ANIMATION);
             this.setAnimationData(animation);
@@ -46,8 +44,10 @@ public class AnimatedHolder extends PositionedHolder {
         display.element().setTranslation(pose.translation().get(new Vector3f()).sub(0, 0.5f, 0));
     }
 
-    protected void updateCullingBox() {
-        if (this.decorationBlockEntity.getDecorationData() != null && this.decorationBlockEntity.getDecorationData().size() != null) {
+    @Override
+    protected void onDataLoaded() {
+        super.onDataLoaded();
+        if (this.bones != null && this.decorationBlockEntity.getDecorationData() != null && this.decorationBlockEntity.getDecorationData().size() != null) {
             for (Bone bone : this.bones) {
                 bone.element().setDisplaySize(this.decorationBlockEntity.getDecorationData().size().get(0) * 1.5f, this.decorationBlockEntity.getDecorationData().size().get(1) * 1.5f);
             }
