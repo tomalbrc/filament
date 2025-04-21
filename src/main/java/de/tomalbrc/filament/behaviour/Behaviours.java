@@ -19,6 +19,8 @@ public class Behaviours {
     public static final BehaviourType<Cosmetic, Cosmetic.Config> COSMETIC = registerBehaviour("cosmetic", Cosmetic.class);
     public static final BehaviourType<Food, Food.FoodConfig> FOOD = registerBehaviour("food", Food.class);
     public static final BehaviourType<Compostable, Compostable.CompostableConfig> COMPOSTABLE = registerBehaviour("compostable", Compostable.class);
+    public static final BehaviourType<ExecuteAttackItem, ExecuteAttackItem.Config> ITEM_ATTACK_EXECUTE = registerBehaviour("item_attack_execute", ExecuteAttackItem.class);
+    public static final BehaviourType<ExecuteInteractItem, ExecuteInteractItem.Config> ITEM_INTERACT_EXECUTE = registerBehaviour("item_interact_execute", ExecuteInteractItem.class);
     public static final BehaviourType<Fuel, Fuel.Config> FUEL = registerBehaviour("fuel", Fuel.class);
     public static final BehaviourType<Hoe, Hoe.Config> HOE = registerBehaviour("hoe", Hoe.class);
     public static final BehaviourType<Instrument, Instrument.Config> INSTRUMENT = registerBehaviour("instrument", Instrument.class);
@@ -37,8 +39,8 @@ public class Behaviours {
     public static final BehaviourType<VillagerFood, VillagerFood.Config> VILLAGER_FOOD = registerBehaviour("villager_food", VillagerFood.class);
 
     // Item + Block
+    @Deprecated(forRemoval = true)
     public static final BehaviourType<Execute, Execute.Config> EXECUTE = registerBehaviour("execute", Execute.class);
-    public static final BehaviourType<Execute, Execute.Config> EXECUTE_ATTACK = registerBehaviour("execute_attack", Execute.class);
 
     // Block
     public static final BehaviourType<CanSurvive, CanSurvive.Config> CAN_SURVIVE = registerBehaviour("can_survive", CanSurvive.class);
@@ -46,6 +48,8 @@ public class Behaviours {
     public static final BehaviourType<Count, Count.CountConfig> COUNT = registerBehaviour("count", Count.class);
     public static final BehaviourType<Crop, Crop.Config> CROP = registerBehaviour("crop", Crop.class);
     public static final BehaviourType<Budding, Budding.Config> BUDDING = registerBehaviour("budding", Budding.class);
+    public static final BehaviourType<ExecuteInteractBlock, ExecuteInteractBlock.Config> BLOCK_INTERACT_EXECUTE = registerBehaviour("block_interact_execute", ExecuteInteractBlock.class);
+    public static final BehaviourType<ExecuteAttackBlock, ExecuteAttackBlock.Config> BLOCK_ATTACK_EXECUTE = registerBehaviour("block_attack_execute", ExecuteAttackBlock.class);
     public static final BehaviourType<Facing, Facing.Config> FACING = registerBehaviour("facing", Facing.class);
     public static final BehaviourType<FallingBlock, FallingBlock.Config> FALLING_BLOCK = registerBehaviour("falling_block", FallingBlock.class);
     public static final BehaviourType<Furnace, Furnace.Config> FURNACE = registerBehaviour("furnace", Furnace.class);

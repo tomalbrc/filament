@@ -370,7 +370,17 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
     }
 
     /**
-     * Caled when a projectile hits the block.
+     * Called when a player "attacks" the block
+     * @param blockState
+     * @param level
+     * @param blockPos
+     * @param player
+     */
+    default void attack(BlockState blockState, Level level, BlockPos blockPos, Player player) {
+    }
+
+    /**
+     * Called when a projectile hits the block.
      *
      * @param level level
      * @param blockState state of the hit block
