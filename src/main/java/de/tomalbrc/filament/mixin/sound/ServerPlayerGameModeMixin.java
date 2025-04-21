@@ -2,6 +2,7 @@ package de.tomalbrc.filament.mixin.sound;
 
 import de.tomalbrc.filament.sound.PolymerSoundBlock;
 import de.tomalbrc.filament.sound.SoundFix;
+import de.tomalbrc.filament.util.FilamentConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayerGameMode;
@@ -24,7 +25,7 @@ public class ServerPlayerGameModeMixin {
     @Inject(method = "incrementDestroyProgress", at = @At("HEAD"))
     private void filament$soundMine(BlockState blockState, BlockPos blockPos, int startTime, CallbackInfoReturnable<Float> cir) {
         var destroyTicks = (gameTicks - startTime) - 1;
-        if ((blockState.getBlock() instanceof PolymerSoundBlock || SoundFix.REMIXES.containsValue(blockState.getSoundType())) && destroyTicks % 4 == 0) {
+        if (FilamentConfig.getInstance().soundModule && (blockState.getBlock() instanceof PolymerSoundBlock || SoundFix.REMIXES.containsValue(blockState.getSoundType())) && destroyTicks % 4 == 0) {
             SoundType soundType = blockState.getSoundType();
             level.playSound(null, blockPos, soundType.getHitSound(), SoundSource.BLOCKS, (soundType.getVolume() + 1.0f) / 8.0f, soundType.getPitch() * 0.5f);
         }

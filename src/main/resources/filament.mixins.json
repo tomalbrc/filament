@@ -40,6 +40,7 @@
     "sound.BlockBehaviourMixin",
     "sound.BlockMixin",
     "sound.EntityMixin",
+    "sound.LivingEntityMixin",
     "sound.PlayerMixin",
     "sound.ServerPlayerGameModeMixin"
   ],

@@ -2,6 +2,7 @@ package de.tomalbrc.filament.mixin.sound;
 
 import de.tomalbrc.filament.sound.PolymerSoundBlock;
 import de.tomalbrc.filament.sound.SoundFix;
+import de.tomalbrc.filament.util.FilamentConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
@@ -18,6 +19,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class BlockMixin {
     @Inject(method = "spawnDestroyParticles", at = @At("TAIL"))
     private void filament$spawnDestroyParticles(Level level, Player player, BlockPos blockPos, BlockState blockState, CallbackInfo ci) {
+        if (!FilamentConfig.getInstance().soundModule)
+            return;
+
         SoundType soundType = null;
         if (blockState.getBlock() instanceof PolymerSoundBlock) {
             soundType = blockState.getSoundType();

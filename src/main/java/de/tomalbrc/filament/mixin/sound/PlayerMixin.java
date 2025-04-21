@@ -2,6 +2,7 @@ package de.tomalbrc.filament.mixin.sound;
 
 import com.mojang.authlib.GameProfile;
 import de.tomalbrc.filament.mixin.accessor.EntityInvoker;
+import de.tomalbrc.filament.util.FilamentConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -22,6 +23,6 @@ public abstract class PlayerMixin extends Player {
     @Inject(method = "checkMovementStatistics", at = @At("HEAD"))
     public void filament$checkMovementStatistics(double d, double e, double f, CallbackInfo ci) {
         // run step sound checks etc
-        if (!isPassenger() && d != 0 && e != 0 && f != 0) ((EntityInvoker)this).invokeApplyMovementEmissionAndPlaySound(MovementEmission.SOUNDS, new Vec3(d,e,f), this.getOnPos(), this.getBlockStateOn());
+        if (FilamentConfig.getInstance().soundModule && !isPassenger() && d != 0 && e != 0 && f != 0) ((EntityInvoker)this).invokeApplyMovementEmissionAndPlaySound(MovementEmission.SOUNDS, new Vec3(d,e,f), this.getOnPos(), this.getBlockStateOn());
     }
 }
