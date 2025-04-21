@@ -552,6 +552,13 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, PolymerS
         return super.useItemOn(itemStack, blockState, level, blockPos, player, interactionHand, blockHitResult);
     }
 
+    @Override
+    protected void attack(BlockState blockState, Level level, BlockPos blockPos, Player player) {
+        if (this.getBehaviours() != null)
+            this.forEach(x -> x.attack(blockState, level, blockPos, player));
+    }
+
+    @Override
     public void onProjectileHit(Level level, BlockState blockState, BlockHitResult blockHitResult, Projectile projectile) {
         if (this.getBehaviours() != null)
             this.forEach(x -> x.onProjectileHit(level, blockState, blockHitResult, projectile));

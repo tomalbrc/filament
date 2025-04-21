@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.mixin.behaviour.execute;
 
 import de.tomalbrc.filament.behaviour.Behaviours;
-import de.tomalbrc.filament.behaviour.item.Execute;
+import de.tomalbrc.filament.behaviour.item.ExecuteAttackItem;
 import de.tomalbrc.filament.item.SimpleItem;
 import net.minecraft.network.protocol.game.ServerboundSwingPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,8 +21,8 @@ public class ServerGamePacketListenerImplMixin {
     private void filament$handleSwing(ServerboundSwingPacket serverboundSwingPacket, CallbackInfo ci) {
         ItemStack item = this.player.getItemInHand(serverboundSwingPacket.getHand());
         if (item.getItem() instanceof SimpleItem simpleItem) {
-            Execute ex = simpleItem.get(Behaviours.EXECUTE_ATTACK);
-            if (ex != null) {
+            ExecuteAttackItem ex = simpleItem.get(Behaviours.ITEM_ATTACK_EXECUTE);
+            if (ex != null && !ex.getConfig().onEntityAttack) {
                 ex.runCommandItem(this.player, simpleItem, serverboundSwingPacket.getHand());
             }
         }
