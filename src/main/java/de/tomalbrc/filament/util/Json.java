@@ -5,9 +5,9 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
-import de.tomalbrc.bil.json.JSON;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.BehaviourList;
@@ -59,7 +59,7 @@ public class Json {
             .registerTypeHierarchyAdapter(Vector3f.class, new Vector3fDeserializer())
             .registerTypeHierarchyAdapter(Vector2f.class, new Vector2fDeserializer())
             .registerTypeHierarchyAdapter(Quaternionf.class, new QuaternionfDeserializer())
-            .registerTypeHierarchyAdapter(ResourceLocation.class, new JSON.ResourceLocationSerializer())
+            .registerTypeAdapter(ResourceLocation.class, new SimpleCodecDeserializer<>(ResourceLocation.CODEC))
             .registerTypeHierarchyAdapter(DataComponentMap.class, new DataComponentsDeserializer())
             .registerTypeHierarchyAdapter(EquipmentSlot.class, new LowercaseEnumDeserializer<>(EquipmentSlot.class))
             .registerTypeHierarchyAdapter(BlockModelType.class, new LowercaseEnumDeserializer<>(BlockModelType.class))
@@ -153,6 +153,23 @@ public class Json {
             snakeCase.append(Character.toLowerCase(c));
         }
         return snakeCase.toString();
+    }
+
+    public static class SimpleCodecDeserializer<T> implements JsonDeserializer<T> {
+
+        private final Codec<T> codec;
+
+        public SimpleCodecDeserializer(Codec<T> codec) {
+            this.codec = codec;
+        }
+
+        @Override
+        public T deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            return codec.parse(JsonOps.INSTANCE, json)
+                    .getOrThrow(error ->
+                            new JsonParseException("Failed to deserialize using Codec: " + error)
+                    );
+        }
     }
 
     public static class BlockStateMappedPropertyDeserializer<T> implements JsonDeserializer<BlockStateMappedProperty<T>> {
