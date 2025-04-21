@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.util;
 
+import de.tomalbrc.filament.sound.SoundFix;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
@@ -14,9 +15,9 @@ public final class FilamentBlockResourceUtils {
     private static final Map<BlockModelType, Map<PolymerBlockModel, BlockState>> MODEL_CACHE = new Object2ObjectArrayMap<>();
 
     public static @Nullable BlockState requestBlock(BlockModelType type, PolymerBlockModel model, boolean virtual) {
-        var list = MODEL_CACHE.computeIfAbsent(type,  x -> new Object2ReferenceArrayMap<>());
+        Map<PolymerBlockModel, BlockState> polymerBlockModelBlockStateMap = MODEL_CACHE.computeIfAbsent(type,  x -> new Object2ReferenceArrayMap<>());
         if (!virtual) {
-            for (Map.Entry<PolymerBlockModel, BlockState> entry : list.entrySet()) {
+            for (Map.Entry<PolymerBlockModel, BlockState> entry : polymerBlockModelBlockStateMap.entrySet()) {
                 if (entry.getKey().equals(model)) {
                     return entry.getValue();
                 }
@@ -31,7 +32,10 @@ public final class FilamentBlockResourceUtils {
         }
 
         if (!virtual)
-            list.put(model, state);
+            polymerBlockModelBlockStateMap.put(model, state);
+
+        if (state != null)
+            SoundFix.SOUND_TYPES.add(state.getSoundType());
 
         return state;
     }

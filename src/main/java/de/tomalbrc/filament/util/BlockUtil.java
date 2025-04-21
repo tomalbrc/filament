@@ -1,9 +1,7 @@
 package de.tomalbrc.filament.util;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -23,15 +21,6 @@ public class BlockUtil {
     }
 
     public static void playBlockPlaceSound(ServerPlayer player, BlockPos pos, SoundType type) {
-        player.connection.send(new ClientboundSoundPacket(
-                Holder.direct(type.getPlaceSound()),
-                SoundSource.BLOCKS,
-                pos.getX(),
-                pos.getY(),
-                pos.getZ(),
-                (type.getVolume() + 1.0F) / 2.0F,
-                type.getPitch() * 0.8F,
-                player.level().getRandom().nextLong()
-        ));
+        player.serverLevel().playSound(null, pos, type.getPlaceSound(), SoundSource.BLOCKS, (type.getVolume() + 1.0F) / 2.0F, type.getPitch() * 0.8F);
     }
 }

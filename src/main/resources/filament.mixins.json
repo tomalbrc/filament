@@ -4,7 +4,6 @@
   "package": "de.tomalbrc.filament.mixin",
   "mixins": [
     "BlockEntityTypeMixin",
-    "BlockItemMixin",
     "BucketItemMixin",
     "FlowingFluidMixin",
     "LevelChunkMixin",
@@ -14,6 +13,7 @@
     "ServerGamePacketListenerImplMixin",
     "StateDefinitionBuilderMixin",
     "WorldLoaderMixin",
+    "accessor.EntityInvoker",
     "accessor.HopperBlockEntityAccessor",
     "accessor.ItemFrameAccessor",
     "accessor.ShovelItemAccessor",
@@ -36,7 +36,12 @@
     "behaviour.trap.MobMixin",
     "behaviour.trident.ThrownTridentAccessor",
     "component.skin.ItemMixin",
-    "component.skin.ItemStackMixin"
+    "component.skin.ItemStackMixin",
+    "sound.BlockBehaviourMixin",
+    "sound.BlockMixin",
+    "sound.EntityMixin",
+    "sound.PlayerMixin",
+    "sound.ServerPlayerGameModeMixin"
   ],
   "injectors": {
     "defaultRequire": 1,

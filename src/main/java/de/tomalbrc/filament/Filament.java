@@ -7,6 +7,7 @@ import de.tomalbrc.filament.data.ItemGroupData;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.*;
+import de.tomalbrc.filament.sound.SoundFix;
 import de.tomalbrc.filament.util.*;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
@@ -40,6 +41,8 @@ public class Filament implements ModInitializer {
         SkinUtil.registerEventHandler();
         Translations.registerEventHandler();
         EntityRegistry.register();
+
+        SoundFix.init();
 
         if (FilamentConfig.getInstance().commands) {
             CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> FilamentCommand.register(dispatcher));

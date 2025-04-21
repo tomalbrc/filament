@@ -5,10 +5,12 @@ import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.data.BlockData;
+import de.tomalbrc.filament.sound.PolymerSoundBlock;
 import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -44,7 +46,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class SimpleBlock extends Block implements PolymerTexturedBlock, BehaviourHolder, SimpleWaterloggedBlock, BonemealableBlock, WeatheringCopper, Fallable {
+public class SimpleBlock extends Block implements PolymerTexturedBlock, PolymerSoundBlock, BehaviourHolder, SimpleWaterloggedBlock, BonemealableBlock, WeatheringCopper, Fallable {
     protected Map<BlockState, BlockData.BlockStateMeta> stateMap;
     protected final BlockState breakEventState;
     protected final BlockData blockData;
@@ -72,6 +74,12 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
         BlockState[] def = {this.stateDefinitionEx.any()};
         this.forEach(behaviour -> def[0] = behaviour.modifyDefaultState(def[0]));
         this.registerDefaultState(def[0]);
+    }
+
+    SoundType sound = new SoundType(1, 1, SoundEvents.ALLAY_HURT, SoundEvents.SNIFFER_HURT, SoundEvents.SHULKER_HURT, SoundEvents.AXOLOTL_HURT, SoundEvents.BONE_MEAL_USE);
+    @NotNull
+    public SoundType getSoundType(BlockState blockState) {
+        return sound;
     }
 
     public boolean hasData() {

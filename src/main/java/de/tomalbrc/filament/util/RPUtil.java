@@ -73,7 +73,7 @@ public class RPUtil {
         if (itemResource.couldGenerate()) {
             for (Map.Entry<String, Map<String, ResourceLocation>> entry : itemResource.textures().entrySet()) {
                 final var modelId = id.withPrefix("item/").withSuffix("_" + entry.getKey());
-                PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(x -> {
+                PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(builder -> {
                     JsonObject object = new JsonObject();
                     object.add("parent", new JsonPrimitive(itemResource.parent().toString()));
 
@@ -83,7 +83,7 @@ public class RPUtil {
                     }
                     object.add("textures", textures);
 
-                    x.addData("assets/" + modelId.getNamespace() + "/models/" + modelId.getPath() + ".json", Json.GSON.toJson(object).getBytes(StandardCharsets.UTF_8));
+                    builder.addData("assets/" + modelId.getNamespace() + "/models/" + modelId.getPath() + ".json", Json.GSON.toJson(object).getBytes(StandardCharsets.UTF_8));
                 });
                 itemResource.getModels().put(entry.getKey(), modelId);
             }
