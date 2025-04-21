@@ -1,0 +1,21 @@
+{
+  "id": "mynamespace:audible_concrete_bricks",
+  "blockResource": {
+    "models": {
+      "default": "minecraft:custom/block/concrete/black_concrete_bricks"
+    }
+  },
+  "properties": {
+    "sounds": {
+      "volume": 1,
+      "pitch": 0.2,
+      "break": "minecraft:entity.allay.hurt",
+      "step": "minecraft:entity.sniffer.hurt",
+      "place": "minecraft:entity.shulker.hurt",
+      "hit": "minecraft:entity.axolotl.hurt",
+      "fall": "minecraft:item.bone_meal.use"
+    },
+    "destroyTime": 2
+  },
+  "blockModelType": "full_block"
+}

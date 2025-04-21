@@ -42,7 +42,7 @@ public class Filament implements ModInitializer {
         Translations.registerEventHandler();
         EntityRegistry.register();
 
-        SoundFix.init();
+        if (FilamentConfig.getInstance().soundModule) SoundFix.init();
 
         if (FilamentConfig.getInstance().commands) {
             CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> FilamentCommand.register(dispatcher));

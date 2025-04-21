@@ -10,7 +10,6 @@ import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -74,12 +73,6 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, PolymerS
         BlockState[] def = {this.stateDefinitionEx.any()};
         this.forEach(behaviour -> def[0] = behaviour.modifyDefaultState(def[0]));
         this.registerDefaultState(def[0]);
-    }
-
-    SoundType sound = new SoundType(1, 1, SoundEvents.ALLAY_HURT, SoundEvents.SNIFFER_HURT, SoundEvents.SHULKER_HURT, SoundEvents.AXOLOTL_HURT, SoundEvents.BONE_MEAL_USE);
-    @NotNull
-    public SoundType getSoundType(BlockState blockState) {
-        return sound;
     }
 
     public boolean hasData() {

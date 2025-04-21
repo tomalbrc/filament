@@ -1,10 +1,13 @@
 package de.tomalbrc.filament.data.properties;
 
+import com.google.gson.annotations.SerializedName;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.NotNull;
@@ -36,23 +39,38 @@ public class BlockProperties extends ItemProperties {
 
     public ResourceLocation lootTable = null;
 
+    public Sounds sounds;
+
     public BlockBehaviour.Properties toBlockProperties() {
         BlockBehaviour.Properties props = BlockBehaviour.Properties.of();
         props.sound(this.blockBase.defaultBlockState().getSoundType());
+        if (sounds != null) {
+            props.sound(new SoundType(
+                    sounds.volume, sounds.pitch,
+                    SoundEvent.createVariableRangeEvent(sounds.breakSound),
+                    SoundEvent.createVariableRangeEvent(sounds.stepSound),
+                    SoundEvent.createVariableRangeEvent(sounds.placeSound),
+                    SoundEvent.createVariableRangeEvent(sounds.hitSound),
+                    SoundEvent.createVariableRangeEvent(sounds.fallSound)
+            ));
+        }
 
         if (this.destroyTime != Float.MIN_VALUE) props.destroyTime(this.destroyTime);
         if (this.explosionResistance != Float.MIN_VALUE) props.explosionResistance(this.explosionResistance);
         else if (this.destroyTime != Float.MIN_VALUE) props.explosionResistance(this.destroyTime);
         if (this.mayBeLightSource()) props.lightLevel((state) -> this.lightEmission.getOrDefault(state, 0));
-        if (this.mayBeRedstoneConductor()) props.isRedstoneConductor((blockState, blockGetter, blockPos) -> this.redstoneConductor.getOrDefault(blockState, false));
+        if (this.mayBeRedstoneConductor())
+            props.isRedstoneConductor((blockState, blockGetter, blockPos) -> this.redstoneConductor.getOrDefault(blockState, false));
         if (this.requiresTool) props.requiresCorrectToolForDrops();
         if (this.replaceable) props.replaceable();
         if (this.transparent) props.noOcclusion();
         if (!this.collision) props.noCollission();
 
-        if (this.lootTable != null) props.overrideLootTable(Optional.of(ResourceKey.create(Registries.LOOT_TABLE, this.lootTable)));
+        if (this.lootTable != null)
+            props.overrideLootTable(Optional.of(ResourceKey.create(Registries.LOOT_TABLE, this.lootTable)));
 
-        if (this.isSuffocating != null) props.isSuffocating((blockState,blockGetter,blockPos) -> this.isSuffocating.getValue(blockState));
+        if (this.isSuffocating != null)
+            props.isSuffocating((blockState, blockGetter, blockPos) -> this.isSuffocating.getValue(blockState));
 
         props.jumpFactor(this.jumpFactor);
         props.mapColor(blockBase.defaultMapColor());
@@ -60,7 +78,7 @@ public class BlockProperties extends ItemProperties {
         if (this.solid) props.forceSolidOn();
         else props.forceSolidOff();
 
-        props.isValidSpawn((blockState,blockGetter,blockPos,entityType) -> this.allowsSpawning);
+        props.isValidSpawn((blockState, blockGetter, blockPos, entityType) -> this.allowsSpawning);
         props.pushReaction(this.pushReaction);
 
         return props;
@@ -73,4 +91,14 @@ public class BlockProperties extends ItemProperties {
     public boolean mayBeLightSource() {
         return this.lightEmission != null && (this.lightEmission.isMap() || (this.lightEmission.getRawValue() != null && this.lightEmission.getRawValue() > 0));
     }
+
+    public record Sounds(
+            float volume,
+            float pitch,
+            @SerializedName("break") ResourceLocation breakSound,
+            @SerializedName("step") ResourceLocation stepSound,
+            @SerializedName("place") ResourceLocation placeSound,
+            @SerializedName("hit") ResourceLocation hitSound,
+            @SerializedName("fall") ResourceLocation fallSound
+    ) {}
 }
