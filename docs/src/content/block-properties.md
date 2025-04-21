@@ -12,7 +12,16 @@ All properties (excluding the shared item and decoration properties):
     "destroyTime": 5,
     "redstoneConductor": false,
     "lightEmission": 0,
-    "lootTable": "minecraft:block/dirt"
+    "lootTable": "minecraft:block/dirt",
+    "sounds": {
+      "volume": 1,
+      "pitch": 0.2,
+      "break": "minecraft:entity.allay.hurt",
+      "step": "minecraft:entity.sniffer.hurt",
+      "place": "minecraft:entity.shulker.hurt",
+      "hit": "minecraft:entity.axolotl.hurt",
+      "fall": "minecraft:item.bone_meal.use"
+    }
   }
 }
 ```
@@ -142,3 +151,29 @@ Example: `minecraft:block/dirt`
 Defaults to `<namespace>:block/<blockname>`. 
 
 So for a block "mynamespace:myblock", the default would be `mynamespace:block/myblock`
+
+### `sounds`
+
+Allows to specify a set of sounds and the volume/pitch for them.
+
+All sounds, including step sounds, will be played serverside! Even for some vanilla blocks, since filament sets the vanilla sounds to an empty list, as a lot of blocks share the same sounds (noteblocks and all wooden blocks use the same wood sounds for example)
+
+This might affect performance a bit, for this reason there is a config option in `config/filament.json` called "sound_module" to enable/disable the server-side block sounds.
+
+~~~ admonish example
+```json
+{
+  "properties": {
+    "sounds": {
+      "volume": 1,
+      "pitch": 0.2,
+      "break": "minecraft:entity.allay.hurt",
+      "step": "minecraft:entity.sniffer.hurt",
+      "place": "minecraft:entity.shulker.hurt",
+      "hit": "minecraft:entity.axolotl.hurt",
+      "fall": "minecraft:item.bone_meal.use"
+    }
+  }
+}
+```
+~~~

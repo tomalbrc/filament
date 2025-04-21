@@ -431,9 +431,24 @@ The values of the `min` and `max` fields can be mapped to block-states.
 
 ---
 
-## `execute` behaviour
+## `block_interact_execute` behaviour
 
-Executes a command on block interaction from console as player (@s).
+Executes a command on block interaction from console, as player (@s).
+
+~~~admonish info "Configurable Fields"
+- `consumes`: Flag whether the block should be broken after running the command(s). Defaults to `false`
+- `dropBlock`: Flag whether the block should drop items when broken. Defaults to `false`
+- `command`: The command string to execute. Empty by default
+- `commands`: List of commands to execute. Empty by default
+- `atBlock`: false/true flag whether the command should be run at the blocks' position
+- `sound`: Optional sound effect to play during execution. Empty by default
+~~~
+
+---
+
+## `block_attack_execute` behaviour
+
+Executes a command when the block is "attacked", from console, as player (@s).
 
 ~~~admonish info "Configurable Fields"
 - `consumes`: Flag whether the block should be broken after running the command(s). Defaults to `false`

@@ -136,15 +136,31 @@ Defines cosmetic item behaviour for either the head or chestplate slot, supporti
 
 ---
 
-## `execute` behaviour
+## `item_interact_execute` behaviour
 
-Executes a command on item use with the player as source, located at the player.
+Executes a command on item use with the player as source, located at the player, with elevated permissions.
 
 ~~~admonish info "Configurable Fields"
 - `consumes`: Flag whether the item is consumed after running the command(s). Defaults to `false`
 - `command`: The command string to execute. Empty by default
 - `commands`: List of commands to execute. Empty by default
 - `sound`: Optional sound effect to play during execution. Empty by default
+~~~
+
+<br>
+
+---
+
+## `item_attack_execute` behaviour
+
+Executes a command when an entity is attacked with the item or when swinging at air, located at the player, with elevated permissions.
+
+~~~admonish info "Configurable Fields"
+- `consumes`: Flag whether the item is consumed after running the command(s). Defaults to `false`
+- `command`: The command string to execute. Empty by default
+- `commands`: List of commands to execute. Empty by default
+- `sound`: Optional sound effect to play during execution. Empty by default
+- `onEntityAttack`: true/false flag whether to execute only when an entity was attacked. Otherwise the command will also be executed when the item is "swung" by the player. Default to `true`
 ~~~
 
 <br>

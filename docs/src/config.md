@@ -37,3 +37,9 @@ Oraxen/ItemsAdder compatible cosmetic placement (adds armorstand offset)
 Enables the experimental entity module to allow data-driven entities
 
 ---
+
+### `sound_module`
+
+Enables the sound module to play block sounds (including step sounds) fully serverside to allow for custom block sounds. 
+
+---
