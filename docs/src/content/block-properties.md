@@ -3,6 +3,7 @@
 Block properties share the same properties as [items](item-properties.md)
 
 All properties (excluding the shared item and decoration properties):
+~~~admonish example
 ```json
 {
   "properties": {
@@ -25,11 +26,11 @@ All properties (excluding the shared item and decoration properties):
   }
 }
 ```
+~~~
 
 ### `blockBase`:
 
-Specifies the base block for this block property. Must be a valid block identifier.
-This is used for sounds, particles and the block color on maps.
+Specifies the base block used for sounds and the block color on maps.
 
 Defaults to `minecraft:stone`
 
@@ -64,6 +65,7 @@ All fields of this property can be mapped to a block-state.
 ~~~
 
 The value of this property can be mapped to a blockstate like this:
+~~~admonish example
 ```json5
 {
   "properties": {
@@ -75,6 +77,7 @@ The value of this property can be mapped to a blockstate like this:
   }
 }
 ```
+~~~
 
 Defaults to `true`
 
@@ -146,11 +149,11 @@ Defaults to `normal`
 
 Allows to override the default loot table
 
-Example: `minecraft:block/dirt`
+Example: `minecraft:blocks/dirt`
 
-Defaults to `<namespace>:block/<blockname>`. 
+Defaults to `<namespace>:blocks/<blockname>`. 
 
-So for a block "mynamespace:myblock", the default would be `mynamespace:block/myblock`
+So for a block "mynamespace:myblock", the default would be `mynamespace:blocks/myblock`
 
 ### `sounds`
 
@@ -167,11 +170,11 @@ This might affect performance a bit, for this reason there is a config option in
     "sounds": {
       "volume": 1,
       "pitch": 0.2,
-      "break": "minecraft:entity.allay.hurt",
-      "step": "minecraft:entity.sniffer.hurt",
-      "place": "minecraft:entity.shulker.hurt",
-      "hit": "minecraft:entity.axolotl.hurt",
-      "fall": "minecraft:item.bone_meal.use"
+      "break": "minecraft:entity.allay.hurt", // sound when broken
+      "step": "minecraft:entity.sniffer.hurt", // sound when stepped on
+      "place": "minecraft:entity.shulker.hurt", // sound when placed
+      "hit": "minecraft:entity.axolotl.hurt", // sound when hit/being mined
+      "fall": "minecraft:item.bone_meal.use" // sound when an entity falls on the block
     }
   }
 }
