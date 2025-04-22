@@ -50,8 +50,7 @@ public class ExecuteAttackItem implements ItemBehaviour<ExecuteAttackItem.Config
 
     @Override
     public void hurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
-        if (config.onEntityAttack) {
-            var player = (ServerPlayer)livingEntity;
+        if (config.onEntityAttack && livingEntity2 instanceof ServerPlayer player) {
             runCommandItem(player, itemStack.getItem(), InteractionHand.MAIN_HAND);
         }
     }
