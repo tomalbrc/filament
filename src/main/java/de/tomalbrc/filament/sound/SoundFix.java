@@ -32,12 +32,11 @@ public class SoundFix {
                 data = Files.readAllBytes(outputPath);
             } else {
                 data = MinecraftAssetFetcher.fetchSoundsJsonForVersion("1.21.5");
+                if (data == null)
+                    return;
+
+                Files.write(outputPath, data);
             }
-
-            if (data == null)
-                return;
-
-            Files.write(outputPath, data);
         } catch (Exception ignored) {}
 
         if (data != null) {
@@ -86,6 +85,6 @@ public class SoundFix {
     }
 
     private static ResourceLocation serversideId(ResourceLocation resourceLocation) {
-        return ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), resourceLocation.getPath() + ".serverside");
+        return resourceLocation.withSuffix(".serverside");
     }
 }
