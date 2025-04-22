@@ -54,6 +54,15 @@ public class SoundFix {
 
             SoundEntry empty = SoundEntry.builder().replace(true).build();
             SoundsAsset newSounds = new SoundsAsset(new Object2ObjectArrayMap<>());
+
+            String oldData = resourcePackBuilder.getStringDataOrSource(PATH);
+            if (oldData != null) {
+                SoundsAsset oldSoundAsset = SoundsAsset.fromJson(oldData);
+                if (oldSoundAsset != null) {
+                    newSounds.sounds().putAll(oldSoundAsset.sounds());
+                }
+            }
+
             for (SoundType soundType : SOUND_TYPES) {
                 newSounds.sounds().put(soundType.getBreakSound().location().getPath(), empty);
                 newSounds.sounds().put(soundType.getStepSound().location().getPath(), empty);
