@@ -54,7 +54,7 @@ public class EntityRegistry {
 
     public static final EntityType<BaseProjectileEntity> BASE_PROJECTILE = registerEntity("projectile", EntityType.Builder.of(BaseProjectileEntity::new, MobCategory.MISC).sized(0.5f, 0.5f).noSummon());
     public static final EntityType<TridentEntity> FILAMENT_TRIDENT = registerEntity("trident", EntityType.Builder.of(TridentEntity::new, MobCategory.MISC).sized(0.5f, 0.5f).eyeHeight(0.13f).noSummon());
-    public static final EntityType<SeatEntity> SEAT_ENTITY =  registerEntity("decoration_seat", EntityType.Builder.of(SeatEntity::new, MobCategory.MISC).noSummon().updateInterval(20));
+    public static final EntityType<SeatEntity> SEAT_ENTITY =  registerEntity("decoration_seat", EntityType.Builder.of(SeatEntity::new, MobCategory.MISC).noSave().noSummon().updateInterval(20).sized(0.5f, 0.1f));
 
     public static void register(InputStream inputStream) throws IOException {
         var element = JsonParser.parseReader(new InputStreamReader(inputStream));
@@ -69,7 +69,7 @@ public class EntityRegistry {
         var size = (data.properties().size == null || Objects.requireNonNull(data.properties().size).size() < 2) ? ImmutableList.of(1.f, 1.f) : data.properties().size;
         assert size != null;
 
-        EntityType.Builder builder = null;
+        EntityType.Builder builder;
         if (data.animation() != null && data.animation().model() != null) {
             builder = EntityType.Builder.of(data.properties().forceEnemy ? AnimatedFilamentEnemyMob::new : AnimatedFilamentMob::new, data.properties().category).sized(size.getFirst(), size.getLast());
         } else {
