@@ -3,9 +3,9 @@ package de.tomalbrc.filament.decoration.block;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.holder.SimpleDecorationHolder;
 import de.tomalbrc.filament.util.DecorationUtil;
-import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -19,6 +19,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.storage.loot.LootParams;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -42,25 +44,23 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
         return new SimpleDecorationHolder();
     }
 
-    public List<ItemStack> getDrops() {
-        if (this.getDecorationData().properties().drops) {
-            return List.of(BuiltInRegistries.ITEM.getValue(this.decorationId).getDefaultInstance());
-        }
-        return List.of();
+    @Override
+    @NotNull
+    public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+        BlockState returnVal = super.playerWillDestroy(level, blockPos, blockState, player);
+        this.playerDestroy(level, player, blockPos, blockState, null, player.getMainHandItem());
+        return returnVal;
     }
 
     @Override
-    protected void spawnAfterBreak(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, boolean bl) {
-        if (!bl && !blockState.is(serverLevel.getBlockState(blockPos).getBlock())) {
-            DecorationData data = this.getDecorationData();
-            if (data.properties().drops && blockState.getBlock() instanceof SimpleDecorationBlock) {
-                for (ItemStack drop : this.getDrops()) {
-                    Util.spawnAtLocation(serverLevel, blockPos.getCenter(), drop);
-                }
-            }
+    @NotNull
+    public List<ItemStack> getDrops(BlockState blockState, LootParams.Builder builder) {
+        if (this.getDecorationData().properties().drops) {
+            List<ItemStack> list = new ObjectArrayList<>();
+            list.addAll(super.getDrops(blockState, builder));
+            return list;
         }
-
-        super.spawnAfterBreak(blockState, serverLevel, blockPos, itemStack, bl);
+        return List.of();
     }
 
     @Override
