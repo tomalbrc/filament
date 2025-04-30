@@ -599,3 +599,12 @@ Hopper behaviour with menu.
 ~~~
 
 ---
+
+## `flammable` behaviour
+
+Makes the block flammable.
+
+~~~admonish info "Configurable Fields"
+- `burn`: Burn. Defaults to `5`
+- `spread` Fire spread chance. Defaults to `20`
+~~~
