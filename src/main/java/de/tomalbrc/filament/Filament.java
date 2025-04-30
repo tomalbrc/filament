@@ -1,6 +1,7 @@
 package de.tomalbrc.filament;
 
 import com.mojang.logging.LogUtils;
+import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.command.FilamentCommand;
 import de.tomalbrc.filament.data.ItemGroupData;
@@ -18,6 +19,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.LayeredRegistryAccess;
@@ -66,6 +68,15 @@ public class Filament implements ModInitializer {
 
             return InteractionResult.PASS;
         });
+
+        FilamentRegistrationEvents.BLOCK.register(((blockData, item, block) -> {
+            if (blockData.behaviour().has(Behaviours.FLAMMABLE))
+                FlammableBlockRegistry.getDefaultInstance().add(block, blockData.behaviour().get(Behaviours.FLAMMABLE).burn, blockData.behaviour().get(Behaviours.FLAMMABLE).spread);
+        }));
+        FilamentRegistrationEvents.DECORATION.register(((decorationData, item, block) -> {
+            if (decorationData.behaviour().has(Behaviours.FLAMMABLE))
+                FlammableBlockRegistry.getDefaultInstance().add(block, decorationData.behaviour().get(Behaviours.FLAMMABLE).burn, decorationData.behaviour().get(Behaviours.FLAMMABLE).spread);
+        }));
 
         ItemGroupRegistry.register(new ItemGroupData(Constants.ITEM_GROUP_ID, ResourceLocation.withDefaultNamespace("diamond"), "<c:blue>Filament Items"));
         ItemGroupRegistry.register(new ItemGroupData(Constants.BLOCK_GROUP_ID, ResourceLocation.withDefaultNamespace("furnace"), "<c:blue>Filament Blocks"));

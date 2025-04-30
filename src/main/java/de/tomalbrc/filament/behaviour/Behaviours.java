@@ -52,6 +52,7 @@ public class Behaviours {
     public static final BehaviourType<ExecuteAttackBlock, ExecuteAttackBlock.Config> BLOCK_ATTACK_EXECUTE = registerBehaviour("block_attack_execute", ExecuteAttackBlock.class);
     public static final BehaviourType<Facing, Facing.Config> FACING = registerBehaviour("facing", Facing.class);
     public static final BehaviourType<FallingBlock, FallingBlock.Config> FALLING_BLOCK = registerBehaviour("falling_block", FallingBlock.class);
+    public static final BehaviourType<Flammable, Flammable.Config> FLAMMABLE = registerBehaviour("flammable", Flammable.class);
     public static final BehaviourType<Furnace, Furnace.Config> FURNACE = registerBehaviour("furnace", Furnace.class);
     public static final BehaviourType<GrassSpread, GrassSpread.Config> GRASS_SPREAD = registerBehaviour("grass_spread", GrassSpread.class);
     public static final BehaviourType<Hopper, Hopper.Config> HOPPER = registerBehaviour("hopper", Hopper.class);

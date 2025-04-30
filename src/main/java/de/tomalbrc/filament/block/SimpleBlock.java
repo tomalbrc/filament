@@ -7,6 +7,8 @@ import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.sound.PolymerSoundBlock;
 import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
+import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
+import net.fabricmc.fabric.impl.content.registry.FireBlockHooks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -45,7 +47,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class SimpleBlock extends Block implements PolymerTexturedBlock, PolymerSoundBlock, BehaviourHolder, SimpleWaterloggedBlock, BonemealableBlock, WeatheringCopper, Fallable {
+public class SimpleBlock extends Block implements PolymerTexturedBlock, PolymerSoundBlock, BehaviourHolder, SimpleWaterloggedBlock, BonemealableBlock, WeatheringCopper, Fallable, FireBlockHooks {
     protected Map<BlockState, BlockData.BlockStateMeta> stateMap;
     protected final BlockState breakEventState;
     protected final BlockData blockData;
@@ -633,5 +635,10 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, PolymerS
                     blockBehaviourWithEntity.entityInside(blockState, level, blockPos, entity, insideBlockEffectApplier);
             });
         }
+    }
+
+    @Override
+    public FlammableBlockRegistry.Entry fabric_getVanillaEntry(BlockState blockState) {
+        return new FlammableBlockRegistry.Entry(0, 0);
     }
 }

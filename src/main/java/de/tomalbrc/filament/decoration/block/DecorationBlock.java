@@ -49,9 +49,6 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Blo
         super(properties);
         this.decorationId = decorationId;
 
-        // todo
-        //FlammableBlockRegistry.getDefaultInstance().add(this, 5, 10);
-
         // the StateDefinition built too early, cant access DecorationData from within createBlockStateDefinition
         StateDefinition.Builder<Block, BlockState> builder = new StateDefinition.Builder<>(this);
         this.createBlockStateDefinition(builder);
