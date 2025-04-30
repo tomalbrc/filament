@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.item;
 
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
@@ -75,7 +75,7 @@ public class SimpleItem extends Item implements PolymerItem, FilamentItem, Behav
         super.verifyComponentsAfterLoad(itemStack);
 
         if (this.data != null) {
-            for (Map.Entry<DataComponentType<?>, JsonObject> entry : this.data.getAdditionalComponents().entrySet()) {
+            for (Map.Entry<DataComponentType<?>, JsonElement> entry : this.data.getAdditionalComponents().entrySet()) {
                 var codec = entry.getKey().codec();
                 assert codec != null;
 
@@ -83,7 +83,7 @@ public class SimpleItem extends Item implements PolymerItem, FilamentItem, Behav
                 var result = codec.decode(RegistryOps.create(JsonOps.INSTANCE, registryInfoLookup), entry.getValue());
                 if (result.hasResultOrPartial()) {
                     DataComponentType type = entry.getKey();
-                    itemStack.set(type, (Object) result.getOrThrow().getFirst());
+                    itemStack.set(type, result.getOrThrow().getFirst());
                 }
             }
         }

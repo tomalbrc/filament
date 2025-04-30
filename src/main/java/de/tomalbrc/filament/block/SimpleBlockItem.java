@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.block;
 
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
@@ -94,7 +94,7 @@ public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentI
         super.verifyComponentsAfterLoad(itemStack);
 
         if (this.getData() != null) {
-            for (Map.Entry<DataComponentType<?>, JsonObject> entry : this.getData().getAdditionalComponents().entrySet()) {
+            for (Map.Entry<DataComponentType<?>, JsonElement> entry : this.getData().getAdditionalComponents().entrySet()) {
                 var codec = entry.getKey().codec();
                 assert codec != null;
 

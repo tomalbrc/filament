@@ -88,10 +88,10 @@ public class Util {
         if (element.getAsJsonObject().has("components")) {
             JsonObject comp = element.getAsJsonObject().get("components").getAsJsonObject();
             if (comp.has("minecraft:jukebox_playable")) {
-                data.putAdditional(DataComponents.JUKEBOX_PLAYABLE, comp.getAsJsonObject("minecraft:jukebox_playable"));
+                data.putAdditional(DataComponents.JUKEBOX_PLAYABLE, comp.get("minecraft:jukebox_playable"));
             }
             if (comp.has("jukebox_playable")) {
-                data.putAdditional(DataComponents.JUKEBOX_PLAYABLE, comp.getAsJsonObject("jukebox_playable"));
+                data.putAdditional(DataComponents.JUKEBOX_PLAYABLE, comp.get("jukebox_playable"));
             }
         }
     }

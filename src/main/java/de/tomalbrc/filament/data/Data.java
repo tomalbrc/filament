@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.data;
 
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.data.resource.ItemResource;
@@ -28,7 +28,7 @@ public abstract class Data {
     protected final @Nullable ResourceLocation group;
     protected final @Nullable Set<ResourceLocation> itemTags;
 
-    transient protected Map<DataComponentType<?>, JsonObject> additionalComponents;
+    transient protected Map<DataComponentType<?>, JsonElement> additionalComponents;
 
     protected Data(
             @NotNull ResourceLocation id,
@@ -52,13 +52,13 @@ public abstract class Data {
         this.itemTags = itemTags;
     }
 
-    public void putAdditional(DataComponentType<?> s, JsonObject jsonObject) {
+    public void putAdditional(DataComponentType<?> s, JsonElement jsonObject) {
         if (this.additionalComponents == null) this.additionalComponents = new Object2ObjectOpenHashMap<>();
         this.additionalComponents.put(s, jsonObject);
     }
 
     @NotNull
-    public Map<DataComponentType<?>, JsonObject> getAdditionalComponents() {
+    public Map<DataComponentType<?>, JsonElement> getAdditionalComponents() {
         if (this.additionalComponents == null) this.additionalComponents = new Object2ObjectOpenHashMap<>();
         return additionalComponents;
     }
