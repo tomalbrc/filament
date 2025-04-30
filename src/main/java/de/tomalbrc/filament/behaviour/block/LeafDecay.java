@@ -36,8 +36,13 @@ public class LeafDecay implements BlockBehaviour<LeafDecay.Config> {
     }
 
     @Override
+    public BlockState filteredBlockState(BlockState blockState) {
+        return blockState.setValue(BlockStateProperties.DISTANCE, 7).setValue(BlockStateProperties.PERSISTENT, false);
+    }
+
+    @Override
     public BlockState modifyDefaultState(BlockState blockState) {
-        return blockState.setValue(BlockStateProperties.FACING, Direction.SOUTH);
+        return blockState.setValue(BlockStateProperties.DISTANCE, 7).setValue(BlockStateProperties.PERSISTENT, false);
     }
 
     @Override
