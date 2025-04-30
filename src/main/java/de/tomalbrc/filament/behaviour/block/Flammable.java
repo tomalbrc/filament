@@ -20,7 +20,7 @@ public class Flammable implements BlockBehaviour<Flammable.Config> {
     }
 
     public static class Config {
-        public int spread;
-        public int burn;
+        public int spread = 20;
+        public int burn = 5;
     }
 }
