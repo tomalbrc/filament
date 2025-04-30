@@ -38,6 +38,7 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.packettweaker.PacketContext;
@@ -147,13 +148,14 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, PolymerS
 
     @Override
     protected long getSeed(BlockState blockState, BlockPos blockPos) {
-        if (this.getBehaviours() != null) for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
-            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
-                var res = blockBehaviour.getSeed(blockState, blockPos);
-                if (res != null && res.isPresent())
-                    return res.orElseThrow();
+        if (this.getBehaviours() != null)
+            for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+                if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
+                    var res = blockBehaviour.getSeed(blockState, blockPos);
+                    if (res != null && res.isPresent())
+                        return res.orElseThrow();
+                }
             }
-        }
 
         return super.getSeed(blockState, blockPos);
     }
@@ -173,13 +175,14 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, PolymerS
     @Override
     @NotNull
     public DamageSource getFallDamageSource(Entity entity) {
-        if (this.getBehaviours() != null) for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
-            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
-                var res = blockBehaviour.getFallDamageSource(entity);
-                if (res != null)
-                    return res;
+        if (this.getBehaviours() != null)
+            for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+                if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
+                    var res = blockBehaviour.getFallDamageSource(entity);
+                    if (res != null)
+                        return res;
+                }
             }
-        }
 
         return Fallable.super.getFallDamageSource(entity);
     }
@@ -241,13 +244,14 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, PolymerS
 
     @Override
     public boolean dropFromExplosion(Explosion explosion) {
-        if (this.getBehaviours() != null) for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
-            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
-                var res = blockBehaviour.dropFromExplosion(explosion);
-                if (!res)
-                    return false;
+        if (this.getBehaviours() != null)
+            for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+                if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
+                    var res = blockBehaviour.dropFromExplosion(explosion);
+                    if (!res)
+                        return false;
+                }
             }
-        }
 
         return super.dropFromExplosion(explosion);
     }
@@ -316,13 +320,14 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, PolymerS
 
     @Override
     protected boolean useShapeForLightOcclusion(BlockState blockState) {
-        if (this.getBehaviours() != null) for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
-            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
-                var res = blockBehaviour.useShapeForLightOcclusion(blockState);
-                if (res.isPresent())
-                    return res.get();
+        if (this.getBehaviours() != null)
+            for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+                if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
+                    var res = blockBehaviour.useShapeForLightOcclusion(blockState);
+                    if (res.isPresent())
+                        return res.get();
+                }
             }
-        }
         return super.useShapeForLightOcclusion(blockState);
     }
 
@@ -640,5 +645,36 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, PolymerS
     @Override
     public FlammableBlockRegistry.Entry fabric_getVanillaEntry(BlockState blockState) {
         return new FlammableBlockRegistry.Entry(0, 0);
+    }
+
+    @Override
+    protected int getLightBlock(BlockState state) {
+        if (this.getBehaviours() != null) {
+            for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+                if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
+                    var res = blockBehaviour.getLightBlock(state);
+                    if (res != -1)
+                        return res;
+                }
+            }
+        }
+
+        return super.getLightBlock(state);
+    }
+
+    @Override
+    @NotNull
+    protected VoxelShape getBlockSupportShape(BlockState state, BlockGetter level, BlockPos pos) {
+        if (this.getBehaviours() != null) {
+            for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+                if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
+                    var res = blockBehaviour.getBlockSupportShape(state, level, pos);
+                    if (res != null)
+                        return res;
+                }
+            }
+        }
+
+        return super.getBlockSupportShape(state, level, pos);
     }
 }

@@ -57,6 +57,7 @@ public class Behaviours {
     public static final BehaviourType<GrassSpread, GrassSpread.Config> GRASS_SPREAD = registerBehaviour("grass_spread", GrassSpread.class);
     public static final BehaviourType<Hopper, Hopper.Config> HOPPER = registerBehaviour("hopper", Hopper.class);
     public static final BehaviourType<HorizontalFacing, HorizontalFacing.Config> HORIZONTAL_FACING = registerBehaviour("horizontal_facing", HorizontalFacing.class);
+    public static final BehaviourType<LeafDecay, LeafDecay.Config> LEAF_DECAY = registerBehaviour("leaf_decay", LeafDecay.class);
     public static final BehaviourType<Powerlevel, Powerlevel.PowerlevelConfig> POWERLEVEL = registerBehaviour("powerlevel", Powerlevel.class);
     public static final BehaviourType<Slab, Slab.SlabConfig> SLAB = registerBehaviour("slab", Slab.class);
     public static final BehaviourType<Trapdoor, Trapdoor.Config> TRAPDOOR = registerBehaviour("trapdoor", Trapdoor.class);

@@ -28,6 +28,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -448,5 +449,13 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
     }
 
     default void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity, InsideBlockEffectApplier insideBlockEffectApplier) {
+    }
+
+    default int getLightBlock(BlockState state) {
+        return -1;
+    }
+
+    default VoxelShape getBlockSupportShape(BlockState state, BlockGetter level, BlockPos pos) {
+        return null;
     }
 }
