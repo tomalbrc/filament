@@ -76,9 +76,6 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, PolymerS
         BlockState[] def = {this.stateDefinitionEx.any()};
         this.forEach(behaviour -> def[0] = behaviour.modifyDefaultState(def[0]));
         this.registerDefaultState(def[0]);
-
-        this.stateDefinitionEx.getPossibleStates().forEach(BlockState::initCache);
-        this.stateDefinition.getPossibleStates().forEach(BlockState::initCache);
     }
 
     public boolean hasData() {
@@ -94,6 +91,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, PolymerS
     public void postRegister() {
         this.stateMap = this.blockData.createStandardStateMap();
         this.forEach(behaviour -> behaviour.modifyStateMap(this.stateMap, this.blockData));
+        this.stateDefinitionEx.getPossibleStates().forEach(BlockState::initCache);
     }
 
     @Override
@@ -235,7 +233,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, PolymerS
             }
 
             this.wasExploded(level, blockPos, explosion); // switch up order to support mapped blockstate properties in block behaviours (tnt example)
-            level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+            level.setBlock(blockPos, Blocks.SAND.defaultBlockState(), Block.UPDATE_ALL);
         }
     }
 
@@ -463,7 +461,6 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, PolymerS
         super.tick(blockState, serverLevel, blockPos, randomSource);
         this.forEach(x -> x.tick(blockState, serverLevel, blockPos, randomSource));
     }
-
 
     // random ticking
 

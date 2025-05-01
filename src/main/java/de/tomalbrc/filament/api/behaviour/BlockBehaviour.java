@@ -130,6 +130,7 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
      * @param bl
      */
     default void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, Orientation orientation, boolean bl) {
+
     }
 
     /**

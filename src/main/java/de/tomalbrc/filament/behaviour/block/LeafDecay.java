@@ -8,11 +8,14 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
@@ -81,8 +84,20 @@ public class LeafDecay implements BlockBehaviour<LeafDecay.Config> {
     }
 
     @Override
+    public BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
+        if (blockState.hasProperty(BlockStateProperties.WATERLOGGED) && blockState.getValue(BlockStateProperties.WATERLOGGED)) {
+            scheduledTickAccess.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelReader));
+        }
+        int dist = getDistanceAt(blockState2) + 1;
+        if (dist != 1 || blockState.getValue(BlockStateProperties.DISTANCE) != dist) {
+            scheduledTickAccess.scheduleTick(blockPos, blockState.getBlock(), 1);
+        }
+        return blockState;
+    }
+
+    @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        level.setBlock(pos, updateDistance(state, level, pos), 3);
+        level.setBlock(pos, updateDistance(state, level, pos), Block.UPDATE_ALL);
     }
 
     private static BlockState updateDistance(BlockState state, LevelAccessor level, BlockPos pos) {

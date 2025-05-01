@@ -63,7 +63,7 @@ public class DecorationRegistry {
 
         BlockBehaviour.Properties blockProperties = data.properties().toBlockProperties();
 
-        var block = BlockRegistry.registerBlock(BlockRegistry.key(data.id()), getBlockCreator(data), blockProperties, data.blockTags());
+        DecorationBlock block = BlockRegistry.registerBlock(BlockRegistry.key(data.id()), getBlockCreator(data), blockProperties, data.blockTags());
         decorationBlocks.put(data.id(), block);
 
         Item.Properties properties = data.properties().toItemProperties();
@@ -92,12 +92,14 @@ public class DecorationRegistry {
 
         RPUtil.create(item, data);
 
-        FilamentRegistrationEvents.DECORATION.invoker().registered(data, item, (DecorationBlock)block);
+        block.postRegister();
+
+        FilamentRegistrationEvents.DECORATION.invoker().registered(data, item, block);
     }
 
     @NotNull
-    private static Function<BlockBehaviour.Properties, Block> getBlockCreator(DecorationData data) {
-        Function<BlockBehaviour.Properties, Block> gen;
+    private static Function<BlockBehaviour.Properties, DecorationBlock> getBlockCreator(DecorationData data) {
+        Function<BlockBehaviour.Properties, DecorationBlock> gen;
         if (!data.isSimple()) {
             gen = (x) -> {
                 var block = new ComplexDecorationBlock(x.pushReaction(PushReaction.BLOCK), data.id());

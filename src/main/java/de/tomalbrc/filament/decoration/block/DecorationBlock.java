@@ -68,6 +68,10 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Blo
         this.stateDefinition.getPossibleStates().forEach(BlockState::initCache);
     }
 
+    public void postRegister() {
+        this.stateDefinitionEx.getPossibleStates().forEach(BlockState::initCache);
+    }
+
     @Override
     @NotNull
     public StateDefinition<Block, BlockState> getStateDefinition() {
