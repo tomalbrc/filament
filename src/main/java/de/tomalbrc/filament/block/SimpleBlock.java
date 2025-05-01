@@ -76,6 +76,8 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, PolymerS
         BlockState[] def = {this.stateDefinitionEx.any()};
         this.forEach(behaviour -> def[0] = behaviour.modifyDefaultState(def[0]));
         this.registerDefaultState(def[0]);
+
+        this.stateDefinitionEx.getPossibleStates().forEach(BlockState::initCache);
     }
 
     public boolean hasData() {

@@ -63,6 +63,9 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Blo
             state = state.setValue(WATERLOGGED, false);
         }
         this.registerDefaultState(state);
+
+        this.stateDefinitionEx.getPossibleStates().forEach(BlockState::initCache);
+        this.stateDefinition.getPossibleStates().forEach(BlockState::initCache);
     }
 
     @Override
