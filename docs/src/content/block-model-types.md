@@ -46,43 +46,6 @@ The following options are availble, with their amount:
 | top_scaffolding_waterlogged         | 168              |
 | bottom_scaffolding_waterlogged      | 168              |
 
-
-BIOME_TRANSPARENT_BLOCK_WATERLOGGED = 6
-FARMLAND_BLOCK = 5
-VINES_BLOCK = 100
-PLANT_BLOCK = 8
-BIOME_PLANT_BLOCK = 15
-KELP_BLOCK = 25
-CACTUS_BLOCK = 15
-SCULK_SENSOR_BLOCK = 150
-SCULK_SENSOR_BLOCK_WATERLOGGED = 150
-TRIPWIRE_BLOCK = 32
-TRIPWIRE_BLOCK_FLAT = 32
-TOP_SLAB = 5
-TOP_SLAB_WATERLOGGED = 5
-BOTTOM_SLAB = 5
-BOTTOM_SLAB_WATERLOGGED = 5
-TOP_TRAPDOOR = 21
-BOTTOM_TRAPDOOR = 21
-NORTH_TRAPDOOR = 21
-EAST_TRAPDOOR = 21
-SOUTH_TRAPDOOR = 21
-WEST_TRAPDOOR = 21
-TOP_TRAPDOOR_WATERLOGGED = 21
-BOTTOM_TRAPDOOR_WATERLOGGED = 21
-NORTH_TRAPDOOR_WATERLOGGED = 21
-EAST_TRAPDOOR_WATERLOGGED = 21
-SOUTH_TRAPDOOR_WATERLOGGED = 21
-WEST_TRAPDOOR_WATERLOGGED = 21
-NORTH_DOOR = 168
-EAST_DOOR = 168
-SOUTH_DOOR = 168
-WEST_DOOR = 168
-TOP_SCAFFOLDING = 7
-BOTTOM_SCAFFOLDING = 6
-TOP_SCAFFOLDING_WATERLOGGED = 7
-BOTTOM_SCAFFOLDING_WATERLOGGED = 6
-
 See the [polymer documentation](https://polymer.pb4.eu/latest/polymer-blocks/basics/) for more infos about the properties of the block model types
 
 When choosing blocks that break instantly on the client, like plant_block or tripwire_block for example, the destroyTime property in the block config has to be 0 as well.

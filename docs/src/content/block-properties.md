@@ -113,7 +113,7 @@ Flag indicating whether the block is transparent. Transparent blocks don't block
 Defaults to `false`
 
 ### `isSuffocating`
-Flag wether the block causes suffocation damage.
+Flag whether the block causes suffocation damage.
 The default is unset.
 
 ### `jumpFactor`

@@ -534,7 +534,7 @@ All fields of this behaviour can be mapped to a block-state.
     "silent": false, // no sounds
     "landSound": "minecraft:block.anvil.land",
     "breakSound": "minecraft:block.anvil.destroy",
-    "canBeDamaged": true, // flag wether the block should be placed as the block in "damagedBlock"
+    "canBeDamaged": true, // flag whether the block should be placed as the block in "damagedBlock"
     "damagedBlock": "minecraft:diamond_block", // new block to use, will copy applicable block state property
     "baseBreakChance": 0.05, // chance for the block to "break" to the block in "damagedBlock"
     "breakChancePerDistance": 0.05 // chance increase per block fallen
