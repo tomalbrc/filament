@@ -17,5 +17,11 @@
     },
     "destroyTime": 2
   },
-  "blockModelType": "full_block"
+  "blockModelType": "full_block",
+  "behaviour": {
+    "flammable": {
+      "spread": 5,
+      "burn": 20
+    }
+  }
 }
