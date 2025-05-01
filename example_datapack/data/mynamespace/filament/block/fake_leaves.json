@@ -1,0 +1,27 @@
+{
+  "id": "mynamespace:fake_leaves",
+  "blockTags": ["leaves"],
+  "blockResource": {
+    "models": {
+      "waterlogged=false": "minecraft:custom/block/concrete/lime_concrete_bricks",
+      "waterlogged=true": "minecraft:custom/block/concrete/lime_concrete_bricks"
+    }
+  },
+  "itemResource": {
+    "models": {
+      "default": "minecraft:custom/block/concrete/lime_concrete_bricks"
+    }
+  },
+  "properties": {
+    "blockBase": "minecraft:lime_concrete",
+    "transparent": true
+  },
+  "blockModelType": {
+    "waterlogged=false": "transparent_block",
+    "waterlogged=true": "transparent_block_waterlogged"
+  },
+  "behaviour": {
+    "simple_waterloggable": {},
+    "leaf_decay": {}
+  }
+}
