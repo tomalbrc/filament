@@ -6,6 +6,8 @@ import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.util.VirtualDestroyStage;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
 import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
+import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
+import net.fabricmc.fabric.impl.content.registry.FireBlockHooks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -37,7 +39,7 @@ import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.function.BiConsumer;
 
-public abstract class DecorationBlock extends Block implements PolymerBlock, BlockWithElementHolder, SimpleWaterloggedBlock, VirtualDestroyStage.Marker {
+public abstract class DecorationBlock extends Block implements PolymerBlock, BlockWithElementHolder, SimpleWaterloggedBlock, VirtualDestroyStage.Marker, FireBlockHooks {
     final protected ResourceLocation decorationId;
 
     public static final IntegerProperty LIGHT_LEVEL = BlockStateProperties.LEVEL;
@@ -198,5 +200,10 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Blo
         var res = super.getStateForPlacement(blockPlaceContext);
         assert res != null;
         return res.hasProperty(WATERLOGGED) ? res.setValue(WATERLOGGED, bl) : res;
+    }
+
+    @Override
+    public FlammableBlockRegistry.Entry fabric_getVanillaEntry(BlockState blockState) {
+        return new FlammableBlockRegistry.Entry(0, 0);
     }
 }
