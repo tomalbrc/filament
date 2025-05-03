@@ -125,7 +125,7 @@ public class EntityData {
                 }
             }
 
-            Predicate<BiomeSelectionContext> biomeSelectors = spawns.isEmpty() ? BiomeSelectors.all() : BiomeSelectors.spawnsOneOf(spawns);
+            Predicate<BiomeSelectionContext> biomeSelectors = spawns.isEmpty() ? ((x) -> false) : BiomeSelectors.spawnsOneOf(spawns);
             if (biomes != null) biomeSelectors = biomeSelectors.or(BiomeSelectors.includeByKey(Biomes.SWAMP, Biomes.MANGROVE_SWAMP));
             if (biomeTags != null) {
                 for (ResourceLocation tag : biomeTags) {
