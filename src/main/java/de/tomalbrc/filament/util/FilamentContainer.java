@@ -1,14 +1,20 @@
 package de.tomalbrc.filament.util;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.List;
 
 public class FilamentContainer extends SimpleContainer {
+    List<ServerPlayer> menus = new ObjectArrayList<>();
+
     private boolean valid = true;
 
     private final boolean purge;
-
-    private int watcher = 0;
 
     private Runnable closeCallback;
     private Runnable openCallback;
@@ -23,7 +29,22 @@ public class FilamentContainer extends SimpleContainer {
         return this.valid;
     }
 
+    @Override
+    public boolean canTakeItem(Container target, int slot, ItemStack stack) {
+        return this.valid;
+    }
+
+    @Override
+    public boolean canPlaceItem(int slot, ItemStack stack) {
+        return this.valid;
+    }
+
     public void setValid(boolean valid) {
+        if (!valid) {
+            for (ServerPlayer player : this.menus) {
+                player.closeContainer();
+            }
+        }
         this.valid = valid;
     }
 
@@ -33,20 +54,23 @@ public class FilamentContainer extends SimpleContainer {
         if (player.isSpectator())
             return;
 
-        if (this.watcher == 0 && this.openCallback != null) {
+        if (this.menus.isEmpty() && this.openCallback != null) {
             this.openCallback.run();
         }
-        this.watcher++;
+
+        if (player instanceof ServerPlayer serverPlayer)
+            this.menus.add(serverPlayer);
     }
 
     @Override
     public void stopOpen(Player player) {
         super.stopOpen(player);
-        this.watcher--;
-        if (this.purge && this.watcher == 0)
+        if (player instanceof ServerPlayer)
+            this.menus.remove(player);
+        if (this.purge && this.menus.isEmpty())
             this.clearContent();
 
-        if (this.watcher == 0 && this.closeCallback != null) {
+        if (this.menus.isEmpty() && this.closeCallback != null) {
             this.closeCallback.run();
         }
     }
