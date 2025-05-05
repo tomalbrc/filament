@@ -608,3 +608,13 @@ Makes the block flammable.
 - `burn`: Burn. Defaults to `5`
 - `spread` Fire spread chance. Defaults to `20`
 ~~~
+
+## `leaf_decay` behaviour
+
+Makes the block decay like leaf blocks.
+Adds `distance` and `persistent` block state properties to the block.
+
+~~~admonish info "Configurable Fields"
+- `blockTag`: Block tag for blocks that prevent leaf decay. Defaults to `minecraft:logs`
+- `decayChance` Chance to decay in each random tick. Can be between 0 and 1. Defaults to `1`
+~~~
