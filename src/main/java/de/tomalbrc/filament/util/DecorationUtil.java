@@ -28,6 +28,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Brightness;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomModelData;
@@ -160,35 +161,51 @@ public class DecorationUtil {
             size = data.size();
         }
 
-        Matrix4f matrix4f = new Matrix4f().identity();
-        matrix4f.scale(0.5f);
+        Matrix4f matrix4f = transform(data.properties().display, direction, rotation);
 
-        if (direction == Direction.DOWN || direction == Direction.UP) {
-            matrix4f.setTranslation(0, -0.5f, 0);
-
-            float ang = (float) java.lang.Math.toRadians(rotation + 180);
-            double angleRadians = Mth.atan2(-Mth.sin(ang), Mth.cos(ang));
-            matrix4f.rotate(Axis.YP.rotation((float) angleRadians).normalize());
-            matrix4f.rotate(Axis.XP.rotationDegrees(-90));
-            if (direction == Direction.DOWN) {
-                matrix4f.rotate(Axis.XP.rotationDegrees(180));
-                matrix4f.setTranslation(0, 0.5f, 0);
-            }
-        } else {
-            double angleRadians = Mth.DEG_TO_RAD * direction.toYRot();
-            Quaternionf rot = Axis.YP.rotation((float) angleRadians).conjugate().normalize();
-            matrix4f.rotate(rot);
-            matrix4f.setTranslation(new Vector3f(0.f, 0.f, -0.5f).rotate(rot));
-
-        }
-
-        itemDisplayElement.setDisplayWidth(size.x * 2.f);
-        itemDisplayElement.setDisplayHeight(size.y * 2.f);
+        itemDisplayElement.setDisplayWidth(size.x * 3.f);
+        itemDisplayElement.setDisplayHeight(size.y * 3.f);
 
         itemDisplayElement.setTransformation(matrix4f);
         itemDisplayElement.setItemDisplayContext(data.properties().display);
 
         return itemDisplayElement;
+    }
+
+    private static Matrix4f transform(ItemDisplayContext context, Direction direction, float rotation) {
+        Matrix4f matrix4f = new Matrix4f();
+
+        return switch (context) {
+            case FIXED -> {
+                matrix4f.scale(0.5f);
+
+                if (direction == Direction.DOWN || direction == Direction.UP) {
+                    matrix4f.setTranslation(0, -0.5f, 0);
+
+                    float ang = (float) java.lang.Math.toRadians(rotation + 180);
+                    double angleRadians = Mth.atan2(-Mth.sin(ang), Mth.cos(ang));
+                    matrix4f.rotate(Axis.YP.rotation((float) angleRadians).normalize());
+                    matrix4f.rotate(Axis.XP.rotationDegrees(-90));
+                    if (direction == Direction.DOWN) {
+                        matrix4f.rotate(Axis.XP.rotationDegrees(180));
+                        matrix4f.setTranslation(0, 0.5f, 0);
+                    }
+                } else {
+                    double angleRadians = Mth.DEG_TO_RAD * direction.toYRot();
+                    Quaternionf rot = Axis.YP.rotation((float) angleRadians).conjugate().normalize();
+                    matrix4f.rotate(rot);
+                    matrix4f.setTranslation(new Vector3f(0.f, 0.f, -0.5f).rotate(rot));
+
+                }
+
+                yield matrix4f;
+            }
+            case HEAD -> {
+                matrix4f.translate(0, 2.0f + (1.5f/16.f), 0);
+                yield matrix4f;
+            }
+            default -> matrix4f;
+        };
     }
 
     public static void showBreakParticle(ServerLevel level, ItemStack stack, float x, float y, float z) {
