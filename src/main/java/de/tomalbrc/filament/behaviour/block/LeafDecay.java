@@ -3,7 +3,11 @@ package de.tomalbrc.filament.behaviour.block;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -20,11 +24,16 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.OptionalInt;
+
 public class LeafDecay implements BlockBehaviour<LeafDecay.Config> {
     private final Config config;
 
     public LeafDecay(Config config) {
         this.config = config;
+        if (this.config.blockTag != null) {
+            this.config.supportBlock = TagKey.create(Registries.BLOCK, this.config.blockTag);
+        }
     }
 
     @Override
@@ -68,12 +77,12 @@ public class LeafDecay implements BlockBehaviour<LeafDecay.Config> {
 
     @Override
     public boolean isRandomlyTicking(BlockState state) {
-        return state.getValue(BlockStateProperties.DISTANCE) == 7 && !(Boolean)state.getValue(BlockStateProperties.PERSISTENT);
+        return state.getValue(BlockStateProperties.DISTANCE) == 7 && !state.getValue(BlockStateProperties.PERSISTENT);
     }
 
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        if (this.decaying(state)) {
+        if (this.decaying(state) && random.nextFloat() <= config.decayChance) {
             Block.dropResources(state, level, pos);
             level.removeBlock(pos, false);
         }
@@ -100,7 +109,7 @@ public class LeafDecay implements BlockBehaviour<LeafDecay.Config> {
         level.setBlock(pos, updateDistance(state, level, pos), Block.UPDATE_ALL);
     }
 
-    private static BlockState updateDistance(BlockState state, LevelAccessor level, BlockPos pos) {
+    private BlockState updateDistance(BlockState state, LevelAccessor level, BlockPos pos) {
         int dist = 7;
         BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
 
@@ -115,11 +124,21 @@ public class LeafDecay implements BlockBehaviour<LeafDecay.Config> {
         return state.setValue(BlockStateProperties.DISTANCE, dist);
     }
 
-    private static int getDistanceAt(BlockState neighbor) {
-        return LeavesBlock.getOptionalDistanceAt(neighbor).orElse(7);
+    private int getDistanceAt(BlockState neighbor) {
+        return getOptionalDistanceAt(neighbor).orElse(7);
+    }
+
+    public OptionalInt getOptionalDistanceAt(BlockState blockState) {
+        if (blockState.is(config.supportBlock))
+            return OptionalInt.of(0);
+        else
+            return blockState.hasProperty(BlockStateProperties.DISTANCE) ? OptionalInt.of(blockState.getValue(BlockStateProperties.DISTANCE)) : OptionalInt.empty();
     }
 
     public static class Config {
+        ResourceLocation blockTag;
+        float decayChance = 1.f;
 
+        transient private TagKey<Block> supportBlock = BlockTags.LOGS;
     }
 }
