@@ -203,7 +203,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
 
-        if (this.projectileStack != null && this.pickupStack != null) {
+        if (this.projectileStack != null && !this.projectileStack.isEmpty() && this.pickupStack != null && !this.pickupStack.isEmpty()) {
             nbt.put("Item", this.projectileStack.save(this.registryAccess()));
             nbt.put("PickupItem", this.pickupStack.save(this.registryAccess()));
         }
