@@ -109,8 +109,8 @@ public class Container implements DecorationBehaviour<Container.ContainerConfig>
 
     @Override
     public void destroy(DecorationBlockEntity decorationBlockEntity, boolean dropItem) {
+        container.setValid(false);
         if (!config.canPickup) {
-            container.setValid(false);
             for (ItemStack itemStack : container.items) {
                 if (itemStack.isEmpty()) continue;
                 Util.spawnAtLocation(decorationBlockEntity.getLevel(), decorationBlockEntity.getBlockPos().getCenter(), itemStack);
