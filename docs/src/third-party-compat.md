@@ -12,6 +12,8 @@ Those 2 options in filament.json are:
 
 While filament does not support reading YAML files of third party mods/plugins, it should be possible to write a conversion script.
 
+Some older itemsadder resourcepacks use the armor stand head display contexts for the models. Make sure to set `display` to `head` in the decorations' properties to properly display them.
+
 # WorldEdit
 
 Everything should be fully compatible, the only known bug is decorations not appearing or being removed when cloning or moving an area. This can be fixed by a server restart
