@@ -92,7 +92,7 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
         if (!(livingEntity instanceof Player player)) {
             return false;
         }
-        ItemStack itemStack2 = player.getProjectile(itemStack);
+        ItemStack itemStack2 = this.getProjectile(player);
         if (itemStack2.isEmpty()) {
             return false;
         }
@@ -128,8 +128,7 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
 
     @Override
     public InteractionResult use(Item item, Level level, Player player, InteractionHand interactionHand) {
-        ItemStack itemStack = player.getItemInHand(interactionHand);
-        boolean hasProjectile = !player.getProjectile(itemStack).isEmpty();
+        boolean hasProjectile = !this.getProjectile(player).isEmpty();
         if (player.hasInfiniteMaterials() || hasProjectile) {
             player.startUsingItem(interactionHand);
             return InteractionResult.CONSUME;
@@ -166,6 +165,25 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
                         data.components().has(DataComponents.DYED_COLOR) || data.vanillaItem().components().has(DataComponents.DYED_COLOR)
                 )
         );
+    }
+
+    public ItemStack getProjectile(Player shooter) {
+        Predicate<ItemStack> predicate = supportedHeldProjectiles();
+        ItemStack itemStack = ProjectileWeaponItem.getHeldProjectile(shooter, predicate);
+        if (!itemStack.isEmpty()) {
+            return itemStack;
+        } else {
+            predicate = supportedProjectiles();
+
+            for(int i = 0; i < shooter.getInventory().getContainerSize(); ++i) {
+                ItemStack itemStack2 = shooter.getInventory().getItem(i);
+                if (predicate.test(itemStack2)) {
+                    return itemStack2;
+                }
+            }
+
+            return shooter.hasInfiniteMaterials() ? new ItemStack(Items.ARROW) : ItemStack.EMPTY;
+        }
     }
 
     public static class Config {

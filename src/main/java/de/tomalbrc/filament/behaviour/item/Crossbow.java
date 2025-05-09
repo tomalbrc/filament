@@ -83,7 +83,7 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
         if (chargedProjectiles != null && !chargedProjectiles.isEmpty()) {
             this.performShooting(level, player, interactionHand, itemStack, getShootingPower(chargedProjectiles) * config.powerMultiplier, 1.0F, null);
             return InteractionResult.CONSUME;
-        } else if (!player.getProjectile(itemStack).isEmpty()) {
+        } else if (!this.getProjectile(player).isEmpty()) {
             this.startSoundPlayed = false;
             this.midLoadSoundPlayed = false;
             player.startUsingItem(interactionHand);
@@ -292,6 +292,24 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
         );
     }
 
+    public ItemStack getProjectile(Player shooter) {
+        Predicate<ItemStack> predicate = supportedHeldProjectiles();
+        ItemStack itemStack = ProjectileWeaponItem.getHeldProjectile(shooter, predicate);
+        if (!itemStack.isEmpty()) {
+            return itemStack;
+        } else {
+            predicate = supportedProjectiles();
+
+            for(int i = 0; i < shooter.getInventory().getContainerSize(); ++i) {
+                ItemStack itemStack2 = shooter.getInventory().getItem(i);
+                if (predicate.test(itemStack2)) {
+                    return itemStack2;
+                }
+            }
+
+            return shooter.hasInfiniteMaterials() ? new ItemStack(Items.ARROW) : ItemStack.EMPTY;
+        }
+    }
 
     public static class Config {
         /**
