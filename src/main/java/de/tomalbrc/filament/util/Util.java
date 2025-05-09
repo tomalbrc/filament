@@ -245,7 +245,8 @@ public class Util {
                 yield matrix4f;
             }
             case HEAD -> {
-                matrix4f.translate(0, 2.0f + (1.5f/16.f), 0);
+                matrix4f.translate(0, 1.81f, 0);
+                matrix4f.scaleLocal(0.64f);
                 yield matrix4f;
             }
             default -> matrix4f;
