@@ -4,8 +4,8 @@ import com.mojang.math.Axis;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.behaviour.Behaviours;
-import de.tomalbrc.filament.block.SimpleBlockItem;
 import de.tomalbrc.filament.decoration.DecorationItem;
+import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.decoration.holder.DecorationHolder;
 import de.tomalbrc.filament.util.Util;
@@ -162,7 +162,7 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
     public void setShowcaseItemStack(DecorationBlockEntity decorationBlockEntity, Showcase.ShowcaseMeta showcase, ItemStack itemStack) {
         assert decorationBlockEntity.getDecorationHolder() != null;
 
-        boolean isBlockItem = itemStack.getItem() instanceof BlockItem;
+        boolean isBlockItem = itemStack.getItem() instanceof BlockItem blockItem && !(blockItem.getBlock() instanceof DecorationBlock);
 
         DisplayElement element = this.showcases.get(showcase);
         DisplayElement newElement;
@@ -178,8 +178,8 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
             newElement = this.createShowcase(decorationBlockEntity, showcase, itemStack);
             decorationBlockEntity.getDecorationHolder().addElement(newElement);
         } else {
-            if (element instanceof BlockDisplayElement blockDisplayElement && itemStack.getItem() instanceof BlockItem blockItem && (!(blockItem instanceof SimpleBlockItem DecorationItem))) {
-                blockDisplayElement.setBlockState(blockItem.getBlock().defaultBlockState());
+            if (element instanceof BlockDisplayElement blockDisplayElement && isBlockItem) {
+                blockDisplayElement.setBlockState(((BlockItem)itemStack.getItem()).getBlock().defaultBlockState());
             } else if (element instanceof ItemDisplayElement itemDisplayElement) {
                 itemDisplayElement.setItem(itemStack);
             }
