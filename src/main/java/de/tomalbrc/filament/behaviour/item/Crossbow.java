@@ -101,13 +101,23 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
     public boolean releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int i) {
         int j = this.getUseDuration(itemStack, livingEntity).orElseThrow() - i;
         float f = CrossbowItem.getPowerForTime(j, itemStack, livingEntity);
-        if (f >= 1.f && !CrossbowItem.isCharged(itemStack) && CrossbowItem.tryLoadProjectiles(livingEntity, itemStack)) {
+        if (f >= 1.f && !CrossbowItem.isCharged(itemStack) && livingEntity instanceof ServerPlayer serverPlayer && tryLoadProjectiles(serverPlayer, itemStack)) {
             CrossbowItem.ChargingSounds chargingSounds = this.getChargingSounds(itemStack);
             chargingSounds.end().ifPresent((holder) -> level.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), holder.value(), livingEntity.getSoundSource(), 1.0F, 1.0F / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F));
 
             return true;
         }
         return false;
+    }
+
+    private boolean tryLoadProjectiles(Player shooter, ItemStack weapon) {
+        List<ItemStack> list = CrossbowItem.draw(weapon, this.getProjectile(shooter), shooter);
+        if (!list.isEmpty()) {
+            weapon.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(list));
+            return true;
+        } else {
+            return false;
+        }
     }
 
     protected void shootProjectile(LivingEntity livingEntity, Projectile projectile, int i, float f, float g, float h, @Nullable LivingEntity livingEntity2) {
