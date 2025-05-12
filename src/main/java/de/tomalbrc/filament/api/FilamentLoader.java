@@ -94,6 +94,15 @@ public class FilamentLoader {
                 throw new RuntimeException(e);
             }
         }, "filament/model/", ".bbmodel");
+
+        search(modid, f -> {
+            try {
+                if (f.getFileName() != null)
+                    ModelRegistry.registerAjBlueprintModel(Files.newInputStream(f), ResourceLocation.fromNamespaceAndPath(namespace, f.getFileName().toString()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }, "filament/model/", ".ajblueprint");
     }
 
     private static void search(String modid, Consumer<Path> registry, String path) {
