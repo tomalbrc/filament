@@ -166,6 +166,8 @@ It's an analog to the `execute` item behaviour.
 
 The command will only run once if a key is specified, the key can be empty to always run the commands/animations on interaction.
 
+This uses Permission levels, So when using with custom commands remember to add a permission level or the command may not work.
+
 ~~~admonish info "Configurable Fields"
 - `key`: The identifier of the key required to unlock. Optional, if left empty the unlockAnimation will play (if applicable) and the commands will be run and the decoration will be discarded based on the `discard` flag.
 - `consumeKey`: Determines whether the key should be consumed upon unlocking.
