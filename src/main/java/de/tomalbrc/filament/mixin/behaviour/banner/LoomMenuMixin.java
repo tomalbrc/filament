@@ -2,7 +2,7 @@ package de.tomalbrc.filament.mixin.behaviour.banner;
 
 import com.google.common.collect.ImmutableList;
 import de.tomalbrc.filament.behaviour.Behaviours;
-import de.tomalbrc.filament.item.SimpleItem;
+import de.tomalbrc.filament.item.FilamentItem;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
@@ -43,7 +43,7 @@ public abstract class LoomMenuMixin extends AbstractContainerMenu {
 
     @Inject(method = "getSelectablePatterns(Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;", at = @At("RETURN"), cancellable = true)
     private void filament$onGetSelectablePatterns(ItemStack itemStack, CallbackInfoReturnable<List<Holder<BannerPattern>>> cir) {
-        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.getBehaviours().has(Behaviours.BANNER_PATTERN)) {
+        if (itemStack.getItem() instanceof FilamentItem simpleItem && simpleItem.getBehaviours().has(Behaviours.BANNER_PATTERN)) {
             ResourceLocation resourceLocation = simpleItem.getBehaviours().get(Behaviours.BANNER_PATTERN).getConfig().id;
             Holder<BannerPattern> res = this.patternGetter.get(ResourceKey.create(Registries.BANNER_PATTERN, resourceLocation)).orElseThrow();
             cir.setReturnValue(ImmutableList.of(res));
@@ -53,7 +53,7 @@ public abstract class LoomMenuMixin extends AbstractContainerMenu {
     @Inject(method = "quickMoveStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;copy()Lnet/minecraft/world/item/ItemStack;", shift = At.Shift.AFTER), cancellable = true, locals = LocalCapture.CAPTURE_FAILSOFT)
     void filament$onQuickMoveStack(Player player, int i, CallbackInfoReturnable<ItemStack> cir, ItemStack itemStack, Slot slot, ItemStack itemStack2) {
         boolean canMove = !(i == this.getDyeSlot().index || i == this.getBannerSlot().index || i == this.getPatternSlot().index);
-        if (canMove && itemStack2.getItem() instanceof SimpleItem simpleItem && simpleItem.getBehaviours().has(Behaviours.BANNER_PATTERN)) {
+        if (canMove && itemStack2.getItem() instanceof FilamentItem simpleItem && simpleItem.getBehaviours().has(Behaviours.BANNER_PATTERN)) {
             if (!this.moveItemStackTo(itemStack2, this.getPatternSlot().index, this.getPatternSlot().index + 1, false)) {
                 cir.setReturnValue(ItemStack.EMPTY);
                 return;

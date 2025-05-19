@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.mixin.behaviour.trim;
 
-import de.tomalbrc.filament.item.SimpleItem;
+import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.trim.FilamentTrimPatterns;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import net.minecraft.world.item.ArmorItem;
@@ -17,7 +17,7 @@ public class SmithingTrimRecipeMixin {
     @Inject(method = "isBaseIngredient", at = @At("HEAD"), cancellable = true)
     public void filament$isBaseIngredient(ItemStack itemStack, CallbackInfoReturnable<Boolean> cir) {
         boolean isChainArmor = !itemStack.isEmpty() && itemStack.getItem() instanceof ArmorItem armorItem && armorItem.getMaterial() == ArmorMaterials.CHAIN;
-        if ((FilamentTrimPatterns.overwriteChainMail() && isChainArmor && !(itemStack.getItem() instanceof PolymerItem)) || itemStack.getItem() instanceof SimpleItem) {
+        if ((FilamentTrimPatterns.overwriteChainMail() && isChainArmor && !(itemStack.getItem() instanceof PolymerItem)) || itemStack.getItem() instanceof FilamentItem) {
             cir.setReturnValue(false);
         }
     }

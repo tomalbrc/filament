@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.mixin.behaviour.elytra;
 
 import de.tomalbrc.filament.behaviour.Behaviours;
-import de.tomalbrc.filament.item.SimpleItem;
+import de.tomalbrc.filament.item.FilamentItem;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -29,7 +29,7 @@ public abstract class PlayerMixin extends LivingEntity {
         if (!cir.getReturnValue()) {
             if (!this.onGround() && !this.isFallFlying() && !this.isInWater() && !this.hasEffect(MobEffects.LEVITATION)) {
                 ItemStack itemStack = this.getItemBySlot(EquipmentSlot.CHEST);
-                if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.ELYTRA) && ElytraItem.isFlyEnabled(itemStack)) {
+                if (itemStack.getItem() instanceof FilamentItem simpleItem && simpleItem.has(Behaviours.ELYTRA) && ElytraItem.isFlyEnabled(itemStack)) {
                     this.startFallFlying();
                     cir.setReturnValue(true);
                 }

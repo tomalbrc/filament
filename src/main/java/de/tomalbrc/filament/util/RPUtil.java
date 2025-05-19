@@ -7,6 +7,7 @@ import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.behaviour.ItemPredicateModelProvider;
 import de.tomalbrc.filament.data.resource.ItemResource;
+import de.tomalbrc.filament.item.SimpleBlockItemBase;
 import de.tomalbrc.filament.item.SimpleItem;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.minecraft.core.component.DataComponents;
@@ -17,6 +18,17 @@ import java.util.Map;
 
 public class RPUtil {
     public static void create(SimpleItem item, ResourceLocation id, ItemResource itemResource) {
+        if (itemResource != null && itemResource.models() != null && itemResource.models().size() > 1 && !item.components().has(DataComponents.CUSTOM_MODEL_DATA)) {
+            for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> entry : item.getBehaviours()) {
+                if (entry.getValue() instanceof ItemPredicateModelProvider modelProvider) {
+                    modelProvider.generate(id, itemResource);
+                    return;
+                }
+            }
+        }
+    }
+
+    public static void create(SimpleBlockItemBase item, ResourceLocation id, ItemResource itemResource) {
         if (itemResource != null && itemResource.models() != null && itemResource.models().size() > 1 && !item.components().has(DataComponents.CUSTOM_MODEL_DATA)) {
             for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> entry : item.getBehaviours()) {
                 if (entry.getValue() instanceof ItemPredicateModelProvider modelProvider) {

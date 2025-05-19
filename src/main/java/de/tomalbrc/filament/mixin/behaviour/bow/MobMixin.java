@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.mixin.behaviour.bow;
 
 import de.tomalbrc.filament.behaviour.Behaviours;
-import de.tomalbrc.filament.item.SimpleItem;
+import de.tomalbrc.filament.item.FilamentItem;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
@@ -25,6 +25,6 @@ public abstract class MobMixin {
 
     @Unique
     private boolean filament$isBow(ItemStack itemStack) {
-        return itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.BOW) || itemStack.getItem() instanceof BowItem;
+        return itemStack.getItem() instanceof FilamentItem simpleItem && simpleItem.has(Behaviours.BOW) || itemStack.getItem() instanceof BowItem;
     }
 }

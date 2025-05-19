@@ -2,7 +2,7 @@ package de.tomalbrc.filament.block;
 
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.data.BlockData;
-import de.tomalbrc.filament.item.SimpleItem;
+import de.tomalbrc.filament.item.SimpleBlockItemBase;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
@@ -12,7 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
-public class SimpleBlockItem extends SimpleItem implements PolymerItem, Equipable, BehaviourHolder {
+public class SimpleBlockItem extends SimpleBlockItemBase implements PolymerItem, Equipable, BehaviourHolder {
 
     private final PolymerModelData itemModelData;
 

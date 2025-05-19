@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.mixin.behaviour;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import de.tomalbrc.filament.item.SimpleItem;
+import de.tomalbrc.filament.item.FilamentItem;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class PlayerMixin {
     @ModifyExpressionValue(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getItemInHand(Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack;"))
     public ItemStack bl4(ItemStack original) {
-        if (original.getItem() instanceof SimpleItem simpleItem && simpleItem.components().has(DataComponents.TOOL)) {
+        if (original.getItem() instanceof FilamentItem && original.getItem().components().has(DataComponents.TOOL)) {
             return Items.WOODEN_SWORD.getDefaultInstance();
         }
         return original;

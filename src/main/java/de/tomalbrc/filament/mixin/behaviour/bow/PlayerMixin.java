@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.mixin.behaviour.bow;
 
 import de.tomalbrc.filament.behaviour.Behaviours;
-import de.tomalbrc.filament.item.SimpleItem;
+import de.tomalbrc.filament.item.FilamentItem;
 import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -49,10 +49,10 @@ public abstract class PlayerMixin {
 
     @Unique
     private Predicate<ItemStack> filament$getPred(ItemStack itemStack) {
-        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.BOW)) {
+        if (itemStack.getItem() instanceof FilamentItem simpleItem && simpleItem.has(Behaviours.BOW)) {
             return simpleItem.get(Behaviours.BOW).supportedProjectiles();
         }
-        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.CROSSBOW)) {
+        if (itemStack.getItem() instanceof FilamentItem simpleItem && simpleItem.has(Behaviours.CROSSBOW)) {
             return simpleItem.get(Behaviours.CROSSBOW).supportedProjectiles();
         }
 
@@ -61,10 +61,10 @@ public abstract class PlayerMixin {
 
     @Unique
     private Predicate<ItemStack> filament$getHeldPred(ItemStack itemStack) {
-        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.BOW)) {
+        if (itemStack.getItem() instanceof FilamentItem simpleItem && simpleItem.has(Behaviours.BOW)) {
             return simpleItem.get(Behaviours.BOW).supportedHeldProjectiles();
         }
-        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.CROSSBOW)) {
+        if (itemStack.getItem() instanceof FilamentItem simpleItem && simpleItem.has(Behaviours.CROSSBOW)) {
             return simpleItem.get(Behaviours.CROSSBOW).supportedHeldProjectiles();
         }
 
@@ -73,6 +73,6 @@ public abstract class PlayerMixin {
 
     @Unique
     private boolean filament$bowOrCrossbow(ItemStack itemStack) {
-        return itemStack.getItem() instanceof SimpleItem simpleItem && (simpleItem.has(Behaviours.BOW) || simpleItem.has(Behaviours.CROSSBOW));
+        return itemStack.getItem() instanceof FilamentItem simpleItem && (simpleItem.has(Behaviours.BOW) || simpleItem.has(Behaviours.CROSSBOW));
     }
 }

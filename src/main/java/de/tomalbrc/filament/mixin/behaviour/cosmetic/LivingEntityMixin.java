@@ -8,7 +8,7 @@ import de.tomalbrc.filament.cosmetic.AnimatedCosmeticHolder;
 import de.tomalbrc.filament.cosmetic.CosmeticHolder;
 import de.tomalbrc.filament.cosmetic.CosmeticInterface;
 import de.tomalbrc.filament.cosmetic.CosmeticUtil;
-import de.tomalbrc.filament.item.SimpleItem;
+import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.registry.FilamentComponents;
 import de.tomalbrc.filament.registry.ModelRegistry;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
@@ -63,12 +63,12 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
     private void filament$customGetEquipmentSlotForItem(ItemStack itemStack, CallbackInfoReturnable<EquipmentSlot> cir) {
         if (itemStack.has(FilamentComponents.SKIN_DATA_COMPONENT)) {
             var wrapped = itemStack.get(FilamentComponents.SKIN_DATA_COMPONENT);
-            if (wrapped.getItem() instanceof SimpleItem simpleItem && simpleItem.getEquipmentSlot() != EquipmentSlot.MAINHAND) {
+            if (wrapped.getItem() instanceof FilamentItem simpleItem && simpleItem.getEquipmentSlot() != EquipmentSlot.MAINHAND) {
                 cir.setReturnValue(simpleItem.getEquipmentSlot());
                 return;
             }
         }
-        if (itemStack.getItem() instanceof SimpleItem simpleItem && simpleItem.getEquipmentSlot() != EquipmentSlot.MAINHAND) {
+        if (itemStack.getItem() instanceof FilamentItem simpleItem && simpleItem.getEquipmentSlot() != EquipmentSlot.MAINHAND) {
             cir.setReturnValue(simpleItem.getEquipmentSlot());
         }
     }
@@ -112,7 +112,7 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
     // ARMOR
     @Inject(method = "doHurtEquipment", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/entity/LivingEntity;getItemBySlot(Lnet/minecraft/world/entity/EquipmentSlot;)Lnet/minecraft/world/item/ItemStack;", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void filament$customOnDoHurtEquipment(DamageSource damageSource, float f, EquipmentSlot[] equipmentSlots, CallbackInfo ci, @Local ItemStack itemStack, @Local EquipmentSlot equipmentSlot) {
-        if (!(itemStack.getItem() instanceof ArmorItem) && itemStack.getItem() instanceof SimpleItem && itemStack.canBeHurtBy(damageSource)) {
+        if (!(itemStack.getItem() instanceof ArmorItem) && itemStack.getItem() instanceof FilamentItem && itemStack.canBeHurtBy(damageSource)) {
             int i = (int)Math.max(1.0F, f / 4.0F);
             itemStack.hurtAndBreak(i, (LivingEntity)(Object)this, equipmentSlot);
             if (itemStack.isEmpty() && CosmeticUtil.isCosmetic(itemStack)) {

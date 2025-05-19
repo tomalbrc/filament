@@ -8,7 +8,7 @@ import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import de.tomalbrc.filament.item.SimpleItem;
+import de.tomalbrc.filament.item.SimpleBlockItemBase;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
@@ -42,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Iterator;
 import java.util.List;
 
-public class DecorationItem extends SimpleItem implements PolymerItem, Equipable, BehaviourHolder {
+public class DecorationItem extends SimpleBlockItemBase implements PolymerItem, Equipable, BehaviourHolder {
     final private DecorationData decorationData;
     final private PolymerModelData modelData;
 
