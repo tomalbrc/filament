@@ -24,10 +24,12 @@ public abstract class ServerGamePacketListenerImplMixin implements VirtualDestro
         return this.filament$virtualDestroyStageF;
     }
 
-    @Inject(method = "handlePickItemFromEntity", at = @At("HEAD"))
+    @Inject(method = "handlePickItemFromEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;tryPickItem(Lnet/minecraft/world/item/ItemStack;)V"), cancellable = true)
     private void filament$handleEntityPick(ServerboundPickItemFromEntityPacket serverboundPickItemFromEntityPacket, CallbackInfo ci) {
-        if (DecorationUtil.VIRTUAL_ENTITY_PICK_MAP.containsKey(serverboundPickItemFromEntityPacket.id())) {
-            this.tryPickItem(DecorationUtil.VIRTUAL_ENTITY_PICK_MAP.get(serverboundPickItemFromEntityPacket.id()));
+        var v = DecorationUtil.VIRTUAL_ENTITY_PICK_MAP.get(serverboundPickItemFromEntityPacket.id());
+        if (v != null) {
+            this.tryPickItem(v);
+            ci.cancel();
         }
     }
 }
