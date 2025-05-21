@@ -48,6 +48,8 @@ public class FallingBlock implements BlockBehaviour<FallingBlock.Config> {
             if (config.disableDrops.getValue(blockState))
                 fallingBlockEntity.disableDrop();
 
+            fallingBlockEntity.dropItem = config.dropItem.getValue(blockState);
+
             fallingBlockEntity.setSilent(true);
             this.falling(fallingBlockEntity);
         }
@@ -74,6 +76,7 @@ public class FallingBlock implements BlockBehaviour<FallingBlock.Config> {
     }
 
     public static class Config {
+        public BlockStateMappedProperty<Boolean> dropItem = BlockStateMappedProperty.of(true) ;
         BlockStateMappedProperty<Integer> delayAfterPlace = BlockStateMappedProperty.of(2);
         BlockStateMappedProperty<Boolean> heavy = BlockStateMappedProperty.of(false);
         public BlockStateMappedProperty<Float> damagePerDistance = BlockStateMappedProperty.of(2.f);
