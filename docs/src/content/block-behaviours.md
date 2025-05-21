@@ -508,11 +508,12 @@ All fields of this behaviour can be mapped to a block-state.
 ~~~
 
 ~~~admonish info "Configurable Fields"
-- `delayAfterPlace`: Delay in ticks before the block falls. Defaults to 2
-- `heavy`: To cause anvil-like damage. Defaults to false
+- `delayAfterPlace`: Delay in ticks before the block falls. Defaults to `2`
+- `heavy`: To cause anvil-like damage. Defaults to `false`
 - `damagePerDistance`: Accumulated damage per block fallen
 - `maxDamage`: Maximum damage a falling block can deal
-- `disableDrops`: Prevent the block from being placed when it falls
+- `disableDrops`: Prevent the block from being placed when it falls. This behaves like the `CancelDrop` NBT data for falling block entities. Defaults to `false`
+- `dropItems`: Flag whether the block should drop as item when it breaks. This behaves like the `DropItems` NBT data for falling block entities. Defaults to `true`
 - `silent`: Flag whether sounds are played when the block falls or breaks
 - `landSound`: Sound played when the block lands
 - `breakSound`: Sound played when the block breaks
