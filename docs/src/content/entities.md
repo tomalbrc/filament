@@ -172,6 +172,8 @@ The model and animations are controlled using the `animation` field:
 }
 ```
 
+The `entity_type` should be set to `block_display` for entities with custom models.
+
 ## Spawn Options
 
 The field `spawn` controls where or how your entity spawned in the world.

@@ -9,17 +9,20 @@ All AI goals have a priority, lower priority = higher chance for the goal to run
 
 ~~~admonish example
 ```json
-{
-  "look_at_mob_goal": {
+[
+  {
+    "type": "look_at_mob_goal",
     "priority": 1,
     "target": "minecraft:player",
     "look_distance": 8.0,
     "probability": 0.02,
     "only_horizontal": true
   }
-}
+]
 ```
 ~~~
+
+# Goal Types
 
 ---
 
