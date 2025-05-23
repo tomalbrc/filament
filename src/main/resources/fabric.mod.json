@@ -5,6 +5,7 @@
   "name": "filament",
   "description": "",
   "authors": ["tomalbrc"],
+  "contributors": ["Furqit", "CapybaraIsSwagDev", "drakosoldier298", "Slyy"],
   "icon": "filament-icon@256.png",
   "contact": {
     "repo": "https://github.com/tomalbrc/filament"
