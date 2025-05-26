@@ -6,12 +6,14 @@ import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -120,7 +122,19 @@ public class Trap implements ItemBehaviour<Trap.Config> {
 
     public boolean canUseOn(Mob mob) {
         ResourceLocation mobType = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
-        return this.config.types.contains(mobType);
+        if (this.config.types != null) {
+            var isType = this.config.types.contains(mobType);
+            if (isType)
+                return true;
+        }
+        if (this.config.tags != null) {
+            for (ResourceLocation tag : this.config.tags) {
+                if (mob.getType().is(TagKey.create(Registries.ENTITY_TYPE, tag))) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public boolean canSave(Mob mob) {
@@ -152,12 +166,14 @@ public class Trap implements ItemBehaviour<Trap.Config> {
 
     public void loadFromTag(Mob mob, CompoundTag compoundTag) {
         // todo: write additional nbt, Bucketable not good enough
+        // especially cobblemon (but then just use pokeballs or something)
         Bucketable.loadDefaultDataFromBucketTag(mob, compoundTag);
     }
 
     public static class Config {
         // allowed util types to trap
         public List<ResourceLocation> types = null;
+        public List<ResourceLocation> tags = null;
 
         public List<ResourceLocation> requiredEffects = null;
 
