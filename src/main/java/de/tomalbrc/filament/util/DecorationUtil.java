@@ -44,9 +44,10 @@ import xyz.nucleoid.packettweaker.PacketContext;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class DecorationUtil {
-    public static Int2ObjectOpenHashMap<ItemStack> VIRTUAL_ENTITY_PICK_MAP = new Int2ObjectOpenHashMap<>();
+    public static Int2ObjectOpenHashMap<Supplier<ItemStack>> VIRTUAL_ENTITY_PICK_MAP = new Int2ObjectOpenHashMap<>();
 
     public static void forEachRotated(List<DecorationData.BlockConfig> blockConfigs, BlockPos originBlockPos, float rotation, Consumer<BlockPos> consumer) {
         if (blockConfigs != null) {
@@ -204,7 +205,7 @@ public class DecorationUtil {
                 matrix4f.translate(0, 1.81f, 0);
                 matrix4f.scaleLocal(0.64f);
 
-                float ang = (float) java.lang.Math.toRadians(rotation);
+                float ang = (float) java.lang.Math.toRadians(rotation + 180);
                 double angleRadians = Mth.atan2(-Mth.sin(ang), Mth.cos(ang));
                 matrix4f.rotate(Axis.YP.rotation((float) angleRadians).normalize());
 

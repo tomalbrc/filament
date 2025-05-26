@@ -40,10 +40,10 @@ public class DecorationHolder extends ElementHolder {
     public <T extends VirtualElement> T addElement(T element) {
         T res = super.addElement(element);
         if (element instanceof InteractionElement interactionElement) {
-            DecorationUtil.VIRTUAL_ENTITY_PICK_MAP.put(interactionElement.getEntityId(), this.parent.getItem());
+            DecorationUtil.VIRTUAL_ENTITY_PICK_MAP.put(interactionElement.getEntityId(), this.parent::getItem);
         }
         if (element instanceof ItemFrameElement itemFrameElement) {
-            DecorationUtil.VIRTUAL_ENTITY_PICK_MAP.put(itemFrameElement.getEntityId(), this.parent.getItem());
+            DecorationUtil.VIRTUAL_ENTITY_PICK_MAP.put(itemFrameElement.getEntityId(), this.parent::getItem);
         }
         return res;
     }

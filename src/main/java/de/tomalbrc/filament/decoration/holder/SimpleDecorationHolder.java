@@ -50,10 +50,10 @@ public class SimpleDecorationHolder extends ElementHolder {
     @Override
     public <T extends VirtualElement> T addElement(T element) {
         if (element instanceof InteractionElement interactionElement) {
-            DecorationUtil.VIRTUAL_ENTITY_PICK_MAP.put(interactionElement.getEntityId(), this.displayElement.getItem());
+            DecorationUtil.VIRTUAL_ENTITY_PICK_MAP.put(interactionElement.getEntityId(), this.displayElement::getItem);
         }
         if (element instanceof ItemFrameElement itemFrameElement) {
-            DecorationUtil.VIRTUAL_ENTITY_PICK_MAP.put(itemFrameElement.getEntityId(), this.displayElement.getItem());
+            DecorationUtil.VIRTUAL_ENTITY_PICK_MAP.put(itemFrameElement.getEntityId(), this.displayElement::getItem);
         }
         return super.addElement(element);
     }
