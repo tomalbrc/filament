@@ -34,8 +34,8 @@ public class ClientItemCommand {
             if (handItem.getItem() instanceof PolymerItem polymerItem) {
                 handItem = polymerItem.getPolymerItemStack(handItem, TooltipFlag.NORMAL, PacketContext.create(player));
             }
-            ItemStack.CODEC.encodeStart(RegistryOps.create(NbtOps.INSTANCE, player.registryAccess()), handItem).ifSuccess(tag -> context.getSource().sendSuccess(() -> Component.literal("Client Item: ").setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN)).append(NbtUtils.toPrettyComponent(tag)), false));
-            DataComponentMap.CODEC.encodeStart(RegistryOps.create(NbtOps.INSTANCE, player.registryAccess()), handItem.getComponents()).ifSuccess(tag -> context.getSource().sendSuccess(() -> Component.literal("Components: ").setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)).append(NbtUtils.toPrettyComponent(tag)), false));
+            ItemStack.CODEC.encodeStart(RegistryOps.create(NbtOps.INSTANCE, player.registryAccess()), handItem).ifSuccess(tag -> context.getSource().sendSuccess(() -> Component.literal("Client Item: ").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)).append(NbtUtils.toPrettyComponent(tag)), false));
+            DataComponentMap.CODEC.encodeStart(RegistryOps.create(NbtOps.INSTANCE, player.registryAccess()), handItem.getComponents()).ifSuccess(tag -> context.getSource().sendSuccess(() -> Component.literal("Components: ").setStyle(Style.EMPTY.withColor(ChatFormatting.RED)).append(NbtUtils.toPrettyComponent(tag)), false));
             if (!isPolymerItem) context.getSource().sendSuccess(() -> Component.literal("Not a polymer item!").setStyle(Style.EMPTY.withColor(ChatFormatting.GOLD)), false);
         }
         return 0;
