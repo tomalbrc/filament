@@ -19,6 +19,7 @@ repositories {
     maven { url 'https://maven.tomalbrc.de' }
     maven { url 'https://maven.nucleoid.xyz' }
     maven { url 'https://maven.parchmentmc.org' }
+    mavenLocal()
 }
 
 dependencies {
@@ -39,6 +40,7 @@ dependencies {
     modImplementation ("eu.pb4:polymer-virtual-entity:${project.polymer_version}")
     modImplementation ("eu.pb4:polymer-networking:${project.polymer_version}")
     modImplementation ("eu.pb4:polymer-autohost:${project.polymer_version}")
+    modImplementation ("eu.pb4:polymer-sound-patcher:${project.polymer_version}")
 
     // BIL
     modImplementation include("de.tomalbrc:blockbench-import-library:${project.bil_version}")

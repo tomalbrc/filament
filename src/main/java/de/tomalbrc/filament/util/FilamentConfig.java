@@ -30,9 +30,6 @@ public class FilamentConfig {
     @SerializedName("entity_module")
     public boolean entityModule = true;
 
-    @SerializedName("sound_module")
-    public boolean soundModule = true;
-
     public static FilamentConfig getInstance() {
         if (instance == null) {
             if (!load()) // only save if file wasn't just created

@@ -36,13 +36,7 @@
     "behaviour.trap.MobMixin",
     "behaviour.trident.ThrownTridentAccessor",
     "component.skin.ItemMixin",
-    "component.skin.ItemStackMixin",
-    "sound.BlockBehaviourMixin",
-    "sound.BlockMixin",
-    "sound.EntityMixin",
-    "sound.LivingEntityMixin",
-    "sound.PlayerMixin",
-    "sound.ServerPlayerGameModeMixin"
+    "component.skin.ItemStackMixin"
   ],
   "injectors": {
     "defaultRequire": 1,

@@ -1,9 +1,9 @@
 package de.tomalbrc.filament.util;
 
-import de.tomalbrc.filament.sound.SoundFix;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
+import eu.pb4.polymer.soundpatcher.api.SoundPatcher;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceArrayMap;
 import net.minecraft.world.level.block.state.BlockState;
@@ -34,8 +34,9 @@ public final class FilamentBlockResourceUtils {
         if (!virtual)
             polymerBlockModelBlockStateMap.put(model, state);
 
-        if (state != null)
-            SoundFix.SOUND_TYPES.add(state.getSoundType());
+        if (state != null) {
+            SoundPatcher.convertIntoServerSound(state.getSoundType());
+        }
 
         return state;
     }

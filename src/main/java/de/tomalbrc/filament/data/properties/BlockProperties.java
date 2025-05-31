@@ -45,14 +45,7 @@ public class BlockProperties extends ItemProperties {
         BlockBehaviour.Properties props = BlockBehaviour.Properties.of();
         props.sound(this.blockBase.defaultBlockState().getSoundType());
         if (sounds != null) {
-            props.sound(new SoundType(
-                    sounds.volume, sounds.pitch,
-                    SoundEvent.createVariableRangeEvent(sounds.breakSound),
-                    SoundEvent.createVariableRangeEvent(sounds.stepSound),
-                    SoundEvent.createVariableRangeEvent(sounds.placeSound),
-                    SoundEvent.createVariableRangeEvent(sounds.hitSound),
-                    SoundEvent.createVariableRangeEvent(sounds.fallSound)
-            ));
+            props.sound(sounds.asSoundType());
         }
 
         if (this.destroyTime != Float.MIN_VALUE) props.destroyTime(this.destroyTime);
@@ -100,5 +93,17 @@ public class BlockProperties extends ItemProperties {
             @SerializedName("place") ResourceLocation placeSound,
             @SerializedName("hit") ResourceLocation hitSound,
             @SerializedName("fall") ResourceLocation fallSound
-    ) {}
+    ) {
+        SoundType asSoundType() {
+            return new SoundType(
+                    volume,
+                    pitch,
+                    SoundEvent.createVariableRangeEvent(breakSound),
+                    SoundEvent.createVariableRangeEvent(stepSound),
+                    SoundEvent.createVariableRangeEvent(placeSound),
+                    SoundEvent.createVariableRangeEvent(hitSound),
+                    SoundEvent.createVariableRangeEvent(fallSound)
+            );
+        }
+    }
 }

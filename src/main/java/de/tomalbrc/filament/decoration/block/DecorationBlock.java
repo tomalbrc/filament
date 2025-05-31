@@ -3,7 +3,6 @@ package de.tomalbrc.filament.decoration.block;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.DecorationRegistry;
-import de.tomalbrc.filament.sound.PolymerSoundBlock;
 import de.tomalbrc.filament.util.VirtualDestroyStage;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
 import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
@@ -40,7 +39,7 @@ import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.function.BiConsumer;
 
-public abstract class DecorationBlock extends Block implements PolymerBlock, PolymerSoundBlock, BlockWithElementHolder, SimpleWaterloggedBlock, VirtualDestroyStage.Marker, FireBlockHooks {
+public abstract class DecorationBlock extends Block implements PolymerBlock, BlockWithElementHolder, SimpleWaterloggedBlock, VirtualDestroyStage.Marker, FireBlockHooks {
     final protected ResourceLocation decorationId;
 
     public static final IntegerProperty LIGHT_LEVEL = BlockStateProperties.LEVEL;
