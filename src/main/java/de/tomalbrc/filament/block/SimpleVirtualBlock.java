@@ -2,6 +2,7 @@ package de.tomalbrc.filament.block;
 
 import com.google.common.collect.ImmutableList;
 import de.tomalbrc.filament.data.BlockData;
+import de.tomalbrc.filament.util.BlockUtil;
 import de.tomalbrc.filament.util.DecorationUtil;
 import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
@@ -124,6 +125,7 @@ public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementH
         if (attachment != null && player.level() instanceof ServerLevel serverLevel) {
             var holder = (VirtualBlockHolder)attachment.holder();
             DecorationUtil.showBreakParticleShaped(serverLevel, blockPos, blockState, holder.displayStack);
+            BlockUtil.playBreakSound(serverLevel, blockPos, blockState);
         }
     }
 }

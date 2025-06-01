@@ -2,6 +2,7 @@ package de.tomalbrc.filament.decoration.block;
 
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.holder.SimpleDecorationHolder;
+import de.tomalbrc.filament.util.BlockUtil;
 import de.tomalbrc.filament.util.DecorationUtil;
 import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
@@ -10,8 +11,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -69,8 +68,7 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
 
         DecorationData data = this.getDecorationData();
         if (!data.hasBlocks()) {
-            SoundEvent breakSound = data.properties().blockBase.defaultBlockState().getSoundType().getBreakSound();
-            level.playSound(null, blockPos,  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);
+            BlockUtil.playBreakSound(level, blockPos, blockState);
         }
 
         if (data.properties().showBreakParticles)

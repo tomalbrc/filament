@@ -4,10 +4,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class BlockUtil {
     public static void handleBoneMealEffects(ServerLevel level, BlockPos blockPos) {
@@ -17,10 +20,10 @@ public class BlockUtil {
 
     public static void handleBlockPlaceEffects(ServerPlayer player, InteractionHand hand, BlockPos pos, SoundType type) {
         player.swing(hand, true);
-        playBlockPlaceSound(player, pos, type);
     }
 
-    public static void playBlockPlaceSound(ServerPlayer player, BlockPos pos, SoundType type) {
-        player.serverLevel().playSound(null, pos, type.getPlaceSound(), SoundSource.BLOCKS, (type.getVolume() + 1.0F) / 2.0F, type.getPitch() * 0.8F);
+    public static void playBreakSound(Level level, BlockPos blockPos, BlockState blockState) {
+        SoundEvent breakSound = blockState.getSoundType().getBreakSound();
+        level.playSound(null, blockPos,  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);
     }
 }
