@@ -6,7 +6,9 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.util.ItemFrameElement;
 import eu.pb4.polymer.core.api.item.PolymerItem;
+import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
@@ -294,6 +296,24 @@ public class DecorationUtil {
             return itemStack.copyWithCount(1);
         } else {
             return ((PolymerItem)itemStack.getItem()).getPolymerItemStack(itemStack, TooltipFlag.NORMAL, PacketContext.create(Filament.REGISTRY_ACCESS.compositeAccess()));
+        }
+    }
+
+    public static void setup(ElementHolder holder, DecorationBlockEntity blockEntity) {
+        if (blockEntity.getDecorationData().hasBlocks()) {
+            holder.addElement(DecorationUtil.decorationItemDisplay(blockEntity));
+        } else if (blockEntity.getDecorationData().size() != null) {
+            holder.addElement(DecorationUtil.decorationItemDisplay(blockEntity));
+            holder.addElement(DecorationUtil.decorationInteraction(blockEntity));
+        } else {
+            if (blockEntity.getDecorationData().itemFrame() == Boolean.TRUE) {
+                ItemFrameElement itemFrameElement = new ItemFrameElement(blockEntity);
+                holder.addElement(itemFrameElement);
+            } else {
+                // Just using display+interaction again with 1.0 width, 0.5 height
+                holder.addElement(DecorationUtil.decorationItemDisplay(blockEntity));
+                holder.addElement(DecorationUtil.decorationInteraction(blockEntity));
+            }
         }
     }
 }
