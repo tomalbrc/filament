@@ -176,10 +176,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
                     blockState = blockState.setValue(DecorationBlock.LIGHT_LEVEL, decorationData.properties().lightEmission.getValue(blockState));
                 }
 
-                if (!decorationData.properties().waterloggable) {
-                    blockState = blockState.setValue(DecorationBlock.WATERLOGGED, false);
-                }
-                else {
+                if (blockState.hasProperty(DecorationBlock.WATERLOGGED)) {
                     FluidState fluidState = level.getFluidState(blockPos2);
                     if (fluidState.is(Fluids.WATER) && fluidState.isSource()) {
                         blockState = blockState.setValue(DecorationBlock.WATERLOGGED, true);
