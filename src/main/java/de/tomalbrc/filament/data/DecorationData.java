@@ -154,7 +154,6 @@ public final class DecorationData extends Data {
     }
 
     public record BlockConfig(Vector3f origin,
-                              Vector3f size,
-                              BlockState block) {
+                              Vector3f size) {
     }
 }
