@@ -25,6 +25,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import org.apache.commons.compress.utils.FileNameUtils;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.yaml.snakeyaml.Yaml;
@@ -41,11 +42,7 @@ public class NexoImporter {
     public static void importAll() {
         var root = FabricLoader.getInstance().getGameDir().resolve("nexo");
         if (!Files.exists(root)) {
-            try {
-                Files.createDirectories(root);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            return;
         }
 
         try (var stream = Files.list(root)) {
@@ -87,8 +84,14 @@ public class NexoImporter {
                 walk.forEach(filepath -> {
                     try (var stream = new FileInputStream(filepath.toFile())) {
                         String relativePath = packPath.relativize(filepath).toString().replace("\\", "/");
+
+                        // oraxen or older packs
+                        if (!relativePath.startsWith("assets/")) {
+                            relativePath = "assets/minecraft/" + relativePath;
+                        }
+
                         String dir = getTextureParent(relativePath);
-                        if (dir != null) {
+                        if (dir != null && relativePath.endsWith(".png")) {
                             String ns = getNamespace(relativePath);
                             if (ns != null) {
                                 texturePaths.add(ResourceLocation.fromNamespaceAndPath(ns, dir));
@@ -106,7 +109,6 @@ public class NexoImporter {
 
             byte[] atlas = generateAtlasJson(texturePaths);
             resourcePackBuilder.addData("assets/minecraft/atlases/blocks.json", atlas);
-            resourcePackBuilder.addData("assets/minecraft/atlases/particle.json", atlas);
         });
     }
 
@@ -139,7 +141,7 @@ public class NexoImporter {
 
         if (assetsIndex == -1 || texturesIndex == -1) return null;
 
-        return normalized.substring(assetsIndex + prefix.length(), texturesIndex);
+        return normalized.substring(assetsIndex + prefix.length(), texturesIndex).toLowerCase();
     }
 
     private static byte[] generateAtlasJson(Collection<ResourceLocation> sourceDirs) {
@@ -224,13 +226,20 @@ public class NexoImporter {
                 props.allowsSpawning = false;
                 props.rotate = props.rotateSmooth = getValue("rotatable", furniture, Boolean.class) == Boolean.TRUE;
 
+                var restrictedRot = getValue("restricted_rotation", furniture, String.class);
+                if (restrictedRot != null) {
+                    props.rotateSmooth = restrictedRot.equals("STRICT");
+                }
+
                 var placing = getMap("limited_placing", furniture);
                 if (placing != null) {
                     props.placement = new DecorationProperties.Placement(
                             getValue("wall", placing, Boolean.class) == Boolean.TRUE,
                             getValue("floor", placing, Boolean.class) == Boolean.TRUE,
-                            getValue("root", placing, Boolean.class) == Boolean.TRUE);
+                            getValue("roof", placing, Boolean.class) == Boolean.TRUE);
                 }
+
+                props.waterloggable = getValue("waterloggable", furniture, Boolean.class) == Boolean.TRUE;
 
                 var drop = getMap("drop", furniture);
                 if (drop != null) {
@@ -242,10 +251,10 @@ public class NexoImporter {
                 }
 
                 var type = getValue("type", furniture, String.class);
-                boolean frame = false;
+                boolean forceItemFrame = false;
                 if (type != null && type.endsWith("ITEM_FRAME")) {
                     props.display = ItemDisplayContext.FIXED;
-                    frame = true;
+                    forceItemFrame = true;
                     if (type.startsWith("GLOW")) {
                         props.glow = true;
                     }
@@ -268,7 +277,7 @@ public class NexoImporter {
                         barrier != null ? List.of(new DecorationData.BlockConfig(new Vector3f(), new Vector3f(1))) : null,
                         null,
                         barrier == null ? new Vector2f(1, 1) : null,
-                        frame
+                        forceItemFrame
                 );
 
                 DecorationRegistry.register(decorationData);
@@ -300,7 +309,7 @@ public class NexoImporter {
     }
 
     @SuppressWarnings("unchecked")
-    public static Map<String, Object> getMap(String key, Object obj) {
+    public static @Nullable Map<String, Object> getMap(String key, Object obj) {
         if (obj instanceof Map<?, ?> map) {
             Object value = map.get(key);
             if (value instanceof Map<?, ?>) {
