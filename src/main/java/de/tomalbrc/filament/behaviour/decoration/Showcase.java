@@ -14,12 +14,7 @@ import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -32,6 +27,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
@@ -96,9 +93,10 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
     }
 
     @Override
-    public void read(CompoundTag compoundTag, HolderLookup.Provider provider, DecorationBlockEntity blockEntity) {
-        if (compoundTag.contains(SHOWCASE_KEY) && blockEntity.getOrCreateHolder() != null) {
-            CompoundTag showcaseTag = compoundTag.getCompound(SHOWCASE_KEY).orElseThrow();
+    public void read(ValueInput output, DecorationBlockEntity blockEntity) {
+        var showcaseInput = output.child(SHOWCASE_KEY);
+        if (showcaseInput.isPresent() && blockEntity.getOrCreateHolder() != null) {
+            ValueInput showcaseTag = showcaseInput.orElseThrow();
             DecorationHolder holder = (DecorationHolder) blockEntity.getDecorationHolder();
             if (holder == null)
                 return;
@@ -110,9 +108,8 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
                 for (int i = 0; i < showcase.config.size(); i++) {
                     Showcase.ShowcaseMeta showcaseMeta = showcase.config.get(i);
                     String key = ITEM + i;
-                    if (showcaseTag.contains(key)) {
-                        RegistryOps<Tag> registryOps = provider.createSerializationContext(NbtOps.INSTANCE);
-                        setShowcaseItemStack(blockEntity, showcaseMeta, showcaseTag.read(key, ItemStack.CODEC, registryOps).orElseThrow());
+                    if (showcaseTag.child(key).isPresent()) {
+                        setShowcaseItemStack(blockEntity, showcaseMeta, showcaseTag.read(key, ItemStack.CODEC).orElseThrow());
                     }
                 }
             }
@@ -121,17 +118,15 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
     }
 
     @Override
-    public void write(CompoundTag compoundTag, HolderLookup.Provider provider, DecorationBlockEntity blockEntity) {
+    public void write(ValueOutput output, DecorationBlockEntity blockEntity) {
         if (blockEntity.getDecorationHolder() != null) {
-            CompoundTag showcaseTag = new CompoundTag();
+            ValueOutput showcaseTag = output.child(SHOWCASE_KEY);
 
             for (int i = 0; i < config.size(); i++) {
                 Showcase.ShowcaseMeta showcase = config.get(i);
                 if (showcase != null && !getShowcaseItemStack(showcase).isEmpty())
-                    showcaseTag.put(ITEM + i, getShowcaseItemStack(showcase).save(provider));
+                    showcaseTag.store(ITEM + i, ItemStack.CODEC, getShowcaseItemStack(showcase));
             }
-
-            compoundTag.put(SHOWCASE_KEY, showcaseTag);
         }
     }
 

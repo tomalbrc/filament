@@ -4,9 +4,7 @@ import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.util.FilamentContainer;
 import de.tomalbrc.filament.util.Util;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.ContainerHelper;
@@ -18,6 +16,8 @@ import net.minecraft.world.inventory.HopperMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -81,8 +81,13 @@ public class Container implements DecorationBehaviour<Container.ContainerConfig>
     }
 
     @Override
-    public void write(CompoundTag compoundTag, HolderLookup.Provider provider, DecorationBlockEntity decorationBlockEntity) {
-        compoundTag.put("Container", new CompoundTag().merge(ContainerHelper.saveAllItems(new CompoundTag(), this.container.items, provider)));
+    public void write(ValueOutput output, DecorationBlockEntity decorationBlockEntity) {
+        ContainerHelper.saveAllItems(output.child("Container"), this.container.items);
+    }
+
+    @Override
+    public void read(ValueInput input, DecorationBlockEntity decorationBlockEntity) {
+        input.child("Container").ifPresent(x -> ContainerHelper.loadAllItems(input, container.items));
     }
 
     @Override
@@ -100,11 +105,6 @@ public class Container implements DecorationBehaviour<Container.ContainerConfig>
             return InteractionResult.CONSUME;
         }
         return InteractionResult.PASS;
-    }
-
-    @Override
-    public void read(CompoundTag compoundTag, HolderLookup.Provider provider, DecorationBlockEntity decorationBlockEntity) {
-        compoundTag.getCompound("Container").ifPresent(x -> ContainerHelper.loadAllItems(x, container.items, provider));
     }
 
     @Override

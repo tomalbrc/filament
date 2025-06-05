@@ -59,7 +59,7 @@ public class Bed implements DecorationBehaviour<Bed.Config> {
         AtomicBoolean range = new AtomicBoolean(false);
         AtomicBoolean blocked = new AtomicBoolean(false);
         DecorationUtil.forEachRotated(decorationBlockEntity.getDecorationData().blocks(), decorationBlockEntity.mainPosition(), decorationBlockEntity.getRotation(), blockPos -> {
-            if (serverPlayer.serverLevel().getBlockState(blockPos.above()).isSuffocating(serverPlayer.level(), blockPos)) {
+            if (serverPlayer.level().getBlockState(blockPos.above()).isSuffocating(serverPlayer.level(), blockPos)) {
                 blocked.set(true);
             }
 
@@ -93,7 +93,7 @@ public class Bed implements DecorationBehaviour<Bed.Config> {
                         double hRange = 8.0F;
                         double vRange = 5.0F;
                         Vec3 vec3 = Vec3.atBottomCenterOf(blockPos);
-                        List<Monster> list = player.level().getEntitiesOfClass(Monster.class, new AABB(vec3.x() - hRange, vec3.y() - vRange, vec3.z() - hRange, vec3.x() + hRange, vec3.y() + vRange, vec3.z() + hRange), (monster) -> monster.isPreventingPlayerRest(player.serverLevel(), player));
+                        List<Monster> list = player.level().getEntitiesOfClass(Monster.class, new AABB(vec3.x() - hRange, vec3.y() - vRange, vec3.z() - hRange, vec3.x() + hRange, vec3.y() + vRange, vec3.z() + hRange), (monster) -> monster.isPreventingPlayerRest(player.level(), player));
                         if (!list.isEmpty()) {
                             return Either.left(Player.BedSleepingProblem.NOT_SAFE);
                         }
@@ -103,11 +103,11 @@ public class Bed implements DecorationBehaviour<Bed.Config> {
                         player.awardStat(Stats.SLEEP_IN_BED);
                         CriteriaTriggers.SLEPT_IN_BED.trigger(player);
                     });
-                    if (!player.serverLevel().canSleepThroughNights()) {
+                    if (!player.level().canSleepThroughNights()) {
                         player.displayClientMessage(Component.translatable("sleep.not_possible"), true);
                     }
 
-                    player.serverLevel().updateSleepingPlayerList();
+                    player.level().updateSleepingPlayerList();
                     return either;
                 }
             }
@@ -123,10 +123,6 @@ public class Bed implements DecorationBehaviour<Bed.Config> {
     }
 
     public static class Config {
-        boolean skipNight = false;
 
-        int on = 15;
-        int off = 0;
-        List<Integer> cycle;
     }
 }

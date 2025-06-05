@@ -73,7 +73,7 @@ public class VirtualDestroyStage extends ElementHolder {
 
         if (self.getAttachment() == null || !self.getAttachment().getPos().equals(vecPos)) {
             // init display list
-            BlockBoundAttachment.of(self, player.serverLevel(), vecPos);
+            BlockBoundAttachment.of(self, player.level(), vecPos);
             self.destroyElements().getFirst().setTranslation(new Vector3f());
 
             if (state.getBlock() instanceof DecorationBlock decorationBlock1 && decorationBlock1.getDecorationData().hasBlocks()) {
@@ -81,7 +81,7 @@ public class VirtualDestroyStage extends ElementHolder {
                     self.addElement(self.destroyElements().get(i1));
                 }
 
-                BlockEntity blockEntity = player.serverLevel().getBlockEntity(pos);
+                BlockEntity blockEntity = player.level().getBlockEntity(pos);
                 if (blockEntity instanceof DecorationBlockEntity decorationBlockEntity) {
                     final AtomicInteger index = new AtomicInteger();
                     final DecorationBlockEntity finalDecorationBlockEntity = decorationBlockEntity.isMain() ? decorationBlockEntity : decorationBlockEntity.getMainBlockEntity();

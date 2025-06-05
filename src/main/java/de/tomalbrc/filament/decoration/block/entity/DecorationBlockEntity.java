@@ -20,8 +20,6 @@ import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -32,6 +30,8 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,10 +53,10 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
-        super.loadAdditional(compoundTag, provider);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
 
-        if (this.isMain()) this.loadMain(compoundTag, provider);
+        if (this.isMain()) this.loadMain(input);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         }
     }
 
-    public void loadMain(CompoundTag compoundTag, HolderLookup.Provider provider) {
+    public void loadMain(ValueInput input) {
         DecorationData decorationData = this.getDecorationData();
         if (decorationData == null) {
             Filament.LOGGER.error("No decoration data for {}!", this.itemStack.getItem().getDescriptionId());
@@ -79,18 +79,18 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : this.behaviours) {
             if (entry.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
-                decorationBehaviour.read(compoundTag, provider, this);
+                decorationBehaviour.read(input, this);
             }
         }
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
-        super.saveAdditional(compoundTag, provider);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
 
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : behaviours) {
             if (entry.getValue() instanceof DecorationBehaviour<?> decorationBehaviour)
-                decorationBehaviour.write(compoundTag, provider, this);
+                decorationBehaviour.write(output, this);
         }
     }
 

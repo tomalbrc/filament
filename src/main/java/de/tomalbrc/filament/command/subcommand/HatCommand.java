@@ -11,7 +11,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 public class HatCommand {
     public static LiteralCommandNode<CommandSourceStack> register() {
         var hatNode = Commands
-                .literal("hat").requires(Permissions.require("filament.command.hat", 1));
+                .literal("hat").requires(Permissions.require("filament.command.hat", 2));
 
         return hatNode.executes(HatCommand::execute).build();
     }

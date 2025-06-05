@@ -1,6 +1,5 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "amethyst",
 	"textures": {
 		"0": "block/custom/arcanery/amethyst_bricks",
 		"particle": "block/custom/arcanery/amethyst_bricks"

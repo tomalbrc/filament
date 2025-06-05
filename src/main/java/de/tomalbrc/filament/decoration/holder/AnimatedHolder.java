@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.decoration.holder;
 
-import de.tomalbrc.bil.core.holder.positioned.PositionedHolder;
+import de.tomalbrc.bil.core.holder.base.SimpleAnimatedHolder;
 import de.tomalbrc.bil.core.holder.wrapper.Bone;
 import de.tomalbrc.bil.core.holder.wrapper.DisplayWrapper;
 import de.tomalbrc.bil.core.model.Model;
@@ -10,23 +10,25 @@ import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.decoration.Animation;
 import de.tomalbrc.filament.behaviour.decoration.Container;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.util.DecorationUtil;
 import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
-import net.minecraft.server.level.ServerLevel;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
-public class AnimatedHolder extends PositionedHolder {
+public class AnimatedHolder extends SimpleAnimatedHolder {
     private final DecorationBlockEntity decorationBlockEntity;
 
     public AnimatedHolder(DecorationBlockEntity blockEntity, Model model) {
-        super((ServerLevel) blockEntity.getLevel(), blockEntity.getBlockPos().getCenter(), model);
+        super(model);
         this.decorationBlockEntity = blockEntity;
 
         if (this.decorationBlockEntity.has(Behaviours.ANIMATION)) {
             Animation.AnimationConfig animation = this.decorationBlockEntity.getDecorationData(). behaviour().get(Behaviours.ANIMATION);
             this.setAnimationData(animation);
         }
+
+        DecorationUtil.setup(this, blockEntity);
     }
 
     public void setRotation(float rotation) {
@@ -48,7 +50,7 @@ public class AnimatedHolder extends PositionedHolder {
     protected void onDataLoaded() {
         super.onDataLoaded();
         if (this.bones != null && this.decorationBlockEntity.getDecorationData() != null && this.decorationBlockEntity.getDecorationData().size() != null) {
-            for (Bone bone : this.bones) {
+            for (Bone<?> bone : this.bones) {
                 bone.element().setDisplaySize(this.decorationBlockEntity.getDecorationData().size().get(0) * 1.5f, this.decorationBlockEntity.getDecorationData().size().get(1) * 1.5f);
             }
         }

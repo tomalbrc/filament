@@ -19,7 +19,7 @@ import static com.mojang.brigadier.arguments.StringArgumentType.getString;
 public class DyeCommand {
     public static LiteralCommandNode<CommandSourceStack> register() {
         var dyeNode = Commands
-                .literal("dye").requires(Permissions.require("filament.command.dye", 1));
+                .literal("dye").requires(Permissions.require("filament.command.dye", 2));
 
         var colorArg = Commands.argument("color", StringArgumentType
                 .string());

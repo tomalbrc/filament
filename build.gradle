@@ -16,6 +16,7 @@ configurations {
 }
 
 repositories {
+    mavenLocal()
     maven { url 'https://maven.tomalbrc.de' }
     maven { url 'https://maven.nucleoid.xyz' }
     maven { url 'https://maven.parchmentmc.org' }
@@ -26,7 +27,7 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings(loom.layered {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${project.parchment_version}")
+        //parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${project.parchment_version}")
     })
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
@@ -46,7 +47,7 @@ dependencies {
 
     modImplementation include("eu.pb4:placeholder-api:${project.papi_version}")
 
-    shadow implementation('org.yaml:snakeyaml:2.0')
+    shadow implementation('org.yaml:snakeyaml:2.4')
 }
 
 processResources {

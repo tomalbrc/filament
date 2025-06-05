@@ -10,7 +10,6 @@ import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.tracker.EntityTrackedData;
 import eu.pb4.polymer.virtualentity.mixin.accessors.DisplayEntityAccessor;
 import eu.pb4.polymer.virtualentity.mixin.accessors.ItemDisplayEntityAccessor;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -24,6 +23,8 @@ import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -122,16 +123,16 @@ public class TridentEntity extends ThrownTrident implements PolymerEntity {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compoundTag) {
-        super.readAdditionalSaveData(compoundTag);
-        if (compoundTag.contains("TridentXRot")) super.setXRot(compoundTag.getFloat("TridentXRot").orElseThrow());
-        if (compoundTag.contains("TridentYRot")) super.setYRot(compoundTag.getFloat("TridentYRot").orElseThrow());
+    public void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
+        super.setXRot(input.getFloatOr("TridentXRot", 0));
+        super.setYRot(input.getFloatOr("TridentYRot", 0));
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compoundTag) {
-        super.addAdditionalSaveData(compoundTag);
-        compoundTag.putFloat("TridentXRot", getXRot());
-        compoundTag.putFloat("TridentYRot", getYRot());
+    public void addAdditionalSaveData(ValueOutput output) {
+        super.addAdditionalSaveData(output);
+        output.putFloat("TridentXRot", getXRot());
+        output.putFloat("TridentYRot", getYRot());
     }
 }

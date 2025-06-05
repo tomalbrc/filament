@@ -3,15 +3,15 @@ package de.tomalbrc.filament.behaviour.decoration;
 import de.tomalbrc.bil.api.AnimatedHolder;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,7 +59,7 @@ public class Lock implements DecorationBehaviour<Lock.LockConfig> {
             boolean validCommand = commands != null;
             boolean validLockCommand = this.lockConfig.command != null && !this.lockConfig.command.isEmpty();
             if ((validCommand || validLockCommand) && player.getServer() != null) {
-                var css = player.createCommandSourceStack().withSource(player.server).withMaximumPermission(4);
+                var css = player.createCommandSourceStack().withSource(player.getServer()).withMaximumPermission(4);
                 if (getConfig().atBlock)
                     css = css.withPosition(decorationBlockEntity.getBlockPos().getCenter());
 
@@ -81,22 +81,19 @@ public class Lock implements DecorationBehaviour<Lock.LockConfig> {
     }
 
     @Override
-    public void read(CompoundTag compoundTag, HolderLookup.Provider provider, DecorationBlockEntity blockEntity) {
-        compoundTag.getCompound("Lock").ifPresent(lock -> {
-            if (compoundTag.contains("Command")) this.command = lock.getString("Command").orElse(null);
-            if (compoundTag.contains("Unlocked")) this.unlocked = lock.getBoolean("Unlocked").orElse(false);
+    public void read(ValueInput input, DecorationBlockEntity blockEntity) {
+        input.child("Lock").ifPresent(lock -> {
+            this.command = lock.getStringOr("Command", this.command);
+            this.unlocked = lock.getBooleanOr("Unlocked", this.unlocked);
         });
     }
 
     @Override
-    public void write(CompoundTag compoundTag, HolderLookup.Provider provider, DecorationBlockEntity blockEntity) {
-        CompoundTag lockTag = new CompoundTag();
+    public void write(ValueOutput output, DecorationBlockEntity blockEntity) {
+        ValueOutput lockTag = output.child("Lock");
 
-        if (this.command != null && !this.command.isEmpty()) lockTag.putString("Command", this.command);
-
+        lockTag.putString("Command", this.command);
         lockTag.putBoolean("Unlocked", this.unlocked);
-
-        compoundTag.put("Lock", lockTag);
     }
 
     private List<String> commands() {

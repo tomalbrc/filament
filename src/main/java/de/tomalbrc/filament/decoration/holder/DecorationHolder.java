@@ -15,25 +15,7 @@ public class DecorationHolder extends ElementHolder {
     public DecorationHolder(DecorationBlockEntity blockEntity) {
         super();
         this.parent = blockEntity;
-        this.setup(blockEntity);
-    }
-
-    private void setup(DecorationBlockEntity blockEntity) {
-        if (blockEntity.getDecorationData().hasBlocks()) {
-            this.addElement(DecorationUtil.decorationItemDisplay(this.parent));
-        } else if (blockEntity.getDecorationData().size() != null) {
-            this.addElement(DecorationUtil.decorationItemDisplay(this.parent));
-            this.addElement(DecorationUtil.decorationInteraction(this.parent));
-        } else {
-            if (blockEntity.getDecorationData().itemFrame() == Boolean.TRUE) {
-                ItemFrameElement itemFrameElement = new ItemFrameElement(this.parent);
-                this.addElement(itemFrameElement);
-            } else {
-                // Just using display+interaction again with 1.0 width, 0.5 height
-                this.addElement(DecorationUtil.decorationItemDisplay(this.parent));
-                this.addElement(DecorationUtil.decorationInteraction(this.parent));
-            }
-        }
+        DecorationUtil.setup(this, blockEntity);
     }
 
     @Override

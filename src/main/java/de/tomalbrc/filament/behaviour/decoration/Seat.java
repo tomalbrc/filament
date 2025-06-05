@@ -51,7 +51,7 @@ public class Seat implements DecorationBehaviour<Seat.SeatConfig> {
     }
 
     public void seatPlayer(DecorationBlockEntity decorationBlockEntity, Seat.SeatMeta seat, ServerPlayer player) {
-        SeatEntity seatEntity = EntityRegistry.SEAT_ENTITY.create(player.serverLevel(), EntitySpawnReason.TRIGGERED);
+        SeatEntity seatEntity = EntityRegistry.SEAT_ENTITY.create(player.level(), EntitySpawnReason.TRIGGERED);
         assert seatEntity != null;
         seatEntity.setPos(this.seatTranslation(decorationBlockEntity, seat).add(decorationBlockEntity.getDecorationHolder().getPos()));
         player.level().addFreshEntity(seatEntity);

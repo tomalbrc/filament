@@ -2,7 +2,6 @@ package de.tomalbrc.filament.decoration.util;
 
 import eu.pb4.polymer.core.api.entity.PolymerEntity;
 import eu.pb4.polymer.virtualentity.api.tracker.EntityTrackedData;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -12,6 +11,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import xyz.nucleoid.packettweaker.PacketContext;
@@ -68,8 +69,8 @@ public class SeatEntity extends Entity implements PolymerEntity {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compoundTag) {}
+    public void readAdditionalSaveData(ValueInput input) {}
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compoundTag) {}
+    public void addAdditionalSaveData(ValueOutput output) {}
 }

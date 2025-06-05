@@ -5,13 +5,13 @@ import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     public static final String MAIN = "Main";
@@ -51,28 +51,13 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
-        super.loadAdditional(compoundTag, provider);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
 
-        if (!compoundTag.contains(VERSION)) {
-            this.version = 1; // upgrade old format
-            if (compoundTag.contains(MAIN)) {
-                var optional = compoundTag.read(MAIN, BlockPos.CODEC);
-                this.main = optional.orElse(this.main).subtract(this.worldPosition);
-            }
-        }
-        else {
-            this.version = compoundTag.getInt(VERSION).orElse(1);
-            if (compoundTag.contains(MAIN)) {
-                var optional = compoundTag.read(MAIN, BlockPos.CODEC);
-                this.main = optional.orElse(this.main);
-            }
-        }
+        this.version = input.getInt(VERSION).orElse(1);
+        input.read(MAIN, BlockPos.CODEC).ifPresent(main -> this.main = main);
 
-        if (compoundTag.contains(ITEM)) {
-            this.itemStack = ItemStack.parse(provider, compoundTag.getCompound(ITEM).orElseThrow()).orElseThrow();
-        }
-
+        this.itemStack = input.read(ITEM, ItemStack.CODEC).orElse(null);
         if (this.itemStack == null || this.itemStack.isEmpty()) {
             this.itemStack = BuiltInRegistries.ITEM.getValue(((DecorationBlock)this.getBlockState().getBlock()).getDecorationData().id()).getDefaultInstance();
         }
@@ -80,15 +65,13 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
         if (!this.isMain())
             return;
 
-        if (compoundTag.contains(ROTATION))
-            this.rotation = compoundTag.getIntOr(ROTATION, 0);
-        if (compoundTag.contains(DIRECTION))
-            this.direction = Direction.from3DDataValue(compoundTag.getIntOr(DIRECTION, Direction.UP.get3DDataValue()));
+        this.rotation = input.getIntOr(ROTATION, 0);
+        this.direction = Direction.from3DDataValue(input.getIntOr(DIRECTION, Direction.UP.get3DDataValue()));
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
-        super.saveAdditional(compoundTag, provider);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
 
         if (this.itemStack == null) {
             var optionalKey = this.getBlockState().getBlockHolder().unwrapKey();
@@ -104,16 +87,16 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
         }
 
         if (this.itemStack != null)
-            compoundTag.put(ITEM, this.itemStack.save(provider));
+            output.store(ITEM, ItemStack.CODEC, this.itemStack);
 
         if (this.main == null) this.main = BlockPos.ZERO;
 
-        compoundTag.store(MAIN, BlockPos.CODEC, this.main);
-        compoundTag.putInt(VERSION, this.version);
+        output.store(MAIN, BlockPos.CODEC, this.main);
+        output.putInt(VERSION, this.version);
 
         if (this.isMain()) {
-            compoundTag.putInt(ROTATION, this.rotation);
-            compoundTag.putInt(DIRECTION, this.direction.get3DDataValue());
+            output.putInt(ROTATION, this.rotation);
+            output.putInt(DIRECTION, this.direction.get3DDataValue());
         }
     }
 

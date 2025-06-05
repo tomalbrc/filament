@@ -20,7 +20,7 @@ public class ItemStackMixin {
             var skinItem = self.get(FilamentComponents.SKIN_DATA_COMPONENT);
             if (skinItem != null && !skinItem.isEmpty()) {
                 if (!serverPlayer.addItem(skinItem))
-                    serverPlayer.spawnAtLocation(serverPlayer.serverLevel(), skinItem);
+                    serverPlayer.spawnAtLocation(serverPlayer.level(), skinItem);
 
                 self.remove(FilamentComponents.SKIN_DATA_COMPONENT);
             }

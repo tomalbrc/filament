@@ -6,7 +6,9 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.util.ItemFrameElement;
 import eu.pb4.polymer.core.api.item.PolymerItem;
+import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
@@ -108,11 +110,11 @@ public class DecorationUtil {
             element.setSize(1.f, blockEntity.getDirection().equals(Direction.DOWN) ? 1.f : .5f); // default
         }
 
-        var q = blockEntity.getDirection().getUnitVec3i();
+        var dirUnitVec = blockEntity.getDirection().getUnitVec3i();
         if (blockEntity.getDirection() != Direction.DOWN && blockEntity.getDirection() != Direction.UP) {
-            element.setOffset(new Vec3(q.getX(), q.getY() + element.getHeight(), q.getZ()).multiply(1.f-element.getWidth(), 1, 1.f-element.getWidth()).scale(-0.5f));
+            element.setOffset(new Vec3(dirUnitVec.getX(), dirUnitVec.getY() + element.getHeight(), dirUnitVec.getZ()).multiply(1.f-element.getWidth(), 1, 1.f-element.getWidth()).scale(-0.5f));
         } else {
-            element.setOffset(new Vec3(q.getX(), q.getY(), q.getZ()).add(0,  blockEntity.getDirection() == Direction.UP ? -1.5f : 0.5f + ((1.f-element.getHeight())), 0));
+            element.setOffset(new Vec3(dirUnitVec.getX(), dirUnitVec.getY(), dirUnitVec.getZ()).add(0,  blockEntity.getDirection() == Direction.UP ? -1.5f : 0.5f + ((1.f-element.getHeight())), 0));
         }
 
         return element;
@@ -294,6 +296,24 @@ public class DecorationUtil {
             return itemStack.copyWithCount(1);
         } else {
             return ((PolymerItem)itemStack.getItem()).getPolymerItemStack(itemStack, TooltipFlag.NORMAL, PacketContext.create(Filament.REGISTRY_ACCESS.compositeAccess()));
+        }
+    }
+
+    public static void setup(ElementHolder holder, DecorationBlockEntity blockEntity) {
+        if (blockEntity.getDecorationData().hasBlocks()) {
+            holder.addElement(DecorationUtil.decorationItemDisplay(blockEntity));
+        } else if (blockEntity.getDecorationData().size() != null) {
+            holder.addElement(DecorationUtil.decorationItemDisplay(blockEntity));
+            holder.addElement(DecorationUtil.decorationInteraction(blockEntity));
+        } else {
+            if (blockEntity.getDecorationData().itemFrame() == Boolean.TRUE) {
+                ItemFrameElement itemFrameElement = new ItemFrameElement(blockEntity);
+                holder.addElement(itemFrameElement);
+            } else {
+                // Just using display+interaction again with 1.0 width, 0.5 height
+                holder.addElement(DecorationUtil.decorationItemDisplay(blockEntity));
+                holder.addElement(DecorationUtil.decorationInteraction(blockEntity));
+            }
         }
     }
 }

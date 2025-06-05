@@ -9,14 +9,10 @@ import eu.pb4.polymer.virtualentity.api.attachment.EntityAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.tracker.EntityTrackedData;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
@@ -32,6 +28,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -185,30 +183,26 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag nbt) {
-        super.readAdditionalSaveData(nbt);
+    public void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
 
-        if (nbt.contains("Item") && nbt.contains("PickupItem")) {
-            RegistryOps<Tag> registryOps = this.registryAccess().createSerializationContext(NbtOps.INSTANCE);
+        this.projectileStack = input.read("Item", ItemStack.CODEC).orElse(ItemStack.EMPTY);
+        this.pickupStack = input.read("PickupItem", ItemStack.CODEC).orElse(ItemStack.EMPTY);
+        this.createMainDisplayElement();
 
-            this.projectileStack = nbt.read("Item", ItemStack.CODEC, registryOps).orElse(ItemStack.EMPTY);
-            this.pickupStack = nbt.read("PickupItem", ItemStack.CODEC, registryOps).orElse(ItemStack.EMPTY);
-            this.createMainDisplayElement();
-        }
-
-        this.dealtDamage = nbt.getBoolean("DealtDamage").orElse(true);
+        this.dealtDamage = input.getBooleanOr("DealtDamage", true);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag nbt) {
-        super.addAdditionalSaveData(nbt);
+    public void addAdditionalSaveData(ValueOutput output) {
+        super.addAdditionalSaveData(output);
 
         if (this.projectileStack != null && !this.projectileStack.isEmpty() && this.pickupStack != null && !this.pickupStack.isEmpty()) {
-            nbt.put("Item", this.projectileStack.save(this.registryAccess()));
-            nbt.put("PickupItem", this.pickupStack.save(this.registryAccess()));
+            output.store("Item", ItemStack.CODEC, this.projectileStack);
+            output.store("PickupItem", ItemStack.CODEC, this.pickupStack);
         }
 
-        nbt.putBoolean("DealtDamage", this.dealtDamage);
+        output.putBoolean("DealtDamage", this.dealtDamage);
     }
 
     @Override
