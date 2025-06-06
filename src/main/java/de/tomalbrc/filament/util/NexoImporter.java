@@ -4,6 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
+import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.behaviour.decoration.Seat;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.ItemData;
@@ -16,13 +19,18 @@ import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.registry.BlockRegistry;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.registry.ItemRegistry;
+import eu.pb4.placeholders.api.TextParserUtils;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import org.apache.commons.compress.utils.FileNameUtils;
 import org.joml.Vector2f;
@@ -35,7 +43,10 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class NexoImporter {
     public static void importAll() {
@@ -72,11 +83,11 @@ public class NexoImporter {
                         importSingleFile(dirName, inputStream);
                     }
                 } catch (Throwable ignored) {
-                    //ignored.printStackTrace();
+                    ignored.printStackTrace();
                 }
             });
         } catch (Throwable e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
 
         PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder -> {
@@ -101,7 +112,7 @@ public class NexoImporter {
                     }
                 });
             } catch (Throwable e) {
-                //e.printStackTrace();
+                e.printStackTrace();
             }
 
             byte[] atlas = generateAtlasJson(texturePaths);
@@ -222,7 +233,8 @@ public class NexoImporter {
                 props.solid = false;
                 props.transparent = true;
                 props.allowsSpawning = false;
-                props.rotate = props.rotateSmooth = getValue("rotatable", furniture, Boolean.class) == Boolean.TRUE;
+                var rotObj = getValue("rotatable", furniture, Boolean.class);
+                props.rotate = rotObj == Boolean.TRUE || rotObj == null;
 
                 var placing = getMap("limited_placing", furniture);
                 if (placing != null) {
@@ -251,23 +263,80 @@ public class NexoImporter {
                     }
                 }
 
-
                 var barrier = getValue("barrier", furniture, Boolean.class);
+                List<DecorationData.BlockConfig> blocks = new ObjectArrayList<>();
+                if (barrier != null) {
+                    blocks.add(new DecorationData.BlockConfig(new Vector3f(), new Vector3f(1)));
+                }
+
+                var barriers = getValue("barriers", furniture, List.class);
+                if (barriers != null) {
+                    for (Object blockConf : barriers) {
+                        boolean origin = blockConf instanceof String s && s.equals("origin");
+                        if (origin) {
+                            blocks.add(new DecorationData.BlockConfig(new Vector3f(), new Vector3f(1)));
+                        } else {
+                            Integer x = getValue("x", blockConf, Integer.class);
+                            Integer y = getValue("y", blockConf, Integer.class);
+                            Integer z = getValue("z", blockConf, Integer.class);
+                            blocks.add(new DecorationData.BlockConfig(new Vector3f(
+                                    x == null ? 0 : x,
+                                    y == null ? 0 : y,
+                                    z == null ? 0 : z
+                            ).rotateY(Mth.PI).round(), new Vector3f(1)));
+                        }
+                    }
+                }
+
+                BehaviourConfigMap behaviourConfigMap = new BehaviourConfigMap();
+
+                Seat.SeatConfig filamentSeats = new Seat.SeatConfig();
+                var seat = getMap("seat", furniture);
+                if (seat != null) {
+                    var height = getValue("height", seat, Float.class);
+                    var yaw = getValue("yaw", seat, Float.class);
+
+                    if (yaw == null) yaw = 180f;
+                    else yaw -= 180;
+
+                    if (height == null) height = 0f;
+
+                    if (blocks.isEmpty()) {
+                        var seatConf = new Seat.SeatConfigData();
+                        seatConf.offset = new Vector3f();
+                        filamentSeats.add(seatConf);
+                    } else {
+                        for (DecorationData.BlockConfig blockConfig : blocks) {
+                            var seatConf = new Seat.SeatConfigData();
+                            seatConf.offset = new Vector3f(blockConfig.origin().add(0, 0.25f + height, 0, new Vector3f()));
+                            seatConf.direction = yaw;
+                            filamentSeats.add(seatConf);
+                        }
+                    }
+                }
+
+                if (!filamentSeats.isEmpty()) {
+                    behaviourConfigMap.put(Behaviours.SEAT, filamentSeats);
+                }
+
+                var builder = DataComponentMap.builder();
+                builder.set(DataComponents.ITEM_NAME, TextParserUtils.formatText(name));
+
                 DecorationData decorationData = new DecorationData(
                         id,
                         null,
-                        Map.of("en_us", name),
+                        null,
                         new ItemResource(Map.of("default", ResourceLocation.parse(model)), null, null),
                         null,
-                        null,
-                        null,
+                        behaviourConfigMap,
+                        builder.build(),
                         null,
                         null,
                         null,
                         props,
-                        barrier != null ? List.of(new DecorationData.BlockConfig(new Vector3f(), new Vector3f(1))) : null,
+                        blocks.isEmpty() ? null : blocks,
                         null,
-                        barrier == null ? new Vector2f(1, 1) : null,
+                        blocks.isEmpty() ? new Vector2f(1, 1) : null,
                         frame
                 );
 
