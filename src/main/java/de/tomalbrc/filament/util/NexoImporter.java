@@ -31,7 +31,9 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.Items;
 import org.apache.commons.compress.utils.FileNameUtils;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -188,7 +190,17 @@ public class NexoImporter {
         var name = getValue("displayname", data, String.class);
         if (name == null) name = getValue("itemname", data, String.class); // fallback for older configs (nexo for <1.20.4)
 
+        var builder = DataComponentMap.builder();
+        if (name != null)
+            builder.set(DataComponents.ITEM_NAME, TextParserUtils.formatText(name));
+
         var material = getValue("material", data, String.class);
+        Item vanillaItem = null;
+        if (material != null) {
+            vanillaItem = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse(material.toLowerCase()));
+        } else {
+            vanillaItem = Items.LEATHER_HORSE_ARMOR;
+        }
 
         var mechanics = getMap("Mechanics", data);
         if (mechanics != null) {
@@ -205,16 +217,20 @@ public class NexoImporter {
                 props.transparent = false;
                 props.allowsSpawning = true;
 
+                var lightObj = getValue("light", furniture, Integer.class);
+                if (lightObj != null)
+                    props.lightEmission = BlockStateMappedProperty.of(lightObj);
+
                 BlockData blockData = new BlockData(
                         id,
-                        BuiltInRegistries.ITEM.get(ResourceLocation.parse(material.toLowerCase())),
-                        Map.of("en_us", name),
+                        vanillaItem,
+                        null,
                         new BlockResource(Map.of("default", new PolymerBlockModel(ResourceLocation.parse(model), 0, 0, false, 0))),
                         null,
                         BlockStateMappedProperty.of(BlockModelType.FULL_BLOCK),
                         props,
                         null,
-                        null,
+                        builder.build(),
                         null,
                         null,
                         null
@@ -238,6 +254,15 @@ public class NexoImporter {
                 props.allowsSpawning = false;
                 var rotObj = getValue("rotatable", furniture, Boolean.class);
                 props.rotate = rotObj == Boolean.TRUE || rotObj == null;
+
+                var lightObj = getValue("light", furniture, Integer.class);
+                if (lightObj != null)
+                    props.lightEmission = BlockStateMappedProperty.of(lightObj);
+
+                var restrictedRot = getValue("restricted_rotation", furniture, String.class);
+                if (restrictedRot != null) {
+                    props.rotateSmooth = restrictedRot.equals("STRICT");
+                }
 
                 var placing = getMap("limited_placing", furniture);
                 if (placing != null) {
@@ -311,7 +336,7 @@ public class NexoImporter {
                     } else {
                         for (DecorationData.BlockConfig blockConfig : blocks) {
                             var seatConf = new Seat.SeatConfigData();
-                            seatConf.offset = new Vector3f(blockConfig.origin().add(0, 0.25f + height, 0, new Vector3f()));
+                            seatConf.offset = new Vector3f(blockConfig.origin().add(0, 0.5f + height, 0, new Vector3f()));
                             seatConf.direction = yaw;
                             filamentSeats.add(seatConf);
                         }
@@ -322,12 +347,9 @@ public class NexoImporter {
                     behaviourConfigMap.put(Behaviours.SEAT, filamentSeats);
                 }
 
-                var builder = DataComponentMap.builder();
-                builder.set(DataComponents.ITEM_NAME, TextParserUtils.formatText(name));
-
                 DecorationData decorationData = new DecorationData(
                         id,
-                        null,
+                        vanillaItem,
                         ItemResource.of(Map.of("default", ResourceLocation.parse(model)), null, null),
                         null,
                         null,
@@ -353,10 +375,10 @@ public class NexoImporter {
 
                 ItemData itemData = new ItemData(
                         id,
+                        vanillaItem,
                         null,
-                        Map.of("en_us", name),
                         ItemResource.of(Map.of("default", ResourceLocation.parse(model)), null, null),
-                        null,
+                        builder.build(),
                         props,
                         null,
                         null,
