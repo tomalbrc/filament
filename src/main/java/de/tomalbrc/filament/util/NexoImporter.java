@@ -197,7 +197,7 @@ public class NexoImporter {
         var material = getValue("material", data, String.class);
         Item vanillaItem = null;
         if (material != null) {
-            vanillaItem = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse(material.toLowerCase()));
+            vanillaItem = BuiltInRegistries.ITEM.get(ResourceLocation.parse(material.toLowerCase()));
         } else {
             vanillaItem = Items.LEATHER_HORSE_ARMOR;
         }
@@ -349,9 +349,9 @@ public class NexoImporter {
 
                 DecorationData decorationData = new DecorationData(
                         id,
-                        vanillaItem,
-                        ItemResource.of(Map.of("default", ResourceLocation.parse(model)), null, null),
                         null,
+                        ItemResource.of(Map.of("default", ResourceLocation.parse(model)), null, null),
+                        vanillaItem,
                         null,
                         blocks.isEmpty() ? null : blocks,
                         blocks.isEmpty() ? new Vector2f(1, 1) : null,
@@ -378,9 +378,9 @@ public class NexoImporter {
                         vanillaItem,
                         null,
                         ItemResource.of(Map.of("default", ResourceLocation.parse(model)), null, null),
-                        builder.build(),
-                        props,
                         null,
+                        props,
+                        builder.build(),
                         null,
                         null
                 );
