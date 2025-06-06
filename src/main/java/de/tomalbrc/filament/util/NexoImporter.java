@@ -34,7 +34,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.Items;
-import org.apache.commons.compress.utils.FileNameUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -66,14 +66,14 @@ public class NexoImporter {
     }
 
     public static void importPack(Path path) {
-        String dirName = FileNameUtils.getBaseName(path);
+        String dirName = FilenameUtils.getBaseName(path.toString());
 
         try (var stream = Files.walk(path.resolve("items"))) {
             stream.forEach(file -> {
                 try {
                     Path filename = file.toAbsolutePath();
-                    String ext = FileNameUtils.getExtension(filename);
-                    String baseName = FileNameUtils.getBaseName(filename);
+                    String ext = FilenameUtils.getExtension(filename.toString());
+                    String baseName = FilenameUtils.getBaseName(filename.toString());
                     if (baseName.startsWith("."))
                         return;
 
