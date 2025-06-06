@@ -8,6 +8,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import de.tomalbrc.bil.json.SimpleCodecDeserializer;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.BehaviourList;
@@ -153,23 +154,6 @@ public class Json {
             snakeCase.append(Character.toLowerCase(c));
         }
         return snakeCase.toString();
-    }
-
-    public static class SimpleCodecDeserializer<T> implements JsonDeserializer<T> {
-
-        private final Codec<T> codec;
-
-        public SimpleCodecDeserializer(Codec<T> codec) {
-            this.codec = codec;
-        }
-
-        @Override
-        public T deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            return codec.parse(JsonOps.INSTANCE, json)
-                    .getOrThrow(error ->
-                            new JsonParseException("Failed to deserialize using Codec: " + error)
-                    );
-        }
     }
 
     public static class BlockStateMappedPropertyDeserializer<T> implements JsonDeserializer<BlockStateMappedProperty<T>> {
