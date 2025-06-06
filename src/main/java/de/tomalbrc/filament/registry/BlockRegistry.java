@@ -36,7 +36,7 @@ public class BlockRegistry {
         register(Json.GSON.fromJson(new InputStreamReader(inputStream, StandardCharsets.UTF_8), BlockData.class));
     }
 
-    public static void register(BlockData data) throws IOException {
+    public static void register(BlockData data) {
         if (BuiltInRegistries.BLOCK.containsKey(data.id())) return;
 
         BlockProperties properties = data.properties();

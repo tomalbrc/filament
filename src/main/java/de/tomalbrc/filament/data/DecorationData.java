@@ -118,6 +118,5 @@ public record DecorationData(
     }
 
     public record BlockConfig(Vector3f origin,
-                       Vector3f size,
-                       BlockState block) { }
+                       Vector3f size) { }
 }

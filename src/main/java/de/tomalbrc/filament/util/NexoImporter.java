@@ -98,8 +98,14 @@ public class NexoImporter {
                 walk.forEach(filepath -> {
                     try (var stream = new FileInputStream(filepath.toFile())) {
                         String relativePath = packPath.relativize(filepath).toString().replace("\\", "/");
+
+                        // oraxen or older packs
+                        if (!relativePath.startsWith("assets/")) {
+                            relativePath = "assets/minecraft/" + relativePath;
+                        }
+
                         String dir = getTextureParent(relativePath);
-                        if (dir != null) {
+                        if (dir != null && relativePath.endsWith(".png")) {
                             String ns = getNamespace(relativePath);
                             if (ns != null) {
                                 texturePaths.add(ResourceLocation.fromNamespaceAndPath(ns, dir));
@@ -108,7 +114,7 @@ public class NexoImporter {
 
                         resourcePackBuilder.addData(relativePath, stream.readAllBytes());
                     } catch (Throwable ignored) {
-                        //ignored.printStackTrace();
+                        ignored.printStackTrace();
                     }
                 });
             } catch (Throwable e) {
@@ -201,17 +207,14 @@ public class NexoImporter {
 
                 BlockData blockData = new BlockData(
                         id,
-                        BuiltInRegistries.ITEM.getValue(ResourceLocation.parse(material.toLowerCase())),
+                        BuiltInRegistries.ITEM.get(ResourceLocation.parse(material.toLowerCase())),
                         Map.of("en_us", name),
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
                         new BlockResource(Map.of("default", new PolymerBlockModel(ResourceLocation.parse(model), 0, 0, false, 0))),
+                        null,
                         BlockStateMappedProperty.of(BlockModelType.FULL_BLOCK),
                         props,
-                        false,
+                        null,
+                        null,
                         null,
                         null,
                         null
@@ -241,7 +244,7 @@ public class NexoImporter {
                     props.placement = new DecorationProperties.Placement(
                             getValue("wall", placing, Boolean.class) == Boolean.TRUE,
                             getValue("floor", placing, Boolean.class) == Boolean.TRUE,
-                            getValue("root", placing, Boolean.class) == Boolean.TRUE);
+                            getValue("roof", placing, Boolean.class) == Boolean.TRUE);
                 }
 
                 var drop = getMap("drop", furniture);
@@ -325,19 +328,17 @@ public class NexoImporter {
                 DecorationData decorationData = new DecorationData(
                         id,
                         null,
+                        ItemResource.of(Map.of("default", ResourceLocation.parse(model)), null, null),
                         null,
-                        new ItemResource(Map.of("default", ResourceLocation.parse(model)), null, null),
                         null,
+                        blocks.isEmpty() ? null : blocks,
+                        blocks.isEmpty() ? new Vector2f(1, 1) : null,
+                        props,
                         behaviourConfigMap,
                         builder.build(),
                         null,
                         null,
-                        null,
-                        props,
-                        blocks.isEmpty() ? null : blocks,
-                        null,
-                        blocks.isEmpty() ? new Vector2f(1, 1) : null,
-                        frame
+                        null
                 );
 
                 DecorationRegistry.register(decorationData);
@@ -354,8 +355,7 @@ public class NexoImporter {
                         id,
                         null,
                         Map.of("en_us", name),
-                        new ItemResource(Map.of("default", ResourceLocation.parse(model)), null, null),
-                        null,
+                        ItemResource.of(Map.of("default", ResourceLocation.parse(model)), null, null),
                         null,
                         props,
                         null,
