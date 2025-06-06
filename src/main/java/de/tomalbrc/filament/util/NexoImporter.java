@@ -297,7 +297,7 @@ public class NexoImporter {
 
                 var barrier = getValue("barrier", furniture, Boolean.class);
                 List<DecorationData.BlockConfig> blocks = new ObjectArrayList<>();
-                if (barrier != null) {
+                if (barrier != null && barrier) {
                     blocks.add(new DecorationData.BlockConfig(new Vector3f(), new Vector3f(1)));
                 }
 
