@@ -98,6 +98,9 @@ public class NexoImporter {
             Path packPath = path.resolve("pack");
             try (var walk = Files.walk(packPath)) {
                 walk.forEach(filepath -> {
+                    if (filepath.toFile().isDirectory())
+                        return;
+
                     try (var stream = new FileInputStream(filepath.toFile())) {
                         String relativePath = packPath.relativize(filepath).toString().replace("\\", "/");
 
