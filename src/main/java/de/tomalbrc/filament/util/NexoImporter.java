@@ -34,6 +34,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.material.PushReaction;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
@@ -254,6 +255,7 @@ public class NexoImporter {
                 props.solid = false;
                 props.transparent = true;
                 props.allowsSpawning = false;
+                props.pushReaction = PushReaction.BLOCK;
                 var rotObj = getValue("rotatable", furniture, Boolean.class);
                 props.rotate = rotObj == Boolean.TRUE || rotObj == null;
 
