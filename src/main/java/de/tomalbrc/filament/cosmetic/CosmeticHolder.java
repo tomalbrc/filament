@@ -39,6 +39,7 @@ public class CosmeticHolder extends ElementHolder {
         this.entity = entity;
 
         this.displayElement = new ItemDisplayElement(itemStack.copy());
+        this.displayElement.setInvisible(true);
 
         Cosmetic.Config cosmeticData = CosmeticUtil.getCosmeticData(itemStack);
         if (cosmeticData != null) {
