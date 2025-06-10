@@ -17,7 +17,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -183,7 +182,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
                     }
                 }
 
-                if (decorationData.isSimple()) {
+                if (decorationData.isSimple() && blockState.hasProperty(SimpleDecorationBlock.ROTATION)) {
                     blockState = blockState.setValue(SimpleDecorationBlock.ROTATION, (rotation + 4) % 8);
                 }
 
@@ -192,10 +191,10 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
                 if (!decorationData.isSimple() && level.getBlockEntity(blockPos2) instanceof DecorationBlockEntity decorationBlockEntity) {
                     decorationBlockEntity.setMain(new BlockPos(blockPos2).subtract(blockPos));
                     decorationBlockEntity.setItem(itemStack.copyWithCount(1));
-                    decorationBlockEntity.setRotation(rotation);
                     decorationBlockEntity.setDirection(direction);
+                    decorationBlockEntity.setRotation(rotation);
                     decorationBlockEntity.setupBehaviour(decorationData);
-                    decorationBlockEntity.attach((ServerLevel) level);
+                    decorationBlockEntity.attach(level.getChunkAt(blockPos));
                 }
             });
         } else {
@@ -212,7 +211,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
                 blockState = blockState.setValue(DecorationBlock.LIGHT_LEVEL, decorationData.properties().lightEmission.getValue(blockState));
             }
 
-            if (decorationData.isSimple()) {
+            if (decorationData.isSimple() && blockState.hasProperty(SimpleDecorationBlock.ROTATION)) {
                 blockState = blockState.setValue(SimpleDecorationBlock.ROTATION, (rotation + 4) % 8);
             }
 
@@ -220,10 +219,10 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
             if (!decorationData.isSimple() && level.getBlockEntity(blockPos) instanceof DecorationBlockEntity decorationBlockEntity) {
                 decorationBlockEntity.setMain(BlockPos.ZERO);
                 decorationBlockEntity.setItem(itemStack.copyWithCount(1));
-                decorationBlockEntity.setRotation(rotation);
                 decorationBlockEntity.setDirection(direction);
+                decorationBlockEntity.setRotation(rotation);
                 decorationBlockEntity.setupBehaviour(decorationData);
-                decorationBlockEntity.attach((ServerLevel) level);
+                decorationBlockEntity.attach(level.getChunkAt(blockPos));
             }
         }
     }

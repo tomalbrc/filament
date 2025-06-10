@@ -1,13 +1,15 @@
 package de.tomalbrc.filament.decoration.block;
 
 import de.tomalbrc.filament.data.DecorationData;
-import de.tomalbrc.filament.decoration.holder.SimpleDecorationHolder;
+import de.tomalbrc.filament.decoration.holder.DecorationHolder;
 import de.tomalbrc.filament.util.BlockUtil;
 import de.tomalbrc.filament.util.DecorationUtil;
+import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -39,8 +41,10 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
     }
 
     @Nullable
-    public ElementHolder createElementHolder(ServerLevel world, BlockPos pos, BlockState initialBlockState) {
-        return new SimpleDecorationHolder();
+    public ElementHolder createElementHolder(ServerLevel world, BlockPos blockPos, BlockState initialBlockState) {
+        var holder = new DecorationHolder(() -> BuiltInRegistries.ITEM.getValue(this.decorationId).getDefaultInstance());
+        DecorationUtil.setupElements(holder, this.getDecorationData(), Direction.UP, Util.SEGMENTED_ANGLE8.toDegrees(initialBlockState.getValue(SimpleDecorationBlock.ROTATION)), BuiltInRegistries.ITEM.getValue(decorationId).getDefaultInstance(), null);
+        return holder;
     }
 
     @Override

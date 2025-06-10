@@ -139,7 +139,7 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     public float getVisualRotationYInDegrees() {
         Direction direction = this.getDirection();
         int i = direction.getAxis().isVertical() ? 90 * direction.getAxisDirection().getStep() : 0;
-        return (float) Mth.wrapDegrees(180 + direction.get2DDataValue() * 90 + rotation * 45 + i);
+        return (float) Mth.wrapDegrees(180 + direction.get2DDataValue() * 90 + this.rotation * 45 + i);
     }
 
     public void setRotation(int rotation) {

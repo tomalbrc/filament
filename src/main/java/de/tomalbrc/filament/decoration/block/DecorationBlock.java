@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -39,7 +40,7 @@ import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.function.BiConsumer;
 
-public abstract class DecorationBlock extends Block implements PolymerBlock, BlockWithElementHolder, SimpleWaterloggedBlock, VirtualDestroyStage.Marker, FireBlockHooks {
+public abstract class DecorationBlock extends Block implements PolymerBlock, BlockWithElementHolder, SimpleWaterloggedBlock, VirtualDestroyStage.Marker {
     final protected ResourceLocation decorationId;
 
     public static final IntegerProperty LIGHT_LEVEL = BlockStateProperties.LEVEL;
@@ -183,8 +184,18 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Blo
     }
 
     @Override
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation, boolean movedByPiston) {
+        super.neighborChanged(state, level, pos, neighborBlock, orientation, movedByPiston);
+    }
+
+    @Override
     @NotNull
     protected BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
+        BlockEntity blockEntity = levelReader.getBlockEntity(blockPos);
+        if (blockEntity instanceof DecorationBlockEntity decorationBlockEntity) {
+            blockState = decorationBlockEntity.updateShape(blockState, levelReader, scheduledTickAccess, blockPos, direction, blockPos2, blockState2, randomSource);
+        }
+
         if (blockState.hasProperty(WATERLOGGED) && blockState.getValue(WATERLOGGED)) {
             scheduledTickAccess.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelReader));
         }
@@ -200,10 +211,5 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Blo
         var res = super.getStateForPlacement(blockPlaceContext);
         assert res != null;
         return res.hasProperty(WATERLOGGED) ? res.setValue(WATERLOGGED, bl) : res;
-    }
-
-    @Override
-    public FlammableBlockRegistry.Entry fabric_getVanillaEntry(BlockState blockState) {
-        return new FlammableBlockRegistry.Entry(0, 0);
     }
 }

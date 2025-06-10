@@ -10,13 +10,13 @@ import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.holder.DecorationHolder;
+import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
 import de.tomalbrc.filament.decoration.util.BlockEntityWithElementHolder;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.util.BlockUtil;
 import de.tomalbrc.filament.util.DecorationUtil;
 import de.tomalbrc.filament.util.FilamentConfig;
 import de.tomalbrc.filament.util.Util;
-import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,12 +24,15 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec3;
@@ -41,7 +44,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     private final BehaviourMap behaviours = new BehaviourMap();
 
     @Nullable
-    private ElementHolder decorationHolder;
+    private FilamentDecorationHolder decorationHolder;
 
     public DecorationBlockEntity(BlockPos pos, BlockState state) {
         super(pos, state);
@@ -54,17 +57,22 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
     @Override
     protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        var rot = rotation;
+        var fresh = decorationHolder == null;
+
         super.loadAdditional(compoundTag, provider);
 
         if (this.isMain()) this.loadMain(compoundTag, provider);
+
+        if (rot != rotation && this.decorationHolder != null && this.getDecorationData().countBlocks() == 1)
+            this.decorationHolder.setYaw(rotation * 45);
+        else if (!fresh) rotation = rot;
     }
 
     @Override
     public void setLevel(Level level) {
         super.setLevel(level);
         if (isMain() && level != null && this.decorationHolder == null) {
-            if (this.behaviours.isEmpty() && !this.getDecorationData().behaviour().isEmpty())
-                this.initBehaviours(this.getDecorationData().behaviour());
             this.getOrCreateHolder();
         }
     }
@@ -84,6 +92,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         }
     }
 
+
     @Override
     protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
         super.saveAdditional(compoundTag, provider);
@@ -95,57 +104,48 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     }
 
     @Override
-    public ElementHolder getOrCreateHolder() {
+    public FilamentDecorationHolder getOrCreateHolder() {
         if (this.decorationHolder != null)
             return this.decorationHolder;
 
-        ElementHolder altHolder = null;
+        FilamentDecorationHolder holder = null;
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : this.behaviours) {
             if (entry.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
-                altHolder = decorationBehaviour.createHolder(this);
-                if (altHolder != null) {
+                holder = decorationBehaviour.createHolder(this);
+                if (holder != null) {
                     break;
                 }
             }
         }
 
-        if (altHolder == null)
-            altHolder = new DecorationHolder(this);
+        if (holder == null) {
+            holder = new DecorationHolder(this::getItem);
+            DecorationUtil.setupElements(holder, this.getDecorationData(), this.direction, this.getVisualRotationYInDegrees(), this.visualItemStack(), (this::interact));
+        }
 
-        this.decorationHolder = altHolder;
-
-        return this.decorationHolder;
-    }
-
-    @Override
-    @Nullable
-    public ElementHolder getDecorationHolder() {
-        return this.decorationHolder;
-    }
-
-    public void setDecorationHolder(@Nullable ElementHolder holder) {
         this.decorationHolder = holder;
+
+        return this.decorationHolder;
+    }
+
+    public void updateModel() {
+        this.getOrCreateHolder().updateVisualItem(this.visualItemStack());
     }
 
     @Override
     public void attach(LevelChunk chunk) {
         if (this.isMain() && this.itemStack != null) {
-            ElementHolder elementHolder = this.getOrCreateHolder();
-            if (elementHolder.getAttachment() == null) {
-                new BlockBoundAttachment(elementHolder, chunk, this.getBlockState(), this.getBlockPos(), this.getBlockPos().getCenter(), !(this.getDecorationHolder() instanceof DecorationHolder));
+            FilamentDecorationHolder holder = this.getOrCreateHolder();
+            if (holder.getAttachment() == null) {
+                var ignore = new BlockBoundAttachment(holder.asPolymerHolder(), chunk, this.getBlockState(), this.getBlockPos(), this.getBlockPos().getCenter(), holder.isAnimated());
+            }
+
+            for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviourEntry : this.behaviours) {
+                if (behaviourEntry.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
+                    decorationBehaviour.onHolderAttach(this, this.decorationHolder);
+                }
             }
         }
-
-        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviourEntry : this.behaviours) {
-            if (behaviourEntry.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
-                decorationBehaviour.onElementAttach(this, this.decorationHolder);
-            }
-        }
-    }
-
-    @Override
-    public void attach(ServerLevel level) {
-        this.attach((LevelChunk)level.getChunk(this.getBlockPos()));
     }
 
     public void setupBehaviour(DecorationData decorationData) {
@@ -197,9 +197,18 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     }
 
     public ItemStack visualItemStack() {
+        var adjusted = DecorationUtil.placementAdjustedItem(this.itemStack, this.getDecorationData().itemResource(), this.direction != Direction.DOWN && this.direction != Direction.UP, this.direction == Direction.DOWN);
+        for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : this.behaviours) {
+            if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
+                ItemStack modifiedStack = decorationBehaviour.visualItemStack(this, adjusted);
+                if (modifiedStack != null) {
+                    return modifiedStack;
+                }
+            }
+        }
+
         return DecorationUtil.placementAdjustedItem(this.itemStack, this.getDecorationData().itemResource(), this.direction != Direction.DOWN && this.direction != Direction.UP, this.direction == Direction.DOWN);
     }
-
 
     @Override
     protected void destroyBlocks(ItemStack particleItem) {
@@ -211,7 +220,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
                     if (this.getLevel() != null && DecorationRegistry.isDecoration(this.getLevel().getBlockState(blockPos))) {
                         if (data.properties().showBreakParticles)
                             DecorationUtil.showBreakParticle((ServerLevel) this.level, data.properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
-                        this.getLevel().removeBlock(blockPos, true);
+                        this.getLevel().destroyBlock(blockPos, false);
                     }
                 });
             } else {
@@ -263,12 +272,31 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         this.destroyBlocks(visualStack);
     }
 
-    private void removeHolder(ElementHolder holder) {
+    private void removeHolder(FilamentDecorationHolder holder) {
         if (holder != null && holder.getAttachment() != null)
             holder.getAttachment().destroy();
     }
 
     public DecorationData getDecorationData() {
-        return ((DecorationBlock)this.getBlockState().getBlock()).getDecorationData();
+        return ((DecorationBlock) this.getBlockState().getBlock()).getDecorationData();
+    }
+
+    public BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
+        for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : this.behaviours) {
+            if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
+                decorationBehaviour.updateShape(this, blockState, levelReader, scheduledTickAccess, blockPos, direction, blockPos2, blockState2, randomSource);
+            }
+        }
+
+        return blockState;
+    }
+
+    @Override
+    public void setRotation(int rotation) {
+        if (this.rotation != rotation) {
+            this.rotation = rotation;
+            if (this.decorationHolder != null) this.decorationHolder.setYaw(rotation * 45);
+            this.setChanged();
+        }
     }
 }

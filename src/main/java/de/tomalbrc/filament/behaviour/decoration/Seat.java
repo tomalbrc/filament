@@ -2,7 +2,6 @@ package de.tomalbrc.filament.behaviour.decoration;
 
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import de.tomalbrc.filament.decoration.holder.DecorationHolder;
 import de.tomalbrc.filament.decoration.util.SeatEntity;
 import de.tomalbrc.filament.registry.EntityRegistry;
 import de.tomalbrc.filament.util.FilamentConfig;
@@ -37,7 +36,7 @@ public class Seat implements DecorationBehaviour<Seat.SeatConfig> {
 
     @Override
     public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
-        if (player.getVehicle() == null && !player.isSecondaryUseActive() && decorationBlockEntity.getDecorationHolder() instanceof DecorationHolder) {
+        if (player.getVehicle() == null && !player.isSecondaryUseActive() && decorationBlockEntity.getOrCreateHolder() != null) {
             SeatConfigData seat = this.getClosestSeat(decorationBlockEntity, location);
 
             if (seat != null && !this.hasSeatedPlayer(decorationBlockEntity, seat)) {
@@ -53,14 +52,14 @@ public class Seat implements DecorationBehaviour<Seat.SeatConfig> {
     public void seatPlayer(DecorationBlockEntity decorationBlockEntity, SeatConfigData seat, ServerPlayer player) {
         SeatEntity seatEntity = EntityRegistry.SEAT_ENTITY.create(player.serverLevel(), EntitySpawnReason.TRIGGERED);
         assert seatEntity != null;
-        seatEntity.setPos(this.seatTranslation(decorationBlockEntity, seat).add(decorationBlockEntity.getDecorationHolder().getPos()));
+        seatEntity.setPos(this.seatTranslation(decorationBlockEntity, seat).add(decorationBlockEntity.getOrCreateHolder().getPos()));
         player.level().addFreshEntity(seatEntity);
         player.startRiding(seatEntity);
         seatEntity.setYRot((decorationBlockEntity.getVisualRotationYInDegrees() - seat.direction + (FilamentConfig.getInstance().alternativeBlockPlacement ? 180 : 0)));
     }
 
     public boolean hasSeatedPlayer(DecorationBlockEntity decorationBlockEntity, SeatConfigData seat) {
-        return !Objects.requireNonNull(decorationBlockEntity.getLevel()).getEntitiesOfClass(SeatEntity.class, AABB.ofSize(seatTranslation(decorationBlockEntity, seat).add(decorationBlockEntity.getDecorationHolder().getPos()), 0.2, 0.2, 0.2), x -> true).isEmpty();
+        return !Objects.requireNonNull(decorationBlockEntity.getLevel()).getEntitiesOfClass(SeatEntity.class, AABB.ofSize(seatTranslation(decorationBlockEntity, seat).add(decorationBlockEntity.getOrCreateHolder().getPos()), 0.2, 0.2, 0.2), x -> true).isEmpty();
     }
 
     public SeatConfigData getClosestSeat(DecorationBlockEntity decorationBlockEntity, Vec3 location) {
@@ -91,7 +90,7 @@ public class Seat implements DecorationBehaviour<Seat.SeatConfig> {
     }
 
     public SeatEntity getSeatEntity(DecorationBlockEntity decorationBlockEntity, SeatConfigData seat) {
-        List<SeatEntity> entities = Objects.requireNonNull(decorationBlockEntity.getLevel()).getEntitiesOfClass(SeatEntity.class, AABB.ofSize(seatTranslation(decorationBlockEntity, seat).add(decorationBlockEntity.getDecorationHolder().getPos()), 0.2, 0.2, 0.2), x -> true);
+        List<SeatEntity> entities = Objects.requireNonNull(decorationBlockEntity.getLevel()).getEntitiesOfClass(SeatEntity.class, AABB.ofSize(seatTranslation(decorationBlockEntity, seat).add(decorationBlockEntity.getOrCreateHolder().getPos()), 0.2, 0.2, 0.2), x -> true);
         if (!entities.isEmpty())
             return entities.getFirst();
 

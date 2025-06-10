@@ -7,7 +7,7 @@ import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.decoration.DecorationItem;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import de.tomalbrc.filament.decoration.holder.DecorationHolder;
+import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.elements.BlockDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
@@ -62,7 +62,7 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
 
     @Override
     public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
-        if (!player.isSecondaryUseActive() && decorationBlockEntity.getDecorationHolder() instanceof DecorationHolder) {
+        if (!player.isSecondaryUseActive() && decorationBlockEntity.getOrCreateHolder() != null) {
             Showcase.ShowcaseMeta showcase = getClosestShowcase(decorationBlockEntity, location);
             ItemStack itemStack = player.getItemInHand(hand);
             ItemStack showcaseStack = this.getShowcaseItemStack(showcase);
@@ -99,7 +99,7 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
     public void read(CompoundTag compoundTag, HolderLookup.Provider provider, DecorationBlockEntity blockEntity) {
         if (compoundTag.contains(SHOWCASE_KEY) && blockEntity.getOrCreateHolder() != null) {
             CompoundTag showcaseTag = compoundTag.getCompound(SHOWCASE_KEY).orElseThrow();
-            DecorationHolder holder = (DecorationHolder) blockEntity.getDecorationHolder();
+            FilamentDecorationHolder holder = blockEntity.getOrCreateHolder();
             if (holder == null)
                 return;
 
@@ -122,7 +122,7 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
 
     @Override
     public void write(CompoundTag compoundTag, HolderLookup.Provider provider, DecorationBlockEntity blockEntity) {
-        if (blockEntity.getDecorationHolder() != null) {
+        if (blockEntity.getOrCreateHolder() != null) {
             CompoundTag showcaseTag = new CompoundTag();
 
             for (int i = 0; i < config.size(); i++) {
@@ -137,7 +137,7 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
 
     @Override
     public void destroy(DecorationBlockEntity decorationBlockEntity, boolean dropItem) {
-        if (decorationBlockEntity.getDecorationHolder() instanceof DecorationHolder) {
+        if (decorationBlockEntity.getOrCreateHolder() != null) {
             config.forEach(showcase -> {
                 ItemStack itemStack = getShowcaseItemStack(showcase);
                 if (itemStack != null && !itemStack.isEmpty()) {
@@ -173,8 +173,6 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
     }
 
     public void setShowcaseItemStack(DecorationBlockEntity decorationBlockEntity, Showcase.ShowcaseMeta showcase, ItemStack itemStack) {
-        assert decorationBlockEntity.getDecorationHolder() != null;
-
         boolean isBlockItem = itemStack.getItem() instanceof BlockItem blockItem && !(blockItem.getBlock() instanceof DecorationBlock);
 
         DisplayElement element = this.showcases.get(showcase);
@@ -184,12 +182,12 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
 
         if (element == null || dynNeedsUpdate) {
             if (element != null) { // update dynamic display, remove old
-                decorationBlockEntity.getDecorationHolder().removeElement(element);
+                decorationBlockEntity.getOrCreateHolder().removeElement(element);
                 this.showcases.remove(showcase);
             }
 
             newElement = this.createShowcase(decorationBlockEntity, showcase, itemStack);
-            decorationBlockEntity.getDecorationHolder().addElement(newElement);
+            decorationBlockEntity.getOrCreateHolder().addElement(newElement);
         } else {
             if (element instanceof BlockDisplayElement blockDisplayElement && itemStack.getItem() instanceof BlockItem blockItem) {
                 blockDisplayElement.setBlockState(blockItem.getBlock().defaultBlockState());
@@ -198,7 +196,7 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
             }
         }
 
-        decorationBlockEntity.getDecorationHolder().tick();
+        decorationBlockEntity.getOrCreateHolder().tick();
     }
 
     private BlockDisplayElement element(BlockItem blockItem) {
@@ -208,6 +206,7 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
     }
     private ItemDisplayElement element(ItemStack itemStack) {
         ItemDisplayElement displayElement = new ItemDisplayElement();
+        displayElement.setInvisible(true);
         displayElement.setItem(itemStack.copy());
         return displayElement;
     }

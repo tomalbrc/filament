@@ -2,6 +2,7 @@ package de.tomalbrc.filament.decoration.block;
 
 import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.behaviour.BehaviourType;
+import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -34,7 +35,7 @@ public class ComplexDecorationBlock extends DecorationBlock implements EntityBlo
         if (blockEntity instanceof DecorationBlockEntity decorationBlockEntity) {
             stack = decorationBlockEntity.getItem();
             for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : decorationBlockEntity.getBehaviours()) {
-                if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.DecorationBehaviour<?> blockBehaviour) {
+                if (behaviour.getValue() instanceof DecorationBehaviour<?> blockBehaviour) {
                     stack = blockBehaviour.getCloneItemStack(stack, levelReader, blockPos, blockState);
                 }
             }

@@ -28,7 +28,8 @@ public abstract class ServerGamePacketListenerImplMixin implements VirtualDestro
     private void filament$handleEntityPick(ServerboundPickItemFromEntityPacket serverboundPickItemFromEntityPacket, CallbackInfo ci) {
         var v = DecorationUtil.VIRTUAL_ENTITY_PICK_MAP.get(serverboundPickItemFromEntityPacket.id());
         if (v != null) {
-            this.tryPickItem(v.get());
+            var pickResult = v.get();
+            this.tryPickItem(pickResult.copy());
             ci.cancel();
         }
     }

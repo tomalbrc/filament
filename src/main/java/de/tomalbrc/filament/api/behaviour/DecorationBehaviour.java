@@ -1,15 +1,18 @@
 package de.tomalbrc.filament.api.behaviour;
 
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import eu.pb4.polymer.virtualentity.api.ElementHolder;
+import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
@@ -18,11 +21,11 @@ public interface DecorationBehaviour<T> extends Behaviour<T> {
     default void init(DecorationBlockEntity blockEntity) {
     }
 
-    default ElementHolder createHolder(DecorationBlockEntity blockEntity) {
+    default FilamentDecorationHolder createHolder(DecorationBlockEntity blockEntity) {
         return null;
     }
 
-    default void onElementAttach(DecorationBlockEntity blockEntity, ElementHolder holder) {
+    default void onHolderAttach(DecorationBlockEntity blockEntity, FilamentDecorationHolder holder) {
     }
 
     default InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
@@ -41,7 +44,8 @@ public interface DecorationBehaviour<T> extends Behaviour<T> {
     default void modifyDrop(DecorationBlockEntity decorationBlockEntity, ItemStack itemStack) {
     }
 
-    default ItemStack getCloneItemStack(ItemStack stack, LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
-        return stack;
+    // Allows to change the visual item stack
+    default ItemStack visualItemStack(DecorationBlockEntity decorationBlockEntity, ItemStack adjusted) {
+        return null;
     }
 }

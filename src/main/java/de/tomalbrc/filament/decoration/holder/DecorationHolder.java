@@ -1,31 +1,44 @@
 package de.tomalbrc.filament.decoration.holder;
 
-import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.decoration.util.ItemFrameElement;
 import de.tomalbrc.filament.util.DecorationUtil;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
+import eu.pb4.polymer.virtualentity.api.attachment.BlockAwareAttachment;
+import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
 import eu.pb4.polymer.virtualentity.api.attachment.HolderAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
+import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.item.ItemStack;
 
-public class DecorationHolder extends ElementHolder {
-    private final DecorationBlockEntity parent;
+import java.util.function.Supplier;
 
-    public DecorationHolder(DecorationBlockEntity blockEntity) {
+public class DecorationHolder extends ElementHolder implements FilamentDecorationHolder {
+    private final Supplier<ItemStack> pickResult;
+
+    public DecorationHolder(Supplier<ItemStack> pickResult) {
         super();
-        this.parent = blockEntity;
-        DecorationUtil.setup(this, blockEntity);
+        this.pickResult = pickResult;
+    }
+
+    @Override
+    public void updateVisualItem(ItemStack newItem) {
+        for (VirtualElement element : this.getElements()) {
+            if (element instanceof ItemDisplayElement itemDisplayElement) {
+                itemDisplayElement.setItem(newItem);
+            }
+        }
+        this.tick();
     }
 
     @Override
     public <T extends VirtualElement> T addElement(T element) {
         T res = super.addElement(element);
         if (element instanceof InteractionElement interactionElement) {
-            DecorationUtil.VIRTUAL_ENTITY_PICK_MAP.put(interactionElement.getEntityId(), this.parent::getItem);
+            DecorationUtil.VIRTUAL_ENTITY_PICK_MAP.put(interactionElement.getEntityId(), this::getPickResult);
         }
         if (element instanceof ItemFrameElement itemFrameElement) {
-            DecorationUtil.VIRTUAL_ENTITY_PICK_MAP.put(itemFrameElement.getEntityId(), this.parent::getItem);
+            DecorationUtil.VIRTUAL_ENTITY_PICK_MAP.put(itemFrameElement.getEntityId(), this::getPickResult);
         }
         return res;
     }
@@ -43,11 +56,21 @@ public class DecorationHolder extends ElementHolder {
     }
 
     @Override
-    protected void notifyElementsOfPositionUpdate(Vec3 newPos, Vec3 delta) {
+    public void notifyUpdate(HolderAttachment.UpdateType updateType) {
+        super.notifyUpdate(updateType);
+
+        if (updateType == BlockBoundAttachment.BLOCK_STATE_UPDATE && getAttachment() != null) {
+            this.update(((BlockAwareAttachment)this.getAttachment()).getBlockState());
+        }
     }
 
     @Override
-    public Vec3 getPos() {
-        return this.getAttachment() != null ? this.getAttachment().getPos() : null;
+    public boolean isAnimated() {
+        return false;
+    }
+
+    @Override
+    public ItemStack getPickResult() {
+        return this.pickResult.get();
     }
 }
