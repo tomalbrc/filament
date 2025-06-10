@@ -45,6 +45,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -69,32 +70,35 @@ public class NexoImporter {
     public static void importPack(Path path) {
         String dirName = FilenameUtils.getBaseName(path.toString());
 
-        try (var stream = Files.walk(path.resolve("items"))) {
-            stream.forEach(file -> {
-                try {
-                    Path filename = file.toAbsolutePath();
-                    String ext = FilenameUtils.getExtension(filename.toString());
-                    String baseName = FilenameUtils.getBaseName(filename.toString());
-                    if (baseName.startsWith("."))
-                        return;
+        var subpath = path.resolve("items");
+        if (subpath.toFile().isDirectory()) {
+            try (var stream = Files.walk(subpath)) {
+                stream.forEach(file -> {
+                    try {
+                        Path filename = file.toAbsolutePath();
+                        String ext = FilenameUtils.getExtension(filename.toString());
+                        String baseName = FilenameUtils.getBaseName(filename.toString());
+                        if (baseName.startsWith("."))
+                            return;
 
-                    if (ext != null && (ext.equals("yml") || ext.equals("yaml"))) {
-                        InputStream inputStream = new FileInputStream(file.toFile());
-                        importSingleFile(dirName, inputStream);
+                        if (ext != null && (ext.equals("yml") || ext.equals("yaml"))) {
+                            InputStream inputStream = new FileInputStream(file.toFile());
+                            importSingleFile(dirName, inputStream);
+                        }
+                    } catch (Throwable ignored) {
+                        ignored.printStackTrace();
                     }
-                } catch (Throwable ignored) {
-                    ignored.printStackTrace();
-                }
-            });
-        } catch (Throwable e) {
-            e.printStackTrace();
+                });
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
         }
 
         PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder -> {
             Set<ResourceLocation> texturePaths = new ObjectArraySet<>();
-
             Path packPath = path.resolve("pack");
-            try (var walk = Files.walk(packPath)) {
+
+            try (var walk = Files.walk(packPath, FileVisitOption.FOLLOW_LINKS)) {
                 walk.forEach(filepath -> {
                     if (filepath.toFile().isDirectory())
                         return;
@@ -266,6 +270,8 @@ public class NexoImporter {
                 var restrictedRot = getValue("restricted_rotation", furniture, String.class);
                 if (restrictedRot != null) {
                     props.rotateSmooth = restrictedRot.equals("STRICT");
+                } else {
+                    props.rotateSmooth = true;
                 }
 
                 var placing = getMap("limited_placing", furniture);
