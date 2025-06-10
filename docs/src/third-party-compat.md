@@ -6,7 +6,7 @@ Filament supports Nexo and Oraxen packs directly as of 0.17.8 (there is also 0.1
 
 Create a folder called "nexo" in your games root directory and copy your oraxen or nexo packs into it.
 ```
-mods/
+└── mods/
 └── nexo/
     └── your-pack/
         ├── items/
