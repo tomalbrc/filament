@@ -15,6 +15,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BedBlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -58,7 +59,7 @@ public class Bed implements DecorationBehaviour<Bed.Config> {
     Pair<Boolean, Boolean> inRangeOrBlocked(ServerPlayer serverPlayer, DecorationBlockEntity decorationBlockEntity) {
         AtomicBoolean range = new AtomicBoolean(false);
         AtomicBoolean blocked = new AtomicBoolean(false);
-        DecorationUtil.forEachRotated(decorationBlockEntity.getDecorationData().blocks(), decorationBlockEntity.mainPosition(), decorationBlockEntity.getRotation(), blockPos -> {
+        DecorationUtil.forEachRotated(decorationBlockEntity.getDecorationData().blocks(), decorationBlockEntity.mainPosition(), decorationBlockEntity.getBlock().getVisualRotationYInDegrees(decorationBlockEntity.getBlockState()), blockPos -> {
             if (serverPlayer.serverLevel().getBlockState(blockPos.above()).isSuffocating(serverPlayer.level(), blockPos)) {
                 blocked.set(true);
             }
@@ -122,11 +123,9 @@ public class Bed implements DecorationBehaviour<Bed.Config> {
         return Either.right(Unit.INSTANCE);
     }
 
+    BedBlockEntity
+
     public static class Config {
         boolean skipNight = false;
-
-        int on = 15;
-        int off = 0;
-        List<Integer> cycle;
     }
 }

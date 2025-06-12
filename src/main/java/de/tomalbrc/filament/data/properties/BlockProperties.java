@@ -39,13 +39,15 @@ public class BlockProperties extends ItemProperties {
 
     public ResourceLocation lootTable = null;
 
+    public boolean virtual;
+
     public Sounds sounds;
 
     public BlockBehaviour.Properties toBlockProperties() {
         BlockBehaviour.Properties props = BlockBehaviour.Properties.of();
         props.sound(this.blockBase.defaultBlockState().getSoundType());
-        if (sounds != null) {
-            props.sound(sounds.asSoundType());
+        if (this.sounds != null) {
+            props.sound(this.sounds.asSoundType());
         }
 
         if (this.destroyTime != Float.MIN_VALUE) props.destroyTime(this.destroyTime);
@@ -66,7 +68,7 @@ public class BlockProperties extends ItemProperties {
             props.isSuffocating((blockState, blockGetter, blockPos) -> this.isSuffocating.getValue(blockState));
 
         props.jumpFactor(this.jumpFactor);
-        props.mapColor(blockBase.defaultMapColor());
+        props.mapColor(this.blockBase.defaultMapColor());
 
         if (this.solid) props.forceSolidOn();
         else props.forceSolidOff();

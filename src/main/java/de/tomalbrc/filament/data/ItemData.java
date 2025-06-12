@@ -14,9 +14,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @SuppressWarnings("unused")
-public final class ItemData extends Data {
-    private final @Nullable ItemProperties properties;
-
+public final class ItemData extends Data<ItemProperties> {
     public ItemData(
             @NotNull ResourceLocation id,
             @Nullable Item vanillaItem,
@@ -29,8 +27,7 @@ public final class ItemData extends Data {
             @Nullable ResourceLocation itemGroup,
             @Nullable Set<ResourceLocation> itemTags
     ) {
-        super(id, vanillaItem, translations, itemResource, itemModel, behaviourConfig, components, itemGroup, itemTags);
-        this.properties = properties;
+        super(id, vanillaItem, translations, itemResource, itemModel, properties, behaviourConfig, components, itemGroup, itemTags);
     }
 
     @Override

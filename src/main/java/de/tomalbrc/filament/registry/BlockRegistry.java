@@ -2,6 +2,7 @@ package de.tomalbrc.filament.registry;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
@@ -36,14 +37,15 @@ public class BlockRegistry {
     public static void register(InputStream inputStream) throws IOException {
         JsonElement element = JsonParser.parseReader(new InputStreamReader(inputStream));
         try {
-            BlockData data = Json.GSON.fromJson(element, BlockData.class);
-
+            BlockData<BlockProperties> data = Json.GSON.fromJson(element, TypeToken.getParameterized(BlockData.class, BlockProperties.class).getType());
             Util.handleComponentsCustom(element, data);
 
             register(data);
         } catch (Exception e) {
             Filament.LOGGER.error("Could not load file! Error: {}", String.valueOf(e.fillInStackTrace()));
             Filament.LOGGER.info(element.toString());
+            if (FilamentConfig.getInstance().debug)
+                e.printStackTrace();
         }
     }
 
@@ -76,6 +78,7 @@ public class BlockRegistry {
                 itemProperties.component(component.type(), component.value());
             }
         }
+
         for (TypedDataComponent component : data.components()) {
             itemProperties.component(component.type(), component.value());
         }

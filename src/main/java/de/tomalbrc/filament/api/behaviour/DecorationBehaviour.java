@@ -48,4 +48,12 @@ public interface DecorationBehaviour<T> extends Behaviour<T> {
     default ItemStack visualItemStack(DecorationBlockEntity decorationBlockEntity, ItemStack adjusted) {
         return null;
     }
+
+    default BlockState updateShape(DecorationBlockEntity decorationBlockEntity, BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
+        return blockState;
+    }
+
+    default ItemStack getCloneItemStack(ItemStack stack, LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
+        return stack;
+    }
 }

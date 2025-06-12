@@ -4,6 +4,7 @@ import com.google.gson.JsonParseException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.data.BlockData;
+import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.FilamentBlockResourceUtils;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
@@ -165,7 +166,7 @@ public class Trapdoor implements BlockBehaviour<Trapdoor.Config>, SimpleWaterlog
     }
 
     @Override
-    public boolean modifyStateMap(Map<BlockState, BlockData.BlockStateMeta> map, BlockData data) {
+    public boolean modifyStateMap(Map<BlockState, BlockData.BlockStateMeta> map, BlockData<? extends BlockProperties> data) {
         for (Map.Entry<String, PolymerBlockModel> entry : data.blockResource().models().entrySet()) {
             PolymerBlockModel blockModel = entry.getValue();
 
@@ -223,7 +224,7 @@ public class Trapdoor implements BlockBehaviour<Trapdoor.Config>, SimpleWaterlog
     }
 
     @Override
-    public BlockState filteredBlockState(BlockState blockState) {
+    public BlockState modifyPolymerBlockState(BlockState original, BlockState blockState) {
         return blockState.setValue(BlockStateProperties.POWERED, false);
     }
 

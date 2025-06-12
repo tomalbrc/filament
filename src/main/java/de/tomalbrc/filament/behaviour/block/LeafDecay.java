@@ -15,7 +15,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -48,7 +47,7 @@ public class LeafDecay implements BlockBehaviour<LeafDecay.Config> {
     }
 
     @Override
-    public BlockState filteredBlockState(BlockState blockState) {
+    public BlockState modifyPolymerBlockState(BlockState original, BlockState blockState) {
         return blockState.setValue(BlockStateProperties.DISTANCE, 7).setValue(BlockStateProperties.PERSISTENT, false);
     }
 

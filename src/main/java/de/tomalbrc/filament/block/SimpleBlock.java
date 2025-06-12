@@ -5,6 +5,7 @@ import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.data.BlockData;
+import de.tomalbrc.filament.data.properties.BlockProperties;
 import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.impl.content.registry.FireBlockHooks;
@@ -50,7 +51,7 @@ import java.util.function.Consumer;
 public class SimpleBlock extends Block implements PolymerTexturedBlock, BehaviourHolder, SimpleWaterloggedBlock, BonemealableBlock, WeatheringCopper, Fallable, FireBlockHooks {
     protected Map<BlockState, BlockData.BlockStateMeta> stateMap;
     protected final BlockState breakEventState;
-    protected final BlockData blockData;
+    protected final BlockData<? extends BlockProperties> blockData;
 
     protected final StateDefinition<Block, BlockState> stateDefinitionEx;
 
@@ -60,12 +61,18 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
         return this.behaviours;
     }
 
-    public SimpleBlock(BlockBehaviour.Properties properties, BlockData data) {
+    public SimpleBlock(BlockBehaviour.Properties properties, BlockData<? extends BlockProperties> data) {
         super(properties);
 
         this.initBehaviours(data.behaviour());
         this.breakEventState = data.properties().blockBase.defaultBlockState();
         this.blockData = data;
+
+        for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : behaviours) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
+                blockBehaviour.modifyBlockProperties(properties);
+            }
+        }
 
         // the StateDefinition built too early, cant access BlockData from within createBlockStateDefinition
         StateDefinition.Builder<Block, BlockState> builder = new StateDefinition.Builder<>(this);
@@ -75,11 +82,21 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
         BlockState[] def = {this.stateDefinitionEx.any()};
         this.forEach(behaviour -> def[0] = behaviour.modifyDefaultState(def[0]));
         this.registerDefaultState(def[0]);
+
+        initCaches();
+    }
+
+    protected void initCaches() {
+        this.stateDefinitionEx.getPossibleStates().forEach(BlockState::initCache);
+        this.stateDefinition.getPossibleStates().forEach(BlockState::initCache);
     }
 
     public boolean hasData() {
         return this.blockData != null;
     }
+
+    @Override
+    public boolean forceLightUpdates(BlockState blockState) { return true; }
 
     @Override
     @NotNull
@@ -95,21 +112,18 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     public BlockState getPolymerBlockState(BlockState blockState, PacketContext packetContext) {
-        if (this.blockData.block() != null) {
-            return this.blockData.block();
-        }
-
+        BlockState state = blockState;
         if (this.stateMap != null) {
-            blockState = behaviourFilteredBlockState(blockState);
+            state = behaviourModifiedBlockState(blockState, state);
         }
 
-        return this.stateMap != null && this.stateMap.get(blockState) != null ? this.stateMap.get(blockState).blockState() : Blocks.BEDROCK.defaultBlockState();
+        return this.stateMap != null && this.stateMap.get(state) != null ? this.stateMap.get(state).blockState() : Blocks.BEDROCK.defaultBlockState();
     }
 
-    public BlockState behaviourFilteredBlockState(BlockState blockState) {
+    public BlockState behaviourModifiedBlockState(BlockState original, BlockState blockState) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
-                blockState = blockBehaviour.filteredBlockState(blockState);
+                blockState = blockBehaviour.modifyPolymerBlockState(original, blockState);
             }
         }
         return blockState;
@@ -195,7 +209,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {
-        BlockState def = this.defaultBlockState();
+        BlockState def = super.getStateForPlacement(blockPlaceContext);
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 def = blockBehaviour.getStateForPlacement(def, blockPlaceContext);
@@ -364,7 +378,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     @Override
     public boolean placeLiquid(LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState, FluidState fluidState) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
-            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour && blockBehaviour instanceof SimpleWaterloggedBlock waterloggedBlock) {
+            if (behaviour.getValue() instanceof SimpleWaterloggedBlock waterloggedBlock) {
                 var res = waterloggedBlock.placeLiquid(levelAccessor, blockPos, blockState, fluidState);
                 if (res) {
                     return true;
@@ -383,7 +397,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     @Override
     public boolean canPlaceLiquid(@Nullable LivingEntity livingEntity, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
-            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour && blockBehaviour instanceof SimpleWaterloggedBlock waterloggedBlock) {
+            if (behaviour.getValue() instanceof SimpleWaterloggedBlock waterloggedBlock) {
                 return waterloggedBlock.canPlaceLiquid(livingEntity, blockGetter, blockPos, blockState, fluid);
             }
         }

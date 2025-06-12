@@ -12,6 +12,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -25,16 +26,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class SimpleWaterloggable implements BlockBehaviour<SimpleWaterloggable.Config>, SimpleWaterloggedBlock {
+public class Waterloggable implements BlockBehaviour<Waterloggable.Config>, SimpleWaterloggedBlock {
     private final Config config;
 
-    public SimpleWaterloggable(Config config) {
+    public Waterloggable(Config config) {
         this.config = config;
     }
 
     @Override
     @NotNull
-    public SimpleWaterloggable.Config getConfig() {
+    public Waterloggable.Config getConfig() {
         return this.config;
     }
 
@@ -88,6 +89,20 @@ public class SimpleWaterloggable implements BlockBehaviour<SimpleWaterloggable.C
             case LAND, AIR -> Optional.of(false);
             case WATER -> Optional.of(blockState.getFluidState().is(FluidTags.WATER));
         };
+    }
+
+    @Override
+    public BlockState modifyPolymerBlockState(BlockState originalState, BlockState blockState) {
+        boolean isAir = blockState.is(Blocks.AIR);
+        boolean waterlogged = originalState.hasProperty(BlockStateProperties.WATERLOGGED) && originalState.getValue(BlockStateProperties.WATERLOGGED);
+
+        if (isAir && waterlogged) {
+            return Blocks.WATER.defaultBlockState();
+        } else if (blockState.hasProperty(BlockStateProperties.WATERLOGGED)) {
+            blockState = blockState.setValue(BlockStateProperties.WATERLOGGED, waterlogged);
+        }
+
+        return blockState;
     }
 
     public static class Config {}

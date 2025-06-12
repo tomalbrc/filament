@@ -7,8 +7,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(FlowingFluid.class)
 public abstract class FlowingFluidMixin {
-    @Shadow protected abstract void beforeDestroyingBlock(LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState);
+    @Shadow protected abstract void beforeDestroyingBlock(LevelAccessor level, BlockPos pos, BlockState state);
 
     @Inject(method = "canPassThroughWall(Lnet/minecraft/core/Direction;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z", at = @At("HEAD"), cancellable = true)
     private static void filament$customCanPassThroughWall(Direction direction, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, BlockPos blockPos2, BlockState blockState2, CallbackInfoReturnable<Boolean> cir) {
@@ -33,7 +33,7 @@ public abstract class FlowingFluidMixin {
 
     @Unique
     private boolean filament$passes(BlockState blockState) {
-        if (DecorationRegistry.isDecoration(blockState) && (!filament$isSolid((DecorationBlock) blockState.getBlock()) || filament$isWaterloggable((DecorationBlock) blockState.getBlock())))
+        if (DecorationRegistry.isDecoration(blockState) && (!filament$isSolid((DecorationBlock) blockState.getBlock()) || filament$isWaterloggable(blockState)))
             return this.filament$canFlowThrough(blockState);
         return false;
     }
@@ -50,17 +50,12 @@ public abstract class FlowingFluidMixin {
         if (filament$passes(blockState2)) cir.setReturnValue(true);
     }
 
-    @Inject(method = "spreadTo", at = @At("RETURN"))
+    @Inject(method = "spreadTo", at = @At(value = "HEAD"))
     protected void filament$spreadTo(LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState, Direction direction, FluidState fluidState, CallbackInfo ci) {
         if (DecorationRegistry.isDecoration(blockState) && !filament$isSolid((DecorationBlock) blockState.getBlock())) {
-            this.beforeDestroyingBlock(levelAccessor, blockPos, blockState);
-
             if (levelAccessor.getBlockEntity(blockPos) instanceof DecorationBlockEntity decorationBlockEntity) {
                 decorationBlockEntity.destroyStructure(true);
             }
-
-            // let it overflow with liquid
-            levelAccessor.setBlock(blockPos, fluidState.createLegacyBlock(), Block.UPDATE_ALL);
         }
     }
 
@@ -75,12 +70,8 @@ public abstract class FlowingFluidMixin {
     }
 
     @Unique
-    private static boolean filament$isWaterloggable(DecorationBlock decorationBlock) {
-        if (decorationBlock.getDecorationData() != null) {
-            return decorationBlock.getDecorationData().properties().waterloggable;
-        }
-
-        return false;
+    private static boolean filament$isWaterloggable(BlockState decorationBlock) {
+        return decorationBlock.hasProperty(BlockStateProperties.WATERLOGGED);
     }
 
     @Unique

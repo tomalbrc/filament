@@ -2,6 +2,7 @@ package de.tomalbrc.filament.api.behaviour;
 
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.data.BlockData;
+import de.tomalbrc.filament.data.properties.BlockProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -35,7 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
-@SuppressWarnings({"unused", "UnusedReturnValue", "javadoc"})
+@SuppressWarnings({"unused", "UnusedReturnValue"})
 public interface BlockBehaviour<T> extends Behaviour<T> {
     /**
      * Called after the block and item were registered
@@ -53,7 +54,7 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
      * @param blockData block data
      * @return true when the state-map was modified
      */
-    default boolean modifyStateMap(Map<BlockState, BlockData.BlockStateMeta> map, BlockData blockData) {
+    default boolean modifyStateMap(Map<BlockState, BlockData.BlockStateMeta> map, BlockData<? extends BlockProperties> blockData) {
         return false;
     }
 
@@ -64,6 +65,15 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
      */
     default BlockState modifyDefaultState(BlockState blockState) {
         return blockState;
+    }
+
+    /**
+     * Allows to modify the blocks' vanilla properties
+     * @param properties the current properties
+     * @return the modified block properties
+     */
+    default net.minecraft.world.level.block.state.BlockBehaviour.Properties modifyBlockProperties(net.minecraft.world.level.block.state.BlockBehaviour.Properties properties) {
+        return properties;
     }
 
     /**
@@ -106,15 +116,6 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
 
     /**
      * Shape update
-     * @param blockState
-     * @param levelReader
-     * @param scheduledTickAccess
-     * @param blockPos
-     * @param direction
-     * @param blockPos2
-     * @param blockState2
-     * @param randomSource
-     * @return
      */
     default BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
         return blockState;
@@ -122,12 +123,6 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
 
     /**
      *
-     * @param blockState
-     * @param level
-     * @param blockPos
-     * @param block
-     * @param orientation
-     * @param bl
      */
     default void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, Orientation orientation, boolean bl) {
 
@@ -135,19 +130,12 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
 
     /**
      *
-     * @param level
-     * @param blockPos
-     * @param blockState
-     * @param player
      */
     default void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
     }
 
     /**
      *
-     * @param blockState
-     * @param pathComputationType
-     * @return
      */
     default Optional<Boolean> isPathfindable(BlockState blockState, PathComputationType pathComputationType) {
         return Optional.empty();
@@ -155,8 +143,6 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
 
     /**
      *
-     * @param blockState
-     * @return
      */
     @Nullable
     default FluidState getFluidState(BlockState blockState) {
@@ -165,19 +151,12 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
 
     /**
      *
-     * @param blockState
-     * @param level
-     * @param blockPos
-     * @param explosion
-     * @param biConsumer
      */
     default void onExplosionHit(BlockState blockState, ServerLevel level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
     }
 
     /**
      *
-     * @param explosion
-     * @return
      */
     default boolean dropFromExplosion(Explosion explosion) {
         return true;
@@ -185,9 +164,6 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
 
     /**
      *
-     * @param blockState
-     * @param rotation
-     * @return
      */
     default BlockState rotate(BlockState blockState, Rotation rotation) {
         return null;
@@ -195,9 +171,6 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
 
     /**
      *
-     * @param blockState
-     * @param mirror
-     * @return
      */
     default BlockState mirror(BlockState blockState, Mirror mirror) {
         return null;
@@ -205,8 +178,6 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
 
     /**
      *
-     * @param blockState
-     * @return
      */
     default boolean isSignalSource(BlockState blockState) {
         return false;
@@ -214,11 +185,6 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
 
     /**
      *
-     * @param blockState
-     * @param blockGetter
-     * @param blockPos
-     * @param direction
-     * @return
      */
     default int getDirectSignal(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, Direction direction) {
         return 0;
@@ -226,11 +192,6 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
 
     /**
      *
-     * @param blockState
-     * @param blockGetter
-     * @param blockPos
-     * @param direction
-     * @return
      */
     default int getSignal(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, Direction direction) {
         return 0;
@@ -238,53 +199,30 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
 
     /**
      *
-     * @param blockState
-     * @param level
-     * @param blockPos
-     * @param blockState2
-     * @param bl
      */
     default void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
     }
 
     /**
      *
-     * @param level
-     * @param blockPos
-     * @param blockState
-     * @param livingEntity
-     * @param itemStack
      */
     default void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, LivingEntity livingEntity, ItemStack itemStack) {
     }
 
     /**
      * Called on removal to update neighbours
-     * @param blockState
-     * @param serverLevel
-     * @param blockPos
-     * @param bl
      */
-    default void affectNeighborsAfterRemoval(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, boolean bl) {
+    default void affectNeighborsAfterRemoval(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, boolean movedByPiston) {
     }
 
     /**
      *
-     * @param blockState
-     * @param serverLevel
-     * @param blockPos
-     * @param itemStack
-     * @param bl
      */
     default void spawnAfterBreak(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, boolean bl) {
     }
 
     /**
      *
-     * @param blockState
-     * @param levelReader
-     * @param blockPos
-     * @return
      */
     default boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
         return true;
@@ -292,8 +230,6 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
 
     /**
      *
-     * @param blockState
-     * @return
      */
     default boolean isRandomlyTicking(BlockState blockState) {
         return false;
@@ -301,10 +237,6 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
 
     /**
      *
-     * @param blockState
-     * @param serverLevel
-     * @param blockPos
-     * @param randomSource
      */
     default void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
     }
@@ -321,9 +253,9 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
 
     /**
      * In some cases your block behaviour may need block states that visually look the same on clients.
-     * This method allows to change block state properties before being passed on to getCustomPolymerBlockState
+     * This method allows to change block state properties before being passed on to getPolymerBlockState
      */
-    default BlockState filteredBlockState(BlockState blockState) {
+    default BlockState modifyPolymerBlockState(BlockState originalBlockState, BlockState blockState) {
         return blockState;
     }
 
@@ -373,10 +305,6 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
 
     /**
      * Called when a player "attacks" the block
-     * @param blockState
-     * @param level
-     * @param blockPos
-     * @param player
      */
     default void attack(BlockState blockState, Level level, BlockPos blockPos, Player player) {
     }
@@ -394,9 +322,6 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
 
     /**
      * Seed for blockstate at blockpos
-     * @param blockState
-     * @param blockPos
-     * @return
      */
     default Optional<Long> getSeed(BlockState blockState, BlockPos blockPos) {
         return Optional.empty();
@@ -414,29 +339,18 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
 
     /**
      * Called when a falling block lands
-     * @param level
-     * @param blockPos
-     * @param blockState
-     * @param blockState2
-     * @param fallingBlockEntity
      */
     default void onLand(Level level, BlockPos blockPos, BlockState blockState, BlockState blockState2, FallingBlockEntity fallingBlockEntity) {
     }
 
     /**
      * Callback on broken after fall
-     * @param level
-     * @param blockPos
-     * @param fallingBlockEntity
      */
     default void onBrokenAfterFall(Level level, BlockPos blockPos, FallingBlockEntity fallingBlockEntity) {
     }
 
     /**
      * Called when a block was exploded. Used for tnt behaviour for example to ignite the block
-     * @param serverLevel
-     * @param blockPos
-     * @param explosion
      */
     default void wasExploded(ServerLevel serverLevel, BlockPos blockPos, Explosion explosion) {
     }

@@ -50,6 +50,10 @@ import java.util.function.Supplier;
 public class DecorationUtil {
     public static Int2ObjectOpenHashMap<Supplier<ItemStack>> VIRTUAL_ENTITY_PICK_MAP = new Int2ObjectOpenHashMap<>();
 
+    public static float getVisualRotationYInDegrees(int rotation) {
+        return (float) Mth.wrapDegrees(180 + rotation * 45);
+    }
+
     public static void forEachRotated(List<DecorationData.BlockConfig> blockConfigs, BlockPos originBlockPos, float rotation, Consumer<BlockPos> consumer) {
         if (blockConfigs != null) {
             for (DecorationData.BlockConfig blockConfig : blockConfigs) {
@@ -59,7 +63,8 @@ public class DecorationUtil {
                     for (int y = 0; y < size.y(); y++) {
                         for (int z = 0; z < size.z(); z++) {
                             Vector3f pos = new Vector3f(x, y, z).add(origin);
-                            Vector3f offset = pos.mul(rotation % 90 != 0 ? Math.sqrt(2) : 1);
+                            var hMul = rotation % 90 != 0 ? Math.sqrt(2) : 1;
+                            Vector3f offset = pos.mul(hMul, 1, hMul);
                             offset.rotateY(Mth.DEG_TO_RAD * (rotation + (FilamentConfig.getInstance().alternativeBlockPlacement ? 0 : 180)));
 
                             BlockPos blockPos = new BlockPos(originBlockPos).offset(-Math.round(offset.x), Math.round(offset.y), Math.round(offset.z));
@@ -125,7 +130,7 @@ public class DecorationUtil {
     public static ItemDisplayElement decorationItemDisplay(@NotNull DecorationData data, Direction direction, float rotation, ItemStack itemStack) {
         ItemDisplayElement element = new ItemDisplayElement(itemStack);
         element.setInvisible(true);
-        element.setTeleportDuration(1);
+        element.setTeleportDuration(0);
 
         if (data.properties().glow) {
             element.setBrightness(Brightness.FULL_BRIGHT);
@@ -140,13 +145,7 @@ public class DecorationUtil {
 
         Matrix4f matrix4f = transform(data.properties().display, direction);
 
-        if (direction.getAxis() == Direction.Axis.Y)
-            element.setYaw(rotation - 180);
-        else {
-            var mirroredAngle = (rotation-180) % 360;
-            if (mirroredAngle < 0) mirroredAngle += 360;
-            element.setYaw(mirroredAngle);
-        }
+        element.setYaw(rotation - (direction == Direction.UP ? 0 : 180));
 
         element.setDisplayWidth(size.x * 3.f);
         element.setDisplayHeight(size.y * 3.f);
@@ -256,6 +255,9 @@ public class DecorationUtil {
     }
 
     public static ItemStack clientsideItem(ItemStack itemStack) {
+        if (itemStack == null)
+            return ItemStack.EMPTY;
+
         if (!(itemStack.getItem() instanceof PolymerItem)) {
             return itemStack.copyWithCount(1);
         } else {
@@ -289,7 +291,7 @@ public class DecorationUtil {
     }
 
     @FunctionalInterface
-    public static interface OnInteract {
+    public interface OnInteract {
         InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 pos);
     }
 }

@@ -206,7 +206,7 @@ public class Hopper implements BlockBehaviourWithEntity<Hopper.Config> {
     }
 
     @Override
-    public void affectNeighborsAfterRemoval(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, boolean bl) {
+    public void affectNeighborsAfterRemoval(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, boolean movedByPiston) {
         Containers.updateNeighboursAfterDestroy(blockState, serverLevel, blockPos);
     }
 

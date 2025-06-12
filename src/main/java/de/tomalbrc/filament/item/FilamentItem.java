@@ -9,7 +9,7 @@ import java.util.Map;
 public interface FilamentItem extends BehaviourHolder {
     FilamentItemDelegate getDelegate();
 
-    Data getData();
+    Data<?> getData();
 
     default Map<String, ResourceLocation> getModelMap() {
         var resource = this.getData().preferredResource();

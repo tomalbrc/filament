@@ -3,11 +3,14 @@ package de.tomalbrc.filament.decoration.block;
 import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
+import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,8 +20,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 public class ComplexDecorationBlock extends DecorationBlock implements EntityBlock {
-    public ComplexDecorationBlock(Properties properties, ResourceLocation decorationId) {
-        super(properties, decorationId);
+    public ComplexDecorationBlock(Properties properties, DecorationData decorationData) {
+        super(properties, decorationData);
     }
 
     @Nullable
@@ -43,5 +46,20 @@ public class ComplexDecorationBlock extends DecorationBlock implements EntityBlo
             stack = super.getCloneItemStack(levelReader, blockPos, blockState, includeData);
         }
         return stack;
+    }
+
+    @Override
+    public @NotNull BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
+        blockState = super.updateShape(blockState, levelReader, scheduledTickAccess, blockPos, direction, blockPos2, blockState2, randomSource);
+
+        if (levelReader.getBlockEntity(blockPos) instanceof DecorationBlockEntity blockEntity) {
+            for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : blockEntity.getBehaviours()) {
+                if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
+                    decorationBehaviour.updateShape(blockEntity, blockState, levelReader, scheduledTickAccess, blockPos, direction, blockPos2, blockState2, randomSource);
+                }
+            }
+        }
+
+        return blockState;
     }
 }

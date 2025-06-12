@@ -5,7 +5,6 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import de.tomalbrc.bil.json.SimpleCodecDeserializer;
@@ -85,8 +84,8 @@ public class Json {
         for (Object document : documents) {
             if (document instanceof Map) {
                 @SuppressWarnings("unchecked")
-                var d = (Map<String, Object>) document;
-                document = Json.camelToSnakeCase(d);
+                var documentMap = (Map<String, Object>) document;
+                document = Json.camelToSnakeCase(documentMap);
             }
             String jsonString = Json.GSON.toJson(document);
             InputStream stream = new ByteArrayInputStream(jsonString.getBytes(StandardCharsets.UTF_8));

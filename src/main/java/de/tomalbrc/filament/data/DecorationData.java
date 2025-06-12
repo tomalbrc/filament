@@ -4,7 +4,9 @@ import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.data.properties.DecorationProperties;
+import de.tomalbrc.filament.data.resource.BlockResource;
 import de.tomalbrc.filament.data.resource.ItemResource;
+import de.tomalbrc.filament.data.resource.ResourceProvider;
 import de.tomalbrc.filament.util.DecorationUtil;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceLocation;
@@ -23,11 +25,9 @@ import java.util.Objects;
 import java.util.Set;
 
 @SuppressWarnings("unused")
-public final class DecorationData extends Data {
+public final class DecorationData extends BlockData<DecorationProperties> {
     private final @Nullable List<BlockConfig> blocks;
     private final @Nullable Vector2f size;
-    private final @Nullable DecorationProperties properties;
-    private final @Nullable Set<ResourceLocation> blockTags;
     private final @Nullable Boolean itemFrame;
     private final @Nullable BlockState block;
 
@@ -48,13 +48,17 @@ public final class DecorationData extends Data {
             @Nullable Vector2f size,
             @Nullable Boolean itemFrame
     ) {
-        super(id, vanillaItem, translations, itemResource, itemModel, behaviourConfig, components, itemGroup, itemTags);
+        super(id, vanillaItem, translations, itemResource, itemModel, behaviourConfig, components, itemGroup, new BlockResource(Map.of()), null, properties, false, itemTags, blockTags);
         this.blocks = blocks;
         this.size = size;
-        this.properties = properties;
-        this.blockTags = blockTags;
         this.itemFrame = itemFrame;
         this.block = block;
+    }
+
+    @Override
+    public @NotNull ResourceProvider preferredResource() {
+        assert this.itemResource != null;
+        return this.itemResource;
     }
 
     @Override
@@ -63,7 +67,7 @@ public final class DecorationData extends Data {
         if (properties == null) {
             return DecorationProperties.EMPTY;
         }
-        return properties;
+        return this.properties ;
     }
 
     public boolean isContainer() {
@@ -78,31 +82,30 @@ public final class DecorationData extends Data {
         if (!this.hasBlocks())
             return 0;
 
-        int c = 0;
+        int count = 0;
         for (BlockConfig block : this.blocks) {
-            c += (int) (block.size().x() * block.size().y() * block.size().z());
+            count += (int) (block.size().x() * block.size().y() * block.size().z());
         }
-        return c;
+
+        return count;
     }
 
-    public boolean isSimple() {
+    @Override
+    public boolean requiresEntityBlock() {
         boolean singleBlock = (!this.hasBlocks() || DecorationUtil.barrierDimensions(Objects.requireNonNull(this.blocks()), 0).equals(1, 1));
-        final Boolean[] hasDecorationBehaviour = new Boolean[]{false};
-        this.behaviour().forEach((a,b) -> {
-            if (DecorationBehaviour.class.isAssignableFrom(a.type())) hasDecorationBehaviour[0] = true;
-        });
-        boolean canBeDyed = this.vanillaItem != null && (vanillaItem == Items.LEATHER_HORSE_ARMOR || vanillaItem == Items.FIREWORK_STAR);
+        boolean hasDecorationBehaviour = this.behaviour().test((a) -> DecorationBehaviour.class.isAssignableFrom(a.type()));
+        boolean canBeDyed = this.vanillaItem != null && (this.vanillaItem == Items.LEATHER_HORSE_ARMOR || this.vanillaItem == Items.FIREWORK_STAR);
         boolean groundOnly = !this.properties().placement.wall() && !this.properties().placement.ceiling();
 
-        return groundOnly && !canBeDyed && !hasDecorationBehaviour[0] && (singleBlock || this.size != null);
+        return !groundOnly || canBeDyed || hasDecorationBehaviour || (!singleBlock && this.size == null);
     }
 
     public @Nullable List<BlockConfig> blocks() {
-        return blocks;
+        return this.blocks;
     }
 
     public @Nullable Vector2f size() {
-        return size;
+        return this.size;
     }
 
     public @Nullable Boolean itemFrame() {
@@ -113,6 +116,10 @@ public final class DecorationData extends Data {
         return this.block != null ? this.block : Blocks.BARRIER.defaultBlockState();
     }
 
+    @Override
+    public Map<BlockState, BlockStateMeta> createStandardStateMap() {
+        return null;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -120,11 +127,6 @@ public final class DecorationData extends Data {
         if (obj == null || obj.getClass() != this.getClass()) return false;
         var that = (DecorationData) obj;
         return Objects.equals(this.id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 
     @Override
@@ -139,18 +141,6 @@ public final class DecorationData extends Data {
                 "behaviourConfig=" + behaviour + ", " +
                 "components=" + components + ", " +
                 "itemGroup=" + group + ']';
-    }
-
-    public boolean isLightEnabled() {
-        return properties().mayBeLightSource() || behaviour().has(Behaviours.LAMP);
-    }
-
-    public boolean hasLightBehaviours() {
-        return behaviour().has(Behaviours.LAMP);
-    }
-
-    public @Nullable Set<ResourceLocation> blockTags() {
-        return this.blockTags;
     }
 
     public record BlockConfig(Vector3f origin,

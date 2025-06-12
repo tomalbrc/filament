@@ -84,7 +84,7 @@ public class Util {
         }
     }
 
-    public static void handleComponentsCustom(JsonElement element, Data data) {
+    public static void handleComponentsCustom(JsonElement element, Data<?> data) {
         if (element.getAsJsonObject().has("components")) {
             JsonObject comp = element.getAsJsonObject().get("components").getAsJsonObject();
             if (comp.has("minecraft:jukebox_playable")) {

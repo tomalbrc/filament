@@ -4,8 +4,6 @@ import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
-import de.tomalbrc.filament.block.SimpleBlockItem;
-import de.tomalbrc.filament.data.Data;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
@@ -27,7 +25,6 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Optional;
@@ -40,11 +37,6 @@ public class FilamentItemDelegate {
 
     public FilamentItemDelegate(BehaviourHolder holder) {
         this.holder = holder;
-    }
-
-    @Nullable
-    public Data data() {
-        return holder instanceof FilamentItem filamentItem ? filamentItem.getData() : holder instanceof SimpleBlockItem blockItem ? blockItem.getData() : null;
     }
 
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack itemStack, int i) {
@@ -123,8 +115,7 @@ public class FilamentItemDelegate {
         }
     }
 
-    public void modifyPolymerItemStack(Map<String, ResourceLocation> modelMap, ItemStack original, ItemStack polymer,
-                                       TooltipFlag tooltipFlag, HolderLookup.Provider lookup, ServerPlayer player) {
+    public void modifyPolymerItemStack(Map<String, ResourceLocation> modelMap, ItemStack original, ItemStack polymer, TooltipFlag tooltipFlag, HolderLookup.Provider lookup, ServerPlayer player) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : holder.getBehaviours()) {
             if (entry.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
                 itemBehaviour.modifyPolymerItemStack(modelMap, original, polymer, tooltipFlag, lookup, player);

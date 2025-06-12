@@ -292,7 +292,7 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
     }
 
     @Override
-    public void generate(Data data) {
+    public void generate(Data<?> data) {
         PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder ->
             ItemAssetGenerator.createCrossbow(
                 resourcePackBuilder, data.id(),

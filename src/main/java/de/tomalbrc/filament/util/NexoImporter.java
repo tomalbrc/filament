@@ -6,6 +6,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.behaviour.block.Rotating;
+import de.tomalbrc.filament.behaviour.block.Waterloggable;
 import de.tomalbrc.filament.behaviour.decoration.Seat;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.DecorationData;
@@ -94,9 +96,13 @@ public class NexoImporter {
             }
         }
 
+        Path packPath = path.resolve("pack");
+        if (!packPath.toFile().isDirectory())
+            return;
+
         PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder -> {
             Set<ResourceLocation> texturePaths = new ObjectArraySet<>();
-            Path packPath = path.resolve("pack");
+
 
             try (var walk = Files.walk(packPath, FileVisitOption.FOLLOW_LINKS)) {
                 walk.forEach(filepath -> {
@@ -239,7 +245,6 @@ public class NexoImporter {
                         props,
                         false,
                         null,
-                        null,
                         null
                 );
 
@@ -248,7 +253,8 @@ public class NexoImporter {
             } else if (furniture != null) {
                 // load as decoration
                 var pack = getMap("Pack", data);
-                var model = getValue("model", pack, String.class);
+                String model = getValue("model", pack, String.class);
+                BehaviourConfigMap behaviourConfigMap = new BehaviourConfigMap();
 
                 if (model == null)
                     return;
@@ -261,18 +267,20 @@ public class NexoImporter {
                 props.allowsSpawning = false;
                 props.pushReaction = PushReaction.BLOCK;
                 var rotObj = getValue("rotatable", furniture, Boolean.class);
-                props.rotate = rotObj == Boolean.TRUE || rotObj == null;
+                if (rotObj == Boolean.TRUE || rotObj == null) {
+                    Rotating.Config config = new Rotating.Config();
+                    var restrictedRot = getValue("restricted_rotation", furniture, String.class);
+                    if (restrictedRot != null) {
+                        config.smooth = restrictedRot.equals("STRICT");
+                    } else {
+                        config.smooth = true;
+                    }
+                    behaviourConfigMap.put(Behaviours.ROTATING, config);
+                }
 
                 var lightObj = getValue("light", furniture, Integer.class);
                 if (lightObj != null)
                     props.lightEmission = BlockStateMappedProperty.of(lightObj);
-
-                var restrictedRot = getValue("restricted_rotation", furniture, String.class);
-                if (restrictedRot != null) {
-                    props.rotateSmooth = restrictedRot.equals("STRICT");
-                } else {
-                    props.rotateSmooth = true;
-                }
 
                 var placing = getMap("limited_placing", furniture);
                 if (placing != null) {
@@ -282,7 +290,10 @@ public class NexoImporter {
                             getValue("roof", placing, Boolean.class) == Boolean.TRUE);
                 }
 
-                props.waterloggable = getValue("waterloggable", furniture, Boolean.class) == Boolean.TRUE;
+                var waterloggable = getValue("waterloggable", furniture, Boolean.class) == Boolean.TRUE;
+                if (waterloggable) {
+                    behaviourConfigMap.put(Behaviours.WATERLOGGABLE, new Waterloggable.Config());
+                }
 
                 var drop = getMap("drop", furniture);
                 if (drop != null) {
@@ -327,8 +338,6 @@ public class NexoImporter {
                         }
                     }
                 }
-
-                BehaviourConfigMap behaviourConfigMap = new BehaviourConfigMap();
 
                 Seat.SeatConfig filamentSeats = new Seat.SeatConfig();
                 var seat = getMap("seat", furniture);

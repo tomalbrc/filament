@@ -4,6 +4,7 @@ import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviourWithEntity;
 import de.tomalbrc.filament.data.BlockData;
+import de.tomalbrc.filament.data.properties.BlockProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
@@ -16,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 public class SimpleBlockWithEntity extends SimpleBlock implements EntityBlock {
-    public SimpleBlockWithEntity(Properties properties, BlockData data) {
+    public SimpleBlockWithEntity(Properties properties, BlockData<BlockProperties> data) {
         super(properties, data);
     }
 

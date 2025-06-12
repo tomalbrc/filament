@@ -30,13 +30,11 @@ import java.util.Objects;
 import java.util.Set;
 
 @SuppressWarnings("unused")
-public final class BlockData extends Data {
+public class BlockData<BlockPropertyLike extends BlockProperties> extends Data<BlockPropertyLike> {
     private final @NotNull BlockResource blockResource;
     private final @Nullable BlockStateMappedProperty<BlockModelType> blockModelType;
-    private final @Nullable BlockProperties properties;
     private final @Nullable Set<ResourceLocation> blockTags;
-    private final boolean virtual;
-    private final @Nullable BlockState block;
+    @Deprecated private final boolean virtual;
 
     public BlockData(
             @NotNull ResourceLocation id,
@@ -49,19 +47,16 @@ public final class BlockData extends Data {
             @Nullable ResourceLocation itemGroup,
             @NotNull BlockResource blockResource,
             @Nullable BlockStateMappedProperty<BlockModelType> blockModelType,
-            @Nullable BlockProperties properties,
+            @Nullable BlockPropertyLike properties,
             boolean virtual,
-            @Nullable BlockState block,
             @Nullable Set<ResourceLocation> itemTags,
             @Nullable Set<ResourceLocation> blockTags
     ) {
-        super(id, vanillaItem, translations, itemResource, itemModel, behaviourConfig, components, itemGroup, itemTags);
+        super(id, vanillaItem, translations, itemResource, itemModel, properties, behaviourConfig, components, itemGroup, itemTags);
         this.blockResource = blockResource;
         this.blockModelType = blockModelType;
-        this.properties = properties;
         this.blockTags = blockTags;
         this.virtual = virtual;
-        this.block = block;
     }
 
     @Override
@@ -74,20 +69,11 @@ public final class BlockData extends Data {
     }
 
     public boolean requiresEntityBlock() {
-        final Boolean[] flag = new Boolean[]{false};
-        behaviour().forEach((behaviourType,object)-> {
-            if (BlockBehaviourWithEntity.class.isAssignableFrom(behaviourType.type())) flag[0] = true;
-        });
-        return flag[0];
+        return behaviour().test((behaviourType)-> BlockBehaviourWithEntity.class.isAssignableFrom(behaviourType.type()));
     }
 
     public boolean virtual() {
-        return this.virtual;
-    }
-
-    @Nullable
-    public BlockState block() {
-        return this.block;
+        return this.properties().virtual;
     }
 
     public Map<BlockState, BlockStateMeta> createStandardStateMap() {
@@ -162,7 +148,7 @@ public final class BlockData extends Data {
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (BlockData) obj;
+        var that = (BlockData<BlockPropertyLike>) obj;
         return Objects.equals(this.id, that.id);
     }
 
@@ -184,7 +170,6 @@ public final class BlockData extends Data {
                 "components=" + components + ", " +
                 "itemGroup=" + group + ']';
     }
-
 
     public record BlockStateMeta(BlockState blockState, PolymerBlockModel polymerBlockModel) {
         public static BlockStateMeta of(BlockState blockState, PolymerBlockModel blockModel) {

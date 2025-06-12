@@ -6,6 +6,8 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
 import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.behaviour.block.Rotating;
+import de.tomalbrc.filament.behaviour.block.Waterloggable;
 import de.tomalbrc.filament.behaviour.decoration.Container;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.DecorationItem;
@@ -48,6 +50,16 @@ public class DecorationRegistry {
         JsonElement element = JsonParser.parseReader(new InputStreamReader(inputStream));
         DecorationData data = Json.GSON.fromJson(element, DecorationData.class);
 
+        // backwards compatibility
+        if (data.properties().waterloggable == null || data.properties().waterloggable == Boolean.TRUE)
+            data.behaviour().put(Behaviours.WATERLOGGABLE, new Waterloggable.Config());
+
+        if (data.properties().rotate) {
+            var conf = new Rotating.Config();
+            conf.smooth = data.properties().rotateSmooth;
+            data.behaviour().put(Behaviours.ROTATING, conf);
+        }
+
         Util.handleComponentsCustom(element, data);
 
         register(data);
@@ -62,7 +74,6 @@ public class DecorationRegistry {
         decorations.put(data.id(), data);
 
         BlockBehaviour.Properties blockProperties = data.properties().toBlockProperties();
-
         DecorationBlock block = BlockRegistry.registerBlock(BlockRegistry.key(data.id()), getBlockCreator(data), blockProperties, data.blockTags());
         decorationBlocks.put(data.id(), block);
 
@@ -100,9 +111,9 @@ public class DecorationRegistry {
     @NotNull
     private static Function<BlockBehaviour.Properties, DecorationBlock> getBlockCreator(DecorationData data) {
         Function<BlockBehaviour.Properties, DecorationBlock> gen;
-        if (!data.isSimple()) {
+        if (data.requiresEntityBlock()) {
             gen = (x) -> {
-                var block = new ComplexDecorationBlock(x.pushReaction(PushReaction.BLOCK), data.id());
+                var block = new ComplexDecorationBlock(x.pushReaction(PushReaction.BLOCK), data);
 
                 BlockEntityType<DecorationBlockEntity> DECORATION_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(DecorationBlockEntity::new, block).build();
                 EntityRegistry.registerBlockEntity(EntityRegistry.key(data.id()), DECORATION_BLOCK_ENTITY);
@@ -113,12 +124,12 @@ public class DecorationRegistry {
                 return block;
             };
         } else {
-            gen = (x) -> new SimpleDecorationBlock(x, data.id());
+            gen = (x) -> new SimpleDecorationBlock(x, data);
         }
         return gen;
     }
 
-    public static DecorationData getDecorationDefinition(ResourceLocation resourceLocation) {
+    public static DecorationData getDecorationData(ResourceLocation resourceLocation) {
         return decorations.get(resourceLocation);
     }
 

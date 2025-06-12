@@ -75,7 +75,7 @@ public class Furnace implements BlockBehaviourWithEntity<Furnace.Config> {
     }
 
     @Override
-    public void affectNeighborsAfterRemoval(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, boolean bl) {
+    public void affectNeighborsAfterRemoval(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, boolean movedByPiston) {
         Containers.updateNeighboursAfterDestroy(blockState, serverLevel, blockPos);
     }
 

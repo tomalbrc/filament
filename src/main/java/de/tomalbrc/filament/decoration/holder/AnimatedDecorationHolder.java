@@ -39,7 +39,7 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
         this.getElements().forEach(x -> {
             if (x instanceof DisplayElement displayElement) {
                 displayElement.setTeleportDuration(0);
-                displayElement.setYaw(rotation - 180);
+                displayElement.setYaw(rotation-180);
             }
         });
     }

@@ -8,7 +8,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,17 +16,16 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     public static final String MAIN = "Main";
     public static final String VERSION = "V";
     public static final String ITEM = "Item";
-    public static final String ROTATION = "Rotation";
     public static final String DIRECTION = "Direction";
 
     protected BlockPos main;
-    protected int version = 1;
-
-    protected int rotation;
+    protected int version = 2;
 
     protected Direction direction = Direction.UP;
 
     protected ItemStack itemStack;
+
+    public int rotation;
 
     public AbstractDecorationBlockEntity(BlockPos pos, BlockState state) {
         super(DecorationRegistry.getBlockEntityType(state), pos, state);
@@ -54,20 +52,8 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
         super.loadAdditional(compoundTag, provider);
 
-        if (!compoundTag.contains(VERSION)) {
-            this.version = 1; // upgrade old format
-            if (compoundTag.contains(MAIN)) {
-                var optional = compoundTag.read(MAIN, BlockPos.CODEC);
-                this.main = optional.orElse(this.main).subtract(this.worldPosition);
-            }
-        }
-        else {
-            this.version = compoundTag.getInt(VERSION).orElse(1);
-            if (compoundTag.contains(MAIN)) {
-                var optional = compoundTag.read(MAIN, BlockPos.CODEC);
-                this.main = optional.orElse(this.main);
-            }
-        }
+        this.version = compoundTag.getInt(VERSION).orElse(1);
+        compoundTag.read(MAIN, BlockPos.CODEC).ifPresent(main -> this.main = main);
 
         if (compoundTag.contains(ITEM)) {
             this.itemStack = ItemStack.parse(provider, compoundTag.getCompound(ITEM).orElseThrow()).orElseThrow();
@@ -80,8 +66,9 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
         if (!this.isMain())
             return;
 
-        if (compoundTag.contains(ROTATION))
-            this.rotation = compoundTag.getIntOr(ROTATION, 0);
+        if (compoundTag.contains("Rotation"))
+            this.rotation = compoundTag.getIntOr("Rotation", 0);
+
         if (compoundTag.contains(DIRECTION))
             this.direction = Direction.from3DDataValue(compoundTag.getIntOr(DIRECTION, Direction.UP.get3DDataValue()));
     }
@@ -112,7 +99,6 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
         compoundTag.putInt(VERSION, this.version);
 
         if (this.isMain()) {
-            compoundTag.putInt(ROTATION, this.rotation);
             compoundTag.putInt(DIRECTION, this.direction.get3DDataValue());
         }
     }
@@ -137,16 +123,6 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     }
 
     public float getVisualRotationYInDegrees() {
-        Direction direction = this.getDirection();
-        int i = direction.getAxis().isVertical() ? 90 * direction.getAxisDirection().getStep() : 0;
-        return (float) Mth.wrapDegrees(180 + direction.get2DDataValue() * 90 + this.rotation * 45 + i);
-    }
-
-    public void setRotation(int rotation) {
-        this.rotation = rotation;
-    }
-
-    public int getRotation() {
-        return this.rotation;
+        return ((DecorationBlock)this.getBlockState().getBlock()).getVisualRotationYInDegrees(this.getBlockState());
     }
 }

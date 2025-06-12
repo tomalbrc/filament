@@ -5,6 +5,7 @@ import com.mojang.serialization.JsonOps;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.BehaviourMap;
+import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.item.FilamentItemDelegate;
@@ -40,12 +41,12 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentItem, BehaviourHolder {
-    private final Data data;
+    private final BlockData<?> data;
 
     protected final BehaviourMap behaviours = new BehaviourMap();
     protected final FilamentItemDelegate delegate;
 
-    public SimpleBlockItem(Properties properties, Block block, Data data) {
+    public SimpleBlockItem(Properties properties, Block block, BlockData<?> data) {
         super(block, properties);
         this.data = data;
         this.initBehaviours(data.behaviour());
@@ -54,7 +55,7 @@ public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentI
     }
 
     @Override
-    public Data getData() {
+    public Data<?> getData() {
         return this.data;
     }
 

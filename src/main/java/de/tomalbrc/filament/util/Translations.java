@@ -27,7 +27,7 @@ public class Translations {
         }
     }
 
-    public static void add(Item item, Block block, Data data) {
+    public static void add(Item item, Block block, Data<?> data) {
         if (data.translations() != null) {
             for (Map.Entry<String, String> entry : Objects.requireNonNull(data.translations()).entrySet()) {
                 Translations.add(entry.getKey(), Triple.of(item, block, null), entry.getValue());
