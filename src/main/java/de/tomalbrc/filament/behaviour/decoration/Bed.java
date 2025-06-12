@@ -15,7 +15,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.entity.BedBlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -122,8 +121,6 @@ public class Bed implements DecorationBehaviour<Bed.Config> {
         entity.sleepCounter = 0;
         return Either.right(Unit.INSTANCE);
     }
-
-    BedBlockEntity
 
     public static class Config {
         boolean skipNight = false;
