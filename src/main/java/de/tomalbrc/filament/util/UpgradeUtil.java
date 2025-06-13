@@ -13,9 +13,7 @@ public class UpgradeUtil {
     public static void upgradeDecoration1to2(DecorationBlockEntity blockEntity, Level level, BlockPos pos) {
         if (blockEntity.getDecorationData().behaviour().has(Behaviours.ROTATING)) {
             int rot = blockEntity.rotation;
-            if (!blockEntity.getDirection().getAxis().isVertical()) {
-                rot = Util.SEGMENTED_ANGLE8.fromDegrees(getVisualRotationYInDegrees(blockEntity.getDirection(), rot));
-            }
+            rot = Util.SEGMENTED_ANGLE8.fromDegrees(getVisualRotationYInDegrees(blockEntity.getDirection(), rot));
             level.setBlock(pos, blockEntity.getBlockState().setValue(BlockUtil.ROTATION, rot), Block.UPDATE_NONE);
         }
     }

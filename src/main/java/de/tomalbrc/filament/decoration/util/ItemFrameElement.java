@@ -22,6 +22,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.RepeaterBlock;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Objects;
@@ -83,6 +84,6 @@ public class ItemFrameElement extends GenericEntityElement {
 
     @Override
     public void setYaw(float yaw) {
-        this.dataTracker.set(ItemFrameAccessor.getDATA_ROTATION(), Util.SEGMENTED_ANGLE8.fromDegrees(yaw - 180));
+        this.dataTracker.set(ItemFrameAccessor.getDATA_ROTATION(), Util.SEGMENTED_ANGLE8.fromDegrees(yaw-180));
     }
 }

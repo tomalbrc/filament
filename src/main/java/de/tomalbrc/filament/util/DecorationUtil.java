@@ -50,10 +50,6 @@ import java.util.function.Supplier;
 public class DecorationUtil {
     public static Int2ObjectOpenHashMap<Supplier<ItemStack>> VIRTUAL_ENTITY_PICK_MAP = new Int2ObjectOpenHashMap<>();
 
-    public static float getVisualRotationYInDegrees(int rotation) {
-        return (float) Mth.wrapDegrees(180 + rotation * 45);
-    }
-
     public static void forEachRotated(List<DecorationData.BlockConfig> blockConfigs, BlockPos originBlockPos, float rotation, Consumer<BlockPos> consumer) {
         if (blockConfigs != null) {
             for (DecorationData.BlockConfig blockConfig : blockConfigs) {
@@ -145,7 +141,7 @@ public class DecorationUtil {
 
         Matrix4f matrix4f = transform(data.properties().display, direction);
 
-        element.setYaw(rotation - (direction == Direction.UP ? 0 : 180));
+        element.setYaw(rotation - (180));
 
         element.setDisplayWidth(size.x * 3.f);
         element.setDisplayHeight(size.y * 3.f);

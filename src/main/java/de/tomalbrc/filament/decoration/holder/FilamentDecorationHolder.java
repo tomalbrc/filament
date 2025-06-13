@@ -39,7 +39,7 @@ public interface FilamentDecorationHolder {
     default void setYaw(float rotation) {
         for (VirtualElement element : this.asPolymerHolder().getElements()) {
             if (element instanceof GenericEntityElement displayElement) {
-                displayElement.setYaw(rotation);
+                displayElement.setYaw(rotation-180);
             }
         }
 

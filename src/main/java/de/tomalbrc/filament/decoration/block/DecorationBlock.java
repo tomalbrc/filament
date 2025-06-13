@@ -114,7 +114,7 @@ public abstract class DecorationBlock extends SimpleBlock implements PolymerBloc
         if (blockState.getBlock() instanceof DecorationBlock decorationBlock) {
             for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : decorationBlock.getBehaviours()) {
                 if (behaviour.getValue() instanceof DecorationRotationProvider rotationProvider) {
-                    return rotationProvider.getVisualRotationYInDegrees(blockState) - 180;
+                    return rotationProvider.getVisualRotationYInDegrees(blockState);
                 }
             }
         }
