@@ -63,7 +63,7 @@ public class Repeater implements BlockBehaviour<Repeater.RepeaterConfig> {
 
     @Override
     public int getDirectSignal(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, Direction direction) {
-        return blockState.getSignal(blockGetter, blockPos, direction);
+        return blockGetter.getBlockState(blockPos.relative(direction)).isRedstoneConductor(blockGetter, blockPos.relative(direction)) ? blockState.getSignal(blockGetter, blockPos, direction) : 0;
     }
 
     @Override

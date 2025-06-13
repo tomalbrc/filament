@@ -31,6 +31,7 @@
     "behaviour.fishing_rod.FishingHookMixin",
     "behaviour.grass_spread.SpreadingSnowyDirtBlockAccessor",
     "behaviour.oxidizable.WeatheringCopperMixin",
+    "behaviour.repeater.RedstoneWireBlockMixin",
     "behaviour.strippable.AxeItemAccessor",
     "behaviour.strippable.AxeItemMixin",
     "behaviour.trap.MobMixin",

@@ -317,7 +317,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
                     return res;
             }
         }
-        return super.getDirectSignal(blockState, blockGetter, blockPos, direction);
+        return 0;
     }
 
     @Override
@@ -329,7 +329,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
                     return res;
             }
         }
-        return super.getSignal(blockState, blockGetter, blockPos, direction);
+        return 0;
     }
 
     @Override
