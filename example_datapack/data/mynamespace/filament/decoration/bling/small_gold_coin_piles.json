@@ -9,12 +9,15 @@
     }
   },
   "properties": {
-    "rotate": true,
-    "rotateSmooth": true,
     "placement": {
       "wall": true,
       "floor": true,
       "ceiling": true
+    }
+  },
+  "behaviour": {
+    "rotating": {
+      "smooth": true
     }
   }
 }

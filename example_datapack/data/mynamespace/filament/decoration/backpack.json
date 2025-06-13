@@ -10,18 +10,11 @@
     }
   },
   "behaviour": {
+    "horizontal_facing": {},
     "cosmetic": {
       "slot": "chest",
-      "translation": [
-        0,
-        -0.38,
-        -0.28
-      ],
-      "scale": [
-        1.5,
-        1.5,
-        1.5
-      ]
+      "translation": [0, -0.38, -0.28],
+      "scale": [1.5, 1.5, 1.5]
     },
     "container": {
       "name": "Backpack",
@@ -35,16 +28,8 @@
   },
   "blocks": [
     {
-      "origin": [
-        0,
-        0,
-        0
-      ],
-      "size": [
-        1,
-        1,
-        1
-      ]
+      "origin": [0, 0, 0],
+      "size": [1, 1, 1]
     }
   ],
   "components": {

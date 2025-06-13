@@ -375,11 +375,14 @@ Comes with all door block state properties (hinge, open, powered, etc.)
 
 ---
 
-## `simple_waterloggable` behaviour
+## `waterloggable` behaviour
 
-Simple waterloggable block.
+Simple waterloggable block with a `waterlogged` property.
 
-~~~admonish info "Optional Block-State-Properties to provide models for (automatically handled)"
+There is an alias called `simple_waterlogged` for backwards compatibility with older filament data packs
+
+
+~~~admonish info "Optional Block-State-Properties to provide models for"
 - `waterlogged`: true, false
 ~~~
 
@@ -417,6 +420,7 @@ The values of the `min` and `max` fields can be mapped to block-states.
   }
 }
 ```
+Using behaviour for crops, you could make a crop that drops xp when fully aged 
 ~~~
 
 ~~~admonish example "Example with constant values"
@@ -427,6 +431,7 @@ The values of the `min` and `max` fields can be mapped to block-states.
   }
 }
 ```
+This will drop 6 xp for any block-state
 ~~~
 
 ---

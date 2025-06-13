@@ -2,10 +2,9 @@ id: mynamespace:darkoak_bench
 item_resource:
   models:
     default: minecraft:custom/furniture/benches/darkoak_bench
-properties:
-  rotate: true
-  rotate_smooth: true
 behaviour:
+  rotating:
+    smooth: true
   seat:
     - offset: [0, 0.42, 0]
     - offset: [1, 0.42, 0]

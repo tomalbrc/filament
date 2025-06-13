@@ -3,18 +3,15 @@
 Decoration properties share the same properties as [items](item-properties.md) and a few of [blocks](block-properties.md), like `solid` and `pushReaction`
 
 ~~~admonish example "Example of properties"
-```json
+```json5
 {
   "properties": {
-    "rotate": false,
-    "rotateSmooth": false,
     "placement": {
       "floor": true, 
       "wall": false, 
       "ceiling": false
     },
     "glow": false,
-    "waterloggable": true,
     "solid": false,
     "display": "fixed",
     "blockBase": "minecraft:stone",
@@ -29,6 +26,11 @@ Decoration properties share the same properties as [items](item-properties.md) a
 
 ### `rotate`:
 
+~~~admonish warning
+This is deprecated!
+Use the `horizontal_facing` behaviour to make a decoration rotate in the 4 cardinal directions
+~~~
+
 Boolean (true/false) indicating whether the decoration can rotate (90° intervals)
 
 Defaults to `false`
@@ -36,6 +38,11 @@ Defaults to `false`
 ---
 
 ### `rotateSmooth`:
+
+~~~admonish warning
+This is deprecated!
+Use the `rotating` block behaviour!
+~~~
 
 Boolean (true/false) indicating whether the decoration can rotate in 45° intervals
 
@@ -96,6 +103,11 @@ Defaults to `false`
 ---
 
 ### `waterloggable`:
+
+~~~admonish warning
+This is deprecated!
+Use the `waterloggable` block behaviour!
+~~~
 
 Boolean (true/false) indicating whether the decoration blocks can be waterlogged.
 

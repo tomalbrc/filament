@@ -6,11 +6,10 @@
     }
   },
   "vanillaItem": "minecraft:leather_horse_armor",
-  "properties": {
-    "rotate": true,
-    "rotateSmooth": true
-  },
   "behaviour": {
+    "rotating": {
+      "smooth": true
+    },
     "seat": [
       {
         "offset": [

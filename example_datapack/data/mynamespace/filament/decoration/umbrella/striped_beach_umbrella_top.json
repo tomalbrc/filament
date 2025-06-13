@@ -9,12 +9,10 @@
     }
   },
   "vanillaItem": "minecraft:leather_horse_armor",
-  "properties": {
-    "rotate": true,
-    "rotateSmooth": true
+  "behaviour": {
+    "rotating": {
+      "smooth": true
+    }
   },
-  "size": [
-    3,
-    -0.5
-  ]
+  "size": [3, -0.5]
 }
