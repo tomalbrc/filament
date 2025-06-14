@@ -1,7 +1,10 @@
 package de.tomalbrc.filament.decoration.holder;
 
+import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.behaviour.decoration.Connectable;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
+import eu.pb4.polymer.virtualentity.api.attachment.BlockAwareAttachment;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
 import eu.pb4.polymer.virtualentity.api.attachment.HolderAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.GenericEntityElement;
@@ -53,9 +56,11 @@ public interface FilamentDecorationHolder {
 
     default void update(BlockState blockState) {
         HolderAttachment attachment = this.getAttachment();
-        if (attachment instanceof BlockBoundAttachment blockBoundAttachment) {
+        if (attachment instanceof BlockAwareAttachment blockBoundAttachment) {
             BlockState attachmentBlockState = blockBoundAttachment.getBlockState();
             DecorationBlock decorationBlock = (DecorationBlock) attachmentBlockState.getBlock();
+            Filament.LOGGER.info("update holder at: {}, {}", blockBoundAttachment.getBlockPos(), blockState.getValue(Connectable.SHAPE));
+            this.updateVisualItem(decorationBlock.visualItemStack(blockBoundAttachment.getWorld(), blockBoundAttachment.getBlockPos(), blockState));
             this.setYaw(decorationBlock.getVisualRotationYInDegrees(blockState));
             this.tick();
         }

@@ -39,9 +39,8 @@ public class Lamp implements BlockBehaviour<Lamp.Config> {
     }
 
     @Override
-    public boolean createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(BlockUtil.LIGHT_LEVEL);
-        return true;
     }
 
     @Override

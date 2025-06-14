@@ -139,9 +139,8 @@ public class Trapdoor implements BlockBehaviour<Trapdoor.Config>, SimpleWaterlog
     }
 
     @Override
-    public boolean createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.HORIZONTAL_FACING, BlockStateProperties.OPEN, BlockStateProperties.HALF, BlockStateProperties.POWERED, BlockStateProperties.WATERLOGGED);
-        return true;
     }
 
     @Override

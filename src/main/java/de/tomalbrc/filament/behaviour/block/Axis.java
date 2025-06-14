@@ -36,9 +36,8 @@ public class Axis implements BlockBehaviour<Axis.Config> {
     }
 
     @Override
-    public boolean createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(AXIS);
-        return true;
     }
 
     @Override

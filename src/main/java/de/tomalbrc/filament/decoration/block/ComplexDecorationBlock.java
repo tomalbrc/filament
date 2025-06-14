@@ -18,10 +18,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class ComplexDecorationBlock extends DecorationBlock implements EntityBlock {
     public ComplexDecorationBlock(Properties properties, DecorationData decorationData) {
         super(properties, decorationData);
+    }
+
+    @Override
+    public ItemStack visualItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
+        return ((DecorationBlockEntity) Objects.requireNonNull(levelReader.getBlockEntity(blockPos))).visualItemStack(blockState);
     }
 
     @Nullable

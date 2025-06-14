@@ -62,7 +62,6 @@ public class Door implements BlockBehaviour<Door.Config> {
         return this.config;
     }
 
-
     @Override
     public BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
         DoubleBlockHalf doubleBlockHalf = blockState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF);
@@ -230,9 +229,8 @@ public class Door implements BlockBehaviour<Door.Config> {
     }
 
     @Override
-    public boolean createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.DOUBLE_BLOCK_HALF, BlockStateProperties.HORIZONTAL_FACING, BlockStateProperties.OPEN, BlockStateProperties.DOOR_HINGE, BlockStateProperties.POWERED);
-        return true;
     }
 
     @Override

@@ -62,9 +62,8 @@ public class Slab implements BlockBehaviour<Slab.SlabConfig>, SimpleWaterloggedB
     }
 
     @Override
-    public boolean createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.SLAB_TYPE, BlockStateProperties.WATERLOGGED);
-        return true;
     }
 
     @Override

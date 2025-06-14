@@ -119,16 +119,12 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
         if (holder == null) {
             holder = new DecorationHolder(this::getItem);
-            DecorationUtil.setupElements(holder, this.getDecorationData(), this.direction, this.getVisualRotationYInDegrees(), this.visualItemStack(), (this::interact));
+            DecorationUtil.setupElements(holder, this.getDecorationData(), this.direction, this.getVisualRotationYInDegrees(), this.visualItemStack(getBlockState()), (this::interact));
         }
 
         this.decorationHolder = holder;
 
         return this.decorationHolder;
-    }
-
-    public void updateModel() {
-        this.getOrCreateHolder().updateVisualItem(this.visualItemStack());
     }
 
     @Override
@@ -195,18 +191,15 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         return res;
     }
 
-    public ItemStack visualItemStack() {
+    public ItemStack visualItemStack(BlockState blockState) {
         var adjusted = DecorationUtil.placementAdjustedItem(this.itemStack, this.getDecorationData().itemResource(), this.direction != Direction.DOWN && this.direction != Direction.UP, this.direction == Direction.DOWN);
         for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : this.behaviours) {
             if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
-                ItemStack modifiedStack = decorationBehaviour.visualItemStack(this, adjusted);
-                if (modifiedStack != null) {
-                    return modifiedStack;
-                }
+                adjusted = decorationBehaviour.visualItemStack(this, adjusted, blockState);
             }
         }
 
-        return DecorationUtil.placementAdjustedItem(this.itemStack, this.getDecorationData().itemResource(), this.direction != Direction.DOWN && this.direction != Direction.UP, this.direction == Direction.DOWN);
+        return adjusted;
     }
 
     @Override
@@ -238,7 +231,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
     @Override
     public void destroyStructure(boolean dropItem) {
-        var visualStack = this.visualItemStack();
+        var visualStack = this.visualItemStack(this.getBlockState());
 
         if (!this.isMain()) {
             if (this.getLevel() != null && this.main != null && this.getLevel().getBlockEntity(this.getBlockPos().subtract(this.main)) instanceof DecorationBlockEntity mainBlockEntity) {
@@ -292,9 +285,5 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         }
 
         return blockState;
-    }
-
-    public Direction getFacing() {
-        return Direction.fromYRot(this.getVisualRotationYInDegrees());
     }
 }

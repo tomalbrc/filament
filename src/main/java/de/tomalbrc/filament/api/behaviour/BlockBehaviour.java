@@ -79,10 +79,8 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
     /**
      * Allows to add block-state-properties to the block holding this behaviour
      * @param builder state-definition builder
-     * @return flag whether something was added
      */
-    default boolean createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        return false;
+    default void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
     }
 
     /**
@@ -269,7 +267,7 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
      * @return The clone (pick) itemstack of the block
      */
     default ItemStack getCloneItemStack(ItemStack itemStack, LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
-        return null;
+        return itemStack;
     }
 
     /**

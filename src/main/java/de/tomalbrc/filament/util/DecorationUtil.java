@@ -231,6 +231,7 @@ public class DecorationUtil {
     public static ItemStack placementAdjustedItem(ItemStack itemStack, ItemResource itemResource, boolean wall, boolean ceiling) {
         var converted = clientsideItem(itemStack);
 
+        // TODO: this should be a behaviour
         if (wall && itemResource.getModels().containsKey("wall")) {
             converted.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(ImmutableList.of(), ImmutableList.of(), ImmutableList.of("wall"), ImmutableList.of()));
             return converted;

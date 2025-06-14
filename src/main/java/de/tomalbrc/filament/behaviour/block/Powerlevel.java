@@ -45,9 +45,8 @@ public class Powerlevel implements BlockBehaviour<Powerlevel.PowerlevelConfig> {
     }
 
     @Override
-    public boolean createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(POWERS[Math.max(0, config.max-1)]);
-        return true;
     }
 
     @Override

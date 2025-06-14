@@ -25,9 +25,8 @@ public class HorizontalFacing implements BlockBehaviour<HorizontalFacing.Config>
     }
 
     @Override
-    public boolean createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.HORIZONTAL_FACING);
-        return true;
     }
 
     @Override
@@ -47,7 +46,7 @@ public class HorizontalFacing implements BlockBehaviour<HorizontalFacing.Config>
 
     @Override
     public float getVisualRotationYInDegrees(BlockState blockState) {
-        return blockState.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot();
+        return blockState.getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite().toYRot();
     }
 
     public static class Config {}

@@ -45,8 +45,8 @@ public interface DecorationBehaviour<T> extends Behaviour<T> {
     }
 
     // Allows to change the visual item stack
-    default ItemStack visualItemStack(DecorationBlockEntity decorationBlockEntity, ItemStack adjusted) {
-        return null;
+    default ItemStack visualItemStack(DecorationBlockEntity decorationBlockEntity, ItemStack adjusted, BlockState blockState) {
+        return adjusted;
     }
 
     default BlockState updateShape(DecorationBlockEntity decorationBlockEntity, BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {

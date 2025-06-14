@@ -43,8 +43,6 @@ public class RPUtil {
                 }
             }
 
-            // todo: models for "breaking" stage of item (using dur. component) ..? using item behavour + itempredicatemodelprovider?
-
             ResourceProvider finalItemResources = itemResources;
             PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder ->
                     ItemAssetGenerator.createDefault(

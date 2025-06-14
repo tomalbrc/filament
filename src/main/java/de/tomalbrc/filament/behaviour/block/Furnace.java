@@ -39,9 +39,8 @@ public class Furnace implements BlockBehaviourWithEntity<Furnace.Config> {
     }
 
     @Override
-    public boolean createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.LIT);
-        return true;
     }
 
     @Override

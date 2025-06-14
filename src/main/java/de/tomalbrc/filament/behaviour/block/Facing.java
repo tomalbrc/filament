@@ -30,9 +30,8 @@ public class Facing implements BlockBehaviour<Facing.Config> {
     }
 
     @Override
-    public boolean createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.FACING);
-        return true;
     }
 
     @Override

@@ -14,6 +14,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import org.jetbrains.annotations.NotNull;
@@ -28,8 +29,8 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
 
     @Nullable
     public ElementHolder createElementHolder(ServerLevel world, BlockPos blockPos, BlockState initialBlockState) {
-        DecorationHolder holder = new DecorationHolder(() -> BuiltInRegistries.ITEM.getValue(this.data.id()).getDefaultInstance());
-        DecorationUtil.setupElements(holder, this.getDecorationData(), Direction.UP, this.getVisualRotationYInDegrees(initialBlockState), BuiltInRegistries.ITEM.getValue(decorationId).getDefaultInstance(), null);
+        DecorationHolder holder = new DecorationHolder(() -> visualItemStack(world, blockPos, initialBlockState));
+        DecorationUtil.setupElements(holder, this.getDecorationData(), Direction.UP, this.getVisualRotationYInDegrees(initialBlockState), this.visualItemStack(world, blockPos, initialBlockState), null);
         return holder;
     }
 
@@ -39,6 +40,11 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
         BlockState returnVal = super.playerWillDestroy(level, blockPos, blockState, player);
         this.playerDestroy(level, player, blockPos, blockState, null, player.getMainHandItem());
         return returnVal;
+    }
+
+    @Override
+    public ItemStack visualItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
+        return BuiltInRegistries.ITEM.getValue(this.data.id()).getDefaultInstance();
     }
 
     @Override

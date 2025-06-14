@@ -45,9 +45,8 @@ public class Waterloggable implements BlockBehaviour<Waterloggable.Config>, Simp
     }
 
     @Override
-    public boolean createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.WATERLOGGED);
-        return true;
     }
 
     @Override
