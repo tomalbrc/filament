@@ -92,7 +92,6 @@ public class Trap implements ItemBehaviour<Trap.Config> {
 
     @Override
     public InteractionResult useOn(UseOnContext useOnContext) {
-        // TODO: maybe check for lava / safe ground?
         if (useOnContext.getPlayer() != null && canSpawn(useOnContext.getItemInHand()) && useOnContext.getLevel() instanceof ServerLevel serverLevel) {
             this.spawn(serverLevel, useOnContext.getPlayer(), useOnContext.getHand(), useOnContext.getItemInHand(), useOnContext.getClickedPos());
             this.useTrapAndBreak(useOnContext.getItemInHand().getItem(), useOnContext.getPlayer(), useOnContext.getHand());

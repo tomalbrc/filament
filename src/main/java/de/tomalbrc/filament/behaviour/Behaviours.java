@@ -17,7 +17,6 @@ import net.minecraft.resources.ResourceLocation;
 public class Behaviours {
     // Item
     public static final BehaviourType<Cosmetic, Cosmetic.Config> COSMETIC = registerBehaviour("cosmetic", Cosmetic.class);
-    public static final BehaviourType<Food, Food.FoodConfig> FOOD = registerBehaviour("food", Food.class);
     public static final BehaviourType<Compostable, Compostable.CompostableConfig> COMPOSTABLE = registerBehaviour("compostable", Compostable.class);
     public static final BehaviourType<ExecuteAttackItem, ExecuteAttackItem.Config> ITEM_ATTACK_EXECUTE = registerBehaviour("item_attack_execute", ExecuteAttackItem.class);
     public static final BehaviourType<ExecuteInteractItem, ExecuteInteractItem.Config> ITEM_INTERACT_EXECUTE = registerBehaviour("item_interact_execute", ExecuteInteractItem.class);
@@ -67,6 +66,7 @@ public class Behaviours {
     public static final BehaviourType<Repeater, Repeater.RepeaterConfig> REPEATER = registerBehaviour("repeater", Repeater.class);
     public static final BehaviourType<Rotating, Rotating.Config> ROTATING = registerBehaviour("rotating", Rotating.class);
     public static final BehaviourType<Sapling, Sapling.Config> SAPLING = registerBehaviour("sapling", Sapling.class);
+    @Deprecated
     public static final BehaviourType<Waterloggable, Waterloggable.Config> SIMPLE_WATERLOGGABLE = registerBehaviour("simple_waterloggable", Waterloggable.class);
     public static final BehaviourType<Waterloggable, Waterloggable.Config> WATERLOGGABLE = registerBehaviour("waterloggable", Waterloggable.class);
     public static final BehaviourType<Slab, Slab.SlabConfig> SLAB = registerBehaviour("slab", Slab.class);
