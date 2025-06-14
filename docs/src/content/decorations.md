@@ -63,12 +63,15 @@ You can specify different models for decorations when placed on walls, ceiling (
   },
   "block": "minecraft:barrier",
   "properties": {
-    "rotate": true,
-    "rotateSmooth": true,
     "placement": {
       "wall": true,
       "floor": true,
       "ceiling": true
+    }
+  },
+  "behaviour": {
+    "rotating": { // to allow 90° rotations
+      "smooth": true // to allow 45° rotations
     }
   }
 }

@@ -69,12 +69,15 @@ You can specify different models for the different placements in the itemResourc
     }
   },
   "properties": {
-    "rotate": true,
-    "rotateSmooth": true,
     "placement": {
       "wall": true,
       "floor": true,
       "ceiling": true
+    }
+  },
+  "behaviour": {
+    "rotating": {
+      "smooth": true
     }
   }
 }
