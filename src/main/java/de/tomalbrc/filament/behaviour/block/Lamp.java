@@ -33,6 +33,11 @@ public class Lamp implements BlockBehaviour<Lamp.Config> {
     }
 
     @Override
+    public BlockState modifyPolymerBlockState(BlockState originalBlockState, BlockState blockState) {
+        return config.models == Boolean.TRUE ? blockState : blockState.setValue(BlockUtil.LIGHT_LEVEL, 0);
+    }
+
+    @Override
     public BlockState getStateForPlacement(BlockState blockState, BlockPlaceContext blockPlaceContext) {
         blockState.setValue(BlockUtil.LIGHT_LEVEL, config.cycle != null && !config.cycle.isEmpty() ? config.cycle.getFirst() : config.defaultValue == null ? config.off : config.defaultValue);
         return BlockBehaviour.super.getStateForPlacement(blockState, blockPlaceContext);
@@ -74,5 +79,6 @@ public class Lamp implements BlockBehaviour<Lamp.Config> {
         int off = 0;
         Integer defaultValue = 0;
         List<Integer> cycle;
+        Boolean models;
     }
 }
