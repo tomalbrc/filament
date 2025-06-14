@@ -99,6 +99,7 @@ public class DecorationRegistry {
 
         var item = ItemRegistry.registerItem(ItemRegistry.key(data.id()), (newProps) -> new DecorationItem(block, data, newProps), properties, data.group() != null ? data.group() : Constants.DECORATION_GROUP_ID, data.itemTags());
         BehaviourUtil.postInitItem(item, item, data.behaviour());
+        BehaviourUtil.postInitBlock(item, block, block, data.behaviour());
         Translations.add(item, block, data);
 
         RPUtil.create(item, data);
