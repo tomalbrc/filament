@@ -1,6 +1,6 @@
 # Block Behaviours
 
-Block behaviours can be customized to add unique properties to blocks. All behaviours are optional, and some can be applied to both, blocks and decorations.
+Block behaviours can be customized to add unique properties to blocks. All behaviours are optional and can be applied to both, blocks and decorations.
 
 Blocks also work with most item-behaviours to give the blocks' item special features.
 
@@ -83,12 +83,6 @@ Example of a block with behaviours set:
     },
     "fuel": {
       "value": 10
-    },
-    "food": {
-      "hunger": 2,
-      "saturation": 1.0,
-      "canAlwaysEat": true,
-      "fastfood": true
     },
     "cosmetic": {
       "slot": "chest",
@@ -623,4 +617,21 @@ Adds `distance` and `persistent` block state properties to the block.
 ~~~admonish info "Configurable Fields"
 - `blockTag`: Block tag for blocks that prevent leaf decay. Defaults to `minecraft:logs`
 - `decayChance` Chance to decay in each random tick. Can be between 0 and 1. Defaults to `1`
+~~~
+
+---
+
+## `lamp` behaviour
+
+Allows you to create lamps that either switch on/off or cycle through a list of light levels on player interaction.
+
+~~~admonish info "Block-State-Properties to provide models for (optional)"
+- `level`: 0 to 15 (optional)
+~~~
+
+~~~admonish info "Configurable Fields"
+- `on`: Light level to use for the 'on' state
+- `off`: Light level to use for the 'off' state
+- `cycle`: List of light levels to cycle through. 
+- `models`: Flag whether you want display custom models for the `level` block-states
 ~~~

@@ -45,12 +45,6 @@ Example with some behaviours set:
     "fuel": {
       "value": 10
     },
-    "food": {
-      "hunger": 2,
-      "saturation": 1.0,
-      "canAlwaysEat": true,
-      "fastfood": true
-    },
     "cosmetic": {
       "slot": "head",
       "model": "mynamespace:custom/models/clown_backpack_animated",
