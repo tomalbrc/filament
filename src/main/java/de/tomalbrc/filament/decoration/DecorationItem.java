@@ -13,6 +13,7 @@ import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
+import eu.pb4.polymer.resourcepack.impl.generation.PolymerModelDataImpl;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -44,13 +45,18 @@ import java.util.List;
 
 public class DecorationItem extends SimpleBlockItemBase implements PolymerItem, Equipable, BehaviourHolder {
     final private DecorationData decorationData;
-    final private PolymerModelData modelData;
+    private PolymerModelData modelData;
 
     public DecorationItem(Block block, DecorationData decorationData, Item.Properties properties) {
         super(block, properties, decorationData.properties(), decorationData.vanillaItem());
         this.initBehaviours(decorationData.behaviourConfig());
         this.decorationData = decorationData;
         this.modelData = this.decorationData.requestModel();
+        if (this.modelData == null) {
+            var cmd = decorationData.components().get(DataComponents.CUSTOM_MODEL_DATA);
+            this.modelData = new PolymerModelDataImpl(decorationData.vanillaItem(), cmd == null ? -1 : cmd.value(), null);
+        }
+
     }
 
     public DecorationData getDecorationData() {

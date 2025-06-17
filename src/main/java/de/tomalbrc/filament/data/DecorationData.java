@@ -12,7 +12,6 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
@@ -73,7 +72,11 @@ public record DecorationData(
     }
 
     public PolymerModelData requestModel() {
-        return PolymerResourcePackUtils.requestModel(vanillaItem != null ? vanillaItem : Items.GUNPOWDER, model == null ? Objects.requireNonNull(itemResource).models().get("default") : model);
+        return requestModel(model == null ? itemResource != null ? itemResource.models().get("default") : null : model);
+    }
+
+    private PolymerModelData requestModel(ResourceLocation model) {
+        return model == null ? null :  PolymerResourcePackUtils.requestModel(vanillaItem != null ? vanillaItem : Items.GUNPOWDER, model == null ? itemResource != null ? itemResource.models().get("default") : null : model);
     }
 
     public boolean isContainer() {
