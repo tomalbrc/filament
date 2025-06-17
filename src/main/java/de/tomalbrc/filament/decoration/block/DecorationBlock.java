@@ -1,5 +1,8 @@
 package de.tomalbrc.filament.decoration.block;
 
+import de.tomalbrc.filament.api.behaviour.Behaviour;
+import de.tomalbrc.filament.api.behaviour.BehaviourType;
+import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.DecorationRegistry;
@@ -33,6 +36,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.function.BiConsumer;
 
 public abstract class DecorationBlock extends Block implements PolymerBlock, SimpleWaterloggedBlock, VirtualDestroyStage.Marker {
@@ -125,6 +129,11 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         if (blockEntity instanceof DecorationBlockEntity decorationBlockEntity) {
             decorationBlockEntity.destroyStructure(player == null || !player.isCreative());
+            for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : decorationBlockEntity.getBehaviours()) {
+                if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
+                    decorationBehaviour.postBreak(decorationBlockEntity, blockPos, player);
+                }
+            }
         } else {
             level.destroyBlock(blockPos, false);
         }

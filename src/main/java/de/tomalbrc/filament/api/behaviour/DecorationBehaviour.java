@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
@@ -42,5 +43,9 @@ public interface DecorationBehaviour<T> extends Behaviour<T> {
 
     default ItemStack getCloneItemStack(ItemStack stack, LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
         return stack;
+    }
+
+    default void postBreak(DecorationBlockEntity decorationBlockEntity, BlockPos blockPos, Player player) {
+
     }
 }
