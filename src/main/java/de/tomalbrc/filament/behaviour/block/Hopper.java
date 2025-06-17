@@ -206,7 +206,7 @@ public class Hopper implements BlockBehaviourWithEntity<Hopper.Config> {
     }
 
     @Override
-    public void affectNeighborsAfterRemoval(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, boolean bl) {
+    public void affectNeighborsAfterRemoval(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, boolean movedByPiston) {
         Containers.updateNeighboursAfterDestroy(blockState, serverLevel, blockPos);
     }
 
@@ -231,9 +231,8 @@ public class Hopper implements BlockBehaviourWithEntity<Hopper.Config> {
     }
 
     @Override
-    public boolean createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.FACING_HOPPER, BlockStateProperties.ENABLED);
-        return true;
     }
 
     @Override

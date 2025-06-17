@@ -13,11 +13,10 @@ All fields support either camelCase or snake_case!
       "default": "mynamespace:custom/furniture/chests/example_chest"
     }
   },
-  "properties": {
-    "rotate": true, // to allow 90° rotations
-    "rotateSmooth": true // to allow 45° rotations
-  },
   "behaviour": {
+    "rotating": { // to allow 90° rotations
+      "smooth": true // to allow 45° rotations
+    },
     "animation": {
       "model": "my_filament_namespace:example_chest"
     },
@@ -77,9 +76,10 @@ The `lock` behaviour also supports an animation using the `animation` behaviour
     }
   },
   "vanillaItem": "minecraft:leather_horse_armor",
-  "properties": {
-    "rotate": true,
-    "rotateSmooth": true
+  "behaviour": {
+    "rotating": {
+      "smooth": true
+    }
   },
   "size": [3, -0.5]
 }
@@ -97,9 +97,10 @@ The `size` field creates an interaction entity with a custom size instead of the
         "default": "mynamespace:custom/deco/misc/pile_of_gold_ingots"
     }
   },
-  "properties": {
-    "rotate": true,
-    "rotateSmooth": true
+  "behaviour": {
+    "rotating": {
+      "smooth": true
+    }
   },
   "blocks": [
     {

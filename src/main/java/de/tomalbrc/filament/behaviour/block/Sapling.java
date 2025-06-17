@@ -4,6 +4,7 @@ import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.data.BlockData;
+import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -56,7 +57,7 @@ public class Sapling implements BlockBehaviour<Sapling.Config>, BonemealableBloc
     }
 
     @Override
-    public boolean modifyStateMap(Map<BlockState, BlockData.BlockStateMeta> map, BlockData blockData) {
+    public boolean modifyStateMap(Map<BlockState, BlockData.BlockStateMeta> map, BlockData<? extends BlockProperties> blockData) {
         // support for only 1 model if wanted
         if (map.size() == 1) {
             var entry = map.entrySet().iterator().next();
@@ -80,9 +81,8 @@ public class Sapling implements BlockBehaviour<Sapling.Config>, BonemealableBloc
     }
 
     @Override
-    public boolean createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.STAGE);
-        return true;
     }
 
     @Override

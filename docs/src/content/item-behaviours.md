@@ -4,11 +4,7 @@ Item behaviours define specific functionalities associated with items, blocks, a
 
 All behaviours are optional, and some are mutually exclusive (e.g., trap, shoot, and instrument).
 
-Example with some behaviours set:
-<details>
-<summary>Click to expand</summary>
-
-~~~admonish example
+~~~admonish example title="Example with some behaviours set" collapsible=true
 ```json
 {
   "id": "mynamespace:multi_example",
@@ -32,10 +28,6 @@ Example with some behaviours set:
       "projectile": "minecraft:iron_axe",
       "sound": "mynamespace:misc.shoot"
     },
-    "armor": {
-      "slot": "head",
-      "texture": "mynamespace:texture_name"
-    },
     "trap": {
       "types": ["minecraft:villager", "minecraft:zombie", "minecraft:skeleton"],
       "requiredEffects": ["minecraft:glowing"],
@@ -44,12 +36,6 @@ Example with some behaviours set:
     },
     "fuel": {
       "value": 10
-    },
-    "food": {
-      "hunger": 2,
-      "saturation": 1.0,
-      "canAlwaysEat": true,
-      "fastfood": true
     },
     "cosmetic": {
       "slot": "head",
@@ -67,14 +53,18 @@ Example with some behaviours set:
 }
 ```
 ~~~
-</details>
 
 ---
 
 ## `armor` behaviour
 <img class="right" src="../img/armor.png" alt="armor">
 
+~~~admonish warning "Only use with 1.21.1"
+Use Minecrafts vanilla [`equippable`](https://minecraft.wiki/w/Data_component_format/equippable) component for your custom armor in 1.21.4 or later!
+~~~
+
 Defines armour item behaviours, using the Fancypants shader via Polymer.
+Only use this for 1.21.1.
 
 ~~~admonish tip
 As of filament 0.7 it is possible to use armor trims to render custom armor, to enable this, set the `trim` flag to `true`.
@@ -161,22 +151,6 @@ Executes a command when an entity is attacked with the item or when swinging at 
 - `commands`: List of commands to execute. Empty by default
 - `sound`: Optional sound effect to play during execution. Empty by default
 - `onEntityAttack`: true/false flag whether to execute only when an entity was attacked. Otherwise the command will also be executed when the item is "swung" by the player. Default to `true`
-~~~
-
-<br>
-
----
-
-## `food` behaviour
-<img class="right" src="../img/food.png" alt="food">
-
-Defines food item behaviour for edible items.
-
-~~~admonish info "Configurable Fields"
-- `hunger`: The amount of hunger restored when consumed. Defaults to `1`
-- `saturation`: The saturation modifier provided by the food. Defaults to `0.6`
-- `canAlwaysEat`: Indicates whether the item can be eaten when the hunger bar is full. Defaults to `false` 
-- `fastfood`: Boolean indicating whether the food item is considered fast food (eats faster than normal). Defaults to `false`
 ~~~
 
 <br>
@@ -314,7 +288,7 @@ Make sure to use `minecraft:bow` as `vanillaItem` in order for the item model ov
 ~~~
 
 <br>
-This behaviour can automatically generate the item model predicate overrides for bows (item assets in `items` in 1.21.4).
+This behaviour can automatically generate the item model predicate overrides for bows (item assets in `items` in 1.21.4 or later).
 
 In order to automatically generate an item model for bows, you have to provide models for `default`, `pulling_0`, `pulling_1` and `pulling_2` in the `itemResource` field:
 ~~~admonish example
@@ -346,7 +320,7 @@ Allows to specify a power multiplier for shooting power.
 **Make sure to use `minecraft:crossbow` as `vanillaItem` in order for the item model overrides to work properly!**
 ~~~
 
-This behaviour can automatically generate the item model predicate overrides for crossbows (item assets in `items` in 1.21.4).
+This behaviour can automatically generate the item model predicate overrides for crossbows (item assets in `items` in 1.21.4 or later).
 
 In order to automatically generate an item model for crossbows, you have to provide models for `default`, `pulling_0`, `pulling_1`, `pulling_2`, `arrow` and `rocket` in the `itemResource` field:
 ~~~admonish example
@@ -408,7 +382,7 @@ This behaviour is deprecated. Use `bow`, `crossbow` or `trident`
 
 Makes the item usable as shield.
 
-This behaviour can automatically generate the item model predicate overrides for shields (item assets in `items` in 1.21.4).
+This behaviour can automatically generate the item model predicate overrides for shields (item assets in `items` in 1.21.4 or later).
 
 In order to automatically generate an item model for shields, you have to provide models for `default` and `blocking` in the `itemResource` field:
 ~~~admonish example
@@ -432,7 +406,7 @@ Alternatively, you can use the `itemModel` field to provide your own item asset 
 
 Makes the item behave like a fishing rod!
 
-This behaviour can automatically generate the item model predicate overrides for fishing rods (item assets in `items` in 1.21.4).
+This behaviour can automatically generate the item model predicate overrides for fishing rods (item assets in `items` in 1.21.4 or later).
 
 In order to automatically generate an item model for fishing rods, you have to provide models for `default` and `cast` in the `itemResource` field:
 ~~~admonish example
@@ -462,7 +436,7 @@ Makes the item behave like a trident!
 
 This behaviour can automatically generate the item model predicate overrides for tridents.
 
-In order to automatically generate an item model for tridents, you will have to provide models for `default` and `cast` in the `itemResource` field:
+In order to automatically generate an item model for tridents, you will have to provide models for `default` and `throwing` in the `itemResource` field:
 ~~~admonish example
 ```json
 {

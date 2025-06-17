@@ -65,7 +65,7 @@ public class FishingRod implements ItemBehaviour<FishingRod.Config>, ItemPredica
     }
 
     @Override
-    public void generate(Data data) {
+    public void generate(Data<?> data) {
         PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder ->
                 ItemAssetGenerator.createFishingRod(
                         resourcePackBuilder, data.id(),

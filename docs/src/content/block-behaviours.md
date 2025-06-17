@@ -1,6 +1,6 @@
 # Block Behaviours
 
-Block behaviours can be customized to add unique properties to blocks. All behaviours are optional, and some can be applied to both, blocks and decorations.
+Block behaviours can be customized to add unique properties to blocks. All behaviours are optional and can be applied to both, blocks and decorations.
 
 Blocks also work with most item-behaviours to give the blocks' item special features.
 
@@ -8,10 +8,7 @@ Some block behaviours provide blockstate properties you will have to provide mod
 
 Example of a blockResource entry for the `repeater` behaviour (can be found as relay block in the example datapack):
 
-<details>
-<summary>Click to expand</summary>
-
-~~~admonish example
+~~~admonish example collapsible=true
 ```json
 {
   "blockResource": {
@@ -51,21 +48,21 @@ You can also provide rotations for the block model like so:
 }
 ```
 ~~~
-</details>
 
-Example of a block with behaviours set:
-
-<details>
-<summary>Click to expand</summary>
-
-~~~admonish example
+~~~admonish example title="Example of a block with behaviours set", collapsible=true
 ```json
 {
   "id": "mynamespace:myblock",
-  "blockResource": {
+    "blockResource": {
     "models": {
-      "...": "mynamespace:custom/block/myblock",
-      "...": "..."
+      "lit=false,facing=north": { "model": "minecraft:block/furnace", "y": 0 },
+      "lit=false,facing=south": { "model": "minecraft:block/furnace", "y": 180 },
+      "lit=false,facing=east": { "model": "minecraft:block/furnace", "y": 90 },
+      "lit=false,facing=west": { "model": "minecraft:block/furnace", "y": 270 },
+      "lit=true,facing=north": { "model": "minecraft:block/furnace_on", "y": 0 },
+      "lit=true,facing=south": { "model": "minecraft:block/furnace_on", "y": 180 },
+      "lit=true,facing=east": { "model": "minecraft:block/furnace_on", "y": 90 },
+      "lit=true,facing=west": { "model": "minecraft:block/furnace_on", "y": 270 }
     }
   },
   "blockModelType": "full_block",
@@ -84,12 +81,6 @@ Example of a block with behaviours set:
     "fuel": {
       "value": 10
     },
-    "food": {
-      "hunger": 2,
-      "saturation": 1.0,
-      "canAlwaysEat": true,
-      "fastfood": true
-    },
     "cosmetic": {
       "slot": "chest",
       "model": "mynamespace:custom/models/clown_backpack_animated",
@@ -104,7 +95,6 @@ Example of a block with behaviours set:
 }
 ```
 ~~~
-</details>
 
 This creates a block + item that can be worn and when worn shows an animated blockbench model on the player. The item is also a food and can be used as fuel source in furnaces.
 
@@ -126,6 +116,37 @@ Gives the block an `axis` property/block-state similar to wooden logs/pillars an
 
 ---
 
+## `connectable` behaviour
+
+This behaviour allows the block to connect to other blocks, similar to stairs, but requiring a block on both sides of a corner to be present in order to the corner shape.
+Optionally without the corner states.
+
+~~~admonish info "Block-State-Properties to provide models for"
+- `shape`: `middle`, `single`, `left`, `right`, `inner_left`, `inner_right`, `outer_left`, `outer_right`
+- `facing`: `north`, `east`, `south`, `west`
+~~~
+
+~~~admonish info "Configurable Fields"
+- `corners`: Flag whether to allow corners
+~~~
+
+This behaviour is best used with decorations, as you will only have to define 6 models:
+~~~admonish example
+"itemResource": {
+  "models": {
+    "default": "minecraft:custom/furniture/benches/middle_connectable",
+    "inner": "minecraft:custom/furniture/benches/inner_connectable",
+    "outer": "minecraft:custom/furniture/benches/outer_connectable",
+    "middle": "minecraft:custom/furniture/benches/middle_connectable",
+    "left": "minecraft:custom/furniture/benches/left_connectable",
+    "right": "minecraft:custom/furniture/benches/right_connectable",
+    "single": "minecraft:custom/furniture/benches/single_connectable"
+  }
+}
+~~~
+
+---
+
 ## `count` behaviour
 
 Gives the block a `count` property/block-state.
@@ -134,6 +155,10 @@ Works similar to turtle eggs or candles, allows you to place "multiple blocks/it
 
 ~~~admonish info "Block-State-Properties to provide models for"
 - `count`: 1...max
+~~~
+
+~~~admonish info "Configurable Fields"
+- `max`: Max count
 ~~~
 
 ---
@@ -375,11 +400,14 @@ Comes with all door block state properties (hinge, open, powered, etc.)
 
 ---
 
-## `simple_waterloggable` behaviour
+## `waterloggable` behaviour
 
-Simple waterloggable block.
+Simple waterloggable block with a `waterlogged` property.
 
-~~~admonish info "Optional Block-State-Properties to provide models for (automatically handled)"
+There is an alias called `simple_waterlogged` for backwards compatibility with older filament data packs
+
+
+~~~admonish info "Optional Block-State-Properties to provide models for"
 - `waterlogged`: true, false
 ~~~
 
@@ -417,6 +445,7 @@ The values of the `min` and `max` fields can be mapped to block-states.
   }
 }
 ```
+Using behaviour for crops, you could make a crop that drops xp when fully aged 
 ~~~
 
 ~~~admonish example "Example with constant values"
@@ -427,6 +456,7 @@ The values of the `min` and `max` fields can be mapped to block-states.
   }
 }
 ```
+This will drop 6 xp for any block-state
 ~~~
 
 ---
@@ -513,7 +543,7 @@ All fields of this behaviour can be mapped to a block-state.
 - `damagePerDistance`: Accumulated damage per block fallen
 - `maxDamage`: Maximum damage a falling block can deal
 - `disableDrops`: Prevent the block from being placed when it falls. This behaves like the `CancelDrop` NBT data for falling block entities. Defaults to `false`
-- `dropItems`: Flag whether the block should drop as item when it breaks. This behaves like the `DropItems` NBT data for falling block entities. Defaults to `true`
+- `dropItem`: Flag whether the block should drop as item when it breaks. This behaves like the `DropItems` NBT data for falling block entities. Defaults to `true`
 - `silent`: Flag whether sounds are played when the block falls or breaks
 - `landSound`: Sound played when the block lands
 - `breakSound`: Sound played when the block breaks
@@ -618,4 +648,21 @@ Adds `distance` and `persistent` block state properties to the block.
 ~~~admonish info "Configurable Fields"
 - `blockTag`: Block tag for blocks that prevent leaf decay. Defaults to `minecraft:logs`
 - `decayChance` Chance to decay in each random tick. Can be between 0 and 1. Defaults to `1`
+~~~
+
+---
+
+## `lamp` behaviour
+
+Allows you to create lamps that either switch on/off or cycle through a list of light levels on player interaction.
+
+~~~admonish info "Block-State-Properties to provide models for (optional)"
+- `level`: 0 to 15 (optional)
+~~~
+
+~~~admonish info "Configurable Fields"
+- `on`: Light level to use for the 'on' state
+- `off`: Light level to use for the 'off' state
+- `cycle`: List of light levels to cycle through. 
+- `models`: Flag whether you want display custom models for the `level` block-states
 ~~~

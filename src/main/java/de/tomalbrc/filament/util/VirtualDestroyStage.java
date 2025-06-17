@@ -31,6 +31,7 @@ public class VirtualDestroyStage extends ElementHolder {
     public VirtualDestroyStage() {
         for (int i = 0; i < 32; i++) {
             var element = new ItemDisplayElement();
+            element.setInvisible(true);
             element.setItem(DESTROY_STAGE_MODELS[0]);
             element.setScale(new Vector3f(1.01f));
             this.destroyElements.add(element);

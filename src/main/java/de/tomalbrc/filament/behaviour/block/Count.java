@@ -26,9 +26,8 @@ public class Count implements BlockBehaviour<Count.CountConfig> {
     }
 
     @Override
-    public boolean createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(COUNT);
-        return true;
     }
 
     @Override

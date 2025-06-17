@@ -4,9 +4,9 @@
 
 Decoration configuration files are to be placed in `MyDatapack/data/<namespace>/filament/decoration/my_decoration.json`.
 
-All item-behaviours such as `food`, `fuel` and `cosmetic` are supported by decorations.
+All item-behaviours such as `fuel` and `cosmetic` are supported by decorations.
 
-You can also set components similar to item configurations using the `components` field
+You can also set components to the configurations using the `components` field.
 
 ---
 
@@ -44,7 +44,7 @@ You can also set components similar to item configurations using the `components
 
 The file contents are very similar to that of blocks, except for additional behaviours exclusive to decorations.
 
-Decorations do not support most of the block behaviours.
+Decorations support most of the block behaviours.
 
 You can specify different models for decorations when placed on walls, ceiling (underside of blocks) or on the floor.
 
@@ -63,12 +63,15 @@ You can specify different models for decorations when placed on walls, ceiling (
   },
   "block": "minecraft:barrier",
   "properties": {
-    "rotate": true,
-    "rotateSmooth": true,
     "placement": {
       "wall": true,
       "floor": true,
       "ceiling": true
+    }
+  },
+  "behaviour": {
+    "rotating": { // to allow 90° rotations
+      "smooth": true // to allow 45° rotations
     }
   }
 }

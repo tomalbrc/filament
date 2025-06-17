@@ -8,10 +8,8 @@
       "default": "minecraft:custom/furniture/chests/example_chest"
     }
   },
-  "properties": {
-    "rotate": true
-  },
   "behaviour": {
+    "horizontal_facing": {},
     "animation": {
       "model": "mynamespace:example_chest"
     },

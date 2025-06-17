@@ -5,8 +5,9 @@
       "default": "minecraft:custom/furniture/misc/darkoak_globe"
     }
   },
-  "properties": {
-    "rotate": true,
-    "rotateSmooth": true
+  "behaviour": {
+    "rotating": {
+      "smooth": true
+    }
   }
 }

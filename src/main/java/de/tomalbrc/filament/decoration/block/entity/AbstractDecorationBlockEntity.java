@@ -3,10 +3,10 @@ package de.tomalbrc.filament.decoration.block.entity;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.registry.DecorationRegistry;
+import de.tomalbrc.filament.datafixer.DataFix;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,17 +17,16 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     public static final String MAIN = "Main";
     public static final String VERSION = "V";
     public static final String ITEM = "Item";
-    public static final String ROTATION = "Rotation";
     public static final String DIRECTION = "Direction";
 
     protected BlockPos main;
-    protected int version = 1;
-
-    protected int rotation;
+    protected int version = DataFix.VERSION;
 
     protected Direction direction = Direction.UP;
 
     protected ItemStack itemStack;
+
+    public int rotation;
 
     public AbstractDecorationBlockEntity(BlockPos pos, BlockState state) {
         super(DecorationRegistry.getBlockEntityType(state), pos, state);
@@ -54,7 +53,7 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
 
-        this.version = input.getInt(VERSION).orElse(1);
+        this.version = input.getInt(VERSION).orElse(2);
         input.read(MAIN, BlockPos.CODEC).ifPresent(main -> this.main = main);
 
         this.itemStack = input.read(ITEM, ItemStack.CODEC).orElse(null);
@@ -65,7 +64,6 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
         if (!this.isMain())
             return;
 
-        this.rotation = input.getIntOr(ROTATION, 0);
         this.direction = Direction.from3DDataValue(input.getIntOr(DIRECTION, Direction.UP.get3DDataValue()));
     }
 
@@ -95,7 +93,6 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
         output.putInt(VERSION, this.version);
 
         if (this.isMain()) {
-            output.putInt(ROTATION, this.rotation);
             output.putInt(DIRECTION, this.direction.get3DDataValue());
         }
     }
@@ -120,16 +117,6 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     }
 
     public float getVisualRotationYInDegrees() {
-        Direction direction = this.getDirection();
-        int i = direction.getAxis().isVertical() ? 90 * direction.getAxisDirection().getStep() : 0;
-        return (float) Mth.wrapDegrees(180 + direction.get2DDataValue() * 90 + rotation * 45 + i);
-    }
-
-    public void setRotation(int rotation) {
-        this.rotation = rotation;
-    }
-
-    public int getRotation() {
-        return this.rotation;
+        return ((DecorationBlock)this.getBlockState().getBlock()).getVisualRotationYInDegrees(this.getBlockState());
     }
 }

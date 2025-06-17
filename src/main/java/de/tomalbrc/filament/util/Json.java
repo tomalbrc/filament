@@ -5,9 +5,9 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import de.tomalbrc.bil.json.SimpleCodecDeserializer;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.BehaviourList;
@@ -84,8 +84,8 @@ public class Json {
         for (Object document : documents) {
             if (document instanceof Map) {
                 @SuppressWarnings("unchecked")
-                var d = (Map<String, Object>) document;
-                document = Json.camelToSnakeCase(d);
+                var documentMap = (Map<String, Object>) document;
+                document = Json.camelToSnakeCase(documentMap);
             }
             String jsonString = Json.GSON.toJson(document);
             InputStream stream = new ByteArrayInputStream(jsonString.getBytes(StandardCharsets.UTF_8));
@@ -153,23 +153,6 @@ public class Json {
             snakeCase.append(Character.toLowerCase(c));
         }
         return snakeCase.toString();
-    }
-
-    public static class SimpleCodecDeserializer<T> implements JsonDeserializer<T> {
-
-        private final Codec<T> codec;
-
-        public SimpleCodecDeserializer(Codec<T> codec) {
-            this.codec = codec;
-        }
-
-        @Override
-        public T deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            return codec.parse(JsonOps.INSTANCE, json)
-                    .getOrThrow(error ->
-                            new JsonParseException("Failed to deserialize using Codec: " + error)
-                    );
-        }
     }
 
     public static class BlockStateMappedPropertyDeserializer<T> implements JsonDeserializer<BlockStateMappedProperty<T>> {

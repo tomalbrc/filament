@@ -39,9 +39,8 @@ public class Furnace implements BlockBehaviourWithEntity<Furnace.Config> {
     }
 
     @Override
-    public boolean createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.LIT);
-        return true;
     }
 
     @Override
@@ -75,7 +74,7 @@ public class Furnace implements BlockBehaviourWithEntity<Furnace.Config> {
     }
 
     @Override
-    public void affectNeighborsAfterRemoval(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, boolean bl) {
+    public void affectNeighborsAfterRemoval(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, boolean movedByPiston) {
         Containers.updateNeighboursAfterDestroy(blockState, serverLevel, blockPos);
     }
 

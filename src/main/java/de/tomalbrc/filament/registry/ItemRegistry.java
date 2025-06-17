@@ -41,7 +41,7 @@ public class ItemRegistry {
     static public void register(ItemData data) {
         if (BuiltInRegistries.ITEM.containsKey(data.id())) return;
 
-        Item.Properties properties = data.properties().toItemProperties(data.behaviour());
+        Item.Properties properties = data.properties().toItemProperties();
 
         if (data.properties().copyComponents) {
             for (TypedDataComponent component : data.vanillaItem().components()) {

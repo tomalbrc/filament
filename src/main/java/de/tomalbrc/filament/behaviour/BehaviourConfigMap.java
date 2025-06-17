@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 public class BehaviourConfigMap {
     public static final BehaviourConfigMap EMPTY = new BehaviourConfigMap();
@@ -35,6 +36,16 @@ public class BehaviourConfigMap {
         for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Object> entry : this.behaviourConfigMap.entrySet()) {
             biConsumer.accept((BehaviourType<T, E>) entry.getKey(), entry.getValue());
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Behaviour<E>,E> boolean test(Predicate<BehaviourType<T,E>> biConsumer) {
+        for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Object> entry : this.behaviourConfigMap.entrySet()) {
+            if (biConsumer.test((BehaviourType<T, E>) entry.getKey()))
+                return true;
+        }
+
+        return false;
     }
 
     public boolean isEmpty() {

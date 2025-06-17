@@ -133,7 +133,7 @@ public class Trident implements ItemBehaviour<Trident.Config>, ItemPredicateMode
     }
 
     @Override
-    public void generate(Data data) {
+    public void generate(Data<?> data) {
         PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder ->
                 ItemAssetGenerator.createTrident(
                         resourcePackBuilder, data.id(),

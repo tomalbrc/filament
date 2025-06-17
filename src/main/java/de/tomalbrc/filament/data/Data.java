@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class Data {
+public abstract class Data<PropertyType extends ItemProperties> {
     protected final @NotNull ResourceLocation id;
     protected final @Nullable Item vanillaItem;
     protected final @Nullable Map<String, String> translations;
@@ -27,6 +27,7 @@ public abstract class Data {
     protected final @Nullable DataComponentMap components;
     protected final @Nullable ResourceLocation group;
     protected final @Nullable Set<ResourceLocation> itemTags;
+    protected final @Nullable PropertyType properties;
 
     transient protected Map<DataComponentType<?>, JsonElement> additionalComponents;
 
@@ -36,6 +37,7 @@ public abstract class Data {
             @Nullable Map<String, String> translations,
             @Nullable ItemResource itemResource,
             @Nullable ResourceLocation itemModel,
+            @Nullable PropertyType properties,
             @Nullable BehaviourConfigMap behaviour,
             @Nullable DataComponentMap components,
             @Nullable ResourceLocation group,
@@ -46,6 +48,7 @@ public abstract class Data {
         this.translations = translations;
         this.itemResource = itemResource;
         this.itemModel = itemModel;
+        this.properties = properties;
         this.behaviour = behaviour;
         this.components = components;
         this.group = group;

@@ -157,7 +157,7 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
     }
 
     @Override
-    public void generate(Data data) {
+    public void generate(Data<?> data) {
         PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder ->
                 ItemAssetGenerator.createBow(
                         resourcePackBuilder, data.id(),

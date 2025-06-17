@@ -52,7 +52,7 @@ When choosing blocks that break instantly on the client, like plant_block or tri
 
 You can map the `blockModelType` field of block configs to blockstates, this allows you to change the hitbox of the block depending on the block-state.
 
-In some cases, for example when using the `simple_waterloggable` behaviour, you might want to specify the waterlogged state for your custom block.
+In some cases, for example when using the `waterloggable` behaviour, you might want to specify the waterlogged state for your custom block.
 
 ~~~admonish example
 ```json
@@ -71,7 +71,7 @@ In some cases, for example when using the `simple_waterloggable` behaviour, you 
     }
   },
   "behaviour": {
-    "simple_waterloggable": {}
+    "waterloggable": {}
   },
   "blockModelType": {
     "waterlogged=false": "sculk_sensor_block",

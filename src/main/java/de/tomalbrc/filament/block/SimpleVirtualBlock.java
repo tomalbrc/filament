@@ -2,6 +2,7 @@ package de.tomalbrc.filament.block;
 
 import com.google.common.collect.ImmutableList;
 import de.tomalbrc.filament.data.BlockData;
+import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.BlockUtil;
 import de.tomalbrc.filament.util.DecorationUtil;
 import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
@@ -28,14 +29,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.Map;
 
 public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementHolder {
     private final Map<BlockData.BlockStateMeta, String> cmdMap = new Reference2ObjectOpenHashMap<>();
 
-    public SimpleVirtualBlock(Properties properties, BlockData data) {
+    public SimpleVirtualBlock(Properties properties, BlockData<BlockProperties> data) {
         super(properties, data);
     }
 
@@ -51,15 +51,6 @@ public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementH
                 }
             }
         }
-    }
-
-    @Override
-    public BlockState getPolymerBlockState(BlockState blockState, PacketContext packetContext) {
-        if (this.blockData.block() != null) {
-            return this.blockData.block();
-        }
-
-        return super.getPolymerBlockState(blockState, packetContext);
     }
 
     @Nullable
@@ -91,7 +82,7 @@ public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementH
         }
 
         public void update(BlockState blockState, boolean update) {
-            var state = this.virtualBlock.behaviourFilteredBlockState(blockState);
+            var state = this.virtualBlock.behaviourModifiedBlockState(blockState, blockState);
             var meta = this.virtualBlock.stateMap.get(state);
             this.displayStack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(
                     ImmutableList.of(),

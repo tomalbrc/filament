@@ -11,8 +11,13 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 
 public class BlockUtil {
+    public static final IntegerProperty ROTATION = IntegerProperty.create("rotation", 0, 7);
+    public static final IntegerProperty LIGHT_LEVEL = BlockStateProperties.LEVEL;
+
     public static void handleBoneMealEffects(ServerLevel level, BlockPos blockPos) {
         level.playSound(null, blockPos, SoundEvents.BONE_MEAL_USE, SoundSource.BLOCKS, 1.0f, 1.0f);
         level.sendParticles(ParticleTypes.HAPPY_VILLAGER, blockPos.getCenter().x, blockPos.getCenter().y, blockPos.getCenter().z, 15, 0.25, 0.25, 0.25, 0.15);

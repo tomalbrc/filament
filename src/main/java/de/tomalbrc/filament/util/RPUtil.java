@@ -20,16 +20,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class RPUtil {
-    public static void create(BehaviourHolder behaviourHolder, Data data) {
+    public static void create(BehaviourHolder behaviourHolder, Data<?> data) {
         ResourceProvider itemResources = data.itemResource();
-        if (data.itemResource() == null && data instanceof BlockData blockData) {
+        if (data.itemResource() == null && data instanceof BlockData<?> blockData) {
             itemResources = blockData.blockResource();
         }
 
         if (itemResources instanceof ItemResource ir && ir.couldGenerate()) {
             createItemModels(data.id(), ir);
         }
-        if (data instanceof BlockData blockData && blockData.virtual()) {
+        if (data instanceof BlockData<?> blockData && blockData.virtual()) {
             createBlockItemAssets(blockData.id(), blockData.blockResource());
         }
 
@@ -42,8 +42,6 @@ public class RPUtil {
                     }
                 }
             }
-
-            // todo: models for "breaking" stage of item (using dur. component) ..? using item behavour + itempredicatemodelprovider?
 
             ResourceProvider finalItemResources = itemResources;
             PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder ->

@@ -58,7 +58,7 @@ public class Bed implements DecorationBehaviour<Bed.Config> {
     Pair<Boolean, Boolean> inRangeOrBlocked(ServerPlayer serverPlayer, DecorationBlockEntity decorationBlockEntity) {
         AtomicBoolean range = new AtomicBoolean(false);
         AtomicBoolean blocked = new AtomicBoolean(false);
-        DecorationUtil.forEachRotated(decorationBlockEntity.getDecorationData().blocks(), decorationBlockEntity.mainPosition(), decorationBlockEntity.getRotation(), blockPos -> {
+        DecorationUtil.forEachRotated(decorationBlockEntity.getDecorationData().blocks(), decorationBlockEntity.mainPosition(), decorationBlockEntity.getBlock().getVisualRotationYInDegrees(decorationBlockEntity.getBlockState()), blockPos -> {
             if (serverPlayer.level().getBlockState(blockPos.above()).isSuffocating(serverPlayer.level(), blockPos)) {
                 blocked.set(true);
             }
@@ -123,6 +123,6 @@ public class Bed implements DecorationBehaviour<Bed.Config> {
     }
 
     public static class Config {
-
+        boolean skipNight = false;
     }
 }

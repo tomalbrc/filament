@@ -6,7 +6,7 @@
     }
   },
   "translations": {
-    "en_us": "Fake Furnace"
+    "en_us": "Test Furnace (buggy when falling)"
   },
   "blockResource": {
     "models": {

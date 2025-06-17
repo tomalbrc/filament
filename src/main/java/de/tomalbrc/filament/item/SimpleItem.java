@@ -37,14 +37,14 @@ import java.util.function.Consumer;
  * Simple item, base for filament items without block (+ decorations), with behaviour support
  */
 public class SimpleItem extends Item implements PolymerItem, FilamentItem, BehaviourHolder {
-    protected final Data data;
+    protected final Data<?> data;
     protected final ItemProperties properties;
     protected final Item vanillaItem;
 
     protected final BehaviourMap behaviours = new BehaviourMap();
     protected final FilamentItemDelegate delegate;
 
-    public SimpleItem(Properties properties, Data data, Item vanillaItem) {
+    public SimpleItem(Properties properties, Data<?> data, Item vanillaItem) {
         super(properties);
         this.initBehaviours(data.behaviour());
 
@@ -60,7 +60,7 @@ public class SimpleItem extends Item implements PolymerItem, FilamentItem, Behav
     }
 
     @Override
-    public Data getData() {
+    public Data<?> getData() {
         return this.data;
     }
 

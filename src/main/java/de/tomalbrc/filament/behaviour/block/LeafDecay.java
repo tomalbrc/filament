@@ -47,7 +47,7 @@ public class LeafDecay implements BlockBehaviour<LeafDecay.Config> {
     }
 
     @Override
-    public BlockState filteredBlockState(BlockState blockState) {
+    public BlockState modifyPolymerBlockState(BlockState original, BlockState blockState) {
         return blockState.setValue(BlockStateProperties.DISTANCE, 7).setValue(BlockStateProperties.PERSISTENT, false);
     }
 
@@ -57,9 +57,8 @@ public class LeafDecay implements BlockBehaviour<LeafDecay.Config> {
     }
 
     @Override
-    public boolean createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.DISTANCE, BlockStateProperties.PERSISTENT);
-        return true;
     }
 
     @Override

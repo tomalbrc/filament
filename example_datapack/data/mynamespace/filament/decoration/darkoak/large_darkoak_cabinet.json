@@ -5,21 +5,13 @@
       "default": "minecraft:custom/furniture/boards/large_darkoak_cabinet"
     }
   },
-  "properties": {
-    "rotate": true
+  "behaviour": {
+    "horizontal_facing": {}
   },
   "blocks": [
     {
-      "origin": [
-        0,
-        0,
-        0
-      ],
-      "size": [
-        2,
-        3,
-        1
-      ]
+      "origin": [0, 0, 0],
+      "size": [2, 3, 1]
     }
   ]
 }

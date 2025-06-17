@@ -1,9 +1,27 @@
 # Third party compatibility
 
-# Oraxen/ItemsAdder
+# Oraxen and Nexo
 
-Filament has 2 options to make 
-1. Decoration `blocks` and `seat` rotations (`seat` behaviour) more similar to that of Oraxen / ItemsAdder - filaments placement for those is rotated by 180° b default.
+Filament supports Nexo and Oraxen packs directly as of 0.17.8 (there is also 0.14.9 for 1.21.1 that supports this feature)
+
+Create a folder called "nexo" in your games root directory and copy your oraxen or nexo packs into it.
+```
+└── mods/
+└── nexo/
+    └── your-pack/
+        ├── items/
+        └── pack/
+```
+
+The folder name of the pack should not contain spaces or special character, it is used as namespace in the identifier for your items and blocks:
+`your-pack:your_item`
+
+The assets will automatically be added to the generated resource-pack.
+
+# Config options
+
+There are 2 options in `filament.json` to make: 
+1. Decoration `blocks` and `seat` rotations (`seat` behaviour) more similar to that of Oraxen / Nexo / ItemsAdder - filaments placement for those is rotated by 180° b default.
 2. Change the display of cosmetics on the player, this uses the "head" as display context of the item. It also moves the backpack up, since filament uses item display entities instead of armor stands.
 
 Those 2 options in filament.json are:

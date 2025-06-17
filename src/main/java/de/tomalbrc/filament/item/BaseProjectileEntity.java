@@ -197,10 +197,8 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     public void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
 
-        if (this.projectileStack != null && !this.projectileStack.isEmpty() && this.pickupStack != null && !this.pickupStack.isEmpty()) {
-            output.store("Item", ItemStack.CODEC, this.projectileStack);
-            output.store("PickupItem", ItemStack.CODEC, this.pickupStack);
-        }
+        if (this.projectileStack != null && !this.projectileStack.isEmpty()) output.store("Item", ItemStack.CODEC, this.projectileStack);
+        if (this.pickupStack != null && !this.pickupStack.isEmpty()) output.store("PickupItem", ItemStack.CODEC, this.pickupStack);
 
         output.putBoolean("DealtDamage", this.dealtDamage);
     }

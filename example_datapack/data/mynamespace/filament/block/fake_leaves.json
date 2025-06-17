@@ -21,7 +21,7 @@
     "waterlogged=true": "transparent_block_waterlogged"
   },
   "behaviour": {
-    "simple_waterloggable": {},
+    "waterloggable": {},
     "leaf_decay": {}
   }
 }

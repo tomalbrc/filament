@@ -68,9 +68,8 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
     }
 
     @Override
-    public boolean createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(AGES[Math.max(0, config.maxAge-1)]);
-        return true;
     }
 
     @Override

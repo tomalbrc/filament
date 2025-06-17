@@ -22,6 +22,10 @@
     "flammable": {
       "spread": 5,
       "burn": 20
+    },
+    "lamp": {
+      "on": 15,
+      "off": 0
     }
   }
 }

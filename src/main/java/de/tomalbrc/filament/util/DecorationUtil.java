@@ -5,7 +5,8 @@ import com.mojang.math.Axis;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.resource.ItemResource;
-import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
+import de.tomalbrc.filament.decoration.util.ItemFrameElement;
 import de.tomalbrc.filament.decoration.util.ItemFrameElement;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
@@ -19,26 +20,26 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBundlePacket;
-import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
-import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
+import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Brightness;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Math;
 import org.joml.*;
 import xyz.nucleoid.packettweaker.PacketContext;
@@ -60,7 +61,8 @@ public class DecorationUtil {
                     for (int y = 0; y < size.y(); y++) {
                         for (int z = 0; z < size.z(); z++) {
                             Vector3f pos = new Vector3f(x, y, z).add(origin);
-                            Vector3f offset = pos.mul(rotation % 90 != 0 ? Math.sqrt(2) : 1);
+                            var hMul = rotation % 90 != 0 ? Math.sqrt(2) : 1;
+                            Vector3f offset = pos.mul(hMul, 1, hMul);
                             offset.rotateY(Mth.DEG_TO_RAD * (rotation + (FilamentConfig.getInstance().alternativeBlockPlacement ? 0 : 180)));
 
                             BlockPos blockPos = new BlockPos(originBlockPos).offset(-Math.round(offset.x), Math.round(offset.y), Math.round(offset.z));
@@ -84,77 +86,52 @@ public class DecorationUtil {
         return new Vector2f();
     }
 
-    public static InteractionElement decorationInteraction(DecorationBlockEntity blockEntity) {
+    public static InteractionElement decorationInteraction(DecorationData decorationData, Direction direction, @Nullable OnInteract onInteract) {
         InteractionElement element = new InteractionElement();
+        if (decorationData != null && decorationData.size() != null) {
+            element.setSize(decorationData.size().x, decorationData.size().y);
+        } else {
+            element.setSize(1.f, direction.equals(Direction.DOWN) ? 1.f : .5f); // default
+        }
+
         element.setHandler(new VirtualElement.InteractionHandler() {
             @Override
             public void interactAt(ServerPlayer player, InteractionHand hand, Vec3 pos) {
-                ServerLevel serverLevel = element.getHolder().getAttachment().getWorld();
+                ServerLevel serverLevel = player.serverLevel();
                 BlockPos blockPos = BlockPos.containing(element.getHolder().getAttachment().getPos());
-                if (serverLevel.mayInteract(player, blockPos)) {
-                    blockEntity.interact(player, hand, blockEntity.getBlockPos().getCenter().subtract(0, 0.5f, 0).add(pos));
+                InteractionResult result = InteractionResult.PASS;
+                if (onInteract != null && serverLevel.mayInteract(player, blockPos)) {
+                    result = onInteract.interact(player, hand, blockPos.getBottomCenter().add(pos));
                 }
+
+                if (!result.consumesAction()) DecorationUtil.defaultVirtualInteraction(player, hand, blockPos, pos, element.getHeight());
             }
 
             @Override
             public void attack(ServerPlayer player) {
-                ServerLevel serverLevel = element.getHolder().getAttachment().getWorld();
+                ServerLevel serverLevel = player.serverLevel();
                 BlockPos blockPos = BlockPos.containing(element.getHolder().getAttachment().getPos());
                 player.gameMode.handleBlockBreakAction(blockPos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, Direction.UP, serverLevel.getMaxY(), 0);
             }
         });
 
-        if (blockEntity.getDecorationData() != null && blockEntity.getDecorationData().size() != null) {
-            element.setSize(blockEntity.getDecorationData().size().x, blockEntity.getDecorationData().size().y);
-        } else {
-            element.setSize(1.f, blockEntity.getDirection().equals(Direction.DOWN) ? 1.f : .5f); // default
-        }
-
-        var dirUnitVec = blockEntity.getDirection().getUnitVec3i();
-        if (blockEntity.getDirection() != Direction.DOWN && blockEntity.getDirection() != Direction.UP) {
+        var dirUnitVec = direction.getUnitVec3i();
+        if (direction != Direction.DOWN && direction != Direction.UP) {
             element.setOffset(new Vec3(dirUnitVec.getX(), dirUnitVec.getY() + element.getHeight(), dirUnitVec.getZ()).multiply(1.f-element.getWidth(), 1, 1.f-element.getWidth()).scale(-0.5f));
         } else {
-            element.setOffset(new Vec3(dirUnitVec.getX(), dirUnitVec.getY(), dirUnitVec.getZ()).add(0,  blockEntity.getDirection() == Direction.UP ? -1.5f : 0.5f + ((1.f-element.getHeight())), 0));
+            element.setOffset(new Vec3(dirUnitVec.getX(), dirUnitVec.getY(), dirUnitVec.getZ()).add(0,  direction == Direction.UP ? -1.5f : 0.5f + ((1.f-element.getHeight())), 0));
         }
 
         return element;
     }
 
-    public static InteractionElement decorationInteraction(DecorationData decorationData) {
-        InteractionElement element = new InteractionElement();
-        element.setHandler(new VirtualElement.InteractionHandler() {
-            @Override
-            public void attack(ServerPlayer player) {
-                ServerLevel serverLevel = element.getHolder().getAttachment().getWorld();
-                BlockPos blockPos = BlockPos.containing(element.getHolder().getAttachment().getPos());
-                player.gameMode.handleBlockBreakAction(blockPos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, Direction.UP, serverLevel.getMaxY(), 0);
-            }
-        });
-        element.setSize(1.f, 1.f);
+    public static ItemDisplayElement decorationItemDisplay(@NotNull DecorationData data, Direction direction, float rotation, ItemStack itemStack) {
+        ItemDisplayElement element = new ItemDisplayElement(itemStack);
+        element.setInvisible(true);
+        element.setTeleportDuration(0);
 
-        if (decorationData.size() != null) {
-            element.setSize(decorationData.size().x, decorationData.size().y);
-        } else {
-            element.setSize(1.f, 1.f);
-        }
-
-        element.setOffset(new Vec3(0, -0.5f, 0));
-
-        return element;
-    }
-
-    public static ItemDisplayElement decorationItemDisplay(DecorationBlockEntity blockEntity) {
-        ItemDisplayElement display = decorationItemDisplay(blockEntity.getDecorationData(), blockEntity.getDirection(), blockEntity.getVisualRotationYInDegrees());
-        display.setItem(blockEntity.visualItemStack());
-        return display;
-    }
-
-    public static ItemDisplayElement decorationItemDisplay(DecorationData data, Direction direction, float rotation) {
-        ItemDisplayElement itemDisplayElement = new ItemDisplayElement(BuiltInRegistries.ITEM.getValue(data.id()));
-        itemDisplayElement.setTeleportDuration(1);
-
-        if (data != null && data.properties().glow) {
-            itemDisplayElement.setBrightness(Brightness.FULL_BRIGHT);
+        if (data.properties().glow) {
+            element.setBrightness(Brightness.FULL_BRIGHT);
         }
 
         Vector2f size = new Vector2f(1);
@@ -164,18 +141,20 @@ public class DecorationUtil {
             size = data.size();
         }
 
-        Matrix4f matrix4f = transform(data.properties().display, direction, rotation);
+        Matrix4f matrix4f = transform(data.properties().display, direction);
 
-        itemDisplayElement.setDisplayWidth(size.x * 3.f);
-        itemDisplayElement.setDisplayHeight(size.y * 3.f);
+        element.setYaw(rotation - (180));
 
-        itemDisplayElement.setTransformation(matrix4f);
-        itemDisplayElement.setItemDisplayContext(data.properties().display);
+        element.setDisplayWidth(size.x * 3.f);
+        element.setDisplayHeight(size.y * 3.f);
 
-        return itemDisplayElement;
+        element.setTransformation(matrix4f);
+        element.setItemDisplayContext(data.properties().display);
+
+        return element;
     }
 
-    private static Matrix4f transform(ItemDisplayContext context, Direction direction, float rotation) {
+    private static Matrix4f transform(ItemDisplayContext context, Direction direction) {
         Matrix4f matrix4f = new Matrix4f();
 
         return switch (context) {
@@ -185,20 +164,12 @@ public class DecorationUtil {
                 if (direction == Direction.DOWN || direction == Direction.UP) {
                     matrix4f.setTranslation(0, -0.5f, 0);
 
-                    float ang = (float) java.lang.Math.toRadians(rotation + 180);
-                    double angleRadians = Mth.atan2(-Mth.sin(ang), Mth.cos(ang));
-                    matrix4f.rotate(Axis.YP.rotation((float) angleRadians).normalize());
                     matrix4f.rotate(Axis.XP.rotationDegrees(-90));
                     if (direction == Direction.DOWN) {
                         matrix4f.rotate(Axis.XP.rotationDegrees(180));
-                        matrix4f.setTranslation(0, 0.5f, 0);
                     }
                 } else {
-                    double angleRadians = Mth.DEG_TO_RAD * direction.toYRot();
-                    Quaternionf rot = Axis.YP.rotation((float) angleRadians).conjugate().normalize();
-                    matrix4f.rotate(rot);
-                    matrix4f.setTranslation(new Vector3f(0.f, 0.f, -0.5f).rotate(rot));
-
+                    matrix4f.setTranslation(new Vector3f(0.f, 0.f, -0.5f));
                 }
 
                 yield matrix4f;
@@ -206,19 +177,9 @@ public class DecorationUtil {
             case HEAD -> {
                 matrix4f.translate(0, 1.91f, 0);
                 matrix4f.scaleLocal(0.64f);
-
-                float ang = (float) java.lang.Math.toRadians(rotation + 180);
-                double angleRadians = Mth.atan2(-Mth.sin(ang), Mth.cos(ang));
-                matrix4f.rotate(Axis.YP.rotation((float) angleRadians).normalize());
-
                 yield matrix4f;
             }
-            default -> {
-                float ang = (float) java.lang.Math.toRadians(rotation);
-                double angleRadians = Mth.atan2(-Mth.sin(ang), Mth.cos(ang));
-                matrix4f.rotate(Axis.YP.rotation((float) angleRadians).normalize());
-                yield matrix4f;
-            }
+            default -> matrix4f;
         };
     }
 
@@ -272,6 +233,7 @@ public class DecorationUtil {
     public static ItemStack placementAdjustedItem(ItemStack itemStack, ItemResource itemResource, boolean wall, boolean ceiling) {
         var converted = clientsideItem(itemStack);
 
+        // TODO: this should be a behaviour
         if (wall && itemResource.getModels().containsKey("wall")) {
             converted.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(ImmutableList.of(), ImmutableList.of(), ImmutableList.of("wall"), ImmutableList.of()));
             return converted;
@@ -292,6 +254,9 @@ public class DecorationUtil {
     }
 
     public static ItemStack clientsideItem(ItemStack itemStack) {
+        if (itemStack == null)
+            return ItemStack.EMPTY;
+
         if (!(itemStack.getItem() instanceof PolymerItem)) {
             return itemStack.copyWithCount(1);
         } else {
@@ -299,21 +264,33 @@ public class DecorationUtil {
         }
     }
 
-    public static void setup(ElementHolder holder, DecorationBlockEntity blockEntity) {
-        if (blockEntity.getDecorationData().hasBlocks()) {
-            holder.addElement(DecorationUtil.decorationItemDisplay(blockEntity));
-        } else if (blockEntity.getDecorationData().size() != null) {
-            holder.addElement(DecorationUtil.decorationItemDisplay(blockEntity));
-            holder.addElement(DecorationUtil.decorationInteraction(blockEntity));
+    public static void setupElements(@NotNull FilamentDecorationHolder holder, @NotNull DecorationData data, @NotNull Direction direction, float rotation, @NotNull ItemStack itemStack, @Nullable OnInteract onInteract) {
+        boolean addDisplay = !holder.isAnimated();
+
+        if (data.hasBlocks() && addDisplay) {
+            holder.addElement(DecorationUtil.decorationItemDisplay(data, direction, rotation, itemStack));
+        } else if (data.size() != null) {
+            if (addDisplay)
+                holder.addElement(DecorationUtil.decorationItemDisplay(data, direction, rotation, itemStack));
+            holder.addElement(DecorationUtil.decorationInteraction(data, direction, onInteract));
         } else {
-            if (blockEntity.getDecorationData().itemFrame() == Boolean.TRUE) {
-                ItemFrameElement itemFrameElement = new ItemFrameElement(blockEntity);
+            if (data.itemFrame() == Boolean.TRUE && addDisplay) {
+                ItemFrameElement itemFrameElement = new ItemFrameElement(data, direction, Util.SEGMENTED_ANGLE8.fromDegrees(rotation), itemStack, onInteract);
                 holder.addElement(itemFrameElement);
-            } else {
+            } else if (!data.hasBlocks()) {
                 // Just using display+interaction again with 1.0 width, 0.5 height
-                holder.addElement(DecorationUtil.decorationItemDisplay(blockEntity));
-                holder.addElement(DecorationUtil.decorationInteraction(blockEntity));
+                if (addDisplay) holder.addElement(DecorationUtil.decorationItemDisplay(data, direction, rotation, itemStack));
+                holder.addElement(DecorationUtil.decorationInteraction(data, direction, onInteract));
             }
         }
+    }
+
+    public static void defaultVirtualInteraction(ServerPlayer player, InteractionHand hand, BlockPos blockPos, Vec3 position, float height) {
+        player.connection.handleUseItemOn(new ServerboundUseItemOnPacket(hand, new BlockHitResult(blockPos.getCenter().add(position), Direction.getApproximateNearest(position.multiply(1, 1.f/height * 0.5, 1)), blockPos, false), 0));
+    }
+
+    @FunctionalInterface
+    public interface OnInteract {
+        InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 pos);
     }
 }
