@@ -13,6 +13,7 @@ import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
 import eu.pb4.polymer.core.api.block.PolymerBlockUtils;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
+import eu.pb4.polymer.resourcepack.extras.api.format.item.model.ItemModel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -36,6 +37,9 @@ public class Filament implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        // TODO: remove  (polymer bug (0.13.0))
+        var x = ItemModel.CODEC;
+
         PolymerResourcePackUtils.markAsRequired();
         FilamentComponents.register();
         Behaviours.register();
