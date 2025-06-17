@@ -250,8 +250,8 @@ public class NexoImporter {
                     return;
 
                 var props = new DecorationProperties();
-                props.destroyTime = 2;
-                props.explosionResistance = 2;
+                props.destroyTime = 0;
+                props.explosionResistance = 0;
                 props.solid = false;
                 props.transparent = true;
                 props.allowsSpawning = false;
