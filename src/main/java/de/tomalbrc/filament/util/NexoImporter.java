@@ -34,6 +34,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import org.apache.commons.io.FilenameUtils;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -212,7 +213,6 @@ public class NexoImporter {
             if (customBlock != null) {
                 // load as block
                 var model = getValue("model", data, String.class);
-
                 var props = new BlockProperties();
                 props.destroyTime = 2;
                 props.explosionResistance = 2;
@@ -250,8 +250,8 @@ public class NexoImporter {
                     return;
 
                 var props = new DecorationProperties();
-                props.destroyTime = 0;
-                props.explosionResistance = 0;
+                props.destroyTime = 0.5f;
+                props.explosionResistance = 0.5f;
                 props.solid = false;
                 props.transparent = true;
                 props.allowsSpawning = false;
