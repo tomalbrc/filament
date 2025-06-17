@@ -2,8 +2,8 @@ package de.tomalbrc.filament.command.subcommand;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import de.tomalbrc.bil.util.Permissions;
 import eu.pb4.polymer.core.api.item.PolymerItem;
-import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;

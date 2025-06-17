@@ -7,9 +7,7 @@ import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
 import de.tomalbrc.filament.decoration.util.ItemFrameElement;
-import de.tomalbrc.filament.decoration.util.ItemFrameElement;
 import eu.pb4.polymer.core.api.item.PolymerItem;
-import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
@@ -97,7 +95,7 @@ public class DecorationUtil {
         element.setHandler(new VirtualElement.InteractionHandler() {
             @Override
             public void interactAt(ServerPlayer player, InteractionHand hand, Vec3 pos) {
-                ServerLevel serverLevel = player.serverLevel();
+                ServerLevel serverLevel = player.level();
                 BlockPos blockPos = BlockPos.containing(element.getHolder().getAttachment().getPos());
                 InteractionResult result = InteractionResult.PASS;
                 if (onInteract != null && serverLevel.mayInteract(player, blockPos)) {
@@ -109,7 +107,7 @@ public class DecorationUtil {
 
             @Override
             public void attack(ServerPlayer player) {
-                ServerLevel serverLevel = player.serverLevel();
+                ServerLevel serverLevel = player.level();
                 BlockPos blockPos = BlockPos.containing(element.getHolder().getAttachment().getPos());
                 player.gameMode.handleBlockBreakAction(blockPos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, Direction.UP, serverLevel.getMaxY(), 0);
             }

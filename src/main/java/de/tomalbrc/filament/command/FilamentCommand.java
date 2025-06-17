@@ -1,13 +1,13 @@
 package de.tomalbrc.filament.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import de.tomalbrc.bil.util.Permissions;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.command.subcommand.*;
 import de.tomalbrc.filament.registry.BlockRegistry;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.registry.ItemRegistry;
 import de.tomalbrc.filament.util.Constants;
-import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.Person;
 import net.minecraft.commands.CommandSourceStack;

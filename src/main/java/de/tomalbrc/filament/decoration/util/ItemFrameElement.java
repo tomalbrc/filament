@@ -47,7 +47,7 @@ public class ItemFrameElement extends GenericEntityElement {
         this.setInteractionHandler(new InteractionHandler() {
             @Override
             public void interactAt(ServerPlayer player, InteractionHand hand, Vec3 pos) {
-                ServerLevel serverLevel = player.serverLevel();
+                ServerLevel serverLevel = player.level();
                 BlockPos blockPos = BlockPos.containing(getHolder().getAttachment().getPos());
                 InteractionResult result = InteractionResult.PASS;
                 if (onInteract != null && serverLevel.mayInteract(player, blockPos)) {
@@ -59,7 +59,7 @@ public class ItemFrameElement extends GenericEntityElement {
 
             @Override
             public void attack(ServerPlayer player) {
-                ServerLevel serverLevel = player.serverLevel();
+                ServerLevel serverLevel = player.level();
                 BlockPos blockPos = BlockPos.containing(getHolder().getAttachment().getPos());
                 player.gameMode.handleBlockBreakAction(blockPos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, Direction.UP, serverLevel.getMaxY(), 0);
             }
