@@ -13,7 +13,10 @@ import de.tomalbrc.filament.decoration.holder.DecorationHolder;
 import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
 import de.tomalbrc.filament.decoration.util.BlockEntityWithElementHolder;
 import de.tomalbrc.filament.registry.DecorationRegistry;
-import de.tomalbrc.filament.util.*;
+import de.tomalbrc.filament.util.BlockUtil;
+import de.tomalbrc.filament.util.DecorationUtil;
+import de.tomalbrc.filament.util.FilamentConfig;
+import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,7 +39,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 public class DecorationBlockEntity extends AbstractDecorationBlockEntity implements BlockEntityWithElementHolder, BehaviourHolder {
     private final BehaviourMap behaviours = new BehaviourMap();
@@ -63,13 +65,6 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     @Override
     public void setLevel(Level level) {
         super.setLevel(level);
-
-        if (level != null && version == 1) CompletableFuture.runAsync(()->{
-            if (level.getServer() != null) level.getServer().execute(() -> {
-                UpgradeUtil.upgradeDecoration1to2(this, this.level, this.getBlockPos());
-                this.version = 2;
-            });
-        });
 
         if (isMain() && level != null && this.decorationHolder == null) {
             this.getOrCreateHolder();

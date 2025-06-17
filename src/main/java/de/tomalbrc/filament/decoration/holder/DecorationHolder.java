@@ -9,7 +9,6 @@ import eu.pb4.polymer.virtualentity.api.attachment.HolderAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
-import eu.pb4.polymer.virtualentity.mixin.block.WorldChunkMixin;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Supplier;

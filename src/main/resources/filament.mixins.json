@@ -37,7 +37,8 @@
     "behaviour.trap.MobMixin",
     "behaviour.trident.ThrownTridentAccessor",
     "component.skin.ItemMixin",
-    "component.skin.ItemStackMixin"
+    "component.skin.ItemStackMixin",
+    "datafix.ChunkStorageMixin"
   ],
   "injectors": {
     "defaultRequire": 1,

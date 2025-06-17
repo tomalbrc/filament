@@ -1,6 +1,5 @@
 package de.tomalbrc.filament.behaviour.decoration;
 
-import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.api.behaviour.DecorationRotationProvider;
@@ -52,7 +51,6 @@ public class Connectable implements BlockBehaviour<Connectable.Config>, Decorati
 
     @Override
     public ItemStack visualItemStack(DecorationBlockEntity decorationBlockEntity, ItemStack itemStack, BlockState blockState) {
-        Filament.LOGGER.info("Item stack update at {}: {}", decorationBlockEntity.getBlockPos(), blockState.getValue(SHAPE).customModelData());
         itemStack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(), List.of(), List.of(blockState.getValue(SHAPE).customModelData()), List.of()));
         return itemStack;
     }
@@ -62,8 +60,6 @@ public class Connectable implements BlockBehaviour<Connectable.Config>, Decorati
         Direction direction = blockState.getValue(FACING);
         if (direction.getAxis().isHorizontal()) {
             var newShape = getShape(blockState, levelReader, blockPos);
-            Filament.LOGGER.info("new updateShape shape at {}: {}", blockPos, newShape.customModelData());
-
             return blockState.setValue(SHAPE, newShape);
         }
 
@@ -72,11 +68,7 @@ public class Connectable implements BlockBehaviour<Connectable.Config>, Decorati
 
     @Override
     public ItemStack getCloneItemStack(ItemStack itemStack, LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
-        return BlockBehaviour.super.getCloneItemStack(itemStack, levelReader, blockPos, blockState);
-    }
-
-    public static class Config {
-        public boolean corners = true;
+        return DecorationBehaviour.super.getCloneItemStack(itemStack, levelReader, blockPos, blockState);
     }
 
     private Shape getShape(BlockState state, LevelReader level, BlockPos pos) {
@@ -84,10 +76,21 @@ public class Connectable implements BlockBehaviour<Connectable.Config>, Decorati
         Direction leftSide = facing.getCounterClockWise();
         Direction rightSide = facing.getClockWise();
 
+        // row connections (left/right/straight/single)
+        BlockState leftState = level.getBlockState(pos.relative(leftSide));
+        BlockState rightState = level.getBlockState(pos.relative(rightSide));
+
+        boolean leftConnected = isSameType(leftState) && (leftState.getValue(FACING) == facing || leftState.getValue(FACING) == facing.getClockWise() && leftState.getValue(SHAPE).cornerOuter || leftState.getValue(FACING) == facing.getCounterClockWise() && leftState.getValue(SHAPE).cornerOuter);
+        boolean rightConnected = isSameType(rightState) && (rightState.getValue(FACING) == facing || rightState.getValue(FACING) == facing.getClockWise() && rightState.getValue(SHAPE).cornerInner || rightState.getValue(FACING) == facing.getCounterClockWise() && rightState.getValue(SHAPE).cornerInner);
+
+        if (leftConnected && rightConnected) {
+            return Shape.STRAIGHT;
+        }
+
         if (config.corners) {
             // outer corners (front connections)
             BlockState frontState = level.getBlockState(pos.relative(facing.getOpposite()));
-            if (isSameType(frontState)) {
+            if (isSameType(frontState) && !frontState.getValue(SHAPE).isCorner()) {
                 Direction frontFacing = frontState.getValue(FACING);
                 boolean isFrontLeftCorner = frontFacing == facing.getCounterClockWise();
                 boolean isFrontRightCorner = frontFacing == facing.getClockWise();
@@ -102,7 +105,7 @@ public class Connectable implements BlockBehaviour<Connectable.Config>, Decorati
 
             // for inner corners (back connections)
             BlockState backState = level.getBlockState(pos.relative(facing));
-            if (isSameType(backState)) {
+            if (isSameType(backState) && !backState.getValue(SHAPE).isCorner()) {
                 Direction backFacing = backState.getValue(FACING);
                 boolean isBackLeftCorner = backFacing == facing.getCounterClockWise();
                 boolean isBackRightCorner = backFacing == facing.getClockWise();
@@ -116,22 +119,13 @@ public class Connectable implements BlockBehaviour<Connectable.Config>, Decorati
             }
         }
 
-        // row connections (left/right/straight/single)
-        BlockState leftState = level.getBlockState(pos.relative(leftSide));
-        BlockState rightState = level.getBlockState(pos.relative(rightSide));
-
-        boolean leftConnected = isSameType(leftState) && (leftState.getValue(FACING) == facing || leftState.getValue(FACING) == facing.getClockWise() || leftState.getValue(FACING) == facing.getCounterClockWise());
-        boolean rightConnected = isSameType(rightState) && (rightState.getValue(FACING) == facing || rightState.getValue(FACING) == facing.getClockWise() || rightState.getValue(FACING) == facing.getCounterClockWise());
-
-        if (leftConnected && rightConnected) {
-            return Shape.STRAIGHT;
-        } else if (leftConnected) {
+        if (leftConnected) {
             return Shape.RIGHT;
         } else if (rightConnected) {
             return Shape.LEFT;
-        } else {
-            return Shape.SINGLE;
         }
+
+        return Shape.SINGLE;
     }
 
     private boolean canTakeCornerShape(BlockState state, LevelReader level, BlockPos pos, Direction direction) {
@@ -179,23 +173,25 @@ public class Connectable implements BlockBehaviour<Connectable.Config>, Decorati
 
 
     public enum Shape implements StringRepresentable {
-        STRAIGHT("middle", "middle", 0),
-        INNER_LEFT("inner_left", "inner", 2),
-        INNER_RIGHT("inner_right", "inner", 0),
-        OUTER_LEFT("outer_left", "outer", 2),
-        OUTER_RIGHT("outer_right", "outer", 0),
-        LEFT("left", "left", 0),
-        RIGHT("right", "right", 0),
-        SINGLE("single", "single", 0);
+        STRAIGHT("middle", "middle", false, false),
+        INNER_LEFT("inner_left", "inner", false, true),
+        INNER_RIGHT("inner_right", "inner", true, false),
+        OUTER_LEFT("outer_left", "outer", false, true),
+        OUTER_RIGHT("outer_right", "outer", true, false),
+        LEFT("left", "left", false, false),
+        RIGHT("right", "right", false, false),
+        SINGLE("single", "single", false, false);
 
         private final String name;
         private final String customModelData;
-        private final int rotation;
+        private final boolean cornerOuter;
+        private final boolean cornerInner;
 
-        Shape(final String name, String customModelData, int rotation) {
+        Shape(final String name, String customModelData, boolean cornerOuter, boolean cornerInner) {
             this.name = name;
             this.customModelData = customModelData;
-            this.rotation = rotation;
+            this.cornerOuter = cornerOuter;
+            this.cornerInner = cornerInner;
         }
 
         public String customModelData() {
@@ -212,8 +208,12 @@ public class Connectable implements BlockBehaviour<Connectable.Config>, Decorati
             return this.name;
         }
 
-        public int rotation() {
-            return this.rotation;
+        public boolean isCorner() {
+            return cornerInner || cornerOuter;
         }
+    }
+
+    public static class Config {
+        public boolean corners = true;
     }
 }

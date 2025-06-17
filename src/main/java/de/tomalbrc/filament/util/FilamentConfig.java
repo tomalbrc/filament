@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.util;
 
 import com.google.gson.annotations.SerializedName;
+import de.tomalbrc.filament.datafixer.DataFix;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -30,10 +31,17 @@ public class FilamentConfig {
     @SerializedName("entity_module")
     public boolean entityModule = true;
 
+    @SerializedName("version")
+    public Integer version;
+
     public static FilamentConfig getInstance() {
         if (instance == null) {
-            if (!load()) // only save if file wasn't just created
+            if (!load()) { // only save if file wasn't just created
                 save(); // save since newer versions may contain new options, also removes old options
+                if (instance.version == null) instance.version = 1;
+            } else if (instance.version == null) {
+                instance.version = DataFix.VERSION;
+            }
         }
         return instance;
     }
@@ -60,9 +68,8 @@ public class FilamentConfig {
         return false;
     }
 
-    private static void save() {
-        try {
-            FileOutputStream stream = new FileOutputStream(CONFIG_FILE_PATH.toFile());
+    public static void save() {
+        try (FileOutputStream stream = new FileOutputStream(CONFIG_FILE_PATH.toFile())) {
             stream.write(Json.GSON.toJson(instance).getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             throw new RuntimeException(e);

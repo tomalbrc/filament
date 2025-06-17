@@ -3,6 +3,7 @@ package de.tomalbrc.filament.decoration.block.entity;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.registry.DecorationRegistry;
+import de.tomalbrc.filament.datafixer.DataFix;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -19,7 +20,7 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     public static final String DIRECTION = "Direction";
 
     protected BlockPos main;
-    protected int version = 2;
+    protected int version = DataFix.VERSION;
 
     protected Direction direction = Direction.UP;
 
