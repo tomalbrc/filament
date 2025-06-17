@@ -116,12 +116,6 @@ Defaults to `false`
 Flag whether the block causes suffocation damage.
 The default is unset.
 
-### `jumpFactor`
-Allows to change the bounciness or stickiness of the block.
-Set to a value below 1 to make the block act like honey, and above 1 to make it bouncy.
-
-Defaults to `1.0`
-
 ### `allowsSpawning`:
 Flag indicating whether mobs can spawn on this block.
 
