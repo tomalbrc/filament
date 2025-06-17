@@ -184,11 +184,10 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
 
-        if (nbt.contains("Item", 10) && nbt.contains("PickupItem", 10)) {
-            this.projectileStack = ItemStack.parseOptional(this.registryAccess(), nbt.getCompound("Item"));
-            this.pickupStack = ItemStack.parseOptional(this.registryAccess(), nbt.getCompound("PickupItem"));
-            this.createMainDisplayElement();
-        }
+        if (nbt.contains("Item", 10)) this.projectileStack = ItemStack.parseOptional(this.registryAccess(), nbt.getCompound("Item"));
+        if (nbt.contains("PickupItem", 10)) this.pickupStack = ItemStack.parseOptional(this.registryAccess(), nbt.getCompound("PickupItem"));
+
+        this.createMainDisplayElement();
 
         this.dealtDamage = nbt.getBoolean("DealtDamage");
     }
@@ -197,10 +196,8 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
 
-        if (this.projectileStack != null && this.pickupStack != null) {
-            nbt.put("Item", this.projectileStack.save(this.registryAccess()));
-            nbt.put("PickupItem", this.pickupStack.save(this.registryAccess()));
-        }
+        if (projectileStack != null && !projectileStack.isEmpty()) nbt.put("Item", this.projectileStack.save(this.registryAccess()));
+        if (pickupStack != null && !pickupStack.isEmpty())nbt.put("PickupItem", this.pickupStack.save(this.registryAccess()));
 
         nbt.putBoolean("DealtDamage", this.dealtDamage);
     }
