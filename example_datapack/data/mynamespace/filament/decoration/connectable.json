@@ -1,0 +1,44 @@
+{
+  "id": "mynamespace:connectable",
+  "itemResource": {
+    "models": {
+      "default": "minecraft:custom/furniture/benches/single_connectable",
+      "inner": "minecraft:custom/furniture/benches/inner_connectable",
+      "outer": "minecraft:custom/furniture/benches/outer_connectable",
+      "middle": "minecraft:custom/furniture/benches/middle_connectable",
+      "left": "minecraft:custom/furniture/benches/left_connectable",
+      "right": "minecraft:custom/furniture/benches/right_connectable",
+      "single": "minecraft:custom/furniture/benches/single_connectable"
+    }
+  },
+  "vanillaItem": "minecraft:leather_horse_armor",
+  "properties": {
+    "display": "none"
+  },
+  "behaviour": {
+    "connectable": {},
+    "seat": [
+      {
+        "offset": [
+          0,
+          0.5,
+          -0.05
+        ]
+      }
+    ]
+  },
+  "blocks": [
+    {
+      "origin": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        1,
+        1,
+        1
+      ]
+    }
+  ]
+}
