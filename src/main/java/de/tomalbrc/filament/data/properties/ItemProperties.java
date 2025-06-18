@@ -1,6 +1,5 @@
 package de.tomalbrc.filament.data.properties;
 
-import de.tomalbrc.filament.util.TextUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 
@@ -11,13 +10,13 @@ import java.util.function.Consumer;
 public class ItemProperties {
     public int durability = Integer.MIN_VALUE;
     public int stackSize = 64;
-    public List<String> lore;
+    public List<Component> lore;
     public boolean fireResistant;
     public boolean copyComponents;
 
     public void appendHoverText(Consumer<Component> tooltip) {
         if (this.lore != null)
-            this.lore.forEach(line -> tooltip.accept(TextUtil.formatText(line)));
+            this.lore.forEach(tooltip);
     }
 
     public Item.Properties toItemProperties() {

@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.data;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -8,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 public record ItemGroupData(
         @NotNull ResourceLocation id,
         @NotNull ResourceLocation item,
-        @Nullable String literal
+        @Nullable Component literal
 ) {
 
 }
