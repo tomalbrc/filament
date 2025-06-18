@@ -6,6 +6,6 @@ import net.minecraft.network.chat.Component;
 
 public class TextUtil {
     public static Component formatText(String text) {
-        return TagParser.QUICK_TEXT.parseText(text, ParserContext.of());
+        return TagParser.SIMPLIFIED_TEXT_FORMAT.parseText(text, ParserContext.of());
     }
 }

@@ -12,8 +12,6 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.BehaviourList;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
-import eu.pb4.placeholders.api.ParserContext;
-import eu.pb4.placeholders.api.parsers.TagParser;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -318,7 +316,7 @@ public class Json {
     private record ComponentDeserializer() implements JsonDeserializer<Component> {
         @Override
         public Component deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
-            return TagParser.QUICK_TEXT.parseText(element.getAsString(), ParserContext.of());
+            return TextUtil.formatText(element.getAsString());
         }
     }
 

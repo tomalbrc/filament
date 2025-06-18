@@ -37,9 +37,6 @@ public class Filament implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        // TODO: remove  (polymer bug (0.13.0))
-        var x = ItemModel.CODEC;
-
         PolymerResourcePackUtils.markAsRequired();
         FilamentComponents.register();
         Behaviours.register();
@@ -81,9 +78,9 @@ public class Filament implements ModInitializer {
                 FlammableBlockRegistry.getDefaultInstance().add(block, decorationData.behaviour().get(Behaviours.FLAMMABLE).burn, decorationData.behaviour().get(Behaviours.FLAMMABLE).spread);
         }));
 
-        ItemGroupRegistry.register(new ItemGroupData(Constants.ITEM_GROUP_ID, ResourceLocation.withDefaultNamespace("diamond"), "<c:blue>Filament Items"));
-        ItemGroupRegistry.register(new ItemGroupData(Constants.BLOCK_GROUP_ID, ResourceLocation.withDefaultNamespace("furnace"), "<c:blue>Filament Blocks"));
-        ItemGroupRegistry.register(new ItemGroupData(Constants.DECORATION_GROUP_ID, ResourceLocation.withDefaultNamespace("lantern"), "<c:blue>Filament Decorations"));
+        ItemGroupRegistry.register(new ItemGroupData(Constants.ITEM_GROUP_ID, ResourceLocation.withDefaultNamespace("diamond"), TextUtil.formatText("<c:blue>Filament Items")));
+        ItemGroupRegistry.register(new ItemGroupData(Constants.BLOCK_GROUP_ID, ResourceLocation.withDefaultNamespace("furnace"), TextUtil.formatText("<c:blue>Filament Blocks")));
+        ItemGroupRegistry.register(new ItemGroupData(Constants.DECORATION_GROUP_ID, ResourceLocation.withDefaultNamespace("lantern"), TextUtil.formatText("<c:blue>Filament Decorations")));
 
         FilamentReloadUtil.registerEarlyReloadListener(new FilamentAssetReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new ModelRegistry.AjModelReloadListener());
