@@ -4,6 +4,7 @@ import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +21,7 @@ public final class ItemData extends Data<ItemProperties> {
             @NotNull ResourceLocation id,
             @Nullable Item vanillaItem,
             @Nullable Map<String, String> translations,
+            @Nullable Component displayName,
             @Nullable ItemResource itemResource,
             @Nullable ResourceLocation itemModel,
             @Nullable BehaviourConfigMap behaviourConfig,
@@ -28,7 +30,7 @@ public final class ItemData extends Data<ItemProperties> {
             @Nullable ResourceLocation itemGroup,
             @Nullable Set<ResourceLocation> itemTags
     ) {
-        super(id, vanillaItem, translations, itemResource, itemModel, properties, behaviourConfig, components, itemGroup, itemTags);
+        super(id, vanillaItem, translations, displayName, itemResource, itemModel, properties, behaviourConfig, components, itemGroup, itemTags);
     }
 
     @Override

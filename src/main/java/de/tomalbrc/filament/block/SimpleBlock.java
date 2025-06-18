@@ -11,6 +11,9 @@ import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.impl.content.registry.FireBlockHooks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentContents;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -93,6 +96,12 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     public boolean hasData() {
         return this.blockData != null;
+    }
+
+    @Override
+    public @NotNull MutableComponent getName() {
+        var dataName = this.blockData.displayName();
+        return dataName != null ? dataName.copy() : super.getName();
     }
 
     @Override

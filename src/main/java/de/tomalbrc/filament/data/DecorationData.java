@@ -9,6 +9,7 @@ import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.data.resource.ResourceProvider;
 import de.tomalbrc.filament.util.DecorationUtil;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -37,6 +38,7 @@ public final class DecorationData extends BlockData<DecorationProperties> {
             @NotNull ResourceLocation id,
             @Nullable Item vanillaItem,
             @Nullable Map<String, String> translations,
+            @Nullable Component displayName,
             @Nullable ItemResource itemResource,
             @Nullable ResourceLocation itemModel,
             @Nullable BehaviourConfigMap behaviourConfig,
@@ -50,7 +52,7 @@ public final class DecorationData extends BlockData<DecorationProperties> {
             @Nullable Vector2f size,
             @Nullable Boolean itemFrame
     ) {
-        super(id, vanillaItem, translations, itemResource, itemModel, behaviourConfig, components, itemGroup, new BlockResource(Map.of()), null, properties, itemTags, blockTags);
+        super(id, vanillaItem, translations, displayName, itemResource, itemModel, behaviourConfig, components, itemGroup, new BlockResource(Map.of()), null, properties, itemTags, blockTags);
         this.blocks = blocks;
         this.size = size;
         this.itemFrame = itemFrame;

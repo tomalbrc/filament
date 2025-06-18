@@ -18,6 +18,7 @@ import it.unimi.dsi.fastutil.objects.Reference2ReferenceArrayMap;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Blocks;
@@ -40,6 +41,7 @@ public class BlockData<BlockPropertyLike extends BlockProperties> extends Data<B
             @NotNull ResourceLocation id,
             @Nullable Item vanillaItem,
             @Nullable Map<String, String> translations,
+            @Nullable Component displayName,
             @Nullable ItemResource itemResource,
             @Nullable ResourceLocation itemModel,
             @Nullable BehaviourConfigMap behaviourConfig,
@@ -51,7 +53,7 @@ public class BlockData<BlockPropertyLike extends BlockProperties> extends Data<B
             @Nullable Set<ResourceLocation> itemTags,
             @Nullable Set<ResourceLocation> blockTags
     ) {
-        super(id, vanillaItem, translations, itemResource, itemModel, properties, behaviourConfig, components, itemGroup, itemTags);
+        super(id, vanillaItem, translations, displayName, itemResource, itemModel, properties, behaviourConfig, components, itemGroup, itemTags);
         this.blockResource = blockResource;
         this.blockModelType = blockModelType;
         this.blockTags = blockTags;

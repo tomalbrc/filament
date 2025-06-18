@@ -8,6 +8,7 @@ import de.tomalbrc.filament.data.resource.ResourceProvider;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -22,6 +23,7 @@ public abstract class Data<PropertyType extends ItemProperties> {
     protected final @NotNull ResourceLocation id;
     protected final @Nullable Item vanillaItem;
     protected final @Nullable Map<String, String> translations;
+    protected final @Nullable Component displayName;
     protected final @Nullable ItemResource itemResource;
     protected final @Nullable ResourceLocation itemModel;
     protected final @Nullable BehaviourConfigMap behaviour;
@@ -36,6 +38,7 @@ public abstract class Data<PropertyType extends ItemProperties> {
             @NotNull ResourceLocation id,
             @Nullable Item vanillaItem,
             @Nullable Map<String, String> translations,
+            @Nullable Component displayName,
             @Nullable ItemResource itemResource,
             @Nullable ResourceLocation itemModel,
             @Nullable PropertyType properties,
@@ -47,6 +50,7 @@ public abstract class Data<PropertyType extends ItemProperties> {
         this.id = id;
         this.vanillaItem = vanillaItem;
         this.translations = translations;
+        this.displayName = displayName;
         this.itemResource = itemResource;
         this.itemModel = itemModel;
         this.properties = properties;
@@ -109,6 +113,10 @@ public abstract class Data<PropertyType extends ItemProperties> {
     }
 
     public @Nullable Set<ResourceLocation> itemTags() { return this.itemTags; }
+
+    public @Nullable Component displayName() {
+        return this.displayName;
+    }
 
     @Override
     public boolean equals(Object obj) {

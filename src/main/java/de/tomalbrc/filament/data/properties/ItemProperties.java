@@ -1,13 +1,13 @@
 package de.tomalbrc.filament.data.properties;
 
-import eu.pb4.placeholders.api.TextParserUtils;
+import de.tomalbrc.filament.util.TextUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-// For shared properties that make sense for both, item, blocks *and* decoration
+// For shared properties that make sense for items, blocks *and* decorations
 public class ItemProperties {
     public int durability = Integer.MIN_VALUE;
     public int stackSize = 64;
@@ -17,7 +17,7 @@ public class ItemProperties {
 
     public void appendHoverText(Consumer<Component> tooltip) {
         if (this.lore != null)
-            this.lore.forEach(line -> tooltip.accept(TextParserUtils.formatNodesSafe(line).toText()));
+            this.lore.forEach(line -> tooltip.accept(TextUtil.formatText(line)));
     }
 
     public Item.Properties toItemProperties() {
