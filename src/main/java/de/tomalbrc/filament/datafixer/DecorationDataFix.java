@@ -16,7 +16,7 @@ public class DecorationDataFix {
         }
         else {
             var waterloggable = props.getAsJsonObject().get("waterloggable");
-            if (waterloggable != null && waterloggable.getAsBoolean()) data.behaviour().put(Behaviours.WATERLOGGABLE, new Waterloggable.Config());
+            if (waterloggable == null || waterloggable.getAsBoolean()) data.behaviour().put(Behaviours.WATERLOGGABLE, new Waterloggable.Config());
 
             var rotate = props.getAsJsonObject().get("rotate");
             var rotateSmooth = props.getAsJsonObject().get("rotateSmooth");
