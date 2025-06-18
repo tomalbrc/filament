@@ -54,8 +54,9 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
             List<ItemStack> list = ObjectArrayList.of(BuiltInRegistries.ITEM.getValue(this.decorationId).getDefaultInstance());
             list.addAll(super.getDrops(blockState, builder));
             return list;
+        } else {
+            return super.getDrops(blockState, builder);
         }
-        return List.of();
     }
 
     @Override

@@ -41,9 +41,6 @@ public abstract class DecorationBlock extends SimpleBlock implements PolymerBloc
         super(properties, data);
         this.decorationId = data.id();
         this.data = data;
-
-        this.stateDefinitionEx.getPossibleStates().forEach(BlockState::initCache);
-        this.stateDefinition.getPossibleStates().forEach(BlockState::initCache);
     }
 
     @Override
