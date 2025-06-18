@@ -106,7 +106,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     public void postRegister() {
         this.stateMap = this.blockData.createStandardStateMap();
-        this.forEach(behaviour -> behaviour.modifyStateMap(this.stateMap, this.blockData));
+        if (this.stateMap != null) this.forEach(behaviour -> behaviour.modifyStateMap(this.stateMap, this.blockData));
         this.stateDefinitionEx.getPossibleStates().forEach(BlockState::initCache);
     }
 

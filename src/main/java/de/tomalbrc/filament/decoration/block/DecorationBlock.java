@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -64,14 +65,22 @@ public abstract class DecorationBlock extends SimpleBlock implements PolymerBloc
             DecorationData decorationData = getDecorationData();
             boolean passthrough = !decorationData.hasBlocks();
 
-            BlockState defaultState = passthrough ? Blocks.AIR.defaultBlockState() : decorationData.block();
+            var newState = state;
             for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
                 if (behaviour.getValue() instanceof BlockBehaviour<?> blockBehaviour) {
-                    defaultState = blockBehaviour.modifyPolymerBlockState(state, defaultState);
+                    newState = blockBehaviour.modifyPolymerBlockState(state, newState);
                 }
             }
 
-            return defaultState;
+            BlockState blockState = passthrough ? Blocks.AIR.defaultBlockState() : decorationData.block();
+            boolean waterlogged = newState.hasProperty(BlockStateProperties.WATERLOGGED) && newState.getValue(BlockStateProperties.WATERLOGGED);
+            if (passthrough && waterlogged) {
+                return Blocks.WATER.defaultBlockState();
+            } else if (blockState.hasProperty(BlockStateProperties.WATERLOGGED)) {
+                blockState = blockState.setValue(BlockStateProperties.WATERLOGGED, waterlogged);
+            }
+
+            return blockState;
         }
 
         return super.getPolymerBlockState(state, packetContext);

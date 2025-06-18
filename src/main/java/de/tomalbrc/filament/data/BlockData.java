@@ -73,7 +73,7 @@ public class BlockData<BlockPropertyLike extends BlockProperties> extends Data<B
     }
 
     public boolean virtual() {
-        return this.properties().virtual;
+        return virtual || this.properties().virtual;
     }
 
     public Map<BlockState, BlockStateMeta> createStandardStateMap() {

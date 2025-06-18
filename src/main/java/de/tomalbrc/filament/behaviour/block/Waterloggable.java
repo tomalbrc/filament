@@ -12,7 +12,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -88,20 +87,6 @@ public class Waterloggable implements BlockBehaviour<Waterloggable.Config>, Simp
             case LAND, AIR -> Optional.of(false);
             case WATER -> Optional.of(blockState.getFluidState().is(FluidTags.WATER));
         };
-    }
-
-    @Override
-    public BlockState modifyPolymerBlockState(BlockState originalState, BlockState blockState) {
-        boolean isAir = blockState.is(Blocks.AIR);
-        boolean waterlogged = originalState.hasProperty(BlockStateProperties.WATERLOGGED) && originalState.getValue(BlockStateProperties.WATERLOGGED);
-
-        if (isAir && waterlogged) {
-            return Blocks.WATER.defaultBlockState();
-        } else if (blockState.hasProperty(BlockStateProperties.WATERLOGGED)) {
-            blockState = blockState.setValue(BlockStateProperties.WATERLOGGED, waterlogged);
-        }
-
-        return blockState;
     }
 
     public static class Config {}
