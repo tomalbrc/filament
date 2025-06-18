@@ -10,11 +10,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 @SuppressWarnings("unused")
 public final class ItemData extends Data<ItemProperties> {
+    transient private final ItemProperties EMPTY = new ItemProperties();
+
     public ItemData(
             @NotNull ResourceLocation id,
             @Nullable Item vanillaItem,
@@ -34,22 +35,9 @@ public final class ItemData extends Data<ItemProperties> {
     @NotNull
     public ItemProperties properties() {
         if (properties == null) {
-            return ItemProperties.EMPTY;
+            return EMPTY;
         }
         return properties;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (ItemData) obj;
-        return Objects.equals(this.id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 
     @Override

@@ -9,8 +9,6 @@ import java.util.function.Consumer;
 
 // For shared properties that make sense for both, item, blocks *and* decoration
 public class ItemProperties {
-    public static final ItemProperties EMPTY = new ItemProperties();
-
     public int durability = Integer.MIN_VALUE;
     public int stackSize = 64;
     public List<String> lore;

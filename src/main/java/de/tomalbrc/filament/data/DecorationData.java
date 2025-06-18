@@ -26,6 +26,8 @@ import java.util.Set;
 
 @SuppressWarnings("unused")
 public final class DecorationData extends BlockData<DecorationProperties> {
+    transient private final DecorationProperties EMPTY = new DecorationProperties();
+
     private final @Nullable List<BlockConfig> blocks;
     private final @Nullable Vector2f size;
     private final @Nullable Boolean itemFrame;
@@ -48,7 +50,7 @@ public final class DecorationData extends BlockData<DecorationProperties> {
             @Nullable Vector2f size,
             @Nullable Boolean itemFrame
     ) {
-        super(id, vanillaItem, translations, itemResource, itemModel, behaviourConfig, components, itemGroup, new BlockResource(Map.of()), null, properties, false, itemTags, blockTags);
+        super(id, vanillaItem, translations, itemResource, itemModel, behaviourConfig, components, itemGroup, new BlockResource(Map.of()), null, properties, itemTags, blockTags);
         this.blocks = blocks;
         this.size = size;
         this.itemFrame = itemFrame;
@@ -65,7 +67,7 @@ public final class DecorationData extends BlockData<DecorationProperties> {
     @NotNull
     public DecorationProperties properties() {
         if (properties == null) {
-            return DecorationProperties.EMPTY;
+            return EMPTY;
         }
         return this.properties ;
     }

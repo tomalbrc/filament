@@ -22,6 +22,8 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public class EntityData {
+    transient private final EntityProperties EMPTY = new EntityProperties();
+
     private final @NotNull ResourceLocation id;
     private final @Nullable ResourceLocation entityType;
     private final @Nullable Map<String, String> translations;
@@ -86,7 +88,7 @@ public class EntityData {
     }
 
     public @NotNull EntityProperties properties() {
-        return properties == null ? EntityProperties.EMPTY : properties;
+        return properties == null ? EMPTY : properties;
     }
 
     @NotNull

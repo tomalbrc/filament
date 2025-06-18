@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public abstract class Data<PropertyType extends ItemProperties> {
@@ -108,4 +109,12 @@ public abstract class Data<PropertyType extends ItemProperties> {
     }
 
     public @Nullable Set<ResourceLocation> itemTags() { return this.itemTags; }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (Data<?>) obj;
+        return Objects.equals(this.id, that.id);
+    }
 }

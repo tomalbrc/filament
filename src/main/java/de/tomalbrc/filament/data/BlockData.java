@@ -26,15 +26,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 @SuppressWarnings("unused")
 public class BlockData<BlockPropertyLike extends BlockProperties> extends Data<BlockPropertyLike> {
+    transient private final BlockProperties EMPTY = new BlockProperties();
+
     private final @NotNull BlockResource blockResource;
     private final @Nullable BlockStateMappedProperty<BlockModelType> blockModelType;
     private final @Nullable Set<ResourceLocation> blockTags;
-    @Deprecated private final boolean virtual;
 
     public BlockData(
             @NotNull ResourceLocation id,
@@ -48,7 +48,6 @@ public class BlockData<BlockPropertyLike extends BlockProperties> extends Data<B
             @NotNull BlockResource blockResource,
             @Nullable BlockStateMappedProperty<BlockModelType> blockModelType,
             @Nullable BlockPropertyLike properties,
-            boolean virtual,
             @Nullable Set<ResourceLocation> itemTags,
             @Nullable Set<ResourceLocation> blockTags
     ) {
@@ -56,14 +55,13 @@ public class BlockData<BlockPropertyLike extends BlockProperties> extends Data<B
         this.blockResource = blockResource;
         this.blockModelType = blockModelType;
         this.blockTags = blockTags;
-        this.virtual = virtual;
     }
 
     @Override
     @NotNull
     public BlockProperties properties() {
         if (properties == null) {
-            return BlockProperties.EMPTY;
+            return EMPTY;
         }
         return properties;
     }
@@ -73,7 +71,7 @@ public class BlockData<BlockPropertyLike extends BlockProperties> extends Data<B
     }
 
     public boolean virtual() {
-        return virtual || this.properties().virtual;
+        return this.properties().virtual;
     }
 
     public Map<BlockState, BlockStateMeta> createStandardStateMap() {
@@ -142,19 +140,6 @@ public class BlockData<BlockPropertyLike extends BlockProperties> extends Data<B
 
     public @Nullable Set<ResourceLocation> blockTags() {
         return this.blockTags;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (BlockData<BlockPropertyLike>) obj;
-        return Objects.equals(this.id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 
     @Override

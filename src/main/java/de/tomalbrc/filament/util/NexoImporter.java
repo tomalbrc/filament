@@ -231,7 +231,7 @@ public class NexoImporter {
                 if (lightObj != null)
                     props.lightEmission = BlockStateMappedProperty.of(lightObj);
 
-                BlockData blockData = new BlockData(
+                BlockData<BlockProperties> blockData = new BlockData<>(
                         id,
                         vanillaItem,
                         null,
@@ -243,7 +243,6 @@ public class NexoImporter {
                         new BlockResource(Map.of("default", new PolymerBlockModel(ResourceLocation.parse(model), 0, 0, false, 0))),
                         BlockStateMappedProperty.of(BlockModelType.FULL_BLOCK),
                         props,
-                        false,
                         null,
                         null
                 );

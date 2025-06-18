@@ -6,23 +6,11 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 
 
 public class DecorationProperties extends BlockProperties {
-    public static final DecorationProperties EMPTY = new DecorationProperties();
-
-    @Deprecated public boolean rotate = false;
-    @Deprecated public boolean rotateSmooth = false;
-
     public Placement placement = Placement.DEFAULT;
     public boolean glow = false;
-
-    @Deprecated
-    public Boolean waterloggable = true;
-
     public ItemDisplayContext display = ItemDisplayContext.FIXED;
-
     public boolean useItemParticles = true;
-
     public boolean showBreakParticles = true;
-
     public boolean drops = true;
 
     @Override

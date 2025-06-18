@@ -1,9 +1,9 @@
 package de.tomalbrc.filament.decoration.block.entity;
 
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.datafixer.DataFix;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.registry.DecorationRegistry;
-import de.tomalbrc.filament.datafixer.DataFix;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;

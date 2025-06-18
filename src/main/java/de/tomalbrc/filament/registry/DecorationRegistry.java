@@ -6,10 +6,9 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
 import de.tomalbrc.filament.behaviour.Behaviours;
-import de.tomalbrc.filament.behaviour.block.Rotating;
-import de.tomalbrc.filament.behaviour.block.Waterloggable;
 import de.tomalbrc.filament.behaviour.decoration.Container;
 import de.tomalbrc.filament.data.DecorationData;
+import de.tomalbrc.filament.datafixer.DecorationDataFix;
 import de.tomalbrc.filament.decoration.DecorationItem;
 import de.tomalbrc.filament.decoration.block.ComplexDecorationBlock;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
@@ -51,14 +50,7 @@ public class DecorationRegistry {
         DecorationData data = Json.GSON.fromJson(element, DecorationData.class);
 
         // backwards compatibility
-        if (data.properties().waterloggable == null || data.properties().waterloggable == Boolean.TRUE)
-            data.behaviour().put(Behaviours.WATERLOGGABLE, new Waterloggable.Config());
-
-        if (data.properties().rotate) {
-            var conf = new Rotating.Config();
-            conf.smooth = data.properties().rotateSmooth;
-            data.behaviour().put(Behaviours.ROTATING, conf);
-        }
+        DecorationDataFix.fixup(element, data);
 
         Util.handleComponentsCustom(element, data);
 

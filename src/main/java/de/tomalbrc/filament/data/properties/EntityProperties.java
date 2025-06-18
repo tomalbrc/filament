@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 public class EntityProperties {
-    public static final EntityProperties EMPTY = new EntityProperties();
-
     public @Nullable List<Float> size;
     public @Nullable MobCategory category;
     public @Nullable Sounds sounds;

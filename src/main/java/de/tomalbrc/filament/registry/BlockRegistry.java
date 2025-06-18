@@ -38,6 +38,8 @@ public class BlockRegistry {
         JsonElement element = JsonParser.parseReader(new InputStreamReader(inputStream));
         try {
             BlockData<BlockProperties> data = Json.GSON.fromJson(element, TypeToken.getParameterized(BlockData.class, BlockProperties.class).getType());
+
+
             Util.handleComponentsCustom(element, data);
 
             register(data);
