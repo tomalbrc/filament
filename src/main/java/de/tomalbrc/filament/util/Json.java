@@ -12,6 +12,8 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.BehaviourList;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
+import eu.pb4.placeholders.api.ParserContext;
+import eu.pb4.placeholders.api.parsers.TagParser;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -20,6 +22,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -60,6 +63,7 @@ public class Json {
             .registerTypeHierarchyAdapter(Vector2f.class, new Vector2fDeserializer())
             .registerTypeHierarchyAdapter(Quaternionf.class, new QuaternionfDeserializer())
             .registerTypeAdapter(ResourceLocation.class, new SimpleCodecDeserializer<>(ResourceLocation.CODEC))
+            .registerTypeHierarchyAdapter(Component.class, new ComponentDeserializer())
             .registerTypeHierarchyAdapter(DataComponentMap.class, new DataComponentsDeserializer())
             .registerTypeHierarchyAdapter(EquipmentSlot.class, new LowercaseEnumDeserializer<>(EquipmentSlot.class))
             .registerTypeHierarchyAdapter(BlockModelType.class, new LowercaseEnumDeserializer<>(BlockModelType.class))
@@ -308,6 +312,13 @@ public class Json {
         @Override
         public T deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
             return this.registry.getValue(ResourceLocation.parse(element.getAsString()));
+        }
+    }
+
+    private record ComponentDeserializer() implements JsonDeserializer<Component> {
+        @Override
+        public Component deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
+            return TagParser.QUICK_TEXT.parseText(element.getAsString(), ParserContext.of());
         }
     }
 

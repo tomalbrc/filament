@@ -21,7 +21,6 @@ import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.registry.BlockRegistry;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.registry.ItemRegistry;
-import eu.pb4.placeholders.api.TextParserUtils;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
@@ -83,7 +82,7 @@ public class NexoImporter {
                         if (baseName.startsWith("."))
                             return;
 
-                        if (ext != null && (ext.equals("yml") || ext.equals("yaml"))) {
+                        if (ext.equals("yml") || ext.equals("yaml")) {
                             InputStream inputStream = new FileInputStream(file.toFile());
                             importSingleFile(dirName, inputStream);
                         }
@@ -202,10 +201,10 @@ public class NexoImporter {
 
         var builder = DataComponentMap.builder();
         if (name != null)
-            builder.set(DataComponents.ITEM_NAME, TextParserUtils.formatText(name));
+            builder.set(DataComponents.ITEM_NAME, TextUtil.formatText(name));
 
         var material = getValue("material", data, String.class);
-        Item vanillaItem = null;
+        Item vanillaItem;
         if (material != null) {
             vanillaItem = BuiltInRegistries.ITEM.getValue(ResourceLocation.parse(material.toLowerCase()));
         } else {
@@ -234,6 +233,7 @@ public class NexoImporter {
                 BlockData<BlockProperties> blockData = new BlockData<>(
                         id,
                         vanillaItem,
+                        null,
                         null,
                         null,
                         null,
@@ -371,6 +371,7 @@ public class NexoImporter {
                         id,
                         vanillaItem,
                         null,
+                        null,
                         new ItemResource(Map.of("default", ResourceLocation.parse(model)), null, null),
                         null,
                         behaviourConfigMap,
@@ -398,6 +399,7 @@ public class NexoImporter {
                 ItemData itemData = new ItemData(
                         id,
                         vanillaItem,
+                        null,
                         null,
                         new ItemResource(Map.of("default", ResourceLocation.parse(model)), null, null),
                         null,
