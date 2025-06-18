@@ -23,8 +23,6 @@ public class FilamentNamedspacedSchema extends NamespacedSchema {
 	@Override
     public Map<String, Supplier<TypeTemplate>> registerBlockEntities(final Schema schema) {
 		Map<String, Supplier<TypeTemplate>> map = super.registerBlockEntities(schema);
-		schema.registerSimple(map, "mynamespace:benchy");
-		schema.registerSimple(map, "mynamespace:small_gold_coin_piles");
 		return map;
     }
 }
