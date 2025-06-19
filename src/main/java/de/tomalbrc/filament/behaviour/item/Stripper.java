@@ -18,6 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -76,13 +77,13 @@ public class Stripper implements ItemBehaviour<Stripper.Config> {
             Optional<BlockState> opt = WeatheringCopper.getPrevious(blockState);
             if (opt.isPresent()) {
                 level.playSound(null, blockPos, SoundEvents.AXE_SCRAPE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                level.levelEvent(null, 3005, blockPos, 0);
+                level.levelEvent(null, LevelEvent.PARTICLES_SCRAPE, blockPos, 0);
                 return opt.get();
             } else {
                 opt = Optional.ofNullable(HoneycombItem.WAX_OFF_BY_BLOCK.get().get(blockState.getBlock())).map((block) -> block.withPropertiesOf(blockState));
                 if (opt.isPresent()) {
                     level.playSound(null, blockPos, SoundEvents.AXE_WAX_OFF, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    level.levelEvent(null, 3004, blockPos, 0);
+                    level.levelEvent(null, LevelEvent.PARTICLES_WAX_OFF, blockPos, 0);
                     return opt.get();
                 } else {
                     return null;

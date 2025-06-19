@@ -15,6 +15,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CampfireBlock;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
@@ -51,7 +52,7 @@ public class Shovel implements ItemBehaviour<Shovel.Config> {
                 blockState3 = blockState2;
             } else if (blockState.getBlock() instanceof CampfireBlock && blockState.getValue(CampfireBlock.LIT)) {
                 if (!level.isClientSide()) {
-                    level.levelEvent(null, 1009, blockPos, 0);
+                    level.levelEvent(null, LevelEvent.SOUND_EXTINGUISH_FIRE, blockPos, 0);
                 }
 
                 CampfireBlock.dowse(useOnContext.getPlayer(), level, blockPos, blockState);
