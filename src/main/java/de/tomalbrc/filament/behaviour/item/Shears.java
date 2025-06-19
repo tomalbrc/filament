@@ -1,8 +1,11 @@
 package de.tomalbrc.filament.behaviour.item;
 
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
+import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.item.FilamentItem;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -14,10 +17,10 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.GrowingPlantHeadBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -41,11 +44,16 @@ public class Shears implements ItemBehaviour<Shears.Config> {
 
     @Override
     public boolean mineBlock(ItemStack itemStack, Level level, BlockState blockState, BlockPos blockPos, LivingEntity livingEntity) {
-        if (!level.isClientSide && !blockState.is(BlockTags.FIRE)) {
-            itemStack.hurtAndBreak(1, livingEntity, EquipmentSlot.MAINHAND);
-        }
+        Tool tool = itemStack.get(DataComponents.TOOL);
+        if (tool == null) {
+            return false;
+        } else {
+            if (!level.isClientSide() && !blockState.is(BlockTags.FIRE) && tool.damagePerBlock() > 0) {
+                itemStack.hurtAndBreak(tool.damagePerBlock(), livingEntity, EquipmentSlot.MAINHAND);
+            }
 
-        return blockState.is(BlockTags.LEAVES) || blockState.is(Blocks.COBWEB) || blockState.is(Blocks.SHORT_GRASS) || blockState.is(Blocks.FERN) || blockState.is(Blocks.DEAD_BUSH) || blockState.is(Blocks.HANGING_ROOTS) || blockState.is(Blocks.VINE) || blockState.is(Blocks.TRIPWIRE) || blockState.is(BlockTags.WOOL);
+            return true;
+        }
     }
 
     public InteractionResult useOn(UseOnContext useOnContext) {
@@ -74,6 +82,10 @@ public class Shears implements ItemBehaviour<Shears.Config> {
         }
 
         return InteractionResult.FAIL;
+    }
+
+    public static boolean is(ItemStack itemStack) {
+        return itemStack.getItem() instanceof FilamentItem filamentItem && filamentItem.has(Behaviours.SHEARS);
     }
 
     public static class Config {
