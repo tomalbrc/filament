@@ -2,7 +2,7 @@ package de.tomalbrc.filament.mixin.behaviour.shears;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import de.tomalbrc.filament.behaviour.item.Shears;
-import de.tomalbrc.filament.util.ItemPredicateCustomCheck;
+import de.tomalbrc.filament.util.mixin.ItemPredicateCustomCheck;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.LootTableSubProvider;

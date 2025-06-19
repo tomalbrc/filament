@@ -11,8 +11,6 @@ import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.impl.content.registry.FireBlockHooks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -326,7 +324,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
                     return res;
             }
         }
-        return 0;
+        return super.getDirectSignal(blockState, blockGetter, blockPos, direction);
     }
 
     @Override
@@ -338,7 +336,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
                     return res;
             }
         }
-        return 0;
+        return super.getSignal(blockState, blockGetter, blockPos, direction);
     }
 
     @Override

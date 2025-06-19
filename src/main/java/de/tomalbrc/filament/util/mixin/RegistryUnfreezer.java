@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.util;
+package de.tomalbrc.filament.util.mixin;
 
 public interface RegistryUnfreezer {
     void filament$unfreeze();

@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.item.FilamentItem;
+import de.tomalbrc.filament.util.mixin.RegistryUnfreezer;
 import eu.pb4.polymer.core.api.item.PolymerItemUtils;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.component.DataComponents;

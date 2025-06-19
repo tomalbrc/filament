@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.util;
+package de.tomalbrc.filament.util.mixin;
 
 import net.minecraft.world.item.ItemStack;
 
