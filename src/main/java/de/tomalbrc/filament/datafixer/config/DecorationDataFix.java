@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.datafixer;
+package de.tomalbrc.filament.datafixer.config;
 
 import com.google.gson.JsonElement;
 import de.tomalbrc.filament.behaviour.Behaviours;

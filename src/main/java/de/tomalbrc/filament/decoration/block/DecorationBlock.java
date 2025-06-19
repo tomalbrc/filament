@@ -43,11 +43,6 @@ public abstract class DecorationBlock extends SimpleBlock implements PolymerBloc
         this.data = data;
     }
 
-    @Override
-    protected void initCaches() {
-
-    }
-
     public void postRegister() {
         this.stateDefinitionEx.getPossibleStates().forEach(BlockState::initCache);
     }

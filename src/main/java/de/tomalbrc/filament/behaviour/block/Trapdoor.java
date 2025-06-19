@@ -3,6 +3,7 @@ package de.tomalbrc.filament.behaviour.block;
 import com.google.gson.JsonParseException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
+import de.tomalbrc.filament.data.AbstractBlockData;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.FilamentBlockResourceUtils;
@@ -165,7 +166,7 @@ public class Trapdoor implements BlockBehaviour<Trapdoor.Config>, SimpleWaterlog
     }
 
     @Override
-    public boolean modifyStateMap(Map<BlockState, BlockData.BlockStateMeta> map, BlockData<? extends BlockProperties> data) {
+    public boolean modifyStateMap(Map<BlockState, BlockData.BlockStateMeta> map, AbstractBlockData<? extends BlockProperties> data) {
         for (Map.Entry<String, PolymerBlockModel> entry : data.blockResource().models().entrySet()) {
             PolymerBlockModel blockModel = entry.getValue();
 

@@ -22,13 +22,11 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public class EntityData {
-    transient private final EntityProperties EMPTY = new EntityProperties();
-
     private final @NotNull ResourceLocation id;
     private final @Nullable ResourceLocation entityType;
     private final @Nullable Map<String, String> translations;
     private final @Nullable AnimationInfo animation;
-    private final @Nullable EntityProperties properties;
+    private @Nullable EntityProperties properties;
     private final @Nullable BehaviourConfigMap behaviour;
     private final @Nullable BehaviourList goals;
     private final @Nullable Set<ResourceLocation> entityTags;
@@ -88,7 +86,11 @@ public class EntityData {
     }
 
     public @NotNull EntityProperties properties() {
-        return properties == null ? EMPTY : properties;
+        if (properties == null) {
+            properties = new EntityProperties();
+        }
+
+        return properties;
     }
 
     @NotNull

@@ -8,7 +8,7 @@ import de.tomalbrc.filament.behaviour.BehaviourUtil;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.decoration.Container;
 import de.tomalbrc.filament.data.DecorationData;
-import de.tomalbrc.filament.datafixer.DecorationDataFix;
+import de.tomalbrc.filament.datafixer.config.DecorationDataFix;
 import de.tomalbrc.filament.decoration.DecorationItem;
 import de.tomalbrc.filament.decoration.block.ComplexDecorationBlock;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;

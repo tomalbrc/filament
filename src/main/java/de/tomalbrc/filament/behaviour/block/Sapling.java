@@ -3,6 +3,7 @@ package de.tomalbrc.filament.behaviour.block;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.block.SimpleBlock;
+import de.tomalbrc.filament.data.AbstractBlockData;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.BlockUtil;
@@ -57,7 +58,7 @@ public class Sapling implements BlockBehaviour<Sapling.Config>, BonemealableBloc
     }
 
     @Override
-    public boolean modifyStateMap(Map<BlockState, BlockData.BlockStateMeta> map, BlockData<? extends BlockProperties> blockData) {
+    public boolean modifyStateMap(Map<BlockState, BlockData.BlockStateMeta> map, AbstractBlockData<? extends BlockProperties> blockData) {
         // support for only 1 model if wanted
         if (map.size() == 1) {
             var entry = map.entrySet().iterator().next();

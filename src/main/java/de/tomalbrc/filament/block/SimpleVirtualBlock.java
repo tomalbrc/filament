@@ -2,7 +2,6 @@ package de.tomalbrc.filament.block;
 
 import com.google.common.collect.ImmutableList;
 import de.tomalbrc.filament.data.BlockData;
-import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.BlockUtil;
 import de.tomalbrc.filament.util.DecorationUtil;
 import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
@@ -35,7 +34,7 @@ import java.util.Map;
 public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementHolder {
     private final Map<BlockData.BlockStateMeta, String> cmdMap = new Reference2ObjectOpenHashMap<>();
 
-    public SimpleVirtualBlock(Properties properties, BlockData<BlockProperties> data) {
+    public SimpleVirtualBlock(Properties properties, BlockData data) {
         super(properties, data);
     }
 

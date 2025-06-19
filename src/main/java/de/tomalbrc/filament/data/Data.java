@@ -30,7 +30,7 @@ public abstract class Data<PropertyType extends ItemProperties> {
     protected final @Nullable DataComponentMap components;
     protected final @Nullable ResourceLocation group;
     protected final @Nullable Set<ResourceLocation> itemTags;
-    protected final @Nullable PropertyType properties;
+    protected @Nullable PropertyType properties;
 
     transient protected Map<DataComponentType<?>, JsonElement> additionalComponents;
 

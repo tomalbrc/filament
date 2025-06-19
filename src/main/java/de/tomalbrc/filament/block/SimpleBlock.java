@@ -4,6 +4,7 @@ import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.BehaviourMap;
+import de.tomalbrc.filament.data.AbstractBlockData;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
@@ -52,7 +53,7 @@ import java.util.function.Consumer;
 public class SimpleBlock extends Block implements PolymerTexturedBlock, BehaviourHolder, SimpleWaterloggedBlock, BonemealableBlock, WeatheringCopper, Fallable, FireBlockHooks {
     protected Map<BlockState, BlockData.BlockStateMeta> stateMap;
     protected final BlockState breakEventState;
-    protected final BlockData<? extends BlockProperties> blockData;
+    protected final AbstractBlockData<? extends BlockProperties> blockData;
 
     protected final StateDefinition<Block, BlockState> stateDefinitionEx;
 
@@ -62,7 +63,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
         return this.behaviours;
     }
 
-    public SimpleBlock(BlockBehaviour.Properties properties, BlockData<? extends BlockProperties> data) {
+    public SimpleBlock(BlockBehaviour.Properties properties, AbstractBlockData<? extends BlockProperties> data) {
         super(properties);
 
         this.initBehaviours(data.behaviour());
@@ -83,13 +84,6 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
         BlockState[] def = {this.stateDefinitionEx.any()};
         this.forEach(behaviour -> def[0] = behaviour.modifyDefaultState(def[0]));
         this.registerDefaultState(def[0]);
-
-        initCaches();
-    }
-
-    protected void initCaches() {
-        this.stateDefinitionEx.getPossibleStates().forEach(BlockState::initCache);
-        this.stateDefinition.getPossibleStates().forEach(BlockState::initCache);
     }
 
     public boolean hasData() {

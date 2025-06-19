@@ -230,7 +230,7 @@ public class NexoImporter {
                 if (lightObj != null)
                     props.lightEmission = BlockStateMappedProperty.of(lightObj);
 
-                BlockData<BlockProperties> blockData = new BlockData<>(
+                BlockData blockData = new BlockData(
                         id,
                         vanillaItem,
                         null,

@@ -5,6 +5,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.block.SimpleBlock;
+import de.tomalbrc.filament.data.AbstractBlockData;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.FilamentBlockResourceUtils;
@@ -239,7 +240,7 @@ public class Door implements BlockBehaviour<Door.Config> {
     }
 
     @Override
-    public boolean modifyStateMap(Map<BlockState, BlockData.BlockStateMeta> map, BlockData<? extends BlockProperties> data) {
+    public boolean modifyStateMap(Map<BlockState, BlockData.BlockStateMeta> map, AbstractBlockData<? extends BlockProperties> data) {
         for (Map.Entry<String, PolymerBlockModel> entry : data.blockResource().models().entrySet()) {
             PolymerBlockModel blockModel = entry.getValue();
 

@@ -26,9 +26,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @SuppressWarnings("unused")
-public final class DecorationData extends BlockData<DecorationProperties> {
-    transient private final DecorationProperties EMPTY = new DecorationProperties();
-
+public final class DecorationData extends AbstractBlockData<DecorationProperties> {
     private final @Nullable List<BlockConfig> blocks;
     private final @Nullable Vector2f size;
     private final @Nullable Boolean itemFrame;
@@ -52,7 +50,7 @@ public final class DecorationData extends BlockData<DecorationProperties> {
             @Nullable Vector2f size,
             @Nullable Boolean itemFrame
     ) {
-        super(id, vanillaItem, translations, displayName, itemResource, itemModel, behaviourConfig, components, itemGroup, new BlockResource(Map.of()), null, properties, itemTags, blockTags);
+        super(id, vanillaItem, translations, displayName, itemResource, itemModel, behaviourConfig, components, itemGroup, properties, itemTags, blockTags);
         this.blocks = blocks;
         this.size = size;
         this.itemFrame = itemFrame;
@@ -69,7 +67,7 @@ public final class DecorationData extends BlockData<DecorationProperties> {
     @NotNull
     public DecorationProperties properties() {
         if (properties == null) {
-            return EMPTY;
+            this.properties = new DecorationProperties();
         }
         return this.properties ;
     }
@@ -121,8 +119,18 @@ public final class DecorationData extends BlockData<DecorationProperties> {
     }
 
     @Override
-    public Map<BlockState, BlockStateMeta> createStandardStateMap() {
+    public Map<BlockState, BlockData.BlockStateMeta> createStandardStateMap() {
         return null;
+    }
+
+    @Override
+    public BlockResource blockResource() {
+        return null;
+    }
+
+    @Override
+    public boolean virtual() {
+        return true;
     }
 
     @Override

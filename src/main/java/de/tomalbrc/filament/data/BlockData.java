@@ -3,7 +3,6 @@ package de.tomalbrc.filament.data;
 import com.google.gson.JsonParseException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.tomalbrc.filament.Filament;
-import de.tomalbrc.filament.api.behaviour.BlockBehaviourWithEntity;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
@@ -30,12 +29,9 @@ import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("unused")
-public class BlockData<BlockPropertyLike extends BlockProperties> extends Data<BlockPropertyLike> {
-    transient private final BlockProperties EMPTY = new BlockProperties();
-
+public class BlockData extends AbstractBlockData<BlockProperties> {
     private final @NotNull BlockResource blockResource;
     private final @Nullable BlockStateMappedProperty<BlockModelType> blockModelType;
-    private final @Nullable Set<ResourceLocation> blockTags;
 
     public BlockData(
             @NotNull ResourceLocation id,
@@ -49,33 +45,30 @@ public class BlockData<BlockPropertyLike extends BlockProperties> extends Data<B
             @Nullable ResourceLocation itemGroup,
             @NotNull BlockResource blockResource,
             @Nullable BlockStateMappedProperty<BlockModelType> blockModelType,
-            @Nullable BlockPropertyLike properties,
+            @Nullable BlockProperties properties,
             @Nullable Set<ResourceLocation> itemTags,
             @Nullable Set<ResourceLocation> blockTags
     ) {
-        super(id, vanillaItem, translations, displayName, itemResource, itemModel, properties, behaviourConfig, components, itemGroup, itemTags);
+        super(id, vanillaItem, translations, displayName, itemResource, itemModel, behaviourConfig, components, itemGroup, properties, itemTags, blockTags);
         this.blockResource = blockResource;
         this.blockModelType = blockModelType;
-        this.blockTags = blockTags;
     }
 
     @Override
     @NotNull
     public BlockProperties properties() {
         if (properties == null) {
-            return EMPTY;
+            properties = new BlockProperties();
         }
         return properties;
     }
 
-    public boolean requiresEntityBlock() {
-        return behaviour().test((behaviourType)-> BlockBehaviourWithEntity.class.isAssignableFrom(behaviourType.type()));
-    }
-
+    @Override
     public boolean virtual() {
         return this.properties().virtual;
     }
 
+    @Override
     public Map<BlockState, BlockStateMeta> createStandardStateMap() {
         Reference2ReferenceArrayMap<BlockState, BlockStateMeta> val = new Reference2ReferenceArrayMap<>();
 
@@ -120,14 +113,15 @@ public class BlockData<BlockPropertyLike extends BlockProperties> extends Data<B
                 Filament.LOGGER.error("Filament: Ran out of blockModelTypes to use AND FULL_BLOCK ran out too! Using Bedrock block temporarily. Fix your Block-Config for {}!", this.id());
                 return null;
             } else {
-                Filament.LOGGER.error("Filament: Ran out of blockModelTypes to use! Using FULL_BLOCK");
+                Filament.LOGGER.error("Filament: Ran out of blockModelTypes to use! Using FULL_BLOCK for {}", this.id());
             }
         }
 
         return blockModelType;
     }
 
-    public @NotNull BlockResource blockResource() {
+    @Override
+    public BlockResource blockResource() {
         return blockResource;
     }
 
@@ -138,10 +132,6 @@ public class BlockData<BlockPropertyLike extends BlockProperties> extends Data<B
 
     public @Nullable BlockStateMappedProperty<BlockModelType> blockModelType() {
         return blockModelType;
-    }
-
-    public @Nullable Set<ResourceLocation> blockTags() {
-        return this.blockTags;
     }
 
     @Override

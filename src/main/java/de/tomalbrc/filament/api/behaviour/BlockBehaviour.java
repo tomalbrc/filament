@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.api.behaviour;
 
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
+import de.tomalbrc.filament.data.AbstractBlockData;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import net.minecraft.core.BlockPos;
@@ -54,7 +55,7 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
      * @param blockData block data
      * @return true when the state-map was modified
      */
-    default boolean modifyStateMap(Map<BlockState, BlockData.BlockStateMeta> map, BlockData<? extends BlockProperties> blockData) {
+    default boolean modifyStateMap(Map<BlockState, BlockData.BlockStateMeta> map, AbstractBlockData<? extends BlockProperties> blockData) {
         return false;
     }
 

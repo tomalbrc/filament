@@ -4,7 +4,6 @@ import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviourWithEntity;
 import de.tomalbrc.filament.data.BlockData;
-import de.tomalbrc.filament.data.properties.BlockProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
@@ -17,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 
 public class SimpleVirtualBlockWithEntity extends SimpleVirtualBlock implements EntityBlock {
-    public SimpleVirtualBlockWithEntity(Properties properties, BlockData<BlockProperties> data) {
+    public SimpleVirtualBlockWithEntity(Properties properties, BlockData data) {
         super(properties, data);
     }
 

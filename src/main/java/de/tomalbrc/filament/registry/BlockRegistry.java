@@ -2,13 +2,13 @@ package de.tomalbrc.filament.registry;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
 import de.tomalbrc.filament.block.*;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
+import de.tomalbrc.filament.datafixer.config.BlockDataFix;
 import de.tomalbrc.filament.util.*;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import net.minecraft.core.Registry;
@@ -37,8 +37,8 @@ public class BlockRegistry {
     public static void register(InputStream inputStream) throws IOException {
         JsonElement element = JsonParser.parseReader(new InputStreamReader(inputStream));
         try {
-            BlockData<BlockProperties> data = Json.GSON.fromJson(element, TypeToken.getParameterized(BlockData.class, BlockProperties.class).getType());
-
+            BlockData data = Json.GSON.fromJson(element, BlockData.class);
+            BlockDataFix.fixup(element, data);
 
             Util.handleComponentsCustom(element, data);
 
