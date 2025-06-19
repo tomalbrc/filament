@@ -2,6 +2,7 @@ package de.tomalbrc.filament.mixin.behaviour.execute;
 
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.item.ExecuteAttackItem;
+import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.item.SimpleItem;
 import net.minecraft.network.protocol.game.ServerboundSwingPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,10 +21,10 @@ public class ServerGamePacketListenerImplMixin {
     @Inject(method = "handleAnimate", at = @At("TAIL"))
     private void filament$handleSwing(ServerboundSwingPacket serverboundSwingPacket, CallbackInfo ci) {
         ItemStack item = this.player.getItemInHand(serverboundSwingPacket.getHand());
-        if (item.getItem() instanceof SimpleItem simpleItem) {
+        if (item.getItem() instanceof FilamentItem simpleItem) {
             ExecuteAttackItem ex = simpleItem.get(Behaviours.ITEM_ATTACK_EXECUTE);
             if (ex != null && !ex.getConfig().onEntityAttack) {
-                ex.runCommandItem(this.player, simpleItem, serverboundSwingPacket.getHand());
+                ex.runCommandItem(this.player, item.getItem(), serverboundSwingPacket.getHand());
             }
         }
     }
