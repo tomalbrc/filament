@@ -4,6 +4,8 @@ filament allows for a data driven way to add items, blocks, decorations/furnitur
 
 Checkout [usage](usage.md) or "[creating content](content)" or the [example datapack](https://github.com/tomalbrc/filament/tree/main/example_datapack/) in the GitHub repo to get started!
 
+You can find the old docs for 0.14 / 0.17 for 1.21.1 / 1.21.5 [here](http://tomalbrc.de/docs/filament-old/)
+
 ---
 
 - ### [Modrinth](https://modrinth.com/mod/filament)
