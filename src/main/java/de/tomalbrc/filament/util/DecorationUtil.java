@@ -160,7 +160,7 @@ public class DecorationUtil {
                 matrix4f.scale(0.5f);
 
                 if (direction == Direction.DOWN || direction == Direction.UP) {
-                    matrix4f.setTranslation(0, -0.5f, 0);
+                    matrix4f.setTranslation(0, direction == Direction.DOWN ? 0.5f : -0.5f, 0);
 
                     matrix4f.rotate(Axis.XP.rotationDegrees(-90));
                     if (direction == Direction.DOWN) {
