@@ -113,7 +113,6 @@ public abstract class DecorationBlock extends SimpleBlock implements PolymerBloc
     }
 
     public float getVisualRotationYInDegrees(BlockState blockState) {
-        float rotation = 0;
         if (blockState.getBlock() instanceof DecorationBlock decorationBlock) {
             for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : decorationBlock.getBehaviours()) {
                 if (behaviour.getValue() instanceof DecorationRotationProvider rotationProvider) {

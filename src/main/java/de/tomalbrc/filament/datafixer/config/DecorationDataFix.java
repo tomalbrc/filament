@@ -21,7 +21,7 @@ public class DecorationDataFix {
             var rotate = props.getAsJsonObject().get("rotate");
             var rotateSmooth = props.getAsJsonObject().get("rotateSmooth");
             var rotate_smooth = props.getAsJsonObject().get("rotate_smooth");
-            if (rotate != null && rotate.getAsBoolean()) {
+            if ((rotate == null && data.properties().placement.wall()) || rotate != null && rotate.getAsBoolean()) {
                 var conf = new Rotating.Config();
                 conf.smooth = (rotateSmooth != null && rotateSmooth.getAsBoolean()) || (rotate_smooth != null && rotate_smooth.getAsBoolean());
                 data.behaviour().put(Behaviours.ROTATING, conf);
