@@ -22,14 +22,12 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public class EntityData {
-    public final BehaviourConfigMap EMPTY = new BehaviourConfigMap();
-
     private final @NotNull ResourceLocation id;
     private final @Nullable ResourceLocation entityType;
     private final @Nullable Map<String, String> translations;
     private final @Nullable AnimationInfo animation;
     private @Nullable EntityProperties properties;
-    private final @Nullable BehaviourConfigMap behaviour;
+    private @Nullable BehaviourConfigMap behaviour;
     private final @Nullable BehaviourList goals;
     private final @Nullable Set<ResourceLocation> entityTags;
     private final @Nullable Map<ResourceLocation, Double> attributes;
@@ -76,7 +74,9 @@ public class EntityData {
     }
 
     public @NotNull BehaviourConfigMap behaviour() {
-        return behaviour == null ? EMPTY : behaviour;
+        if (behaviour == null)
+            behaviour = new BehaviourConfigMap();
+        return behaviour;
     }
 
     public @Nullable Set<ResourceLocation> entityTags() {

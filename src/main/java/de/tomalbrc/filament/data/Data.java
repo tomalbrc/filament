@@ -20,15 +20,13 @@ import java.util.Objects;
 import java.util.Set;
 
 public abstract class Data<PropertyType extends ItemProperties> {
-    public final BehaviourConfigMap EMPTY = new BehaviourConfigMap();
-
     protected final @NotNull ResourceLocation id;
     protected final @Nullable Item vanillaItem;
     protected final @Nullable Map<String, String> translations;
     protected final @Nullable Component displayName;
     protected final @Nullable ItemResource itemResource;
     protected final @Nullable ResourceLocation itemModel;
-    protected final @Nullable BehaviourConfigMap behaviour;
+    protected @Nullable BehaviourConfigMap behaviour;
     protected final @Nullable DataComponentMap components;
     protected final @Nullable ResourceLocation group;
     protected final @Nullable Set<ResourceLocation> itemTags;
@@ -103,7 +101,10 @@ public abstract class Data<PropertyType extends ItemProperties> {
     }
 
     public @NotNull BehaviourConfigMap behaviour() {
-        return behaviour == null ? EMPTY : behaviour;
+        if (behaviour == null) {
+            behaviour = new BehaviourConfigMap();
+        }
+        return behaviour;
     }
 
     public @NotNull DataComponentMap components() {
