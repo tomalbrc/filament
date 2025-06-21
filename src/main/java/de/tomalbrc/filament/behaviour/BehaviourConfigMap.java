@@ -15,7 +15,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 public class BehaviourConfigMap {
-    public static final BehaviourConfigMap EMPTY = new BehaviourConfigMap();
     private final Map<BehaviourType<? extends Behaviour<?>,?>, Object> behaviourConfigMap = new Object2ObjectOpenHashMap<>();
 
     public void put(BehaviourType<?,?> type, Object config) {
