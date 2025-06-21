@@ -22,6 +22,8 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public class EntityData {
+    public final BehaviourConfigMap EMPTY = new BehaviourConfigMap();
+
     private final @NotNull ResourceLocation id;
     private final @Nullable ResourceLocation entityType;
     private final @Nullable Map<String, String> translations;
@@ -74,7 +76,7 @@ public class EntityData {
     }
 
     public @NotNull BehaviourConfigMap behaviour() {
-        return behaviour == null ? BehaviourConfigMap.EMPTY : behaviour;
+        return behaviour == null ? EMPTY : behaviour;
     }
 
     public @Nullable Set<ResourceLocation> entityTags() {
