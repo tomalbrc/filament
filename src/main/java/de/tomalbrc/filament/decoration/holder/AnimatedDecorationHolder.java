@@ -118,4 +118,30 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
     public ItemStack getPickResult() {
         return parent.getItem().copy();
     }
+
+    @Override
+    public <T extends VirtualElement> T addElement(T element) {
+        T res = super.addElement(element);
+        if (element instanceof InteractionElement interactionElement) {
+            DecorationUtil.VIRTUAL_ENTITY_PICK_MAP.put(interactionElement.getEntityId(), this::getPickResult);
+        }
+        if (element instanceof ItemFrameElement itemFrameElement) {
+            DecorationUtil.VIRTUAL_ENTITY_PICK_MAP.put(itemFrameElement.getEntityId(), this::getPickResult);
+        }
+        return res;
+    }
+
+    @Override
+    protected void onAttachmentRemoved(HolderAttachment oldAttachment) {
+        for (VirtualElement element : this.getElements()) {
+            if (element instanceof InteractionElement interactionElement) {
+                DecorationUtil.VIRTUAL_ENTITY_PICK_MAP.remove(interactionElement.getEntityId());
+            }
+            if (element instanceof ItemFrameElement interactionElement) {
+                DecorationUtil.VIRTUAL_ENTITY_PICK_MAP.remove(interactionElement.getEntityId());
+            }
+        }
+
+        super.onAttachmentRemoved(oldAttachment);
+    }
 }
