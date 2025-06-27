@@ -52,10 +52,10 @@ public class AnimatedCosmeticHolder extends EntityHolder {
     }
 
     @Override
-    protected void updateElement(DisplayWrapper<?> display) {
+    protected void updateElement(ServerPlayer serverPlayer, DisplayWrapper<?> display) {
         display.element().ignorePositionUpdates();
         display.element().setYaw(access().filament$bodyYaw());
-        super.updateElement(display);
+        super.updateElement(serverPlayer, display);
     }
 
     @Override

@@ -10,11 +10,15 @@ import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.decoration.Animation;
 import de.tomalbrc.filament.behaviour.decoration.Container;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.util.ItemFrameElement;
 import de.tomalbrc.filament.util.DecorationUtil;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockAwareAttachment;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
 import eu.pb4.polymer.virtualentity.api.attachment.HolderAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
+import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
+import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
@@ -45,9 +49,9 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
     }
 
     @Override
-    public void applyPose(Pose pose, DisplayWrapper display) {
-        super.applyPose(pose, display);
-        display.element().setTranslation(pose.translation().get(new Vector3f()).sub(0, 0.5f, 0));
+    public void applyPose(ServerPlayer serverPlayer, Pose pose, DisplayWrapper<?> display) {
+        super.applyPose(serverPlayer, pose, display);
+        display.element().setTranslation(serverPlayer, pose.translation().get(new Vector3f()).sub(0, 0.5f, 0));
     }
 
     @Override
@@ -96,13 +100,13 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
     }
 
     @Override
-    public void playAnimation(String animation, int priority) {
-        this.getAnimator().playAnimation(animation, priority);
+    public void playAnimation(ServerPlayer serverPlayer, String animation, int priority) {
+        this.getAnimator().playAnimation(serverPlayer, animation, priority);
     }
 
     @Override
-    public void playAnimation(String animation) {
-        this.getAnimator().playAnimation(animation);
+    public void playAnimation(ServerPlayer serverPlayer, String animation) {
+        this.getAnimator().playAnimation(serverPlayer, animation);
     }
 
     @Override

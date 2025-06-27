@@ -9,6 +9,7 @@ import eu.pb4.polymer.virtualentity.api.attachment.HolderAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Supplier;
@@ -29,6 +30,16 @@ public class DecorationHolder extends ElementHolder implements FilamentDecoratio
             }
         }
         this.tick();
+    }
+
+    @Override
+    public void playAnimation(ServerPlayer serverPlayer, String animation, int priority) {
+        // noop
+    }
+
+    @Override
+    public void playAnimation(ServerPlayer serverPlayer, String animation) {
+        // noop
     }
 
     @Override
@@ -53,6 +64,8 @@ public class DecorationHolder extends ElementHolder implements FilamentDecoratio
                 DecorationUtil.VIRTUAL_ENTITY_PICK_MAP.remove(interactionElement.getEntityId());
             }
         }
+
+        super.onAttachmentRemoved(oldAttachment);
     }
 
     @Override

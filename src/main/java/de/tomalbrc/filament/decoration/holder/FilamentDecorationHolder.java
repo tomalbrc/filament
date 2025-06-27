@@ -6,6 +6,7 @@ import eu.pb4.polymer.virtualentity.api.attachment.BlockAwareAttachment;
 import eu.pb4.polymer.virtualentity.api.attachment.HolderAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.GenericEntityElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -30,10 +31,14 @@ public interface FilamentDecorationHolder {
 
     }
 
+    void playAnimation(ServerPlayer serverPlayer, String animation, int priority);
     default void playAnimation(String animation, int priority) {
+        playAnimation(null, animation, priority);
     }
 
+    void playAnimation(ServerPlayer serverPlayer, String animation);
     default void playAnimation(String animation) {
+        playAnimation(null, animation);
     }
 
     default void setYaw(float rotation) {
