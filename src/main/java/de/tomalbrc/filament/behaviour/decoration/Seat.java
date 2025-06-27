@@ -21,16 +21,16 @@ import java.util.Objects;
 /**
  * Seat behaviour for decoration
  */
-public class Seat implements DecorationBehaviour<Seat.SeatConfig> {
-    private final SeatConfig seatConfig;
+public class Seat implements DecorationBehaviour<Seat.Config> {
+    private final Config seatConfig;
 
-    public Seat(SeatConfig seatConfig) {
+    public Seat(Config seatConfig) {
         this.seatConfig = seatConfig;
     }
 
     @Override
     @NotNull
-    public SeatConfig getConfig() {
+    public Seat.Config getConfig() {
         return this.seatConfig;
     }
 
@@ -119,5 +119,5 @@ public class Seat implements DecorationBehaviour<Seat.SeatConfig> {
         public float direction = 180;
     }
 
-    public static class SeatConfig extends ObjectArrayList<SeatConfigData> { }
+    public static class Config extends ObjectArrayList<SeatConfigData> { }
 }

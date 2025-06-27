@@ -44,7 +44,7 @@ public class Behaviours {
     // Block
     public static final BehaviourType<Axis, Axis.Config> AXIS = registerBehaviour("axis", Axis.class);
     public static final BehaviourType<CanSurvive, CanSurvive.Config> CAN_SURVIVE = registerBehaviour("can_survive", CanSurvive.class);
-    public static final BehaviourType<Count, Count.CountConfig> COUNT = registerBehaviour("count", Count.class);
+    public static final BehaviourType<Count, Count.Config> COUNT = registerBehaviour("count", Count.class);
     public static final BehaviourType<Crop, Crop.Config> CROP = registerBehaviour("crop", Crop.class);
     public static final BehaviourType<Budding, Budding.Config> BUDDING = registerBehaviour("budding", Budding.class);
     public static final BehaviourType<Door, Door.Config> DOOR = registerBehaviour("door", Door.class);
@@ -61,28 +61,28 @@ public class Behaviours {
     public static final BehaviourType<Lamp, Lamp.Config> LAMP = registerBehaviour("lamp", Lamp.class);
     public static final BehaviourType<LeafDecay, LeafDecay.Config> LEAF_DECAY = registerBehaviour("leaf_decay", LeafDecay.class);
     public static final BehaviourType<Oxidizable, Oxidizable.Config> OXIDIZABLE = registerBehaviour("oxidizable", Oxidizable.class);
-    public static final BehaviourType<Powerlevel, Powerlevel.PowerlevelConfig> POWERLEVEL = registerBehaviour("powerlevel", Powerlevel.class);
-    public static final BehaviourType<Powersource, Powersource.PowersourceConfig> POWERSOURCE = registerBehaviour("powersource", Powersource.class);
-    public static final BehaviourType<Repeater, Repeater.RepeaterConfig> REPEATER = registerBehaviour("repeater", Repeater.class);
+    public static final BehaviourType<Powerlevel, Powerlevel.Config> POWERLEVEL = registerBehaviour("powerlevel", Powerlevel.class);
+    public static final BehaviourType<Powersource, Powersource.Config> POWERSOURCE = registerBehaviour("powersource", Powersource.class);
+    public static final BehaviourType<Repeater, Repeater.Config> REPEATER = registerBehaviour("repeater", Repeater.class);
     public static final BehaviourType<Rotating, Rotating.Config> ROTATING = registerBehaviour("rotating", Rotating.class);
     public static final BehaviourType<Sapling, Sapling.Config> SAPLING = registerBehaviour("sapling", Sapling.class);
     @Deprecated
     public static final BehaviourType<Waterloggable, Waterloggable.Config> SIMPLE_WATERLOGGABLE = registerBehaviour("simple_waterloggable", Waterloggable.class);
     public static final BehaviourType<Waterloggable, Waterloggable.Config> WATERLOGGABLE = registerBehaviour("waterloggable", Waterloggable.class);
-    public static final BehaviourType<Slab, Slab.SlabConfig> SLAB = registerBehaviour("slab", Slab.class);
-    public static final BehaviourType<Strippable, Strippable.StrippableConfig> STRIPPABLE = registerBehaviour("strippable", Strippable.class);
+    public static final BehaviourType<Slab, Slab.Config> SLAB = registerBehaviour("slab", Slab.class);
+    public static final BehaviourType<Strippable, Strippable.Config> STRIPPABLE = registerBehaviour("strippable", Strippable.class);
     public static final BehaviourType<Tnt, Tnt.Config> TNT = registerBehaviour("tnt", Tnt.class);
     public static final BehaviourType<Trapdoor, Trapdoor.Config> TRAPDOOR = registerBehaviour("trapdoor", Trapdoor.class);
 
     // Decoration
-    public static final BehaviourType<Animation, Animation.AnimationConfig> ANIMATION = registerBehaviour("animation", Animation.class);
+    public static final BehaviourType<Animation, Animation.Config> ANIMATION = registerBehaviour("animation", Animation.class);
     public static final BehaviourType<Bed, Bed.Config> BED = registerBehaviour("bed", Bed.class);
     public static final BehaviourType<Connectable, Connectable.Config> CONNECTABLE = registerBehaviour("connectable", Connectable.class);
-    public static final BehaviourType<Container, Container.ContainerConfig> CONTAINER = registerBehaviour("container", Container.class);
-    public static final BehaviourType<Lock, Lock.LockConfig> LOCK = registerBehaviour("lock", Lock.class); // this only exists for backwards compatibility
-    public static final BehaviourType<Lock, Lock.LockConfig> INTERACT_EXECUTE = registerBehaviour("interact_execute", Lock.class);
-    public static final BehaviourType<Seat, Seat.SeatConfig> SEAT = registerBehaviour("seat", Seat.class);
-    public static final BehaviourType<Showcase, Showcase.ShowcaseConfig> SHOWCASE = registerBehaviour("showcase", Showcase.class);
+    public static final BehaviourType<Container, Container.Config> CONTAINER = registerBehaviour("container", Container.class);
+    public static final BehaviourType<Lock, Lock.Config> LOCK = registerBehaviour("lock", Lock.class); // this only exists for backwards compatibility
+    public static final BehaviourType<Lock, Lock.Config> INTERACT_EXECUTE = registerBehaviour("interact_execute", Lock.class);
+    public static final BehaviourType<Seat, Seat.Config> SEAT = registerBehaviour("seat", Seat.class);
+    public static final BehaviourType<Showcase, Showcase.Config> SHOWCASE = registerBehaviour("showcase", Showcase.class);
 
     // Entity
     // goals

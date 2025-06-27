@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.redstone.Orientation;
 import org.jetbrains.annotations.NotNull;
 
-public class Powerlevel implements BlockBehaviour<Powerlevel.PowerlevelConfig> {
+public class Powerlevel implements BlockBehaviour<Powerlevel.Config> {
     public static final IntegerProperty[] POWERS = {
             IntegerProperty.create("powerlevel", 0,1),
             IntegerProperty.create("powerlevel", 0,2),
@@ -32,15 +32,15 @@ public class Powerlevel implements BlockBehaviour<Powerlevel.PowerlevelConfig> {
             IntegerProperty.create("powerlevel", 0,15),
     };
 
-    private final PowerlevelConfig config;
+    private final Config config;
 
-    public Powerlevel(PowerlevelConfig config) {
+    public Powerlevel(Config config) {
         this.config = config;
     }
 
     @Override
     @NotNull
-    public PowerlevelConfig getConfig() {
+    public Powerlevel.Config getConfig() {
         return this.config;
     }
 
@@ -80,7 +80,7 @@ public class Powerlevel implements BlockBehaviour<Powerlevel.PowerlevelConfig> {
         }
     }
 
-    public static class PowerlevelConfig {
+    public static class Config {
         public int max = 15;
     }
 }

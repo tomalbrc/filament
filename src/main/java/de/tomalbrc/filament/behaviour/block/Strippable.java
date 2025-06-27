@@ -12,16 +12,16 @@ import org.jetbrains.annotations.NotNull;
  * Block behaviourConfig for strippable blocks (with an axe)
  * Copies blockstate properties if applicable
  */
-public class Strippable implements BlockBehaviour<Strippable.StrippableConfig> {
-    private final StrippableConfig config;
+public class Strippable implements BlockBehaviour<Strippable.Config> {
+    private final Config config;
 
-    public Strippable(StrippableConfig config) {
+    public Strippable(Config config) {
         this.config = config;
     }
 
     @Override
     @NotNull
-    public StrippableConfig getConfig() {
+    public Strippable.Config getConfig() {
         return this.config;
     }
 
@@ -30,7 +30,7 @@ public class Strippable implements BlockBehaviour<Strippable.StrippableConfig> {
         StrippableRegistry.add(block, config.replacement, config.lootTable);
     }
 
-    public static class StrippableConfig {
+    public static class Config {
         /**
          * Replacement block
          */

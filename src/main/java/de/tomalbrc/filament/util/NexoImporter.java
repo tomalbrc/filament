@@ -338,7 +338,7 @@ public class NexoImporter {
                     }
                 }
 
-                Seat.SeatConfig filamentSeats = new Seat.SeatConfig();
+                Seat.Config filamentSeats = new Seat.Config();
                 var seat = getMap("seat", furniture);
                 if (seat != null) {
                     var height = getValue("height", seat, Float.class);

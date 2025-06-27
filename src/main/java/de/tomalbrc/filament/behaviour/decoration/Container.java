@@ -26,23 +26,23 @@ import java.util.Objects;
 /**
  * Decoration containers, such as chests, or just drawers etc.
  */
-public class Container implements DecorationBehaviour<Container.ContainerConfig> {
+public class Container implements DecorationBehaviour<Container.Config> {
     public final FilamentContainer container;
 
-    private final ContainerConfig config;
+    private final Config config;
 
-    public Container(ContainerConfig config) {
+    public Container(Config config) {
         this.config = config;
         this.container = new FilamentContainer(config.size, config.purge);
     }
 
     @Override
     @NotNull
-    public ContainerConfig getConfig() {
+    public Container.Config getConfig() {
         return config;
     }
 
-    public static class ContainerConfig {
+    public static class Config {
         /**
          * The name displayed in the container UI
          */

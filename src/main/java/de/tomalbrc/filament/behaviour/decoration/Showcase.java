@@ -39,21 +39,21 @@ import java.util.List;
 /**
  * For item showcase decoration
  */
-public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
+public class Showcase implements DecorationBehaviour<Showcase.Config> {
     private static final String SHOWCASE_KEY = "Showcase";
     private static final String ITEM = "Item";
 
-    private final ShowcaseConfig config;
+    private final Config config;
 
     Object2ObjectOpenHashMap<ShowcaseMeta, DisplayElement> showcases = new Object2ObjectOpenHashMap<>();
 
-    public Showcase(ShowcaseConfig config) {
+    public Showcase(Config config) {
         this.config = config;
     }
 
     @Override
     @NotNull
-    public ShowcaseConfig getConfig() {
+    public Showcase.Config getConfig() {
         return this.config;
     }
 
@@ -321,5 +321,5 @@ public class Showcase implements DecorationBehaviour<Showcase.ShowcaseConfig> {
         dynamic // block when possible, item otherwise
     }
 
-    public static class ShowcaseConfig extends ObjectArrayList<ShowcaseMeta> { }
+    public static class Config extends ObjectArrayList<ShowcaseMeta> { }
 }

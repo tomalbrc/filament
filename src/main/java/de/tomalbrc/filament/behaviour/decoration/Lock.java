@@ -19,18 +19,18 @@ import java.util.List;
 /**
  * Lock behaviour for decoration
  */
-public class Lock implements DecorationBehaviour<Lock.LockConfig> {
-    public LockConfig lockConfig;
+public class Lock implements DecorationBehaviour<Lock.Config> {
+    public Config lockConfig;
     public boolean unlocked = false;
     public String command = null;
 
-    public Lock(LockConfig lockConfig) {
+    public Lock(Config lockConfig) {
         this.lockConfig = lockConfig;
     }
 
     @Override
     @NotNull
-    public LockConfig getConfig() {
+    public Lock.Config getConfig() {
         return this.lockConfig;
     }
 
@@ -99,7 +99,7 @@ public class Lock implements DecorationBehaviour<Lock.LockConfig> {
         return getConfig().commands == null ? this.getConfig().command == null ? null : List.of(this.getConfig().command) : getConfig().commands;
     }
 
-    public static class LockConfig {
+    public static class Config {
 
         /**
          * The identifier of the key required to unlock.

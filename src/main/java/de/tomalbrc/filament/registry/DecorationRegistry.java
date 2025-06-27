@@ -80,7 +80,7 @@ public class DecorationRegistry {
         }
 
         if (data.isContainer()) {
-            Container.ContainerConfig container = data.behaviour().get(Behaviours.CONTAINER);
+            Container.Config container = data.behaviour().get(Behaviours.CONTAINER);
             if (container.canPickup)
                 properties.component(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
         }

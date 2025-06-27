@@ -31,7 +31,7 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
         this.parent = blockEntity;
 
         if (this.parent.has(Behaviours.ANIMATION)) {
-            Animation.AnimationConfig animation = this.parent.getDecorationData(). behaviour().get(Behaviours.ANIMATION);
+            Animation.Config animation = this.parent.getDecorationData(). behaviour().get(Behaviours.ANIMATION);
             this.setAnimationData(animation);
         }
 
@@ -64,7 +64,7 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
         }
     }
 
-    public void setAnimationData(@NotNull Animation.AnimationConfig animationData) {
+    public void setAnimationData(@NotNull Animation.Config animationData) {
         if (animationData.model != null) {
             if (model == null) {
                 Filament.LOGGER.error("No Animated model named '{}' was found!", animationData.model);
@@ -106,7 +106,7 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
 
     @Override
     public void playAnimation(ServerPlayer serverPlayer, String animation) {
-        this.getAnimator().playAnimation(serverPlayer, animation);
+        this.getAnimator().playAnimation(serverPlayer, animation, 0);
     }
 
     @Override

@@ -39,16 +39,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Map;
 import java.util.Optional;
 
-public class Slab implements BlockBehaviour<Slab.SlabConfig>, SimpleWaterloggedBlock {
-    private final SlabConfig config;
+public class Slab implements BlockBehaviour<Slab.Config>, SimpleWaterloggedBlock {
+    private final Config config;
 
-    public Slab(SlabConfig config) {
+    public Slab(Config config) {
         this.config = config;
     }
 
     @Override
     @NotNull
-    public SlabConfig getConfig() {
+    public Slab.Config getConfig() {
         return this.config;
     }
 
@@ -176,5 +176,5 @@ public class Slab implements BlockBehaviour<Slab.SlabConfig>, SimpleWaterloggedB
         return true;
     }
 
-    public static class SlabConfig {}
+    public static class Config {}
 }

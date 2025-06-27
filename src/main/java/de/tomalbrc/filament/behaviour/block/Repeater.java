@@ -24,10 +24,10 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Block behaviour for redstone power source
  */
-public class Repeater implements BlockBehaviour<Repeater.RepeaterConfig> {
-    private final RepeaterConfig config;
+public class Repeater implements BlockBehaviour<Repeater.Config> {
+    private final Config config;
 
-    public Repeater(RepeaterConfig config) {
+    public Repeater(Config config) {
         this.config = config;
     }
 
@@ -161,11 +161,11 @@ public class Repeater implements BlockBehaviour<Repeater.RepeaterConfig> {
 
     @Override
     @NotNull
-    public RepeaterConfig getConfig() {
+    public Repeater.Config getConfig() {
         return this.config;
     }
 
-    public static class RepeaterConfig {
+    public static class Config {
         /**
          * delay in ticks
          */

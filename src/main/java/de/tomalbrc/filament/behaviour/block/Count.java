@@ -10,18 +10,18 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public class Count implements BlockBehaviour<Count.CountConfig> {
+public class Count implements BlockBehaviour<Count.Config> {
     public static final IntegerProperty COUNT = IntegerProperty.create("count", 1,16);
 
-    private final CountConfig config;
+    private final Config config;
 
-    public Count(CountConfig config) {
+    public Count(Config config) {
         this.config = config;
     }
 
     @Override
     @NotNull
-    public CountConfig getConfig() {
+    public Count.Config getConfig() {
         return this.config;
     }
 
@@ -49,7 +49,7 @@ public class Count implements BlockBehaviour<Count.CountConfig> {
         return self;
     }
 
-    public static class CountConfig {
+    public static class Config {
         public int max = 4;
     }
 }

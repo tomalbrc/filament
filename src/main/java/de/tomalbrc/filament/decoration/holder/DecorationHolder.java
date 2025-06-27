@@ -29,6 +29,7 @@ public class DecorationHolder extends ElementHolder implements FilamentDecoratio
                 itemDisplayElement.setItem(newItem);
             }
         }
+
         this.tick();
     }
 

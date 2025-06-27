@@ -11,18 +11,18 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Animation behaviour for decoration using animated java models (powered by nylon)
+ * Animation behaviour for decoration using animated java models
  */
-public class Animation implements DecorationBehaviour<Animation.AnimationConfig> {
-    private final AnimationConfig config;
+public class Animation implements DecorationBehaviour<Animation.Config> {
+    private final Config config;
 
-    public Animation(AnimationConfig config) {
+    public Animation(Config config) {
         this.config = config;
     }
 
     @Override
     @NotNull
-    public AnimationConfig getConfig() {
+    public Animation.Config getConfig() {
         return this.config;
     }
 
@@ -43,7 +43,7 @@ public class Animation implements DecorationBehaviour<Animation.AnimationConfig>
         holder.setYaw(blockEntity.getVisualRotationYInDegrees());
     }
 
-    public static class AnimationConfig {
+    public static class Config {
         /**
          * The name of the animated model associated with this animation (if applicable).
          */
