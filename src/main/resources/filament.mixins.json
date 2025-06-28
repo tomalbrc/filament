@@ -22,6 +22,7 @@
     "behaviour.banner.LoomMenuMixin",
     "behaviour.bed.LivingEntityMixin",
     "behaviour.bed.ServerPlayerMixin",
+    "behaviour.container.HopperBlockEntityMixin",
     "behaviour.cosmetic.LivingEntityMixin",
     "behaviour.cosmetic.ServerPlayerMixin",
     "behaviour.crop.BeeMixin",

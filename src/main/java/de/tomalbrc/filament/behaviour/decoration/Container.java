@@ -72,6 +72,8 @@ public class Container implements DecorationBehaviour<Container.Config> {
          * Flag to indicate whether the container can be picked up like shulker boxes.
          */
         public boolean canPickup = false;
+
+        public boolean hopperDropperSupport = true;
     }
 
     @Override
