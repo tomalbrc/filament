@@ -36,7 +36,7 @@ public class DecorationHolder extends ElementHolder implements FilamentDecoratio
 
     @Override
     public void playAnimation(ServerPlayer serverPlayer, String animation, int priority, Consumer<ServerPlayer> onFinish) {
-        // noop
+        onFinish.accept(serverPlayer);
     }
 
     @Override
