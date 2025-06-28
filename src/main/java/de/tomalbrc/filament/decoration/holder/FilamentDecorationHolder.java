@@ -12,6 +12,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Consumer;
+
 public interface FilamentDecorationHolder {
     <T extends VirtualElement> T addElement(T element);
 
@@ -31,14 +33,19 @@ public interface FilamentDecorationHolder {
 
     }
 
-    void playAnimation(ServerPlayer serverPlayer, String animation, int priority);
-    default void playAnimation(String animation, int priority) {
-        playAnimation(null, animation, priority);
-    }
+    void playAnimation(ServerPlayer serverPlayer, String animation, int priority, Consumer<ServerPlayer> onFinish);
 
-    void playAnimation(ServerPlayer serverPlayer, String animation);
+    default void playAnimation(ServerPlayer serverPlayer, String animation, int priority) {
+        playAnimation(null, animation, priority, null);
+    }
+    default void playAnimation(String animation, int priority) {
+        playAnimation(null, animation, priority, null);
+    }
+    default void playAnimation(ServerPlayer serverPlayer, String animation) {
+        playAnimation(serverPlayer, animation, 0, null);
+    }
     default void playAnimation(String animation) {
-        playAnimation(null, animation);
+        playAnimation(null, animation, 0, null);
     }
 
     default void setYaw(float rotation) {

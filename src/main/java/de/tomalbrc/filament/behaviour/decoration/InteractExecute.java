@@ -11,8 +11,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,20 +19,20 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Lock behaviour for decoration
+ * Interact-execute behaviour for decoration
  */
-public class Lock implements DecorationBehaviour<Lock.Config> {
+public class InteractExecute implements DecorationBehaviour<InteractExecute.Config> {
     public Config config;
-    public boolean unlocked = false;
-    ParsedCommand[] parsedCommands;
+    public ParsedCommand[] parsedCommands = null;
+    public ParsedCommand[] parsedCommandsPost = null;
 
-    public Lock(Config config) {
+    public InteractExecute(Config config) {
         this.config = config;
     }
 
     @Override
     @NotNull
-    public Lock.Config getConfig() {
+    public InteractExecute.Config getConfig() {
         return this.config;
     }
 
@@ -50,12 +48,19 @@ public class Lock implements DecorationBehaviour<Lock.Config> {
             }
             this.parsedCommands = commandList.toArray(new ParsedCommand[0]);
         }
+
+        var commandsPost = commandsPost();
+        if (commandsPost != null) {
+            List<ParsedCommand> commandListPost = new ArrayList<>();
+            for (String command : commandsPost) {
+                commandListPost.addAll(Arrays.asList(CommandParser.parse(command)));
+            }
+            this.parsedCommandsPost = commandListPost.toArray(new ParsedCommand[0]);
+        }
     }
 
     @Override
     public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
-        if (this.unlocked && !config.repeatable) return InteractionResult.PASS;
-
         Item key = this.config.key == null ? null : BuiltInRegistries.ITEM.getValue(this.config.key);
         ItemStack mainHandItem = player.getItemInHand(InteractionHand.MAIN_HAND);
         boolean hasHandItem = !mainHandItem.isEmpty();
@@ -66,11 +71,19 @@ public class Lock implements DecorationBehaviour<Lock.Config> {
                 mainHandItem.shrink(1);
             }
 
-            if (this.config.unlockAnimation != null && !config.unlockAnimation.isEmpty() && decorationBlockEntity.getOrCreateHolder() != null) {
-                decorationBlockEntity.getOrCreateHolder().playAnimation(config.unlockAnimation);
-            }
+            if (this.config.animation != null && !config.animation.isEmpty() && decorationBlockEntity.getOrCreateHolder() != null) {
+                decorationBlockEntity.getOrCreateHolder().playAnimation(config.animatePerPlayer ? player : null, config.animation, 0, commandsPost() == null ? null : (serverPlayer -> {
+                    var css = player.createCommandSourceStack().withSource(player.getServer()).withMaximumPermission(4);
+                    if (getConfig().atBlock)
+                        css = css.withPosition(decorationBlockEntity.getBlockPos().getCenter());
 
-            this.unlocked = !noItemNoKey;
+                    if (player.getServer() != null && parsedCommandsPost != null) {
+                        for (ParsedCommand cmd : parsedCommandsPost) {
+                            cmd.execute(player.getServer().getCommands().getDispatcher(), css);
+                        }
+                    }
+                }));
+            }
 
             boolean hasCommand = parsedCommands != null && parsedCommands.length > 0;
             boolean validLockCommand = this.config.command != null && !this.config.command.isEmpty();
@@ -84,6 +97,8 @@ public class Lock implements DecorationBehaviour<Lock.Config> {
                         cmd.execute(player.getServer().getCommands().getDispatcher(), css);
                     }
                 }
+
+                return InteractionResult.CONSUME;
             }
 
             if (this.config.discard) {
@@ -91,22 +106,15 @@ public class Lock implements DecorationBehaviour<Lock.Config> {
             }
         }
 
-        return this.unlocked ? InteractionResult.CONSUME : InteractionResult.PASS;
-    }
-
-    @Override
-    public void read(ValueInput input, DecorationBlockEntity blockEntity) {
-        input.child("Lock").ifPresent(lock -> this.unlocked = lock.getBooleanOr("Unlocked", this.unlocked));
-    }
-
-    @Override
-    public void write(ValueOutput output, DecorationBlockEntity blockEntity) {
-        ValueOutput lockTag = output.child("Lock");
-        lockTag.putBoolean("Unlocked", this.unlocked);
+        return InteractionResult.PASS;
     }
 
     private List<String> commands() {
-        return getConfig().commands == null ? this.getConfig().command == null ? null : List.of(this.getConfig().command) : getConfig().commands;
+        return config.commands == null ? config.command == null ? null : List.of(config.command) : config.commands;
+    }
+
+    private List<String> commandsPost() {
+        return config.commandsPostAnimation == null ? config.commandPostAnimation == null ? null : List.of(config.commandPostAnimation) : config.commandsPostAnimation;
     }
 
     public static class Config {
@@ -129,7 +137,12 @@ public class Lock implements DecorationBehaviour<Lock.Config> {
         /**
          * Name of the animation to play upon successful unlocking (if applicable).
          */
-        public String unlockAnimation = null;
+        public String animation = null;
+
+        /**
+         * Whether to play animation only for player interacting with the decoration
+         */
+        public boolean animatePerPlayer = false;
 
         /**
          * Command to execute when the lock is successfully unlocked (if specified).
@@ -137,10 +150,18 @@ public class Lock implements DecorationBehaviour<Lock.Config> {
          * `formats modify @e[entitySpecifier] Lock.Command set value "say hello"`
          */
         public String command = null;
+
+        /**
+         * List of commands. See above
+         */
         public List<String> commands = null;
 
-        public boolean atBlock = false;
+        /**
+         * Whether to run commands after animation
+         */
+        public String commandPostAnimation = null;
+        public List<String> commandsPostAnimation = null;
 
-        public boolean repeatable = true;
+        public boolean atBlock = false;
     }
 }

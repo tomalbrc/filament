@@ -80,7 +80,7 @@ public class Behaviours {
     public static final BehaviourType<Connectable, Connectable.Config> CONNECTABLE = registerBehaviour("connectable", Connectable.class);
     public static final BehaviourType<Container, Container.Config> CONTAINER = registerBehaviour("container", Container.class);
     public static final BehaviourType<Lock, Lock.Config> LOCK = registerBehaviour("lock", Lock.class); // this only exists for backwards compatibility
-    public static final BehaviourType<Lock, Lock.Config> INTERACT_EXECUTE = registerBehaviour("interact_execute", Lock.class);
+    public static final BehaviourType<InteractExecute, InteractExecute.Config> INTERACT_EXECUTE = registerBehaviour("interact_execute", InteractExecute.class);
     public static final BehaviourType<Seat, Seat.Config> SEAT = registerBehaviour("seat", Seat.class);
     public static final BehaviourType<Showcase, Showcase.Config> SHOWCASE = registerBehaviour("showcase", Showcase.class);
 

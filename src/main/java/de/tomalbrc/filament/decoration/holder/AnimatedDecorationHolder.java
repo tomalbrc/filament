@@ -23,6 +23,8 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
+import java.util.function.Consumer;
+
 public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements FilamentDecorationHolder {
     private final DecorationBlockEntity parent;
 
@@ -100,13 +102,8 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
     }
 
     @Override
-    public void playAnimation(ServerPlayer serverPlayer, String animation, int priority) {
-        this.getAnimator().playAnimation(serverPlayer, animation, priority);
-    }
-
-    @Override
-    public void playAnimation(ServerPlayer serverPlayer, String animation) {
-        this.getAnimator().playAnimation(serverPlayer, animation, 0);
+    public void playAnimation(ServerPlayer serverPlayer, String animation, int priority, Consumer<ServerPlayer> onFinish) {
+        this.getAnimator().playAnimation(serverPlayer, animation, priority, onFinish);
     }
 
     @Override

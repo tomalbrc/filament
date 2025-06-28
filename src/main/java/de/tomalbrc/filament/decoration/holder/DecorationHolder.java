@@ -12,6 +12,7 @@ import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class DecorationHolder extends ElementHolder implements FilamentDecorationHolder {
@@ -34,12 +35,7 @@ public class DecorationHolder extends ElementHolder implements FilamentDecoratio
     }
 
     @Override
-    public void playAnimation(ServerPlayer serverPlayer, String animation, int priority) {
-        // noop
-    }
-
-    @Override
-    public void playAnimation(ServerPlayer serverPlayer, String animation) {
+    public void playAnimation(ServerPlayer serverPlayer, String animation, int priority, Consumer<ServerPlayer> onFinish) {
         // noop
     }
 
