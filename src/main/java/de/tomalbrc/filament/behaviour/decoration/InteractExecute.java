@@ -82,6 +82,10 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
                             cmd.execute(player.getServer().getCommands().getDispatcher(), css);
                         }
                     }
+
+                    if (config.animationPost != null && (!config.animatePerPlayer || player.level() == decorationBlockEntity.getLevel())) {
+                        decorationBlockEntity.getOrCreateHolder().playAnimation(config.animatePerPlayer ? player : null, config.animationPost);
+                    }
                 }));
             }
 
@@ -118,7 +122,6 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
     }
 
     public static class Config {
-
         /**
          * The identifier of the key required to unlock.
          */
@@ -138,6 +141,11 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
          * Name of the animation to play upon successful unlocking (if applicable).
          */
         public String animation = null;
+
+        /**
+         * Name of animation to player after the first one ended
+         */
+        public String animationPost = null;
 
         /**
          * Whether to play animation only for player interacting with the decoration
