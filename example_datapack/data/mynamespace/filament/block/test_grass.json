@@ -1,0 +1,17 @@
+{
+  "id": "mynamespace:test_grass",
+  "blockResource": {
+    "models": {
+      "default": "minecraft:custom/block/concrete/green_concrete_bricks"
+    }
+  },
+  "properties": {
+    "blockBase": "minecraft:green_concrete"
+  },
+  "behaviour": {
+    "grass_spread": {
+      "decayBlockState": "minecraft:dirt"
+    }
+  },
+  "blockModelType": "full_block"
+}

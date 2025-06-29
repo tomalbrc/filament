@@ -105,6 +105,8 @@ Works with the `animation` behaviour to play an animation defined in the bbmodel
 - `purge`: Indicates whether the container's contents should be cleared when no player is viewing the inventory.
 - `openAnimation`: The name of the animation to play when the container is opened (if applicable).
 - `closeAnimation`: The name of the animation to play when the container is closed (if applicable).
+- `canPickup`: Flag whether the container will not drop its items when broken but store it as component in the dropped item
+- `hopperDropperSupport`: Flag whether hoppers/droppers can interact with this container
 ~~~
 
 ~~~admonish example
@@ -123,50 +125,16 @@ Works with the `animation` behaviour to play an animation defined in the bbmodel
 
 ---
 
-## `lamp` behaviour
+## `lock` behaviour
 
-Allows you to create lamps that either switch on/off or cycle through a list of light levels on player interaction.
+This behaviour runs a command, optionally with a key item.
 
-~~~admonish info "Configurable Fields"
-- `on`: Light level to use for the 'on' state
-- `off`: Light level to use for the 'off' state
-- `cycle`: List of light levels to cycle through. 
-~~~
-
-~~~admonish example "Simple on / off lamp"
-```json
-{
-  "lamp": {
-    "on": 15,
-    "off": 0
-  }
-}
-```
-~~~
-
-~~~admonish example "Cycling lamp"
-```json
-{
-  "lamp": {
-    "cycle": [0, 2, 4, 6, 8, 10, 12, 14]
-  }
-}
-```
-~~~
-
----
-
-## `interact_execute` / `lock` behaviour
-
-Defines a behaviour that runs a command, for decorations, optionally with a key item.
-
-This behaviour is available under 2 names, `interact_execute` and `lock`. The name `lock` exists to keep compatibility with older versions of filament / filament configs.
-
-It's an analog to the `execute` item behaviour.
+It's similar to the `execute` item-behaviour or `interact_execute` decoration behaviour.
 
 The command will only run once if a key is specified, the key can be empty to always run the commands/animations on interaction.
+The `repeatable` flag can be set to overwrite this.
 
-This uses Permission levels, So when using with custom commands remember to add a permission level or the command may not work.
+The `command` or `commands` are run as player but with elevated permissions, optionally at the decoration block itself.
 
 ~~~admonish info "Configurable Fields"
 - `key`: The identifier of the key required to unlock. Optional, if left empty the unlockAnimation will play (if applicable) and the commands will be run and the decoration will be discarded based on the `discard` flag.
@@ -174,7 +142,35 @@ This uses Permission levels, So when using with custom commands remember to add 
 - `discard`: Specifies whether the decoration should be destroyed after interacting with it.
 - `unlockAnimation`: Name of the animation to play upon successful unlocking with a key (if applicable).
 - `command`: Command to execute when the lock is successfully unlocked (if specified).
+- `commands`: List of commands to execute when the lock is successfully unlocked (if specified).
 - `atBlock`: false/true flag whether the command should be run at the blocks' position
+~~~
+
+---
+
+## `interact_execute` behaviour
+
+This behaviour runs a command, plays an animation and runs a command once the animation finished.
+
+It behaves similar to the `lock` behaviour, but will always 
+It's similar to the `execute` item-behaviour or `interact_execute` decoration behaviour.
+
+The command will only run once if a key is specified, the key can be empty to always run the commands/animations on interaction.
+The `repeatable` flag can be set to overwrite this.
+
+The `command` or `commands` are run as player but with elevated permissions, optionally at the decoration block itself.
+
+~~~admonish info "Configurable Fields"
+- `key`: The identifier of the item held by player required to run commands/animations. Optional, if left empty the animation will play (if applicable) and the commands will be run and the decoration will be discarded based on the `discard` flag.
+- `consumeKey`: Determines whether the key should be consumed upon unlocking.
+- `discard`: Specifies whether the decoration should be destroyed after interacting with it.
+- `animation`: Name of the animation to play when interacting.
+- `animationPost`: Name of animation to player after the first one ended
+- `command`: Command to execute when the lock is successfully unlocked (if specified).
+- `commands`: List of commands to execute when interacted with
+- `atBlock`: false/true flag whether the command should be run at the blocks' position
+- `commandPostAnimation`: Command to run when the first animation stops playing
+- `commandsPostAnimation`: List of commands to run when the first animation stops playing
 ~~~
 
 ---

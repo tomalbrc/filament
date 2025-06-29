@@ -618,8 +618,8 @@ Checkout the example datapack to see how to configure it.
 Hopper behaviour with menu.
 
 ~~~admonish info "Block-State-Properties to provide models for"
-- `facing`: north, south, east, west, down
-- `enabled`: true, false
+- `facing`: `north`, `south`, `east`, `west`, `down`
+- `enabled`: `true`, `false`
 ~~~
 
 ~~~admonish info "Configurable Fields"
@@ -642,7 +642,7 @@ Makes the block flammable.
 
 ## `leaf_decay` behaviour
 
-Makes the block decay like leaf blocks.
+Makes the block decay like leaf blocks when no log is attached to it and wasn't placed by a player.
 Adds `distance` and `persistent` block state properties to the block.
 
 ~~~admonish info "Configurable Fields"
@@ -657,12 +657,34 @@ Adds `distance` and `persistent` block state properties to the block.
 Allows you to create lamps that either switch on/off or cycle through a list of light levels on player interaction.
 
 ~~~admonish info "Block-State-Properties to provide models for (optional)"
-- `level`: 0 to 15 (optional)
+- `level`: 0 to 15 (optional when `models` is set to `true`)
 ~~~
 
 ~~~admonish info "Configurable Fields"
-- `on`: Light level to use for the 'on' state
-- `off`: Light level to use for the 'off' state
-- `cycle`: List of light levels to cycle through. 
-- `models`: Flag whether you want display custom models for the `level` block-states
+- `on`: Light level to use for the 'on' state. From `0`-`15`
+- `off`: Light level to use for the 'off' state. From `0`-`15`
+- `cycle`: List of light levels to cycle through. Overwrites the `on` and `off` values. Example: `[0,7,15]`
+- `defaultValue`: Default light level when placed. From `0`-`15`
+- `models`: Flag whether to use block state models. Ignored by decorations. `true`/`false`. `false` by default.
+~~~
+
+~~~admonish example "Simple on / off lamp"
+```json
+{
+  "lamp": {
+    "on": 15,
+    "off": 0
+  }
+}
+```
+~~~
+
+~~~admonish example "Cycling lamp"
+```json
+{
+  "lamp": {
+    "cycle": [0, 2, 4, 6, 8, 10, 12, 14]
+  }
+}
+```
 ~~~
