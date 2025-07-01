@@ -1,8 +1,11 @@
 {
   "id": "mynamespace:black_concrete_bricks",
   "blockResource": {
-    "models": {
-      "default": "minecraft:custom/block/concrete/black_concrete_bricks"
+    "parent": "block/cube_all",
+    "textures": {
+      "default": {
+        "all": "minecraft:custom/block/concrete/black_concrete_bricks"
+      }
     }
   },
   "properties": {
