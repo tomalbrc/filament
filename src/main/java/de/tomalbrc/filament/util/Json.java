@@ -12,6 +12,7 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.BehaviourList;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
+import de.tomalbrc.filament.data.resource.BlockResource;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -77,6 +78,7 @@ public class Json {
             .registerTypeHierarchyAdapter(BehaviourList.class, new BehaviourList.Deserializer())
             .registerTypeHierarchyAdapter(BlockStateMappedProperty.class, new BlockStateMappedPropertyDeserializer<>())
             .registerTypeHierarchyAdapter(PolymerBlockModel.class, new PolymerBlockModelDeserializer())
+            .registerTypeHierarchyAdapter(BlockResource.TextureBlockModel.class, new TextureBlockModelDeserializer())
             .create();
 
     public static List<InputStream> yamlToJson(InputStream inputStream) {
@@ -102,8 +104,7 @@ public class Json {
         var json = JsonParser.parseReader(new InputStreamReader(inputStream));
         InputStream stream;
         if (json.isJsonObject()) {
-            Type mapType = new TypeToken<Map<String, Object>>() {
-            }.getType();
+            Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
             Map<String, Object> document = gson.fromJson(json, mapType);
             if (document != null) {
                 document = Json.camelToSnakeCase(document);
@@ -253,6 +254,31 @@ public class Json {
             }
 
             throw new JsonParseException("Invalid PolymerBlockModel value: " + json);
+        }
+    }
+
+    public static class TextureBlockModelDeserializer implements JsonDeserializer<BlockResource.TextureBlockModel> {
+        @Override
+        public BlockResource.TextureBlockModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            if (json.isJsonObject()) {
+                JsonObject object = json.getAsJsonObject();
+
+                Map<String, ResourceLocation> map;
+                Type mapType = new TypeToken<Map<String, ResourceLocation>>() {}.getType();
+                if (object.has("textures")) {
+                    map = context.deserialize(object.get("textures").getAsJsonObject(), mapType);
+                } else {
+                    map = context.deserialize(object, mapType);
+                }
+
+                int x = object.has("x") ? object.get("x").getAsInt() : 0;
+                int y = object.has("y") ? object.get("y").getAsInt() : 0;
+                boolean uvLock = object.has("uvLock") && object.get("uvLock").getAsBoolean();
+                int weight = object.has("weight") ? object.get("weight").getAsInt() : 1;
+                return new BlockResource.TextureBlockModel(map, x, y, uvLock, weight);
+            }
+
+            throw new JsonParseException("Invalid TextureBlockModel value: " + json);
         }
     }
 

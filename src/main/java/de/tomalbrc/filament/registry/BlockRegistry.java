@@ -90,9 +90,10 @@ public class BlockRegistry {
         BehaviourUtil.postInitBlock(item, customBlock, customBlock, data.behaviour());
         Translations.add(item, customBlock, data);
 
-        customBlock.postRegister();
-
+        // has to run before `postRegister` since it may add block models from textures
         RPUtil.create(item, data);
+
+        customBlock.postRegister();
 
         FilamentRegistrationEvents.BLOCK.invoker().registered(data, item, customBlock);
     }

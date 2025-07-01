@@ -27,7 +27,7 @@ public class ItemResource implements ResourceProvider {
     }
 
     public boolean couldGenerate() {
-        return models.isEmpty() && textures != null && parent != null;
+        return (models == null || models.isEmpty()) && textures != null && parent != null;
     }
 
     @Override
