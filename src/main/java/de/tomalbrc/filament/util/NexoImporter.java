@@ -102,7 +102,6 @@ public class NexoImporter {
         PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder -> {
             Set<ResourceLocation> texturePaths = new ObjectArraySet<>();
 
-
             try (var walk = Files.walk(packPath, FileVisitOption.FOLLOW_LINKS)) {
                 walk.forEach(filepath -> {
                     if (filepath.toFile().isDirectory())
@@ -387,31 +386,31 @@ public class NexoImporter {
                 );
 
                 DecorationRegistry.register(decorationData);
-            } else {
-                // load as simple item
-                var pack = getMap("Pack", data);
-                var model = getValue("model", pack, String.class);
-                if (model == null)
-                    return;
-
-                var props = new ItemProperties();
-
-                ItemData itemData = new ItemData(
-                        id,
-                        vanillaItem,
-                        null,
-                        null,
-                        new ItemResource(Map.of("default", ResourceLocation.parse(model)), null, null),
-                        null,
-                        null,
-                        props,
-                        builder.build(),
-                        null,
-                        null
-                );
-
-                ItemRegistry.register(itemData);
             }
+        } else {
+            // load as simple item
+            var pack = getMap("Pack", data);
+            var model = getValue("model", pack, String.class);
+            if (model == null)
+                return;
+
+            var props = new ItemProperties();
+
+            ItemData itemData = new ItemData(
+                    id,
+                    vanillaItem,
+                    null,
+                    null,
+                    new ItemResource(Map.of("default", ResourceLocation.parse(model)), null, null),
+                    null,
+                    null,
+                    props,
+                    builder.build(),
+                    null,
+                    null
+            );
+
+            ItemRegistry.register(itemData);
         }
     }
 
