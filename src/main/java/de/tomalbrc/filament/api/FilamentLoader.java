@@ -122,16 +122,21 @@ public class FilamentLoader {
                 try (var str = Files.walk(rootPaths)) {
                     str.forEach(file -> {
                         try {
+                            if (file.getFileName() == null)
+                                return;
+
                             var name = file.getFileName().toString();
                             if (file.toAbsolutePath().toString().contains(rootPath) && name.endsWith(ext)) {
                                 consumer.accept(file);
                             }
-                        } catch (Throwable ignored) {
-                            //ignored.printStackTrace();
+                        } catch (Throwable throwable) {
+                            Filament.LOGGER.error("Could not load file from jar: {}", file);
+                            Filament.LOGGER.error(throwable.getMessage());
                         }
                     });
-                } catch (Throwable e) {
-                    //e.printStackTrace();
+                } catch (Throwable throwable) {
+                    Filament.LOGGER.error("Error searching in jar for {}", modid);
+                    Filament.LOGGER.error(throwable.getMessage());
                 }
             }
         } else {
