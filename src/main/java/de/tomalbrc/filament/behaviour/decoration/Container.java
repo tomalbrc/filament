@@ -42,40 +42,6 @@ public class Container implements DecorationBehaviour<Container.Config> {
         return config;
     }
 
-    public static class Config {
-        /**
-         * The name displayed in the container UI
-         */
-        public String name;
-
-        /**
-         * The size of the container, has to be 5 slots or a multiple of 9, up to 6 rows of 9 slots.
-         */
-        public int size = 9;
-
-        /**
-         * Indicates whether the container's contents should be cleared when no player is viewing the inventory.
-         */
-        public boolean purge = false;
-
-        /**
-         * The name of the animation to play when the container is opened (if applicable).
-         */
-        public String openAnimation = null;
-
-        /**
-         * The name of the animation to play when the container is closed (if applicable).
-         */
-        public String closeAnimation = null;
-
-        /**
-         * Flag to indicate whether the container can be picked up like shulker boxes.
-         */
-        public boolean canPickup = false;
-
-        public boolean hopperDropperSupport = true;
-    }
-
     @Override
     public void init(DecorationBlockEntity blockEntity) {
         if (this.config.canPickup)
@@ -139,5 +105,42 @@ public class Container implements DecorationBehaviour<Container.Config> {
             default ->
                     throw new IllegalStateException("Unexpected container size: " + config.name + " " + config.size);
         };
+    }
+
+    public static class Config {
+        /**
+         * The name displayed in the container UI
+         */
+        public String name;
+
+        /**
+         * The size of the container, has to be 5 slots or a multiple of 9, up to 6 rows of 9 slots.
+         */
+        public int size = 9;
+
+        /**
+         * Indicates whether the container's contents should be cleared when no player is viewing the inventory.
+         */
+        public boolean purge = false;
+
+        /**
+         * The name of the animation to play when the container is opened (if applicable).
+         */
+        public String openAnimation = null;
+
+        /**
+         * The name of the animation to play when the container is closed (if applicable).
+         */
+        public String closeAnimation = null;
+
+        /**
+         * Flag to indicate whether the container can be picked up like shulker boxes.
+         */
+        public boolean canPickup = false;
+
+        /**
+         * Support hopper and dropper block support
+         */
+        public boolean hopperDropperSupport = true;
     }
 }
