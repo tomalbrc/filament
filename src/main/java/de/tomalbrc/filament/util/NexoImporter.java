@@ -28,7 +28,6 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -199,8 +198,7 @@ public class NexoImporter {
         if (name == null) name = getValue("itemname", data, String.class); // fallback for older configs (nexo for <1.20.4)
 
         var builder = DataComponentMap.builder();
-        if (name != null)
-            builder.set(DataComponents.ITEM_NAME, TextUtil.formatText(name));
+        var componentName = name == null ? null : TextUtil.formatText(name);
 
         var material = getValue("material", data, String.class);
         Item vanillaItem;
@@ -233,7 +231,7 @@ public class NexoImporter {
                         id,
                         vanillaItem,
                         null,
-                        null,
+                        componentName,
                         null,
                         null,
                         null,
@@ -370,7 +368,7 @@ public class NexoImporter {
                         id,
                         vanillaItem,
                         null,
-                        null,
+                        componentName,
                         new ItemResource(Map.of("default", ResourceLocation.parse(model)), null, null),
                         null,
                         behaviourConfigMap,
@@ -400,7 +398,7 @@ public class NexoImporter {
                     id,
                     vanillaItem,
                     null,
-                    null,
+                    componentName,
                     new ItemResource(Map.of("default", ResourceLocation.parse(model)), null, null),
                     null,
                     null,
