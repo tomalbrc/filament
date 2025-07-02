@@ -15,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
@@ -157,5 +158,8 @@ public final class DecorationData extends AbstractBlockData<DecorationProperties
 
     public record BlockConfig(Vector3f origin,
                               Vector3f size) {
+        public Vector3f origin() {
+            return origin == null ? Vec3.ZERO.toVector3f() : origin;
+        }
     }
 }
