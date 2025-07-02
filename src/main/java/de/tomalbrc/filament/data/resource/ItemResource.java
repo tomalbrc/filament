@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class ItemResource implements ResourceProvider {
     private Map<String, ResourceLocation> models = new Object2ObjectArrayMap<>();
-    private ResourceLocation parent = ResourceLocation.withDefaultNamespace("item/generated");
+    private ResourceLocation parent;
     private Map<String, Map<String, ResourceLocation>> textures;
 
     public ItemResource() {}
@@ -19,6 +19,8 @@ public class ItemResource implements ResourceProvider {
     }
 
     public ResourceLocation parent() {
+        if (parent == null)
+            parent = ResourceLocation.withDefaultNamespace("item/generated");
         return parent;
     }
 
@@ -27,7 +29,7 @@ public class ItemResource implements ResourceProvider {
     }
 
     public boolean couldGenerate() {
-        return (models == null || models.isEmpty()) && textures != null && parent != null;
+        return (models == null || models.isEmpty()) && textures != null;
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class BlockResource implements ResourceProvider {
     private Map<String, PolymerBlockModel> models = new Object2ObjectArrayMap<>();
-    private ResourceLocation parent = ResourceLocation.withDefaultNamespace("block/cube_all");
+    private ResourceLocation parent;
     private Map<String, TextureBlockModel> textures;
 
     public BlockResource(Map<String, PolymerBlockModel> models) {
@@ -23,6 +23,8 @@ public class BlockResource implements ResourceProvider {
     }
 
     public ResourceLocation parent() {
+        if (parent == null)
+            parent = ResourceLocation.withDefaultNamespace("block/cube_all");
         return parent;
     }
 
@@ -31,7 +33,7 @@ public class BlockResource implements ResourceProvider {
     }
 
     public boolean couldGenerate() {
-        return (models == null || models.isEmpty()) && textures != null && parent != null;
+        return (models == null || models.isEmpty()) && textures != null;
     }
 
     @Override
