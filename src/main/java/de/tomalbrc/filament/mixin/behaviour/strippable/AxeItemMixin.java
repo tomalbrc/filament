@@ -1,16 +1,20 @@
 package de.tomalbrc.filament.mixin.behaviour.strippable;
 
+import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.behaviour.block.Strippable;
+import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.registry.StrippableRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -29,7 +33,17 @@ public class AxeItemMixin {
     private void filament$onGetStripped(Level level, BlockPos blockPos, Player player, BlockState blockState, CallbackInfoReturnable<Optional<BlockState>> cir) {
         if (StrippableRegistry.has(blockState.getBlock())) {
             var newState = StrippableRegistry.get(blockState.getBlock()).withPropertiesOf(blockState);
-            level.playSound(player, blockPos, SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1.0F, 1.0F);
+
+            Strippable strippable = ((SimpleBlock)blockState.getBlock()).get(Behaviours.STRIPPABLE);
+            level.playSound(player, blockPos, SoundEvent.createVariableRangeEvent(strippable.getConfig().sound), SoundSource.BLOCKS, 1.0F, 1.0F);
+            if (strippable.getConfig().scrape) {
+                level.levelEvent(null, LevelEvent.PARTICLES_SCRAPE, blockPos, 0);
+            }
+
+            if (strippable.getConfig().scrapeWax) {
+                level.levelEvent(null, LevelEvent.PARTICLES_WAX_OFF, blockPos, 0);
+            }
+
             var lootId = StrippableRegistry.getLootTable(blockState.getBlock());
             if (lootId != null) {
                 var tableReference = level.registryAccess().get(ResourceKey.create(Registries.LOOT_TABLE, lootId));
