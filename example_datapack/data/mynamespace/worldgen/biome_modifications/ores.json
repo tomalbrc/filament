@@ -1,0 +1,9 @@
+{
+  "type": "filament:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": [
+    "mynamespace:yellow_concrete_bricks",
+    "mynamespace:red_concrete_bricks"
+  ],
+  "step": "underground_ores"
+}
