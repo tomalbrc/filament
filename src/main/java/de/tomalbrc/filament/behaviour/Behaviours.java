@@ -36,6 +36,7 @@ public class Behaviours {
     public static final BehaviourType<Trident, Trident.Config> TRIDENT = registerBehaviour("trident", Trident.class);
     public static final BehaviourType<BannerPattern, BannerPattern.Config> BANNER_PATTERN = registerBehaviour("banner_pattern", BannerPattern.class);
     public static final BehaviourType<VillagerFood, VillagerFood.Config> VILLAGER_FOOD = registerBehaviour("villager_food", VillagerFood.class);
+    public static final BehaviourType<Wax, Wax.Config> WAX = registerBehaviour("wax", Wax.class);
 
     // Item + Block
     @Deprecated(forRemoval = true)
