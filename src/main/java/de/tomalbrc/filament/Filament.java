@@ -78,6 +78,7 @@ public class Filament implements ModInitializer {
         if (FilamentConfig.getInstance().entityModule)
             FilamentReloadUtil.registerEarlyReloadListener(new EntityRegistry.EntityDataReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new ItemGroupRegistry.ItemGroupDataReloadListener());
+        FilamentReloadUtil.registerEarlyReloadListener(new BiomeModifications.BiomeModificationsDataReloadListener());
 
         VirtualDestroyStage.destroy(null);
 
