@@ -27,6 +27,7 @@ import java.util.Map;
 
 public class BiomeModifications {
     public static final Map<ResourceLocation, JsonObject> TO_REGISTER = new Object2ObjectOpenHashMap<>();
+    private static boolean locked = false;
 
     public record AddFeaturesBiomeModifier(HolderSet<Biome> biomes, HolderSet<PlacedFeature> features,
                                            GenerationStep.Decoration step) {
@@ -56,6 +57,7 @@ public class BiomeModifications {
             }
         }
         TO_REGISTER.clear();
+        locked = true;
     }
 
     private static void addFeatureModifier(AddFeaturesBiomeModifier modifier) {
@@ -81,6 +83,9 @@ public class BiomeModifications {
 
         @Override
         public void onResourceManagerReload(ResourceManager resourceManager) {
+            if (locked) {
+                return;
+            }
             load("worldgen/biome_modifications", null, resourceManager, (id, inputStream) -> {
                 try {
                     BiomeModifications.register(inputStream, id);
