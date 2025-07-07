@@ -15,7 +15,6 @@ import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.level.ServerPlayer;
@@ -167,15 +166,12 @@ public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentI
     @NotNull
     public InteractionResult useOn(UseOnContext useOnContext) {
         return this.delegate.useOn(useOnContext, () -> {
-            if (this.getBlock() instanceof SimpleBlock) {
-                var res = super.useOn(useOnContext);
-                if (res.consumesAction()) {
-                    return res;
-                }
-                return InteractionResult.FAIL;
+            var res = super.useOn(useOnContext);
+            if (res.consumesAction()) {
+                return res;
             }
 
-            return useOnContext.getItemInHand().has(DataComponents.CONSUMABLE) ? super.use(useOnContext.getLevel(), useOnContext.getPlayer(), useOnContext.getHand()) : InteractionResult.FAIL;
+            return InteractionResult.FAIL;
         });
     }
 
