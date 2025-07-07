@@ -46,7 +46,7 @@ public class CanSurvive implements BlockBehaviour<CanSurvive.Config> {
     private boolean test(Direction direction, BlockPos blockPos, LevelReader levelReader, BlockState blockState) {
         var belowState = levelReader.getBlockState(blockPos.relative(direction));
         if (this.config.blocks != null && this.config.blocks.contains(belowState.getBlock()))
-            return true;
+            return !belowState.is(Blocks.WATER) || levelReader.getFluidState(blockPos.relative(direction)).isSource();
         if (this.config.tags != null) {
             for (ResourceLocation tag : this.config.tags) {
                 var tagKey = TagKey.create(Registries.BLOCK, tag);
