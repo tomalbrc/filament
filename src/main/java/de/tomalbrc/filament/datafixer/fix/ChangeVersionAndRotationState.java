@@ -46,6 +46,9 @@ public class ChangeVersionAndRotationState extends com.mojang.datafixers.DataFix
     private Dynamic<?> fix(Dynamic<?> dynamic) {
         try {
             List<Dynamic<?>> blockEntities = dynamic.get("block_entities").asList(dyn -> dyn.castTyped(NbtOps.INSTANCE));
+            if (blockEntities == null || blockEntities.isEmpty())
+                return dynamic;
+
             List<Dynamic<?>> sections = dynamic.get("sections").asList(dyn -> dyn.castTyped(NbtOps.INSTANCE));
 
             var blendingData = dynamic.get("blending_data");
@@ -54,7 +57,11 @@ public class ChangeVersionAndRotationState extends com.mojang.datafixers.DataFix
             Map<Integer, List<Dynamic<?>>> map = new HashMap<>();
             for (Dynamic<?> blockEntity : blockEntities) {
                 var id = blockEntity.get("id").read(ResourceLocation.CODEC).getOrThrow();
-                var version = blockEntity.get("V").asInt(0);
+                var v = blockEntity.get("V");
+                if (v == null || v.get().isError())
+                    continue;
+
+                var version = v.asInt(0);
                 if (!id.getNamespace().equals(ResourceLocation.DEFAULT_NAMESPACE) && version < DataFix.VERSION) {
                     var yData = blockEntity.get("y").asInt(0);
                     var idx = (yData - min * 16) / 16;
