@@ -48,6 +48,9 @@ The following options are availble, with their amount:
 
 See the [polymer documentation](https://polymer.pb4.eu/latest/polymer-blocks/basics/) for more infos about the properties of the block model types
 
+As of filament 0.16 it is possible to flag the block as virtual, to allow for an unlimited amount of block states. See [Blocks](blocks.md) for details.
+
+
 When choosing blocks that break instantly on the client, like plant_block or tripwire_block for example, the destroyTime property in the block config has to be 0 as well.
 
 You can map the `blockModelType` field of block configs to blockstates, this allows you to change the hitbox of the block depending on the block-state.
@@ -55,6 +58,27 @@ You can map the `blockModelType` field of block configs to blockstates, this all
 In some cases, for example when using the `waterloggable` behaviour, you might want to specify the waterlogged state for your custom block.
 
 ~~~admonish example
+<!-- langtabs-start -->
+```yml
+id: mynamespace:half_slab
+blockTags:
+  - minecraft:climbable
+blockResource:
+  models:
+    waterlogged=false: minecraft:custom/block/dirt/dirt_slab
+    waterlogged=true: minecraft:custom/block/dirt/dirt_slab
+itemResource:
+  models:
+    default: minecraft:custom/block/dirt/dirt_slab
+behaviour:
+  waterloggable: {}
+blockModelType:
+  waterlogged=false: sculk_sensor_block
+  waterlogged=true: sculk_sensor_block_waterlogged
+properties:
+  blockBase: minecraft:dirt
+```
+
 ```json
 {
   "id": "mynamespace:half_slab",
@@ -82,6 +106,6 @@ In some cases, for example when using the `waterloggable` behaviour, you might w
   }
 }
 ```
-~~~
+<!-- langtabs-end -->
 
-As of filament 0.16 it is possible to flag the block as virtual, to allow for an unlimited amount of block states. See [Blocks](blocks.md) for details.
+~~~

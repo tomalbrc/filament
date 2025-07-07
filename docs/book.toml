@@ -3,7 +3,7 @@ authors = ["tomalbrc"]
 language = "en"
 multilingual = false
 src = "src"
-title = "Filament Documentation (0.17.x)"
+title = "Filament Documentation (1.0.0-beta)"
 
 # we be using mdbook
 
@@ -14,10 +14,14 @@ command = "mdbook-image-size"
 command = "mdbook-admonish"
 assets_version = "3.0.2" # do not edit: managed by `mdbook-admonish install`
 
+[preprocessor.langtabs]
+command = "mdbook-langtabs"
+
 [output]
 
 [output.html]
-additional-css = ["./mdbook-admonish.css", "./custom.css"]
+additional-css = ["./mdbook-admonish.css", "./custom.css", "langtabs.css"]
+additional-js = ["langtabs.js"]
 
 [output.html.fold]
 enable = false

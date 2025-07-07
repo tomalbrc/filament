@@ -9,6 +9,24 @@ Some block behaviours provide blockstate properties you will have to provide mod
 Example of a blockResource entry for the `repeater` behaviour (can be found as relay block in the example datapack):
 
 ~~~admonish example collapsible=true
+<!-- langtabs-start -->
+```yml
+blockResource:
+  models:
+    facing=up,powered=false: minecraft:custom/block/arcanery/relay/relay_up_off
+    facing=down,powered=false: minecraft:custom/block/arcanery/relay/relay_down_off
+    facing=north,powered=false: minecraft:custom/block/arcanery/relay/relay_north_off
+    facing=south,powered=false: minecraft:custom/block/arcanery/relay/relay_south_off
+    facing=east,powered=false: minecraft:custom/block/arcanery/relay/relay_east_off
+    facing=west,powered=false: minecraft:custom/block/arcanery/relay/relay_west_off
+    facing=up,powered=true: minecraft:custom/block/arcanery/relay/relay_up_on
+    facing=down,powered=true: minecraft:custom/block/arcanery/relay/relay_down_on
+    facing=north,powered=true: minecraft:custom/block/arcanery/relay/relay_north_on
+    facing=south,powered=true: minecraft:custom/block/arcanery/relay/relay_south_on
+    facing=east,powered=true: minecraft:custom/block/arcanery/relay/relay_east_on
+    facing=west,powered=true: minecraft:custom/block/arcanery/relay/relay_west_on
+```
+
 ```json
 {
   "blockResource": {
@@ -29,8 +47,39 @@ Example of a blockResource entry for the `repeater` behaviour (can be found as r
   }
 }
 ```
+<!-- langtabs-end -->
 
 You can also provide rotations for the block model like so:
+<!-- langtabs-start -->
+```yml
+blockResource:
+  models:
+    lit=false,facing=north:
+      model: minecraft:block/furnace
+      y: 0
+    lit=false,facing=south:
+      model: minecraft:block/furnace
+      y: 180
+    lit=false,facing=east:
+      model: minecraft:block/furnace
+      y: 90
+    lit=false,facing=west:
+      model: minecraft:block/furnace
+      y: 270
+    lit=true,facing=north:
+      model: minecraft:block/furnace_on
+      y: 0
+    lit=true,facing=south:
+      model: minecraft:block/furnace_on
+      y: 180
+    lit=true,facing=east:
+      model: minecraft:block/furnace_on
+      y: 90
+    lit=true,facing=west:
+      model: minecraft:block/furnace_on
+      y: 270
+```
+
 ```json
 {
   "blockResource": {
@@ -47,9 +96,62 @@ You can also provide rotations for the block model like so:
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 ~~~admonish example title="Example of a block with behaviours set", collapsible=true
+<!-- langtabs-start -->
+```yml
+id: mynamespace:myblock
+blockResource:
+  models:
+    lit=false,facing=north:
+      model: minecraft:block/furnace
+      y: 0
+    lit=false,facing=south:
+      model: minecraft:block/furnace
+      y: 180
+    lit=false,facing=east:
+      model: minecraft:block/furnace
+      y: 90
+    lit=false,facing=west:
+      model: minecraft:block/furnace
+      y: 270
+    lit=true,facing=north:
+      model: minecraft:block/furnace_on
+      y: 0
+    lit=true,facing=south:
+      model: minecraft:block/furnace_on
+      y: 180
+    lit=true,facing=east:
+      model: minecraft:block/furnace_on
+      y: 90
+    lit=true,facing=west:
+      model: minecraft:block/furnace_on
+      y: 270
+blockModelType: full_block
+properties:
+  destroyTime: 0
+  blockBase: minecraft:stone
+behaviour:
+  powersource:
+    value: 15
+  repeater:
+    delay: 1
+    loss: 1
+  fuel:
+    value: 10
+  cosmetic:
+    slot: chest
+    model: mynamespace:custom/models/clown_backpack_animated
+    autoplay: idle
+    scale: [1.5, 1.5, 1.5]
+    translation: [0.0, 0.5, 0.0]
+  strippable:
+    replacement: minecraft:stone
+```
+
 ```json
 {
   "id": "mynamespace:myblock",
@@ -94,6 +196,8 @@ You can also provide rotations for the block model like so:
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 This creates a block + item that can be worn and when worn shows an animated blockbench model on the player. The item is also a food and can be used as fuel source in furnaces.
@@ -132,17 +236,36 @@ Optionally without the corner states.
 
 This behaviour is best used with decorations, as you will only have to define 6 models:
 ~~~admonish example
-"itemResource": {
-  "models": {
-    "default": "minecraft:custom/furniture/benches/middle_connectable",
-    "inner": "minecraft:custom/furniture/benches/inner_connectable",
-    "outer": "minecraft:custom/furniture/benches/outer_connectable",
-    "middle": "minecraft:custom/furniture/benches/middle_connectable",
-    "left": "minecraft:custom/furniture/benches/left_connectable",
-    "right": "minecraft:custom/furniture/benches/right_connectable",
-    "single": "minecraft:custom/furniture/benches/single_connectable"
+<!-- langtabs-start -->
+```yml
+itemResource:
+  models:
+    default: minecraft:custom/furniture/benches/middle_connectable
+    inner: minecraft:custom/furniture/benches/inner_connectable
+    outer: minecraft:custom/furniture/benches/outer_connectable
+    middle: minecraft:custom/furniture/benches/middle_connectable
+    left: minecraft:custom/furniture/benches/left_connectable
+    right: minecraft:custom/furniture/benches/right_connectable
+    single: minecraft:custom/furniture/benches/single_connectable
+```
+
+```json
+{
+  "itemResource": {
+    "models": {
+      "default": "minecraft:custom/furniture/benches/middle_connectable",
+      "inner": "minecraft:custom/furniture/benches/inner_connectable",
+      "outer": "minecraft:custom/furniture/benches/outer_connectable",
+      "middle": "minecraft:custom/furniture/benches/middle_connectable",
+      "left": "minecraft:custom/furniture/benches/left_connectable",
+      "right": "minecraft:custom/furniture/benches/right_connectable",
+      "single": "minecraft:custom/furniture/benches/single_connectable"
+    }
   }
 }
+```
+<!-- langtabs-end -->
+
 ~~~
 
 ---
@@ -278,8 +401,16 @@ The field of this behaviour can be mapped to a block-state.
 ~~~
 
 ~~~admonish example
-```json5
+<!-- langtabs-start -->
+```yml
+behaviour:
+  powersource:
+    value:
+      age=0: 0
+      age=1: 15
+```
 
+```json
 {
   "behaviour": {
     "powersource": {
@@ -291,10 +422,19 @@ The field of this behaviour can be mapped to a block-state.
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 ~~~admonish example "Example with constant value"
-```json5
+<!-- langtabs-start -->
+```yml
+behaviour:
+  powersource:
+    value: 5
+```
+
+```json
 {
   "behaviour": {
     "powersource": {
@@ -303,6 +443,8 @@ The field of this behaviour can be mapped to a block-state.
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 ---
@@ -344,6 +486,9 @@ Defines the block as strippable, replacing it with another block when interacted
 ~~~admonish info "Configurable Fields"
 - `replacement`: The identifier of the block to replace the current block with. Example: `minecraft:stone`
 - `lootTable`: Identifier for a loot table to use when the block is stripped. Example: `minecraft:bell`
+- `scrape`: Flag whether to show copper scrape particles. Defaults to `false`
+- `scrapeWax`: Flag whether to show wax scrape particles. Defaults to `false`
+- `sound`: Custom sound id to play. Defaults to `minecraft:item.axe.strip`
 ~~~
 
 ---
@@ -427,6 +572,20 @@ The values of the `min` and `max` fields can be mapped to block-states.
 ~~~
 
 ~~~admonish example
+<!-- langtabs-start -->
+```yml
+behaviour:
+  drop_xp:
+    min:
+      age=0: 0
+      age=1: 0
+      age=2: 4
+    max:
+      age=0: 0
+      age=1: 0
+      age=2: 6
+```
+
 ```json
 {
   "behaviour": {
@@ -445,10 +604,18 @@ The values of the `min` and `max` fields can be mapped to block-states.
   }
 }
 ```
+<!-- langtabs-end -->
+
 Using behaviour for crops, you could make a crop that drops xp when fully aged 
 ~~~
 
 ~~~admonish example "Example with constant values"
+<!-- langtabs-start -->
+```yml
+behaviour:
+  drop_xp: 6
+```
+
 ```json
 {
   "behaviour": {
@@ -456,6 +623,8 @@ Using behaviour for crops, you could make a crop that drops xp when fully aged
   }
 }
 ```
+<!-- langtabs-end -->
+
 This will drop 6 xp for any block-state
 ~~~
 
@@ -554,6 +723,24 @@ All fields of this behaviour can be mapped to a block-state.
 ~~~
 
 ~~~admonish example
+<!-- langtabs-start -->
+```yml
+falling_block:
+  delayAfterPlace: 2 # delay in ticks before the block falls
+  heavy: true # to cause anvil-like damage
+  damagePerDistance: 2.0 # accumulated damage per block fallen
+  maxDamage: 40 # maximum damage
+  disableDrops: false # prevent the block from being placed
+  silent: false # no sounds
+  landSound: minecraft:block.anvil.land
+  breakSound: minecraft:block.anvil.destroy
+  canBeDamaged: true # flag whether the block should be placed as the block in "damagedBlock"
+  damagedBlock: minecraft:diamond_block # new block to use, will copy applicable block state property
+  baseBreakChance: 0.05 # chance for the block to "break" to the block in "damagedBlock"
+  breakChancePerDistance: 0.05 # chance increase per block fallen
+
+```
+
 ```json5
 {
   "falling_block": {
@@ -572,6 +759,8 @@ All fields of this behaviour can be mapped to a block-state.
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 ---
@@ -669,6 +858,13 @@ Allows you to create lamps that either switch on/off or cycle through a list of 
 ~~~
 
 ~~~admonish example "Simple on / off lamp"
+<!-- langtabs-start -->
+```yml
+lamp:
+  on: 15
+  off: 0
+```
+
 ```json
 {
   "lamp": {
@@ -677,9 +873,17 @@ Allows you to create lamps that either switch on/off or cycle through a list of 
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 ~~~admonish example "Cycling lamp"
+<!-- langtabs-start -->
+```yml
+lamp:
+  cycle: [0, 2, 4, 6, 8, 10, 12, 14]
+```
+
 ```json
 {
   "lamp": {
@@ -687,4 +891,16 @@ Allows you to create lamps that either switch on/off or cycle through a list of 
   }
 }
 ```
+<!-- langtabs-end -->
+
+~~~
+
+---
+
+## `waxable` behaviour
+
+Allows the block to be 'waxed' using honeycomb or with filament items that have the "wax" behaviour.
+
+~~~admonish info "Configurable Fields"
+- `replacement`: The identifier of the block to replace the current block with. Example: `minecraft:waxed_copper_block`
 ~~~

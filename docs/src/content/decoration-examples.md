@@ -5,6 +5,7 @@ All fields support either camelCase or snake_case!
 ~~~
 
 ### Animated chest with solid 1x1 solid collision:
+<!-- langtabs-start -->
 ```json5
 {
   "id": "mynamespace:example_chest",
@@ -37,8 +38,7 @@ All fields support either camelCase or snake_case!
 }
 ```
 
-YAML:
-```yaml
+```yml
 id: mynamespace:example_chest
 item_resource:
   models:
@@ -59,6 +59,7 @@ blocks:
   - origin: [0, 0, 0]
     size: [1, 1, 1]
 ```
+<!-- langtabs-end -->
 
 The `animation` behaviour gets used for animations by various behaviours such as the `container` behaviour.
 
@@ -67,6 +68,19 @@ The blockbench model gets loaded from a filament datapack that contains the refe
 The `lock` behaviour also supports an animation using the `animation` behaviour
 
 ### Beach umbrella with custom size:
+<!-- langtabs-start -->
+```yml
+id: mynamespace:beach_umbrella_top
+itemResource:
+  models:
+    default: mynamespace:custom/furniture/umbrella/beach_umbrella_top
+vanillaItem: minecraft:leather_horse_armor
+behaviour:
+  rotating:
+    smooth: true
+size: [3, -0.5]
+```
+
 ```json
 {
   "id": "mynamespace:beach_umbrella_top",
@@ -84,11 +98,27 @@ The `lock` behaviour also supports an animation using the `animation` behaviour
   "size": [3, -0.5]
 }
 ```
+<!-- langtabs-end -->
+
 
 The `size` field creates an interaction entity with a custom size instead of the default 1x1 sized one when no `blocks` are set. 
 
 
 ### Pile of gold ingots with solid 1x1 solid collision:
+<!-- langtabs-start -->
+```yml
+id: mynamespace:pile_of_gold_ingots
+itemResource:
+  models:
+    default: mynamespace:custom/deco/misc/pile_of_gold_ingots
+behaviour:
+  rotating:
+    smooth: true
+blocks:
+  - origin: [0, 0, 0]
+    size: [1, 1, 1]
+```
+
 ```json
 {
   "id": "mynamespace:pile_of_gold_ingots",
@@ -110,4 +140,5 @@ The `size` field creates an interaction entity with a custom size instead of the
   ]
 }
 ```
+<!-- langtabs-end -->
 

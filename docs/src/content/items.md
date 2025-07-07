@@ -12,6 +12,28 @@ MyDatapack/data/<namespace>/filament/item/myitem.json
 Here is a basic example of an item configuration:
 
 ~~~admonish example
+<!-- langtabs-start -->
+```yaml
+id: mynamespace:clown_horn
+vanillaItem: minecraft:paper
+
+# optional and only available in >= 1.21.4
+itemModel: minecraft:mymodel
+
+itemResource:
+  models:
+    default: mynamespace:custom/misc/clown_horn
+
+properties:
+  # your properties here, like stackSize, durability and more!
+
+behaviour:
+  # your behaviours here
+
+components:
+  # your components here
+```
+
 ```json5
 {
   "id": "mynamespace:clown_horn",
@@ -33,6 +55,8 @@ Here is a basic example of an item configuration:
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 Item configurations have two required fields: `id` and `vanillaItem`.
@@ -79,6 +103,7 @@ Specifies the resource(s) for the item model. Depending on the item's behaviour(
 
 Example for automatic model generation based on textures:
 ~~~admonish example
+<!-- langtabs-start -->
 ```yaml
 item_resource:
   parent: item/generated
@@ -88,6 +113,22 @@ item_resource:
     trapped:
       layer0: item/traps/allay_bottle_trapped
 ```
+
+```json
+{
+  "parent": "item/generated",
+  "textures": {
+    "default": {
+      "layer0": "item/traps/allay_bottle"
+    },
+    "trapped": {
+      "layer0": "item/traps/allay_bottle_trapped"
+    }
+  }
+}
+```
+<!-- langtabs-end -->
+
 ~~~
 
 This automatically creates:

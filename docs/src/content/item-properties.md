@@ -5,6 +5,21 @@ All properties are optional.
 
 Example with all properties set:
 ~~~admonish example
+<!-- langtabs-start -->
+```yml
+id: mynamespace:clown_horn
+vanillaItem: minecraft:paper
+models:
+  default: mynamespace:custom/misc/clown_horn
+properties:
+  durability: 100
+  stackSize: 64
+  lore:
+    - "line 1"
+    - "line 2"
+  fireResistant: false
+```
+
 ```json
 {
   "id": "mynamespace:clown_horn",
@@ -20,11 +35,13 @@ Example with all properties set:
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 ### `durability`:
 
-The items' `vanillaItem` will have to be a vanilla item that has a durability bar by default, otherwise it will not show up on the client side.
+Gives the item durability. You can also use the vanilla component for this.
 
 ### `stackSize`:
 
@@ -49,3 +66,7 @@ Example: `<lang:'mymod.lore.mylore'>`
 Boolean (true/false) whether the item is fire-resistant.
 
 Defaults to `false`
+
+### `copyComponents`
+
+Boolean (true/false) whether the components of the vanillaItem should be copied.

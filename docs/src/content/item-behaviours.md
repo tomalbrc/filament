@@ -5,6 +5,48 @@ Item behaviours define specific functionalities associated with items, blocks, a
 All behaviours are optional, and some are mutually exclusive (e.g., trap, shoot, and instrument).
 
 ~~~admonish example title="Example with some behaviours set" collapsible=true
+<!-- langtabs-start -->
+```yml
+id: mynamespace:multi_example
+vanillaItem: minecraft:paper
+itemResource:
+  models:
+    default: mynamespace:custom/misc/clown_horn
+    trapped: mynamespace:custom/misc/clown_horn_trapped
+behaviour:
+  instrument:
+    sound: mynamespace:misc.honk
+    range: 64
+    useDuration: 60
+  shoot:
+    consumes: false
+    baseDamage: 2.0
+    speed: 1.0
+    projectile: minecraft:iron_axe
+    sound: mynamespace:misc.shoot
+  trap:
+    types:
+      - minecraft:villager
+      - minecraft:zombie
+      - minecraft:skeleton
+    requiredEffects:
+      - minecraft:glowing
+    chance: 75
+    useDuration: 0
+  fuel:
+    value: 10
+  cosmetic:
+    slot: head
+    model: mynamespace:custom/models/clown_backpack_animated
+    autoplay: idle
+    scale: [1.5, 1.5, 1.5]
+    translation: [0.0, 0.5, 0.0]
+  execute:
+    consumes: true
+    command: "/summon minecraft:creeper ~ ~ ~ {powered:1b}"
+    sound: minecraft:block.anvil.place
+```
+
 ```json
 {
   "id": "mynamespace:multi_example",
@@ -52,6 +94,8 @@ All behaviours are optional, and some are mutually exclusive (e.g., trap, shoot,
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 ---
@@ -292,7 +336,17 @@ This behaviour can automatically generate the item model predicate overrides for
 
 In order to automatically generate an item model for bows, you have to provide models for `default`, `pulling_0`, `pulling_1` and `pulling_2` in the `itemResource` field:
 ~~~admonish example
-```json5
+<!-- langtabs-start -->
+```yml
+itemResource:
+  models:
+    default: minecraft:custom/bow/custombow
+    pulling_0: minecraft:custom/bow/custombow_pulling_0
+    pulling_1: minecraft:custom/bow/custombow_pulling_1
+    pulling_2: minecraft:custom/bow/custombow_pulling_2
+```
+
+```json
 {
   "itemResource":  {
     "models": {
@@ -304,6 +358,8 @@ In order to automatically generate an item model for bows, you have to provide m
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 Alternatively, you can use the `itemModel` field to provide your own item asset model
@@ -324,6 +380,20 @@ This behaviour can automatically generate the item model predicate overrides for
 
 In order to automatically generate an item model for crossbows, you have to provide models for `default`, `pulling_0`, `pulling_1`, `pulling_2`, `arrow` and `rocket` in the `itemResource` field:
 ~~~admonish example
+<!-- langtabs-start -->
+```yml
+itemResource:
+  models:
+    # model without projectile
+    default: minecraft:custom/crossbow/crossy1
+    pulling_0: minecraft:custom/crossbow/crossy1_pulling_0
+    pulling_1: minecraft:custom/crossbow/crossy1_pulling_1
+    pulling_2: minecraft:custom/crossbow/crossy1_pulling_2
+    # model with projectile
+    arrow: minecraft:custom/crossbow/crossy1_arrow
+    rocket: minecraft:custom/crossbow/crossy1_rocket
+```
+
 ```json5
 {
   "itemResource": {
@@ -338,6 +408,8 @@ In order to automatically generate an item model for crossbows, you have to prov
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 Alternatively, you can use the `itemModel` field to provide your own item asset model.
@@ -386,6 +458,14 @@ This behaviour can automatically generate the item model predicate overrides for
 
 In order to automatically generate an item model for shields, you have to provide models for `default` and `blocking` in the `itemResource` field:
 ~~~admonish example
+<!-- langtabs-start -->
+```yml
+itemResource:
+  models:
+    default: minecraft:custom/shield/shield1
+    blocking: minecraft:custom/shield/shield1_blocking
+```
+
 ```json
 {
   "itemResource": {
@@ -396,6 +476,8 @@ In order to automatically generate an item model for shields, you have to provid
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 Alternatively, you can use the `itemModel` field to provide your own item asset model
@@ -410,6 +492,14 @@ This behaviour can automatically generate the item model predicate overrides for
 
 In order to automatically generate an item model for fishing rods, you have to provide models for `default` and `cast` in the `itemResource` field:
 ~~~admonish example
+<!-- langtabs-start -->
+```yml
+itemResource:
+  models:
+    default: minecraft:custom/rod/fire_rod
+    cast: minecraft:custom/rod/fire_rod_cast
+```
+
 ```json
 {
   "itemResource": {
@@ -420,6 +510,8 @@ In order to automatically generate an item model for fishing rods, you have to p
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 Alternatively, you can use the `itemModel` field to provide your own item asset model
@@ -438,6 +530,14 @@ This behaviour can automatically generate the item model predicate overrides for
 
 In order to automatically generate an item model for tridents, you will have to provide models for `default` and `throwing` in the `itemResource` field:
 ~~~admonish example
+<!-- langtabs-start -->
+```yml
+itemResource:
+  models:
+    default: minecraft:custom/trident/nether_trident
+    throwing: minecraft:custom/trident/nether_trident_throwing
+```
+
 ```json
 {
   "itemResource": {
@@ -448,6 +548,8 @@ In order to automatically generate an item model for tridents, you will have to 
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 Alternatively, you can use the `itemModel` field to provide your own item asset model
@@ -463,6 +565,13 @@ Makes the item behave like a mace!
 ~~~
 
 ~~~admonish example
+<!-- langtabs-start -->
+```yml
+behaviour:
+  mace:
+    damageMultiplier: 1.0
+```
+
 ```json
 {
   "behaviour": {
@@ -472,48 +581,37 @@ Makes the item behave like a mace!
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 ---
 
-## `enchantable` behaviour
+## `wax` behaviour
 
-Backport of the `minecraft:enchantable` component introduced in 1.21.2, only available for 1.21.1.
+Allows to wax blocks using this item, similar to honeycomb with copper.
 
 ~~~admonish info "Configurable Fields"
-- `value`: Enchantability value. Defaults to `1`
+- `reduceDurability`: Flag whether the items durability should be decreased instead of the item being consumed. Defaults to `false`
 ~~~
 
 ~~~admonish example
+<!-- langtabs-start -->
+```yml
+behaviour:
+  wax:
+    reduceDurability: false
+```
+
 ```json
 {
   "behaviour": {
-    "enchantable": {
-      "value": 1
+    "wax": {
+      "reduceDurability": false
     }
   }
 }
 ```
-~~~
+<!-- langtabs-end -->
 
----
-
-## `repairable` behaviour
-
-Backport of the `minecraft:repairable` component introduced in 1.21.2, only available for 1.21.1.
-
-~~~admonish info "Configurable Fields"
-- `items`: List of items and or item-tags
-~~~
-
-~~~admonish example
-```json
-{
-  "behaviour": {
-    "repairable": {
-      "items": ["minecraft:honeycomb", "#minecraft:candles"]
-    }
-  }
-}
-```
 ~~~

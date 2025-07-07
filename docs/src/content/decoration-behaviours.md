@@ -3,6 +3,47 @@
 Example of some behaviours for decorations:
 
 ~~~admonish example
+<!-- langtabs-start -->
+```yml
+id: mynamespace:clown_horn
+vanillaItem: minecraft:paper
+itemResource:
+  models:
+    default: mynamespace:custom/misc/clown_horn
+behaviour:
+  animation:
+    model: mynamespace:mymodel
+    autoplay: myAnimationName
+  container:
+    name: Example Container
+    size: 9
+    purge: false
+    openAnimation: openAnimation
+    closeAnimation: closeAnimation
+  lock:
+    key: minecraft:tripwire_hook
+    consumeKey: false
+    discard: false
+    unlockAnimation: unlockAnimation
+    command: "say Unlocked"
+  seat:
+    - offset: [0.0, 0.0, 0.0]
+      direction: 0.0
+  showcase:
+    - offset: [0.0, 0.0, 0.0]
+      scale: [1.0, 1.0, 1.0]
+      rotation: [0.0, 0.0, 0.0, 1.0]
+      type: item
+      filterItems: null
+      filterTags: null
+  cosmetic:
+    slot: head
+    model: mynamespace:clown_backpack_animated
+    autoplay: idle
+    scale: [1.5, 1.5, 1.5]
+    translation: [0.0, 0.5, 0.0]
+```
+
 ```json
 {
   "id": "mynamespace:clown_horn",
@@ -57,6 +98,8 @@ Example of some behaviours for decorations:
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 # Behaviours
@@ -77,6 +120,13 @@ You would reference it as `mynamespace:mymodel` in the `model` field.
 ~~~
 
 ~~~admonish example
+<!-- langtabs-start -->
+```yml
+animation:
+  model: mynamespace:mymodel
+  autoplay: myAnimationName
+```
+
 ```json
 {
   "animation": {
@@ -85,6 +135,8 @@ You would reference it as `mynamespace:mymodel` in the `model` field.
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 ---
@@ -110,6 +162,16 @@ Works with the `animation` behaviour to play an animation defined in the bbmodel
 ~~~
 
 ~~~admonish example
+<!-- langtabs-start -->
+```yml
+container:
+  name: Example Container
+  size: 9
+  purge: false
+  openAnimation: openAnimation
+  closeAnimation: closeAnimation
+```
+
 ```json
 {
   "container": {
@@ -121,6 +183,8 @@ Works with the `animation` behaviour to play an animation defined in the bbmodel
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 ---
@@ -187,6 +251,13 @@ For chairs, benches, etc.
 ~~~
 
 ~~~admonish example "Single seat"
+<!-- langtabs-start -->
+```yml
+seat:
+  - offset: [0.0, 0.0, 0.0]
+    direction: 0.0
+```
+
 ```json
 {
   "seat": [
@@ -197,6 +268,8 @@ For chairs, benches, etc.
   ]
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 ---
@@ -217,6 +290,19 @@ Allows you to create shelves / item-frame like decorations.
 ~~~
 
 ~~~admonish example "Single item showcase"
+<!-- langtabs-start -->
+```yml
+showcase:
+  - offset: [0.0, 0.0, 0.0]
+    scale: [1.0, 1.0, 1.0]
+    rotation: [0.0, 0.0, 0.0, 1.0]
+    type: item
+    filterItems:
+      - minecraft:paper
+    filterTags:
+      - minecraft:tag_example
+```
+
 ```json
 {
   "showcase": [
@@ -231,6 +317,8 @@ Allows you to create shelves / item-frame like decorations.
   ]
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 ---
@@ -250,6 +338,16 @@ Cosmetics are worn on the player using item display entities (except for the hea
 ~~~
 
 ~~~admonish example "Backpack"
+<!-- langtabs-start -->
+```yml
+cosmetic:
+  slot: chest
+  model: mynamespace:clown_backpack_animated
+  autoplay: idle
+  scale: [1.5, 1.5, 1.5]
+  translation: [0.0, 0.5, 0.0]
+```
+
 ```json
 {
   "cosmetic": {
@@ -261,6 +359,8 @@ Cosmetics are worn on the player using item display entities (except for the hea
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 ---

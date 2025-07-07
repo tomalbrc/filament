@@ -1,0 +1,6 @@
+{
+  "type": "filament:add_features",
+  "biomes": "desert",
+  "features": "mynamespace:amethyst_patch",
+  "step": "raw_generation"
+}

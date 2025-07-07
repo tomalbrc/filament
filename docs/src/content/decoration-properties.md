@@ -3,7 +3,22 @@
 Decoration properties share the same properties as [items](item-properties.md) and a few of [blocks](block-properties.md), like `solid` and `pushReaction`
 
 ~~~admonish example "Example of properties"
-```json5
+<!-- langtabs-start -->
+```yml
+properties:
+  placement:
+    floor: true
+    wall: false
+    ceiling: false
+  glow: false
+  solid: false
+  display: fixed
+  blockBase: minecraft:stone
+  useItemParticles: true
+  showBreakParticles: true
+```
+
+```json
 {
   "properties": {
     "placement": {
@@ -20,6 +35,8 @@ Decoration properties share the same properties as [items](item-properties.md) a
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 ---
@@ -56,6 +73,26 @@ A set of options for placement options. Possible keys: "floor", "wall", "ceiling
 
 You can specify different models for the different placements in the itemResource field.
 ~~~admonish example
+<!-- langtabs-start -->
+```yml
+id: mynamespace:small_gold_coin_piles
+itemFrame: true
+itemResource:
+  models:
+    default: minecraft:item/diamond_sword
+    wall: minecraft:custom/hats/backpack
+    ceiling: minecraft:custom/furniture/misc/small_gold_coin_piles
+    floor: minecraft:custom/furniture/misc/small_gold_coin_piles
+properties:
+  placement:
+    wall: true
+    floor: true
+    ceiling: true
+behaviour:
+  rotating:
+    smooth: true
+```
+
 ```json
 {
   "id": "mynamespace:small_gold_coin_piles",
@@ -82,9 +119,19 @@ You can specify different models for the different placements in the itemResourc
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 Default values:
+<!-- langtabs-start -->
+```yml
+placement:
+  floor: true
+  wall: false
+  ceiling: false
+```
+
 ```json
 {
   "placement": {
@@ -94,6 +141,7 @@ Default values:
   }
 }
 ```
+<!-- langtabs-end -->
 
 ---
 

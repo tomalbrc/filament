@@ -4,6 +4,26 @@ Block properties share the same properties as [items](item-properties.md)
 
 All properties (excluding the shared item and decoration properties):
 ~~~admonish example
+<!-- langtabs-start -->
+```yml
+properties:
+  blockBase: minecraft:stone
+  requiresTool: true
+  explosionResistance: 10
+  destroyTime: 5
+  redstoneConductor: false
+  lightEmission: 0
+  lootTable: minecraft:block/dirt
+  sounds:
+    volume: 1
+    pitch: 0.2
+    break: minecraft:entity.allay.hurt
+    step: minecraft:entity.sniffer.hurt
+    place: minecraft:entity.shulker.hurt
+    hit: minecraft:entity.axolotl.hurt
+    fall: minecraft:item.bone_meal.use
+```
+
 ```json
 {
   "properties": {
@@ -26,6 +46,8 @@ All properties (excluding the shared item and decoration properties):
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 ### `blockBase`:
@@ -66,6 +88,15 @@ All fields of this property can be mapped to a block-state.
 
 The value of this property can be mapped to a blockstate like this:
 ~~~admonish example
+<!-- langtabs-start -->
+```yml
+properties:
+  redstoneConductor:
+    powerlevel=0: true
+    powerlevel=1: false
+    # etc.
+```
+
 ```json5
 {
   "properties": {
@@ -77,6 +108,8 @@ The value of this property can be mapped to a blockstate like this:
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 Defaults to `true`
@@ -92,6 +125,15 @@ All fields of this property can be mapped to a block-state.
 The value of this property can be mapped to a blockstate like this:
 
 ~~~admonish example
+<!-- langtabs-start -->
+```yml
+properties:
+  lightEmission:
+    powerlevel=0: 0
+    powerlevel=1: 1
+    # etc
+```
+
 ```json5
 {
   "properties": {
@@ -103,6 +145,8 @@ The value of this property can be mapped to a blockstate like this:
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
 
 Defaults to `0`
@@ -158,6 +202,19 @@ All sounds, including step sounds, will be played serverside! Even for some vani
 This might affect performance a bit, for this reason there is a config option in `config/filament.json` called "sound_module" to enable/disable the server-side block sounds.
 
 ~~~ admonish example
+<!-- langtabs-start -->
+```yml
+properties:
+  sounds:
+    volume: 1
+    pitch: 0.2
+    break: minecraft:entity.allay.hurt   # sound when broken
+    step: minecraft:entity.sniffer.hurt  # sound when stepped on
+    place: minecraft:entity.shulker.hurt # sound when placed
+    hit: minecraft:entity.axolotl.hurt   # sound when hit/being mined
+    fall: minecraft:item.bone_meal.use   # sound when an entity falls on the block
+```
+
 ```json
 {
   "properties": {
@@ -173,4 +230,6 @@ This might affect performance a bit, for this reason there is a config option in
   }
 }
 ```
+<!-- langtabs-end -->
+
 ~~~
