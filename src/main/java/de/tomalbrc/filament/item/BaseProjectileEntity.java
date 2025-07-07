@@ -60,7 +60,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     protected final InteractionElement interactionElement = new InteractionElement(); // InteractionElement.redirect(this);
     protected final InteractionElement interactionElement2 = new InteractionElement(); // InteractionElement.redirect(this);
 
-    public Shoot.ShootConfig config;
+    public Shoot.Config config;
 
     protected void createMainDisplayElement() {
         this.mainDisplayElement.setItem(this.projectileStack);

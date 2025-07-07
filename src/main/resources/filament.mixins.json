@@ -16,6 +16,7 @@
     "accessor.EntityInvoker",
     "accessor.HopperBlockEntityAccessor",
     "accessor.ItemFrameAccessor",
+    "accessor.ItemInvoker",
     "accessor.ShovelItemAccessor",
     "behaviour.FuelValuesMixin",
     "behaviour.banner.LoomMenu$5Mixin",
@@ -31,7 +32,6 @@
     "behaviour.falling_block.FallingBlockEntityMixin",
     "behaviour.fishing_rod.FishingHookMixin",
     "behaviour.grass_spread.SpreadingSnowyDirtBlockAccessor",
-    "behaviour.waxable.HoneycombItemMixin",
     "behaviour.oxidizable.WeatheringCopperMixin",
     "behaviour.repeater.RedstoneWireBlockMixin",
     "behaviour.shears.BlockLootSubProviderMixin",
@@ -50,6 +50,7 @@
     "behaviour.strippable.AxeItemMixin",
     "behaviour.trap.MobMixin",
     "behaviour.trident.ThrownTridentAccessor",
+    "behaviour.waxable.HoneycombItemMixin",
     "component.skin.ItemMixin",
     "component.skin.ItemStackMixin",
     "datafix.ChunkStorageMixin"

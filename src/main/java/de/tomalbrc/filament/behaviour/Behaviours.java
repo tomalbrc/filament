@@ -16,25 +16,26 @@ import net.minecraft.resources.ResourceLocation;
 @SuppressWarnings("unused")
 public class Behaviours {
     // Item
-    public static final BehaviourType<Cosmetic, Cosmetic.Config> COSMETIC = registerBehaviour("cosmetic", Cosmetic.class);
+    public static final BehaviourType<BannerPattern, BannerPattern.Config> BANNER_PATTERN = registerBehaviour("banner_pattern", BannerPattern.class); // TODO: deprecated?
+    public static final BehaviourType<Bow, Bow.Config> BOW = registerBehaviour("bow", Bow.class);
     public static final BehaviourType<Compostable, Compostable.CompostableConfig> COMPOSTABLE = registerBehaviour("compostable", Compostable.class);
+    public static final BehaviourType<Cosmetic, Cosmetic.Config> COSMETIC = registerBehaviour("cosmetic", Cosmetic.class);
+    public static final BehaviourType<Crossbow, Crossbow.Config> CROSSBOW = registerBehaviour("crossbow", Crossbow.class);
     public static final BehaviourType<ExecuteAttackItem, ExecuteAttackItem.Config> ITEM_ATTACK_EXECUTE = registerBehaviour("item_attack_execute", ExecuteAttackItem.class);
     public static final BehaviourType<ExecuteInteractItem, ExecuteInteractItem.Config> ITEM_INTERACT_EXECUTE = registerBehaviour("item_interact_execute", ExecuteInteractItem.class);
+    public static final BehaviourType<FishingRod, FishingRod.Config> FISHING_ROD = registerBehaviour("fishing_rod", FishingRod.class);
     public static final BehaviourType<Fuel, Fuel.Config> FUEL = registerBehaviour("fuel", Fuel.class);
     public static final BehaviourType<Hoe, Hoe.Config> HOE = registerBehaviour("hoe", Hoe.class);
     public static final BehaviourType<Instrument, Instrument.Config> INSTRUMENT = registerBehaviour("instrument", Instrument.class);
-    public static final BehaviourType<Shoot, Shoot.ShootConfig> SHOOT = registerBehaviour("shoot", Shoot.class);
-    public static final BehaviourType<Bow, Bow.Config> BOW = registerBehaviour("bow", Bow.class);
-    public static final BehaviourType<Crossbow, Crossbow.Config> CROSSBOW = registerBehaviour("crossbow", Crossbow.class);
-    public static final BehaviourType<Shield, Shield.Config> SHIELD = registerBehaviour("shield", Shield.class);
-    public static final BehaviourType<FishingRod, FishingRod.Config> FISHING_ROD = registerBehaviour("fishing_rod", FishingRod.class);
     public static final BehaviourType<Mace, Mace.Config> MACE = registerBehaviour("mace", Mace.class);
+    public static final BehaviourType<PlaceOnWater, PlaceOnWater.Config> PLACE_ON_WATER = registerBehaviour("place_on_water", PlaceOnWater.class);
+    public static final BehaviourType<Shoot, Shoot.Config> SHOOT = registerBehaviour("shoot", Shoot.class);
+    public static final BehaviourType<Shield, Shield.Config> SHIELD = registerBehaviour("shield", Shield.class);
     public static final BehaviourType<Shears, Shears.Config> SHEARS = registerBehaviour("shears", Shears.class);
     public static final BehaviourType<Shovel, Shovel.Config> SHOVEL = registerBehaviour("shovel", Shovel.class);
     public static final BehaviourType<Stripper, Stripper.Config> STRIPPER = registerBehaviour("stripper", Stripper.class);
     public static final BehaviourType<Trap, Trap.Config> TRAP = registerBehaviour("trap", Trap.class);
     public static final BehaviourType<Trident, Trident.Config> TRIDENT = registerBehaviour("trident", Trident.class);
-    public static final BehaviourType<BannerPattern, BannerPattern.Config> BANNER_PATTERN = registerBehaviour("banner_pattern", BannerPattern.class);
     public static final BehaviourType<VillagerFood, VillagerFood.Config> VILLAGER_FOOD = registerBehaviour("villager_food", VillagerFood.class);
     public static final BehaviourType<Wax, Wax.Config> WAX = registerBehaviour("wax", Wax.class);
 

@@ -25,16 +25,16 @@ import org.joml.Vector3f;
 /**
  * Item behaviour for projectile shooting
  */
-public class Shoot implements ItemBehaviour<Shoot.ShootConfig> {
-    private final ShootConfig config;
+public class Shoot implements ItemBehaviour<Shoot.Config> {
+    private final Config config;
 
-    public Shoot(ShootConfig config) {
+    public Shoot(Config config) {
         this.config = config;
     }
 
     @Override
     @NotNull
-    public ShootConfig getConfig() {
+    public Shoot.Config getConfig() {
         return this.config;
     }
 
@@ -88,7 +88,7 @@ public class Shoot implements ItemBehaviour<Shoot.ShootConfig> {
         return InteractionResult.CONSUME;
     }
 
-    public static class ShootConfig {
+    public static class Config {
         /**
          * Indicates whether the shooting action consumes the item
          */
