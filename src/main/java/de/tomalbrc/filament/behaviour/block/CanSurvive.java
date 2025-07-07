@@ -4,13 +4,13 @@ import com.google.common.collect.ImmutableList;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -45,8 +45,15 @@ public class CanSurvive implements BlockBehaviour<CanSurvive.Config> {
 
     private boolean test(Direction direction, BlockPos blockPos, LevelReader levelReader, BlockState blockState) {
         var belowState = levelReader.getBlockState(blockPos.relative(direction));
-        if (this.config.blocks != null && this.config.blocks.contains(belowState.getBlock()))
-            return !belowState.is(Blocks.WATER) || levelReader.getFluidState(blockPos.relative(direction)).isSource();
+        if (this.config.blocks != null) {
+            for (ResourceLocation resourceLocation : this.config.blocks) {
+                var block = BuiltInRegistries.BLOCK.getValue(resourceLocation);
+                if (belowState.is(block)) {
+                    return !belowState.is(Blocks.WATER) || levelReader.getFluidState(blockPos.relative(direction)).isSource();
+                }
+            }
+        }
+
         if (this.config.tags != null) {
             for (ResourceLocation tag : this.config.tags) {
                 var tagKey = TagKey.create(Registries.BLOCK, tag);
@@ -96,7 +103,7 @@ public class CanSurvive implements BlockBehaviour<CanSurvive.Config> {
     }
 
     public static class Config {
-        public List<Block> blocks;
+        public List<ResourceLocation> blocks;
         public List<ResourceLocation> tags;
     }
 }
