@@ -904,3 +904,13 @@ Allows the block to be 'waxed' using honeycomb or with filament items that have 
 ~~~admonish info "Configurable Fields"
 - `replacement`: The identifier of the block to replace the current block with. Example: `minecraft:waxed_copper_block`
 ~~~
+
+---
+
+## `place_on_water` behaviour
+
+Allows the block to be placed on water.
+Use this behaviour together with the `can_survive` behaviour to recreate lily-pads!
+
+
+No fields to configure.
