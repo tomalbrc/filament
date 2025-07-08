@@ -914,3 +914,13 @@ Use this behaviour together with the `can_survive` behaviour to recreate lily-pa
 
 
 No fields to configure.
+
+---
+
+## `bouncy` behaviour
+
+Allows to make the block bouncy, similar to slime but extra bounciness when the player presses space on landing.
+
+~~~admonish info "Configurable Fields"
+- `bounciness`: This value gets multiplied by the entities y-velocity when landing on the block and the player presses space
+~~~

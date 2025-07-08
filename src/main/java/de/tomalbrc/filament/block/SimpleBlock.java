@@ -97,7 +97,9 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public boolean forceLightUpdates(BlockState blockState) { return true; }
+    public boolean forceLightUpdates(BlockState blockState) {
+        return true;
+    }
 
     @Override
     @NotNull
@@ -690,5 +692,33 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
         }
 
         return super.getBlockSupportShape(state, level, pos);
+    }
+
+    @Override
+    public void updateEntityMovementAfterFallOn(BlockGetter blockGetter, Entity entity) {
+        if (this.getBehaviours() != null)
+            this.forEach(x -> x.updateEntityMovementAfterFallOn(blockGetter, entity));
+    }
+
+    @Override
+    public void fallOn(Level level, BlockState blockState, BlockPos blockPos, Entity entity, double d) {
+        boolean ranCustomImpl = false;
+        if (this.getBehaviours() != null) {
+            for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+                if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
+                    ranCustomImpl |= blockBehaviour.fallOn(level, blockState, blockPos, entity, d);
+                }
+            }
+        }
+
+        if (!ranCustomImpl) {
+            super.fallOn(level, blockState, blockPos, entity, d);
+        }
+    }
+
+    @Override
+    public void stepOn(Level level, BlockPos blockPos, BlockState blockState, Entity entity) {
+        if (this.getBehaviours() != null)
+            this.forEach(x -> x.stepOn(level, blockPos, blockState, entity));
     }
 }

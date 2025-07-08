@@ -372,4 +372,16 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
     default VoxelShape getBlockSupportShape(BlockState state, BlockGetter level, BlockPos pos) {
         return null;
     }
+
+    default void updateEntityMovementAfterFallOn(BlockGetter blockGetter, Entity entity) {
+        // noop
+    }
+
+    default boolean fallOn(Level level, BlockState blockState, BlockPos blockPos, Entity entity, double d) {
+        return false;
+    }
+
+    default void stepOn(Level level, BlockPos blockPos, BlockState blockState, Entity entity) {
+        // noop
+    }
 }

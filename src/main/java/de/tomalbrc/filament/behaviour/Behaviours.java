@@ -45,10 +45,11 @@ public class Behaviours {
 
     // Block
     public static final BehaviourType<Axis, Axis.Config> AXIS = registerBehaviour("axis", Axis.class);
+    public static final BehaviourType<Budding, Budding.Config> BUDDING = registerBehaviour("budding", Budding.class);
+    public static final BehaviourType<Bouncy, Bouncy.Config> BOUNCY = registerBehaviour("bouncy", Bouncy.class);
     public static final BehaviourType<CanSurvive, CanSurvive.Config> CAN_SURVIVE = registerBehaviour("can_survive", CanSurvive.class);
     public static final BehaviourType<Count, Count.Config> COUNT = registerBehaviour("count", Count.class);
     public static final BehaviourType<Crop, Crop.Config> CROP = registerBehaviour("crop", Crop.class);
-    public static final BehaviourType<Budding, Budding.Config> BUDDING = registerBehaviour("budding", Budding.class);
     public static final BehaviourType<Door, Door.Config> DOOR = registerBehaviour("door", Door.class);
     public static final BehaviourType<DropXp, DropXp.Config> DROP_XP = registerBehaviour("drop_xp", DropXp.class);
     public static final BehaviourType<ExecuteInteractBlock, ExecuteInteractBlock.Config> BLOCK_INTERACT_EXECUTE = registerBehaviour("block_interact_execute", ExecuteInteractBlock.class);
