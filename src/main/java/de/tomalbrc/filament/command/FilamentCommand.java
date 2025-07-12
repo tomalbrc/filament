@@ -24,7 +24,10 @@ public class FilamentCommand {
                 .executes(ctx -> {
                     var meta = FabricLoader.getInstance().getModContainer(Constants.MOD_ID).orElseThrow().getMetadata();
                     ctx.getSource().sendSuccess(() -> Component.literal(meta.getName() + " " + meta.getVersion().getFriendlyString() + " by " + meta.getAuthors().stream().map(Person::getName).collect(Collectors.joining())), false);
-                    for (String s : Arrays.asList("Items: " + ItemRegistry.ITEMS_TAGS.size(), "Blocks: " + BlockRegistry.BLOCKS_TAGS.size(), "Decorations registered: " + DecorationRegistry.REGISTERED_DECORATIONS, "Decoration block entities: " + DecorationRegistry.REGISTERED_BLOCK_ENTITIES)) {
+
+                    var itemsLine = String.format("Items: %d (%d combined)", (ItemRegistry.ITEMS_TAGS.size() - DecorationRegistry.REGISTERED_DECORATIONS - BlockRegistry.BLOCKS_TAGS.size()), ItemRegistry.ITEMS_TAGS.size());
+                    var blocksLine = String.format("Blocks: %d (%d)", BlockRegistry.BLOCKS_TAGS.size()-DecorationRegistry.REGISTERED_DECORATIONS, BlockRegistry.BLOCKS_TAGS.size());
+                    for (String s : Arrays.asList(itemsLine, blocksLine, "Decorations registered: " + DecorationRegistry.REGISTERED_DECORATIONS, "Decoration block entities: " + DecorationRegistry.REGISTERED_BLOCK_ENTITIES)) {
                         Filament.LOGGER.info(s);
                         ctx.getSource().sendSuccess(() -> Component.literal(s), false);
                     }
@@ -36,6 +39,7 @@ public class FilamentCommand {
         rootNode.then(PickCommand.register());
         rootNode.then(ServerItemCommand.register());
         rootNode.then(ClientItemCommand.register());
+        rootNode.then(BlockModelTypesCommand.register());
 
         dispatcher.register(rootNode);
     }

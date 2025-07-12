@@ -113,11 +113,15 @@ public class DecorationRegistry {
 
                 decorationBlockEntities.put(block, DECORATION_BLOCK_ENTITY);
                 REGISTERED_BLOCK_ENTITIES++;
+                REGISTERED_DECORATIONS++;
 
                 return block;
             };
         } else {
-            gen = (x) -> new SimpleDecorationBlock(x, data);
+            gen = (x) -> {
+                REGISTERED_DECORATIONS++;
+                return new SimpleDecorationBlock(x, data);
+            };
         }
         return gen;
     }

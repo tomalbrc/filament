@@ -46,7 +46,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
- * Fuel behaviour
+ * Crowssbow behaviour
  */
 public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateModelProvider {
     private final CrossbowItem.ChargingSounds sounds;
