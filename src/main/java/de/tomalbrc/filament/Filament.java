@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 
 public class Filament implements ModInitializer {
     public static final Logger LOGGER = LogUtils.getLogger();
+
     public static LayeredRegistryAccess<RegistryLayer> REGISTRY_ACCESS;
 
     @Override

@@ -26,7 +26,7 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings(loom.layered {
         officialMojangMappings()
-        //parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${project.parchment_version}")
+        parchment("org.parchmentmc.data:parchment-1.21.6:${project.parchment_version}")
     })
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
@@ -43,6 +43,8 @@ dependencies {
 
     // BIL
     modImplementation include("de.tomalbrc:blockbench-import-library:${project.bil_version}")
+
+    modImplementation include("net.kyori:adventure-platform-fabric:6.4.0")
 
     modImplementation include("eu.pb4:placeholder-api:${project.papi_version}")
 
