@@ -31,9 +31,6 @@ public class FilamentConfig {
     @SerializedName("entity_module")
     public boolean entityModule = true;
 
-    @SerializedName("use_minimessage")
-    public boolean minimessage = false;
-
     @SerializedName("version")
     public Integer version;
 
