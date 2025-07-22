@@ -24,8 +24,8 @@ public class BlockModelTypesCommand {
         var player = context.getSource().getPlayer();
         if (player != null) {
             var r = Arrays.stream(BlockModelType.values()).map(x -> {
-                var left = PolymerBlockResourceUtils.getBlocksLeft(x);
-                return String.format("§3%s§r: §" + (left <= 3 ? "4" : left <= 10 ? "6" : "2") + "%d§r", x.name(), left);
+                var blocksLeft = PolymerBlockResourceUtils.getBlocksLeft(x);
+                return String.format("§3%s§r: §" + (blocksLeft <= 3 ? "4" : blocksLeft <= 10 ? "6" : "2") + "%d§r", x.name().toLowerCase(), blocksLeft);
             }).collect(Collectors.joining(", "));
             context.getSource().sendSuccess(() -> Component.literal("BlockModelTypes: " + r), false);
         }

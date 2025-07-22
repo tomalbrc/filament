@@ -15,6 +15,7 @@ import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.loader.api.FabricLoader;
@@ -50,7 +51,7 @@ public class Filament implements ModInitializer {
         PolymerBlockUtils.BREAKING_PROGRESS_UPDATE.register(VirtualDestroyStage::updateState);
         PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
             if (state.getBlock() instanceof DecorationBlock && !world.isClientSide()) {
-                ((VirtualDestroyStage.ServerGamePacketListenerExtF) ((ServerPlayer)player).connection).filament$getVirtualDestroyStage().setState(-1);
+                ((VirtualDestroyStage.ServerGamePacketListenerExtF) ((ServerPlayer) player).connection).filament$getVirtualDestroyStage().setState(-1);
             }
         });
 
@@ -88,9 +89,18 @@ public class Filament implements ModInitializer {
 
         if (FilamentConfig.getInstance().debug) {
             LOGGER.info("Available Polymer block model types:");
-            for (BlockModelType blockModelType : BlockModelType.values()) {
-                LOGGER.info("\t{} = {}", blockModelType.name(), PolymerBlockResourceUtils.getBlocksLeft(blockModelType));
-            }
+            logModelTypes();
+
+            ServerLifecycleEvents.SERVER_STARTED.register(minecraftServer -> {
+                LOGGER.info("Available Polymer block model types after server start:");
+                logModelTypes();
+            });
+        }
+    }
+
+    private void logModelTypes() {
+        for (BlockModelType blockModelType : BlockModelType.values()) {
+            LOGGER.info("\t{} = {}", blockModelType.name(), PolymerBlockResourceUtils.getBlocksLeft(blockModelType));
         }
     }
 }
