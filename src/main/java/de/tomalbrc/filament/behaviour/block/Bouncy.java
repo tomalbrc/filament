@@ -38,7 +38,7 @@ public class Bouncy implements BlockBehaviour<Bouncy.Config> {
     }
 
     @Override
-    public void updateEntityMovementAfterFallOn(BlockGetter blockGetter, Entity entity) {
+    public boolean updateEntityMovementAfterFallOn(BlockGetter blockGetter, Entity entity) {
         Vec3 deltaMovement = entity.getDeltaMovement();
         if (deltaMovement.y < -0.4 && !entity.isSuppressingBounce() && (entity instanceof ServerPlayer serverPlayer && serverPlayer.getLastClientInput().jump())) {
             if (config.bounciness > 0) setVel(entity, new Vec3(deltaMovement.x, Mth.clamp(0, -deltaMovement.y * config.bounciness, config.max), deltaMovement.z));
@@ -48,6 +48,8 @@ public class Bouncy implements BlockBehaviour<Bouncy.Config> {
         } else {
             setVel(entity, deltaMovement.multiply(1.0, 0.0, 1.0));
         }
+
+        return true;
     }
 
     @Override

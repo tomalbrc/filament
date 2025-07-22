@@ -373,8 +373,8 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
         return null;
     }
 
-    default void updateEntityMovementAfterFallOn(BlockGetter blockGetter, Entity entity) {
-        // noop
+    default boolean updateEntityMovementAfterFallOn(BlockGetter blockGetter, Entity entity) {
+        return false;
     }
 
     default boolean fallOn(Level level, BlockState blockState, BlockPos blockPos, Entity entity, double d) {

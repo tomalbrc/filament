@@ -696,8 +696,18 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     public void updateEntityMovementAfterFallOn(BlockGetter blockGetter, Entity entity) {
-        if (this.getBehaviours() != null)
-            this.forEach(x -> x.updateEntityMovementAfterFallOn(blockGetter, entity));
+        boolean ranCustomImpl = false;
+        if (this.getBehaviours() != null) {
+            for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+                if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
+                    ranCustomImpl = ranCustomImpl || blockBehaviour.updateEntityMovementAfterFallOn(blockGetter, entity);
+                }
+            }
+        }
+
+        if (!ranCustomImpl) {
+            super.updateEntityMovementAfterFallOn(blockGetter, entity);
+        }
     }
 
     @Override
