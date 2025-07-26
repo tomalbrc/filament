@@ -77,7 +77,7 @@ public class Slab implements BlockBehaviour<Slab.Config>, SimpleWaterloggedBlock
         FluidState fluidState = blockPlaceContext.getLevel().getFluidState(blockPos);
         BlockState blockState2 = prevBlockState.setValue(BlockStateProperties.SLAB_TYPE, SlabType.BOTTOM).setValue(BlockStateProperties.WATERLOGGED, fluidState.getType() == Fluids.WATER);
         Direction direction = blockPlaceContext.getClickedFace();
-        if (direction == Direction.DOWN || direction != Direction.UP && blockPlaceContext.getClickLocation().y - (double)blockPos.getY() > 0.5) {
+        if (direction == Direction.DOWN || direction != Direction.UP && blockPlaceContext.getClickLocation().y - (double) blockPos.getY() > 0.5) {
             return blockState2.setValue(BlockStateProperties.SLAB_TYPE, SlabType.TOP);
         }
         return blockState2;
@@ -91,7 +91,7 @@ public class Slab implements BlockBehaviour<Slab.Config>, SimpleWaterloggedBlock
             return Optional.of(false);
         }
         if (blockPlaceContext.replacingClickedOnBlock()) {
-            boolean bl = blockPlaceContext.getClickLocation().y - (double)blockPlaceContext.getClickedPos().getY() > 0.5;
+            boolean bl = blockPlaceContext.getClickLocation().y - (double) blockPlaceContext.getClickedPos().getY() > 0.5;
             Direction direction = blockPlaceContext.getClickedFace();
             if (slabType == SlabType.BOTTOM) {
                 return Optional.of(direction == Direction.UP || bl && direction.getAxis().isHorizontal());
@@ -176,5 +176,6 @@ public class Slab implements BlockBehaviour<Slab.Config>, SimpleWaterloggedBlock
         return true;
     }
 
-    public static class Config {}
+    public static class Config {
+    }
 }

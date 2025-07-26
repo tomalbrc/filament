@@ -731,4 +731,11 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
         if (this.getBehaviours() != null)
             this.forEach(x -> x.stepOn(level, blockPos, blockState, entity));
     }
+
+    @Override
+    protected void spawnDestroyParticles(Level level, Player player, BlockPos blockPos, BlockState blockState) {
+        if (blockData.properties().showBreakParticles) {
+            super.spawnDestroyParticles(level, player, blockPos, blockState);
+        }
+    }
 }

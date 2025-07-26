@@ -2,6 +2,7 @@ package de.tomalbrc.filament;
 
 import com.mojang.logging.LogUtils;
 import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.behaviour.block.Fire;
 import de.tomalbrc.filament.command.FilamentCommand;
 import de.tomalbrc.filament.data.ItemGroupData;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
@@ -47,6 +48,9 @@ public class Filament implements ModInitializer {
         if (FilamentConfig.getInstance().commands) {
             CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> FilamentCommand.register(dispatcher));
         }
+
+        Fire.addRemap();
+        PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(Fire::init);
 
         PolymerBlockUtils.BREAKING_PROGRESS_UPDATE.register(VirtualDestroyStage::updateState);
         PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
@@ -99,8 +103,11 @@ public class Filament implements ModInitializer {
     }
 
     private void logModelTypes() {
-        for (BlockModelType blockModelType : BlockModelType.values()) {
+        for (var blockModelType : BlockModelType.values()) {
             LOGGER.info("\t{} = {}", blockModelType.name(), PolymerBlockResourceUtils.getBlocksLeft(blockModelType));
         }
+//        for (var blockModelType : FilamentBlockModelType.values()) {
+//            LOGGER.info("\t{} = {}", blockModelType.name(), PolymerBlockResourceUtils.getBlocksLeft(blockModelType));
+//        }
     }
 }

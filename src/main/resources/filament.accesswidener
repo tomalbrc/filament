@@ -23,3 +23,10 @@ accessible field net/minecraft/world/entity/projectile/AbstractArrow baseDamage 
 
 accessible field net/minecraft/world/entity/player/Player sleepCounter I
 accessible class net/minecraft/server/level/ServerPlayer$RespawnPosAngle
+
+accessible method net/minecraft/world/level/block/FireBlock updateShape (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/world/level/ScheduledTickAccess;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/util/RandomSource;)Lnet/minecraft/world/level/block/state/BlockState;
+accessible method net/minecraft/world/level/block/FireBlock getStateForPlacement (Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;
+accessible method net/minecraft/world/level/block/FireBlock canSurvive (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/LevelReader;Lnet/minecraft/core/BlockPos;)Z
+accessible method net/minecraft/world/level/block/FireBlock tick (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/util/RandomSource;)V
+accessible method net/minecraft/world/level/block/FireBlock onPlace (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Z)V
+accessible method net/minecraft/world/level/block/FireBlock createBlockStateDefinition (Lnet/minecraft/world/level/block/state/StateDefinition$Builder;)V

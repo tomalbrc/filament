@@ -38,6 +38,7 @@ public class BlockProperties extends ItemProperties {
     public ResourceLocation lootTable = null;
 
     public boolean virtual;
+    public boolean showBreakParticles = true;
 
     public Sounds sounds;
 

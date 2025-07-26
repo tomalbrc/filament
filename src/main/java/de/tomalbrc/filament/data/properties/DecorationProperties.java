@@ -10,7 +10,6 @@ public class DecorationProperties extends BlockProperties {
     public boolean glow = false;
     public ItemDisplayContext display = ItemDisplayContext.FIXED;
     public boolean useItemParticles = true;
-    public boolean showBreakParticles = true;
     public boolean drops = true;
 
     @Override

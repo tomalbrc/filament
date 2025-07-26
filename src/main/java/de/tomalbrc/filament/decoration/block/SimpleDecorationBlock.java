@@ -61,7 +61,7 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
 
     @Override
     protected void spawnDestroyParticles(Level level, Player player, BlockPos blockPos, BlockState blockState) {
-        if (!(level instanceof ServerLevel)) return;
+        if (!(level instanceof ServerLevel) || !data.properties().showBreakParticles) return;
 
         DecorationData data = this.getDecorationData();
         if (!data.hasBlocks()) {
