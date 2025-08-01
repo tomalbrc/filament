@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.behaviour.item;
 
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
+import de.tomalbrc.filament.mixin.accessor.MaceItemAccessor;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.server.level.ServerLevel;
@@ -56,7 +57,7 @@ public class Mace implements ItemBehaviour<Mace.Config> {
                 serverLevel.playSound(null, livingEntity2.getX(), livingEntity2.getY(), livingEntity2.getZ(), SoundEvents.MACE_SMASH_AIR, livingEntity2.getSoundSource(), 1.0F, 1.0F);
             }
 
-            MaceItem.knockback(serverLevel, livingEntity2, livingEntity);
+            MaceItemAccessor.invokeKnockback(serverLevel, livingEntity2, livingEntity);
         }
     }
 

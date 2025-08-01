@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.mixin.accessor.PlayerAccessor;
 import de.tomalbrc.filament.util.DecorationUtil;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -118,7 +119,7 @@ public class Bed implements DecorationBehaviour<Bed.Config> {
 
     public Either<Player.BedSleepingProblem, Unit> startSleepInBedDirect(ServerPlayer entity, BlockPos blockPos) {
         entity.startSleeping(blockPos);
-        entity.sleepCounter = 0;
+        ((PlayerAccessor)entity).setSleepCounter(0);
         return Either.right(Unit.INSTANCE);
     }
 

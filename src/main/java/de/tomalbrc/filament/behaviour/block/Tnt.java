@@ -3,6 +3,7 @@ package de.tomalbrc.filament.behaviour.block;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
+import de.tomalbrc.filament.mixin.accessor.PrimedTntAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
@@ -137,7 +138,7 @@ public class Tnt implements BlockBehaviour<Tnt.Config> {
 
             PrimedTnt tntEntity = new PrimedTnt(level, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, livingEntity);
             tntEntity.setFuse(fuse);
-            tntEntity.explosionPower = config.explosionPower.getValue(bs);
+            ((PrimedTntAccessor)tntEntity).setExplosionPower(config.explosionPower.getValue(bs));
             tntEntity.setBlockState(bs);
             level.addFreshEntity(tntEntity);
 

@@ -10,6 +10,7 @@ import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.data.AbstractBlockData;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
+import de.tomalbrc.filament.mixin.accessor.FireBlockInvoker;
 import eu.pb4.polymer.blocks.impl.BlockExtBlockMapper;
 import eu.pb4.polymer.blocks.impl.DefaultModelData;
 import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
@@ -140,32 +141,32 @@ public class Fire implements BlockBehaviour<Fire.Config> {
 
     @Override
     public BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
-        return blockState.getBlock().withPropertiesOf(FIRE_BLOCK.updateShape(blockState, levelReader, scheduledTickAccess, blockPos, direction, blockPos2, blockState2, randomSource));
+        return blockState.getBlock().withPropertiesOf(((FireBlockInvoker)FIRE_BLOCK).invokeUpdateShape(blockState, levelReader, scheduledTickAccess, blockPos, direction, blockPos2, blockState2, randomSource));
     }
 
     @Override
     public BlockState getStateForPlacement(BlockState blockState, BlockPlaceContext blockPlaceContext) {
-        return blockState.getBlock().withPropertiesOf(FIRE_BLOCK.getStateForPlacement(blockPlaceContext.getLevel(), blockPlaceContext.getClickedPos()));
+        return blockState.getBlock().withPropertiesOf(((FireBlockInvoker)FIRE_BLOCK).invokeGetStateForPlacement(blockPlaceContext.getLevel(), blockPlaceContext.getClickedPos()));
     }
 
     @Override
     public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
-        return FIRE_BLOCK.canSurvive(blockState, levelReader, blockPos);
+        return ((FireBlockInvoker)FIRE_BLOCK).invokeCanSurvive(blockState, levelReader, blockPos);
     }
 
     @Override
     public void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
-        FIRE_BLOCK.tick(blockState, serverLevel, blockPos, randomSource);
+        ((FireBlockInvoker)FIRE_BLOCK).invokeTick(blockState, serverLevel, blockPos, randomSource);
     }
 
     @Override
     public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
-        FIRE_BLOCK.onPlace(blockState, level, blockPos, blockState2, bl);
+        ((FireBlockInvoker)FIRE_BLOCK).invokeOnPlace(blockState, level, blockPos, blockState2, bl);
     }
 
     @Override
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        FIRE_BLOCK.createBlockStateDefinition(builder);
+        ((FireBlockInvoker)FIRE_BLOCK).invokeCreateBlockStateDefinition(builder);
     }
 
     @Override

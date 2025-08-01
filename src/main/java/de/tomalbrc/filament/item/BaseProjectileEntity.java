@@ -2,6 +2,7 @@ package de.tomalbrc.filament.item;
 
 import com.mojang.math.Axis;
 import de.tomalbrc.filament.behaviour.item.Shoot;
+import de.tomalbrc.filament.mixin.accessor.AbstractArrowAccessor;
 import eu.pb4.polymer.core.api.entity.PolymerEntity;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.VirtualEntityUtils;
@@ -150,8 +151,8 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
             Entity owner = this.getOwner();
             var damageSource = this.damageSources().trident(this, owner);
 
-            float damage = (float) baseDamage;
-            if (target.hurtServer((ServerLevel) level(), damageSource, damage)) {
+            double damage = ((AbstractArrowAccessor)this).getBaseDamage();
+            if (target.hurtServer((ServerLevel) level(), damageSource, (float) damage)) {
                 if (target.getType() != EntityType.ENDERMAN && this.getOwner() instanceof LivingEntity livingOwner) {
                     EnchantmentHelper.doPostAttackEffectsWithItemSource((ServerLevel) target.level(), livingOwner, damageSource, this.getWeaponItem());
                     this.doPostHurtEffects(target);

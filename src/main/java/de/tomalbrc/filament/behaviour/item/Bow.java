@@ -5,6 +5,7 @@ import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.behaviour.ItemPredicateModelProvider;
 import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.generator.ItemAssetGenerator;
+import de.tomalbrc.filament.mixin.accessor.ProjectileWeaponItemInvoker;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -102,7 +103,7 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
             return false;
         }
 
-        List<ItemStack> list = BowItem.draw(itemStack, itemStack2, player);
+        List<ItemStack> list = ProjectileWeaponItemInvoker.invokeDraw(itemStack, itemStack2, player);
         if (level instanceof ServerLevel serverLevel && !list.isEmpty()) {
             this.shoot(serverLevel, player, player.getUsedItemHand(), itemStack, list, currentPower * config.powerMultiplier, currentPower == 1.0f);
         }

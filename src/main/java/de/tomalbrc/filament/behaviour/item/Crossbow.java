@@ -7,6 +7,8 @@ import de.tomalbrc.filament.behaviour.ItemPredicateModelProvider;
 import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.generator.ItemAssetGenerator;
 import de.tomalbrc.filament.item.FilamentItem;
+import de.tomalbrc.filament.mixin.accessor.CrossbowItemInvoker;
+import de.tomalbrc.filament.mixin.accessor.ProjectileWeaponItemInvoker;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.HolderLookup;
@@ -100,7 +102,7 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
     @Override
     public boolean releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int i) {
         int j = this.getUseDuration(itemStack, livingEntity).orElseThrow() - i;
-        float f = CrossbowItem.getPowerForTime(j, itemStack, livingEntity);
+        float f = CrossbowItemInvoker.invokeGetPowerForTime(j, itemStack, livingEntity);
         if (f >= 1.f && !CrossbowItem.isCharged(itemStack) && livingEntity instanceof ServerPlayer serverPlayer && tryLoadProjectiles(serverPlayer, itemStack)) {
             CrossbowItem.ChargingSounds chargingSounds = this.getChargingSounds(itemStack);
             chargingSounds.end().ifPresent((holder) -> level.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), holder.value(), livingEntity.getSoundSource(), 1.0F, 1.0F / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F));
@@ -111,7 +113,7 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
     }
 
     private boolean tryLoadProjectiles(Player shooter, ItemStack weapon) {
-        List<ItemStack> list = CrossbowItem.draw(weapon, this.getProjectile(shooter), shooter);
+        List<ItemStack> list = ProjectileWeaponItemInvoker.invokeDraw(weapon, this.getProjectile(shooter), shooter);
         if (!list.isEmpty()) {
             weapon.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(list));
             return true;

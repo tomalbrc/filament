@@ -2,6 +2,7 @@ package de.tomalbrc.filament.behaviour.item;
 
 import com.mojang.datafixers.util.Pair;
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
+import de.tomalbrc.filament.mixin.accessor.HoeItemAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -10,7 +11,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +38,7 @@ public class Hoe implements ItemBehaviour<Hoe.Config> {
     public InteractionResult useOn(UseOnContext useOnContext) {
         Level level = useOnContext.getLevel();
         BlockPos blockPos = useOnContext.getClickedPos();
-        Pair<Predicate<UseOnContext>, Consumer<UseOnContext>> pair = HoeItem.TILLABLES.get(level.getBlockState(blockPos).getBlock());
+        Pair<Predicate<UseOnContext>, Consumer<UseOnContext>> pair = HoeItemAccessor.getTILLABLES().get(level.getBlockState(blockPos).getBlock());
         if (pair == null) {
             return InteractionResult.PASS;
         } else {

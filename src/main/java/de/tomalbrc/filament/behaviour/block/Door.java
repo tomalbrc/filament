@@ -8,6 +8,7 @@ import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.data.AbstractBlockData;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
+import de.tomalbrc.filament.mixin.accessor.DoublePlantBlockInvoker;
 import de.tomalbrc.filament.util.FilamentBlockResourceUtils;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
@@ -32,7 +33,10 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -87,8 +91,8 @@ public class Door implements BlockBehaviour<Door.Config> {
 
     @Override
     public void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
-        if (!(level.isClientSide || !player.isCreative() && player.hasCorrectToolForDrops(blockState))) {
-            DoublePlantBlock.preventDropFromBottomPart(level, blockPos, blockState, player);
+        if (!(level.isClientSide() || !player.isCreative() && player.hasCorrectToolForDrops(blockState))) {
+            DoublePlantBlockInvoker.invokePreventDropFromBottomPart(level, blockPos, blockState, player);
         }
     }
 
