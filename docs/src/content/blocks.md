@@ -1,5 +1,7 @@
 # Blocks
 
+The misode based generator for blocks can be found [here!](https://misode.tomalbrc.de/filament/block)
+
 ## File
 
 Block configuration files are to be placed in `MyDatapack/data/<namespace>/filament/block/myblock.json` 

@@ -1,5 +1,7 @@
 # Items
 
+The misode based generator for items can be found [here!](https://misode.tomalbrc.de/filament/item)
+
 ## File Location
 
 Item configuration files should be placed in the following directory:

@@ -6,6 +6,11 @@ Checkout [usage](usage.md) or "[creating content](content)" or the [example data
 
 You can find the old docs for 0.14 / 0.17 for 1.21.1 / 1.21.5 [here](http://tomalbrc.de/docs/filament-old/)
 
+### Misode based generators for:
+- [Items (https://misode.tomalbrc.de/filament/item)](https://misode.tomalbrc.de/filament/item)
+- [Blocks (https://misode.tomalbrc.de/filament/block)](https://misode.tomalbrc.de/filament/block)
+- [Decorations (https://misode.tomalbrc.de/filament/decoration)](https://misode.tomalbrc.de/filament/decoration)
+
 ---
 
 - ### [Modrinth](https://modrinth.com/mod/filament)

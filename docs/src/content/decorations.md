@@ -1,5 +1,7 @@
 # Decorations
 
+The misode based generator for decorations can be found [here!](https://misode.tomalbrc.de/filament/decoration)
+
 ## File
 
 Decoration configuration files are to be placed in `MyDatapack/data/<namespace>/filament/decoration/my_decoration.json`.
