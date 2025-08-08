@@ -17,7 +17,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CrossbowItem;
 import org.jetbrains.annotations.NotNull;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,12 +33,12 @@ public class ItemAssetGenerator {
                                     list
                             ),
                             Optional.of(defaultModel)
-                    ), ItemAsset.Properties.DEFAULT).toJson().getBytes(StandardCharsets.UTF_8)
+                    ), ItemAsset.Properties.DEFAULT).toBytes()
             );
         } else {
             builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
                     defaultModel,
-                    ItemAsset.Properties.DEFAULT).toJson().getBytes(StandardCharsets.UTF_8)
+                    ItemAsset.Properties.DEFAULT).toBytes()
             );
         }
     }
@@ -72,7 +71,7 @@ public class ItemAssetGenerator {
 
         builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
                 new ConditionItemModel(new UsingItemProperty(), rangeModelBuilder.build(), defaultModel),
-                ItemAsset.Properties.DEFAULT).toJson().getBytes(StandardCharsets.UTF_8)
+                ItemAsset.Properties.DEFAULT).toBytes()
         );
     }
 
@@ -96,7 +95,7 @@ public class ItemAssetGenerator {
 
         builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
                 new ConditionItemModel(new UsingItemProperty(), rangeModelBuilder.build(), notUsed.build()),
-                ItemAsset.Properties.DEFAULT).toJson().getBytes(StandardCharsets.UTF_8)
+                ItemAsset.Properties.DEFAULT).toBytes()
         );
     }
 
@@ -106,7 +105,7 @@ public class ItemAssetGenerator {
 
         builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
                 new ConditionItemModel(new UsingItemProperty(), blocking, defaultModel),
-                ItemAsset.Properties.DEFAULT).toJson().getBytes(StandardCharsets.UTF_8)
+                ItemAsset.Properties.DEFAULT).toBytes()
         );
     }
 
@@ -115,7 +114,7 @@ public class ItemAssetGenerator {
         var cast = new BasicItemModel(itemResource.getModels().get("cast"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
         builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
                 new ConditionItemModel(new FishingRodCastProperty(), cast, defaultModel),
-                ItemAsset.Properties.DEFAULT).toJson().getBytes(StandardCharsets.UTF_8)
+                ItemAsset.Properties.DEFAULT).toBytes()
         );
     }
 
@@ -125,7 +124,7 @@ public class ItemAssetGenerator {
 
         builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
                 new ConditionItemModel(new UsingItemProperty(), throwing, defaultModel),
-                ItemAsset.Properties.DEFAULT).toJson().getBytes(StandardCharsets.UTF_8)
+                ItemAsset.Properties.DEFAULT).toBytes()
         );
     }
 }
