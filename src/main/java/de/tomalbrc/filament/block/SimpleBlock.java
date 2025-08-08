@@ -249,7 +249,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
             }
 
             this.wasExploded(level, blockPos, explosion); // switch up order to support mapped blockstate properties in block behaviours (tnt example)
-            level.setBlock(blockPos, Blocks.SAND.defaultBlockState(), Block.UPDATE_ALL);
+            level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
         }
     }
 
