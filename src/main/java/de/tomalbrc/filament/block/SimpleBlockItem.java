@@ -15,6 +15,7 @@ import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.level.ServerPlayer;
@@ -51,6 +52,12 @@ public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentI
         this.initBehaviours(data.behaviour());
 
         this.delegate = new FilamentItemDelegate(this);
+    }
+
+    @Override
+    public @NotNull Component getName(ItemStack itemStack) {
+        var dataName = this.data.displayName();
+        return dataName != null ? dataName : data.components().has(DataComponents.ITEM_NAME) ? data.components().get(DataComponents.ITEM_NAME) : super.getName(itemStack);
     }
 
     @Override

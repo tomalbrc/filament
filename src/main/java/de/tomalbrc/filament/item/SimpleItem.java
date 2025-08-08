@@ -6,7 +6,6 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.data.Data;
-import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.util.Json;
 import de.tomalbrc.filament.util.Util;
@@ -93,7 +92,7 @@ public class SimpleItem extends Item implements PolymerItem, FilamentItem, Behav
     @Override
     public @NotNull Component getName(ItemStack itemStack) {
         var dataName = this.data.displayName();
-        return dataName != null ? dataName : super.getName(itemStack);
+        return dataName != null ? dataName : data.components().has(DataComponents.ITEM_NAME) ? data.components().get(DataComponents.ITEM_NAME) : super.getName(itemStack);
     }
 
     @Override
