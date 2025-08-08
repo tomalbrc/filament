@@ -71,7 +71,7 @@ public class Door implements BlockBehaviour<Door.Config> {
     public BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
         DoubleBlockHalf doubleBlockHalf = blockState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF);
         if (direction.getAxis() == Direction.Axis.Y && doubleBlockHalf == DoubleBlockHalf.LOWER == (direction == Direction.UP)) {
-            if (isSame(blockState2.getBlock())  && blockState2.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) != doubleBlockHalf) {
+            if (isSame(blockState2.getBlock()) && blockState2.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) != doubleBlockHalf) {
                 return blockState2.setValue(BlockStateProperties.DOUBLE_BLOCK_HALF, doubleBlockHalf);
             }
             return Blocks.AIR.defaultBlockState();
@@ -126,7 +126,7 @@ public class Door implements BlockBehaviour<Door.Config> {
     }
 
     private boolean isSame(Block block) {
-        return block instanceof SimpleBlock simpleBlock && simpleBlock.has(Behaviours.DOOR) && simpleBlock.get(Behaviours.DOOR) == this;
+        return block instanceof SimpleBlock simpleBlock && simpleBlock.has(Behaviours.DOOR);
     }
 
     private DoorHingeSide getHinge(BlockPlaceContext blockPlaceContext) {
