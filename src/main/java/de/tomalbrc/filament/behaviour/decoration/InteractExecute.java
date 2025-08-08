@@ -155,7 +155,7 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
         /**
          * Command to execute when the lock is successfully unlocked (if specified).
          * The command can be overwritten using NBT, the path for the command is Lock.Command in the block entities' NBT
-         * `formats modify @e[entitySpecifier] Lock.Command set value "say hello"`
+         * `data modify @e[...] Lock.Command set value "say hello"`
          */
         public String command = null;
 
@@ -165,11 +165,18 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
         public List<String> commands = null;
 
         /**
-         * Whether to run commands after animation
+         * Commands to run after animation
          */
         public String commandPostAnimation = null;
+
+        /**
+         * List of to run after animation
+         */
         public List<String> commandsPostAnimation = null;
 
+        /**
+         * Whether to execute the commands at the interacted blocks' position instead of the players position
+         */
         public boolean atBlock = false;
     }
 }
