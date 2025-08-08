@@ -9,8 +9,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -32,22 +34,25 @@ public class Oxidizable implements BlockBehaviour<Oxidizable.Config>, Weathering
 
     @Override
     public void init(Item item, Block block, BehaviourHolder behaviourHolder) {
-        OxidizableRegistry.add(block, config.replacement);
+        if (config.replacement != null)
+            OxidizableRegistry.add(block, config.replacement);
     }
 
     @Override
-    public WeatherState getAge() {
+    public @NotNull WeatherState getAge() {
         return this.config.weatherState;
     }
 
     @Override
     public boolean isRandomlyTicking(BlockState blockState) {
-        return this.getAge() != WeatherState.OXIDIZED;
+        return this.getAge() != WeatherState.OXIDIZED && config.replacement != null;
     }
 
     @Override
     public void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
-        this.changeOverTime(blockState, serverLevel, blockPos, randomSource);
+        if (!blockState.hasProperty(DoorBlock.HALF) || blockState.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER) {
+            this.changeOverTime(blockState, serverLevel, blockPos, randomSource);
+        }
     }
 
     public static class Config {
