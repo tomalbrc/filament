@@ -70,8 +70,7 @@ public class Behaviours {
     public static final BehaviourType<Repeater, Repeater.Config> REPEATER = registerBehaviour("repeater", Repeater.class);
     public static final BehaviourType<Rotating, Rotating.Config> ROTATING = registerBehaviour("rotating", Rotating.class);
     public static final BehaviourType<Sapling, Sapling.Config> SAPLING = registerBehaviour("sapling", Sapling.class);
-    @Deprecated
-    public static final BehaviourType<Waterloggable, Waterloggable.Config> SIMPLE_WATERLOGGABLE = registerBehaviour("simple_waterloggable", Waterloggable.class);
+    @Deprecated public static final BehaviourType<Waterloggable, Waterloggable.Config> SIMPLE_WATERLOGGABLE = registerBehaviour("simple_waterloggable", Waterloggable.class);
     public static final BehaviourType<Waterloggable, Waterloggable.Config> WATERLOGGABLE = registerBehaviour("waterloggable", Waterloggable.class);
     public static final BehaviourType<Slab, Slab.Config> SLAB = registerBehaviour("slab", Slab.class);
     public static final BehaviourType<Strippable, Strippable.Config> STRIPPABLE = registerBehaviour("strippable", Strippable.class);

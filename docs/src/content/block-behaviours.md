@@ -549,7 +549,7 @@ Comes with all door block state properties (hinge, open, powered, etc.)
 
 Simple waterloggable block with a `waterlogged` property.
 
-There is an alias called `simple_waterlogged` for backwards compatibility with older filament data packs
+There is an alias called `simple_waterloggable` for backwards compatibility with older filament data packs
 
 
 ~~~admonish info "Optional Block-State-Properties to provide models for"
