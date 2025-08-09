@@ -64,7 +64,8 @@ public abstract class DecorationBlock extends SimpleBlock implements PolymerBloc
                 }
             }
 
-            BlockState blockState = passthrough ? Blocks.AIR.defaultBlockState() : decorationData.block();
+            var customBlock = decorationData.block(state);
+            BlockState blockState = customBlock == null ? passthrough ? Blocks.AIR.defaultBlockState() : Blocks.BARRIER.defaultBlockState() : customBlock;
             boolean waterlogged = newState.hasProperty(BlockStateProperties.WATERLOGGED) && newState.getValue(BlockStateProperties.WATERLOGGED);
             if (passthrough && waterlogged) {
                 return Blocks.WATER.defaultBlockState();
