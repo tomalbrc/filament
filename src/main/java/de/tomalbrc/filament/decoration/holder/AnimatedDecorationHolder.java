@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.decoration.holder;
 
+import de.tomalbrc.bil.core.element.PerPlayerTransformableElement;
 import de.tomalbrc.bil.core.holder.base.SimpleAnimatedHolder;
 import de.tomalbrc.bil.core.holder.wrapper.Bone;
 import de.tomalbrc.bil.core.holder.wrapper.DisplayWrapper;
@@ -15,7 +16,6 @@ import de.tomalbrc.filament.util.DecorationUtil;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockAwareAttachment;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
 import eu.pb4.polymer.virtualentity.api.attachment.HolderAttachment;
-import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,8 +43,8 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
     @Override
     public void setYaw(float rotation) {
         this.getElements().forEach(x -> {
-            if (x instanceof DisplayElement displayElement) {
-                displayElement.setTeleportDuration(0);
+            if (x instanceof PerPlayerTransformableElement displayElement) {
+                displayElement.setTeleportDuration(null,0);
                 displayElement.setYaw(rotation-180);
             }
         });
