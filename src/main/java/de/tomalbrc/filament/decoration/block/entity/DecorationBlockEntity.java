@@ -124,6 +124,14 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
     @Override
     public void attach(LevelChunk chunk) {
+        if (this.itemStack == null) {
+            this.itemStack = this.getBlock().asItem().getDefaultInstance();
+        }
+
+        if (this.main == null) {
+            this.main = BlockPos.ZERO;
+        }
+
         if (this.isMain() && this.itemStack != null) {
             FilamentDecorationHolder holder = this.getOrCreateHolder();
             if (holder.getAttachment() == null) {

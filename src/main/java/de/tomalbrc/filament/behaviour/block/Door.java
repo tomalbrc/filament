@@ -33,10 +33,7 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -126,7 +123,7 @@ public class Door implements BlockBehaviour<Door.Config> {
     }
 
     private boolean isSame(Block block) {
-        return block instanceof SimpleBlock simpleBlock && simpleBlock.has(Behaviours.DOOR);
+        return (block instanceof SimpleBlock simpleBlock && simpleBlock.has(Behaviours.DOOR)) || block instanceof DoorBlock;
     }
 
     private DoorHingeSide getHinge(BlockPlaceContext blockPlaceContext) {

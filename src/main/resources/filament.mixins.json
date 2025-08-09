@@ -37,6 +37,7 @@
     "behaviour.cosmetic.ServerPlayerMixin",
     "behaviour.crop.BeeMixin",
     "behaviour.crop.HarvestFarmlandMixin",
+    "behaviour.door.DoorBlockMixin",
     "behaviour.execute.ServerGamePacketListenerImplMixin",
     "behaviour.falling_block.FallingBlockEntityMixin",
     "behaviour.fire.BaseFireBlockMixin",

@@ -92,7 +92,7 @@ public class DecorationUtil {
             element.setSize(1.f, direction.equals(Direction.DOWN) ? 1.f : .5f); // default
         }
 
-        element.setHandler(new VirtualElement.InteractionHandler() {
+        element.setInteractionHandler(new VirtualElement.InteractionHandler() {
             @Override
             public void interactAt(ServerPlayer player, InteractionHand hand, Vec3 pos) {
                 ServerLevel serverLevel = player.level();
