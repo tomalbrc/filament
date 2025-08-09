@@ -3,6 +3,7 @@ package de.tomalbrc.filament.data;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import de.tomalbrc.filament.data.properties.DecorationProperties;
 import de.tomalbrc.filament.data.resource.BlockResource;
 import de.tomalbrc.filament.data.resource.ItemResource;
@@ -31,7 +32,7 @@ public final class DecorationData extends AbstractBlockData<DecorationProperties
     private final @Nullable List<BlockConfig> blocks;
     private final @Nullable Vector2f size;
     private final @Nullable Boolean itemFrame;
-    private final @Nullable BlockState block;
+    private final @Nullable BlockStateMappedProperty<BlockState> block;
 
     public DecorationData(
             @NotNull ResourceLocation id,
@@ -47,10 +48,10 @@ public final class DecorationData extends AbstractBlockData<DecorationProperties
             @Nullable Set<ResourceLocation> blockTags,
             @Nullable DecorationProperties properties,
             @Nullable List<BlockConfig> blocks,
-            @Nullable BlockState block,
+            @Nullable BlockStateMappedProperty<BlockState> block,
             @Nullable Vector2f size,
             @Nullable Boolean itemFrame
-    ) {
+            ) {
         super(id, vanillaItem, translations, displayName, itemResource, itemModel, behaviourConfig, components, itemGroup, properties, itemTags, blockTags);
         this.blocks = blocks;
         this.size = size;
@@ -115,8 +116,8 @@ public final class DecorationData extends AbstractBlockData<DecorationProperties
         return this.itemFrame;
     }
 
-    public @NotNull BlockState block() {
-        return this.block != null ? this.block : Blocks.BARRIER.defaultBlockState();
+    public @Nullable BlockState block(BlockState blockState) {
+        return this.block != null ? this.block.getOrDefault(blockState, null) : null;
     }
 
     @Override
