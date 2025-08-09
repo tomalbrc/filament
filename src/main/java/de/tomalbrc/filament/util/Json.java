@@ -68,7 +68,7 @@ public class Json {
             .registerTypeHierarchyAdapter(BlockModelType.class, new LowercaseEnumDeserializer<>(BlockModelType.class))
             .registerTypeHierarchyAdapter(Difficulty.class, new LowercaseEnumDeserializer<>(Difficulty.class))
             .registerTypeHierarchyAdapter(MobCategory.class, new LowercaseEnumDeserializer<>(MobCategory.class))
-            .registerTypeHierarchyAdapter(ItemDisplayContext.class, new LowercaseEnumDeserializer<>(ItemDisplayContext.class))
+            .registerTypeHierarchyAdapter(ItemDisplayContext.class, new SimpleCodecDeserializer<>(ItemDisplayContext.CODEC))
             .registerTypeHierarchyAdapter(PushReaction.class, new LowercaseEnumDeserializer<>(PushReaction.class))
             .registerTypeHierarchyAdapter(WeatheringCopper.WeatherState.class, new LowercaseEnumDeserializer<>(WeatheringCopper.WeatherState.class))
             .registerTypeHierarchyAdapter(Block.class, new RegistryDeserializer<>(BuiltInRegistries.BLOCK))
