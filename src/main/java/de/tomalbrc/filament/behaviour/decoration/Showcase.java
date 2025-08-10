@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.behaviour.decoration;
 
-import com.mojang.math.Axis;
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.decoration.DecorationItem;
@@ -15,7 +15,6 @@ import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,14 +23,12 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -41,12 +38,11 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * For item showcase decoration
  */
-public class Showcase implements DecorationBehaviour<Showcase.Config> {
+public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBehaviour<Showcase.Config> {
     private static final String SHOWCASE_KEY = "Showcase";
     private static final String ITEM = "Item";
 
@@ -62,14 +58,6 @@ public class Showcase implements DecorationBehaviour<Showcase.Config> {
     @NotNull
     public Showcase.Config getConfig() {
         return this.config;
-    }
-
-    public void reposition(DecorationBlockEntity decorationBlockEntity) {
-        for (Map.Entry<ShowcaseMeta, ElementInfo> entry : showcases.entrySet()) {
-            var meta = entry.getKey();
-            var elementInfo = entry.getValue();
-            transform(decorationBlockEntity, elementInfo.element, meta);
-        }
     }
 
     @Override
@@ -165,7 +153,7 @@ public class Showcase implements DecorationBehaviour<Showcase.Config> {
             double dist = Double.MAX_VALUE;
             Showcase.ShowcaseMeta nearest = null;
             for (Showcase.ShowcaseMeta showcase : config) {
-                Vec3 q = decorationBlockEntity.getBlockPos().getCenter().add(new Vec3(this.showcaseTranslation(decorationBlockEntity, showcase)));
+                Vec3 q = decorationBlockEntity.getBlockPos().getCenter().add(new Vec3(this.showcaseTranslation(decorationBlockEntity, showcase).rotateY((decorationBlockEntity.getVisualRotationYInDegrees())*Mth.DEG_TO_RAD)));
                 double distance = q.distanceTo(location);
 
                 if (distance < dist) {
@@ -179,7 +167,7 @@ public class Showcase implements DecorationBehaviour<Showcase.Config> {
     }
 
     private Vector3f showcaseTranslation(DecorationBlockEntity decorationBlockEntity, Showcase.ShowcaseMeta showcase) {
-        return new Vector3f(showcase.offset).sub(0, 0.475f, 0).rotate(Axis.YN.rotation(Mth.DEG_TO_RAD * decorationBlockEntity.getVisualRotationYInDegrees()));
+        return new Vector3f(showcase.offset).sub(0, 0.475f, 0).rotateY(Mth.PI);
     }
 
     public void setShowcaseItemStack(DecorationBlockEntity decorationBlockEntity, Showcase.ShowcaseMeta showcase, ItemStack itemStack) {
@@ -201,9 +189,11 @@ public class Showcase implements DecorationBehaviour<Showcase.Config> {
         } else {
             if (elementInfo.element instanceof BlockDisplayElement blockDisplayElement && itemStack.getItem() instanceof BlockItem blockItem) {
                 blockDisplayElement.setBlockState(blockItem.getBlock().defaultBlockState());
-            } else if (elementInfo.element instanceof ItemDisplayElement itemDisplayElement) {
-                itemDisplayElement.setItem(itemStack);
+            } else if (elementInfo.element instanceof ShowcaseItemElement itemDisplayElement) {
+                itemDisplayElement.setItemReal(itemStack);
             }
+
+            this.showcases.put(showcase, new ElementInfo(elementInfo.element, itemStack.copy()));
         }
 
         decorationBlockEntity.getOrCreateHolder().tick();
@@ -216,9 +206,8 @@ public class Showcase implements DecorationBehaviour<Showcase.Config> {
     }
 
     private ItemDisplayElement element(ItemStack itemStack) {
-        ItemDisplayElement displayElement = new ItemDisplayElement(itemStack.copy());
+        ItemDisplayElement displayElement = new ShowcaseItemElement(itemStack.copy());
         displayElement.setInvisible(true);
-        displayElement.setItem(itemStack.copy());
         return displayElement;
     }
 
@@ -255,25 +244,17 @@ public class Showcase implements DecorationBehaviour<Showcase.Config> {
         if (element != null) {
             element.setScale(showcase.scale);
             element.setLeftRotation(showcase.rotation);
-            Quaternionf rot = Axis.YN.rotationDegrees(decorationBlockEntity.getVisualRotationYInDegrees()+180).normalize();
+            element.setYaw(decorationBlockEntity.getVisualRotationYInDegrees()+180);
             if (element instanceof BlockDisplayElement) {
-                element.setTranslation(this.showcaseTranslation(decorationBlockEntity, showcase).add(new Vector3f(-.5f, -.5f, -.5f).rotate(rot).mul(showcase.scale)));
+                element.setTranslation(this.showcaseTranslation(decorationBlockEntity, showcase).add(new Vector3f(-.5f, -.5f, -.5f).mul(showcase.scale)));
             } else {
                 element.setTranslation(this.showcaseTranslation(decorationBlockEntity, showcase));
             }
-
-            element.setRightRotation(rot);
         }
     }
 
     public ItemStack getShowcaseItemStack(Showcase.ShowcaseMeta showcase) {
-        DisplayElement element = this.showcases.getOrDefault(showcase, ElementInfo.EMPTY).element;
-        if (element instanceof ItemDisplayElement itemDisplayElement) {
-            return itemDisplayElement.getItem().copy();
-        } else if (element instanceof BlockDisplayElement itemDisplayElement) {
-            return itemDisplayElement.getBlockState().getBlock().asItem().getDefaultInstance();
-        }
-        return ItemStack.EMPTY;
+        return this.showcases.getOrDefault(showcase, ElementInfo.EMPTY).itemStack;
     }
 
     public boolean canUseShowcaseItem(Showcase.ShowcaseMeta showcase, ItemStack item) {
@@ -301,9 +282,8 @@ public class Showcase implements DecorationBehaviour<Showcase.Config> {
     }
 
     @Override
-    public BlockState updateShape(DecorationBlockEntity decorationBlockEntity, BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
-        reposition(decorationBlockEntity);
-        return DecorationBehaviour.super.updateShape(decorationBlockEntity, blockState, levelReader, scheduledTickAccess, blockPos, direction, blockPos2, blockState2, randomSource);
+    public ItemStack getCloneItemStack(ItemStack itemStack, LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
+        return DecorationBehaviour.super.getCloneItemStack(itemStack, levelReader, blockPos, blockState);
     }
 
     public static class ShowcaseMeta {
@@ -352,5 +332,20 @@ public class Showcase implements DecorationBehaviour<Showcase.Config> {
 
     public record ElementInfo(DisplayElement element, ItemStack itemStack) {
         public static ElementInfo EMPTY = new ElementInfo(null, ItemStack.EMPTY);
+    }
+
+    private static class ShowcaseItemElement extends ItemDisplayElement {
+        public ShowcaseItemElement(ItemStack itemStack) {
+            setItemReal(itemStack);
+        }
+
+        @Override
+        public void setItem(ItemStack stack) {
+
+        }
+
+        public void setItemReal(ItemStack stack) {
+            super.setItem(stack);
+        }
     }
 }
