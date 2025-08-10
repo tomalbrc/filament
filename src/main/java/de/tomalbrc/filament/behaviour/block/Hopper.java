@@ -74,7 +74,7 @@ public class Hopper implements BlockBehaviourWithEntity<Hopper.Config> {
     @Override
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide ? null : BlockBehaviourWithEntity.createTickerHelper(blockEntityType, BlockEntityType.HOPPER, Hopper::pushItemsTick);
+        return level.isClientSide() ? null : BlockBehaviourWithEntity.createTickerHelper(blockEntityType, BlockEntityType.HOPPER, Hopper::pushItemsTick);
     }
 
     public static void pushItemsTick(Level level, BlockPos blockPos, BlockState blockState, HopperBlockEntity hopperBlockEntity) {
@@ -96,7 +96,7 @@ public class Hopper implements BlockBehaviourWithEntity<Hopper.Config> {
     }
 
     private static void tryMoveItems(Level level, BlockPos blockPos, BlockState blockState, HopperBlockEntity hopperBlockEntity, BooleanSupplier booleanSupplier, Config config) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (!((HopperBlockEntityAccessor) hopperBlockEntity).invokeIsOnCooldown() && blockState.getValue(HopperBlock.ENABLED)) {
                 boolean changed = false;
                 if (!hopperBlockEntity.isEmpty()) {
@@ -183,7 +183,7 @@ public class Hopper implements BlockBehaviourWithEntity<Hopper.Config> {
 
     @Override
     public InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (level.getBlockEntity(blockPos) instanceof HopperBlockEntity hopperBlockEntity) {
                 player.openMenu(hopperBlockEntity);
                 player.awardStat(Stats.INSPECT_HOPPER);

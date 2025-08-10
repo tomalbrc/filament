@@ -57,7 +57,7 @@ public class Powerlevel implements BlockBehaviour<Powerlevel.Config> {
 
     @Override
     public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, Orientation orientation, boolean bl) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             int power = blockState.getValue(POWERS[Math.max(0, config.max-1)]);
             int signal = level.getBestNeighborSignal(blockPos);
             if (signal > this.config.max)

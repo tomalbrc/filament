@@ -133,7 +133,7 @@ public class Tnt implements BlockBehaviour<Tnt.Config> {
     }
 
     public void explode(Level level, BlockPos blockPos, @Nullable LivingEntity livingEntity, BlockState bs, int fuse) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             bs = bs == null ? level.getBlockState(blockPos) : bs;
 
             PrimedTnt tntEntity = new PrimedTnt(level, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, livingEntity);

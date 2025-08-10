@@ -35,7 +35,7 @@ public class SimpleVirtualBlockWithEntity extends SimpleVirtualBlock implements 
 
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
-        if (level.isClientSide)
+        if (level.isClientSide())
             return null;
 
         for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {

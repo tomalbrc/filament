@@ -62,7 +62,7 @@ public class Furnace implements BlockBehaviourWithEntity<Furnace.Config> {
 
     @Override
     public InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             BlockEntity blockEntity = level.getBlockEntity(blockPos);
             if (blockEntity instanceof FurnaceBlockEntity) {
                 player.openMenu((MenuProvider)blockEntity);

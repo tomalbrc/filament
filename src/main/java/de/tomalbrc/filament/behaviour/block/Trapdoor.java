@@ -111,7 +111,7 @@ public class Trapdoor implements BlockBehaviour<Trapdoor.Config>, SimpleWaterlog
 
     @Override
     public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, Orientation orientation, boolean bl) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return;
         }
         boolean bl2 = level.hasNeighborSignal(blockPos);

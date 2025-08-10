@@ -42,7 +42,7 @@ public class FishingRod implements ItemBehaviour<FishingRod.Config>, ItemPredica
     public InteractionResult use(Item item, Level level, Player player, InteractionHand interactionHand) {
         ItemStack itemStack = player.getItemInHand(interactionHand);
         if (player.fishing != null) {
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 int i = player.fishing.retrieve(itemStack);
                 itemStack.hurtAndBreak(i, player, LivingEntity.getSlotForHand(interactionHand));
             }

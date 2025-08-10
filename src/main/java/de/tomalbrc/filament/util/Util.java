@@ -49,7 +49,7 @@ public class Util {
     }
 
     public static void spawnAtLocation(Level level, Vec3 pos, ItemStack itemStack) {
-        if (!itemStack.isEmpty() && !level.isClientSide) {
+        if (!itemStack.isEmpty() && !level.isClientSide()) {
             ItemEntity itemEntity = new ItemEntity(level, pos.x(), pos.y(), pos.z(), itemStack);
             itemEntity.setDefaultPickUpDelay();
             level.addFreshEntity(itemEntity);

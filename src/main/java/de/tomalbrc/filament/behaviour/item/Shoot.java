@@ -43,7 +43,7 @@ public class Shoot implements ItemBehaviour<Shoot.Config> {
         user.getCooldowns().addCooldown(user.getItemInHand(hand), 8);
         ItemStack itemStack = user.getItemInHand(hand);
 
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             BaseProjectileEntity projectile = EntityRegistry.BASE_PROJECTILE.create(level, EntitySpawnReason.TRIGGERED);
             if (projectile != null) {
                 projectile.config = config;

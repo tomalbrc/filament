@@ -23,7 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.apache.http.annotation.Obsolete;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
@@ -38,7 +37,7 @@ public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementH
         super(properties, data);
     }
 
-    @Obsolete
+    @Override
     public void postRegister() {
         super.postRegister();
 

@@ -47,7 +47,7 @@ public class Hoe implements ItemBehaviour<Hoe.Config> {
             if (predicate.test(useOnContext)) {
                 Player player = useOnContext.getPlayer();
                 level.playSound(player, blockPos, SoundEvent.createVariableRangeEvent(config.sound), SoundSource.BLOCKS, 1.0F, 1.0F);
-                if (!level.isClientSide) {
+                if (!level.isClientSide()) {
                     consumer.accept(useOnContext);
                     if (player != null) {
                         useOnContext.getItemInHand().hurtAndBreak(1, player, LivingEntity.getSlotForHand(useOnContext.getHand()));

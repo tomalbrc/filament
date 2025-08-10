@@ -228,7 +228,7 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
 
     @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack itemStack, int i) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             CrossbowItem.ChargingSounds chargingSounds = this.getChargingSounds(itemStack);
             float f = (float)(itemStack.getUseDuration(livingEntity) - i) / (float)getChargeDuration(itemStack, livingEntity);
             if (f < 0.2F) {
