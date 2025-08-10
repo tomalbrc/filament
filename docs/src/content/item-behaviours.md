@@ -43,7 +43,7 @@ behaviour:
     translation: [0.0, 0.5, 0.0]
   execute:
     consumes: true
-    command: "/summon minecraft:creeper ~ ~ ~ {powered:1b}"
+    command: "summon minecraft:creeper ~ ~ ~ {powered:1b}"
     sound: minecraft:block.anvil.place
 ```
 
@@ -88,7 +88,7 @@ behaviour:
     },
     "execute": {
       "consumes": true,
-      "command": "/summon minecraft:creeper ~ ~ ~ {powered:1b}",
+      "command": "summon minecraft:creeper ~ ~ ~ {powered:1b}",
       "sound": "minecraft:block.anvil.place"
     }
   }
