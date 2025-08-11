@@ -37,7 +37,7 @@ public class GenerateTrimModels implements ItemBehaviour<GenerateTrimModels.Conf
 
     private EquipmentSlot slot(Data<?> data) {
         if (data.components().has(DataComponents.EQUIPPABLE)) {
-            return data.components().get(DataComponents.EQUIPPABLE).slot();
+            return Objects.requireNonNull(data.components().get(DataComponents.EQUIPPABLE)).slot();
         }
 
         return null;
@@ -47,16 +47,25 @@ public class GenerateTrimModels implements ItemBehaviour<GenerateTrimModels.Conf
     public void generate(Data<?> data) {
         var slot = slot(data);
         String armorType = null;
-        if (slot != null) {
+        String namespace = null;
+        if (slot != null && config.typePrefix == null) {
             for (ArmorType type : ArmorType.values()) {
                 if (type.getSlot() == slot) {
-                    armorType = type.getName();
+                    namespace = ResourceLocation.DEFAULT_NAMESPACE;
+                    armorType = "trims/items/" + type.getName() + "_trim_";
                     break;
                 }
             }
-        } else {
+        } else if (config.typePrefix != null) {
             // support non wearable items like axes
-            armorType = config.typePrefix;
+            if (config.typePrefix.contains(":")) {
+                var r = ResourceLocation.parse(config.typePrefix);
+                armorType = r.getPath();
+                namespace = r.getNamespace();
+            }
+            else {
+                armorType = config.typePrefix;
+            }
         }
 
         var itemResource = data.itemResource();
@@ -74,7 +83,7 @@ public class GenerateTrimModels implements ItemBehaviour<GenerateTrimModels.Conf
             //                    var assetInfo = trimMaterialReference.assets().assetId(Objects.requireNonNull(eq).assetId().orElseThrow());
 
             for (ResourceLocation suffix : list) {
-                var layer1 = ResourceLocation.fromNamespaceAndPath(suffix.getNamespace(), String.format("%s_trim_%s", armorType, suffix.getPath())).withPrefix("trims/items/");
+                var layer1 = ResourceLocation.fromNamespaceAndPath(namespace == null ? suffix.getNamespace() : namespace, String.format("%s%s", armorType, suffix.getPath()));
                 var name = data.id().getPath() + MaterialAssetGroup.SEPARATOR + suffix.getPath();
                 ModelAsset.Builder modelAsset = ModelAsset.builder();
 
@@ -115,7 +124,7 @@ public class GenerateTrimModels implements ItemBehaviour<GenerateTrimModels.Conf
     }
 
     public static class Config {
-        public String typePrefix = "";
+        public String typePrefix = null;
         public List<ResourceLocation> customMaterials = List.of();
         public List<ResourceLocation> materials = List.of(
                 ResourceLocation.withDefaultNamespace("quartz"),
