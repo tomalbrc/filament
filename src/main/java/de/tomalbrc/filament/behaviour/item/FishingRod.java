@@ -23,6 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Objects;
 
 public class FishingRod implements ItemBehaviour<FishingRod.Config>, ItemPredicateModelProvider {
@@ -73,6 +74,11 @@ public class FishingRod implements ItemBehaviour<FishingRod.Config>, ItemPredica
                         data.components().has(DataComponents.DYED_COLOR) || data.vanillaItem().components().has(DataComponents.DYED_COLOR)
                 )
         );
+    }
+
+    @Override
+    public List<String> requiredModels() {
+        return List.of("cast");
     }
 
     public static class Config {}

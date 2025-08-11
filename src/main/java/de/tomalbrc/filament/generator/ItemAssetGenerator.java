@@ -1,7 +1,14 @@
 package de.tomalbrc.filament.generator;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.data.resource.ResourceProvider;
+import de.tomalbrc.filament.util.Json;
 import eu.pb4.polymer.resourcepack.api.AssetPaths;
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.ItemAsset;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.model.*;
@@ -17,7 +24,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CrossbowItem;
 import org.jetbrains.annotations.NotNull;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class ItemAssetGenerator {
@@ -126,5 +135,78 @@ public class ItemAssetGenerator {
                 new ConditionItemModel(new UsingItemProperty(), throwing, defaultModel),
                 ItemAsset.Properties.DEFAULT).toBytes()
         );
+    }
+
+    public static void createTrimModels(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource, boolean tint) {
+        Gson gson = new Gson();
+        JsonObject root = new JsonObject();
+        JsonObject model = new JsonObject();
+        model.addProperty("type", "select");
+
+        JsonArray cases = new JsonArray();
+        for (Map.Entry<String, ResourceLocation> entry : itemResource.getModels().entrySet()) {
+            if (entry.getKey().equals("default"))
+                continue;
+
+            JsonObject caseObj = new JsonObject();
+            JsonObject caseModel = new JsonObject();
+            caseModel.addProperty("type", "model");
+            caseModel.addProperty("model", entry.getValue().withPrefix("item/").toString());
+
+            if (tint) {
+                JsonArray tints = new JsonArray();
+                JsonObject tintObj = new JsonObject();
+                tintObj.addProperty("type", "dye");
+                tintObj.addProperty("default", 0xFFFFFF);
+                tints.add(tintObj);
+                caseModel.add("tints", tints);
+            }
+
+            caseObj.add("model", caseModel);
+            caseObj.addProperty("when", entry.getKey());
+            cases.add(caseObj);
+        }
+        model.add("cases", cases);
+
+        JsonObject fallback = new JsonObject();
+        fallback.addProperty("type", "model");
+        fallback.addProperty("model", itemResource.getModels().get("default").toString());
+
+        if (tint) {
+            JsonArray tints = new JsonArray();
+            JsonObject tintObj = new JsonObject();
+            tintObj.addProperty("type", "dye");
+            tintObj.addProperty("default", 0xFFFFFF);
+            tints.add(tintObj);
+            fallback.add("tints", tints);
+        }
+
+        model.add("fallback", fallback);
+        model.addProperty("property", "trim_material");
+
+        root.add("model", model);
+        String jsonOutput = gson.toJson(root);
+        builder.addData(AssetPaths.itemAsset(id), jsonOutput.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public static void createItemModels(ResourceLocation id, ItemResource itemResource) {
+        if (itemResource.couldGenerate()) {
+            for (Map.Entry<String, Map<String, ResourceLocation>> entry : itemResource.textures().entrySet()) {
+                final var modelId = id.withPrefix("item/").withSuffix("_" + entry.getKey());
+                PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(builder -> {
+                    JsonObject object = new JsonObject();
+                    object.add("parent", new JsonPrimitive(itemResource.parent().getNamespace().equals(ResourceLocation.DEFAULT_NAMESPACE) ? itemResource.parent().getPath() : itemResource.parent().toString()));
+
+                    JsonObject textures = new JsonObject();
+                    for (Map.Entry<String, ResourceLocation> texturesMapEntry : entry.getValue().entrySet()) {
+                        textures.add(texturesMapEntry.getKey(), new JsonPrimitive(texturesMapEntry.getValue().getNamespace().equals(ResourceLocation.DEFAULT_NAMESPACE) ? texturesMapEntry.getValue().getPath() : texturesMapEntry.getValue().toString()));
+                    }
+                    object.add("textures", textures);
+
+                    builder.addData("assets/" + modelId.getNamespace() + "/models/" + modelId.getPath() + ".json", Json.GSON.toJson(object).getBytes(StandardCharsets.UTF_8));
+                });
+                itemResource.getModels().put(entry.getKey(), modelId);
+            }
+        }
     }
 }

@@ -42,6 +42,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
@@ -100,7 +101,12 @@ public class EntityRegistry {
         FabricDefaultAttributeRegistry.register(type, attributeBuilder.build());
 
         Translations.add(type, data);
-        ENTITY_TAGS.put(data.id(), data.entityTags());
+
+        if (data.entityTags() != null) for (ResourceLocation tag : data.entityTags()) {
+            var list = ENTITY_TAGS.computeIfAbsent(tag, x -> new ArrayList<>());
+            list.add(data.id());
+        }
+
         if (data.spawn() != null) {
             data.spawn().add(type);
         }

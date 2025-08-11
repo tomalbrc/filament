@@ -26,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -104,7 +105,10 @@ public class BlockRegistry {
 
     public static <T extends Block> T registerBlock(ResourceKey<Block> resourceKey, Function<BlockBehaviour.Properties, T> function, BlockBehaviour.Properties properties, @Nullable Set<ResourceLocation> blockTags) {
         T block = function.apply(properties.setId(resourceKey));
-        BLOCKS_TAGS.put(resourceKey.location(), blockTags);
+        if (blockTags != null) for (ResourceLocation tag : blockTags) {
+            var list = BLOCKS_TAGS.computeIfAbsent(tag, x -> new ArrayList<>());
+            list.add(resourceKey.location());
+        }
         return Registry.register(BuiltInRegistries.BLOCK, resourceKey, block);
     }
 

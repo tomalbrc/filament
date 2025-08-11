@@ -64,7 +64,7 @@ public class Json {
             .registerTypeAdapter(ResourceLocation.class, new SimpleCodecDeserializer<>(ResourceLocation.CODEC))
             .registerTypeHierarchyAdapter(Component.class, new ComponentDeserializer())
             .registerTypeHierarchyAdapter(DataComponentMap.class, new DataComponentsDeserializer())
-            .registerTypeHierarchyAdapter(EquipmentSlot.class, new LowercaseEnumDeserializer<>(EquipmentSlot.class))
+            .registerTypeHierarchyAdapter(EquipmentSlot.class, new SimpleCodecDeserializer<>(EquipmentSlot.CODEC))
             .registerTypeHierarchyAdapter(BlockModelType.class, new LowercaseEnumDeserializer<>(BlockModelType.class))
             .registerTypeHierarchyAdapter(Difficulty.class, new LowercaseEnumDeserializer<>(Difficulty.class))
             .registerTypeHierarchyAdapter(MobCategory.class, new LowercaseEnumDeserializer<>(MobCategory.class))

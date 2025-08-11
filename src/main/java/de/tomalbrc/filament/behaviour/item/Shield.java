@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -57,6 +58,11 @@ public class Shield implements ItemBehaviour<Shield.Config>, ItemPredicateModelP
                         Objects.requireNonNull(data.itemResource())
                 )
         );
+    }
+
+    @Override
+    public List<String> requiredModels() {
+        return List.of("blocking");
     }
 
     public static class Config {

@@ -30,6 +30,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -141,6 +142,11 @@ public class Trident implements ItemBehaviour<Trident.Config>, ItemPredicateMode
                         data.components().has(DataComponents.DYED_COLOR) || data.vanillaItem().components().has(DataComponents.DYED_COLOR)
                 )
         );
+    }
+
+    @Override
+    public List<String> requiredModels() {
+        return List.of("throwing");
     }
 
     public static class Config {

@@ -33,18 +33,22 @@ public class RPUtil {
             createBlockModels(blockData.id(), blockData.blockResource());
         }
 
-        if (resource instanceof ItemResource ir) {
-            createItemModels(data.id(), ir);
-        }
-
-        if (resource != null && data.itemModel() == null && resource.getModels() != null && !data.components().has(DataComponents.ITEM_MODEL)) {
-            if (resource.getModels().size() > 1) {
+        if (resource != null && !data.components().has(DataComponents.ITEM_MODEL) && data.itemModel() == null && (resource.getModels() != null || resource.couldGenerate())) {
+            if (behaviourHolder.getBehaviours() != null && !behaviourHolder.getBehaviours().isEmpty()) {
                 for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> entry : behaviourHolder.getBehaviours()) {
-                    if (entry.getValue() instanceof ItemPredicateModelProvider modelProvider) {
+                    if (entry.getValue() instanceof ItemPredicateModelProvider modelProvider && modelProvider.hasRequiredModels(data)) {
+                        if (resource instanceof ItemResource ir && !modelProvider.canCreateItemModels()) {
+                            ItemAssetGenerator.createItemModels(data.id(), ir);
+                        }
+
                         modelProvider.generate(data);
                         return;
                     }
                 }
+            }
+
+            if (resource instanceof ItemResource ir) {
+                ItemAssetGenerator.createItemModels(data.id(), ir);
             }
 
             ResourceProvider finalItemResources = resource;
@@ -69,27 +73,6 @@ public class RPUtil {
                         false
                 )
         );
-    }
-
-    private static void createItemModels(ResourceLocation id, ItemResource itemResource) {
-        if (itemResource.couldGenerate()) {
-            for (Map.Entry<String, Map<String, ResourceLocation>> entry : itemResource.textures().entrySet()) {
-                final var modelId = id.withPrefix("item/").withSuffix("_" + entry.getKey());
-                PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(builder -> {
-                    JsonObject object = new JsonObject();
-                    object.add("parent", new JsonPrimitive(itemResource.parent().getNamespace().equals(ResourceLocation.DEFAULT_NAMESPACE) ? itemResource.parent().getPath() : itemResource.parent().toString()));
-
-                    JsonObject textures = new JsonObject();
-                    for (Map.Entry<String, ResourceLocation> texturesMapEntry : entry.getValue().entrySet()) {
-                        textures.add(texturesMapEntry.getKey(), new JsonPrimitive(texturesMapEntry.getValue().getNamespace().equals(ResourceLocation.DEFAULT_NAMESPACE) ? texturesMapEntry.getValue().getPath() : texturesMapEntry.getValue().toString()));
-                    }
-                    object.add("textures", textures);
-
-                    builder.addData("assets/" + modelId.getNamespace() + "/models/" + modelId.getPath() + ".json", Json.GSON.toJson(object).getBytes(StandardCharsets.UTF_8));
-                });
-                itemResource.getModels().put(entry.getKey(), modelId);
-            }
-        }
     }
 
     private static void createBlockModels(ResourceLocation id, BlockResource blockResource) {

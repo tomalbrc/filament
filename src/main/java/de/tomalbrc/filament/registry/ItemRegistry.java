@@ -21,12 +21,14 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 public class ItemRegistry {
-    public static Map<ResourceLocation, Collection<ResourceLocation>> ITEMS_TAGS = new Object2ReferenceOpenHashMap<>();
+    public static Map<ResourceLocation, List<ResourceLocation>> ITEMS_TAGS = new Object2ReferenceOpenHashMap<>();
 
     public static void register(InputStream inputStream) throws IOException {
         var element = JsonParser.parseReader(new InputStreamReader(inputStream));
@@ -70,7 +72,10 @@ public class ItemRegistry {
         Registry.register(BuiltInRegistries.ITEM, identifier, item);
         ItemGroupRegistry.addItem(itemGroup, item);
 
-        ITEMS_TAGS.put(identifier.location(), tags);
+        if (tags != null) for (ResourceLocation tag : tags) {
+            var list = ITEMS_TAGS.computeIfAbsent(tag, x -> new ArrayList<>());
+            list.add(identifier.location());
+        }
 
         return item;
     }

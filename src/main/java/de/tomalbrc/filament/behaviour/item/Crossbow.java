@@ -304,6 +304,11 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
         );
     }
 
+    @Override
+    public List<String> requiredModels() {
+        return List.of("pulling_0", "pulling_1", "pulling_2", "rocket", "arrow");
+    }
+
     public ItemStack getProjectile(Player shooter) {
         Predicate<ItemStack> predicate = supportedHeldProjectiles();
         ItemStack itemStack = ProjectileWeaponItem.getHeldProjectile(shooter, predicate);

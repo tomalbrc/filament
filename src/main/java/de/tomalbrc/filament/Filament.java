@@ -23,6 +23,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.LayeredRegistryAccess;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.RegistryLayer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -33,6 +34,7 @@ import org.slf4j.Logger;
 public class Filament implements ModInitializer {
     public static final Logger LOGGER = LogUtils.getLogger();
     public static LayeredRegistryAccess<RegistryLayer> REGISTRY_ACCESS;
+    public static MinecraftServer SERVER;
 
     @Override
     public void onInitialize() {
@@ -70,6 +72,8 @@ public class Filament implements ModInitializer {
 
             return InteractionResult.PASS;
         });
+
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> SERVER = server);
 
         ItemGroupRegistry.register(new ItemGroupData(Constants.ITEM_GROUP_ID, ResourceLocation.withDefaultNamespace("diamond"), TextUtil.formatText("<c:blue>Filament Items")));
         ItemGroupRegistry.register(new ItemGroupData(Constants.BLOCK_GROUP_ID, ResourceLocation.withDefaultNamespace("furnace"), TextUtil.formatText("<c:blue>Filament Blocks")));

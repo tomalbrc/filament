@@ -168,6 +168,11 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
         );
     }
 
+    @Override
+    public List<String> requiredModels() {
+        return List.of("pulling_0", "pulling_1", "pulling_2");
+    }
+
     public ItemStack getProjectile(Player shooter) {
         Predicate<ItemStack> predicate = supportedHeldProjectiles();
         ItemStack itemStack = ProjectileWeaponItem.getHeldProjectile(shooter, predicate);

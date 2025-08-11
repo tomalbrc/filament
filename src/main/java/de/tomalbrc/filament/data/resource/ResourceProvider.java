@@ -6,4 +6,6 @@ import java.util.Map;
 
 public interface ResourceProvider {
     Map<String, ResourceLocation> getModels();
+
+    boolean couldGenerate();
 }
