@@ -67,9 +67,9 @@ public class LookAtMobGoal implements EntityBehaviour<LookAtMobGoal.Config> {
             this.setFlags(EnumSet.of(Flag.LOOK));
             if (entityType == EntityType.PLAYER) {
                 Predicate<Entity> predicate = EntitySelector.notRiding(mob);
-                this.lookAtContext = TargetingConditions.forNonCombat().range((double)f).selector((livingEntity, serverLevel) -> predicate.test(livingEntity));
+                this.lookAtContext = TargetingConditions.forNonCombat().range(f).selector((livingEntity, serverLevel) -> predicate.test(livingEntity));
             } else {
-                this.lookAtContext = TargetingConditions.forNonCombat().range((double)f);
+                this.lookAtContext = TargetingConditions.forNonCombat().range(f);
             }
 
         }

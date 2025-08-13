@@ -3,6 +3,7 @@ package de.tomalbrc.filament.behaviour.decoration;
 import de.tomalbrc.bil.core.model.Model;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
+import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.decoration.holder.AnimatedDecorationHolder;
 import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
@@ -53,5 +54,7 @@ public class Animation implements DecorationBehaviour<Animation.Config> {
          * The name of the animation to autoplay (if specified)
          */
         public String autoplay = null;
+
+        public BlockStateMappedProperty<String> variant = BlockStateMappedProperty.of("default");
     }
 }

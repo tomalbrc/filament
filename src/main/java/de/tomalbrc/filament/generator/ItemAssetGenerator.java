@@ -30,11 +30,11 @@ import java.util.Map;
 import java.util.Optional;
 
 public class ItemAssetGenerator {
-    public static void createDefault(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource, boolean tint) {
-        var def = itemResource.getModels().get("default");
-        var defaultModel = new BasicItemModel(def == null ? itemResource.getModels().values().iterator().next() : def, !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
-        if (itemResource.getModels().size() > 1) {
-            var list = getCases(itemResource, tint);
+    public static void createDefault(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider resourceProvider, boolean tint) {
+        var def = resourceProvider.getModels().get("default");
+        var defaultModel = new BasicItemModel(def == null ? resourceProvider.getModels().values().iterator().next() : def, !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
+        if (resourceProvider.getModels().size() > 1) {
+            var list = getCases(resourceProvider, tint);
             builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
                     new SelectItemModel<>(
                             new SelectItemModel.Switch<>(

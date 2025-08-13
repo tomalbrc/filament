@@ -6,7 +6,6 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
 import de.tomalbrc.filament.behaviour.Behaviours;
-import de.tomalbrc.filament.behaviour.decoration.Container;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.datafixer.config.DecorationDataFix;
 import de.tomalbrc.filament.decoration.DecorationItem;
@@ -80,9 +79,7 @@ public class DecorationRegistry {
         }
 
         if (data.isContainer()) {
-            Container.Config container = data.behaviour().get(Behaviours.CONTAINER);
-            if (container.canPickup)
-                properties.component(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
+            properties.component(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
         }
 
         if (data.vanillaItem() == Items.LEATHER_HORSE_ARMOR || data.vanillaItem() == Items.FIREWORK_STAR) {

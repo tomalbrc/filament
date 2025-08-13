@@ -4,6 +4,7 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.datafixer.DataFix;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.registry.DecorationRegistry;
+import de.tomalbrc.filament.registry.OxidizableRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -23,8 +24,6 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     protected int version = DataFix.VERSION;
 
     protected Direction direction = Direction.UP;
-
-    protected ItemStack itemStack;
 
     public int rotation;
 
@@ -56,11 +55,6 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
         this.version = input.getInt(VERSION).orElse(2);
         input.read(MAIN, BlockPos.CODEC).ifPresent(main -> this.main = main);
 
-        this.itemStack = input.read(ITEM, ItemStack.CODEC).orElse(null);
-        if (this.itemStack == null || this.itemStack.isEmpty()) {
-            this.itemStack = BuiltInRegistries.ITEM.getValue(((DecorationBlock)this.getBlockState().getBlock()).getDecorationData().id()).getDefaultInstance();
-        }
-
         if (!this.isMain())
             return;
 
@@ -70,22 +64,6 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     @Override
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
-
-        if (this.itemStack == null) {
-            var optionalKey = this.getBlockState().getBlockHolder().unwrapKey();
-            var optional = BuiltInRegistries.ITEM.get(optionalKey.orElseThrow().location());
-            optional.ifPresent(item -> this.itemStack = item.value().getDefaultInstance());
-        }
-
-        if (this.itemStack == null && this.level != null) {
-            Filament.LOGGER.error("No item for decoration! Removing decoration block entity at {}", this.getBlockPos().toShortString());
-            this.level.destroyBlock(this.getBlockPos(), false);
-            this.setRemoved();
-            return;
-        }
-
-        if (this.itemStack != null)
-            output.store(ITEM, ItemStack.CODEC, this.itemStack);
 
         if (this.main == null) this.main = BlockPos.ZERO;
 
@@ -109,11 +87,9 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     }
 
     public ItemStack getItem() {
-        return this.itemStack;
-    }
-
-    public void setItem(ItemStack itemStack) {
-        this.itemStack = itemStack;
+        var item = getBlockState().getBlock().asItem().getDefaultInstance();
+        item.applyComponents(components());
+        return item;
     }
 
     public float getVisualRotationYInDegrees() {

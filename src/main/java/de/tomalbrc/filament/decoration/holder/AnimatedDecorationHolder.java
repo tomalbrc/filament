@@ -4,12 +4,13 @@ import de.tomalbrc.bil.core.element.PerPlayerTransformableElement;
 import de.tomalbrc.bil.core.holder.base.SimpleAnimatedHolder;
 import de.tomalbrc.bil.core.holder.wrapper.Bone;
 import de.tomalbrc.bil.core.holder.wrapper.DisplayWrapper;
+import de.tomalbrc.bil.core.model.Frame;
 import de.tomalbrc.bil.core.model.Model;
 import de.tomalbrc.bil.core.model.Pose;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.decoration.Animation;
-import de.tomalbrc.filament.behaviour.decoration.Container;
+import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.decoration.util.ItemFrameElement;
 import de.tomalbrc.filament.util.DecorationUtil;
@@ -20,6 +21,9 @@ import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.ChestType;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
@@ -27,17 +31,45 @@ import java.util.function.Consumer;
 
 public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements FilamentDecorationHolder {
     private final DecorationBlockEntity parent;
+    private BlockStateMappedProperty<String> variantProperty;
 
     public AnimatedDecorationHolder(DecorationBlockEntity blockEntity, Model model) {
         super(model);
         this.parent = blockEntity;
 
         if (this.parent.has(Behaviours.ANIMATION)) {
-            Animation.Config animation = this.parent.getDecorationData(). behaviour().get(Behaviours.ANIMATION);
+            Animation.Config animation = this.parent.getDecorationData().behaviour().get(Behaviours.ANIMATION);
             this.setAnimationData(animation);
+
+            this.variantProperty = animation.variant;
         }
 
         DecorationUtil.setupElements(this, blockEntity.getDecorationData(), blockEntity.getDirection(), blockEntity.getVisualRotationYInDegrees(), parent.getItem(), parent::interact);
+    }
+
+    private void updateVariant(BlockState blockState) {
+        if (this.variantProperty != null) {
+            if (blockState.hasProperty(BlockStateProperties.WATERLOGGED)) {
+                blockState = blockState.setValue(BlockStateProperties.WATERLOGGED, false);
+            }
+
+            var variantName = this.variantProperty.getValue(blockState);
+            if (variantName != null) {
+                this.getVariantController().setVariant(variantName);
+            }
+        }
+    }
+
+    @Override
+    public boolean canRunEffects(ServerPlayer serverPlayer, Frame frame) {
+        BlockState state = parent.getBlockState();
+
+        // TODO: This should be done through decoration behaviours...
+        if (state.hasProperty(BlockStateProperties.CHEST_TYPE)) {
+            return state.getValue(BlockStateProperties.CHEST_TYPE) != ChestType.RIGHT;
+        }
+
+        return super.canRunEffects(serverPlayer, frame);
     }
 
     @Override
@@ -64,6 +96,8 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
                 bone.element().setDisplaySize(this.parent.getDecorationData().size().get(0) * 1.5f, this.parent.getDecorationData().size().get(1) * 1.5f);
             }
         }
+
+        updateVariant(this.parent.getBlockState());
     }
 
     public void setAnimationData(@NotNull Animation.Config animationData) {
@@ -76,18 +110,6 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
                 }
 
                 this.setYaw(this.parent.getVisualRotationYInDegrees());
-
-                if (this.parent.has(Behaviours.CONTAINER)) {
-                    Container container = this.parent.get(Behaviours.CONTAINER);
-                    assert container != null;
-
-                    if (container.getConfig().openAnimation != null) {
-                        container.container.setOpenCallback(() -> this.parent.getOrCreateHolder().playAnimation(container.getConfig().openAnimation, 2));
-                    }
-                    if (container.getConfig().closeAnimation != null) {
-                        container.container.setCloseCallback(() -> this.parent.getOrCreateHolder().playAnimation(container.getConfig().closeAnimation, 2));
-                    }
-                }
             }
         }
     }
@@ -99,6 +121,12 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
         if (updateType == BlockBoundAttachment.BLOCK_STATE_UPDATE && getAttachment() != null) {
             this.update(((BlockAwareAttachment)this.getAttachment()).getBlockState());
         }
+    }
+
+    @Override
+    public void update(BlockState blockState) {
+        FilamentDecorationHolder.super.update(blockState);
+        updateVariant(blockState);
     }
 
     @Override

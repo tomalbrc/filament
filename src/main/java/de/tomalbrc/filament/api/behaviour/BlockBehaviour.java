@@ -265,9 +265,10 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
      * @param levelReader The level(-reader)
      * @param blockPos Position of the block in world
      * @param blockState State of the picked block
+     * @param includeData Include extra data
      * @return The clone (pick) itemstack of the block
      */
-    default ItemStack getCloneItemStack(ItemStack itemStack, LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
+    default ItemStack getCloneItemStack(ItemStack itemStack, LevelReader levelReader, BlockPos blockPos, BlockState blockState, boolean includeData) {
         return itemStack;
     }
 

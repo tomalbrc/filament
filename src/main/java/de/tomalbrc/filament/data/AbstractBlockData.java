@@ -1,14 +1,25 @@
 package de.tomalbrc.filament.data;
 
+import com.google.gson.JsonParseException;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviourWithEntity;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.data.resource.BlockResource;
 import de.tomalbrc.filament.data.resource.ItemResource;
+import de.tomalbrc.filament.util.FilamentBlockResourceUtils;
+import eu.pb4.polymer.blocks.api.BlockModelType;
+import eu.pb4.polymer.blocks.api.PolymerBlockModel;
+import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
+import it.unimi.dsi.fastutil.objects.Reference2ReferenceArrayMap;
+import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,6 +30,7 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public abstract class AbstractBlockData<BlockPropertyLike extends BlockProperties> extends Data<BlockPropertyLike> {
     private final @Nullable Set<ResourceLocation> blockTags;
+    private final @Nullable BlockResource blockResource;
 
     public AbstractBlockData(
             @NotNull ResourceLocation id,
@@ -26,6 +38,7 @@ public abstract class AbstractBlockData<BlockPropertyLike extends BlockPropertie
             @Nullable Map<String, String> translations,
             @Nullable Component displayName,
             @Nullable ItemResource itemResource,
+            @Nullable BlockResource blockResource,
             @Nullable ResourceLocation itemModel,
             @Nullable BehaviourConfigMap behaviourConfig,
             @Nullable DataComponentMap components,
@@ -36,6 +49,7 @@ public abstract class AbstractBlockData<BlockPropertyLike extends BlockPropertie
     ) {
         super(id, vanillaItem, translations, displayName, itemResource, itemModel, properties, behaviourConfig, components, itemGroup, itemTags);
         this.blockTags = blockTags;
+        this.blockResource = blockResource;
     }
 
     public boolean requiresEntityBlock() {
@@ -50,7 +64,9 @@ public abstract class AbstractBlockData<BlockPropertyLike extends BlockPropertie
 
     public abstract Map<BlockState, BlockData.BlockStateMeta> createStandardStateMap();
 
-    public abstract BlockResource blockResource();
+    public BlockResource blockResource() {
+        return this.blockResource;
+    }
 
     public @Nullable Set<ResourceLocation> blockTags() {
         return this.blockTags;
@@ -66,5 +82,29 @@ public abstract class AbstractBlockData<BlockPropertyLike extends BlockPropertie
                 "behaviourConfig=" + behaviour + ", " +
                 "components=" + components + ", " +
                 "itemGroup=" + group + ']';
+    }
+
+    protected BlockModelType safeBlockModelType(BlockModelType blockModelType) {
+        if (PolymerBlockResourceUtils.getBlocksLeft(blockModelType) <= 0) {
+            blockModelType = BlockModelType.FULL_BLOCK;
+            if (PolymerBlockResourceUtils.getBlocksLeft(blockModelType) <= 0) {
+                Filament.LOGGER.error("Filament: Ran out of blockModelTypes to use AND FULL_BLOCK ran out too! Using Bedrock block temporarily. Fix your Block-Config for {}!", this.id());
+                return null;
+            } else {
+                Filament.LOGGER.error("Filament: Ran out of blockModelTypes to use! Using FULL_BLOCK for {}", this.id());
+            }
+        }
+
+        return blockModelType;
+    }
+
+    protected static BlockState blockState(String str) {
+        BlockStateParser.BlockResult parsed;
+        try {
+            parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK, str, false);
+        } catch (CommandSyntaxException e) {
+            throw new JsonParseException("Invalid BlockState value: " + str);
+        }
+        return parsed.blockState();
     }
 }

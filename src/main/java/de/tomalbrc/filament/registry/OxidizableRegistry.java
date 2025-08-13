@@ -34,4 +34,8 @@ public class OxidizableRegistry {
     public static void add(Block block, ResourceLocation replacement) {
         oxidizables.putIfAbsent(block, replacement);
     }
+
+    public static boolean sameOxidizable(Block block, Block block2) {
+        return hasNext(block) && getNext(block) == block2 || hasPrevious(block) && getPrevious(block) == block2;
+    }
 }

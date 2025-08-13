@@ -371,6 +371,7 @@ public class NexoImporter {
                         componentName,
                         new ItemResource(Map.of("default", ResourceLocation.parse(model)), null, null),
                         null,
+                        null,
                         behaviourConfigMap,
                         builder.build(),
                         null,

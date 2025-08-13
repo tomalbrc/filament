@@ -25,21 +25,21 @@ public class BlockStateMappedProperty<T> {
         if (this.isMap()) {
             for (Map.Entry<String, T> entry : valueMap.entrySet()) {
                 String[] props = entry.getKey().split(",");
-                for (String propWithValue : props) {
-                    String[] pair = propWithValue.split("=");
-                    assert pair.length == 2;
-                    boolean missmatch = false;
-                    for (Property<?> property : blockState.getProperties()) {
-                        if (property.getName().equals(pair[0])) {
-                            if (!blockState.getValue(property).toString().equals(pair[1])) {
-                                missmatch = true;
-                            }
+
+                boolean missmatch = false;
+                for (Property property : blockState.getProperties()) {
+                    for (String propWithValue : props) {
+                        String[] pair = propWithValue.split("=");
+                        assert pair.length == 2;
+
+                        if (property.getName().equals(pair[0]) && !property.getName(blockState.getValue(property)).equalsIgnoreCase(pair[1])) {
+                            missmatch = true;
                         }
                     }
+                }
 
-                    if (!missmatch) {
-                        return entry.getValue();
-                    }
+                if (!missmatch) {
+                    return entry.getValue();
                 }
             }
         }

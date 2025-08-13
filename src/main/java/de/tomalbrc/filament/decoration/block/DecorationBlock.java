@@ -5,11 +5,13 @@ import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.api.behaviour.DecorationRotationProvider;
 import de.tomalbrc.filament.block.SimpleBlock;
+import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.util.VirtualDestroyStage;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
 import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -35,7 +37,8 @@ import java.util.function.BiConsumer;
 
 public abstract class DecorationBlock extends SimpleBlock implements PolymerBlock, BlockWithElementHolder, SimpleWaterloggedBlock, VirtualDestroyStage.Marker {
     final protected ResourceLocation decorationId;
-    DecorationData data;
+    final protected DecorationData data;
+    final protected Map<BlockData.BlockStateMeta, String> cmdMap = new Reference2ObjectOpenHashMap<>();
 
     public DecorationBlock(Properties properties, DecorationData data) {
         super(properties, data);
@@ -44,6 +47,17 @@ public abstract class DecorationBlock extends SimpleBlock implements PolymerBloc
     }
 
     public void postRegister() {
+        this.stateMap = this.data.createStandardStateMap();
+        if (data.blockResource() != null) {
+            for (Map.Entry<BlockState, BlockData.BlockStateMeta> stateMapEntry : this.stateMap.entrySet()) {
+                for (Map.Entry<String, ResourceLocation> blockResourceModelsEntry : this.blockData.blockResource().getModels().entrySet()) {
+                    boolean same = blockResourceModelsEntry.getValue().equals(stateMapEntry.getValue().polymerBlockModel().model());
+                    if (same) {
+                        this.cmdMap.put(stateMapEntry.getValue(), blockResourceModelsEntry.getKey());
+                    }
+                }
+            }
+        }
         this.stateDefinitionEx.getPossibleStates().forEach(BlockState::initCache);
     }
 
@@ -53,8 +67,8 @@ public abstract class DecorationBlock extends SimpleBlock implements PolymerBloc
 
     @Override
     public BlockState getPolymerBlockState(BlockState state, PacketContext packetContext) {
-        if (getDecorationData() != null) {
-            DecorationData decorationData = getDecorationData();
+        DecorationData decorationData = getDecorationData();
+        if (decorationData != null) {
             boolean passthrough = !decorationData.hasBlocks();
 
             var newState = state;

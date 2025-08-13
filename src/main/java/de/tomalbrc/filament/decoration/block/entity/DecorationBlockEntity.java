@@ -7,12 +7,14 @@ import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.BehaviourMap;
+import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.holder.DecorationHolder;
 import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
 import de.tomalbrc.filament.decoration.util.BlockEntityWithElementHolder;
 import de.tomalbrc.filament.registry.DecorationRegistry;
+import de.tomalbrc.filament.registry.OxidizableRegistry;
 import de.tomalbrc.filament.util.BlockUtil;
 import de.tomalbrc.filament.util.DecorationUtil;
 import de.tomalbrc.filament.util.FilamentConfig;
@@ -20,15 +22,19 @@ import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.LockCode;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.GameType;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.state.BlockState;
@@ -42,6 +48,7 @@ import java.util.Map;
 
 public class DecorationBlockEntity extends AbstractDecorationBlockEntity implements BlockEntityWithElementHolder, BehaviourHolder {
     private final BehaviourMap behaviours = new BehaviourMap();
+    private Boolean replaceable;
 
     @Nullable
     private FilamentDecorationHolder decorationHolder;
@@ -56,28 +63,19 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
+    public void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
 
-        if (this.isMain()) this.loadMain(input);
-    }
-
-    @Override
-    public void setLevel(Level level) {
-        super.setLevel(level);
-
-        if (isMain() && level != null && this.decorationHolder == null) {
-            this.getOrCreateHolder();
-        }
+        if (this.isMain() || this.main == null) this.loadMain(input);
     }
 
     public void loadMain(ValueInput input) {
         DecorationData decorationData = this.getDecorationData();
         if (decorationData == null) {
-            Filament.LOGGER.error("No decoration data for {}!", this.itemStack.getItem().getDescriptionId());
-        } else if (this.decorationHolder == null) {
-            this.setupBehaviour(decorationData);
+            Filament.LOGGER.error("No decoration data for {}!", this.getItem().getItem().getDescriptionId());
         }
+
+        this.setupBehaviour(getDecorationData());
 
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : this.behaviours) {
             if (entry.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
@@ -88,7 +86,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
+    public void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
 
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : behaviours) {
@@ -124,9 +122,13 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
     @Override
     public void attach(LevelChunk chunk) {
-        if (this.isMain() && this.itemStack != null) {
+        if (main == null) main = BlockPos.ZERO;
+
+        if (this.isMain()) {
+            setupBehaviour(getDecorationData());
+
             FilamentDecorationHolder holder = this.getOrCreateHolder();
-            if (holder.getAttachment() == null) {
+            if (holder != null && holder.getAttachment() == null) {
                 var ignore = new BlockBoundAttachment(holder.asPolymerHolder(), chunk, this.getBlockState(), this.getBlockPos(), this.getBlockPos().getCenter(), holder.isAnimated());
             }
 
@@ -187,7 +189,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     }
 
     public ItemStack visualItemStack(BlockState blockState) {
-        var adjusted = DecorationUtil.placementAdjustedItem(this.itemStack, this.getDecorationData().itemResource(), this.direction != Direction.DOWN && this.direction != Direction.UP, this.direction == Direction.DOWN);
+        var adjusted = DecorationUtil.placementAdjustedItem(this.getItem(), this.getDecorationData().itemResource(), this.direction != Direction.DOWN && this.direction != Direction.UP, this.direction == Direction.DOWN);
         for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : this.behaviours) {
             if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
                 adjusted = decorationBehaviour.visualItemStack(this, adjusted, blockState);
@@ -226,7 +228,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
     @Override
     public void destroyStructure(boolean dropItem) {
-        var visualStack = this.visualItemStack(this.getBlockState());
+        var visualStack = getBlock().visualItemStack(this.level, this.getBlockPos(), this.getBlockState());
 
         if (!this.isMain()) {
             if (this.getLevel() != null && this.main != null && this.getLevel().getBlockEntity(this.getBlockPos().subtract(this.main)) instanceof DecorationBlockEntity mainBlockEntity) {
@@ -280,5 +282,39 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         }
 
         return blockState;
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentGetter dataComponentGetter) {
+        super.applyImplicitComponents(dataComponentGetter);
+
+        setupBehaviour(getDecorationData());
+
+        for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : this.behaviours) {
+            if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
+                decorationBehaviour.applyImplicitComponents(this, dataComponentGetter);
+            }
+        }
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder builder) {
+        super.collectImplicitComponents(builder);
+
+        for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : this.behaviours) {
+            if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
+                decorationBehaviour.collectImplicitComponents(this, builder);
+            }
+        }
+
+
+    }
+
+    public boolean replaceable() {
+        if (replaceable == null) {
+            replaceable = has(Behaviours.OXIDIZABLE) || has(Behaviours.STRIPPABLE) || OxidizableRegistry.hasPrevious(getBlockState().getBlock());
+        }
+
+        return replaceable;
     }
 }

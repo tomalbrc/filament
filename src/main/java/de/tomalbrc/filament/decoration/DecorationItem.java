@@ -10,15 +10,17 @@ import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.util.DecorationUtil;
 import eu.pb4.polymer.core.api.item.PolymerItem;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -74,12 +76,12 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
         Level level = useOnContext.getLevel();
 
         boolean propertyPlaceCheck = properties.placement.canPlace(direction);
-        if (!propertyPlaceCheck && properties.placement.floor() && !level.getBlockState(relativeBlockPos.relative(Direction.DOWN)).isAir()) {
+        if (!propertyPlaceCheck && properties.placement.floor()) {
             direction = Direction.UP;
             propertyPlaceCheck = properties.placement.canPlace(direction);
         }
 
-        if (!propertyPlaceCheck && properties.placement.ceiling() && !level.getBlockState(relativeBlockPos.relative(Direction.UP)).isAir()) {
+        if (!propertyPlaceCheck && properties.placement.ceiling()) {
             direction = Direction.DOWN;
             propertyPlaceCheck = properties.placement.canPlace(direction);
         }
@@ -89,13 +91,13 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
         assert blockState != null;
         float angle = block.getVisualRotationYInDegrees(blockState);
 
-        if (player == null || !this.mayPlace(player, direction, itemStack, relativeBlockPos) || !propertyPlaceCheck) {
+        if (!this.getBlock().isEnabled(level.enabledFeatures()) || player == null || !this.mayPlace(player, direction, itemStack, relativeBlockPos) || !propertyPlaceCheck) {
             return InteractionResult.FAIL;
         } else if (this.canPlaceAt(level, relativeBlockPos, angle) && itemStack.getItem() instanceof DecorationItem) {
             DecorationItem.place(itemStack, level, blockState, relativeBlockPos, direction, useOnContext);
 
             player.startUsingItem(useOnContext.getHand());
-            itemStack.shrink(1);
+            itemStack.consume(1, player);
 
             SoundEvent placeSound = properties.blockBase.defaultBlockState().getSoundType().getPlaceSound();
             level.playSound(null, blockPos, placeSound, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -133,7 +135,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
 
     public static void place(ItemStack itemStack, Level level, BlockState blockState, BlockPos blockPos, Direction direction, UseOnContext useOnContext) {
         if (!(itemStack.getItem() instanceof DecorationItem decorationItem)) {
-            Filament.LOGGER.error("Tried to place non-decoration item as decoration! Item: {}", BuiltInRegistries.ITEM.getKey(itemStack.getItem()));
+            Filament.LOGGER.error("Tried to place non-decoration item as decoration! Item: {}", itemStack.getItem().builtInRegistryHolder().key().location());
             return;
         }
 
@@ -149,23 +151,34 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
                 var offsetState = block.getStateForPlacement(BlockPlaceContext.at(new BlockPlaceContext(useOnContext), blockPos2, direction));
                 level.setBlockAndUpdate(blockPos2, offsetState);
 
+                if (offsetState != null) {
+                    offsetState.getBlock().setPlacedBy(level, blockPos2, offsetState, useOnContext.getPlayer(), itemStack);
+                    if (useOnContext.getPlayer() != null) CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) useOnContext.getPlayer(), blockPos, itemStack);
+                }
+
                 if (decorationData.requiresEntityBlock() && level.getBlockEntity(blockPos2) instanceof DecorationBlockEntity decorationBlockEntity) {
                     decorationBlockEntity.setMain(new BlockPos(blockPos2).subtract(blockPos));
-                    decorationBlockEntity.setItem(itemStack.copyWithCount(1));
                     decorationBlockEntity.setDirection(direction);
-                    decorationBlockEntity.setupBehaviour(decorationData);
+                    if (decorationBlockEntity.isMain()) updateComponents(decorationBlockEntity, itemStack);
                     decorationBlockEntity.attach(level.getChunkAt(blockPos));
                 }
             });
         } else {
             level.setBlockAndUpdate(blockPos, blockState);
+            blockState.getBlock().setPlacedBy(level, blockPos, blockState, useOnContext.getPlayer(), itemStack);
+            if (useOnContext.getPlayer() != null) CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) useOnContext.getPlayer(), blockPos, itemStack);
+
             if (decorationData.requiresEntityBlock() && level.getBlockEntity(blockPos) instanceof DecorationBlockEntity decorationBlockEntity) {
                 decorationBlockEntity.setMain(BlockPos.ZERO);
-                decorationBlockEntity.setItem(itemStack.copyWithCount(1));
                 decorationBlockEntity.setDirection(direction);
-                decorationBlockEntity.setupBehaviour(decorationData);
+                updateComponents(decorationBlockEntity, itemStack);
                 decorationBlockEntity.attach(level.getChunkAt(blockPos));
             }
         }
+    }
+
+    public static void updateComponents(DecorationBlockEntity blockEntity, ItemStack itemStack) {
+        blockEntity.applyComponentsFromItemStack(itemStack);
+        blockEntity.setChanged();
     }
 }

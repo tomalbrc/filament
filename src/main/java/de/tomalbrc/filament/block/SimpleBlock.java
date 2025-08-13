@@ -126,10 +126,10 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     public BlockState behaviourModifiedBlockState(BlockState original, BlockState blockState) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
-                blockState = blockBehaviour.modifyPolymerBlockState(original, blockState);
+                original = blockBehaviour.modifyPolymerBlockState(original, blockState);
             }
         }
-        return blockState;
+        return original;
     }
 
     private void forEach(Consumer<de.tomalbrc.filament.api.behaviour.BlockBehaviour<?>> consumer) {
@@ -445,12 +445,12 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     @NotNull
-    public ItemStack getCloneItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState, boolean bl) {
-        ItemStack stack = super.getCloneItemStack(levelReader, blockPos, blockState, bl);
+    public ItemStack getCloneItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState, boolean includeData) {
+        ItemStack stack = super.getCloneItemStack(levelReader, blockPos, blockState, includeData);
 
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
-                var item = blockBehaviour.getCloneItemStack(stack, levelReader, blockPos, blockState);
+                var item = blockBehaviour.getCloneItemStack(stack, levelReader, blockPos, blockState, includeData);
                 if (item != null) {
                     stack = item;
                 }

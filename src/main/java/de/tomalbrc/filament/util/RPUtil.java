@@ -6,8 +6,10 @@ import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.ItemPredicateModelProvider;
+import de.tomalbrc.filament.data.AbstractBlockData;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.Data;
+import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.resource.BlockResource;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.data.resource.ResourceProvider;
@@ -24,10 +26,10 @@ import java.util.Map;
 public class RPUtil {
     public static void create(BehaviourHolder behaviourHolder, Data<?> data) {
         ResourceProvider resource = data.itemResource();
-        if (data instanceof BlockData blockData) {
-            if (data.itemResource() == null) resource = blockData.blockResource();
+        if (data instanceof AbstractBlockData<?> blockData) {
+            if (data.itemResource() == null && blockData.blockResource() != null) resource = blockData.blockResource();
 
-            if (blockData.properties().virtual)
+            if (blockData.properties().virtual || blockData instanceof DecorationData)
                 createBlockItemAssets(blockData.id(), blockData.blockResource());
 
             createBlockModels(blockData.id(), blockData.blockResource());
@@ -65,7 +67,7 @@ public class RPUtil {
 
     // Item assets for virtual blocks that use item displays (NOT DECORATIONS!)
     public static void createBlockItemAssets(ResourceLocation id, BlockResource blockResource) {
-        PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder ->
+        if (blockResource != null) PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder ->
                 ItemAssetGenerator.createDefault(
                         resourcePackBuilder,
                         id.withPrefix("block/"),
@@ -76,7 +78,7 @@ public class RPUtil {
     }
 
     private static void createBlockModels(ResourceLocation id, BlockResource blockResource) {
-        if (blockResource.couldGenerate()) {
+        if (blockResource != null && blockResource.couldGenerate()) {
             int index = 1;
             Map<Map<String, ResourceLocation>, ResourceLocation> localCache = new Object2ObjectOpenHashMap<>();
 

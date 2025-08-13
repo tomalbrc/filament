@@ -60,6 +60,5 @@ public class BlockResource implements ResourceProvider {
         this.models.put(key, blockModel);
     }
 
-
     public record TextureBlockModel(Map<String, ResourceLocation> textures, int x, int y, boolean uvLock, int weight) {}
 }

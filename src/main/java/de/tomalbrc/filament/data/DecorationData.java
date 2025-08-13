@@ -1,7 +1,8 @@
 package de.tomalbrc.filament.data;
 
-import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
+import de.tomalbrc.filament.api.behaviour.*;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
+import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import de.tomalbrc.filament.data.properties.DecorationProperties;
@@ -9,13 +10,16 @@ import de.tomalbrc.filament.data.resource.BlockResource;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.data.resource.ResourceProvider;
 import de.tomalbrc.filament.util.DecorationUtil;
+import eu.pb4.polymer.blocks.api.PolymerBlockModel;
+import it.unimi.dsi.fastutil.objects.Reference2ReferenceArrayMap;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,6 +44,7 @@ public final class DecorationData extends AbstractBlockData<DecorationProperties
             @Nullable Map<String, String> translations,
             @Nullable Component displayName,
             @Nullable ItemResource itemResource,
+            @Nullable BlockResource blockResource,
             @Nullable ResourceLocation itemModel,
             @Nullable BehaviourConfigMap behaviourConfig,
             @Nullable DataComponentMap components,
@@ -52,7 +57,7 @@ public final class DecorationData extends AbstractBlockData<DecorationProperties
             @Nullable Vector2f size,
             @Nullable Boolean itemFrame
             ) {
-        super(id, vanillaItem, translations, displayName, itemResource, itemModel, behaviourConfig, components, itemGroup, properties, itemTags, blockTags);
+        super(id, vanillaItem, translations, displayName, itemResource, blockResource, itemModel, behaviourConfig, components, itemGroup, properties, itemTags, blockTags);
         this.blocks = blocks;
         this.size = size;
         this.itemFrame = itemFrame;
@@ -75,7 +80,16 @@ public final class DecorationData extends AbstractBlockData<DecorationProperties
     }
 
     public boolean isContainer() {
-        return this.behaviour().has(Behaviours.CONTAINER);
+        return behaviour().test((behaviourType)-> ContainerLike.class.isAssignableFrom(behaviourType.type()));
+    }
+
+    public ContainerLike getFirstContainer(BehaviourHolder holder) {
+        for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : holder.getBehaviours()) {
+            if (behaviour.getValue() instanceof ContainerLike containerLike) {
+                return containerLike;
+            }
+        }
+        return null;
     }
 
     public boolean hasBlocks() {
@@ -122,12 +136,26 @@ public final class DecorationData extends AbstractBlockData<DecorationProperties
 
     @Override
     public Map<BlockState, BlockData.BlockStateMeta> createStandardStateMap() {
-        return null;
-    }
+        Reference2ReferenceArrayMap<BlockState, BlockData.BlockStateMeta> val = new Reference2ReferenceArrayMap<>();
 
-    @Override
-    public BlockResource blockResource() {
-        return null;
+        if (blockResource() != null && blockResource().models() != null) {
+            for (Map.Entry<String, PolymerBlockModel> entry : this.blockResource().models().entrySet()) {
+                if (entry.getKey().equals("default")) {
+                    var customState = BuiltInRegistries.BLOCK.getValue(id).defaultBlockState();
+                    val.put(customState, BlockData.BlockStateMeta.of(null, entry.getValue()));
+                } else {
+                    BlockState state = blockState(String.format("%s[%s]", id, entry.getKey()));
+
+                    if (state.hasProperty(BlockStateProperties.WATERLOGGED) && !entry.getKey().contains(BlockStateProperties.WATERLOGGED.getName() + "=")) {
+                        val.put(state.setValue(BlockStateProperties.WATERLOGGED, !state.getValue(BlockStateProperties.WATERLOGGED)), BlockData.BlockStateMeta.of(null, entry.getValue()));
+                    }
+
+                    val.put(state, BlockData.BlockStateMeta.of(null, entry.getValue()));
+                }
+            }
+        }
+
+        return val;
     }
 
     @Override

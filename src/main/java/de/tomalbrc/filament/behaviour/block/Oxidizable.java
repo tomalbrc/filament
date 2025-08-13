@@ -2,6 +2,9 @@ package de.tomalbrc.filament.behaviour.block;
 
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
+import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.behaviour.decoration.AnimatedChest;
+import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.OxidizableRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -9,9 +12,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,7 +55,16 @@ public class Oxidizable implements BlockBehaviour<Oxidizable.Config>, Weathering
 
     @Override
     public void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
-        if (!blockState.hasProperty(DoorBlock.HALF) || blockState.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER) {
+        var rightSideChest = blockState.hasProperty(ChestBlock.TYPE) && blockState.getValue(ChestBlock.TYPE) == ChestType.RIGHT;
+        if (blockState.hasProperty(ChestBlock.TYPE)) {
+            DecorationBlockEntity decorationBlockEntity = (DecorationBlockEntity) serverLevel.getBlockEntity(blockPos);
+            if (decorationBlockEntity != null) {
+                AnimatedChest animatedChest = decorationBlockEntity.get(Behaviours.ANIMATED_CHEST);
+                if (animatedChest != null && animatedChest.container.hasViewers()) return;
+            }
+        }
+
+        if (!rightSideChest && (!blockState.hasProperty(DoorBlock.HALF) || blockState.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER)) {
             this.changeOverTime(blockState, serverLevel, blockPos, randomSource);
         }
     }

@@ -67,8 +67,8 @@ public class Connectable implements BlockBehaviour<Connectable.Config>, Decorati
     }
 
     @Override
-    public ItemStack getCloneItemStack(ItemStack itemStack, LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
-        return DecorationBehaviour.super.getCloneItemStack(itemStack, levelReader, blockPos, blockState);
+    public ItemStack getCloneItemStack(ItemStack itemStack, LevelReader levelReader, BlockPos blockPos, BlockState blockState, boolean includeData) {
+        return DecorationBehaviour.super.getCloneItemStack(itemStack, levelReader, blockPos, blockState, includeData);
     }
 
     private Shape getShape(BlockState state, LevelReader level, BlockPos pos) {

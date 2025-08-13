@@ -9,10 +9,12 @@ import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
@@ -38,13 +40,23 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
     @NotNull
     public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
         BlockState returnVal = super.playerWillDestroy(level, blockPos, blockState, player);
-        this.playerDestroy(level, player, blockPos, blockState, null, player.getMainHandItem());
+        if (!player.hasInfiniteMaterials()) this.playerDestroy(level, player, blockPos, blockState, null, player.getMainHandItem());
         return returnVal;
     }
 
     @Override
     public ItemStack visualItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
-        return BuiltInRegistries.ITEM.getValue(this.data.id()).getDefaultInstance();
+        var item = BuiltInRegistries.ITEM.getValue(this.data.id()).getDefaultInstance();
+
+        if (stateMap != null && cmdMap != null) {
+            var val = stateMap.get(behaviourModifiedBlockState(blockState, blockState));
+            if (val != null && cmdMap.containsKey(val)) {
+                item.set(DataComponents.ITEM_MODEL, data.id().withPrefix("block/"));
+                item.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(), List.of(), List.of(cmdMap.get(val)), List.of()));
+            }
+        }
+
+        return item;
     }
 
     @Override
