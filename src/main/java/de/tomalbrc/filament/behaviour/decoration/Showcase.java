@@ -314,6 +314,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     @Override
     public void applyImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentGetter dataComponentGetter) {
         dataComponentGetter.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(container.items);
+        container.setChanged();
     }
 
     @Override
