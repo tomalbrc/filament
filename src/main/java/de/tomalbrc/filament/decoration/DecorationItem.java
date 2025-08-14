@@ -20,7 +20,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -69,7 +68,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
         var replaceable = useOnContext.getLevel().getBlockState(useOnContext.getClickedPos()).canBeReplaced();
 
         BlockPos blockPos = useOnContext.getClickedPos();
-        Direction direction = replaceable ? Direction.UP : useOnContext.getClickedFace();
+        Direction direction, actualDir = direction = replaceable ? Direction.UP : useOnContext.getClickedFace();
         BlockPos relativeBlockPos = replaceable ? blockPos : blockPos.relative(direction);
         Player player = useOnContext.getPlayer();
         ItemStack itemStack = useOnContext.getItemInHand();
@@ -94,7 +93,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
         if (!this.getBlock().isEnabled(level.enabledFeatures()) || player == null || !this.mayPlace(player, direction, itemStack, relativeBlockPos) || !propertyPlaceCheck) {
             return InteractionResult.FAIL;
         } else if (this.canPlaceAt(level, relativeBlockPos, angle) && itemStack.getItem() instanceof DecorationItem) {
-            DecorationItem.place(itemStack, level, blockState, relativeBlockPos, direction, useOnContext);
+            DecorationItem.place(itemStack, level, blockState, relativeBlockPos, actualDir, direction, useOnContext);
 
             player.startUsingItem(useOnContext.getHand());
             itemStack.consume(1, player);
@@ -133,7 +132,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
         return true;
     }
 
-    public static void place(ItemStack itemStack, Level level, BlockState blockState, BlockPos blockPos, Direction direction, UseOnContext useOnContext) {
+    public static void place(ItemStack itemStack, Level level, BlockState blockState, BlockPos blockPos, Direction placeDirection, Direction direction, UseOnContext useOnContext) {
         if (!(itemStack.getItem() instanceof DecorationItem decorationItem)) {
             Filament.LOGGER.error("Tried to place non-decoration item as decoration! Item: {}", itemStack.getItem().builtInRegistryHolder().key().location());
             return;
@@ -144,11 +143,11 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
             Filament.LOGGER.warn("Found block data with potentially invalid blocks for {} while trying to place", decorationData.id());
 
         DecorationBlock block = (DecorationBlock) blockState.getBlock();
-        if (decorationData.hasBlocks()) {
+        if (decorationData.hasBlocks() && decorationData.countBlocks() > 1) {
             DecorationUtil.forEachRotated(decorationData.blocks(), blockPos, block.getVisualRotationYInDegrees(blockState), blockPos2 -> {
                 level.destroyBlock(blockPos2, false);
 
-                var offsetState = block.getStateForPlacement(BlockPlaceContext.at(new BlockPlaceContext(useOnContext), blockPos2, direction));
+                var offsetState = block.getStateForPlacement(BlockPlaceContext.at(new BlockPlaceContext(useOnContext), blockPos2, placeDirection));
                 level.setBlockAndUpdate(blockPos2, offsetState);
 
                 if (offsetState != null) {
