@@ -8,6 +8,7 @@ import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.block.AbstractHorizontalFacing;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.mixin.accessor.ChestBlockInvoker;
 import de.tomalbrc.filament.registry.OxidizableRegistry;
 import de.tomalbrc.filament.util.FilamentContainer;
 import de.tomalbrc.filament.util.TextUtil;
@@ -331,12 +332,12 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
         public boolean purge = false;
 
         /**
-         * The name of the animation to play when the container is opened (if applicable).
+         * The name of the animation to play when the container is opened
          */
         public String openAnimation = null;
 
         /**
-         * The name of the animation to play when the container is closed (if applicable).
+         * The name of the animation to play when the container is closed
          */
         public String closeAnimation = null;
 
@@ -350,10 +351,21 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
          */
         public boolean hopperDropperSupport = true;
 
+        /**
+         * Show custom name from item stack
+         */
         public boolean showCustomName = true;
 
+        /**
+         * Ignore blocking by redstone conductor and cats
+         */
         public boolean ignoreBlock = false;
 
+        public Direction blockDirection = Direction.UP;
+
+        /**
+         * Anger nearby piglins
+         */
         public boolean angerPiglins = true;
     }
 
@@ -361,12 +373,22 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
         return combine(blockState, level, blockPos, ignoreBlock).apply(CONTAINER_COMBINER).orElse(null);
     }
 
+    public boolean isBlockedAt(LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState) {
+        Direction dir = config.blockDirection;
+        if (dir.getAxis().isHorizontal()) {
+            var localRot = dir.toYRot();
+            var facing = blockState.getValue(ChestBlock.FACING).toYRot();
+            dir = Direction.fromYRot(facing - localRot);
+        }
+        return levelAccessor.getBlockState(blockPos.relative(dir)).isRedstoneConductor(levelAccessor, blockPos) || (dir == Direction.UP && ChestBlockInvoker.isCatSittingOnChest(levelAccessor, blockPos));
+    }
+
     public DoubleBlockCombiner.NeighborCombineResult<DecorationBlockEntity> combine(BlockState blockState, Level level, BlockPos blockPos, boolean ignoreBlock) {
         BiPredicate<LevelAccessor, BlockPos> biPredicate;
         if (ignoreBlock) {
             biPredicate = (levelAccessor, blockPosx) -> false;
         } else {
-            biPredicate = ChestBlock::isChestBlockedAt;
+            biPredicate = (levelAccessor, pos) -> this.isBlockedAt(levelAccessor, pos, blockState);
         }
 
         return DoubleBlockCombiner.combineWithNeigbour(TYPE, ChestBlock::getBlockType, ChestBlock::getConnectedDirection, ChestBlock.FACING, blockState, level, blockPos, biPredicate);
