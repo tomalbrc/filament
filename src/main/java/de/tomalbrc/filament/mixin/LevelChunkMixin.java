@@ -33,9 +33,7 @@ public abstract class LevelChunkMixin {
     )
     private void filament$filamentDecorationInit(BlockEntity blockEntity, CallbackInfo ci) {
         if (blockEntity instanceof BlockEntityWithElementHolder blockEntityWithElementHolder) {
-            Filament.SERVER.schedule(new TickTask(0, () -> {
-                blockEntityWithElementHolder.attach((LevelChunk)(Object) this);
-            }));
+            Filament.SERVER.schedule(new TickTask(0, () -> blockEntityWithElementHolder.attach((LevelChunk)(Object) this)));
         }
     }
 
@@ -59,15 +57,15 @@ public abstract class LevelChunkMixin {
     }
 
     @WrapOperation(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/chunk/LevelChunk;removeBlockEntity(Lnet/minecraft/core/BlockPos;)V"))
-    private void filament$avoidRemovalOxidation2(LevelChunk instance, BlockPos blockPos, Operation<Void> original, @Local(ordinal = 0, argsOnly = true) BlockState blockState, @Local(ordinal = 1) BlockState blockStateOld) {
+    private void filament$avoidRemovalOxidation(LevelChunk instance, BlockPos blockPos, Operation<Void> original, @Local(ordinal = 0, argsOnly = true) BlockState blockState, @Local(ordinal = 1) BlockState blockStateOld) {
         var oxiDeco = !blockStateOld.isAir() && blockStateOld.getBlock() instanceof DecorationBlock && blockState.getBlock() instanceof DecorationBlock && filament$replace(blockStateOld.getBlock(), blockState.getBlock());
         if (!oxiDeco) {
             original.call(instance, blockPos);
         }
     }
 
-    @WrapOperation(method = "setBlockState", at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;[Ljava/lang/Object;)V"))
-    private void filament$avoidRemovalOxidation24(Logger instance, String s, Object[] objects, Operation<Void> original, @Local(ordinal = 0, argsOnly = true) BlockState blockState, @Local(ordinal = 1) BlockState blockStateOld, @Local(argsOnly = true) BlockPos blockPos) {
+    @WrapOperation(method = "setBlockState", at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;[Ljava/lang/Object;)V", remap = false))
+    private void filament$avoidRemovalOxidationWarn(Logger instance, String s, Object[] objects, Operation<Void> original, @Local(ordinal = 0, argsOnly = true) BlockState blockState, @Local(ordinal = 1) BlockState blockStateOld, @Local(argsOnly = true) BlockPos blockPos) {
         var oxiDeco = !blockStateOld.isAir() && blockStateOld.getBlock() instanceof DecorationBlock && blockState.getBlock() instanceof DecorationBlock && filament$replace(blockStateOld.getBlock(), blockState.getBlock());
         if (!oxiDeco) {
             original.call(instance, s, objects);
