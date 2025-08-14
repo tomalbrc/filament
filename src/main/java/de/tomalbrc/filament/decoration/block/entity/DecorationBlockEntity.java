@@ -72,6 +72,8 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             Filament.LOGGER.error("No decoration data for {}!", this.getItem().getItem().getDescriptionId());
         }
 
+        input.read("Item", ItemStack.CODEC).ifPresent(this::applyComponentsFromItemStack);
+
         this.setupBehaviour(getDecorationData());
 
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : this.behaviours) {
