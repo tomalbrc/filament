@@ -56,7 +56,7 @@ public class ComplexDecorationBlock extends DecorationBlock implements EntityBlo
         ItemStack stack;
         BlockEntity blockEntity = levelReader.getBlockEntity(blockPos);
         if (blockEntity instanceof DecorationBlockEntity decorationBlockEntity) {
-            stack = decorationBlockEntity.getItem();
+            stack = decorationBlockEntity.getMainBlockEntity().getItem();
             for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : decorationBlockEntity.getBehaviours()) {
                 if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
                     stack = decorationBehaviour.getCloneItemStack(stack, levelReader, blockPos, blockState, includeData);
