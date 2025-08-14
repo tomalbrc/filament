@@ -15,6 +15,9 @@
   "entrypoints": {
     "main": [
       "de.tomalbrc.filament.Filament"
+    ],
+    "client": [
+      "de.tomalbrc.filament.FilamentClient"
     ]
   },
   "mixins": [

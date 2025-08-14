@@ -74,5 +74,8 @@
   "injectors": {
     "defaultRequire": 1,
     "maxShiftBy": 3
-  }
+  },
+  "client": [
+    "accessor.PolymerResourcePackAccessor"
+  ]
 }
