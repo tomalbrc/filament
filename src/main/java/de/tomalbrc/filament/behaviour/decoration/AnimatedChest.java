@@ -17,6 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
@@ -29,6 +30,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.HoneycombItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -75,10 +77,16 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     }
 
     @Override
+    public void init(Item item, Block block, BehaviourHolder behaviourHolder) {
+        var id = block.builtInRegistryHolder().key().location();
+        TYPE = (BlockEntityType<DecorationBlockEntity>) BuiltInRegistries.BLOCK_ENTITY_TYPE.getValue(id);
+    }
+
+    @Override
     public void init(DecorationBlockEntity blockEntity) {
         DecorationBehaviour.super.init(blockEntity);
 
-        TYPE = (BlockEntityType<DecorationBlockEntity>) blockEntity.getType();
+        //TYPE = (BlockEntityType<DecorationBlockEntity>) blockEntity.getType();
 
         this.container = new FilamentContainer(blockEntity, config.size, config.purge);
 
@@ -227,7 +235,7 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
 
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos) {
-        return AbstractContainerMenu.getRedstoneSignalFromContainer(getContainer(blockState, level, blockPos, false));
+        return AbstractContainerMenu.getRedstoneSignalFromContainer(getContainer(blockState, level, blockPos, config.ignoreBlock));
     }
 
     @Override
@@ -246,7 +254,7 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
 
     @Nullable
     protected MenuProvider getMenuProvider(BlockState blockState, Level level, BlockPos blockPos) {
-        return this.combine(blockState, level, blockPos, false).apply(MENU_PROVIDER_COMBINER).orElse(null);
+        return this.combine(blockState, level, blockPos, config.ignoreBlock).apply(MENU_PROVIDER_COMBINER).orElse(null);
     }
 
     @Override
@@ -343,6 +351,8 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
         public boolean hopperDropperSupport = true;
 
         public boolean showCustomName = true;
+
+        public boolean ignoreBlock = false;
     }
 
     public Container getContainer(BlockState blockState, Level level, BlockPos blockPos, boolean ignoreBlock) {
