@@ -134,3 +134,5 @@ This will result in a decoration with different models in the Inventory, when pl
 The field `block` can be used to specify a different block to use instead of barrier blocks (only used when the decoration has blocks specified using the `blocks` field)
 
 The field `itemFrame` forces the decoration to use item-frames instead an item-display entity in combination with an interaction entity.
+
+Decorations are able to show a different item model based on the block state, similar to blocks, using a `block_resource`. 

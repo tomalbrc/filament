@@ -117,6 +117,7 @@ You would reference it as `mynamespace:mymodel` in the `model` field.
 ~~~admonish info "Configurable Fields"
 - `model`: The name of the animated model associated with this animation (if applicable).
 - `autoplay`: The name of the animation to autoplay (if specified).
+- `variant`: The model variant to display (for Animated-Java models). Can be mapped to a block-state 
 ~~~
 
 ~~~admonish example
@@ -145,20 +146,20 @@ animation:
 
 Defines a container behaviour for decorations.
 
-Dropper/Hopper support is not implemented yet as of filament 0.10.7
+Allows to create barrels, trashcans, etc.
 
-Allows to create chests, trashcans, etc.
-
-Works with the `animation` behaviour to play an animation defined in the bbmodel/ajmodel.
+Works with the `animation` behaviour to play an animation defined in the bbmodel/ajblueprint.
 
 ~~~admonish info "Configurable Fields"
 - `name`: The name displayed in the container UI.
+- `showCustomName`: Flag whether to show the name of the placed itemstack. Enabled by default.
 - `size`: The size of the container, has to be 5 slots or a multiple of 9, up to 6 rows of 9 slots.
 - `purge`: Indicates whether the container's contents should be cleared when no player is viewing the inventory.
 - `openAnimation`: The name of the animation to play when the container is opened (if applicable).
 - `closeAnimation`: The name of the animation to play when the container is closed (if applicable).
 - `canPickup`: Flag whether the container will not drop its items when broken but store it as component in the dropped item
 - `hopperDropperSupport`: Flag whether hoppers/droppers can interact with this container
+- `angerPiglins`: Flag whether opening the container will anger piglins. Enabled by default.
 ~~~
 
 ~~~admonish example
@@ -178,6 +179,52 @@ container:
     "name": "Example Container",
     "size": 9,
     "purge": false,
+    "openAnimation": "openAnimation",
+    "closeAnimation": "closeAnimation"
+  }
+}
+```
+<!-- langtabs-end -->
+
+~~~
+
+---
+
+## `animated_chest` behaviour
+
+Allows to make animated connectable containers with a left and right side. 
+
+Requires with the `animation` behaviour to play an animation defined in the bbmodel/ajblueprint.
+
+~~~admonish info "Configurable Fields"
+- `name`: The name displayed in the container UI.
+- `showCustomName`: Flag whether to show the name of the placed itemstack if it has a custom name. Enabled by default.
+- `size`: The size of the container, has to be 5 slots or a multiple of 9, up to 6 rows of 9 slots.
+- `purge`: Indicates whether the container's contents should be cleared when no player is viewing the inventory.
+- `openAnimation`: The name of the animation to play when the container is opened (if applicable).
+- `closeAnimation`: The name of the animation to play when the container is closed (if applicable).
+- `canPickup`: Flag whether the container will not drop its items when broken but store it as component in the dropped item
+- `hopperDropperSupport`: Flag whether hoppers/droppers can interact with this container
+- `angerPiglins`: Flag whether opening the container will anger piglins. Enabled by default.
+- `ignoreBlock`: Flag whether the block in direction as specified in `blockDirection` prevents the chest from being opened. Enabled by default
+- `blockDirection`: Direction for the `ignoreBlock` check. Can be `up`, `down`, `north`, `east`, `south`, `west`. `up` by default.
+~~~
+
+~~~admonish example
+<!-- langtabs-start -->
+```yml
+animated_chest:
+  name: Example Chest
+  size: 27
+  openAnimation: openAnimation
+  closeAnimation: closeAnimation
+```
+
+```json
+{
+  "animated_chest": {
+    "name": "Example Chest",
+    "size": 27,
     "openAnimation": "openAnimation",
     "closeAnimation": "closeAnimation"
   }
@@ -284,9 +331,13 @@ Allows you to create shelves / item-frame like decorations.
 - `offset`: Offset for positioning the showcased item.
 - `scale`: Scale of the showcased item.
 - `rotation`: Rotation of the showcased item.
-- `type`: Type to display, block for blocks (block display), item for items (item display), dynamic uses blocks if possible, otherwise item (block/item display).
+- `type`: Display entity type to use, `block` for block display, `item` for item display, `dynamic` uses block displays if possible, otherwise item displays.
 - `filterItems`: Items to allow.
 - `filterTags`: Items with given item tags to allow.
+- `addItemSound`: Sound to use when inserting an item by a player. Defaults to item frame sounds
+- `removeItemSound`: Sound to use when an item is removed by a player. Defaults to item frame sounds
+- `hopperDropperSupport`: Support for hoppers & droppers. If 1 showcase element has this option enabled, all will have it enabled. Enabled by default.
+- `maxStackSize`: Max stack size for this showcase element. Defaults to 1
 ~~~
 
 ~~~admonish example "Single item showcase"
@@ -319,57 +370,4 @@ showcase:
 ```
 <!-- langtabs-end -->
 
-~~~
-
----
-
-## `cosmetic` behaviour
-
-Defines cosmetic behaviours for decorations, supporting animated Blockbench models for chestplates and simple item models.
-
-Cosmetics are worn on the player using item display entities (except for the head slot)
-
-~~~admonish info "Configurable Fields"
-- `slot`: The equipment slot for the cosmetic (head or chest).
-- `model`: Optional, the resource location of the animated blockbench or animated-java model for the cosmetic.
-- `autoplay`: Optional, the name of the animation to autoplay, which should be loopable.
-- `scale`: Scale of the chest cosmetic. Defaults to `[1 1 1]`
-- `translation`: Translation of the chest cosmetic. Defaults to `[0 0 0]`.
-~~~
-
-~~~admonish example "Backpack"
-<!-- langtabs-start -->
-```yml
-cosmetic:
-  slot: chest
-  model: mynamespace:clown_backpack_animated
-  autoplay: idle
-  scale: [1.5, 1.5, 1.5]
-  translation: [0.0, 0.5, 0.0]
-```
-
-```json
-{
-  "cosmetic": {
-    "slot": "chest",
-    "model": "mynamespace:clown_backpack_animated",
-    "autoplay": "idle",
-    "scale": [1.5, 1.5, 1.5],
-    "translation": [0.0, 0.5, 0.0]
-  }
-}
-```
-<!-- langtabs-end -->
-
-~~~
-
----
-
-## `flammable` behaviour
-
-Makes the block flammable.
-
-~~~admonish info "Configurable Fields"
-- `burn`: Burn. Defaults to `5`
-- `spread` Fire spread chance. Defaults to `20`
 ~~~

@@ -156,17 +156,43 @@ Makes the item usable in composters.
 ## `cosmetic` behaviour
 <img class="right" src="../img/cosmetic.png" alt="cosmetic">
 
-Defines cosmetic item behaviour for either the head or chestplate slot, supporting both Blockbench models for chestplates and simple item models for either slot.
+Defines cosmetic behaviours for decorations, supporting animated Blockbench models for chestplates and simple item models.
+
+Cosmetics are worn on the player using item display entities (except for the head slot)
 
 ~~~admonish info "Configurable Fields"
 - `slot`: The equipment slot for the cosmetic (head or chest).
 - `model`: Optional, the resource location of the animated blockbench or animated-java model for the cosmetic.
 - `autoplay`: Optional, the name of the animation to autoplay, which should be loopable.
-- `scale`: Scale of the chest cosmetic, defaulting to (1, 1, 1).
-- `translation`: Translation of the chest cosmetic, defaulting to (0, 0, 0).
+- `scale`: Scale of the chest cosmetic. Defaults to `[1 1 1]`
+- `translation`: Translation of the chest cosmetic. Defaults to `[0 0 0]`.
 ~~~
 
-<br>
+~~~admonish example "Backpack"
+<!-- langtabs-start -->
+```yml
+cosmetic:
+  slot: chest
+  model: mynamespace:clown_backpack_animated
+  autoplay: idle
+  scale: [1.5, 1.5, 1.5]
+  translation: [0.0, 0.5, 0.0]
+```
+
+```json
+{
+  "cosmetic": {
+    "slot": "chest",
+    "model": "mynamespace:clown_backpack_animated",
+    "autoplay": "idle",
+    "scale": [1.5, 1.5, 1.5],
+    "translation": [0.0, 0.5, 0.0]
+  }
+}
+```
+<!-- langtabs-end -->
+
+~~~
 
 ---
 
