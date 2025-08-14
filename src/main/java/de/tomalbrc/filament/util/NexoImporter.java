@@ -214,6 +214,7 @@ public class NexoImporter {
                 // load as block
                 var model = getValue("model", data, String.class);
                 var props = new BlockProperties();
+                props.copyComponents = true;
                 props.destroyTime = 2;
                 props.explosionResistance = 2;
                 props.solid = true;
@@ -250,6 +251,7 @@ public class NexoImporter {
                     return;
 
                 var props = new DecorationProperties();
+                props.copyComponents = true;
                 props.destroyTime = 0.5f;
                 props.explosionResistance = 0.5f;
                 props.solid = false;
@@ -376,6 +378,7 @@ public class NexoImporter {
                 return;
 
             var props = new ItemProperties();
+            props.copyComponents = true;
 
             ItemData itemData = new ItemData(
                     id,

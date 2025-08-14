@@ -19,6 +19,11 @@ repositories {
     maven { url 'https://maven.tomalbrc.de' }
     maven { url 'https://maven.nucleoid.xyz' }
     mavenLocal()
+
+    maven {
+        name = 'griefdefender'
+        url = 'https://repo.glaremasters.me/repository/bloodshot'
+    }
 }
 
 dependencies {
@@ -35,6 +40,8 @@ dependencies {
     modImplementation ("eu.pb4:polymer-virtual-entity:${project.polymer_version}")
     modImplementation ("eu.pb4:polymer-networking:${project.polymer_version}")
     modImplementation ("eu.pb4:polymer-autohost:${project.polymer_version}")
+
+    compileOnly group: 'com.griefdefender', name: 'api', version: '2.1.0-SNAPSHOT'
 
     // Adventure API
     modImplementation include("net.kyori:adventure-text-serializer-legacy:4.17.0")
