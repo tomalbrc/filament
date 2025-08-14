@@ -5,7 +5,6 @@ import com.google.gson.JsonParser;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
-import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.datafixer.config.DecorationDataFix;
 import de.tomalbrc.filament.decoration.DecorationItem;
