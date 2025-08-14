@@ -245,7 +245,7 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
             if (menuProvider != null) {
                 player.openMenu(menuProvider);
                 player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
-                PiglinAi.angerNearbyPiglins(serverLevel, player, true);
+                if (config.angerPiglins) PiglinAi.angerNearbyPiglins(serverLevel, player, true);
             }
         }
 
@@ -353,6 +353,8 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
         public boolean showCustomName = true;
 
         public boolean ignoreBlock = false;
+
+        public boolean angerPiglins = true;
     }
 
     public Container getContainer(BlockState blockState, Level level, BlockPos blockPos, boolean ignoreBlock) {
@@ -373,14 +375,11 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     public static DoubleBlockCombiner.Combiner<DecorationBlockEntity, Optional<Container>> CONTAINER_COMBINER = new DoubleBlockCombiner.Combiner<>() {
         @Override
         public @NotNull Optional<net.minecraft.world.Container> acceptDouble(DecorationBlockEntity container, DecorationBlockEntity container2) {
-            container.setChanged();
-            container2.setChanged();
             return Optional.of(new CompoundContainer(container.getOrThrow(Behaviours.ANIMATED_CHEST).container, container2.getOrThrow(Behaviours.ANIMATED_CHEST).container));
         }
 
         @Override
         public @NotNull Optional<net.minecraft.world.Container> acceptSingle(DecorationBlockEntity container) {
-            container.setChanged();
             return Optional.of(container.getOrThrow(Behaviours.ANIMATED_CHEST).container);
         }
 
