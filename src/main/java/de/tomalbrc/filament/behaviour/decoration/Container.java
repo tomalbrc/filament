@@ -11,6 +11,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.*;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.HopperMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -78,6 +79,8 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
             } else if (this.container.getContainerSize() == 5) {
                 player.openMenu(new SimpleMenuProvider((i, playerInventory, playerEntity) -> new HopperMenu(i, playerInventory, container), containerName));
             }
+
+            if (config.angerPiglins) PiglinAi.angerNearbyPiglins(player.level(), player, true);
 
             decorationBlockEntity.setChanged();
 
@@ -187,5 +190,7 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
         public boolean hopperDropperSupport = true;
 
         public boolean showCustomName = true;
+
+        public boolean angerPiglins = true;
     }
 }
