@@ -25,7 +25,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -57,7 +56,7 @@ public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentI
     @Override
     public @NotNull Component getName(ItemStack itemStack) {
         var dataName = this.data.displayName();
-        return dataName != null ? dataName : data.components().has(DataComponents.ITEM_NAME) ? data.components().get(DataComponents.ITEM_NAME) : super.getName(itemStack);
+        return dataName != null ? dataName : data.components().getOrDefault(DataComponents.ITEM_NAME, super.getName(itemStack));
     }
 
     @Override
@@ -68,12 +67,6 @@ public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentI
     @Override
     public FilamentItemDelegate getDelegate() {
         return this.delegate;
-    }
-
-    @Override
-    @NotNull
-    public FeatureFlagSet requiredFeatures() {
-        return this.getBlock().requiredFeatures();
     }
 
     @Override

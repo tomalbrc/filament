@@ -55,7 +55,7 @@ public interface DecorationBehaviour<T> extends Behaviour<T> {
         return blockState;
     }
 
-    @Deprecated(forRemoval = true) default ItemStack getCloneItemStack(ItemStack stack, LevelReader levelReader, BlockPos blockPos, BlockState blockState, boolean includeData) {
+    default ItemStack getCloneItemStack(ItemStack stack, LevelReader levelReader, BlockPos blockPos, BlockState blockState, boolean includeData) {
         return stack;
     }
 

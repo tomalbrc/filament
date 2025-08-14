@@ -5,8 +5,6 @@ import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.util.FilamentContainer;
 import de.tomalbrc.filament.util.TextUtil;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
@@ -18,8 +16,6 @@ import net.minecraft.world.inventory.HopperMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
@@ -76,7 +72,7 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
     @Override
     public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
         if (!player.isSecondaryUseActive()) {
-            Component containerName = TextUtil.formatText(config.name);
+            Component containerName = customName() != null && showCustomName() ? customName() : TextUtil.formatText(config.name);
             if (this.container.getContainerSize() % 9 == 0) {
                 player.openMenu(new SimpleMenuProvider((i, playerInventory, playerEntity) -> new ChestMenu(getMenuType(config.size, config.name), i, playerInventory, container, container.getContainerSize() / 9), containerName));
             } else if (this.container.getContainerSize() == 5) {
@@ -103,11 +99,6 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
         if (config.canPickup) {
             itemStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(container.getItems()));
         }
-    }
-
-    @Override
-    public ItemStack getCloneItemStack(ItemStack itemStack, LevelReader levelReader, BlockPos blockPos, BlockState blockState, boolean includeData) {
-        return itemStack;
     }
 
     @Override

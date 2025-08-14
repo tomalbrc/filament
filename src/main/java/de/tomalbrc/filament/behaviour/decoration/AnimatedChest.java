@@ -17,7 +17,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
@@ -30,7 +29,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.HoneycombItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -77,14 +75,10 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     }
 
     @Override
-    public void init(Item item, Block block, BehaviourHolder behaviourHolder) {
-        var id = block.builtInRegistryHolder().key().location();
-        TYPE = (BlockEntityType<DecorationBlockEntity>) BuiltInRegistries.BLOCK_ENTITY_TYPE.getValue(id);
-    }
-
-    @Override
     public void init(DecorationBlockEntity blockEntity) {
         DecorationBehaviour.super.init(blockEntity);
+
+        TYPE = (BlockEntityType<DecorationBlockEntity>) blockEntity.getType();
 
         this.container = new FilamentContainer(blockEntity, config.size, config.purge);
 
@@ -116,7 +110,7 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
         builder.add(BlockStateProperties.CHEST_TYPE);
     }
 
-    protected BlockState updateShapeSimple(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
+    protected BlockState updateShapeSimple(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockState blockState2) {
         if (blockState.getValue(BlockStateProperties.WATERLOGGED)) {
             scheduledTickAccess.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelReader));
         }
@@ -135,7 +129,7 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
 
     @Override
     public BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
-        var blockState3 = updateShapeSimple(blockState, levelReader, scheduledTickAccess, blockPos, direction, blockPos2, blockState2, randomSource);
+        var blockState3 = updateShapeSimple(blockState, levelReader, scheduledTickAccess, blockPos, direction, blockState2);
 
         if ((OxidizableRegistry.hasPrevious(blockState.getBlock()) || OxidizableRegistry.hasNext(blockState.getBlock())) && this.canConnectTo(blockState, blockState2) && !blockState3.getValue(ChestBlock.TYPE).equals(ChestType.SINGLE) && ChestBlock.getConnectedDirection(blockState3) == direction) {
             return blockState2.getBlock().withPropertiesOf(blockState3);
@@ -191,7 +185,7 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
                 }
 
                 Block block = maybeFinal.getBlock();
-                if (placed.has(Behaviours.OXIDIZABLE) && other.has(Behaviours.OXIDIZABLE) && placed.get(Behaviours.OXIDIZABLE).getConfig().weatherState.ordinal() <= other.get(Behaviours.OXIDIZABLE).getConfig().weatherState.ordinal()) {
+                if (placed.has(Behaviours.OXIDIZABLE) && other.has(Behaviours.OXIDIZABLE) && placed.getOrThrow(Behaviours.OXIDIZABLE).getConfig().weatherState.ordinal() <= other.getOrThrow(Behaviours.OXIDIZABLE).getConfig().weatherState.ordinal()) {
                     block = blockStateOther.getBlock();
                 }
 
@@ -273,6 +267,13 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     @Override
     public void collectImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentMap.Builder builder) {
         builder.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(this.container.items));
+    }
+
+    @Override
+    public void modifyDrop(DecorationBlockEntity blockEntity, ItemStack itemStack) {
+        if (config.canPickup) {
+            itemStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(container.getItems()));
+        }
     }
 
     @Override
@@ -364,13 +365,13 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
         public @NotNull Optional<net.minecraft.world.Container> acceptDouble(DecorationBlockEntity container, DecorationBlockEntity container2) {
             container.setChanged();
             container2.setChanged();
-            return Optional.of(new CompoundContainer(container.get(Behaviours.ANIMATED_CHEST).container, container2.get(Behaviours.ANIMATED_CHEST).container));
+            return Optional.of(new CompoundContainer(container.getOrThrow(Behaviours.ANIMATED_CHEST).container, container2.getOrThrow(Behaviours.ANIMATED_CHEST).container));
         }
 
         @Override
         public @NotNull Optional<net.minecraft.world.Container> acceptSingle(DecorationBlockEntity container) {
             container.setChanged();
-            return Optional.of(container.get(Behaviours.ANIMATED_CHEST).container);
+            return Optional.of(container.getOrThrow(Behaviours.ANIMATED_CHEST).container);
         }
 
         @Override
@@ -383,11 +384,11 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
         return !player.isSpectator();
     }
 
-    public static DoubleBlockCombiner.Combiner<DecorationBlockEntity, Optional<MenuProvider>> MENU_PROVIDER_COMBINER = new DoubleBlockCombiner.Combiner<DecorationBlockEntity, Optional<MenuProvider>>() {
+    public static DoubleBlockCombiner.Combiner<DecorationBlockEntity, Optional<MenuProvider>> MENU_PROVIDER_COMBINER = new DoubleBlockCombiner.Combiner<>() {
         @Override
         public @NotNull Optional<MenuProvider> acceptDouble(final DecorationBlockEntity chestBlockEntity, final DecorationBlockEntity chestBlockEntity2) {
-            var c1 = chestBlockEntity.get(Behaviours.ANIMATED_CHEST);
-            var c2 = chestBlockEntity2.get(Behaviours.ANIMATED_CHEST);
+            var c1 = chestBlockEntity.getOrThrow(Behaviours.ANIMATED_CHEST);
+            var c2 = chestBlockEntity2.getOrThrow(Behaviours.ANIMATED_CHEST);
             final Container container = new CompoundContainer(c1.container, c2.container);
 
             return Optional.of(new MenuProvider() {
@@ -404,7 +405,7 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
                 @Override
                 public @NotNull Component getDisplayName() {
                     var cname = c1.customName();
-                    return cname != null ? cname : TextUtil.formatText(c1.config.nameDouble);
+                    return cname != null && c1.showCustomName() ? cname : TextUtil.formatText(c1.config.nameDouble);
                 }
             });
         }
@@ -412,8 +413,9 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
         @Override
         public @NotNull Optional<MenuProvider> acceptSingle(DecorationBlockEntity chestBlockEntity) {
             var c1 = chestBlockEntity.get(Behaviours.ANIMATED_CHEST);
+            assert c1 != null;
             var container = c1.container;
-            var p = new SimpleMenuProvider((i, inventory, playerEntity) -> new ChestMenu(de.tomalbrc.filament.behaviour.decoration.Container.getMenuType(container.getContainerSize(), c1.config.name), i, inventory, container, container.getContainerSize() / 9), TextUtil.formatText(c1.config.name));
+            var p = new SimpleMenuProvider((i, inventory, playerEntity) -> new ChestMenu(de.tomalbrc.filament.behaviour.decoration.Container.getMenuType(container.getContainerSize(), c1.config.name), i, inventory, container, container.getContainerSize() / 9), c1.customName() != null && c1.showCustomName() ? c1.customName() : TextUtil.formatText(c1.config.name));
             return Optional.of(p);
         }
 
