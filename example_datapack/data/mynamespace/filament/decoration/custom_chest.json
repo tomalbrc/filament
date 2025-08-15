@@ -1,0 +1,46 @@
+{
+  "id": "mynamespace:custom_chest",
+  "translations": {"en_us": "Custom Chest"},
+  "itemResource": {
+    "models": {
+      "default": "minecraft:custom/furniture/chests/custom_chest"
+    }
+  },
+  "behaviour": {
+    "animation": {
+      "model": "mynamespace:custom_chest",
+      "variant": {
+        "type=single": "single",
+        "type=left": "left",
+        "type=right": "right"
+      }
+    },
+    "animated_chest": {
+      "open_animation": "open",
+      "close_animation": "close"
+    },
+    "oxidizable": {
+      "replacement": "mynamespace:custom_chest_weathered"
+    },
+    "waxable": {
+      "replacement": "mynamespace:custom_chest_waxed"
+    }
+  },
+  "properties": {
+    "redstoneConductor": false
+  },
+  "blocks": [
+    {
+      "origin": [
+        0,
+        0,
+        0
+      ],
+      "size": [
+        1,
+        1,
+        1
+      ]
+    }
+  ]
+}

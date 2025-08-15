@@ -1,12 +1,12 @@
 {
-  "id": "mynamespace:test_horizontal_directional",
+  "id": "mynamespace:test_horizontal_directional_slim",
   "itemResource": {
     "models": {
       "default": "minecraft:block/furnace"
     }
   },
   "translations": {
-    "en_us": "Test Furnace (drops items when falling)"
+    "en_us": "Slim Furnace (drops items when falling)"
   },
   "blockResource": {
     "models": {
@@ -24,9 +24,15 @@
     "transparent": false,
     "solid": true,
     "replaceable": false,
-    "destroyTime": 1.5
+    "destroyTime": 1.5,
+    "virtual": true
   },
-  "blockModelType": "full_block",
+  "block_model_type": {
+    "facing=east": "east_trapdoor",
+    "facing=south": "south_trapdoor",
+    "facing=north": "north_trapdoor",
+    "facing=west": "west_trapdoor"
+  },
   "behaviour": {
     "horizontal_facing": {},
     "furnace": {},
