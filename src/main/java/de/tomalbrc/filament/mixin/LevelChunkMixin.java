@@ -9,6 +9,7 @@ import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.decoration.util.BlockEntityWithElementHolder;
 import de.tomalbrc.filament.registry.OxidizableRegistry;
 import de.tomalbrc.filament.registry.StrippableRegistry;
+import de.tomalbrc.filament.registry.WaxableRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.TickTask;
@@ -74,6 +75,6 @@ public abstract class LevelChunkMixin {
 
     @Unique
     private boolean filament$replace(Block old, Block fresh) {
-        return OxidizableRegistry.sameOxidizable(fresh, old) || StrippableRegistry.get(old) != null;
+        return OxidizableRegistry.sameOxidizable(fresh, old) || StrippableRegistry.get(old) == fresh || WaxableRegistry.getPrevious(fresh) == old;
     }
 }

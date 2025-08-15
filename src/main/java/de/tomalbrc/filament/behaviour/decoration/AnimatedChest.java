@@ -10,6 +10,7 @@ import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.mixin.accessor.ChestBlockInvoker;
 import de.tomalbrc.filament.registry.OxidizableRegistry;
+import de.tomalbrc.filament.registry.StrippableRegistry;
 import de.tomalbrc.filament.util.FilamentContainer;
 import de.tomalbrc.filament.util.TextUtil;
 import de.tomalbrc.filament.util.Util;
@@ -124,7 +125,7 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
             scheduledTickAccess.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelReader));
         }
 
-        if (this.canConnectTo(blockState, blockState2) && direction.getAxis().isHorizontal()) {
+        if (canConnectTo(blockState, blockState2) && direction.getAxis().isHorizontal()) {
             ChestType chestType = blockState2.getValue(ChestBlock.TYPE);
             if (blockState.getValue(ChestBlock.TYPE) == ChestType.SINGLE && chestType != ChestType.SINGLE && blockState.getValue(ChestBlock.FACING) == blockState2.getValue(ChestBlock.FACING) && ChestBlock.getConnectedDirection(blockState2) == direction.getOpposite()) {
                 return blockState.setValue(ChestBlock.TYPE, chestType.getOpposite());
@@ -140,15 +141,15 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     public BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
         var blockState3 = updateShapeSimple(blockState, levelReader, scheduledTickAccess, blockPos, direction, blockState2);
 
-        if ((OxidizableRegistry.hasPrevious(blockState.getBlock()) || OxidizableRegistry.hasNext(blockState.getBlock())) && this.canConnectTo(blockState, blockState2) && !blockState3.getValue(ChestBlock.TYPE).equals(ChestType.SINGLE) && ChestBlock.getConnectedDirection(blockState3) == direction) {
+        if (canConnectTo(blockState, blockState2) && !blockState3.getValue(ChestBlock.TYPE).equals(ChestType.SINGLE) && ChestBlock.getConnectedDirection(blockState3) == direction) {
             return blockState2.getBlock().withPropertiesOf(blockState3);
         }
 
         return blockState3;
     }
 
-    public boolean canConnectTo(BlockState state1, BlockState state2) {
-        return state1.is(state2.getBlock()) || OxidizableRegistry.sameOxidizable(state1.getBlock(), state2.getBlock());
+    public static boolean canConnectTo(BlockState state1, BlockState state2) {
+        return state1.is(state2.getBlock()) || OxidizableRegistry.sameOxidizable(state1.getBlock(), state2.getBlock()) || StrippableRegistry.get(state1.getBlock()) == state2.getBlock() || StrippableRegistry.get(state2.getBlock()) == state1.getBlock();
     }
 
 
