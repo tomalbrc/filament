@@ -77,11 +77,7 @@ public class BlockData extends AbstractBlockData<BlockProperties> {
                 } else {
                     BlockState state = blockState(String.format("%s[%s]", id, entry.getKey()));
                     BlockModelType type;
-                    if (this.blockModelType.isMap()) {
-                        type = safeBlockModelType(this.blockModelType.getOrDefault(state, BlockModelType.FULL_BLOCK));
-                    } else {
-                        type = safeBlockModelType(this.blockModelType.getRawValue());
-                    }
+                    type = safeBlockModelType(this.blockModelType.getOrDefault(state, BlockModelType.FULL_BLOCK));
 
                     BlockState requestedState = type == null ? null : FilamentBlockResourceUtils.requestBlock(type, entry.getValue(), this.virtual());
                     val.put(state, BlockStateMeta.of(type == null ? Blocks.BEDROCK.defaultBlockState() : requestedState, entry.getValue()));
