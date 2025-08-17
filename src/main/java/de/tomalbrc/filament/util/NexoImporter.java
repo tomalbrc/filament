@@ -34,7 +34,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Blocks;
 import org.apache.commons.io.FilenameUtils;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -379,6 +378,7 @@ public class NexoImporter {
 
             var props = new ItemProperties();
             props.copyComponents = true;
+            props.copyTags = true;
 
             ItemData itemData = new ItemData(
                     id,

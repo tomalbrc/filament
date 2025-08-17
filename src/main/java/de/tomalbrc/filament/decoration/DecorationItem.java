@@ -1,8 +1,5 @@
 package de.tomalbrc.filament.decoration;
 
-import com.griefdefender.api.GriefDefender;
-import com.griefdefender.api.claim.Claim;
-import com.griefdefender.lib.flowpowered.math.vector.Vector3i;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.Behaviours;
@@ -228,7 +225,7 @@ public class DecorationItem extends SimpleBlockItemBase implements PolymerItem, 
     }
 
     protected boolean mayPlace(Player player, Direction direction, ItemStack itemStack, BlockPos blockPos) {
-        if (FabricLoader.getInstance().isModLoaded("griefdefender") && GriefDefenderSupport.isAdminClaim(player.level(), blockPos)) {
+        if (!player.isCreative() && FabricLoader.getInstance().isModLoaded("griefdefender") && GriefDefenderSupport.isAdminClaim(player.level(), blockPos)) {
             return false;
         }
 

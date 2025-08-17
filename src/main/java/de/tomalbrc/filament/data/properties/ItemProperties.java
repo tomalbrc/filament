@@ -19,6 +19,7 @@ public class ItemProperties {
     public List<String> lore;
     public boolean fireResistant;
     public boolean copyComponents;
+    public boolean copyTags;
 
     public void appendHoverText(List<Component> tooltip) {
         if (this.lore != null)

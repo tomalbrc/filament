@@ -18,3 +18,4 @@ accessible method net/minecraft/world/item/MaceItem knockback (Lnet/minecraft/wo
 accessible field net/minecraft/server/packs/FilePackResources zipFileAccess Lnet/minecraft/server/packs/FilePackResources$SharedZipFileAccess;
 accessible method net/minecraft/server/packs/FilePackResources addPrefix (Ljava/lang/String;)Ljava/lang/String;
 accessible method net/minecraft/server/packs/FilePackResources$SharedZipFileAccess getOrCreateZipFile ()Ljava/util/zip/ZipFile;
+
