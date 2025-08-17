@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.behaviour.decoration;
 
+import com.google.gson.*;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.api.behaviour.ContainerLike;
@@ -9,6 +10,7 @@ import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
 import de.tomalbrc.filament.util.FilamentContainer;
+import de.tomalbrc.filament.util.TextUtil;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.virtualentity.api.elements.BlockDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
@@ -17,7 +19,6 @@ import eu.pb4.polymer.virtualentity.api.tracker.DisplayTrackedData;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
@@ -30,8 +31,10 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
+import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -46,6 +49,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -73,17 +77,17 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
 
     @Override
     public void init(DecorationBlockEntity blockEntity) {
-        this.container = new FilamentContainer(blockEntity, config.size(), false) {
+        this.container = new FilamentContainer(blockEntity, config.elements.size(), false) {
             @Override
             public int getMaxStackSize(int slot) {
-                return config.get(slot).maxStackSize;
+                return config.elements.get(slot).maxStackSize;
             }
         };
 
         this.container.addListener(x -> {
             for (int i = 0; i < x.getContainerSize(); i++) {
                 var stack = x.getItem(i);
-                setShowcaseItemStack(blockEntity, config.get(i), stack);
+                setShowcaseItemStack(blockEntity, config.elements.get(i), stack);
             }
         });
     }
@@ -91,6 +95,12 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     @Override
     public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
         if (!player.isSecondaryUseActive() && decorationBlockEntity.getOrCreateHolder() != null) {
+            if (config.useMenu) {
+                Component containerName = customName() != null && showCustomName() ? customName() : TextUtil.formatText(config.name);
+                player.openMenu(new SimpleMenuProvider((id, inventory, p) -> Util.createMenu(container, id, inventory, p), containerName));
+                return InteractionResult.SUCCESS;
+            }
+
             Showcase.ShowcaseMeta showcase = getClosestShowcase(decorationBlockEntity, location);
             ItemStack itemStack = player.getItemInHand(hand);
             ItemStack showcaseStack = this.getShowcaseItemStack(showcase);
@@ -104,13 +114,13 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
                     }
 
                     var count = container.getMaxStackSize(0);
-                    this.container.setItem(config.indexOf(showcase), itemStack.copyWithCount(count));
+                    this.container.setItem(config.elements.indexOf(showcase), itemStack.copyWithCount(count));
                     itemStack.shrink(count);
                     player.level().playSound(null, location.x(), location.y(), location.z(), SoundEvent.createVariableRangeEvent(showcase.addItemSound), SoundSource.NEUTRAL, 1.0f, 1.0f);
                 } else if (showcaseStack != null && !showcaseStack.isEmpty()) {
                     changed = true;
                     player.setItemInHand(hand, showcaseStack);
-                    this.container.setItem(config.indexOf(showcase), ItemStack.EMPTY);
+                    this.container.setItem(config.elements.indexOf(showcase), ItemStack.EMPTY);
                     player.level().playSound(null, location.x(), location.y(), location.z(), SoundEvent.createVariableRangeEvent(showcase.removeItemSound), SoundSource.NEUTRAL, 1.0f, 1.0f);
                 }
 
@@ -130,7 +140,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
         if (showcaseInput.isPresent() && blockEntity.getOrCreateHolder() != null) {
             ValueInput showcaseTag = showcaseInput.orElseThrow();
 
-            for (int i = 0; i < this.config.size(); i++) {
+            for (int i = 0; i < this.config.elements.size(); i++) {
                 String key = ITEM + i;
                 if (showcaseTag.child(key).isPresent()) {
                     container.items.set(i, showcaseTag.read(key, ItemStack.CODEC).orElseThrow());
@@ -145,8 +155,8 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
         if (blockEntity.getOrCreateHolder() != null) {
             ValueOutput showcaseTag = output.child(SHOWCASE_KEY);
 
-            for (int i = 0; i < config.size(); i++) {
-                Showcase.ShowcaseMeta showcase = config.get(i);
+            for (int i = 0; i < config.elements.size(); i++) {
+                Showcase.ShowcaseMeta showcase = config.elements.get(i);
                 if (showcase != null && !getShowcaseItemStack(showcase).isEmpty())
                     showcaseTag.store(ITEM + i, ItemStack.CODEC, getShowcaseItemStack(showcase));
             }
@@ -156,7 +166,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     @Override
     public void destroy(DecorationBlockEntity decorationBlockEntity, boolean dropItem) {
         if (decorationBlockEntity.getOrCreateHolder() != null) {
-            config.forEach(showcase -> {
+            config.elements.forEach(showcase -> {
                 ItemStack itemStack = getShowcaseItemStack(showcase);
                 if (itemStack != null && !itemStack.isEmpty()) {
                     Util.spawnAtLocation(decorationBlockEntity.getLevel(), decorationBlockEntity.getBlockPos().getCenter(), itemStack.copyAndClear());
@@ -166,13 +176,13 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     }
 
     public Showcase.ShowcaseMeta getClosestShowcase(DecorationBlockEntity decorationBlockEntity, Vec3 location) {
-        if (config.size() == 1) {
-            return config.getFirst();
+        if (config.elements.size() == 1) {
+            return config.elements.getFirst();
         } else {
             double dist = Double.MAX_VALUE;
             Showcase.ShowcaseMeta nearest = null;
-            for (Showcase.ShowcaseMeta showcase : config) {
-                Vec3 q = decorationBlockEntity.getBlockPos().getCenter().add(new Vec3(this.showcaseTranslation(decorationBlockEntity, showcase).rotateY((-decorationBlockEntity.getVisualRotationYInDegrees() + 180) * Mth.DEG_TO_RAD)));
+            for (Showcase.ShowcaseMeta showcase : config.elements) {
+                Vec3 q = decorationBlockEntity.getBlockPos().getCenter().add(new Vec3(this.showcaseTranslation(showcase).rotateY((-decorationBlockEntity.getVisualRotationYInDegrees() + 180) * Mth.DEG_TO_RAD)));
                 double distance = q.distanceTo(location);
 
                 if (distance < dist) {
@@ -185,7 +195,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
         }
     }
 
-    private Vector3f showcaseTranslation(DecorationBlockEntity decorationBlockEntity, Showcase.ShowcaseMeta showcase) {
+    private Vector3f showcaseTranslation(Showcase.ShowcaseMeta showcase) {
         return new Vector3f(showcase.offset).sub(0, 0.475f, 0).rotateY(Mth.PI);
     }
 
@@ -270,15 +280,15 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
             element.setLeftRotation(showcase.rotation);
             element.setYaw(decorationBlockEntity.getVisualRotationYInDegrees() + 180);
             if (element instanceof BlockDisplayElement) {
-                element.setTranslation(this.showcaseTranslation(decorationBlockEntity, showcase).add(new Vector3f(-.5f, -.5f, -.5f).mul(showcase.scale)));
+                element.setTranslation(this.showcaseTranslation(showcase).add(new Vector3f(-.5f, -.5f, -.5f).mul(showcase.scale)));
             } else {
-                element.setTranslation(this.showcaseTranslation(decorationBlockEntity, showcase));
+                element.setTranslation(this.showcaseTranslation(showcase));
             }
         }
     }
 
     public ItemStack getShowcaseItemStack(Showcase.ShowcaseMeta showcase) {
-        var i = config.indexOf(showcase);
+        var i = config.elements.indexOf(showcase);
         return container.getItem(i);
     }
 
@@ -314,7 +324,6 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     @Override
     public void applyImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentGetter dataComponentGetter) {
         dataComponentGetter.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(container.items);
-        container.setChanged();
     }
 
     @Override
@@ -324,31 +333,22 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
 
     @Override
     public Component customName() {
-        return null;
+        return container.getBlockEntity().components().get(DataComponents.CUSTOM_NAME);
     }
 
     @Override
-    public @Nullable FilamentContainer container() {
+    public @Nullable Container container() {
         return container;
     }
 
     @Override
     public boolean showCustomName() {
-        return false;
+        return config.showCustomName;
     }
 
     @Override
     public boolean hopperDropperSupport() {
-        for (ShowcaseMeta meta : config) {
-            if (meta.hopperDropperSupport)
-                return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean canPickup() {
-        return false;
+        return config.hopperDropperSupport;
     }
 
     public static class ShowcaseMeta {
@@ -386,8 +386,6 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
 
         public ResourceLocation removeItemSound = SoundEvents.ITEM_FRAME_REMOVE_ITEM.location();
 
-        public boolean hopperDropperSupport = true;
-
         public int maxStackSize = 1;
     }
 
@@ -397,7 +395,52 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
         dynamic // block when possible, item otherwise
     }
 
-    public static class Config extends ObjectArrayList<ShowcaseMeta> {
+    public static class Config {
+        public boolean hopperDropperSupport = true;
+        public boolean useMenu = false;
+        public String name = "Showcase";
+        public boolean showCustomName = true;
+        public boolean canPickup = false;
+        public List<ShowcaseMeta> elements;
+
+        public static class ConfigDeserializer implements JsonDeserializer<Config> {
+            @Override
+            public Config deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext ctx) throws JsonParseException {
+                Config config = new Config();
+                if (json.isJsonArray()) {
+                    config.elements = new ObjectArrayList<>();
+                    for (JsonElement elem : json.getAsJsonArray()) {
+                        ShowcaseMeta meta = ctx.deserialize(elem, ShowcaseMeta.class);
+                        config.elements.add(meta);
+                    }
+                    return config;
+                }
+
+                if (json.isJsonObject()) {
+                    JsonObject obj = json.getAsJsonObject();
+
+                    if (obj.has("hopper_dropper_support"))
+                        config.hopperDropperSupport = obj.get("hopper_dropper_support").getAsBoolean();
+                    if (obj.has("use_menu"))
+                        config.useMenu = obj.get("use_menu").getAsBoolean();
+                    if (obj.has("name"))
+                        config.name = obj.get("name").getAsString();
+                    if (obj.has("show_custom_name"))
+                        config.showCustomName = obj.get("show_custom_name").getAsBoolean();
+
+                    if (obj.has("elements") && obj.get("elements").isJsonArray()) {
+                        config.elements = new ObjectArrayList<>();
+                        for (JsonElement elem : obj.getAsJsonArray("elements")) {
+                            ShowcaseMeta meta = ctx.deserialize(elem, ShowcaseMeta.class);
+                            config.elements.add(meta);
+                        }
+                    }
+                    return config;
+                }
+
+                throw new JsonParseException("Invalid config format: must be object or array");
+            }
+        }
     }
 
     private static class ShowcaseItemElement extends ItemDisplayElement {
@@ -406,9 +449,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
         }
 
         @Override
-        public void setItem(ItemStack stack) {
-
-        }
+        public void setItem(ItemStack stack) {}
 
         public void setItemReal(ItemStack stack) {
             this.dataTracker.set(DisplayTrackedData.Item.ITEM, stack, true);

@@ -1,0 +1,6 @@
+{
+  "parent": "filament:item/previous_gui",
+  "textures": {
+    "layer1": "filament:item/right_gui"
+  }
+}

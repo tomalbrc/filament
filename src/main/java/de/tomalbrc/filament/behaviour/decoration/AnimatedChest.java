@@ -30,7 +30,6 @@ import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -88,7 +87,7 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     public void init(DecorationBlockEntity blockEntity) {
         DecorationBehaviour.super.init(blockEntity);
 
-        //TYPE = (BlockEntityType<DecorationBlockEntity>) blockEntity.getType();
+        TYPE = (BlockEntityType<DecorationBlockEntity>) blockEntity.getType();
 
         this.container = new FilamentContainer(blockEntity, config.size, config.purge);
 
@@ -292,8 +291,8 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     }
 
     @Override
-    public @Nullable FilamentContainer container() {
-        return container;
+    public @Nullable Container container() {
+        return getContainer(container.getBlockEntity().getBlockState(), container.getBlockEntity().getLevel(), container.getBlockEntity().getBlockPos(), config.ignoreBlock);
     }
 
     @Override
@@ -304,11 +303,6 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     @Override
     public boolean hopperDropperSupport() {
         return config.hopperDropperSupport;
-    }
-
-    @Override
-    public boolean canPickup() {
-        return config.canPickup;
     }
 
     public static class Config {
@@ -426,9 +420,9 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
             return Optional.of(new MenuProvider() {
                 @Override
                 @Nullable
-                public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+                public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
                     if (c1.canOpen(player) && c2.canOpen(player)) {
-                        return new ChestMenu(de.tomalbrc.filament.behaviour.decoration.Container.getMenuType(container.getContainerSize(), c1.config.name), i, inventory, container, container.getContainerSize() / 9);
+                        return Util.createMenu(container, id, inventory, player);
                     } else {
                         return null;
                     }
@@ -444,11 +438,28 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
 
         @Override
         public @NotNull Optional<MenuProvider> acceptSingle(DecorationBlockEntity chestBlockEntity) {
-            var c1 = chestBlockEntity.get(Behaviours.ANIMATED_CHEST);
-            assert c1 != null;
-            var container = c1.container;
-            var p = new SimpleMenuProvider((i, inventory, playerEntity) -> new ChestMenu(de.tomalbrc.filament.behaviour.decoration.Container.getMenuType(container.getContainerSize(), c1.config.name), i, inventory, container, container.getContainerSize() / 9), c1.customName() != null && c1.showCustomName() ? c1.customName() : TextUtil.formatText(c1.config.name));
-            return Optional.of(p);
+            var c1 = chestBlockEntity.getOrThrow(Behaviours.ANIMATED_CHEST);
+            FilamentContainer container = c1.container;
+
+            var menuProvider = new MenuProvider() {
+                @Override
+                @Nullable
+                public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
+                    if (c1.canOpen(player)) {
+                        return Util.createMenu(container, id, inventory, player);
+                    } else {
+                        return null;
+                    }
+                }
+
+                @Override
+                public @NotNull Component getDisplayName() {
+                    var cname = c1.customName();
+                    return cname != null && c1.showCustomName() ? cname : TextUtil.formatText(c1.config.name);
+                }
+            };
+
+            return Optional.of(menuProvider);
         }
 
         @Override

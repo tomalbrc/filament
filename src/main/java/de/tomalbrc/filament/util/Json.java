@@ -11,6 +11,7 @@ import de.tomalbrc.bil.json.SimpleCodecDeserializer;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.BehaviourList;
+import de.tomalbrc.filament.behaviour.decoration.Showcase;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import de.tomalbrc.filament.data.resource.BlockResource;
 import eu.pb4.polymer.blocks.api.BlockModelType;
@@ -79,6 +80,10 @@ public class Json {
             .registerTypeHierarchyAdapter(BlockStateMappedProperty.class, new BlockStateMappedPropertyDeserializer<>())
             .registerTypeHierarchyAdapter(PolymerBlockModel.class, new PolymerBlockModelDeserializer())
             .registerTypeHierarchyAdapter(BlockResource.TextureBlockModel.class, new TextureBlockModelDeserializer())
+            // special case to support old format
+            // TODO: allow behaviours to specify codec/deserializer
+            .registerTypeHierarchyAdapter(Showcase.Config.class, new Showcase.Config.ConfigDeserializer())
+
             .create();
 
     public static List<InputStream> yamlToJson(InputStream inputStream) {

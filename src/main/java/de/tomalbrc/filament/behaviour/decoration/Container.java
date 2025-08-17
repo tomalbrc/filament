@@ -5,6 +5,7 @@ import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.util.FilamentContainer;
 import de.tomalbrc.filament.util.TextUtil;
+import de.tomalbrc.filament.util.Util;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
@@ -12,8 +13,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
-import net.minecraft.world.inventory.ChestMenu;
-import net.minecraft.world.inventory.HopperMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
@@ -74,11 +73,8 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
     public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
         if (!player.isSecondaryUseActive()) {
             Component containerName = customName() != null && showCustomName() ? customName() : TextUtil.formatText(config.name);
-            if (this.container.getContainerSize() % 9 == 0) {
-                player.openMenu(new SimpleMenuProvider((i, playerInventory, playerEntity) -> new ChestMenu(getMenuType(config.size, config.name), i, playerInventory, container, container.getContainerSize() / 9), containerName));
-            } else if (this.container.getContainerSize() == 5) {
-                player.openMenu(new SimpleMenuProvider((i, playerInventory, playerEntity) -> new HopperMenu(i, playerInventory, container), containerName));
-            }
+
+            player.openMenu(new SimpleMenuProvider((id, inventory, p) -> Util.createMenu(container, id, inventory, p), containerName));
 
             if (config.angerPiglins) PiglinAi.angerNearbyPiglins(player.level(), player, true);
 
@@ -114,7 +110,7 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
         builder.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(this.container.items));
     }
 
-    public static MenuType<?> getMenuType(int size, String name) {
+    public static MenuType<?> getMenuType(int size) {
         return switch (size) {
             case 9 -> MenuType.GENERIC_9x1;
             case 2 * 9 -> MenuType.GENERIC_9x2;
@@ -123,8 +119,23 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
             case 5 * 9 -> MenuType.GENERIC_9x5;
             case 6 * 9 -> MenuType.GENERIC_9x6;
             case 5 -> MenuType.HOPPER;
-            default ->
-                    throw new IllegalStateException("Unexpected container size: " + name + " " + size);
+            default -> null;
+        };
+    }
+
+    public static MenuType<?> estimateMenuType(int size) {
+        if (size <= 5) {
+            return MenuType.HOPPER;
+        }
+
+        int rows = (size + 8) / 9;
+        return switch (Math.min(rows, 6)) {
+            case 1 -> MenuType.GENERIC_9x1;
+            case 2 -> MenuType.GENERIC_9x2;
+            case 3 -> MenuType.GENERIC_9x3;
+            case 4 -> MenuType.GENERIC_9x4;
+            case 5 -> MenuType.GENERIC_9x5;
+            default -> MenuType.GENERIC_9x6;
         };
     }
 
@@ -134,7 +145,7 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
     }
 
     @Override
-    public @Nullable FilamentContainer container() {
+    public net.minecraft.world.Container container() {
         return container;
     }
 
@@ -146,11 +157,6 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
     @Override
     public boolean hopperDropperSupport() {
         return config.hopperDropperSupport;
-    }
-
-    @Override
-    public boolean canPickup() {
-        return config.canPickup;
     }
 
     public static class Config {

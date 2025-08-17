@@ -100,42 +100,16 @@ behaviour:
 
 ---
 
-## `armor` behaviour
+## `generate_trim_models` behaviour
 <img class="right" src="../img/armor.png" alt="armor">
 
-~~~admonish warning "Only use with 1.21.1"
-Use Minecrafts vanilla [`equippable`](https://minecraft.wiki/w/Data_component_format/equippable) component for your custom armor in 1.21.4 or later!
-~~~
-
-Defines armour item behaviours, using the Fancypants shader via Polymer.
-Only use this for 1.21.1.
-
-~~~admonish tip
-As of filament 0.7 it is possible to use armor trims to render custom armor, to enable this, set the `trim` flag to `true`.
-~~~
-
-~~~admonish info "For Shader-Based Armor"
-- The textures for the shader version of armor should be located in `assets/minecraft/textures/models/armor/`.
-- For a `texture` field value of `mynamespace:amethyst`, the textures should be named `amethyst_layer_1.png` and `amethyst_layer_2.png`.
-- It's required to use a leather armor item for your `vanillaItem` for the shader to work.
-~~~
-
-~~~admonish info "For Trim-Based Armor"
-- When using Armor Trims for the armor, the textures need to be located in `assets/minecraft/textures/trims/models/armor/`.
-- For a `texture` field value of `mynamespace:amethyst`, the textures should be named `amethyst.png` and `amethyst_leggings.png`.
-- It's required to use an armor item for your `vanillaItem`. Any armor item should work.
-- Depending on the `vanillaItem` of your custom item, you might be able to see parts of the original armors texture, to mitigate this, you will have to enable the `trimArmorReplaceChainmail` option in the mods configs.
-- Enabling `trimArmorReplaceChainmail` will prevent all chainmail armor pieces unable to receive or display armor trims. The Smithing Table will also reject chainmail armor with this option enabled.
-~~~
+Enables automatic generation of the different item models with the trim overlay.
 
 ~~~admonish info "Configurable Fields"
-- `slot`: The equipment slot for the armour piece (e.g., head, chest, legs, or feet).
-- `texture`: The resource location of the texture associated with the armour. Example: `mynamespace:amethyst`
-- `trim`: Flag whether to use trim-based armor instead of shaders
+- `type_prefix`: Chance of raising the composter level by 1 between 0 and 100
+- `custom_materials`: List of identifiers for custom trim materials. Empty by default
+- `materials`: List of vanilla trim materials. Default values include all vanilla trim materials: `["minecraft:quartz", "minecraft:iron", "minecraft:netherite", "minecraft:redstone", ...]`
 ~~~
-
-<br>
-<br>
 
 ---
 

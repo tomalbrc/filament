@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class FilamentCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         var rootNode = Commands
-                .literal("filament").requires(Permissions.require("filament.command", 2))
+                .literal(Constants.MOD_ID).requires(Permissions.require("filament.command", 2))
                 .executes(ctx -> {
                     var meta = FabricLoader.getInstance().getModContainer(Constants.MOD_ID).orElseThrow().getMetadata();
                     ctx.getSource().sendSuccess(() -> Component.literal(meta.getName() + " " + meta.getVersion().getFriendlyString() + " by " + meta.getAuthors().stream().map(Person::getName).collect(Collectors.joining())), false);

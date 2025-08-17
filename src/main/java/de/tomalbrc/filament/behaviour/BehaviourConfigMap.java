@@ -77,7 +77,7 @@ public class BehaviourConfigMap {
                 var behaviourType = BehaviourRegistry.getType(resourceLocation);
 
                 if (behaviourType == null || behaviourType.configType() == null) {
-                    Filament.LOGGER.error("Could not load behaviour " + resourceLocation);
+                    Filament.LOGGER.error("Could not load behaviour {}", resourceLocation);
                     continue;
                 }
                 var clazz = behaviourType.configType();

@@ -1,0 +1,16 @@
+{
+  "model": {
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:model",
+        "model": "filament:item/next_gui"
+      },
+      {
+        "type": "minecraft:model",
+        "model": "filament:item/blank_gui"
+      }
+    ]
+  },
+  "oversized_in_gui": true
+}

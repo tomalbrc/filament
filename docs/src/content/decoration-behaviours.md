@@ -151,7 +151,7 @@ Allows to create barrels, trashcans, etc.
 Works with the `animation` behaviour to play an animation defined in the bbmodel/ajblueprint.
 
 ~~~admonish info "Configurable Fields"
-- `name`: The name displayed in the container UI.
+- `name`: The default name displayed in the container UI.
 - `showCustomName`: Flag whether to show the name of the placed itemstack. Enabled by default.
 - `size`: The size of the container, has to be 5 slots or a multiple of 9, up to 6 rows of 9 slots.
 - `purge`: Indicates whether the container's contents should be cleared when no player is viewing the inventory.
@@ -197,7 +197,7 @@ Allows to make animated connectable containers with a left and right side.
 Requires with the `animation` behaviour to play an animation defined in the bbmodel/ajblueprint.
 
 ~~~admonish info "Configurable Fields"
-- `name`: The name displayed in the container UI.
+- `name`: The default name displayed in the container UI.
 - `showCustomName`: Flag whether to show the name of the placed itemstack if it has a custom name. Enabled by default.
 - `size`: The size of the container, has to be 5 slots or a multiple of 9, up to 6 rows of 9 slots.
 - `purge`: Indicates whether the container's contents should be cleared when no player is viewing the inventory.
@@ -327,7 +327,18 @@ Defines a showcase behaviour for decorations.
 
 Allows you to create shelves / item-frame like decorations.
 
+Can be either a list of elements or an object as described below:
+
 ~~~admonish info "Configurable Fields"
+- `useMenu`: Use a container menu instead of the in-world insert interaction
+- `name`: The default name displayed in the container UI.
+- `canPickup`: Flag whether the container will not drop its items when broken but store it as component in the dropped item
+- `showCustomName`: Show the name of the itemstack inside the container menu. Defaults to `true`
+- `hopperDropperSupport`: Enables hopper and dropper interaction. Defaults to `true`
+- `elements`: List of elements
+~~~
+
+~~~admonish info "Fields for each element"
 - `offset`: Offset for positioning the showcased item.
 - `scale`: Scale of the showcased item.
 - `rotation`: Rotation of the showcased item.
@@ -336,11 +347,10 @@ Allows you to create shelves / item-frame like decorations.
 - `filterTags`: Items with given item tags to allow.
 - `addItemSound`: Sound to use when inserting an item by a player. Defaults to item frame sounds
 - `removeItemSound`: Sound to use when an item is removed by a player. Defaults to item frame sounds
-- `hopperDropperSupport`: Support for hoppers & droppers. If 1 showcase element has this option enabled, all will have it enabled. Enabled by default.
 - `maxStackSize`: Max stack size for this showcase element. Defaults to 1
 ~~~
 
-~~~admonish example "Single item showcase"
+~~~admonish example "Showcase with menu"
 <!-- langtabs-start -->
 ```yml
 showcase:
@@ -366,6 +376,50 @@ showcase:
       "filterTags": ["minecraft:tag_example"]
     }
   ]
+}
+```
+<!-- langtabs-end -->
+~~~
+
+~~~admonish example "Showcase with menu"
+<!-- langtabs-start -->
+```yml
+showcase:
+  hopperDropperSupport: true
+  useMenu: true
+  name: "Showcase"
+  showCustomName: false
+  canPickup: false
+  elements:
+    - offset: [0, 0, 0]
+      scale: [1, 1, 1]
+      rotation: [0, 0, 0]
+      type: item
+      addItemSound: minecraft:item_frame.add_item
+      removeItemSound: minecraft:item_frame.remove_item
+      maxStackSize: 1
+```
+
+```json
+{
+   "showcase":{
+      "hopperDropperSupport": true,
+      "useMenu": false,
+      "name": "Showcase",
+      "showCustomName":false,
+      "canPickup":false,
+      "elements":[
+         {
+            "offset":[0, 0, 0],
+            "scale":[1, 1, 1],
+            "rotation":[0, 0, 0],
+            "type": "item",
+            "addItemSound": "minecraft:item_frame.add_item",
+            "removeItemSound": "minecraft:item_frame.remove_item",
+            "maxStackSize": 1
+         }
+      ]
+   }
 }
 ```
 <!-- langtabs-end -->
