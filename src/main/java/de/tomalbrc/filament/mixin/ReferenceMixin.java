@@ -39,6 +39,7 @@ public abstract class ReferenceMixin<T> implements Holder<T> {
                 });
 
                 this.tags = Set.copyOf(newSet);
+                ci.cancel();
             }
         }
     }
