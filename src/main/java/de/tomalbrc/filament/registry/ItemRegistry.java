@@ -58,7 +58,7 @@ public class ItemRegistry {
         RPUtil.create(item, data.id(), data.itemResource());
 
         if (data.properties().copyTags) {
-            COPY_TAGS.put(data.vanillaItem(), item);
+            COPY_TAGS.put(item, data.vanillaItem());
         }
 
         FilamentRegistrationEvents.ITEM.invoker().registered(data, item);
