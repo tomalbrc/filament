@@ -70,3 +70,8 @@ Defaults to `false`
 ### `copyComponents`
 
 Boolean (true/false) whether the components of the vanillaItem should be copied.
+
+### `copyTags`
+
+Boolean (true/false) whether the item tags of the vanillaItem should be copied.
+
