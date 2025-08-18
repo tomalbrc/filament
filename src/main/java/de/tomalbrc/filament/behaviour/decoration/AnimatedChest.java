@@ -107,10 +107,9 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     @Override
     public void destroy(DecorationBlockEntity decorationBlockEntity, boolean dropItem) {
         container.setValid(false);
-        for (ItemStack itemStack : container.items) {
-            if (itemStack.isEmpty()) continue;
-            Util.spawnAtLocation(decorationBlockEntity.getLevel(), decorationBlockEntity.getBlockPos().getCenter(), itemStack);
-        }
+
+        if (!config.canPickup)
+            Containers.dropContents(decorationBlockEntity.getLevel(), decorationBlockEntity.getBlockPos(), container);
     }
 
     @Override
