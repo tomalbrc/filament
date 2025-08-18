@@ -36,7 +36,9 @@ public class Filament implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        PolymerResourcePackUtils.addModAssets(Constants.MOD_ID);
+        if (FilamentConfig.getInstance().addCustomMenuAssets)
+            PolymerResourcePackUtils.addModAssets(Constants.MOD_ID);
+
         PolymerResourcePackUtils.markAsRequired();
         FilamentComponents.register();
         Behaviours.register();

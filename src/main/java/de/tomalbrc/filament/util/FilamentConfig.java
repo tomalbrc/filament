@@ -14,10 +14,14 @@ public class FilamentConfig {
     static Path CONFIG_FILE_PATH = Constants.CONFIG_DIR.resolve("filament.json");
     static FilamentConfig instance;
 
+    @SerializedName("debug")
     public boolean debug = false;
 
     @SerializedName("commands")
     public boolean commands = true;
+
+    @SerializedName("add_custom_menu_assets")
+    public boolean addCustomMenuAssets = true;
 
     @SerializedName("prevent_adventure_mode_decoration_interaction")
     public boolean preventAdventureModeDecorationInteraction = true;
