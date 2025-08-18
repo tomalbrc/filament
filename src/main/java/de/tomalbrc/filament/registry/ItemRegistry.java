@@ -8,6 +8,7 @@ import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.util.*;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -29,6 +30,7 @@ import java.util.function.Function;
 
 public class ItemRegistry {
     public static Map<ResourceLocation, List<ResourceLocation>> ITEMS_TAGS = new Object2ReferenceOpenHashMap<>();
+    public static Map<Item, Item> COPY_TAGS = new Reference2ReferenceOpenHashMap<>(); // custom->vanilla
 
     public static void register(InputStream inputStream) throws IOException {
         var element = JsonParser.parseReader(new InputStreamReader(inputStream));
@@ -59,6 +61,10 @@ public class ItemRegistry {
         BehaviourUtil.postInitItem(item, item, data.behaviour());
         Translations.add(item, null, data);
         RPUtil.create(item, data);
+
+        if (data.properties().copyTags) {
+            COPY_TAGS.put(item, data.vanillaItem());
+        }
 
         FilamentRegistrationEvents.ITEM.invoker().registered(data, item);
     }

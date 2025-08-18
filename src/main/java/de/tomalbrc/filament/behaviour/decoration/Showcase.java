@@ -31,10 +31,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
+import net.minecraft.world.*;
 import net.minecraft.world.Container;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -165,13 +163,10 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
 
     @Override
     public void destroy(DecorationBlockEntity decorationBlockEntity, boolean dropItem) {
-        if (decorationBlockEntity.getOrCreateHolder() != null) {
-            config.elements.forEach(showcase -> {
-                ItemStack itemStack = getShowcaseItemStack(showcase);
-                if (itemStack != null && !itemStack.isEmpty()) {
-                    Util.spawnAtLocation(decorationBlockEntity.getLevel(), decorationBlockEntity.getBlockPos().getCenter(), itemStack.copyAndClear());
-                }
-            });
+        container.setValid(false);
+
+        if (!config.canPickup) {
+            Containers.dropContents(decorationBlockEntity.getLevel(), decorationBlockEntity.getBlockPos(), container);
         }
     }
 
@@ -317,8 +312,16 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     }
 
     @Override
+    public void modifyDrop(DecorationBlockEntity decorationBlockEntity, ItemStack itemStack) {
+        if (config.canPickup) {
+            itemStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(container.getItems()));
+        }
+    }
+
+    @Override
     public ItemStack getCloneItemStack(ItemStack itemStack, LevelReader levelReader, BlockPos blockPos, BlockState blockState, boolean includeData) {
-        return DecorationBehaviour.super.getCloneItemStack(itemStack, levelReader, blockPos, blockState, includeData);
+        var be = levelReader.getBlockEntity(blockPos);
+        return be instanceof DecorationBlockEntity decorationBlockEntity ? decorationBlockEntity.getBlock().getCloneItemStack(levelReader, decorationBlockEntity.mainPosition(), blockState, includeData) : DecorationBehaviour.super.getCloneItemStack(itemStack, levelReader, blockPos, blockState, includeData);
     }
 
     @Override
