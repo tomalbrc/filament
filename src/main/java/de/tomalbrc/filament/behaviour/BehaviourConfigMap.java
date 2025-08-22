@@ -16,7 +16,7 @@ import java.util.function.BiConsumer;
 public class BehaviourConfigMap {
     private final Map<BehaviourType<? extends Behaviour<?>,?>, Object> behaviourConfigMap = new Object2ObjectOpenHashMap<>();
 
-    public void put(BehaviourType<?,?> type, Object config) {
+    public <T extends Behaviour<E>, E> void put(BehaviourType<T,E> type, Object config) {
         this.behaviourConfigMap.put(type, config);
     }
 

@@ -8,7 +8,7 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.decoration.Seat;
-import de.tomalbrc.filament.behaviour.item.Armor;
+import de.tomalbrc.filament.behaviour.item.*;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.ItemData;
@@ -38,10 +38,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import org.apache.commons.io.FilenameUtils;
 import org.joml.Vector2f;
@@ -446,6 +443,32 @@ public class NexoImporter {
                 }
 
                 behaviourConfigMap.put(Behaviours.ARMOR, conf);
+            }
+
+            if (vanillaItem instanceof ElytraItem) {
+                behaviourConfigMap.put(Behaviours.ELYTRA, new Elytra.Config());
+            }
+
+            if (vanillaItem instanceof ShovelItem) {
+                behaviourConfigMap.put(Behaviours.SHOVEL, new Shovel.Config());
+            }
+
+            if (vanillaItem instanceof HoeItem) {
+                behaviourConfigMap.put(Behaviours.HOE, new Hoe.Config());
+            }
+
+            if (vanillaItem instanceof ShearsItem) {
+                behaviourConfigMap.put(Behaviours.SHEARS, new Shears.Config());
+            }
+
+            if (vanillaItem instanceof AxeItem) {
+                behaviourConfigMap.put(Behaviours.STRIPPER, new Stripper.Config());
+            }
+
+            if (mechanics != null && mechanics.containsKey("cosmetic") && vanillaItem instanceof Equipable equipable) {
+                var conf = new Cosmetic.Config();
+                conf.slot = equipable.getEquipmentSlot();
+                behaviourConfigMap.put(Behaviours.COSMETIC, conf);
             }
 
             ItemData itemData = new ItemData(
