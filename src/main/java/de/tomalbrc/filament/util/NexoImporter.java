@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.decoration.Seat;
+import de.tomalbrc.filament.behaviour.item.Armor;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.ItemData;
@@ -23,6 +25,8 @@ import eu.pb4.placeholders.api.TextParserUtils;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
+import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.fabricmc.loader.api.FabricLoader;
@@ -31,9 +35,14 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import org.apache.commons.io.FilenameUtils;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -45,10 +54,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class NexoImporter {
     public static void importAll() {
@@ -61,14 +67,15 @@ public class NexoImporter {
             }
         }
 
+        Map<String, String> redirects = new Object2ObjectOpenHashMap<>();
         try (var stream = Files.list(root)) {
-            stream.forEach(NexoImporter::importPack);
+            stream.forEach(x -> importPack(x, redirects));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static void importPack(Path path) {
+    public static void importPack(Path path, Map<String, String> fileRedirects) {
         String dirName = FilenameUtils.getBaseName(path.toString());
 
         try (var stream = Files.walk(path.resolve("items"))) {
@@ -82,14 +89,14 @@ public class NexoImporter {
 
                     if (ext != null && (ext.equals("yml") || ext.equals("yaml"))) {
                         InputStream inputStream = new FileInputStream(file.toFile());
-                        importSingleFile(dirName, inputStream);
+                        importSingleFile(dirName, inputStream, fileRedirects);
                     }
-                } catch (Throwable ignored) {
-                    ignored.printStackTrace();
+                } catch (Throwable e) {
+                    Filament.LOGGER.error("Error loading nexo file", e);
                 }
             });
         } catch (Throwable e) {
-            e.printStackTrace();
+            Filament.LOGGER.error("Error reading nexo directory", e);
         }
 
         PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder -> {
@@ -117,13 +124,13 @@ public class NexoImporter {
                             }
                         }
 
-                        resourcePackBuilder.addData(relativePath, stream.readAllBytes());
-                    } catch (Throwable ignored) {
-                        ignored.printStackTrace();
+                        resourcePackBuilder.addData(fileRedirects.getOrDefault(relativePath, relativePath), stream.readAllBytes());
+                    } catch (Throwable e) {
+                        Filament.LOGGER.error("Error reading nexo asset", e);
                     }
                 });
             } catch (Throwable e) {
-                e.printStackTrace();
+                Filament.LOGGER.error("Error reading nexo pack assets", e);
             }
 
             byte[] atlas = generateAtlasJson(texturePaths);
@@ -181,17 +188,18 @@ public class NexoImporter {
         return gson.toJson(root).getBytes(StandardCharsets.UTF_8);
     }
 
-    public static void importSingleFile(String baseName, InputStream inputStream) {
+    public static void importSingleFile(String baseName, InputStream inputStream, Map<String, String> fileRedirects) {
         Yaml yaml = new Yaml();
         Map<String, Object> elements = yaml.load(inputStream);
         for (Map.Entry<String, Object> element : elements.entrySet()) {
-            processElement(ResourceLocation.fromNamespaceAndPath(baseName, element.getKey()), element.getValue());
+            processElement(ResourceLocation.fromNamespaceAndPath(baseName, element.getKey()), element.getValue(), fileRedirects);
         }
     }
 
-    private static void processElement(ResourceLocation id, Object data) {
+    private static void processElement(ResourceLocation id, Object data, Map<String, String> fileRedirects) {
         var name = getValue("displayname", data, String.class);
-        if (name == null) name = getValue("itemname", data, String.class); // fallback for older configs (nexo for <1.20.4)
+        if (name == null)
+            name = getValue("itemname", data, String.class); // fallback for older configs (nexo for <1.20.4)
 
         var builder = DataComponentMap.builder();
         if (name != null)
@@ -205,10 +213,33 @@ public class NexoImporter {
             vanillaItem = Items.LEATHER_HORSE_ARMOR;
         }
 
+        var attr = getValue("AttributeModifiers", data, List.class);
+        if (attr != null) {
+            var attrBuilder = ItemAttributeModifiers.builder();
+            for (Object o : attr) {
+                var amount = getValue("amount", o, Number.class);
+                var attribute = getValue("attribute", o, String.class);
+                var operation = getValue("operation", o, Integer.class);
+                var slot = EquipmentSlot.valueOf(getValue("slot", o, String.class));
+
+                attrBuilder.add(BuiltInRegistries.ATTRIBUTE.getHolder(ResourceLocation.parse(attribute.toLowerCase().replace("_", "."))).orElseThrow(), new AttributeModifier(ResourceLocation.fromNamespaceAndPath("filament", "armor"), amount.doubleValue(), Arrays.stream(AttributeModifier.Operation.values()).filter(y -> y.id() == operation).findAny().orElseThrow()), EquipmentSlotGroup.bySlot(slot));
+            }
+            builder.set(DataComponents.ATTRIBUTE_MODIFIERS, attrBuilder.build());
+        }
+
         var mechanics = getMap("Mechanics", data);
+        Map<String, Object> customBlock = null;
+        Map<String, Object> furniture = null;
+        Integer dur = null;
         if (mechanics != null) {
-            var customBlock = getMap("custom_block", mechanics);
-            var furniture = getMap("furniture", mechanics);
+            customBlock = getMap("custom_block", mechanics);
+            furniture = getMap("furniture", mechanics);
+            dur = getValue("durability", mechanics, Integer.class);
+        }
+
+        if (dur != null) builder.set(DataComponents.MAX_DAMAGE, dur);
+
+        if (customBlock != null || furniture != null) {
             if (customBlock != null) {
                 // load as block
                 var model = getValue("model", data, String.class);
@@ -370,22 +401,59 @@ public class NexoImporter {
                 DecorationRegistry.register(decorationData);
             }
         } else {
+            BehaviourConfigMap behaviourConfigMap = new BehaviourConfigMap();
+
             // load as simple item
             var pack = getMap("Pack", data);
             var model = getValue("model", pack, String.class);
-            if (model == null)
-                return;
+            //if (model == null)
+            //    return;
 
             var props = new ItemProperties();
             props.copyComponents = true;
             props.copyTags = true;
 
+            String parent_model = getValue("parent_model", pack, String.class);
+            String texture = getValue("texture", pack, String.class);
+            List<String> textureList = getValue("textures", pack, List.class);
+            Map<String, ResourceLocation> textures = new Object2ObjectOpenHashMap<>();
+            if (parent_model != null) {
+                if (texture != null) {
+                    textures.put("layer0", ResourceLocation.parse(texture));
+                } else if (textureList != null) {
+                    for (int i = 0; i < textureList.size(); i++) {
+                        textures.put("layer" + i, ResourceLocation.parse(textureList.get(i)));
+                    }
+                }
+            }
+
+            var customArmor = getMap("#CustomArmor", pack);
+            if (customArmor != null) {
+                String l1 = customArmor.get("layer1").toString();
+                String l2 = customArmor.get("layer2").toString();
+                var src1 = "assets/minecraft/textures/" + l1 + ".png";
+                var src2 = "assets/minecraft/textures/" + l2 + ".png";
+                var pathParts = l1.replace("_layer_1", "").split("/");
+                var path = pathParts[pathParts.length - 1];
+                fileRedirects.put(src1, "assets/minecraft/textures/trims/models/armor/" + path + ".png");
+                fileRedirects.put(src2, "assets/minecraft/textures/trims/models/armor/" + path + "_leggings.png");
+
+                var conf = new Armor.Config();
+                conf.trim = true;
+                conf.texture = ResourceLocation.withDefaultNamespace(path);
+                if (vanillaItem instanceof ArmorItem armorItem) {
+                    conf.slot = armorItem.getEquipmentSlot();
+                }
+
+                behaviourConfigMap.put(Behaviours.ARMOR, conf);
+            }
+
             ItemData itemData = new ItemData(
                     id,
                     vanillaItem,
                     null,
-                    ItemResource.of(Map.of("default", ResourceLocation.parse(model)), null, null),
-                    null,
+                    ItemResource.of(model == null ? null : new Object2ObjectArrayMap<>(new String[]{"default"}, new ResourceLocation[]{ResourceLocation.parse(model)}), parent_model == null ? null : ResourceLocation.parse(parent_model), textures.isEmpty() ? null : Map.of("default", textures)),
+                    behaviourConfigMap,
                     props,
                     builder.build(),
                     null,
