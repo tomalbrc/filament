@@ -11,6 +11,9 @@ You can find the old docs for 0.14 / 0.17 for 1.21.1 / 1.21.5 [here](http://toma
 - [Blocks (https://misode.tomalbrc.de/filament/block)](https://misode.tomalbrc.de/filament/block)
 - [Decorations (https://misode.tomalbrc.de/filament/decoration)](https://misode.tomalbrc.de/filament/decoration)
 
+### 3rd party generators:
+- [Filament Generator by Palm (https://palmmc.github.io/FilamentGenerator/)](https://palmmc.github.io/FilamentGenerator/)
+
 ---
 
 - ### [Modrinth](https://modrinth.com/mod/filament)
