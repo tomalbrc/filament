@@ -105,7 +105,7 @@ public class Tnt implements BlockBehaviour<Tnt.Config> {
             level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_NEIGHBORS | Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE);
             Item item = itemStack.getItem();
             if (itemStack.is(Items.FLINT_AND_STEEL)) {
-                itemStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(interactionHand));
+                itemStack.hurtAndBreak(1, player, interactionHand);
             } else {
                 itemStack.consume(1, player);
             }

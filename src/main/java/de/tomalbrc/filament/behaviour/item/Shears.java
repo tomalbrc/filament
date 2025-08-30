@@ -7,7 +7,6 @@ import de.tomalbrc.filament.item.FilamentItem;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.ShearsDispenseItemBehavior;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -85,7 +84,7 @@ public class Shears implements ItemBehaviour<Shears.Config> {
                 level.setBlockAndUpdate(blockPos, blockState2);
                 level.gameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Context.of(useOnContext.getPlayer(), blockState2));
                 if (player != null) {
-                    itemStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(useOnContext.getHand()));
+                    itemStack.hurtAndBreak(1, player, useOnContext.getHand());
                 }
 
                 return InteractionResult.SUCCESS;

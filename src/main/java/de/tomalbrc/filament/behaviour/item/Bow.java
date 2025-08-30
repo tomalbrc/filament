@@ -61,7 +61,7 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
             Projectile projectile = this.createProjectile(serverLevel, livingEntity, itemStack, itemStack2, fullPower);
             this.shootProjectile(livingEntity, projectile, f, (float) 1.0, m);
             serverLevel.addFreshEntity(projectile);
-            itemStack.hurtAndBreak(this.getDurabilityUse(itemStack2), livingEntity, LivingEntity.getSlotForHand(interactionHand));
+            itemStack.hurtAndBreak(this.getDurabilityUse(itemStack2), livingEntity, interactionHand);
             if (itemStack.isEmpty()) break;
         }
     }

@@ -57,7 +57,7 @@ public class BlockProperties extends ItemProperties {
         if (this.requiresTool) props.requiresCorrectToolForDrops();
         if (this.replaceable) props.replaceable();
         if (this.transparent) props.noOcclusion();
-        if (!this.collision) props.noCollission();
+        if (!this.collision) props.noCollision();
 
         if (this.lootTable != null)
             props.overrideLootTable(Optional.of(ResourceKey.create(Registries.LOOT_TABLE, this.lootTable)));

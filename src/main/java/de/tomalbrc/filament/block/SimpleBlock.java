@@ -634,11 +634,11 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos) {
-        int max = super.getAnalogOutputSignal(blockState, level, blockPos);
+    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos, Direction direction) {
+        int max = super.getAnalogOutputSignal(blockState, level, blockPos, direction);
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
-                var res = blockBehaviour.getAnalogOutputSignal(blockState, level, blockPos);
+                var res = blockBehaviour.getAnalogOutputSignal(blockState, level, blockPos, direction);
                 if (res > max)
                     max = res;
             }

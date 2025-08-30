@@ -4,7 +4,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.List;
 
 public class FilamentContainer extends SimpleContainer {
-    List<LivingEntity> menus = new ObjectArrayList<>();
+    List<ContainerUser> menus = new ObjectArrayList<>();
 
     private boolean valid = true;
 
@@ -51,7 +51,7 @@ public class FilamentContainer extends SimpleContainer {
 
     public void setValid(boolean valid) {
         if (!valid) {
-            for (LivingEntity entity : this.menus) {
+            for (ContainerUser entity : this.menus) {
                 if (entity instanceof ServerPlayer player) player.closeContainer();
             }
         }
@@ -63,10 +63,10 @@ public class FilamentContainer extends SimpleContainer {
     }
 
     @Override
-    public void startOpen(Player player) {
+    public void startOpen(ContainerUser player) {
         super.startOpen(player);
 
-        if (!player.isSpectator() && this.menus.isEmpty() && this.openCallback != null) {
+        if (!(player instanceof ServerPlayer serverPlayer && serverPlayer.isSpectator()) && this.menus.isEmpty() && this.openCallback != null) {
             this.openCallback.run();
         }
 
@@ -74,7 +74,7 @@ public class FilamentContainer extends SimpleContainer {
     }
 
     @Override
-    public void stopOpen(Player player) {
+    public void stopOpen(ContainerUser player) {
         super.stopOpen(player);
 
         this.menus.remove(player);
