@@ -320,13 +320,13 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
 
     @Override
     public ItemStack getCloneItemStack(ItemStack itemStack, LevelReader levelReader, BlockPos blockPos, BlockState blockState, boolean includeData) {
-        var be = levelReader.getBlockEntity(blockPos);
-        return be instanceof DecorationBlockEntity decorationBlockEntity ? decorationBlockEntity.getBlock().getCloneItemStack(levelReader, decorationBlockEntity.mainPosition(), blockState, includeData) : DecorationBehaviour.super.getCloneItemStack(itemStack, levelReader, blockPos, blockState, includeData);
+        return itemStack;
     }
 
     @Override
     public void applyImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentGetter dataComponentGetter) {
         dataComponentGetter.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(container.items);
+        container.setChanged();
     }
 
     @Override
