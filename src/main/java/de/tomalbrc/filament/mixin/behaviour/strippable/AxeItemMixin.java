@@ -6,16 +6,20 @@ import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.registry.StrippableRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.protocol.game.ClientboundLevelEventPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -38,10 +42,18 @@ public class AxeItemMixin {
             level.playSound(player, blockPos, SoundEvent.createVariableRangeEvent(strippable.getConfig().sound), SoundSource.BLOCKS, 1.0F, 1.0F);
             if (strippable.getConfig().scrape) {
                 level.levelEvent(null, LevelEvent.PARTICLES_SCRAPE, blockPos, 0);
+
+                if (blockState.hasProperty(ChestBlock.TYPE) && blockState.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
+                    ((ServerPlayer)player).connection.send(new ClientboundLevelEventPacket(LevelEvent.PARTICLES_SCRAPE, ChestBlock.getConnectedBlockPos(blockPos, blockState), 0, false));
+                }
             }
 
             if (strippable.getConfig().scrapeWax) {
                 level.levelEvent(null, LevelEvent.PARTICLES_WAX_OFF, blockPos, 0);
+
+                if (blockState.hasProperty(ChestBlock.TYPE) && blockState.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
+                    ((ServerPlayer)player).connection.send(new ClientboundLevelEventPacket(LevelEvent.PARTICLES_WAX_OFF, ChestBlock.getConnectedBlockPos(blockPos, blockState), 0, false));
+                }
             }
 
             var lootId = StrippableRegistry.getLootTable(blockState.getBlock());
