@@ -90,6 +90,7 @@ public class Behaviours {
     public static final BehaviourType<InteractExecute, InteractExecute.Config> INTERACT_EXECUTE = registerBehaviour("interact_execute", InteractExecute.class);
     public static final BehaviourType<Seat, Seat.Config> SEAT = registerBehaviour("seat", Seat.class);
     public static final BehaviourType<Showcase, Showcase.Config> SHOWCASE = registerBehaviour("showcase", Showcase.class);
+    public static final BehaviourType<Sign, Sign.Config> SIGN = registerBehaviour("sign", Sign.class);
 
     // Entity
     // goals
