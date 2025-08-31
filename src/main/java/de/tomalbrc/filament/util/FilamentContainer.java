@@ -8,6 +8,7 @@ import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -28,6 +29,11 @@ public class FilamentContainer extends SimpleContainer {
         this.addListener(x -> blockEntity.setChanged());
         this.blockEntity = blockEntity;
         this.purge = purge;
+    }
+
+    @Override
+    public @NotNull List<ContainerUser> getEntitiesWithContainerOpen() {
+        return menus;
     }
 
     @Override
@@ -63,21 +69,21 @@ public class FilamentContainer extends SimpleContainer {
     }
 
     @Override
-    public void startOpen(ContainerUser player) {
-        super.startOpen(player);
+    public void startOpen(ContainerUser containerUser) {
+        super.startOpen(containerUser);
 
-        if (!(player instanceof ServerPlayer serverPlayer && serverPlayer.isSpectator()) && this.menus.isEmpty() && this.openCallback != null) {
+        if (!containerUser.getLivingEntity().isSpectator() && this.menus.isEmpty() && this.openCallback != null) {
             this.openCallback.run();
         }
 
-        this.menus.add(player);
+        this.menus.add(containerUser);
     }
 
     @Override
-    public void stopOpen(ContainerUser player) {
-        super.stopOpen(player);
+    public void stopOpen(ContainerUser containerUser) {
+        super.stopOpen(containerUser);
 
-        this.menus.remove(player);
+        this.menus.remove(containerUser);
 
         if (this.menus.isEmpty() && this.closeCallback != null) {
             this.closeCallback.run();
