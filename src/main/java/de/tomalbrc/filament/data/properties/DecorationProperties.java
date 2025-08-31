@@ -11,6 +11,7 @@ public class DecorationProperties extends BlockProperties {
     public ItemDisplayContext display = ItemDisplayContext.FIXED;
     public boolean useItemParticles = true;
     public boolean drops = true;
+    public boolean allowAdventureMode = false;
 
     @Override
     public BlockBehaviour.Properties toBlockProperties() {

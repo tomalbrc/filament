@@ -162,7 +162,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     }
 
     public InteractionResult decorationInteract(ServerPlayer player, InteractionHand interactionHand, Vec3 location) {
-        if (FilamentConfig.getInstance().preventAdventureModeDecorationInteraction && player.gameMode.getGameModeForPlayer() == GameType.ADVENTURE)
+        if ((FilamentConfig.getInstance().preventAdventureModeDecorationInteraction && !this.getDecorationData().properties().allowAdventureMode) && player.gameMode.getGameModeForPlayer() == GameType.ADVENTURE)
             return InteractionResult.PASS;
 
         if (!this.isMain()) {
