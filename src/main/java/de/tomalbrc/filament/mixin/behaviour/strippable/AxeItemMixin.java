@@ -44,7 +44,7 @@ public class AxeItemMixin {
                 level.levelEvent(null, LevelEvent.PARTICLES_SCRAPE, blockPos, 0);
 
                 if (blockState.hasProperty(ChestBlock.TYPE) && blockState.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
-                    ((ServerPlayer)player).connection.send(new ClientboundLevelEventPacket(LevelEvent.PARTICLES_SCRAPE, ChestBlock.getConnectedBlockPos(blockPos, blockState), 0, false));
+                    ((ServerPlayer)player).connection.send(new ClientboundLevelEventPacket(LevelEvent.PARTICLES_SCRAPE, blockPos.relative(ChestBlock.getConnectedDirection(blockState)), 0, false));
                 }
             }
 
@@ -52,7 +52,7 @@ public class AxeItemMixin {
                 level.levelEvent(null, LevelEvent.PARTICLES_WAX_OFF, blockPos, 0);
 
                 if (blockState.hasProperty(ChestBlock.TYPE) && blockState.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
-                    ((ServerPlayer)player).connection.send(new ClientboundLevelEventPacket(LevelEvent.PARTICLES_WAX_OFF, ChestBlock.getConnectedBlockPos(blockPos, blockState), 0, false));
+                    ((ServerPlayer)player).connection.send(new ClientboundLevelEventPacket(LevelEvent.PARTICLES_WAX_OFF, blockPos.relative(ChestBlock.getConnectedDirection(blockState)), 0, false));
                 }
             }
 

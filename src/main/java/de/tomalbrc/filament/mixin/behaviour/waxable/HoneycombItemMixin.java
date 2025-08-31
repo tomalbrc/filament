@@ -38,7 +38,7 @@ public class HoneycombItemMixin {
             ((ServerPlayer)player).connection.send(new ClientboundLevelEventPacket(LevelEvent.PARTICLES_AND_SOUND_WAX_ON, blockPos, 0, false));
 
             if (blockState.hasProperty(ChestBlock.TYPE) && blockState.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
-                ((ServerPlayer)player).connection.send(new ClientboundLevelEventPacket(LevelEvent.PARTICLES_AND_SOUND_WAX_ON, ChestBlock.getConnectedBlockPos(blockPos, blockState), 0, false));
+                ((ServerPlayer)player).connection.send(new ClientboundLevelEventPacket(LevelEvent.PARTICLES_AND_SOUND_WAX_ON, blockPos.relative(ChestBlock.getConnectedDirection(blockState)), 0, false));
             }
         }
     }
