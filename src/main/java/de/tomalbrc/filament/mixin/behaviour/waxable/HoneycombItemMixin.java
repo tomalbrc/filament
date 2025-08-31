@@ -12,8 +12,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.ChestType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -34,6 +36,10 @@ public class HoneycombItemMixin {
     private static void filament$broadcastToPlayer(UseOnContext useOnContext, BlockPos blockPos, Level level, BlockState blockState, CallbackInfoReturnable<InteractionResult> cir, @Local Player player, @Local(argsOnly = true) BlockState blockState2) {
         if (!level.isClientSide() && WaxableRegistry.getPrevious(blockState.getBlock()) != null) {
             ((ServerPlayer)player).connection.send(new ClientboundLevelEventPacket(LevelEvent.PARTICLES_AND_SOUND_WAX_ON, blockPos, 0, false));
+
+            if (blockState.hasProperty(ChestBlock.TYPE) && blockState.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
+                ((ServerPlayer)player).connection.send(new ClientboundLevelEventPacket(LevelEvent.PARTICLES_AND_SOUND_WAX_ON, ChestBlock.getConnectedBlockPos(blockPos, blockState), 0, false));
+            }
         }
     }
 }
