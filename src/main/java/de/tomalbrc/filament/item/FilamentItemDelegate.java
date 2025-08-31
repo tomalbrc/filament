@@ -104,7 +104,7 @@ public class FilamentItemDelegate {
             }
         }
         if (itemStack.has(DataComponents.TOOL))
-            itemStack.hurtAndBreak(1, target, EquipmentSlot.MAINHAND);
+            itemStack.hurtAndBreak(1, target, attacker.getEquipmentSlotForItem(itemStack));
     }
 
     public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, TooltipDisplay tooltipDisplay, Consumer<Component> consumer, TooltipFlag tooltipFlag) {
