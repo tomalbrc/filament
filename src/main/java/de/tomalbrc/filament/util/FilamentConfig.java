@@ -29,6 +29,9 @@ public class FilamentConfig {
     @SerializedName("alternative_cosmetic_placement")
     public boolean alternativeCosmeticPlacement = false;
 
+    @SerializedName("resourcepack_required")
+    public boolean resourcepackRequired = true;
+
     public static FilamentConfig getInstance() {
         if (instance == null) {
             if (!load()) // only save if file wasn't just created

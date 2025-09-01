@@ -27,7 +27,8 @@ public class Filament implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        PolymerResourcePackUtils.markAsRequired();
+        if (FilamentConfig.getInstance().resourcepackRequired)
+            PolymerResourcePackUtils.markAsRequired();
         FilamentComponents.register();
         Behaviours.register();
         SkinUtil.registerEventHandler();
