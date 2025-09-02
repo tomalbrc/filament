@@ -278,7 +278,6 @@ public class NexoImporter {
                     return;
 
                 var props = new DecorationProperties();
-                props.copyComponents = true;
                 props.destroyTime = 0.5f;
                 props.explosionResistance = 0.5f;
                 props.solid = false;
@@ -346,6 +345,11 @@ public class NexoImporter {
                             ).rotateY(Mth.PI).round(), new Vector3f(1)));
                         }
                     }
+                }
+
+                if (blocks.isEmpty()) {
+                    props.destroyTime = 0f;
+                    props.explosionResistance = 0.5f;
                 }
 
                 BehaviourConfigMap behaviourConfigMap = new BehaviourConfigMap();
