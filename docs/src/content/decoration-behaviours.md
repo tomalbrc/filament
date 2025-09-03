@@ -192,7 +192,7 @@ container:
 
 ## `animated_chest` behaviour
 
-Allows to make animated connectable containers with a left and right side. 
+Allows to make animated connectable containers with a left and right side.
 
 Requires with the `animation` behaviour to play an animation defined in the bbmodel/ajblueprint.
 
@@ -242,7 +242,8 @@ This behaviour runs a command, optionally with a key item.
 
 It's similar to the `execute` item-behaviour or `interact_execute` decoration behaviour.
 
-The command will only run once if a key is specified, the key can be empty to always run the commands/animations on interaction.
+The command will only run once if a key is specified, the key can be empty to always run the commands/animations on
+interaction.
 The `repeatable` flag can be set to overwrite this.
 
 The `command` or `commands` are run as player but with elevated permissions, optionally at the decoration block itself.
@@ -263,10 +264,11 @@ The `command` or `commands` are run as player but with elevated permissions, opt
 
 This behaviour runs a command, plays an animation and runs a command once the animation finished.
 
-It behaves similar to the `lock` behaviour, but will always 
+It behaves similar to the `lock` behaviour, but will always
 It's similar to the `execute` item-behaviour or `interact_execute` decoration behaviour.
 
-The command will only run once if a key is specified, the key can be empty to always run the commands/animations on interaction.
+The command will only run once if a key is specified, the key can be empty to always run the commands/animations on
+interaction.
 The `repeatable` flag can be set to overwrite this.
 
 The `command` or `commands` are run as player but with elevated permissions, optionally at the decoration block itself.
@@ -424,4 +426,105 @@ showcase:
 ```
 <!-- langtabs-end -->
 
+~~~
+
+---
+
+## `sign` behaviour
+
+Allows you to create signs with multiple text displays.
+
+Can be either a list of elements or an object as described below:
+
+~~~admonish info "Configurable Fields"
+- `canEdit`: Flag wether the sign elements can be edited. Defaults to `true`
+- `waxable`: Flag wether the sign is waxable. Defaults to `true`
+- `dyeable`: Flag wether the sign is dyeable. Defaults to `true`
+- `block`: Sign block to use for the Sign Edit GUI. Defaults to `minecraft:oak_sign`
+- `elements`: List of elements. See below
+~~~
+
+~~~admonish info "Fields for each element"
+- `offset`: Offset for positioning the text element. Defaults to `[0, 0, 0.5]`
+- `scale`: Scale of the text element. Defaults to `[0.5, 0.5, 0.5]`
+- `rotation`: Rotation of the showcased item.
+- `lines`: Number of lines for this sign element. Defaults to `4`
+- `text`: List of predefined lines of text for this sign element.
+- `billboardMode`: Billboard mode of this element. Can be `fixed`, `vertical`, `horizontal`, `center`. Defaults to `fixed`
+- `backgroundColor`: Background color of the text element. Defaults to `0`
+- `seeThrough`: See-through flag. Defaults to `false`
+- `alignment`: Text alignment. Can be `center`, `left`, `right`. Defaults to `center`
+~~~
+
+~~~admonish example Sign
+<!-- langtabs-start -->
+```yml
+sign:
+  can_edit: true
+  elements:
+    - offset:
+        - 0
+        - 0
+        - -0.51
+      rotation:
+        - 0
+        - 180
+        - 0
+      text:
+        - "<rainbow>Color test 2</rainbow>"
+        - "Very cool!"
+        - "this is the backside"
+        - ""
+    - offset:
+        - 0
+        - 0
+        - -0.55
+      text:
+        - "<rainbow>Color test 1</rainbow>"
+        - "Very cool!"
+        - "this is the front side"
+        - ""
+```
+
+```json
+{
+   "sign":{
+      "can_edit":true,
+      "elements":[
+         {
+            "offset":[
+               0,
+               0,
+               -0.51
+            ],
+            "rotation":[
+               0,
+               180,
+               0
+            ],
+            "text":[
+               "<rainbow>Color test 2</rainbow>",
+               "Very cool!",
+               "this is the backside",
+               ""
+            ]
+         },
+         {
+            "offset":[
+               0,
+               0,
+               -0.55
+            ],
+            "text":[
+               "<rainbow>Color test 1</rainbow>",
+               "Very cool!",
+               "this is the front side",
+               ""
+            ]
+         }
+      ]
+   }
+}
+```
+<!-- langtabs-end -->
 ~~~

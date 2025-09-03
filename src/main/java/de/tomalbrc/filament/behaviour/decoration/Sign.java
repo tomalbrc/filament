@@ -327,11 +327,11 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
     }
 
     public static class Config {
-        public List<ConfiguredSignElement> elements = List.of();
-        public boolean canEdit;
+        public boolean canEdit = true;
         public boolean waxable = true;
         public boolean dyeable = true;
         public Block block = Blocks.OAK_SIGN;
+        public List<ConfiguredSignElement> elements = List.of();
     }
 
     public static class ConfiguredSignElement {
