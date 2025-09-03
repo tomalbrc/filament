@@ -1,59 +1,73 @@
 # Filament: Custom Content Adder for Fabric Servers
 
-Filament simplifies the process of adding custom content to Fabric-based Minecraft servers.
+[![Documentation](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/generic_64h.png)](https://tomalbrc.de/docs/filament)
+[![Modrinth](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_64h.png)](https://modrinth.com/mod/filament)
+[![CurseForge](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_64h.png)](https://www.curseforge.com/minecraft/mc-mods/filament)
+[![GitHub](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/github_64h.png)](https://github.com/tomalbrc/filament)  
 
-It allows server owners or content creators to add new items, blocks, and decorations without writing a single line of code. Everything is data driven via json files, just configure a block, item, decoration or armor, and you are ready to go!
 
-Clients connecting to servers using Filament don't need to install any mods, they can connect using vanilla clients.
+filament simplifies adding custom content to Fabric-based Minecraft servers. It allows server owners to add new items, blocks, decorations and even mobs using JSON files—no coding required. Configure a block, item, decoration, or armor, and you're ready to go!
 
-This is made possible by a resource pack, item display entities, and other packet-based tricks.
+Clients can connect to servers using filament without installing any mods, as it relies on a resource pack, item display entities, and packet-based methods. 
 
-Since most things are packet based, especially decorations, the performance impact on the server is very low.
+Decorations and other features have minimal server performance impact due to their packet-based nature.
 
-You should use [polymers auto-host capability](https://polymer.pb4.eu/latest/user/resource-pack-hosting/) to host the resourcepack, no 3rd party server needed!
+**Use [Polymer's auto-hosting capability](https://polymer.pb4.eu/latest/user/resource-pack-hosting/) to host the resource pack—no third-party server required.**
 
-TLDR: ItemsAdder / Oraxen alternative for fabric. Doesn't handle datapack files such as item-tags / block-tags, etc. (bring your own datapack).
+**TLDR:** ItemsAdder/Oraxen alternative for Fabric.
 
 ## Features
+- **Custom Items:** Add items with unique behaviors, including:
+  - Armor
+  - Cosmetics
+  - Items running commands
+  - Bows/Crossbows
 
-- **Custom Items:** Add unique items to the game with different behaviors, including armor, shooting, and more.
-- **Custom Blocks:** Introduce new blocks with different properties.
-- **Custom Decorations:** Introduce your own decorations such as furniture, complete with customizable placement and various behaviors for player interaction.
+
+- **Custom Blocks:** Add your own custom blocks like:
+  - Trapdoors
+  - Doors
+  - Crops
+  - Budding blocks
+
+
+- **Custom Decorations:** Add furniture and decorations with configurable placement and interactions:
+  - Benches
+  - Showcases/Item-Displays
+  - Container
+  - Wearable & placeable backpacks
+
+- **Custom Mobs:** Add your own mobs with simple goal-based AI - supports custom models too! Create:
+  - Animals
+  - Hostile mobs
+  - Supports custom attributes
+  - Control spawn chances and biomes to spawn in
 
 ## Installation
-
-Requires [Fabric API](https://modrinth.com/mod/fabric-api) and [Polymer](https://modrinth.com/mod/polymer)
-
-Use one of the releases on GitHub and drop the `example_datapack` into the `datapacks` folder of your server world.
-
-filament uses polymers resource-pack generation to generate the RP and autohost features to automatically create an http server to serve the RP to your players!
+Requires [Fabric API](https://modrinth.com/mod/fabric-api) and [Polymer](https://modrinth.com/mod/polymer).  
+Download filament and drop the `example_datapack` into the `datapacks` folder of your server world. filament uses Polymer's resource pack generation and hosting features.
 
 ## Usage
-
-There is an example datapack in the GitHub repo, just drop it into your world's datapacks folder.
-
+An example datapack is available in the GitHub repo. Just drop it into your world's datapacks folder.  
 [Check out the documentation!](https://tomalbrc.de/projects/filament/docs)
 
-
 ## Mods using filament
+These mods & datapacks demonstrate filament's capabilities:
+- [Backported Shelvesby palm1](https://modrinth.com/datapack/backported-shelves)
+- [Planked Chests by palm1](https://modrinth.com/datapack/planked-chests)
+- [Toms Server Additions: Decorations & Furniture](https://modrinth.com/mod/tsa-decorations)  
+- [Toms Server Additions: Stone!](https://modrinth.com/mod/tsa-stone)  
+- [Toms Server Additions: Planks!](https://modrinth.com/mod/tsa-planks)  
+- [Toms Server Additions: Concrete!](https://modrinth.com/mod/tsa-concrete)  
 
-These mods use filament for their items/blocks/decorations:
+Archived:
+- [Decorative Boxes by swzo](https://modrinth.com/mod/decorative-boxes)  
+- [Better Amethyst Polymerized by swzo](https://modrinth.com/mod/better-amethyst-polymerized)  
 
-- [Decorative Boxes by swzo](https://modrinth.com/mod/decorative-boxes)
-- [Better Amethyst Polymerized by swzo](https://modrinth.com/mod/better-amethyst-polymerized)
-- [Toms Server Additions: Decorations & Furniture](https://modrinth.com/mod/tsa-decorations)
-- [Toms Server Additions: Stone!](https://modrinth.com/mod/tsa-stone)
-- [Toms Server Additions: Planks!](https://modrinth.com/mod/tsa-planks)
-- [Toms Server Additions: Concrete!](https://modrinth.com/mod/tsa-concrete)
+## Credits
+This project includes code from [FactoryTools](https://github.com/Patbox/FactoryTools) by Patbox, specifically the Virtual Destroy stages for decorations.  
+A copy of the FactoryTools LGPL3 license is included in `factorytools-license.txt`.
 
 ---
 
-This project uses code from the [FactoryTools](https://github.com/Patbox/FactoryTools) project by Patbox, specifically the Virtual Destroy stages for decorations.
-
-You can find a copy of the FactoryTools LGPL3 License in `factorytools-license.txt`
-
----
-
-- [Modrinth](https://modrinth.com/mod/filament)
-- [GitHub](https://github.com/tomalbrc/filament)
-- [Discord](https://discord.gg/9X6w2kfy89)
+[![discord](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/social/discord-singular_64h.png)](https://discord.gg/9X6w2kfy89)  
