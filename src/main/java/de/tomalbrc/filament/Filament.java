@@ -46,8 +46,6 @@ public class Filament implements ModInitializer {
         Translations.registerEventHandler();
         EntityRegistry.register();
 
-        NexoImporter.importAll();
-
         if (FilamentConfig.getInstance().commands) {
             CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> FilamentCommand.register(dispatcher));
         }
