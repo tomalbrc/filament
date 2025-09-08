@@ -53,7 +53,7 @@ public class Filament implements ModInitializer {
 
         var nexoDir = FabricLoader.getInstance().getGameDir().resolve("nexo");
         var nexoDirFile = nexoDir.toFile();
-        if (nexoDirFile.exists() && nexoDirFile.isDirectory() && nexoDirFile.listFiles() != null && Arrays.stream(Objects.requireNonNull(nexoDirFile.listFiles())).anyMatch(x -> !FilenameUtils.getBaseName(x.getPath()).startsWith("."))) {
+        if (!FabricLoader.getInstance().isModLoaded("filament-nexo") && nexoDirFile.exists() && nexoDirFile.isDirectory() && nexoDirFile.listFiles() != null && Arrays.stream(Objects.requireNonNull(nexoDirFile.listFiles())).anyMatch(x -> !FilenameUtils.getBaseName(x.getPath()).startsWith("."))) {
             throw new RuntimeException("Found nexo folder with packs, please install filament-nexo (https://modrinth.com/mod/filament-nexo) or remove the nexo directory in your game directory!");
         }
 
