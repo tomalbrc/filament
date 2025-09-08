@@ -14,13 +14,18 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.state.BlockState;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
+
+import java.util.Arrays;
+import java.util.Objects;
 
 public class Filament implements ModInitializer {
     public static final Logger LOGGER = LogUtils.getLogger();
@@ -34,6 +39,12 @@ public class Filament implements ModInitializer {
         SkinUtil.registerEventHandler();
         Translations.registerEventHandler();
         EntityRegistry.register();
+
+        var nexoDir = FabricLoader.getInstance().getGameDir().resolve("nexo");
+        var nexoDirFile = nexoDir.toFile();
+        if (nexoDirFile.exists() && nexoDirFile.isDirectory() && nexoDirFile.listFiles() != null && Arrays.stream(Objects.requireNonNull(nexoDirFile.listFiles())).anyMatch(x -> !FilenameUtils.getBaseName(x.getPath()).startsWith("."))) {
+            throw new RuntimeException("Found nexo folder with packs, please install filament-nexo (https://modrinth.com/mod/filament-nexo) or remove the nexo directory in your game directory!");
+        }
 
         if (FilamentConfig.getInstance().commands) {
             CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> {
