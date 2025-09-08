@@ -3,6 +3,7 @@ package de.tomalbrc.filament.util;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import de.tomalbrc.filament.data.Data;
+import de.tomalbrc.filament.data.EntityData;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import net.minecraft.world.entity.EntityType;
@@ -16,7 +17,15 @@ import java.util.Objects;
 
 public class Translations {
     // locale => Pair<Item, Block> => text (x2)
-    public static final Map<String, Map<Triple<Item, Block, EntityType<?>>, String>> translations = new Object2ObjectArrayMap<>();
+    private static final Map<String, Map<Triple<Item, Block, EntityType<?>>, String>> translations = new Object2ObjectArrayMap<>();
+
+    public static void add(EntityType<?> entity, EntityData data) {
+        if (data.translations() != null) {
+            for (Map.Entry<String, String> entry : Objects.requireNonNull(data.translations()).entrySet()) {
+                Translations.add(entry.getKey(), Triple.of(null, null, entity), entry.getValue());
+            }
+        }
+    }
 
     public static void add(Item item, Block block, Data<?> data) {
         if (data.translations() != null) {

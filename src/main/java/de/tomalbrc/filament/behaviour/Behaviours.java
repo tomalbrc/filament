@@ -5,6 +5,10 @@ import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.api.registry.BehaviourRegistry;
 import de.tomalbrc.filament.behaviour.block.*;
 import de.tomalbrc.filament.behaviour.decoration.*;
+import de.tomalbrc.filament.behaviour.entity.goal.*;
+import de.tomalbrc.filament.behaviour.entity.target.DefendVillageGoal;
+import de.tomalbrc.filament.behaviour.entity.target.HurtByTargetGoal;
+import de.tomalbrc.filament.behaviour.entity.target.NearestAttackableTargetGoal;
 import de.tomalbrc.filament.behaviour.item.*;
 import de.tomalbrc.filament.util.Constants;
 import net.minecraft.resources.ResourceLocation;
@@ -87,6 +91,37 @@ public class Behaviours {
     public static final BehaviourType<Seat, Seat.Config> SEAT = registerBehaviour("seat", Seat.class);
     public static final BehaviourType<Showcase, Showcase.Config> SHOWCASE = registerBehaviour("showcase", Showcase.class);
     public static final BehaviourType<Sign, Sign.Config> SIGN = registerBehaviour("sign", Sign.class);
+
+    // Entity
+    // goals
+    public static final BehaviourType<FloatGoal, FloatGoal.Config> FLOAT_GOAL = registerBehaviour("float_goal", FloatGoal.class);
+    public static final BehaviourType<RemoveBlockGoal, RemoveBlockGoal.Config> REMOVE_BLOCK_GOAL = registerBehaviour("remove_block_goal", RemoveBlockGoal.class);
+    public static final BehaviourType<LookAtMobGoal, LookAtMobGoal.Config> LOOK_AT_MOB_GOAL = registerBehaviour("look_at_mob_goal", LookAtMobGoal.class);
+    public static final BehaviourType<RandomLookAroundGoal, RandomLookAroundGoal.Config> RANDOM_LOOK_AROUND_GOAL = registerBehaviour("random_look_around_goal", RandomLookAroundGoal.class);
+    public static final BehaviourType<MeleeAttackGoal, MeleeAttackGoal.Config> MELEE_ATTACK_GOAL = registerBehaviour("melee_attack_goal", MeleeAttackGoal.class);
+    public static final BehaviourType<MoveThroughVillageGoal, MoveThroughVillageGoal.Config> MOVE_THROUGH_VILLAGE_GOAL = registerBehaviour("move_through_village_goal", MoveThroughVillageGoal.class);
+    public static final BehaviourType<WaterAvoidingRandomStrollGoal, WaterAvoidingRandomStrollGoal.Config> WATER_AVOIDING_RANDOM_STROLL_GOAL = registerBehaviour("water_avoiding_random_stroll_goal", WaterAvoidingRandomStrollGoal.class);
+    public static final BehaviourType<BreakDoorGoal, BreakDoorGoal.Config> BREAK_DOOR_GOAL = registerBehaviour("break_door_goal", BreakDoorGoal.class);
+    public static final BehaviourType<BreedGoal, BreedGoal.Config> BREED_GOAL = registerBehaviour("breed_goal", BreedGoal.class);
+    public static final BehaviourType<EatBlockGoal, EatBlockGoal.Config> EAT_BLOCK_GOAL = registerBehaviour("eat_block_goal", EatBlockGoal.class);
+    public static final BehaviourType<FleeSunGoal, FleeSunGoal.Config> FLEE_SUN_GOAL = registerBehaviour("flee_sun_goal", FleeSunGoal.class);
+    public static final BehaviourType<FollowBoatGoal, FollowBoatGoal.Config> FOLLOW_BOAT_GOAL = registerBehaviour("follow_boat_goal", FollowBoatGoal.class);
+    public static final BehaviourType<FollowMobGoal, FollowMobGoal.Config> FOLLOW_MOB_GOAL = registerBehaviour("follow_mob_goal", FollowMobGoal.class);
+    public static final BehaviourType<FollowParentGoal, FollowParentGoal.Config> FOLLOW_PARENT_GOAL = registerBehaviour("follow_parent_goal", FollowParentGoal.class);
+    public static final BehaviourType<MoveTowardsTargetGoal, MoveTowardsTargetGoal.Config> MOVE_TOWARDS_TARGET_GOAL = registerBehaviour("move_towards_target_goal", MoveTowardsTargetGoal.class);
+    public static final BehaviourType<OpenDoorGoal, OpenDoorGoal.Config> OPEN_DOOR_GOAL = registerBehaviour("open_door_goal", OpenDoorGoal.class);
+    public static final BehaviourType<PanicGoal, PanicGoal.Config> PANIC_GOAL = registerBehaviour("panic_goal", PanicGoal.class);
+    public static final BehaviourType<RandomStrollGoal, RandomStrollGoal.Config> RANDOM_STROLL_GOAL = registerBehaviour("random_stroll_goal", RandomStrollGoal.class);
+    public static final BehaviourType<RandomSwimmingGoal, RandomSwimmingGoal.Config> RANDOM_SWIMMING_GOAL_CONFIG = registerBehaviour("random_swimming_goal", RandomSwimmingGoal.class);
+    public static final BehaviourType<StrollThroughVillageGoal, StrollThroughVillageGoal.Config> STROLL_THROUGH_VILLAGE_GOAL = registerBehaviour("stroll_through_village_goal", StrollThroughVillageGoal.class);
+    public static final BehaviourType<TemptGoal, TemptGoal.Config> TEMPT_GOAL = registerBehaviour("tempt_goal", TemptGoal.class);
+    public static final BehaviourType<TryFindWaterGoal, TryFindWaterGoal.Config> TRY_FIND_WATER_GOAL = registerBehaviour("try_find_water_goal", TryFindWaterGoal.class);
+
+    // target goals
+    public static final BehaviourType<DefendVillageGoal, DefendVillageGoal.Config> DEFEND_VILLAGE_GOAL = registerBehaviour("defend_village_goal", DefendVillageGoal.class);
+    public static final BehaviourType<HurtByTargetGoal, HurtByTargetGoal.Config> HURT_BY_TARGET_GOAL = registerBehaviour("hurt_by_target_goal", HurtByTargetGoal.class);
+    public static final BehaviourType<NearestAttackableTargetGoal, NearestAttackableTargetGoal.Config> NEAREST_ATTACKABLE_TARGET_GOAL = registerBehaviour("nearest_attackable_target_goal", NearestAttackableTargetGoal.class);
+
 
     private static <T extends Behaviour<E>,E> BehaviourType<T, E> registerBehaviour(String name, Class<T> type) {
         return BehaviourRegistry.registerBehaviour(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, name), type);

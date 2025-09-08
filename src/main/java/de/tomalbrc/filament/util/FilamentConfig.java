@@ -32,6 +32,9 @@ public class FilamentConfig {
     @SerializedName("alternative_cosmetic_placement")
     public boolean alternativeCosmeticPlacement = false;
 
+    @SerializedName("entity_module")
+    public boolean entityModule = true;
+
     @SerializedName("version")
     public Integer version;
 
