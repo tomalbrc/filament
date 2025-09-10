@@ -1,6 +1,8 @@
 package de.tomalbrc.filament.behaviour.item;
 
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
+import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.item.FilamentItem;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -31,6 +33,10 @@ public class Shears implements ItemBehaviour<Shears.Config> {
 
     public Shears(Config config) {
         this.config = config;
+    }
+
+    public static boolean is(ItemStack instance) {
+        return instance.getItem() instanceof FilamentItem filamentItem && filamentItem.has(Behaviours.SHEARS);
     }
 
     @Override
