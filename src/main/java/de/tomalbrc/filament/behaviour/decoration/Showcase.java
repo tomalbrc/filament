@@ -35,6 +35,7 @@ import net.minecraft.world.*;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.LevelReader;
@@ -234,8 +235,9 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
         return displayElement;
     }
 
-    private ItemDisplayElement element(ItemStack itemStack) {
+    private DisplayElement element(ShowcaseMeta showcase, ItemStack itemStack) {
         ItemDisplayElement displayElement = new ShowcaseItemElement(itemStack.copy());
+        displayElement.setItemDisplayContext(showcase.display);
         displayElement.setInvisible(true);
         return displayElement;
     }
@@ -244,7 +246,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
         DisplayElement element = null;
 
         switch (showcase.type) {
-            case item -> element = this.element(itemStack);
+            case item -> element = this.element(showcase, itemStack);
             case block -> {
                 if (itemStack.getItem().asItem() instanceof BlockItem blockItem && !(blockItem instanceof DecorationItem)) {
                     element = this.element(blockItem);
@@ -254,7 +256,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
                 if (itemStack.getItem().asItem() instanceof BlockItem blockItem && !(blockItem instanceof DecorationItem)) {
                     element = this.element(blockItem);
                 } else {
-                    element = this.element(itemStack);
+                    element = this.element(showcase, itemStack);
                 }
             }
         }
@@ -390,6 +392,8 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
         public ResourceLocation removeItemSound = SoundEvents.ITEM_FRAME_REMOVE_ITEM.location();
 
         public int maxStackSize = 1;
+
+        public ItemDisplayContext display = ItemDisplayContext.FIXED;
     }
 
     public enum ShowcaseType {
