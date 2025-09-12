@@ -3,6 +3,7 @@ package de.tomalbrc.filament.behaviour.decoration;
 import de.tomalbrc.bil.api.AnimatedHolder;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.util.ExecuteUtil;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -21,58 +22,53 @@ import java.util.List;
  * Lock behaviour for decoration
  */
 public class Lock implements DecorationBehaviour<Lock.LockConfig> {
-    public LockConfig lockConfig;
+    public LockConfig config;
     public boolean unlocked = false;
     public String command = null;
 
-    public Lock(LockConfig lockConfig) {
-        this.lockConfig = lockConfig;
+    public Lock(LockConfig config) {
+        this.config = config;
     }
 
     @Override
     @NotNull
     public LockConfig getConfig() {
-        return this.lockConfig;
+        return this.config;
     }
 
     @Override
     public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
         if (this.unlocked) return InteractionResult.PASS;
 
-        Item key = this.lockConfig.key == null ? null : BuiltInRegistries.ITEM.get(this.lockConfig.key);
+        Item key = this.config.key == null ? null : BuiltInRegistries.ITEM.get(this.config.key);
         ItemStack mainHandItem = player.getItemInHand(InteractionHand.MAIN_HAND);
         boolean hasHandItem = !mainHandItem.isEmpty();
         boolean holdsKeyAndIsValid = hasHandItem && key != null && mainHandItem.is(key);
         boolean noItemNoKey = !hasHandItem && (key == null);
         if (holdsKeyAndIsValid || noItemNoKey) {
-            if (this.lockConfig.consumeKey && hasHandItem) {
+            if (this.config.consumeKey && hasHandItem) {
                 mainHandItem.shrink(1);
             }
 
-            if (this.lockConfig.unlockAnimation != null && !lockConfig.unlockAnimation.isEmpty() && decorationBlockEntity.getDecorationHolder() instanceof AnimatedHolder animatedHolder) {
-                animatedHolder.getAnimator().playAnimation(lockConfig.unlockAnimation);
+            if (this.config.unlockAnimation != null && !config.unlockAnimation.isEmpty() && decorationBlockEntity.getDecorationHolder() instanceof AnimatedHolder animatedHolder) {
+                animatedHolder.getAnimator().playAnimation(config.unlockAnimation);
             }
 
             this.unlocked = !noItemNoKey;
 
             var commands = commands();
             boolean validCommand = commands != null;
-            boolean validLockCommand = this.lockConfig.command != null && !this.lockConfig.command.isEmpty();
-            if ((validCommand || validLockCommand) && player.getServer() != null) {
-                var css = player.createCommandSourceStack().withSource(player.server).withMaximumPermission(4);
-                if (getConfig().atBlock)
-                    css = css.withPosition(decorationBlockEntity.getBlockPos().getCenter());
-
-                if (validCommand) {
-                    for (String cmd : commands) {
-                        player.getServer().getCommands().performPrefixedCommand(css, cmd);
-                    }
-                } else {
-                    player.getServer().getCommands().performPrefixedCommand(css, this.lockConfig.command);
+            if (validCommand && player.getServer() != null) {
+                var pos = config.atBlock ? decorationBlockEntity.getBlockPos().getCenter() : null;
+                if (config.console) {
+                    ExecuteUtil.asConsole(player, pos, commands.toArray(new String[0]));
+                }
+                else {
+                    ExecuteUtil.asPlayer(player, pos, commands.toArray(new String[0]));
                 }
             }
 
-            if (this.lockConfig.discard) {
+            if (this.config.discard) {
                 decorationBlockEntity.destroyStructure(false);
             }
         }
@@ -137,5 +133,6 @@ public class Lock implements DecorationBehaviour<Lock.LockConfig> {
         public List<String> commands = null;
 
         public boolean atBlock = false;
+        public boolean console;
     }
 }

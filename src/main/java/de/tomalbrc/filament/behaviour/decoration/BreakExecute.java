@@ -2,7 +2,9 @@ package de.tomalbrc.filament.behaviour.decoration;
 
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.util.ExecuteUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +15,6 @@ import java.util.List;
  */
 public class BreakExecute implements DecorationBehaviour<BreakExecute.Config> {
     public Config config;
-    public String command = null;
 
     public BreakExecute(Config config) {
         this.config = config;
@@ -29,13 +30,13 @@ public class BreakExecute implements DecorationBehaviour<BreakExecute.Config> {
     public void postBreak(DecorationBlockEntity decorationBlockEntity, BlockPos blockPos, Player player) {
         var commands = commands();
         boolean hasCommands = commands != null;
-        if (hasCommands && player.getServer() != null) {
-            var css = player.createCommandSourceStack().withSource(player.getServer()).withMaximumPermission(4);
-            if (getConfig().atBlock)
-                css = css.withPosition(decorationBlockEntity.getBlockPos().getCenter());
-
-            for (String cmd : commands) {
-                player.getServer().getCommands().performPrefixedCommand(css, cmd);
+        if (hasCommands && player.getServer() != null && player instanceof ServerPlayer serverPlayer) {
+            var pos = config.atBlock ? blockPos.getCenter() : null;
+            if (getConfig().console) {
+                ExecuteUtil.asConsole(serverPlayer, pos, commands.toArray(new String[0]));
+            }
+            else {
+                ExecuteUtil.asPlayer(serverPlayer, pos, commands.toArray(new String[0]));
             }
         }
     }
@@ -48,5 +49,6 @@ public class BreakExecute implements DecorationBehaviour<BreakExecute.Config> {
         public String command = null;
         public List<String> commands = null;
         public boolean atBlock = false;
+        public boolean console;
     }
 }
