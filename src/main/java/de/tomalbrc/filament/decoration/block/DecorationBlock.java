@@ -129,7 +129,7 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         if (blockEntity instanceof DecorationBlockEntity decorationBlockEntity) {
             decorationBlockEntity.destroyStructure(player == null || !player.isCreative());
-            for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : decorationBlockEntity.getBehaviours()) {
+            if (player != null) for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : decorationBlockEntity.getBehaviours()) {
                 if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
                     decorationBehaviour.postBreak(decorationBlockEntity, blockPos, player);
                 }
