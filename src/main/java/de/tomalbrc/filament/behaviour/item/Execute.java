@@ -2,6 +2,7 @@ package de.tomalbrc.filament.behaviour.item;
 
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
+import de.tomalbrc.filament.util.ExecuteUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -67,9 +68,10 @@ public class Execute implements ItemBehaviour<Execute.Config>, BlockBehaviour<Ex
     public void runCommandItem(ServerPlayer serverPlayer, Item item, InteractionHand hand) {
         var cmds = commands();
         if (cmds != null && serverPlayer.getServer() != null) {
-            for (String cmd : cmds) {
-                serverPlayer.getServer().getCommands().performPrefixedCommand(
-                        serverPlayer.createCommandSourceStack().withSource(serverPlayer.getServer()).withMaximumPermission(4), cmd);
+            if (config.console) {
+                ExecuteUtil.asConsole(serverPlayer, null, cmds.toArray(new String[0]));
+            } else {
+                ExecuteUtil.asPlayer(serverPlayer, null, cmds.toArray(new String[0]));
             }
 
             serverPlayer.awardStat(Stats.ITEM_USED.get(item));
@@ -88,13 +90,20 @@ public class Execute implements ItemBehaviour<Execute.Config>, BlockBehaviour<Ex
     public void runCommandBlock(ServerPlayer user, BlockPos blockPos) {
         var cmds = commands();
         if (cmds != null && user.getServer() != null) {
-            for (String cmd : cmds) {
-                var css = user.createCommandSourceStack().withSource(user.getServer()).withMaximumPermission(4);
-                if (config.atBlock)
-                    css = css.withPosition(blockPos.getCenter());
-
-                user.getServer().getCommands().performPrefixedCommand(css, cmd);
+            var pos = getConfig().atBlock ? blockPos.getCenter() : null;
+            if (getConfig().console) {
+                ExecuteUtil.asConsole(user, pos, cmds.toArray(new String[0]));
             }
+            else {
+                ExecuteUtil.asPlayer(user, pos, cmds.toArray(new String[0]));
+            }
+
+            if (config.console) {
+                ExecuteUtil.asConsole(user, null, cmds.toArray(new String[0]));
+            } else {
+                ExecuteUtil.asPlayer(user, config.atBlock ? blockPos.getCenter() : null, cmds.toArray(new String[0]));
+            }
+
             if (this.config.sound != null) {
                 var sound = this.config.sound;
                 user.level().playSound(null, user, BuiltInRegistries.SOUND_EVENT.getValue(sound), SoundSource.NEUTRAL, 1.0F, 1.0F);
@@ -121,5 +130,6 @@ public class Execute implements ItemBehaviour<Execute.Config>, BlockBehaviour<Ex
         public boolean dropBlock = false;
 
         public ResourceLocation sound;
+        public boolean console = false;
     }
 }

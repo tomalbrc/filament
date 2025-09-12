@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.behaviour.block;
 
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
+import de.tomalbrc.filament.util.ExecuteUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -52,13 +53,14 @@ public class ExecuteInteractBlock implements BlockBehaviour<ExecuteInteractBlock
     public void runCommandBlock(ServerPlayer user, BlockPos blockPos) {
         var cmds = commands();
         if (cmds != null && user.getServer() != null) {
-            for (String cmd : cmds) {
-                var css = user.createCommandSourceStack().withSource(user.getServer()).withMaximumPermission(4);
-                if (config.atBlock)
-                    css = css.withPosition(blockPos.getCenter());
-
-                user.getServer().getCommands().performPrefixedCommand(css, cmd);
+            var pos = config.atBlock ? blockPos.getCenter() : null;
+            if (getConfig().console) {
+                ExecuteUtil.asConsole(user, pos, cmds.toArray(new String[0]));
             }
+            else {
+                ExecuteUtil.asPlayer(user, pos, cmds.toArray(new String[0]));
+            }
+
             if (this.config.sound != null) {
                 var sound = this.config.sound;
                 user.level().playSound(null, user, BuiltInRegistries.SOUND_EVENT.getValue(sound), SoundSource.NEUTRAL, 1.0F, 1.0F);
@@ -85,5 +87,6 @@ public class ExecuteInteractBlock implements BlockBehaviour<ExecuteInteractBlock
         public boolean dropBlock = false;
 
         public ResourceLocation sound;
+        public boolean console;
     }
 }

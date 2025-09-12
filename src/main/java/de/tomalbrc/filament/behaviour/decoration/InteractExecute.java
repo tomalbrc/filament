@@ -1,9 +1,8 @@
 package de.tomalbrc.filament.behaviour.decoration;
 
-import de.tomalbrc.bil.util.command.CommandParser;
-import de.tomalbrc.bil.util.command.ParsedCommand;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.util.ExecuteUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -14,8 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -23,8 +20,6 @@ import java.util.List;
  */
 public class InteractExecute implements DecorationBehaviour<InteractExecute.Config> {
     public Config config;
-    public ParsedCommand[] parsedCommands = null;
-    public ParsedCommand[] parsedCommandsPost = null;
 
     public InteractExecute(Config config) {
         this.config = config;
@@ -39,24 +34,6 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
     @Override
     public void init(DecorationBlockEntity blockEntity) {
         DecorationBehaviour.super.init(blockEntity);
-
-        var commands = commands();
-        if (commands != null) {
-            List<ParsedCommand> commandList = new ArrayList<>();
-            for (String command : commands) {
-                commandList.addAll(Arrays.asList(CommandParser.parse(command)));
-            }
-            this.parsedCommands = commandList.toArray(new ParsedCommand[0]);
-        }
-
-        var commandsPost = commandsPost();
-        if (commandsPost != null) {
-            List<ParsedCommand> commandListPost = new ArrayList<>();
-            for (String command : commandsPost) {
-                commandListPost.addAll(Arrays.asList(CommandParser.parse(command)));
-            }
-            this.parsedCommandsPost = commandListPost.toArray(new ParsedCommand[0]);
-        }
     }
 
     @Override
@@ -73,13 +50,14 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
 
             if (this.config.animation != null && !config.animation.isEmpty() && decorationBlockEntity.getOrCreateHolder() != null) {
                 decorationBlockEntity.getOrCreateHolder().playAnimation(config.animatePerPlayer ? player : null, config.animation, 0, commandsPost() == null ? null : (serverPlayer -> {
-                    var css = player.createCommandSourceStack().withSource(player.getServer()).withMaximumPermission(4);
-                    if (getConfig().atBlock)
-                        css = css.withPosition(decorationBlockEntity.getBlockPos().getCenter());
-
-                    if (player.getServer() != null && parsedCommandsPost != null) {
-                        for (ParsedCommand cmd : parsedCommandsPost) {
-                            cmd.execute(player.getServer().getCommands().getDispatcher(), css);
+                    var cmdsPost = commandsPost();
+                    if (player.getServer() != null && cmdsPost != null) {
+                        var pos = getConfig().atBlock ? decorationBlockEntity.getBlockPos().getCenter() : null;
+                        if (getConfig().console) {
+                            ExecuteUtil.asConsole(player, pos, cmdsPost.toArray(new String[0]));
+                        }
+                        else {
+                            ExecuteUtil.asPlayer(player, pos, cmdsPost.toArray(new String[0]));
                         }
                     }
 
@@ -89,17 +67,15 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
                 }));
             }
 
-            boolean hasCommand = parsedCommands != null && parsedCommands.length > 0;
-            boolean validLockCommand = this.config.command != null && !this.config.command.isEmpty();
-            if ((hasCommand || validLockCommand) && player.getServer() != null) {
-                var css = player.createCommandSourceStack().withSource(player.getServer()).withMaximumPermission(4);
-                if (getConfig().atBlock)
-                    css = css.withPosition(decorationBlockEntity.getBlockPos().getCenter());
-
-                if (hasCommand) {
-                    for (ParsedCommand cmd : parsedCommands) {
-                        cmd.execute(player.getServer().getCommands().getDispatcher(), css);
-                    }
+            var cmds = commands();
+            boolean hasCommand = cmds != null && !cmds.isEmpty();
+            if ((hasCommand) && player.getServer() != null) {
+                var pos = getConfig().atBlock ? decorationBlockEntity.getBlockPos().getCenter() : null;
+                if (getConfig().console) {
+                    ExecuteUtil.asConsole(player, pos, cmds.toArray(new String[0]));
+                }
+                else {
+                    ExecuteUtil.asPlayer(player, pos, cmds.toArray(new String[0]));
                 }
 
                 return InteractionResult.CONSUME;
@@ -178,5 +154,6 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
          * Whether to execute the commands at the interacted blocks' position instead of the players position
          */
         public boolean atBlock = false;
+        public boolean console;
     }
 }

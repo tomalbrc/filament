@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.behaviour.item;
 
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
+import de.tomalbrc.filament.util.ExecuteUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -46,9 +47,10 @@ public class ExecuteInteractItem implements ItemBehaviour<ExecuteInteractItem.Co
 
         var cmds = commands();
         if (cmds != null && serverPlayer.getServer() != null) {
-            for (String cmd : cmds) {
-                serverPlayer.getServer().getCommands().performPrefixedCommand(
-                        serverPlayer.createCommandSourceStack().withSource(serverPlayer.getServer()).withMaximumPermission(4), cmd);
+            if (config.console) {
+                ExecuteUtil.asConsole(serverPlayer, null, cmds.toArray(new String[0]));
+            } else {
+                ExecuteUtil.asPlayer(serverPlayer, null, cmds.toArray(new String[0]));
             }
 
             serverPlayer.awardStat(Stats.ITEM_USED.get(item));
@@ -75,5 +77,6 @@ public class ExecuteInteractItem implements ItemBehaviour<ExecuteInteractItem.Co
         public List<String> commands;
 
         public ResourceLocation sound;
+        public boolean console = false;
     }
 }

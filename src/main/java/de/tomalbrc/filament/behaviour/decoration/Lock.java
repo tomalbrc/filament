@@ -1,9 +1,8 @@
 package de.tomalbrc.filament.behaviour.decoration;
 
-import de.tomalbrc.bil.util.command.CommandParser;
-import de.tomalbrc.bil.util.command.ParsedCommand;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.util.ExecuteUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,8 +15,6 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -26,7 +23,6 @@ import java.util.List;
 public class Lock implements DecorationBehaviour<Lock.Config> {
     public Config config;
     public boolean unlocked = false;
-    ParsedCommand[] parsedCommands;
 
     public Lock(Config config) {
         this.config = config;
@@ -41,15 +37,6 @@ public class Lock implements DecorationBehaviour<Lock.Config> {
     @Override
     public void init(DecorationBlockEntity blockEntity) {
         DecorationBehaviour.super.init(blockEntity);
-
-        var commands = commands();
-        if (commands != null) {
-            List<ParsedCommand> commandList = new ArrayList<>();
-            for (String command : commands) {
-                commandList.addAll(Arrays.asList(CommandParser.parse(command)));
-            }
-            this.parsedCommands = commandList.toArray(new ParsedCommand[0]);
-        }
     }
 
     @Override
@@ -72,17 +59,15 @@ public class Lock implements DecorationBehaviour<Lock.Config> {
 
             this.unlocked = !noItemNoKey;
 
-            boolean hasCommand = parsedCommands != null && parsedCommands.length > 0;
-            boolean validLockCommand = this.config.command != null && !this.config.command.isEmpty();
-            if ((hasCommand || validLockCommand) && player.getServer() != null) {
-                var css = player.createCommandSourceStack().withSource(player.getServer()).withMaximumPermission(4);
-                if (getConfig().atBlock)
-                    css = css.withPosition(decorationBlockEntity.getBlockPos().getCenter());
-
-                if (hasCommand) {
-                    for (ParsedCommand cmd : parsedCommands) {
-                        cmd.execute(player.getServer().getCommands().getDispatcher(), css);
-                    }
+            var cmds = commands();
+            boolean hasCommand = cmds != null && !cmds.isEmpty();
+            if (hasCommand && player.getServer() != null) {
+                var pos = getConfig().atBlock ? decorationBlockEntity.getBlockPos().getCenter() : null;
+                if (getConfig().console) {
+                    ExecuteUtil.asConsole(player, pos, cmds.toArray(new String[0]));
+                }
+                else {
+                    ExecuteUtil.asPlayer(player, pos, cmds.toArray(new String[0]));
                 }
             }
 
@@ -142,5 +127,6 @@ public class Lock implements DecorationBehaviour<Lock.Config> {
         public boolean atBlock = false;
 
         public boolean repeatable = true;
+        public boolean console;
     }
 }
