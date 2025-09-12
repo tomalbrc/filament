@@ -141,7 +141,6 @@ Here is a basic example for a zombie-like entity with an Iron Golem model:
     "minecraft:movement_speed": 0.23,
     "minecraft:attack_damage": 3.0,
     "minecraft:armor": 2.0,
-    "minecraft:attack_range": 1.5,
     "minecraft:spawn_reinforcements": 0.5,
     "minecraft:step_height": 0
   },
