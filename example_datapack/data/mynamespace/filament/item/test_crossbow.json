@@ -6,7 +6,12 @@
   "vanillaItem": "minecraft:crossbow",
   "itemResource": {
     "models": {
-      "default": "minecraft:custom/crossbow"
+      "default": "minecraft:item/crossbow",
+      "pulling_0": "minecraft:item/crossbow",
+      "pulling_1": "minecraft:item/crossbow",
+      "pulling_2": "minecraft:item/crossbow",
+      "arrow": "minecraft:item/crossbow_arrow",
+      "rocket": "minecraft:item/crossbow_firework"
     }
   },
   "properties": {
