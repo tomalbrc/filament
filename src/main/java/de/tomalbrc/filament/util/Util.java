@@ -206,6 +206,7 @@ public class Util {
         }
 
         Matrix4f matrix4f = transform(data.properties().display, direction, rotation);
+        if (data.properties().scale != null) matrix4f.scale(data.properties().scale);
 
         itemDisplayElement.setDisplayWidth(size.x * 2.f);
         itemDisplayElement.setDisplayHeight(size.y * 2.f);

@@ -4,7 +4,7 @@ import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-
+import org.joml.Vector3f;
 
 public class DecorationProperties extends BlockProperties {
     public static final DecorationProperties EMPTY = new DecorationProperties();
@@ -24,6 +24,7 @@ public class DecorationProperties extends BlockProperties {
     public boolean showBreakParticles = true;
 
     public boolean drops = true;
+    public Vector3f scale;
 
     @Override
     public BlockBehaviour.Properties toBlockProperties() {
