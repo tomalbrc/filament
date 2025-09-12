@@ -256,6 +256,7 @@ The `command` or `commands` are run as player but with elevated permissions, opt
 - `command`: Command to execute when the lock is successfully unlocked (if specified).
 - `commands`: List of commands to execute when the lock is successfully unlocked (if specified).
 - `atBlock`: false/true flag whether the command should be run at the blocks' position
+- `console`: Run as server/console instead of as player
 ~~~
 
 ---
@@ -284,6 +285,20 @@ The `command` or `commands` are run as player but with elevated permissions, opt
 - `atBlock`: false/true flag whether the command should be run at the blocks' position
 - `commandPostAnimation`: Command to run when the first animation stops playing
 - `commandsPostAnimation`: List of commands to run when the first animation stops playing
+- `console`: Run as server/console instead of as player
+~~~
+
+---
+
+## `break_execute` behaviour
+
+This behaviour runs a command when the decoration is broken by a player
+
+~~~admonish info "Configurable Fields"
+- `command`: Command to execute when the lock is successfully unlocked (if specified).
+- `commands`: List of commands to execute when interacted with
+- `atBlock`: false/true flag whether the command should be run at the blocks' position
+- `console`: Run as server/console instead of as player
 ~~~
 
 ---

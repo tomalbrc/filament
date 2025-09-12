@@ -83,6 +83,7 @@ public class Behaviours {
     // Decoration
     public static final BehaviourType<Animation, Animation.Config> ANIMATION = registerBehaviour("animation", Animation.class);
     public static final BehaviourType<Bed, Bed.Config> BED = registerBehaviour("bed", Bed.class);
+    public static final BehaviourType<BreakExecute, BreakExecute.Config> BREAK_EXECUTE = registerBehaviour("break_execute", BreakExecute.class);
     public static final BehaviourType<Connectable, Connectable.Config> CONNECTABLE = registerBehaviour("connectable", Connectable.class);
     public static final BehaviourType<Container, Container.Config> CONTAINER = registerBehaviour("container", Container.class);
     public static final BehaviourType<AnimatedChest, AnimatedChest.Config> ANIMATED_CHEST = registerBehaviour("animated_chest", AnimatedChest.class);

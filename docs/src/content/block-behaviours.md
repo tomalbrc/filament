@@ -641,6 +641,7 @@ Executes a command on block interaction from console, as player (@s).
 - `commands`: List of commands to execute. Empty by default
 - `atBlock`: false/true flag whether the command should be run at the blocks' position
 - `sound`: Optional sound effect to play during execution. Empty by default
+- `console`: Run as server/console instead of as player
 ~~~
 
 ---
@@ -656,6 +657,7 @@ Executes a command when the block is "attacked", from console, as player (@s).
 - `commands`: List of commands to execute. Empty by default
 - `atBlock`: false/true flag whether the command should be run at the blocks' position
 - `sound`: Optional sound effect to play during execution. Empty by default
+- `console`: Run as server/console instead of as player
 ~~~
 
 ---

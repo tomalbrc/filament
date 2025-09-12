@@ -179,6 +179,7 @@ Executes a command on item use with the player as source, located at the player,
 - `command`: The command string to execute. Empty by default
 - `commands`: List of commands to execute. Empty by default
 - `sound`: Optional sound effect to play during execution. Empty by default
+- `console`: Run as server/console instead of as player
 ~~~
 
 <br>
@@ -195,6 +196,7 @@ Executes a command when an entity is attacked with the item or when swinging at 
 - `commands`: List of commands to execute. Empty by default
 - `sound`: Optional sound effect to play during execution. Empty by default
 - `onEntityAttack`: true/false flag whether to execute only when an entity was attacked. Otherwise the command will also be executed when the item is "swung" by the player. Default to `true`
+- `console`: Run as server/console instead of as player
 ~~~
 
 <br>

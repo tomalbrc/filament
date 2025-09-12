@@ -108,9 +108,11 @@ public abstract class DecorationBlock extends SimpleBlock implements PolymerBloc
     protected void removeDecoration(Level level, BlockPos blockPos, Player player) {
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         if (blockEntity instanceof DecorationBlockEntity decorationBlockEntity) {
-            for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : decorationBlockEntity.getBehaviours()) {
-                if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
-                    decorationBehaviour.postBreak(decorationBlockEntity, blockPos, player);
+            if (player != null) {
+                for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : decorationBlockEntity.getBehaviours()) {
+                    if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
+                        decorationBehaviour.postBreak(decorationBlockEntity, blockPos, player);
+                    }
                 }
             }
 
