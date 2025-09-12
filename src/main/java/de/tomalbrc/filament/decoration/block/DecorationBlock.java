@@ -1,9 +1,6 @@
 package de.tomalbrc.filament.decoration.block;
 
-import de.tomalbrc.filament.api.behaviour.Behaviour;
-import de.tomalbrc.filament.api.behaviour.BehaviourType;
-import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
-import de.tomalbrc.filament.api.behaviour.DecorationRotationProvider;
+import de.tomalbrc.filament.api.behaviour.*;
 import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.DecorationData;
@@ -111,7 +108,13 @@ public abstract class DecorationBlock extends SimpleBlock implements PolymerBloc
     protected void removeDecoration(Level level, BlockPos blockPos, Player player) {
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         if (blockEntity instanceof DecorationBlockEntity decorationBlockEntity) {
-            decorationBlockEntity.destroyStructure(player == null || !player.isCreative());
+            for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : decorationBlockEntity.getBehaviours()) {
+                if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
+                    decorationBehaviour.postBreak(decorationBlockEntity, blockPos, player);
+                }
+            }
+
+            decorationBlockEntity.destroyStructure(player == null || !player.hasInfiniteMaterials());
         } else {
             level.destroyBlock(blockPos, false);
         }
@@ -140,4 +143,9 @@ public abstract class DecorationBlock extends SimpleBlock implements PolymerBloc
     }
 
     abstract public ItemStack visualItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState);
+
+
+    public void postBreak(DecorationBlockEntity decorationBlockEntity, BlockPos blockPos, Player player) {
+
+    }
 }
