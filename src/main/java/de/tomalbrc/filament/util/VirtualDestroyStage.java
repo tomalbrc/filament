@@ -87,10 +87,12 @@ public class VirtualDestroyStage extends ElementHolder {
                 if (blockEntity instanceof DecorationBlockEntity decorationBlockEntity) {
                     final AtomicInteger index = new AtomicInteger();
                     final DecorationBlockEntity finalDecorationBlockEntity = decorationBlockEntity.isMain() ? decorationBlockEntity : decorationBlockEntity.getMainBlockEntity();
-                    Util.forEachRotated(finalDecorationBlockEntity.getDecorationData().blocks(), finalDecorationBlockEntity.getBlockPos(), finalDecorationBlockEntity.getVisualRotationYInDegrees(), rotPos -> {
-                        BlockPos op = rotPos.subtract(pos);
-                        self.destroyElements.get(index.getAndIncrement()).setTranslation(new Vector3f(op.getX(), op.getY(), op.getZ()));
-                    });
+                    if (finalDecorationBlockEntity != null) {
+                        Util.forEachRotated(finalDecorationBlockEntity.getDecorationData().blocks(), finalDecorationBlockEntity.getBlockPos(), finalDecorationBlockEntity.getVisualRotationYInDegrees(), rotPos -> {
+                            BlockPos op = rotPos.subtract(pos);
+                            self.destroyElements.get(index.getAndIncrement()).setTranslation(new Vector3f(op.getX(), op.getY(), op.getZ()));
+                        });
+                    }
                 }
             }
         }
