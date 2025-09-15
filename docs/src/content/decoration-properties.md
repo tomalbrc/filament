@@ -41,6 +41,12 @@ properties:
 
 ---
 
+### `allowAdventureMode`:
+
+Allows adventure mode players to interact with the decoration. Defaults to `false`
+
+---
+
 ### `rotate`:
 
 ~~~admonish warning
@@ -181,6 +187,12 @@ Changes the item_display value used for the Item Display Entity of the decoratio
 Can be `none`, `thirdperson_lefthand`, `thirdperson_righthand`, `firstperson_lefthand`, `firstperson_righthand`, `head`, `gui`, `ground`, and `fixed`. 
 
 Defaults to `fixed`.
+
+---
+
+### `scale`:
+
+Scale for non-animated decoration. Defaults to `[1, 1, 1]`
 
 ---
 
