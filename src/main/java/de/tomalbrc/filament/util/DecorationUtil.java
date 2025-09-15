@@ -140,6 +140,7 @@ public class DecorationUtil {
         }
 
         Matrix4f matrix4f = transform(data.properties().display, direction);
+        if (data.properties().scale != null) matrix4f.scale(data.properties().scale);
 
         element.setYaw(rotation - (180));
 

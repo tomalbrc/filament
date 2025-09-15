@@ -3,12 +3,14 @@ package de.tomalbrc.filament.data.properties;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import org.joml.Vector3f;
 
 
 public class DecorationProperties extends BlockProperties {
     public Placement placement = Placement.DEFAULT;
     public boolean glow = false;
     public ItemDisplayContext display = ItemDisplayContext.FIXED;
+    public Vector3f scale;
     public boolean useItemParticles = true;
     public boolean drops = true;
     public boolean allowAdventureMode = false;
