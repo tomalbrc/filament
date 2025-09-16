@@ -1,11 +1,9 @@
 package de.tomalbrc.filament.util;
 
 import com.google.common.reflect.TypeToken;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.registry.Templates;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -19,6 +17,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
@@ -68,11 +68,82 @@ public interface FilamentSynchronousResourceReloadListener extends SimpleSynchro
     }
 
     default void load(@NotNull String root, @Nullable String endsWith, @NotNull ResourceManager resourceManager, @NotNull BiConsumer<ResourceLocation, InputStream> onRead) {
-        loadYaml(root, endsWith, resourceManager, onRead);
-        loadJson(root, endsWith, resourceManager, onRead);
+        loadYaml(root, endsWith, resourceManager, (id, input) -> {
+            if (!loadAsTemplate(input))
+                onRead.accept(id, template(input));
+        });
+
+        loadJson(root, endsWith, resourceManager, (id, input) -> {
+            if (!loadAsTemplate(input))
+                onRead.accept(id, template(input));
+        });
     }
 
-    default void error(ResourceLocation resourceLocation, Exception e) {
+    static boolean loadAsTemplate(InputStream input) {
+        JsonElement element = JsonParser.parseReader(new InputStreamReader(input));
+        if (element != null && element.isJsonObject()) {
+            try {
+                if (element.getAsJsonObject().has("is_template") && element.getAsJsonObject().getAsJsonPrimitive("is_template").getAsBoolean()) {
+                    Templates.add(input);
+                    return true;
+                }
+            } catch (Exception ignored) {}
+        }
+
+        return false;
+    }
+
+    static void error(ResourceLocation resourceLocation, Exception e) {
         Filament.LOGGER.error("Failed to load resource \"{}\".", resourceLocation, e);
+    }
+
+    static InputStream template(InputStream inputStream) {
+        var parsed = JsonParser.parseReader(new InputStreamReader(inputStream));
+        try {
+            inputStream.reset();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (!parsed.isJsonObject() || !parsed.getAsJsonObject().has("id"))
+            return inputStream;
+
+        var parsedObject = parsed.getAsJsonObject();
+        var realId = ResourceLocation.parse(parsedObject.getAsJsonPrimitive("id").getAsString());
+        var multiTemp = parsedObject.has("templates");
+        var singleTemp = parsedObject.has("template");
+        if (multiTemp || singleTemp) {
+            List<ResourceLocation> templates = new ArrayList<>();
+            if (multiTemp) {
+                JsonElement templateEl = parsedObject.get("templates");
+                if (templateEl.isJsonArray()) {
+                    JsonArray array = templateEl.getAsJsonArray();
+                    for (JsonElement element : array) {
+                        if (element.isJsonPrimitive()) {
+                            templates.add(ResourceLocation.parse(element.getAsJsonPrimitive().getAsString()));
+                        }
+                    }
+                }
+            }
+            else {
+                JsonElement templateEl = parsedObject.get("template");
+                if (templateEl.isJsonPrimitive()) {
+                    templates.add(ResourceLocation.parse(templateEl.getAsString()));
+                }
+            }
+
+            for (ResourceLocation template : templates) {
+                parsed = Templates.merge(template, realId, parsed.getAsJsonObject());
+            }
+
+            parsed.getAsJsonObject().remove("is_template");
+
+            JsonElement res = Templates.handlePlaceholder(parsed, realId);
+
+            String jsonString = new Gson().toJson(res);
+            return new ByteArrayInputStream(jsonString.getBytes(StandardCharsets.UTF_8));
+        }
+
+        return inputStream;
     }
 }

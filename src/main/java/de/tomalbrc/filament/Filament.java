@@ -80,6 +80,7 @@ public class Filament implements ModInitializer {
         ItemGroupRegistry.register(new ItemGroupData(Constants.DECORATION_GROUP_ID, ResourceLocation.withDefaultNamespace("lantern"), "<c:blue>Filament Decorations"));
 
         FilamentReloadUtil.registerEarlyReloadListener(new FilamentAssetReloadListener());
+        FilamentReloadUtil.registerEarlyReloadListener(new FilamentTemplateReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new ModelRegistry.AjModelReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new BlockRegistry.BlockDataReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new DecorationRegistry.DecorationDataReloadListener());

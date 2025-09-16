@@ -6,6 +6,7 @@
 - [Developers](DEVELOPERS.md)
 - [Creating content](content/README.md)
     - [Item Groups](content/item-groups.md)
+        - [Templates](content/templates.md)
     - [Items](content/items.md)
         - [Properties](content/item-properties.md)
         - [Behaviours](content/item-behaviours.md)
