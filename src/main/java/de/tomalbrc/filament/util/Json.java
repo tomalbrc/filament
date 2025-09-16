@@ -54,7 +54,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class Json {
-    private static final Set<String> BEHAVIOUR_ALIASES = ImmutableSet.of("behavior", "behaviors", "behaviours");
+    public static final Set<String> BEHAVIOUR_ALIASES = ImmutableSet.of("behavior", "behaviors", "behaviours");
 
     public static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()

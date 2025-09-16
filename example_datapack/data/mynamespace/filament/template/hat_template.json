@@ -1,0 +1,22 @@
+{
+  "id": "mynamespace:hat_template",
+  "translations": {
+    "en_us": "<item_id_capitalized>"
+  },
+  "itemResource": {
+    "models": {
+      "default": "mynamespace:custom/hats/<item_id>"
+    }
+  },
+  "components": {
+    "minecraft:equippable": {
+      "slot": "head",
+      "swappable": true,
+      "damage_on_hurt": true,
+      "equip_on_interact": false
+    }
+  },
+  "properties": {
+    "stackSize": 1
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "id": "mynamespace:cod_hat",
+  "template": "mynamespace:hat_template",
+  "itemResource": {
+    "models": {
+      "default": "minecraft:item/raw_cod"
+    }
+  }
+}
