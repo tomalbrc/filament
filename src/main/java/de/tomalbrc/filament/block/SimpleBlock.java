@@ -2,6 +2,7 @@ package de.tomalbrc.filament.block;
 
 import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.behaviour.BehaviourType;
+import de.tomalbrc.filament.behaviour.AsyncTickingBlockBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.data.AbstractBlockData;
@@ -88,6 +89,10 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     public boolean hasData() {
         return this.blockData != null;
+    }
+
+    public AbstractBlockData<? extends BlockProperties> data() {
+        return this.blockData;
     }
 
     @Override
@@ -476,6 +481,14 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     public void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
         super.tick(blockState, serverLevel, blockPos, randomSource);
         this.forEach(x -> x.tick(blockState, serverLevel, blockPos, randomSource));
+    }
+
+    public void tickAync(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
+        super.tick(blockState, serverLevel, blockPos, randomSource);
+        this.forEach(x -> {
+            if (x instanceof AsyncTickingBlockBehaviour asyncTicking)
+                asyncTicking.tickAsync(blockState, serverLevel, blockPos, randomSource);
+        });
     }
 
     // random ticking

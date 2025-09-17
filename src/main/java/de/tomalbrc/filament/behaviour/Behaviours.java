@@ -67,6 +67,7 @@ public class Behaviours {
     public static final BehaviourType<Lamp, Lamp.Config> LAMP = registerBehaviour("lamp", Lamp.class);
     public static final BehaviourType<LeafDecay, LeafDecay.Config> LEAF_DECAY = registerBehaviour("leaf_decay", LeafDecay.class);
     public static final BehaviourType<Oxidizable, Oxidizable.Config> OXIDIZABLE = registerBehaviour("oxidizable", Oxidizable.class);
+    public static final BehaviourType<ParticleEmitter, ParticleEmitter.Config> PARTICLE_EMITTER = registerBehaviour("particle_emitter", ParticleEmitter.class);
     public static final BehaviourType<Powerlevel, Powerlevel.Config> POWERLEVEL = registerBehaviour("powerlevel", Powerlevel.class);
     public static final BehaviourType<Powersource, Powersource.Config> POWERSOURCE = registerBehaviour("powersource", Powersource.class);
     public static final BehaviourType<Repeater, Repeater.Config> REPEATER = registerBehaviour("repeater", Repeater.class);

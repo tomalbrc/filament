@@ -241,7 +241,7 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
     }
 
     /**
-     * Tick
+     * Tick on scheduled ticks through ServerLevels blockTicker
      * @param blockState state of ticking block
      * @param serverLevel level
      * @param blockPos position

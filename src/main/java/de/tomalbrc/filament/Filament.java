@@ -15,7 +15,9 @@ import eu.pb4.polymer.core.api.block.PolymerBlockUtils;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.loader.api.FabricLoader;
@@ -84,6 +86,9 @@ public class Filament implements ModInitializer {
         });
 
         ServerLifecycleEvents.SERVER_STARTING.register(server -> SERVER = server);
+
+        ServerTickEvents.END_SERVER_TICK.register(AsyncBlockTicker::tick);
+        ServerChunkEvents.CHUNK_UNLOAD.register(AsyncBlockTicker::remove);
 
         ItemGroupRegistry.register(new ItemGroupData(Constants.ITEM_GROUP_ID, ResourceLocation.withDefaultNamespace("diamond"), TextUtil.formatText("<c:blue>Filament Items")));
         ItemGroupRegistry.register(new ItemGroupData(Constants.BLOCK_GROUP_ID, ResourceLocation.withDefaultNamespace("furnace"), TextUtil.formatText("<c:blue>Filament Blocks")));

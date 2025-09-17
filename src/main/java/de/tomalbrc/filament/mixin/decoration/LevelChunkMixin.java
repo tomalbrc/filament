@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.mixin;
+package de.tomalbrc.filament.mixin.decoration;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;

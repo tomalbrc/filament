@@ -5,8 +5,7 @@
   "mixins": [
     "BlockEntityTypeMixin",
     "BucketItemMixin",
-    "FlowingFluidMixin",
-    "LevelChunkMixin",
+    "LevelChunkAsyncMixin",
     "MappedRegistryMixin",
     "ReferenceMixin",
     "ReloadableServerResourcesMixin",
@@ -71,7 +70,9 @@
     "behaviour.waxable.HoneycombItemMixin",
     "component.skin.ItemMixin",
     "component.skin.ItemStackMixin",
-    "datafix.ChunkStorageMixin"
+    "datafix.ChunkStorageMixin",
+    "decoration.FlowingFluidMixin",
+    "decoration.LevelChunkMixin"
   ],
   "injectors": {
     "defaultRequire": 1,

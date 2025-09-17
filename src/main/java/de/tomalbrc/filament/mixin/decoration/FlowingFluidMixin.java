@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.mixin;
+package de.tomalbrc.filament.mixin.decoration;
 
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
