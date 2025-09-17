@@ -42,8 +42,8 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
         ItemStack mainHandItem = player.getItemInHand(InteractionHand.MAIN_HAND);
         boolean hasHandItem = !mainHandItem.isEmpty();
         boolean holdsKeyAndIsValid = hasHandItem && key != null && mainHandItem.is(key);
-        boolean noItemNoKey = !hasHandItem && (key == null);
-        if (holdsKeyAndIsValid || noItemNoKey) {
+        boolean noKey = key == null;
+        if (holdsKeyAndIsValid || noKey) {
             if (this.config.consumeKey && hasHandItem) {
                 mainHandItem.shrink(1);
             }
@@ -78,12 +78,14 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
                     ExecuteUtil.asPlayer(player, pos, cmds.toArray(new String[0]));
                 }
 
-                return InteractionResult.CONSUME;
+                return InteractionResult.SUCCESS;
             }
 
             if (this.config.discard) {
                 decorationBlockEntity.destroyStructure(false);
             }
+
+            return InteractionResult.CONSUME;
         }
 
         return InteractionResult.PASS;
