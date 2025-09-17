@@ -12,7 +12,9 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.BehaviourList;
 import de.tomalbrc.filament.behaviour.decoration.Showcase;
+import de.tomalbrc.filament.data.properties.RangedValue;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
+import de.tomalbrc.filament.data.properties.RangedVector3f;
 import de.tomalbrc.filament.data.resource.BlockResource;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
@@ -27,6 +29,7 @@ import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.Display;
@@ -60,8 +63,8 @@ public class Json {
             .setPrettyPrinting()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .registerTypeHierarchyAdapter(BlockState.class, new BlockStateDeserializer())
-            .registerTypeHierarchyAdapter(Vector3f.class, new Vector3fDeserializer())
-            .registerTypeHierarchyAdapter(Vector2f.class, new Vector2fDeserializer())
+            .registerTypeHierarchyAdapter(Vector3f.class, new SimpleCodecDeserializer<>(ExtraCodecs.VECTOR3F))
+            .registerTypeHierarchyAdapter(Vector2f.class, new SimpleCodecDeserializer<>(ExtraCodecs.VECTOR2F))
             .registerTypeHierarchyAdapter(Quaternionf.class, new QuaternionfDeserializer())
             .registerTypeAdapter(ResourceLocation.class, new SimpleCodecDeserializer<>(ResourceLocation.CODEC))
             .registerTypeHierarchyAdapter(Component.class, new ComponentDeserializer())
@@ -74,6 +77,8 @@ public class Json {
             .registerTypeHierarchyAdapter(ItemDisplayContext.class, new SimpleCodecDeserializer<>(ItemDisplayContext.CODEC))
             .registerTypeHierarchyAdapter(PushReaction.class, new LowercaseEnumDeserializer<>(PushReaction.class))
             .registerTypeHierarchyAdapter(WeatheringCopper.WeatherState.class, new SimpleCodecDeserializer<>(WeatheringCopper.WeatherState.CODEC))
+            .registerTypeHierarchyAdapter(RangedValue.class, new SimpleCodecDeserializer<>(RangedValue.CODEC))
+            .registerTypeHierarchyAdapter(RangedVector3f.class, new SimpleCodecDeserializer<>(RangedVector3f.CODEC))
             .registerTypeHierarchyAdapter(Block.class, new RegistryDeserializer<>(BuiltInRegistries.BLOCK))
             .registerTypeHierarchyAdapter(Item.class, new RegistryDeserializer<>(BuiltInRegistries.ITEM))
             .registerTypeHierarchyAdapter(SoundEvent.class, new RegistryDeserializer<>(BuiltInRegistries.SOUND_EVENT))
@@ -303,39 +308,6 @@ public class Json {
             float z = jsonArray.get(2).getAsFloat();
 
             return new Quaternionf().rotateXYZ(x * Mth.DEG_TO_RAD, y * Mth.DEG_TO_RAD, z * Mth.DEG_TO_RAD);
-        }
-    }
-
-    public static class Vector3fDeserializer implements JsonDeserializer<Vector3f> {
-        @Override
-        public Vector3f deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-            JsonArray jsonArray = jsonElement.getAsJsonArray();
-
-            if (jsonArray.size() < 3) {
-                throw new JsonParseException("Array size should be at least 3 for Vector3f deserialization.");
-            }
-
-            float x = jsonArray.get(0).getAsFloat();
-            float y = jsonArray.get(1).getAsFloat();
-            float z = jsonArray.get(2).getAsFloat();
-
-            return new Vector3f(x, y, z);
-        }
-    }
-
-    public static class Vector2fDeserializer implements JsonDeserializer<Vector2f> {
-        @Override
-        public Vector2f deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-            JsonArray jsonArray = jsonElement.getAsJsonArray();
-
-            if (jsonArray.size() < 2) {
-                throw new JsonParseException("Array size should be at least 2 for Vector2f deserialization.");
-            }
-
-            float x = jsonArray.get(0).getAsFloat();
-            float y = jsonArray.get(1).getAsFloat();
-
-            return new Vector2f(x, y);
         }
     }
 

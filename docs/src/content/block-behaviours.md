@@ -926,3 +926,43 @@ Allows to make the block bouncy, similar to slime but extra bounciness when the 
 ~~~admonish info "Configurable Fields"
 - `bounciness`: This value gets multiplied by the entities y-velocity when landing on the block and the player presses space
 ~~~
+
+---
+
+## `particle_emitter` behaviour
+
+Adds particle emitters to the block.
+
+Allows for ranged values and enabling based on block-state.
+
+Example for a block that emits particles when powered:
+```json
+{
+  "powerlevel": {
+    "max": 1
+  },
+  "particle_emitter": {
+    "enabled": {
+      "powerlevel=1": true,
+      "powerlevel=0": false
+    },
+    "elements": [
+      {
+        "enabled": true,
+        "particle": {
+          "type": "scrape"
+        },
+        "interval": 5,
+        "offset": [0.5, "0..0.5", 0.5],
+        "count": 5,
+        "delta": [0, 0, 0],
+        "speed": 0.1
+      }
+    ]
+  }
+}
+```
+
+The `offset`, `count`, `delta` and `speed` can have ranged values like "0..1" -> this will pick a random number between 0 and 1.
+
+Some particle types have additional options like color.
