@@ -1,0 +1,30 @@
+{
+  "id": "mynamespace:hello_block",
+  "blockModelType": "full_block",
+  "displayName": "<gold>Greeting Purr Block",
+  "blockResource": {
+    "models": {
+      "powerlevel=1": "minecraft:custom/block/arcanery/amethyst_bricks",
+      "powerlevel=0": "minecraft:block/amethyst_block"
+    }
+  },
+  "behaviour": {
+    "powerlevel": {
+      "max": 1
+    },
+    "area_execute": {
+      "enabled": true,
+      "radius": {
+        "powerlevel=0": 2,
+        "powerlevel=1": 5
+      },
+      "interval": 40,
+      "enterCommand": "title %player% actionbar {\"text\":\"Hello, %player%!\"}",
+      "repeatCommand": "playsound minecraft:entity.cat.purr master %player%",
+      "exitCommand": "title %player% actionbar {\"text\":\"Goodbye, %player%!\"}"
+    }
+  },
+  "properties": {
+    "blockBase": "minecraft:amethyst_block"
+  }
+}

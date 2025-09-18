@@ -1,0 +1,75 @@
+{
+  "id": "mynamespace:multi_effect_block",
+  "blockModelType": "full_block",
+  "blockResource": {
+    "models": {
+      "powerlevel=1": "minecraft:custom/block/arcanery/amethyst_bricks",
+      "powerlevel=0": "minecraft:block/amethyst_block"
+    }
+  },
+  "behaviour": {
+    "powerlevel": {
+      "max": 1
+    },
+    "particle_emitter": {
+      "enabled": true,
+      "elements": [
+        {
+          "enabled": {
+            "powerlevel=1": true,
+            "powerlevel=0": false
+          },
+          "particle": {
+            "type": "campfire_cosy_smoke"
+          },
+          "interval": 1,
+          "offset": ["-0.5..0.5", 0.85, "-0.5..0.5"],
+          "count": 0,
+          "delta": [0, 0.075, 0],
+          "speed": 1
+        },
+        {
+          "enabled": {
+            "powerlevel=1": false,
+            "powerlevel=0": true
+          },
+          "particle": {
+            "type": "spore_blossom_air"
+          },
+          "interval": 20,
+          "offset": [0, 0.5, 0],
+          "count": 40,
+          "delta": [6, 5, 6],
+          "speed": 0.05,
+          "force": true
+        }
+      ]
+    },
+    "status_effect_emitter": {
+      "enabled": true,
+      "elements": [
+        {
+          "enabled": {
+            "powerlevel=1": true,
+            "powerlevel=0": false
+          },
+          "effect": "night_vision",
+          "interval": 20,
+          "duration": 400
+        },
+        {
+          "enabled": {
+            "powerlevel=1": false,
+            "powerlevel=0": true
+          },
+          "effect": "speed",
+          "interval": 20,
+          "duration": 400
+        }
+      ]
+    }
+  },
+  "properties": {
+    "blockBase": "minecraft:amethyst_block"
+  }
+}
