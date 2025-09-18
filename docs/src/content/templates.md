@@ -28,7 +28,7 @@ properties:
   lore: ["Namespace: <item_namespace>"]
 ```
 
-Those templates can then be used in your item/block/decoration/entity configuration like this:
+Configurations with `is_template` set to `true` will only be added as template, not as item/block/etc. 
 
 Those templates can then be used in your item/block/decoration/entity configuration like this:
 ```yaml
