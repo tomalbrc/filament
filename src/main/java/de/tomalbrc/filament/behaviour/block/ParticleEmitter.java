@@ -63,6 +63,7 @@ public class ParticleEmitter implements BlockBehaviour<ParticleEmitter.Config>, 
         Vector3f delta = element.delta.random(randomSource);
         serverLevel.sendParticles(
                 decoded.get(element),
+                element.force, element.force,
                 pos.x + offset.x, pos.y + offset.y, pos.z + offset.z,
                 (int)element.count.randomValue(randomSource),
                 delta.x, delta.y, delta.z,
@@ -82,5 +83,6 @@ public class ParticleEmitter implements BlockBehaviour<ParticleEmitter.Config>, 
         RangedValue count = new RangedValue(0);
         RangedVector3f delta = new RangedVector3f();
         RangedValue speed = new RangedValue(0);
+        boolean force = false;
     }
 }
