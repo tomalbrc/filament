@@ -483,14 +483,6 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
         this.forEach(x -> x.tick(blockState, serverLevel, blockPos, randomSource));
     }
 
-    public void tickAync(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
-        super.tick(blockState, serverLevel, blockPos, randomSource);
-        this.forEach(x -> {
-            if (x instanceof AsyncTickingBlockBehaviour asyncTicking)
-                asyncTicking.tickAsync(blockState, serverLevel, blockPos, randomSource);
-        });
-    }
-
     // random ticking
 
     @Override
