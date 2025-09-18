@@ -1,17 +1,15 @@
 package de.tomalbrc.filament.decoration.holder;
 
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.decoration.util.DecorationItemDisplayElement;
 import de.tomalbrc.filament.decoration.block.ComplexDecorationBlock;
-import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.util.ItemFrameElement;
 import de.tomalbrc.filament.util.DecorationUtil;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockAwareAttachment;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
-import eu.pb4.polymer.virtualentity.api.attachment.ChunkAttachment;
 import eu.pb4.polymer.virtualentity.api.attachment.HolderAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
-import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
 import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,7 +41,7 @@ public class DecorationHolder extends ElementHolder implements FilamentDecoratio
     @Override
     public void updateVisualItem(ItemStack newItem) {
         for (VirtualElement element : this.getElements()) {
-            if (element instanceof ItemDisplayElement itemDisplayElement) {
+            if (element instanceof DecorationItemDisplayElement itemDisplayElement) {
                 itemDisplayElement.setItem(newItem);
             }
         }

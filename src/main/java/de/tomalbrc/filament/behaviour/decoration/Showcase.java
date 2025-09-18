@@ -219,8 +219,8 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
         } else {
             if (element instanceof BlockDisplayElement blockDisplayElement && itemStack.getItem() instanceof BlockItem blockItem) {
                 blockDisplayElement.getDataTracker().set(DisplayTrackedData.Block.BLOCK_STATE, blockItem.getBlock().defaultBlockState(), true);
-            } else if (element instanceof ShowcaseItemElement itemDisplayElement) {
-                itemDisplayElement.setItemReal(itemStack);
+            } else if (element instanceof ItemDisplayElement itemDisplayElement) {
+                itemDisplayElement.setItem(itemStack);
             }
 
             this.showcases.put(showcase, element);
@@ -236,7 +236,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     }
 
     private DisplayElement element(ShowcaseMeta showcase, ItemStack itemStack) {
-        ItemDisplayElement displayElement = new ShowcaseItemElement(itemStack.copy());
+        ItemDisplayElement displayElement = new ItemDisplayElement(itemStack.copy());
         displayElement.setItemDisplayContext(showcase.display);
         displayElement.setInvisible(true);
         return displayElement;
@@ -447,19 +447,6 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
 
                 throw new JsonParseException("Invalid config format: must be object or array");
             }
-        }
-    }
-
-    private static class ShowcaseItemElement extends ItemDisplayElement {
-        public ShowcaseItemElement(ItemStack itemStack) {
-            setItemReal(itemStack);
-        }
-
-        @Override
-        public void setItem(ItemStack stack) {}
-
-        public void setItemReal(ItemStack stack) {
-            this.dataTracker.set(DisplayTrackedData.Item.ITEM, stack, true);
         }
     }
 }
