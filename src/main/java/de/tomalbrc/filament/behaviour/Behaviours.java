@@ -46,6 +46,7 @@ public class Behaviours {
     public static final BehaviourType<Execute, Execute.Config> EXECUTE = registerBehaviour("execute", Execute.class);
 
     // Block
+    public static final BehaviourType<AreaExecute, AreaExecute.Config> AREA_EXECUTE = registerBehaviour("area_execute", AreaExecute.class);
     public static final BehaviourType<Axis, Axis.Config> AXIS = registerBehaviour("axis", Axis.class);
     public static final BehaviourType<Budding, Budding.Config> BUDDING = registerBehaviour("budding", Budding.class);
     public static final BehaviourType<Bouncy, Bouncy.Config> BOUNCY = registerBehaviour("bouncy", Bouncy.class);

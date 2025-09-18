@@ -5,6 +5,7 @@ import com.mojang.math.Axis;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.resource.ItemResource;
+import de.tomalbrc.filament.decoration.util.DecorationItemDisplayElement;
 import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
 import de.tomalbrc.filament.decoration.util.ItemFrameElement;
 import eu.pb4.polymer.core.api.item.PolymerItem;
@@ -124,7 +125,7 @@ public class DecorationUtil {
     }
 
     public static ItemDisplayElement decorationItemDisplay(@NotNull DecorationData data, Direction direction, float rotation, ItemStack itemStack) {
-        ItemDisplayElement element = new ItemDisplayElement(itemStack);
+        ItemDisplayElement element = new DecorationItemDisplayElement(itemStack);
         element.setInvisible(true);
         element.setTeleportDuration(0);
 

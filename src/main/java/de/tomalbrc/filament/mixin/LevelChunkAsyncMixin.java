@@ -39,7 +39,7 @@ public abstract class LevelChunkAsyncMixin extends ChunkAccess {
 
     @Inject(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z", ordinal = 0))
     private void filament$removeOldAsyncTicker(BlockPos blockPos, BlockState blockState, int i, CallbackInfoReturnable<BlockState> cir) {
-        var x = AsyncBlockTicker.get(blockPos);
+        var x = AsyncBlockTicker.getBlock(blockPos);
         if (x != null) {
             if (x != blockState.getBlock()) {
                 AsyncBlockTicker.remove(blockPos);
@@ -51,7 +51,7 @@ public abstract class LevelChunkAsyncMixin extends ChunkAccess {
 
     @Inject(method = "setBlockState", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/Level;isClientSide:Z", ordinal = 1, shift = At.Shift.BEFORE))
     private void filament$addAsyncTicker(BlockPos blockPos, BlockState blockState, int i, CallbackInfoReturnable<BlockState> cir) {
-        var x = AsyncBlockTicker.get(blockPos);
+        var x = AsyncBlockTicker.getBlock(blockPos);
         if (x == null && this.level instanceof ServerLevel serverLevel && blockState.getBlock() instanceof SimpleBlock simpleBlock && filament$isAsyncTickingBlock(simpleBlock)) {
             AsyncBlockTicker.add(blockPos, simpleBlock, serverLevel);
         }

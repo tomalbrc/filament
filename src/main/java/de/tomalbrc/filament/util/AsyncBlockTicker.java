@@ -6,6 +6,7 @@ import de.tomalbrc.filament.behaviour.AsyncTickingBlockBehaviour;
 import de.tomalbrc.filament.block.SimpleBlock;
 import it.unimi.dsi.fastutil.longs.LongArraySet;
 import it.unimi.dsi.fastutil.longs.LongSet;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.server.MinecraftServer;
@@ -19,7 +20,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class AsyncBlockTicker {
-    private record TickData(BlockPos blockPos, SimpleBlock block, ServerLevel serverLevel) { }
+    public record DataKey(String name) {}
+    public record TickData(BlockPos blockPos, SimpleBlock block, ServerLevel serverLevel, Map<DataKey, Object> userData) { }
 
     private static final Map<Long, TickData> TICKING = new ConcurrentHashMap<>();
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadScheduledExecutor();
@@ -43,7 +45,11 @@ public class AsyncBlockTicker {
     }
 
     public static void add(BlockPos pos, SimpleBlock block, ServerLevel serverLevel) {
-        TICKING.put(pos.asLong(), new TickData(pos, block, serverLevel));
+        TICKING.put(pos.asLong(), new TickData(pos, block, serverLevel, new Reference2ObjectOpenHashMap<>()));
+    }
+
+    public static void add(BlockPos pos, SimpleBlock block, ServerLevel serverLevel, Map<DataKey, Object> userData) {
+        TICKING.put(pos.asLong(), new TickData(pos, block, serverLevel, userData));
     }
 
     public static void remove(BlockPos pos) {
@@ -60,7 +66,11 @@ public class AsyncBlockTicker {
         s.forEach(TICKING::remove);
     }
 
-    public static SimpleBlock get(BlockPos pos) {
+    public static TickData get(BlockPos pos) {
+        return TICKING.get(pos.asLong());
+    }
+
+    public static SimpleBlock getBlock(BlockPos pos) {
         var v = TICKING.get(pos.asLong());
         if (v != null)
             return v.block;

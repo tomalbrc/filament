@@ -35,7 +35,7 @@ public class ExecuteUtil {
         }
 
         for (String cmd : cmds) {
-            server.getCommands().performPrefixedCommand(commandSourceStack, cmd);
+            server.getCommands().performPrefixedCommand(commandSourceStack.withSuppressedOutput(), cmd);
         }
     }
 }
