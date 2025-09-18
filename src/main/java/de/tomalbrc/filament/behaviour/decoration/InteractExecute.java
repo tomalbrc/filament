@@ -43,6 +43,7 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
         boolean hasHandItem = !mainHandItem.isEmpty();
         boolean holdsKeyAndIsValid = hasHandItem && key != null && mainHandItem.is(key);
         boolean noKey = key == null;
+        var pos = getConfig().atBlock ? decorationBlockEntity.getBlockPos().getCenter() : null;
         if (holdsKeyAndIsValid || noKey) {
             if (this.config.consumeKey && hasHandItem) {
                 mainHandItem.shrink(1);
@@ -52,7 +53,6 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
                 decorationBlockEntity.getOrCreateHolder().playAnimation(config.animatePerPlayer ? player : null, config.animation, 0, commandsPost() == null ? null : (serverPlayer -> {
                     var cmdsPost = commandsPost();
                     if (player.getServer() != null && cmdsPost != null) {
-                        var pos = getConfig().atBlock ? decorationBlockEntity.getBlockPos().getCenter() : null;
                         if (getConfig().console) {
                             ExecuteUtil.asConsole(player, pos, cmdsPost.toArray(new String[0]));
                         }
@@ -69,8 +69,7 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
 
             var cmds = commands();
             boolean hasCommand = cmds != null && !cmds.isEmpty();
-            if ((hasCommand) && player.getServer() != null) {
-                var pos = getConfig().atBlock ? decorationBlockEntity.getBlockPos().getCenter() : null;
+            if (hasCommand && player.getServer() != null) {
                 if (getConfig().console) {
                     ExecuteUtil.asConsole(player, pos, cmds.toArray(new String[0]));
                 }
