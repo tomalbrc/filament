@@ -933,7 +933,7 @@ Allows to make the block bouncy, similar to slime but extra bounciness when the 
 
 Adds particle emitters to the block.
 
-Allows for ranged values and enabling based on block-state.
+Allows for ranged random values and enabling based on block-state.
 
 Example for a block that emits particles when powered:
 ```json
@@ -956,7 +956,8 @@ Example for a block that emits particles when powered:
         "offset": [0.5, "0..0.5", 0.5],
         "count": 5,
         "delta": [0, 0, 0],
-        "speed": 0.1
+        "speed": 0.1,
+        "force": false
       }
     ]
   }
@@ -965,4 +966,42 @@ Example for a block that emits particles when powered:
 
 The `offset`, `count`, `delta` and `speed` can have ranged values like "0..1" -> this will pick a random number between 0 and 1.
 
-Some particle types have additional options like color.
+Some particle types have additional options like `color`.
+
+---
+
+## `status_effect_emitter` behaviour
+
+Adds status effect emitters to the block.
+
+Allows for ranged values and enabling based on block-state.
+
+Example for a block that applies a status effect to players when powered:
+```json
+{
+  "powerlevel": {
+    "max": 1
+  },
+  "status_effect_emitter": {
+    "enabled": {
+      "powerlevel=1": true,
+      "powerlevel=0": false
+    },
+    "elements": [
+      {
+        "enabled": true,
+        "interval": 100,
+        "onlyPlayer": true,
+        "ignoreHeight": false,
+        "radius": 16,
+        "effect": "speed",
+        "duration": 200,
+        "amplifier": 0,
+        "ambient": true,
+        "visible": true,
+        "showIcon": true
+      }
+    ]
+  }
+}
+```
