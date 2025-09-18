@@ -933,14 +933,44 @@ Allows to make the block bouncy, similar to slime but extra bounciness when the 
 
 Adds particle emitters to the block.
 
-Allows for ranged random values and enabling based on block-state.
+~~~admonish tip
+Most field values can be mapped to block-states and ranges (like `0..1`) are supported for numeric values.
+~~~
 
-Example for a block that emits particles when powered:
+~~~admonish info "Configurable Fields"
+- `enabled`: Boolean or state-mapped boolean controlling whether the emitter is active.
+- `elements`: Array of emitter elements. Each element supports:
+  - `enabled`: `true`/`false`
+  - `particle`: Particle descriptor or identifier (some particle types accept extra options like `color`)
+  - `interval`: Interval in ticks between emissions
+  - `offset`: Offset from block center. Each axis can be a number or range like `"0..0.5"`
+  - `count`: Number of particles to spawn (can be a single number or a ranged string like `"1..5"`)
+  - `delta`: Delta/spread for particle positions
+  - `speed`: Particle speed (can be ranged)
+  - `force`: Boolean whether to force particle spawning
+~~~
+
+~~~admonish example
+<!-- langtabs-start -->
+```yml
+particle_emitter:
+  enabled:
+    powerlevel=1: true
+    powerlevel=0: false
+  elements:
+    - enabled: true
+      particle:
+        type: scrape
+      interval: 5
+      offset: [0.5, "0..0.5", 0.5]
+      count: 5
+      delta: [0, 0, 0]
+      speed: 0.1
+      force: false
+```
+
 ```json
 {
-  "powerlevel": {
-    "max": 1
-  },
   "particle_emitter": {
     "enabled": {
       "powerlevel=1": true,
@@ -963,8 +993,10 @@ Example for a block that emits particles when powered:
   }
 }
 ```
+<!-- langtabs-end -->
+~~~
 
-The `offset`, `count`, `delta` and `speed` can have ranged values like "0..1" -> this will pick a random number between 0 and 1.
+The `offset`, `count`, `delta` and `speed` can have ranged values like `"0..1"` - this will pick a random number between 0 and 1.
 
 Some particle types have additional options like `color`.
 
@@ -976,12 +1008,45 @@ Adds status effect emitters to the block.
 
 Allows for ranged values and enabling based on block-state.
 
-Example for a block that applies a status effect to players when powered:
+~~~admonish info "Configurable Fields"
+- `enabled`: Boolean or state-mapped boolean controlling whether the emitter is active.
+- `elements`: List of effect elements. Each element supports:
+  - `enabled`: `true`/`false`
+  - `interval`: Interval in ticks
+  - `onlyPlayer`: If `true`, only players are affected
+  - `ignoreHeight`: If `true`, vertical distance is ignored when applying the effect (similar to beacons)
+  - `radius`: Cube-shaped radius in blocks to search for entities
+  - `effect`: Identifier or name of the status effect (e.g. `speed`)
+  - `duration`: Duration of the effect in ticks
+  - `amplifier`: Effect amplifier (integer)
+  - `ambient`: Ambient flag for the effect
+  - `visible`: Whether particles are shown
+  - `showIcon`: Whether the status effect icon is shown
+~~~
+
+~~~admonish example
+<!-- langtabs-start -->
+```yml
+status_effect_emitter:
+  enabled:
+    powerlevel=1: true
+    powerlevel=0: false
+  elements:
+    - enabled: true
+      interval: 100
+      onlyPlayer: true
+      ignoreHeight: false
+      radius: 16
+      effect: speed
+      duration: 200
+      amplifier: 0
+      ambient: true
+      visible: true
+      showIcon: true
+```
+
 ```json
 {
-  "powerlevel": {
-    "max": 1
-  },
   "status_effect_emitter": {
     "enabled": {
       "powerlevel=1": true,
@@ -1005,3 +1070,60 @@ Example for a block that applies a status effect to players when powered:
   }
 }
 ```
+<!-- langtabs-end -->
+~~~
+
+---
+
+## `area_execute` behaviour
+
+Executes commands when a players enter/leaves or stays in an area. Optionally based on luckperms permission.
+
+~~~admonish info "Configurable Fields"
+- `radius`: Cube-shaped radius in blocks to check for players. Defaults to `16`
+- `enabled`: Boolean or state-mapped flag to enable all commands. Defaults to `true`
+- `interval`: Interval in ticks between checks. Defaults to `40`
+- `repeatCommand` / `repeatCommands`: Command(s) to run each interval for players inside the area
+- `enterCommand` / `enterCommands`: Command(s) to run when a player first enters the area
+- `exitCommand` / `exitCommands`: Command(s) to run when a player leaves the area
+- `atBlock`: If `true`, commands are executed at the block position (useful for selectors). Defaults to `false`
+- `ignoreHeight`: If `true`, height is ignored when forming the area (uses world height). Defaults to `false`
+- `console`: If `true`, commands are executed as the server console instead of the player. Defaults to `false`
+- `permission`: Optional permission node to check (requires luckperms) - only players with the permission are considered
+~~~
+
+~~~admonish example
+<!-- langtabs-start -->
+```yml
+area_execute:
+  radius: 16
+  enabled: true
+  interval: 40
+  enterCommands:
+    - "title %player% actionbar {\"text\":\"Hello, %player%!\"}"
+  repeatCommands:
+    - "playsound minecraft:entity.cat.purr master %player%"
+  exitCommands:
+    - "title %player% actionbar {\"text\":\"Goodbye, %player%!\"}"
+  atBlock: true
+  ignoreHeight: false
+  permission: "mything.area.affected" # optional, luckperms based
+```
+
+```json
+{
+  "area_execute": {
+    "radius": 16,
+    "enabled": true,
+    "interval": 40,
+    "enterCommands": ["title %player% actionbar {\"text\":\"Hello, %player%!\"}"],
+    "repeatCommands": ["playsound minecraft:entity.cat.purr master %player%"],
+    "exitCommands": ["title %player% actionbar {\"text\":\"Goodbye, %player%!\"}"],
+    "atBlock": true,
+    "ignoreHeight": false,
+    "permission": "mything.area.affected"
+  }
+}
+```
+<!-- langtabs-end -->
+~~~
