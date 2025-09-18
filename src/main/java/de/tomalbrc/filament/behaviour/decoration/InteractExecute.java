@@ -61,7 +61,7 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
                         }
                     }
 
-                    if (config.animationPost != null && (!config.animatePerPlayer || player.level() == decorationBlockEntity.getLevel())) {
+                    if (config.animationPost != null) {
                         decorationBlockEntity.getOrCreateHolder().playAnimation(config.animatePerPlayer ? player : null, config.animationPost);
                     }
                 }));
@@ -83,11 +83,23 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
             if (this.config.discard) {
                 decorationBlockEntity.destroyStructure(false);
             }
+        } else if (!noKey) {
+            var cmds = commandsIncorrectKey();
+            if (player.getServer() != null && cmds != null) {
+                if (getConfig().console) {
+                    ExecuteUtil.asConsole(player, pos, cmds.toArray(new String[0]));
+                }
+                else {
+                    ExecuteUtil.asPlayer(player, pos, cmds.toArray(new String[0]));
+                }
+            }
 
-            return InteractionResult.CONSUME;
+            if (config.animationIncorrectKey != null) {
+                decorationBlockEntity.getOrCreateHolder().playAnimation(config.animatePerPlayer ? player : null, config.animationIncorrectKey);
+            }
         }
 
-        return InteractionResult.PASS;
+        return InteractionResult.CONSUME;
     }
 
     private List<String> commands() {
@@ -96,6 +108,10 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
 
     private List<String> commandsPost() {
         return config.commandsPostAnimation == null ? config.commandPostAnimation == null ? null : List.of(config.commandPostAnimation) : config.commandsPostAnimation;
+    }
+
+    private List<String> commandsIncorrectKey() {
+        return config.commandsIncorrectKey == null ? config.commandIncorrectKey == null ? null : List.of(config.commandIncorrectKey) : config.commandsIncorrectKey;
     }
 
     public static class Config {
@@ -150,6 +166,13 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
          * List of to run after animation
          */
         public List<String> commandsPostAnimation = null;
+
+        /**
+         * List of commands to run on incorrect key
+         */
+        public String commandIncorrectKey = null;
+        public List<String> commandsIncorrectKey = null;
+        public String animationIncorrectKey = null;
 
         /**
          * Whether to execute the commands at the interacted blocks' position instead of the players position

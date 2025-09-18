@@ -280,11 +280,14 @@ The `command` or `commands` are run as player but with elevated permissions, opt
 - `discard`: Specifies whether the decoration should be destroyed after interacting with it.
 - `animation`: Name of the animation to play when interacting.
 - `animationPost`: Name of animation to player after the first one ended
-- `command`: Command to execute when the lock is successfully unlocked (if specified).
-- `commands`: List of commands to execute when interacted with
+- `command`: Command to execute when the lock is successfully unlocked (if a key is specified, otherwise the command is always run).
+- `commands`: List of commands, as above
 - `atBlock`: false/true flag whether the command should be run at the blocks' position
 - `commandPostAnimation`: Command to run when the first animation stops playing
-- `commandsPostAnimation`: List of commands to run when the first animation stops playing
+- `commandsPostAnimation`: List of commands, as above
+- `commandIncorrectKey`: Command to run when the player has an incorrect key
+- `commandsIncorrectKey`: List of commands, as above
+- `animationIncorrectKey`: Animation to play when the player has an incorrect key
 - `console`: Run as server/console instead of as player
 ~~~
 
