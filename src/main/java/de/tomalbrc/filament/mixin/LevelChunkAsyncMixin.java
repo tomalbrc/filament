@@ -43,7 +43,7 @@ public abstract class LevelChunkAsyncMixin extends ChunkAccess {
         if (x != null) {
             if (x != blockState.getBlock()) {
                 AsyncBlockTicker.remove(blockPos);
-            } else if (blockState.getBlock() instanceof SimpleBlock simpleBlock && getLevel() instanceof ServerLevel serverLevel) {
+            } else if (blockState.getBlock() instanceof SimpleBlock simpleBlock && getLevel() instanceof ServerLevel serverLevel && AsyncBlockTicker.get(blockPos) == null) {
                 AsyncBlockTicker.add(blockPos, simpleBlock, serverLevel);
             }
         }
