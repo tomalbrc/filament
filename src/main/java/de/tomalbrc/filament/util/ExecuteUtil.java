@@ -7,7 +7,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class ExecuteUtil {
     public static void asPlayer(ServerPlayer user, Vec3 at, String ...cmd) {
-        var commandSourceStack = user.getServer().createCommandSourceStack().withEntity(user).withMaximumPermission(4);
+        var commandSourceStack = user.getServer().createCommandSourceStack().withEntity(user).withPosition(user.position()).withMaximumPermission(4);
         if (at != null) {
             commandSourceStack = commandSourceStack.withPosition(at);
         }
