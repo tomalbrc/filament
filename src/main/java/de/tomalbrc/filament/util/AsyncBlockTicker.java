@@ -4,8 +4,6 @@ import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.behaviour.AsyncTickingBlockBehaviour;
 import de.tomalbrc.filament.block.SimpleBlock;
-import it.unimi.dsi.fastutil.longs.Long2ObjectAVLTreeMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.LongArraySet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.core.BlockPos;
@@ -16,18 +14,22 @@ import net.minecraft.world.level.chunk.LevelChunk;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class AsyncBlockTicker {
-    private record TickData(BlockPos blockPos, SimpleBlock block, ServerLevel serverLevel) {}
-    private static final Long2ObjectAVLTreeMap<TickData> TICKING = new Long2ObjectAVLTreeMap<>();
+    private record TickData(BlockPos blockPos, SimpleBlock block, ServerLevel serverLevel) { }
+
+    private static final Map<Long, TickData> TICKING = new ConcurrentHashMap<>();
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadScheduledExecutor();
 
     public static void tick(MinecraftServer server) {
-        for (TickData entry : TICKING.values()) {
-            CompletableFuture.runAsync(() -> tick(entry), EXECUTOR_SERVICE);
-        }
+        CompletableFuture.runAsync(() -> {
+            for (TickData entry : TICKING.values()) {
+                tick(entry);
+            }
+        }, EXECUTOR_SERVICE);
     }
 
     private static void tick(TickData tickData) {
@@ -50,9 +52,9 @@ public class AsyncBlockTicker {
 
     public static void remove(ServerLevel serverLevel, LevelChunk chunk) {
         LongSet s = new LongArraySet();
-        for (Long2ObjectMap.Entry<TickData> entry : TICKING.long2ObjectEntrySet()) {
+        for (Map.Entry<Long, TickData> entry : TICKING.entrySet()) {
             if (entry.getValue().serverLevel == serverLevel && SectionPos.of(entry.getValue().blockPos).chunk().equals(chunk.getPos())) {
-                s.add(entry.getLongKey());
+                s.add(entry.getKey());
             }
         }
         s.forEach(TICKING::remove);
