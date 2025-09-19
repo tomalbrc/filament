@@ -1,8 +1,12 @@
 package de.tomalbrc.filament.behaviour.block;
 
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
+import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import de.tomalbrc.filament.util.BlockUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -61,6 +65,7 @@ public class Lamp implements BlockBehaviour<Lamp.Config> {
             var currentIndex = config.cycle.indexOf(lightLevel);
             var next = config.cycle.get((currentIndex+1) % config.cycle.size());
             level.setBlockAndUpdate(blockPos, blockState.setValue(BlockUtil.LIGHT_LEVEL, next));
+            playSound(level, blockPos, blockState);
             return InteractionResult.CONSUME;
         } else if (level != null) {
             if (lightLevel == config.on) {
@@ -68,10 +73,16 @@ public class Lamp implements BlockBehaviour<Lamp.Config> {
             } else {
                 level.setBlockAndUpdate(blockPos, blockState.setValue(BlockUtil.LIGHT_LEVEL, config.on));
             }
+            playSound(level, blockPos, blockState);
             return InteractionResult.CONSUME;
         }
 
         return InteractionResult.PASS;
+    }
+
+    private void playSound(Level level, BlockPos blockPos, BlockState blockState) {
+        if (config.sound != null)
+            level.playSound(null, blockPos, SoundEvent.createVariableRangeEvent(config.sound.getValue(blockState)), SoundSource.BLOCKS);
     }
 
     public static class Config {
@@ -80,5 +91,7 @@ public class Lamp implements BlockBehaviour<Lamp.Config> {
         Integer defaultValue = 0;
         List<Integer> cycle;
         Boolean models;
+
+        public BlockStateMappedProperty<ResourceLocation> sound;
     }
 }

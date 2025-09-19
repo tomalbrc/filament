@@ -848,7 +848,7 @@ Adds `distance` and `persistent` block state properties to the block.
 Allows you to create lamps that either switch on/off or cycle through a list of light levels on player interaction.
 
 ~~~admonish info "Block-State-Properties to provide models for (optional)"
-- `level`: 0 to 15 (optional when `models` is set to `true`)
+- `level`: 0 to 15 (optional, only when `models` is set to `true`)
 ~~~
 
 ~~~admonish info "Configurable Fields"
@@ -856,7 +856,8 @@ Allows you to create lamps that either switch on/off or cycle through a list of 
 - `off`: Light level to use for the 'off' state. From `0`-`15`
 - `cycle`: List of light levels to cycle through. Overwrites the `on` and `off` values. Example: `[0,7,15]`
 - `defaultValue`: Default light level when placed. From `0`-`15`
-- `models`: Flag whether to use block state models. Ignored by decorations. `true`/`false`. `false` by default.
+- `models`: Flag whether to use block state models. Ignored by decorations. `true`/`false`. Defaults to `false`
+- `sound`: Sound to play when interacted with succesfully. Can be based on block-state. Empty by default
 ~~~
 
 ~~~admonish example "Simple on / off lamp"
