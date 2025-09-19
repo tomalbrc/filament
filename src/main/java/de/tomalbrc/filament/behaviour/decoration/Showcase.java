@@ -393,7 +393,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
 
         public int maxStackSize = 1;
 
-        public ItemDisplayContext display = ItemDisplayContext.FIXED;
+        public ItemDisplayContext display = ItemDisplayContext.NONE;
     }
 
     public enum ShowcaseType {
