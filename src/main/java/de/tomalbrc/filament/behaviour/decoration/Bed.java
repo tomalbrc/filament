@@ -8,6 +8,7 @@ import de.tomalbrc.filament.mixin.accessor.PlayerAccessor;
 import de.tomalbrc.filament.util.DecorationUtil;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -16,6 +17,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -86,7 +88,7 @@ public class Bed implements DecorationBehaviour<Bed.Config> {
             } else if (testRes.getSecond()) {
                 return Either.left(Player.BedSleepingProblem.OBSTRUCTED);
             } else {
-                player.setRespawnPosition(new ServerPlayer.RespawnConfig(player.level().dimension(), blockPos, player.getYRot(), false), true);
+                player.setRespawnPosition(new ServerPlayer.RespawnConfig(new LevelData.RespawnData(GlobalPos.of(player.level().dimension(), blockPos), player.getYRot(), player.getXRot()), false), true);
                 if (player.level().isBrightOutside()) {
                     return Either.left(Player.BedSleepingProblem.NOT_POSSIBLE_NOW);
                 } else {

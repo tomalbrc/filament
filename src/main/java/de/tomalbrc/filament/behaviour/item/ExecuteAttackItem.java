@@ -30,7 +30,7 @@ public class ExecuteAttackItem implements ItemBehaviour<ExecuteAttackItem.Config
 
     public void runCommandItem(ServerPlayer serverPlayer, Item item, InteractionHand hand) {
         var cmds = commands();
-        if (cmds != null && serverPlayer.getServer() != null) {
+        if (cmds != null) {
             if (config.console) {
                 ExecuteUtil.asConsole(serverPlayer, null, cmds.toArray(new String[0]));
             } else {

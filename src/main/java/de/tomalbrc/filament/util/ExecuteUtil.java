@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.util;
 
+import de.tomalbrc.filament.Filament;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -7,7 +8,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class ExecuteUtil {
     public static void asPlayer(ServerPlayer user, Vec3 at, String ...cmd) {
-        var commandSourceStack = user.getServer().createCommandSourceStack().withEntity(user).withPosition(user.position()).withMaximumPermission(4);
+        var commandSourceStack = Filament.SERVER.createCommandSourceStack().withEntity(user).withPosition(user.position()).withMaximumPermission(4);
         if (at != null) {
             commandSourceStack = commandSourceStack.withPosition(at);
         }
@@ -17,16 +18,16 @@ public class ExecuteUtil {
             cmd[i] = cmd[i].replace("%player%", user.getScoreboardName());
         }
 
-        as(user.getServer(), commandSourceStack, at, cmd);
+        as(Filament.SERVER, commandSourceStack, at, cmd);
     }
 
     public static void asConsole(ServerPlayer user, Vec3 at, String ... cmd) {
-        var commandSourceStack = user.getServer().createCommandSourceStack().withEntity(user).withPosition(user.position()).withRotation(user.getRotationVector()).withMaximumPermission(4);
+        var commandSourceStack = Filament.SERVER.createCommandSourceStack().withEntity(user).withPosition(user.position()).withRotation(user.getRotationVector()).withMaximumPermission(4);
         if (at != null) {
             commandSourceStack = commandSourceStack.withPosition(at);
         }
 
-        as(user.getServer(), commandSourceStack, at, cmd);
+        as(Filament.SERVER, commandSourceStack, at, cmd);
     }
 
     public static void as(MinecraftServer server, CommandSourceStack commandSourceStack, Vec3 at, String ... cmds) {

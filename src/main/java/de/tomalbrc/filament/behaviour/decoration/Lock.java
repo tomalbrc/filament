@@ -61,7 +61,7 @@ public class Lock implements DecorationBehaviour<Lock.Config> {
 
             var cmds = commands();
             boolean hasCommand = cmds != null && !cmds.isEmpty();
-            if (hasCommand && player.getServer() != null) {
+            if (hasCommand) {
                 var pos = getConfig().atBlock ? decorationBlockEntity.getBlockPos().getCenter() : null;
                 if (getConfig().console) {
                     ExecuteUtil.asConsole(player, pos, cmds.toArray(new String[0]));

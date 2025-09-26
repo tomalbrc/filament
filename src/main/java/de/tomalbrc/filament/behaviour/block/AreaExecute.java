@@ -61,7 +61,7 @@ public class AreaExecute implements BlockBehaviour<AreaExecute.Config>, AsyncTic
             // ENTER: only when not already tracked
             if (!set.contains(user)) {
                 var cmds = enterCommands();
-                if (cmds != null && user.getServer() != null && (config.permission == null || Permissions.check(user, config.permission))) {
+                if (cmds != null && (config.permission == null || Permissions.check(user, config.permission))) {
                     var pos = config.atBlock ? blockPos.getCenter() : null;
                     if (getConfig().console) {
                         ExecuteUtil.asConsole(user, pos, cmds.toArray(new String[0]));
@@ -74,7 +74,7 @@ public class AreaExecute implements BlockBehaviour<AreaExecute.Config>, AsyncTic
             }
 
             var repeat = repeatCommands();
-            if (repeat != null && user.getServer() != null && (config.permission == null || Permissions.check(user, config.permission))) {
+            if (repeat != null && (config.permission == null || Permissions.check(user, config.permission))) {
                 var pos = config.atBlock ? blockPos.getCenter() : null;
                 if (getConfig().console) {
                     ExecuteUtil.asConsole(user, pos, repeat.toArray(new String[0]));

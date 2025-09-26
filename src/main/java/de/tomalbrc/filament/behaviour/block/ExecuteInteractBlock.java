@@ -52,7 +52,7 @@ public class ExecuteInteractBlock implements BlockBehaviour<ExecuteInteractBlock
 
     public void runCommandBlock(ServerPlayer user, BlockPos blockPos) {
         var cmds = commands();
-        if (cmds != null && user.getServer() != null) {
+        if (cmds != null) {
             var pos = config.atBlock ? blockPos.getCenter() : null;
             if (getConfig().console) {
                 ExecuteUtil.asConsole(user, pos, cmds.toArray(new String[0]));

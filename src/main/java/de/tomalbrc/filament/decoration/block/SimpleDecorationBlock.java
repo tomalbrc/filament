@@ -73,7 +73,7 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
 
     @Override
     protected void spawnDestroyParticles(Level level, Player player, BlockPos blockPos, BlockState blockState) {
-        if (level.isClientSide) return;
+        if (level.isClientSide()) return;
 
         BlockUtil.playBreakSound(level, blockPos, blockState);
 

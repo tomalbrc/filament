@@ -22,9 +22,9 @@ public class ServerPlayerMixin {
 
     @Inject(method = "findRespawnAndUseSpawnBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getBlock()Lnet/minecraft/world/level/block/Block;", ordinal = 0), cancellable = true)
     private static void filament$findRespawnAndUseSpawnBlock(ServerLevel serverLevel, ServerPlayer.RespawnConfig respawnConfig, boolean bl, CallbackInfoReturnable<Optional<ServerPlayer.RespawnPosAngle>> cir) {
-        BlockState blockState = serverLevel.getBlockState(respawnConfig.pos());
+        BlockState blockState = serverLevel.getBlockState(respawnConfig.respawnData().pos());
         if (blockState.getBlock() instanceof DecorationBlock decorationBlock && decorationBlock.getDecorationData().behaviour().has(Behaviours.BED) && BedBlock.canSetSpawn(serverLevel)) {
-            var v = BedBlock.findStandUpPosition(EntityType.PLAYER, serverLevel, respawnConfig.pos(), blockState.getValue(BedBlock.FACING), respawnConfig.angle()).map((vec3) -> ServerPlayer.RespawnPosAngle.of(vec3, respawnConfig.pos()));
+            var v = BedBlock.findStandUpPosition(EntityType.PLAYER, serverLevel, respawnConfig.respawnData().pos(), blockState.getValue(BedBlock.FACING), respawnConfig.respawnData().yaw()).map((vec3) -> ServerPlayer.RespawnPosAngle.of(vec3, respawnConfig.respawnData().pos(), respawnConfig.respawnData().yaw()));
             cir.setReturnValue(v);
         }
     }

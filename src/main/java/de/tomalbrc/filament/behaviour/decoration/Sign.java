@@ -2,6 +2,7 @@ package de.tomalbrc.filament.behaviour.decoration;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
@@ -116,7 +117,7 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
                 return InteractionResult.CONSUME;
             }
 
-            if (!isWaxed && !player.isSecondaryUseActive() && (editingPlayer == null || player.getServer().getPlayerList().getPlayer(editingPlayer) == null)) {
+            if (!isWaxed && !player.isSecondaryUseActive() && (editingPlayer == null || Filament.SERVER.getPlayerList().getPlayer(editingPlayer) == null)) {
                 if (e != null) {
                     editingPlayer = player.getUUID();
                     var signGui = new SignGui(player) {

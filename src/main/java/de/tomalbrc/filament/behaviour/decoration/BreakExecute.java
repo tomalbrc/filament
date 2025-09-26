@@ -30,7 +30,7 @@ public class BreakExecute implements DecorationBehaviour<BreakExecute.Config> {
     public void postBreak(DecorationBlockEntity decorationBlockEntity, BlockPos blockPos, Player player) {
         var commands = commands();
         boolean hasCommands = commands != null;
-        if (hasCommands && player.getServer() != null && player instanceof ServerPlayer serverPlayer) {
+        if (hasCommands && player instanceof ServerPlayer serverPlayer) {
             var pos = config.atBlock ? blockPos.getCenter() : null;
             if (getConfig().console) {
                 ExecuteUtil.asConsole(serverPlayer, pos, commands.toArray(new String[0]));

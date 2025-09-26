@@ -52,7 +52,7 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
             if (this.config.animation != null && !config.animation.isEmpty() && decorationBlockEntity.getOrCreateHolder() != null) {
                 decorationBlockEntity.getOrCreateHolder().playAnimation(config.animatePerPlayer ? player : null, config.animation, 0, commandsPost() == null ? null : (serverPlayer -> {
                     var cmdsPost = commandsPost();
-                    if (player.getServer() != null && cmdsPost != null) {
+                    if (cmdsPost != null) {
                         if (getConfig().console) {
                             ExecuteUtil.asConsole(player, pos, cmdsPost.toArray(new String[0]));
                         }
@@ -69,7 +69,7 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
 
             var cmds = commands();
             boolean hasCommand = cmds != null && !cmds.isEmpty();
-            if (hasCommand && player.getServer() != null) {
+            if (hasCommand) {
                 if (getConfig().console) {
                     ExecuteUtil.asConsole(player, pos, cmds.toArray(new String[0]));
                 }
@@ -85,7 +85,7 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
             }
         } else if (!noKey) {
             var cmds = commandsIncorrectKey();
-            if (player.getServer() != null && cmds != null) {
+            if (cmds != null) {
                 if (getConfig().console) {
                     ExecuteUtil.asConsole(player, pos, cmds.toArray(new String[0]));
                 }

@@ -34,7 +34,7 @@ public class ExecuteAttackBlock implements BlockBehaviour<ExecuteAttackBlock.Con
 
     public void runCommandBlock(ServerPlayer user, BlockPos blockPos) {
         var cmds = commands();
-        if (cmds != null && user.getServer() != null) {
+        if (cmds != null) {
             if (config.console) {
                 ExecuteUtil.asConsole(user, config.atBlock ? blockPos.getCenter() :  null, cmds.toArray(new String[0]));
             }else {

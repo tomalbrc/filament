@@ -39,7 +39,7 @@ public class Execute implements ItemBehaviour<Execute.Config>, BlockBehaviour<Ex
     public InteractionResult use(Item item, Level level, Player user, InteractionHand hand) {
         var cmds = commands();
 
-        if (cmds != null && user.getServer() != null && user instanceof ServerPlayer serverPlayer) {
+        if (cmds != null && user instanceof ServerPlayer serverPlayer) {
             runCommandItem(serverPlayer, item, hand);
             return InteractionResult.CONSUME;
         }
@@ -67,7 +67,7 @@ public class Execute implements ItemBehaviour<Execute.Config>, BlockBehaviour<Ex
 
     public void runCommandItem(ServerPlayer serverPlayer, Item item, InteractionHand hand) {
         var cmds = commands();
-        if (cmds != null && serverPlayer.getServer() != null) {
+        if (cmds != null) {
             if (config.console) {
                 ExecuteUtil.asConsole(serverPlayer, null, cmds.toArray(new String[0]));
             } else {
@@ -89,7 +89,7 @@ public class Execute implements ItemBehaviour<Execute.Config>, BlockBehaviour<Ex
 
     public void runCommandBlock(ServerPlayer user, BlockPos blockPos) {
         var cmds = commands();
-        if (cmds != null && user.getServer() != null) {
+        if (cmds != null) {
             var pos = getConfig().atBlock ? blockPos.getCenter() : null;
             if (getConfig().console) {
                 ExecuteUtil.asConsole(user, pos, cmds.toArray(new String[0]));

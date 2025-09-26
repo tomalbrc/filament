@@ -4,17 +4,12 @@ import de.tomalbrc.filament.behaviour.AsyncTickingBlockBehaviour;
 import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.util.AsyncBlockTicker;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelHeightAccessor;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.chunk.LevelChunkSection;
-import net.minecraft.world.level.chunk.UpgradeData;
+import net.minecraft.world.level.chunk.*;
 import net.minecraft.world.level.levelgen.blending.BlendingData;
 import net.minecraft.world.ticks.LevelChunkTicks;
 import org.jetbrains.annotations.Nullable;
@@ -31,11 +26,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class LevelChunkAsyncMixin extends ChunkAccess {
     @Shadow @Final Level level;
 
-    @Shadow public abstract Level getLevel();
-
-    public LevelChunkAsyncMixin(ChunkPos chunkPos, UpgradeData upgradeData, LevelHeightAccessor levelHeightAccessor, Registry<Biome> registry, long l, @Nullable LevelChunkSection[] levelChunkSections, @Nullable BlendingData blendingData) {
-        super(chunkPos, upgradeData, levelHeightAccessor, registry, l, levelChunkSections, blendingData);
+    public LevelChunkAsyncMixin(ChunkPos chunkPos, UpgradeData upgradeData, LevelHeightAccessor levelHeightAccessor, PalettedContainerFactory palettedContainerFactory, long l, @Nullable LevelChunkSection[] levelChunkSections, @Nullable BlendingData blendingData) {
+        super(chunkPos, upgradeData, levelHeightAccessor, palettedContainerFactory, l, levelChunkSections, blendingData);
     }
+
 
     @Inject(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z", ordinal = 0))
     private void filament$removeOldAsyncTicker(BlockPos blockPos, BlockState blockState, int i, CallbackInfoReturnable<BlockState> cir) {
@@ -43,13 +37,13 @@ public abstract class LevelChunkAsyncMixin extends ChunkAccess {
         if (x != null) {
             if (x != blockState.getBlock()) {
                 AsyncBlockTicker.remove(blockPos);
-            } else if (blockState.getBlock() instanceof SimpleBlock simpleBlock && getLevel() instanceof ServerLevel serverLevel && AsyncBlockTicker.get(blockPos) == null) {
+            } else if (blockState.getBlock() instanceof SimpleBlock simpleBlock && level instanceof ServerLevel serverLevel && AsyncBlockTicker.get(blockPos) == null) {
                 AsyncBlockTicker.add(blockPos, simpleBlock, serverLevel);
             }
         }
     }
 
-    @Inject(method = "setBlockState", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/Level;isClientSide:Z", ordinal = 1, shift = At.Shift.BEFORE))
+    @Inject(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;isClientSide()Z", ordinal = 1, shift = At.Shift.BEFORE))
     private void filament$addAsyncTicker(BlockPos blockPos, BlockState blockState, int i, CallbackInfoReturnable<BlockState> cir) {
         var x = AsyncBlockTicker.getBlock(blockPos);
         if (x == null && this.level instanceof ServerLevel serverLevel && blockState.getBlock() instanceof SimpleBlock simpleBlock && filament$isAsyncTickingBlock(simpleBlock)) {

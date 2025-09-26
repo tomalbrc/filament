@@ -33,7 +33,7 @@ public class ExecuteInteractItem implements ItemBehaviour<ExecuteInteractItem.Co
     public InteractionResult use(Item item, Level level, Player user, InteractionHand hand) {
         var cmds = commands();
 
-        if (cmds != null && user.getServer() != null && user instanceof ServerPlayer serverPlayer) {
+        if (cmds != null && user instanceof ServerPlayer serverPlayer) {
             runCommandItem(serverPlayer, item, hand);
             return InteractionResult.CONSUME;
         }
@@ -46,7 +46,7 @@ public class ExecuteInteractItem implements ItemBehaviour<ExecuteInteractItem.Co
             return;
 
         var cmds = commands();
-        if (cmds != null && serverPlayer.getServer() != null) {
+        if (cmds != null) {
             if (config.console) {
                 ExecuteUtil.asConsole(serverPlayer, null, cmds.toArray(new String[0]));
             } else {
