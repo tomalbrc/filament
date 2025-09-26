@@ -4,15 +4,16 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class FilamentContainer extends SimpleContainer {
-    List<LivingEntity> menus = new ObjectArrayList<>();
+    List<ContainerUser> menus = new ObjectArrayList<>();
 
     private boolean valid = true;
 
@@ -28,6 +29,11 @@ public class FilamentContainer extends SimpleContainer {
         this.addListener(x -> blockEntity.setChanged());
         this.blockEntity = blockEntity;
         this.purge = purge;
+    }
+
+    @Override
+    public @NotNull List<ContainerUser> getEntitiesWithContainerOpen() {
+        return menus;
     }
 
     @Override
@@ -51,7 +57,7 @@ public class FilamentContainer extends SimpleContainer {
 
     public void setValid(boolean valid) {
         if (!valid) {
-            for (LivingEntity entity : this.menus) {
+            for (ContainerUser entity : this.menus) {
                 if (entity instanceof ServerPlayer player) player.closeContainer();
             }
         }
@@ -63,21 +69,21 @@ public class FilamentContainer extends SimpleContainer {
     }
 
     @Override
-    public void startOpen(Player player) {
-        super.startOpen(player);
+    public void startOpen(ContainerUser containerUser) {
+        super.startOpen(containerUser);
 
-        if (!player.isSpectator() && this.menus.isEmpty() && this.openCallback != null) {
+        if (!containerUser.getLivingEntity().isSpectator() && this.menus.isEmpty() && this.openCallback != null) {
             this.openCallback.run();
         }
 
-        this.menus.add(player);
+        this.menus.add(containerUser);
     }
 
     @Override
-    public void stopOpen(Player player) {
-        super.stopOpen(player);
+    public void stopOpen(ContainerUser containerUser) {
+        super.stopOpen(containerUser);
 
-        this.menus.remove(player);
+        this.menus.remove(containerUser);
 
         if (this.menus.isEmpty() && this.closeCallback != null) {
             this.closeCallback.run();

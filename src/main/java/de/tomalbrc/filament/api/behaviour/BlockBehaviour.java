@@ -359,7 +359,7 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
         return Optional.empty();
     }
 
-    default int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos) {
+    default int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos, Direction direction) {
         return 0;
     }
 

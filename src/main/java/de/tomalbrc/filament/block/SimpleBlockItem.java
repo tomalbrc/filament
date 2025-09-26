@@ -91,8 +91,6 @@ public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentI
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void verifyComponentsAfterLoad(ItemStack itemStack) {
-        super.verifyComponentsAfterLoad(itemStack);
-
         if (this.getData() != null) {
             for (Map.Entry<DataComponentType<?>, JsonElement> entry : this.getData().getAdditionalComponents().entrySet()) {
                 var codec = entry.getKey().codec();

@@ -104,9 +104,11 @@ public class Tnt implements BlockBehaviour<Tnt.Config> {
             explode(level, blockPos, player, blockState);
             level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_NEIGHBORS | Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE);
             Item item = itemStack.getItem();
-            if (!itemStack.isDamageableItem())
+            if (itemStack.isDamageableItem()) {
+                itemStack.hurtAndBreak(1, player, interactionHand);
+            } else {
                 itemStack.consume(1, player);
-            else itemStack.hurtAndBreak(1, player, interactionHand);
+            }
 
             player.awardStat(Stats.ITEM_USED.get(item));
             return InteractionResult.SUCCESS;

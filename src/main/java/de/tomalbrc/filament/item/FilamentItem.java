@@ -3,6 +3,7 @@ package de.tomalbrc.filament.item;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.data.Data;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Map;
 
@@ -16,4 +17,6 @@ public interface FilamentItem extends BehaviourHolder {
         var defaultResource = this.getData().itemResource();
         return resource != null ? resource.getModels() : defaultResource != null ? defaultResource.getModels() : null;
     }
+
+    void verifyComponentsAfterLoad(ItemStack itemStack);
 }

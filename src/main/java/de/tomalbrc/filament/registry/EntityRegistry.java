@@ -83,6 +83,8 @@ public class EntityRegistry {
             builder.noSave();
         if (data.properties().noSummon)
             builder.noSummon();
+        if (data.properties().shouldDespawnInPeaceful)
+            builder.notInPeaceful();
 
         AttributeSupplier.Builder attributeBuilder = Mob.createMobAttributes();
         var attrMap = data.attributes();

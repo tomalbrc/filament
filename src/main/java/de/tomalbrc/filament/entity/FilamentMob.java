@@ -94,11 +94,6 @@ public class FilamentMob extends Animal implements PolymerEntity {
     }
 
     @Override
-    protected boolean shouldDespawnInPeaceful() {
-        return data.properties().shouldDespawnInPeaceful;
-    }
-
-    @Override
     public @Nullable AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
         var id = data.properties().offspring;
         return (AgeableMob) BuiltInRegistries.ENTITY_TYPE.getValue(id).create(serverLevel, EntitySpawnReason.BREEDING);

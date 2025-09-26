@@ -72,8 +72,6 @@ public class SimpleItem extends Item implements PolymerItem, FilamentItem, Behav
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public void verifyComponentsAfterLoad(ItemStack itemStack) {
-        super.verifyComponentsAfterLoad(itemStack);
-
         if (this.data != null) {
             for (Map.Entry<DataComponentType<?>, JsonElement> entry : this.data.getAdditionalComponents().entrySet()) {
                 var codec = entry.getKey().codec();

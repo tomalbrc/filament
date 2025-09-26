@@ -1,7 +1,6 @@
 package de.tomalbrc.filament.behaviour.item;
 
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
-import de.tomalbrc.filament.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
@@ -57,7 +56,7 @@ public class Trap implements ItemBehaviour<Trap.Config> {
     @Override
     public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, TooltipDisplay tooltipDisplay, Consumer<Component> consumer, TooltipFlag tooltipFlag) {
         var bucketData = itemStack.get(DataComponents.BUCKET_ENTITY_DATA);
-        if (bucketData != null && bucketData.contains("Type")) {
+        if (bucketData != null && bucketData.copyTag().contains("Type")) {
             EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(ResourceLocation.parse(bucketData.copyTag().getString("Type").orElse("minecraft:pig")));
             consumer.accept(Component.literal("Contains ").append(Component.translatable(type.getDescriptionId()))); // todo: make "Contains " translateable?
         } else {
@@ -87,7 +86,7 @@ public class Trap implements ItemBehaviour<Trap.Config> {
 
         player.awardStat(Stats.ITEM_USED.get(item));
 
-        Util.damageAndBreak(1, itemStack, player, Player.getSlotForHand(hand));
+        itemStack.hurtAndBreak(1, player, hand);
     }
 
     @Override
@@ -109,7 +108,7 @@ public class Trap implements ItemBehaviour<Trap.Config> {
     }
 
     private static boolean canSpawn(ItemStack useOnContext) {
-        return useOnContext.get(DataComponents.BUCKET_ENTITY_DATA) != null && Objects.requireNonNull(useOnContext.get(DataComponents.BUCKET_ENTITY_DATA)).contains("Type");
+        return useOnContext.get(DataComponents.BUCKET_ENTITY_DATA) != null && Objects.requireNonNull(useOnContext.get(DataComponents.BUCKET_ENTITY_DATA)).copyTag().contains("Type");
     }
 
     private void spawn(ServerLevel serverLevel, Player player, InteractionHand hand, ItemStack itemStack, BlockPos blockPos) {

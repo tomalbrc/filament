@@ -5,6 +5,9 @@
   "mixins": [
     "BlockEntityTypeMixin",
     "BucketItemMixin",
+    "FlowingFluidMixin",
+    "ItemStackMixin",
+    "LevelChunkMixin",
     "LevelChunkAsyncMixin",
     "MappedRegistryMixin",
     "ReferenceMixin",
@@ -70,6 +73,8 @@
     "behaviour.waxable.HoneycombItemMixin",
     "component.skin.ItemMixin",
     "component.skin.ItemStackMixin",
+    "copper_golem.CopperGolemAiMixin",
+    "copper_golem.TransportItemsBetweenContainersMixin",
     "datafix.ChunkStorageMixin",
     "decoration.FlowingFluidMixin",
     "decoration.LevelChunkMixin"

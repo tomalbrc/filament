@@ -12,7 +12,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -45,7 +44,7 @@ public class FishingRod implements ItemBehaviour<FishingRod.Config>, ItemPredica
         if (player.fishing != null) {
             if (!level.isClientSide()) {
                 int i = player.fishing.retrieve(itemStack);
-                itemStack.hurtAndBreak(i, player, LivingEntity.getSlotForHand(interactionHand));
+                itemStack.hurtAndBreak(i, player, interactionHand);
             }
 
             level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.FISHING_BOBBER_RETRIEVE, SoundSource.NEUTRAL, 1.0F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));

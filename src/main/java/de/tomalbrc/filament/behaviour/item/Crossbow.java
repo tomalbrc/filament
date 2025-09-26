@@ -208,7 +208,7 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
                 Projectile projectile = this.createProjectile(serverLevel, livingEntity, itemStack, itemStack2, bl);
                 this.shootProjectile(livingEntity, projectile, l, f, g, m, livingEntity2);
                 serverLevel.addFreshEntity(projectile);
-                itemStack.hurtAndBreak(this.getDurabilityUse(itemStack2), livingEntity, LivingEntity.getSlotForHand(interactionHand));
+                itemStack.hurtAndBreak(this.getDurabilityUse(itemStack2), livingEntity, interactionHand);
                 if (itemStack.isEmpty()) {
                     break;
                 }

@@ -3,7 +3,6 @@ package de.tomalbrc.filament.behaviour.item;
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.item.BaseProjectileEntity;
 import de.tomalbrc.filament.registry.EntityRegistry;
-import de.tomalbrc.filament.util.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -49,7 +48,7 @@ public class Shoot implements ItemBehaviour<Shoot.Config> {
                 projectile.config = config;
 
                 projectile.setPos(user.position().add(0, user.getEyeHeight(), 0));
-                Util.damageAndBreak(1, itemStack, user, Player.getSlotForHand(hand));
+                itemStack.hurtAndBreak(1, user, hand);
 
                 float pitch = user.getXRot();
                 float yaw = user.getYRot();

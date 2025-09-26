@@ -26,6 +26,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.*;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -55,6 +56,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiPredicate;
@@ -234,7 +236,7 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos) {
+    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos, Direction direction) {
         return AbstractContainerMenu.getRedstoneSignalFromContainer(getContainer(blockState, level, blockPos, config.ignoreBlock));
     }
 
@@ -391,7 +393,14 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     public static DoubleBlockCombiner.Combiner<DecorationBlockEntity, Optional<Container>> CONTAINER_COMBINER = new DoubleBlockCombiner.Combiner<>() {
         @Override
         public @NotNull Optional<net.minecraft.world.Container> acceptDouble(DecorationBlockEntity container, DecorationBlockEntity container2) {
-            return Optional.of(new CompoundContainer(container.getOrThrow(Behaviours.ANIMATED_CHEST).container, container2.getOrThrow(Behaviours.ANIMATED_CHEST).container));
+            var c1 = container.getOrThrow(Behaviours.ANIMATED_CHEST).container;
+            var c2 = container2.getOrThrow(Behaviours.ANIMATED_CHEST).container;
+            return Optional.of(new CompoundContainer(c1, c2) {
+                @Override
+                public @NotNull List<ContainerUser> getEntitiesWithContainerOpen() {
+                    return container2.getOrThrow(Behaviours.ANIMATED_CHEST).container.getEntitiesWithContainerOpen();
+                }
+            });
         }
 
         @Override
@@ -414,7 +423,12 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
         public @NotNull Optional<MenuProvider> acceptDouble(final DecorationBlockEntity chestBlockEntity, final DecorationBlockEntity chestBlockEntity2) {
             var c1 = chestBlockEntity.getOrThrow(Behaviours.ANIMATED_CHEST);
             var c2 = chestBlockEntity2.getOrThrow(Behaviours.ANIMATED_CHEST);
-            final Container container = new CompoundContainer(c1.container, c2.container);
+            final Container container = new CompoundContainer(c1.container, c2.container) {
+                @Override
+                public @NotNull List<ContainerUser> getEntitiesWithContainerOpen() {
+                    return c2.container.getEntitiesWithContainerOpen();
+                }
+            };
 
             return Optional.of(new MenuProvider() {
                 @Override
