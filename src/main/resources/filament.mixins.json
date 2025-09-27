@@ -72,8 +72,8 @@
     "behaviour.waxable.HoneycombItemMixin",
     "component.skin.ItemMixin",
     "component.skin.ItemStackMixin",
-    "copper_golem.CopperGolemAiMixin",
-    "copper_golem.TransportItemsBetweenContainersMixin",
+    "behaviour.container.CopperGolemAiMixin",
+    "behaviour.container.TransportItemsBetweenContainersMixin",
     "datafix.ChunkStorageMixin",
     "decoration.FlowingFluidMixin",
     "decoration.LevelChunkMixin"

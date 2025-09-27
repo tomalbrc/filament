@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.mixin.copper_golem;
+package de.tomalbrc.filament.mixin.behaviour.container;
 
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import net.minecraft.core.BlockPos;
