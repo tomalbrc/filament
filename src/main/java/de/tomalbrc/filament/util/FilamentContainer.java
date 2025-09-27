@@ -1,28 +1,37 @@
 package de.tomalbrc.filament.util;
 
+import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
+import net.minecraft.world.RandomizableContainer;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.storage.loot.LootTable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FilamentContainer extends SimpleContainer {
+public class FilamentContainer extends SimpleContainer implements RandomizableContainer {
     List<LivingEntity> menus = new ObjectArrayList<>();
 
     private boolean valid = true;
 
     private final boolean purge;
-    private final BlockEntity blockEntity;
+    private final DecorationBlockEntity blockEntity;
 
     private Runnable closeCallback;
     private Runnable openCallback;
 
-    public FilamentContainer(BlockEntity blockEntity, int size, boolean purge) {
+    public FilamentContainer(DecorationBlockEntity blockEntity, int size, boolean purge) {
         super(size);
 
         this.addListener(x -> blockEntity.setChanged());
@@ -64,6 +73,7 @@ public class FilamentContainer extends SimpleContainer {
 
     @Override
     public void startOpen(Player player) {
+        this.unpackLootTable(player);
         super.startOpen(player);
 
         if (!player.isSpectator() && this.menus.isEmpty() && this.openCallback != null) {
@@ -95,7 +105,82 @@ public class FilamentContainer extends SimpleContainer {
         this.openCallback = openCallback;
     }
 
+    @Override
+    public boolean isEmpty() {
+        this.unpackLootTable(null);
+        return super.isEmpty();
+    }
+
+    @Override
+    public @NotNull ItemStack getItem(int n) {
+        this.unpackLootTable(null);
+        return super.getItem(n);
+    }
+
+    @Override
+    public @NotNull ItemStack removeItem(int n, int n2) {
+        this.unpackLootTable(null);
+        return super.removeItem(n, n2);
+    }
+
+    @Override
+    public @NotNull ItemStack removeItemNoUpdate(int n) {
+        this.unpackLootTable(null);
+        return super.removeItemNoUpdate(n);
+    }
+
+    @Override
+    public void setItem(int n, ItemStack itemStack) {
+        this.unpackLootTable(null);
+        super.setItem(n, itemStack);
+    }
+
+    @Override
+    public @NotNull NonNullList<ItemStack> getItems() {
+        this.unpackLootTable(null);
+        return this.items;
+    }
+
     public BlockEntity getBlockEntity() {
         return blockEntity;
+    }
+
+    @Override
+    public @Nullable ResourceKey<LootTable> getLootTable() {
+        var containerLike = blockEntity.getDecorationData().getFirstContainer(blockEntity);
+        if (containerLike != null)
+            return containerLike.getLootTable();
+        return null;
+    }
+
+    @Override
+    public void setLootTable(@Nullable ResourceKey<LootTable> resourceKey) {
+        var containerLike = blockEntity.getDecorationData().getFirstContainer(blockEntity);
+        if (containerLike != null) containerLike.setLootTable(resourceKey);
+    }
+
+    @Override
+    public long getLootTableSeed() {
+        var containerLike = blockEntity.getDecorationData().getFirstContainer(blockEntity);
+        if (containerLike != null)
+            return containerLike.getLootTableSeed();
+        return 0;
+    }
+
+    @Override
+    public void setLootTableSeed(long l) {
+        var containerLike = blockEntity.getDecorationData().getFirstContainer(blockEntity);
+        if (containerLike != null)
+            containerLike.setLootTableSeed(l);
+    }
+
+    @Override
+    public @NotNull BlockPos getBlockPos() {
+        return blockEntity.getBlockPos();
+    }
+
+    @Override
+    public @Nullable Level getLevel() {
+        return blockEntity.getLevel();
     }
 }
