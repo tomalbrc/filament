@@ -1,8 +1,9 @@
 package de.tomalbrc.filament.mixin.copper_golem;
 
-import de.tomalbrc.filament.block.SimpleBlock;
+import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.ai.behavior.TransportItemsBetweenContainers;
 import net.minecraft.world.entity.animal.coppergolem.CopperGolemAi;
@@ -14,9 +15,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CopperGolemAi.class)
 public class CopperGolemAiMixin {
+    @Inject(method = "method_72489", at = @At("RETURN"), cancellable = true)
+    private static void filament$customContainerSupportCopper(BlockState blockState, CallbackInfoReturnable<Boolean> cir) {
+        if (!cir.getReturnValue() && blockState.getBlock() instanceof DecorationBlock decorationBlock && decorationBlock.getDecorationData().getFirstContainer(decorationBlock) != null)
+            cir.setReturnValue(blockState.is(BlockTags.COPPER_CHESTS));
+    }
+
     @Inject(method = "method_72486", at = @At("RETURN"), cancellable = true)
-    private static void filament$customContainerSupport(BlockState blockState, CallbackInfoReturnable<Boolean> cir) {
-        if (!cir.getReturnValue() && blockState.getBlock() instanceof SimpleBlock)
+    private static void filament$customContainerSupportWooden(BlockState blockState, CallbackInfoReturnable<Boolean> cir) {
+        if (!cir.getReturnValue() && blockState.getBlock() instanceof DecorationBlock decorationBlock && decorationBlock.getDecorationData().getFirstContainer(decorationBlock) != null)
             cir.setReturnValue(blockState.is(ConventionalBlockTags.WOODEN_CHESTS));
     }
 

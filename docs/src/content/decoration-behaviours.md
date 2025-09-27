@@ -150,6 +150,8 @@ Allows to create barrels, trashcans, etc.
 
 Works with the `animation` behaviour to play an animation defined in the bbmodel/ajblueprint.
 
+Supports copper golem item transport based on block-tags: `c:chests/wooden` and `minecraft:copper_chests`
+
 ~~~admonish info "Configurable Fields"
 - `name`: The default name displayed in the container UI.
 - `showCustomName`: Flag whether to show the name of the placed itemstack. Enabled by default.
@@ -195,6 +197,8 @@ container:
 Allows to make animated connectable containers with a left and right side.
 
 Requires with the `animation` behaviour to play an animation defined in the bbmodel/ajblueprint.
+
+Supports copper golem item transport based on block-tags: `c:chests/wooden` and `minecraft:copper_chests`
 
 ~~~admonish info "Configurable Fields"
 - `name`: The default name displayed in the container UI.
@@ -348,6 +352,8 @@ Defines a showcase behaviour for decorations.
 Allows you to create shelves / item-frame like decorations.
 
 Can be either a list of elements or an object as described below:
+
+Supports copper golem item transport based on block-tags: `c:chests/wooden` and `minecraft:copper_chests`
 
 ~~~admonish info "Configurable Fields"
 - `useMenu`: Use a container menu instead of the in-world insert interaction
