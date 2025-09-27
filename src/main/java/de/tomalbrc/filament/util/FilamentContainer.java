@@ -74,6 +74,7 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
     @Override
     public void startOpen(Player player) {
         this.unpackLootTable(player);
+        this.unpackLootTable(player);
         super.startOpen(player);
 
         if (!player.isSpectator() && this.menus.isEmpty() && this.openCallback != null) {
