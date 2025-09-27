@@ -306,8 +306,17 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
                 decorationBehaviour.collectImplicitComponents(this, builder);
             }
         }
+    }
 
+    @Override
+    public void removeComponentsFromTag(ValueOutput valueOutput) {
+        super.removeComponentsFromTag(valueOutput);
 
+        for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : this.behaviours) {
+            if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
+                decorationBehaviour.removeComponentsFromTag(this, valueOutput);
+            }
+        }
     }
 
     public boolean replaceable() {

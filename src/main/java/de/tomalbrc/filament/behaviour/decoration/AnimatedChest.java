@@ -21,6 +21,7 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
@@ -35,6 +36,7 @@ import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.item.component.SeededContainerLoot;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -52,6 +54,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -65,6 +68,8 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     private final Config config;
 
     public FilamentContainer container;
+    public ResourceKey<LootTable> lootTable;
+    public long lootTableSeed;
 
     BlockEntityType<DecorationBlockEntity> TYPE;
 
@@ -222,12 +227,14 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
 
     @Override
     public void write(ValueOutput output, DecorationBlockEntity decorationBlockEntity) {
-        ContainerHelper.saveAllItems(output.child("Container"), this.container.items);
+        if (!container.trySaveLootTable(output))
+            ContainerHelper.saveAllItems(output.child("Container"), this.container.items);
     }
 
     @Override
     public void read(ValueInput input, DecorationBlockEntity decorationBlockEntity) {
-        input.child("Container").ifPresent(x -> ContainerHelper.loadAllItems(x, container.items));
+        if (!container.tryLoadLootTable(input))
+            input.child("Container").ifPresent(x -> ContainerHelper.loadAllItems(x, container.items));
     }
 
     @Override
@@ -272,11 +279,25 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     @Override
     public void applyImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentGetter dataComponentGetter) {
         dataComponentGetter.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(this.container.items);
+        SeededContainerLoot seededContainerLoot = dataComponentGetter.get(DataComponents.CONTAINER_LOOT);
+        if (seededContainerLoot != null) {
+            this.lootTable = seededContainerLoot.lootTable();
+            this.lootTableSeed = seededContainerLoot.seed();
+        }
     }
 
     @Override
     public void collectImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentMap.Builder builder) {
         builder.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(this.container.items));
+        if (this.lootTable != null) {
+            builder.set(DataComponents.CONTAINER_LOOT, new SeededContainerLoot(this.lootTable, this.lootTableSeed));
+        }
+    }
+
+    @Override
+    public void removeComponentsFromTag(DecorationBlockEntity decorationBlockEntity, ValueOutput valueOutput) {
+        valueOutput.discard("LootTable");
+        valueOutput.discard("LootTableSeed");
     }
 
     @Override
@@ -304,6 +325,26 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     @Override
     public boolean hopperDropperSupport() {
         return config.hopperDropperSupport;
+    }
+
+    @Override
+    public void setLootTable(@Nullable ResourceKey<LootTable> resourceKey) {
+        lootTable = resourceKey;
+    }
+
+    @Override
+    public @Nullable ResourceKey<LootTable> getLootTable() {
+        return lootTable;
+    }
+
+    @Override
+    public void setLootTableSeed(long l) {
+        lootTableSeed = l;
+    }
+
+    @Override
+    public long getLootTableSeed() {
+        return lootTableSeed;
     }
 
     public static class Config {
@@ -434,6 +475,9 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
                 @Override
                 @Nullable
                 public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
+                    c1.container.unpackLootTable(inventory.player);
+                    c2.container.unpackLootTable(inventory.player);
+
                     if (c1.canOpen(player) && c2.canOpen(player)) {
                         return Util.createMenu(container, id, inventory, player);
                     } else {

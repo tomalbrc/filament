@@ -64,6 +64,8 @@ public interface DecorationBehaviour<T> extends Behaviour<T> {
 
     default void collectImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentMap.Builder builder) {}
 
+    default void removeComponentsFromTag(DecorationBlockEntity decorationBlockEntity, ValueOutput valueOutput) {}
+
     default void postBreak(DecorationBlockEntity decorationBlockEntity, BlockPos blockPos, Player player) {
 
     }

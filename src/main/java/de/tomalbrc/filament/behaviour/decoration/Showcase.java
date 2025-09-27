@@ -24,6 +24,7 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -38,10 +39,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.item.component.SeededContainerLoot;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -63,6 +66,8 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     private final Object2ObjectOpenHashMap<ShowcaseMeta, DisplayElement> showcases = new Object2ObjectOpenHashMap<>();
 
     private FilamentContainer container;
+    public ResourceKey<LootTable> lootTable;
+    public long lootTableSeed;
 
     public Showcase(Config config) {
         this.config = config;
@@ -134,30 +139,35 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     }
 
     @Override
-    public void read(ValueInput output, DecorationBlockEntity blockEntity) {
-        var showcaseInput = output.child(SHOWCASE_KEY);
-        if (showcaseInput.isPresent() && blockEntity.getOrCreateHolder() != null) {
-            ValueInput showcaseTag = showcaseInput.orElseThrow();
+    public void read(ValueInput input, DecorationBlockEntity blockEntity) {
+        if (!container.tryLoadLootTable(input)) {
+            var showcaseInput = input.child(SHOWCASE_KEY);
+            if (showcaseInput.isPresent() && blockEntity.getOrCreateHolder() != null) {
+                ValueInput showcaseTag = showcaseInput.orElseThrow();
 
-            for (int i = 0; i < this.config.elements.size(); i++) {
-                String key = ITEM + i;
-                if (showcaseTag.child(key).isPresent()) {
-                    container.items.set(i, showcaseTag.read(key, ItemStack.CODEC).orElseThrow());
+                for (int i = 0; i < this.config.elements.size(); i++) {
+                    String key = ITEM + i;
+                    if (showcaseTag.child(key).isPresent()) {
+                        container.items.set(i, showcaseTag.read(key, ItemStack.CODEC).orElseThrow());
+                    }
                 }
+                container.setChanged();
             }
-            container.setChanged();
         }
+        container.unpackLootTable(null);
     }
 
     @Override
     public void write(ValueOutput output, DecorationBlockEntity blockEntity) {
-        if (blockEntity.getOrCreateHolder() != null) {
-            ValueOutput showcaseTag = output.child(SHOWCASE_KEY);
+        if (!container.trySaveLootTable(output)) {
+            if (blockEntity.getOrCreateHolder() != null) {
+                ValueOutput showcaseTag = output.child(SHOWCASE_KEY);
 
-            for (int i = 0; i < config.elements.size(); i++) {
-                Showcase.ShowcaseMeta showcase = config.elements.get(i);
-                if (showcase != null && !getShowcaseItemStack(showcase).isEmpty())
-                    showcaseTag.store(ITEM + i, ItemStack.CODEC, getShowcaseItemStack(showcase));
+                for (int i = 0; i < config.elements.size(); i++) {
+                    Showcase.ShowcaseMeta showcase = config.elements.get(i);
+                    if (showcase != null && !getShowcaseItemStack(showcase).isEmpty())
+                        showcaseTag.store(ITEM + i, ItemStack.CODEC, getShowcaseItemStack(showcase));
+                }
             }
         }
     }
@@ -327,13 +337,24 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
 
     @Override
     public void applyImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentGetter dataComponentGetter) {
+        SeededContainerLoot seededContainerLoot = dataComponentGetter.get(DataComponents.CONTAINER_LOOT);
+        if (seededContainerLoot != null) {
+            this.lootTable = seededContainerLoot.lootTable();
+            this.lootTableSeed = seededContainerLoot.seed();
+        }
+
         dataComponentGetter.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(container.items);
         container.setChanged();
+
+        container.unpackLootTable(null);
     }
 
     @Override
     public void collectImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentMap.Builder builder) {
         builder.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(container.items));
+        if (this.lootTable != null) {
+            builder.set(DataComponents.CONTAINER_LOOT, new SeededContainerLoot(this.lootTable, this.lootTableSeed));
+        }
     }
 
     @Override
@@ -354,6 +375,32 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     @Override
     public boolean hopperDropperSupport() {
         return config.hopperDropperSupport;
+    }
+
+    @Override
+    public void removeComponentsFromTag(DecorationBlockEntity decorationBlockEntity, ValueOutput valueOutput) {
+        valueOutput.discard("LootTable");
+        valueOutput.discard("LootTableSeed");
+    }
+
+    @Override
+    public void setLootTable(@Nullable ResourceKey<LootTable> resourceKey) {
+        lootTable = resourceKey;
+    }
+
+    @Override
+    public @Nullable ResourceKey<LootTable> getLootTable() {
+        return lootTable;
+    }
+
+    @Override
+    public void setLootTableSeed(long l) {
+        lootTableSeed = l;
+    }
+
+    @Override
+    public long getLootTableSeed() {
+        return lootTableSeed;
     }
 
     public static class ShowcaseMeta {
