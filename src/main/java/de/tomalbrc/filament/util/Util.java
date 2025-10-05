@@ -10,6 +10,7 @@ import de.tomalbrc.filament.gui.VirtualChestMenu;
 import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.util.mixin.RegistryUnfreezer;
 import eu.pb4.polymer.core.api.item.PolymerItemUtils;
+import eu.pb4.polymer.core.impl.interfaces.PolymerIdList;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -31,6 +32,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import xyz.nucleoid.packettweaker.PacketContext;
 
@@ -77,6 +80,9 @@ public class Util {
         ((RegistryUnfreezer) BuiltInRegistries.BLOCK_ENTITY_TYPE).filament$freeze();
         ((RegistryUnfreezer) BuiltInRegistries.ENTITY_TYPE).filament$freeze();
         ((RegistryUnfreezer) BuiltInRegistries.CREATIVE_MODE_TAB).filament$freeze();
+
+        ((PolymerIdList<?>) Block.BLOCK_STATE_REGISTRY).polymer$reorderEntries();
+        ((PolymerIdList<?>) Fluid.FLUID_STATE_REGISTRY).polymer$reorderEntries();
     }
 
     public static void damageAndBreak(int i, ItemStack itemStack, LivingEntity livingEntity, EquipmentSlot slot) {
