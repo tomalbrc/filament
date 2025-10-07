@@ -34,12 +34,10 @@ public class ChangeVersionAndRotationState extends com.mojang.datafixers.DataFix
         return new ChangeVersionAndRotationState(outputSchema);
     }
 
-
     @Override
     public TypeRewriteRule makeRule() {
         Type<?> type = this.getInputSchema().getType(References.CHUNK);
         Type<?> type2 = this.getOutputSchema().getType(References.CHUNK);
-
         return writeFixAndRead("UpdateFilamentDecorations", type, type2, this::fix);
     }
 
@@ -56,13 +54,16 @@ public class ChangeVersionAndRotationState extends com.mojang.datafixers.DataFix
 
             Map<Integer, List<Dynamic<?>>> map = new HashMap<>();
             for (Dynamic<?> blockEntity : blockEntities) {
-                var id = blockEntity.get("id").read(ResourceLocation.CODEC).getOrThrow();
+                var id = blockEntity.get("id").read(ResourceLocation.CODEC);
+                if (id.isError())
+                    continue;
+
                 var v = blockEntity.get("V");
                 if (v == null || v.get().isError())
                     continue;
 
                 var version = v.asInt(0);
-                if (!id.getNamespace().equals(ResourceLocation.DEFAULT_NAMESPACE) && version < DataFix.VERSION) {
+                if (!id.getOrThrow().getNamespace().equals(ResourceLocation.DEFAULT_NAMESPACE) && version < DataFix.VERSION) {
                     var yData = blockEntity.get("y").asInt(0);
                     var idx = (yData - min * 16) / 16;
                     map.computeIfAbsent(idx, (x) -> new ArrayList<>()).add(blockEntity);
@@ -106,7 +107,7 @@ public class ChangeVersionAndRotationState extends com.mojang.datafixers.DataFix
                 dynamic = dynamic.set("block_entities", dynamic.createList(blockEntities.stream())).set("sections", dynamic.createList(sections.stream()));
             }
         } catch (Exception e) {
-            Filament.LOGGER.info("Error during data fix");
+            Filament.LOGGER.info("Error during data fix", e);
         }
 
         return dynamic;
