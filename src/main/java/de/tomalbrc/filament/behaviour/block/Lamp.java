@@ -2,7 +2,9 @@ package de.tomalbrc.filament.behaviour.block;
 
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
+import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.util.BlockUtil;
+import de.tomalbrc.filament.util.DecorationUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -65,6 +67,11 @@ public class Lamp implements BlockBehaviour<Lamp.Config> {
             var currentIndex = config.cycle.indexOf(lightLevel);
             var next = config.cycle.get((currentIndex+1) % config.cycle.size());
             level.setBlockAndUpdate(blockPos, blockState.setValue(BlockUtil.LIGHT_LEVEL, next));
+            if (level.getBlockEntity(blockPos) instanceof DecorationBlockEntity decorationBlockEntity && decorationBlockEntity.getMainBlockEntity().getDecorationData().hasBlocks() && decorationBlockEntity.getMainBlockEntity().getDecorationData().countBlocks() > 1) {
+                DecorationUtil.forEachRotated(decorationBlockEntity.getMainBlockEntity().getDecorationData().blocks(), blockPos, decorationBlockEntity.getMainBlockEntity().rotation, pos -> {
+                    level.setBlockAndUpdate(blockPos, blockState.setValue(BlockUtil.LIGHT_LEVEL, next));
+                });
+            }
             playSound(level, blockPos, blockState);
             return InteractionResult.CONSUME;
         } else if (level != null) {
