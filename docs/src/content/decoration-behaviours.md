@@ -277,6 +277,7 @@ The `command` or `commands` are run as player but with elevated permissions, opt
 ~~~admonish info "Configurable Fields"
 - `key`: The identifier of the item held by player required to run commands/animations. Optional, if left empty the animation will play (if applicable) and the commands will be run and the decoration will be discarded based on the `discard` flag.
 - `consumeKey`: Determines whether the key should be consumed upon unlocking.
+- `animate_per_player`: Flag to play animations per-player. Defaults to `false`
 - `discard`: Specifies whether the decoration should be destroyed after interacting with it.
 - `animation`: Name of the animation to play when interacting.
 - `animationPost`: Name of animation to player after the first one ended
