@@ -47,6 +47,8 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
         if (holdsKeyAndIsValid || noKey) {
             if (this.config.consumeKey && hasHandItem) {
                 mainHandItem.shrink(1);
+            } else if (this.config.damageKey) {
+                mainHandItem.hurtAndBreak(1, player, hand);
             }
 
             if (this.config.animation != null && !config.animation.isEmpty() && decorationBlockEntity.getOrCreateHolder() != null) {
@@ -124,6 +126,11 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
          * Determines whether the key should be consumed upon unlocking.
          */
         public boolean consumeKey = false;
+
+        /**
+         * Damage the key item
+         */
+        public boolean damageKey = false;
 
         /**
          * Specifies whether the lock util should be discarded after unlocking.
