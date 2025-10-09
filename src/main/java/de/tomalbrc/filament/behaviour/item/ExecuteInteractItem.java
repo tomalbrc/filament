@@ -62,6 +62,8 @@ public class ExecuteInteractItem implements ItemBehaviour<ExecuteInteractItem.Co
 
             if (this.config.consumes) {
                 serverPlayer.getItemInHand(hand).shrink(1);
+            } else if (this.config.damages) {
+                serverPlayer.getItemInHand(hand).hurtAndBreak(1, serverPlayer, hand);
             }
         }
     }
@@ -72,6 +74,7 @@ public class ExecuteInteractItem implements ItemBehaviour<ExecuteInteractItem.Co
 
     public static class Config {
         public boolean consumes;
+        public boolean damages;
 
         public String command;
         public List<String> commands;
