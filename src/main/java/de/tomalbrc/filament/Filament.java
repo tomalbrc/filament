@@ -21,6 +21,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.loader.api.FabricLoader;
+import net.kyori.adventure.platform.modcommon.MinecraftServerAudiences;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.LayeredRegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -40,6 +41,15 @@ public class Filament implements ModInitializer {
     public static final Logger LOGGER = LogUtils.getLogger();
     public static LayeredRegistryAccess<RegistryLayer> REGISTRY_ACCESS;
     public static MinecraftServer SERVER;
+
+    public static MinecraftServerAudiences ADVENTURE;
+
+    public static MinecraftServerAudiences adventure() {
+        if (ADVENTURE == null) {
+            throw new IllegalStateException("Tried to access Adventure without a running server!");
+        }
+        return ADVENTURE;
+    }
 
     @Override
     public void onInitialize() {
@@ -85,7 +95,10 @@ public class Filament implements ModInitializer {
             return InteractionResult.PASS;
         });
 
-        ServerLifecycleEvents.SERVER_STARTING.register(server -> SERVER = server);
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> {
+            ADVENTURE = MinecraftServerAudiences.of(server);
+            SERVER = server;
+        });
 
         ServerTickEvents.END_SERVER_TICK.register(AsyncBlockTicker::tick);
         ServerChunkEvents.CHUNK_UNLOAD.register(AsyncBlockTicker::remove);

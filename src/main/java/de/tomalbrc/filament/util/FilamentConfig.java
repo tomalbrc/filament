@@ -17,6 +17,9 @@ public class FilamentConfig {
     @SerializedName("debug")
     public boolean debug = false;
 
+    @SerializedName("use_minimessage")
+    public boolean minimessage = false;
+
     @SerializedName("commands")
     public boolean commands = true;
 
