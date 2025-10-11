@@ -37,6 +37,8 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import xyz.nucleoid.packettweaker.PacketContext;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static net.minecraft.core.component.DataComponents.ITEM_MODEL;
@@ -97,13 +99,20 @@ public class Util {
     }
 
     public static void handleComponentsCustom(JsonElement element, Data<?> data) {
+        List<ResourceLocation> comps = List.of(
+                Objects.requireNonNull(BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(DataComponents.JUKEBOX_PLAYABLE)),
+                Objects.requireNonNull(BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(DataComponents.ENCHANTMENTS)),
+                Objects.requireNonNull(BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(DataComponents.TRIM)),
+                Objects.requireNonNull(BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(DataComponents.INSTRUMENT)),
+                Objects.requireNonNull(BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(DataComponents.BANNER_PATTERNS))
+        );
+
         if (element.getAsJsonObject().has("components")) {
             JsonObject comp = element.getAsJsonObject().get("components").getAsJsonObject();
-            if (comp.has("minecraft:jukebox_playable")) {
-                data.putAdditional(DataComponents.JUKEBOX_PLAYABLE, comp.get("minecraft:jukebox_playable"));
-            }
-            if (comp.has("jukebox_playable")) {
-                data.putAdditional(DataComponents.JUKEBOX_PLAYABLE, comp.get("jukebox_playable"));
+            for (String key : comp.keySet()) {
+                comps.stream().filter(x -> x.toString().equals(key) || x.getPath().equals(key)).findAny().ifPresent(compId -> {
+                    data.putAdditional(BuiltInRegistries.DATA_COMPONENT_TYPE.getValue(compId), comp.get(key));
+                });
             }
         }
     }
