@@ -1,7 +1,9 @@
 package de.tomalbrc.filament.util;
 
+import de.tomalbrc.filament.Filament;
 import eu.pb4.placeholders.api.ParserContext;
 import eu.pb4.placeholders.api.parsers.TagParser;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.network.chat.Component;
 
 public class TextUtil {
@@ -9,6 +11,11 @@ public class TextUtil {
         if (text == null || text.isBlank())
             return Component.empty();
 
-        return TagParser.SIMPLIFIED_TEXT_FORMAT.parseText(text, ParserContext.of());
+        if (FilamentConfig.getInstance().minimessage) {
+            var parsed = MiniMessage.miniMessage().deserialize(text);
+            return Filament.adventure().asNative(parsed);
+        }
+        else
+            return TagParser.SIMPLIFIED_TEXT_FORMAT.parseText(text, ParserContext.of());
     }
 }
