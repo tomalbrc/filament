@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.mixin.behaviour.container;
 
+import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.ComplexDecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -19,7 +20,7 @@ public class HopperBlockEntityMixin {
         if (blockState.getBlock() instanceof ComplexDecorationBlock complexDecorationBlock && complexDecorationBlock.getDecorationData().isContainer()) {
             DecorationBlockEntity blockEntity = (DecorationBlockEntity) level.getBlockEntity(blockPos);
             if (blockEntity != null && (blockEntity = blockEntity.getMainBlockEntity()) != null) {
-                var containerLike = blockEntity.getDecorationData().getFirstContainer(blockEntity);
+                var containerLike = DecorationData.getFirstContainer(blockEntity);
                 if (containerLike != null && containerLike.hopperDropperSupport()) {
                     cir.setReturnValue(containerLike.container());
                 }

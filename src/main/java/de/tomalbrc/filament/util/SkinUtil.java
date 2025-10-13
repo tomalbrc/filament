@@ -22,7 +22,7 @@ public class SkinUtil {
     private static final List<DataComponentType<?>> COMPONENTS_TO_COPY = List.of(DataComponents.ITEM_NAME, DataComponents.CUSTOM_NAME, DataComponents.ATTRIBUTE_MODIFIERS, DataComponents.LORE, DataComponents.DAMAGE, DataComponents.MAX_DAMAGE, DataComponents.MAX_STACK_SIZE, DataComponents.UNBREAKABLE, DataComponents.CHARGED_PROJECTILES, DataComponents.TOOL, DataComponents.ENCHANTMENTS, DataComponents.ENCHANTMENT_GLINT_OVERRIDE);
 
     public static void registerEventHandler() {
-        PolymerItemUtils.ITEM_CHECK.register(x -> x.has(FilamentComponents.SKIN_DATA_COMPONENT));
+        PolymerItemUtils.CONTEXT_ITEM_CHECK.register((itemStack, packetContext) -> itemStack.has(FilamentComponents.SKIN_DATA_COMPONENT));
         PolymerItemUtils.ITEM_MODIFICATION_EVENT.register((orig,mod,player) -> {
             var newStack = SkinUtil.wrap(orig, mod, player);
             if (mod == newStack) return mod;

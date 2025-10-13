@@ -83,7 +83,7 @@ public final class DecorationData extends AbstractBlockData<DecorationProperties
         return behaviour().test((behaviourType)-> ContainerLike.class.isAssignableFrom(behaviourType.type()));
     }
 
-    public ContainerLike getFirstContainer(BehaviourHolder holder) {
+    public static ContainerLike getFirstContainer(BehaviourHolder holder) {
         for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : holder.getBehaviours()) {
             if (behaviour.getValue() instanceof ContainerLike containerLike) {
                 return containerLike;

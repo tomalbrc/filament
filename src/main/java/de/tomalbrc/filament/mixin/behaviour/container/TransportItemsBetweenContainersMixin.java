@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.mixin.behaviour.container;
 
+import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
@@ -17,7 +18,7 @@ public class TransportItemsBetweenContainersMixin {
     @Inject(method = "getBlockEntityContainer", at = @At("RETURN"), cancellable = true)
     private static void filament$getContainer(BlockEntity blockEntity, BlockState blockState, Level level, BlockPos blockPos, CallbackInfoReturnable<Container> cir) {
         if (blockEntity instanceof DecorationBlockEntity decorationBlockEntity) {
-            var res = decorationBlockEntity.getMainBlockEntity().getDecorationData().getFirstContainer(decorationBlockEntity);
+            var res = DecorationData.getFirstContainer(decorationBlockEntity);
             if (res != null) {
                 cir.setReturnValue(res.container());
             }

@@ -19,6 +19,7 @@ repositories {
     maven { url 'https://maven.tomalbrc.de' }
     maven { url 'https://maven.nucleoid.xyz' }
     maven { url 'https://maven.parchmentmc.org' }
+    mavenLocal()
 }
 
 dependencies {

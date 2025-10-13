@@ -3,9 +3,11 @@ package de.tomalbrc.filament.item;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.api.behaviour.ContainerLike;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.data.Data;
+import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.util.Json;
 import de.tomalbrc.filament.util.Util;
@@ -173,5 +175,14 @@ public class SimpleItem extends Item implements PolymerItem, FilamentItem, Behav
     @Nullable
     public DamageSource getDamageSource(LivingEntity livingEntity) {
         return this.delegate.getDamageSource(livingEntity, () -> super.getDamageSource(livingEntity));
+    }
+
+    @Override
+    public boolean canFitInsideContainerItems() {
+        var c = DecorationData.getFirstContainer(this);
+        if (c != null && c.canPickUp())
+            return false;
+
+        return super.canFitInsideContainerItems();
     }
 }

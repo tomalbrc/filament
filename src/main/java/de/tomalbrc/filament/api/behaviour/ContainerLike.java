@@ -16,6 +16,8 @@ public interface ContainerLike {
 
     boolean hopperDropperSupport();
 
+    boolean canPickUp();
+
     void setLootTable(@Nullable ResourceKey<LootTable> resourceKey);
 
     @Nullable ResourceKey<LootTable> getLootTable();
