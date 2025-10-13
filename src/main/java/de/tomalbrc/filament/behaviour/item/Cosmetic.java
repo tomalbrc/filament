@@ -3,6 +3,7 @@ package de.tomalbrc.filament.behaviour.item;
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemDisplayContext;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
@@ -47,5 +48,7 @@ public class Cosmetic implements ItemBehaviour<Cosmetic.Config> {
          * Translation of the chest cosmetic
          */
         public Vector3f translation = new Vector3f();
+
+        public ItemDisplayContext display = ItemDisplayContext.NONE;
     }
 }
