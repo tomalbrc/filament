@@ -8,3 +8,5 @@ accessible class net/minecraft/core/MappedRegistry$TagSet
 accessible field net/minecraft/server/packs/FilePackResources zipFileAccess Lnet/minecraft/server/packs/FilePackResources$SharedZipFileAccess;
 accessible method net/minecraft/server/packs/FilePackResources addPrefix (Ljava/lang/String;)Ljava/lang/String;
 accessible method net/minecraft/server/packs/FilePackResources$SharedZipFileAccess getOrCreateZipFile ()Ljava/util/zip/ZipFile;
+
+extendable method net/minecraft/world/inventory/ChestMenu addChestGrid (Lnet/minecraft/world/Container;II)V

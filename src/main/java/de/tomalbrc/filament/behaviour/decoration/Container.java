@@ -177,6 +177,11 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
     }
 
     @Override
+    public boolean canPickUp() {
+        return config.canPickup;
+    }
+
+    @Override
     public void removeComponentsFromTag(DecorationBlockEntity decorationBlockEntity, ValueOutput valueOutput) {
         valueOutput.discard("LootTable");
         valueOutput.discard("LootTableSeed");

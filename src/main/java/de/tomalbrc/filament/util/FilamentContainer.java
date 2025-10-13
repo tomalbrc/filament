@@ -1,5 +1,7 @@
 package de.tomalbrc.filament.util;
 
+import de.tomalbrc.filament.api.behaviour.ContainerLike;
+import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
@@ -142,13 +144,13 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
         return this.items;
     }
 
-    public BlockEntity getBlockEntity() {
+    public DecorationBlockEntity getBlockEntity() {
         return blockEntity;
     }
 
     @Override
     public @Nullable ResourceKey<LootTable> getLootTable() {
-        var containerLike = blockEntity.getDecorationData().getFirstContainer(blockEntity);
+        var containerLike = DecorationData.getFirstContainer(blockEntity);
         if (containerLike != null)
             return containerLike.getLootTable();
         return null;
@@ -156,13 +158,13 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
 
     @Override
     public void setLootTable(@Nullable ResourceKey<LootTable> resourceKey) {
-        var containerLike = blockEntity.getDecorationData().getFirstContainer(blockEntity);
+        var containerLike = DecorationData.getFirstContainer(blockEntity);
         if (containerLike != null) containerLike.setLootTable(resourceKey);
     }
 
     @Override
     public long getLootTableSeed() {
-        var containerLike = blockEntity.getDecorationData().getFirstContainer(blockEntity);
+        var containerLike = DecorationData.getFirstContainer(blockEntity);
         if (containerLike != null)
             return containerLike.getLootTableSeed();
         return 0;
@@ -170,7 +172,7 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
 
     @Override
     public void setLootTableSeed(long l) {
-        var containerLike = blockEntity.getDecorationData().getFirstContainer(blockEntity);
+        var containerLike = DecorationData.getFirstContainer(blockEntity);
         if (containerLike != null)
             containerLike.setLootTableSeed(l);
     }
@@ -183,5 +185,10 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
     @Override
     public @Nullable Level getLevel() {
         return blockEntity.getLevel();
+    }
+
+    public static boolean isPickUpContainer(Container container) {
+        ContainerLike containerLike;
+        return container instanceof FilamentContainer filamentContainer && (containerLike = DecorationData.getFirstContainer(filamentContainer.getBlockEntity())) != null && containerLike.canPickUp();
     }
 }

@@ -28,6 +28,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -149,6 +150,25 @@ public class Util {
             return new VirtualChestMenu(est, id, new PaginatedContainerGui(est, (ServerPlayer) player, false, container), player, container);
         }
 
-        return new ChestMenu(menuType, id, inventory, container, container.getContainerSize() / 9);
+        return new ChestMenu(menuType, id, inventory, container, container.getContainerSize() / 9) {
+            @Override
+            public void addChestGrid(Container container, int i, int j) {
+                boolean doCheck = FilamentContainer.isPickUpContainer(container);
+                for (int y = 0; y < this.getRowCount(); ++y) {
+                    for (int x = 0; x < 9; ++x) {
+                        this.addSlot(new Slot(container, x + y * 9, i + x * 18, j + y * 18) {
+                            @Override
+                            public boolean mayPlace(ItemStack itemStack) {
+                                if (doCheck) {
+                                    return itemStack.getItem().canFitInsideContainerItems();
+                                }
+                                return super.mayPlace(itemStack);
+                            }
+                        });
+                    }
+                }
+
+            }
+        };
     }
 }

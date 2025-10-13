@@ -326,6 +326,11 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     }
 
     @Override
+    public boolean canPickUp() {
+        return config.canPickup;
+    }
+
+    @Override
     public void setLootTable(@Nullable ResourceKey<LootTable> resourceKey) {
         lootTable = resourceKey;
     }

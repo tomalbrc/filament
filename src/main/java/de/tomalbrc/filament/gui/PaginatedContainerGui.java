@@ -115,7 +115,7 @@ public class PaginatedContainerGui extends SimpleGui {
                 }
 
                 if (slotInContainer >= 0 && slotInContainer < containerSize) {
-                    this.setSlotRedirect(slotInGui, createSlot(slotInContainer));
+                    this.setSlotRedirect(slotInGui, createSlot(container, slotInContainer));
                 } else {
                     this.setSlot(slotInGui, empty.build());
                 }
@@ -133,11 +133,19 @@ public class PaginatedContainerGui extends SimpleGui {
         return container;
     }
 
-    private Slot createSlot(int slotInContainer) {
+    public static Slot createSlot(Container container, int slotInContainer) {
         return new Slot(container, slotInContainer, 0, 0) {
             @Override
             public int getMaxStackSize(ItemStack itemStack) {
                 return container instanceof FilamentContainer filamentContainer ? filamentContainer.getMaxStackSize(slotInContainer) : container.getMaxStackSize(itemStack);
+            }
+
+            @Override
+            public boolean mayPlace(ItemStack itemStack) {
+                if (FilamentContainer.isPickUpContainer(container))
+                    return itemStack.getItem().canFitInsideContainerItems();
+
+                return super.mayPlace(itemStack);
             }
         };
     }
