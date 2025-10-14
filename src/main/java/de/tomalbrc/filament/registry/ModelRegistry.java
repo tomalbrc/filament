@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.registry;
 
 import de.tomalbrc.bil.core.model.Model;
+import de.tomalbrc.bil.file.loader.AjBlueprintLoader;
 import de.tomalbrc.bil.file.loader.AjModelLoader;
 import de.tomalbrc.bil.file.loader.BbModelLoader;
 import de.tomalbrc.filament.Filament;
@@ -11,6 +12,7 @@ import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +37,15 @@ public class ModelRegistry {
 
             for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
                 try (var inputStream = entry.getValue().open()) {
-                    Model model = entry.getKey().getPath().endsWith(".ajmodel") ? new AjModelLoader().load(inputStream, entry.getKey().getPath()) : new BbModelLoader().load(inputStream, entry.getKey().getPath());
+                    String path = entry.getKey().getPath();
+                    Model model;
+                    if (path.endsWith(".ajmodel")) {
+                        model = new AjModelLoader().load(inputStream, FilenameUtils.getBaseName(path));
+                    } else if (path.endsWith(".ajblueprint")) {
+                        model = new AjBlueprintLoader().load(inputStream, FilenameUtils.getBaseName(path));
+                    } else {
+                        model = new BbModelLoader().load(inputStream, FilenameUtils.getBaseName(path));
+                    }
                     ajmodels.put(sanitize(entry.getKey()), model);
                 } catch (IOException | IllegalStateException e) {
                     Filament.LOGGER.error("Failed to load decoration resource \"{}\".", entry.getKey());
