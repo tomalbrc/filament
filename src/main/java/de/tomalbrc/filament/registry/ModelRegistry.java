@@ -33,7 +33,7 @@ public class ModelRegistry {
 
         @Override
         public void onResourceManagerReload(ResourceManager resourceManager) {
-            var resources = resourceManager.listResources("filament/model", path -> path.getPath().endsWith(".ajmodel") || path.getPath().endsWith(".bbmodel"));
+            var resources = resourceManager.listResources("filament/model", path -> path.getPath().endsWith(".ajmodel") || path.getPath().endsWith(".ajblueprint") || path.getPath().endsWith(".bbmodel"));
 
             for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
                 try (var inputStream = entry.getValue().open()) {
