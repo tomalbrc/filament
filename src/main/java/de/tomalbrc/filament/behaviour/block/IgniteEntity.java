@@ -24,7 +24,6 @@ public class IgniteEntity implements BlockBehaviourWithEntity<IgniteEntity.Confi
 
     @Override
     public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity, InsideBlockEffectApplier insideBlockEffectApplier) {
-        insideBlockEffectApplier.apply(InsideBlockEffectType.CLEAR_FREEZE);
         insideBlockEffectApplier.apply(InsideBlockEffectType.FIRE_IGNITE);
         insideBlockEffectApplier.runAfter(InsideBlockEffectType.FIRE_IGNITE, entityx -> entityx.hurt(entityx.level().damageSources().inFire(), this.config.fireDamage));
     }
