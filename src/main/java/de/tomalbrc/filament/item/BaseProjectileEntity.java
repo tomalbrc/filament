@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.item;
 
 import com.mojang.math.Axis;
+import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.item.Shoot;
 import de.tomalbrc.filament.mixin.accessor.AbstractArrowAccessor;
 import eu.pb4.polymer.core.api.entity.PolymerEntity;
@@ -25,13 +26,16 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,6 +49,7 @@ import java.util.function.Consumer;
 public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity {
     protected ItemStack projectileStack = Items.DIRT.getDefaultInstance();
     protected ItemStack pickupStack;
+    protected ItemStack base;
     private boolean dealtDamage;
     protected final ElementHolder holder = new ElementHolder() {
         @Override
@@ -71,6 +76,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
             VirtualEntityUtils.addVirtualPassenger(this, this.mainDisplayElement.getEntityId());
         }
 
+        this.mainDisplayElement.setItemDisplayContext(config.display);
         this.mainDisplayElement.setLeftRotation(Axis.ZP.rotationDegrees(180));
         this.mainDisplayElement.setRightRotation(new Quaternionf().rotateY((float) Math.toRadians(getYRot())).mul(config.rotation).normalize());
         this.mainDisplayElement.setTranslation(new Vector3f(0.f, 0.15f, 0.f).add(config.translation));
@@ -103,6 +109,10 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
 
     public void setPickupStack(ItemStack itemStack) {
         this.pickupStack = itemStack;
+    }
+
+    public void setBase(ItemStack itemStack) {
+        ((AbstractArrowAccessor)this).setFiredFromWeapon(itemStack);
     }
 
     @Override
@@ -145,11 +155,20 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     }
 
     @Override
+    protected void onHit(HitResult result) {
+        super.onHit(result);
+
+        if (config.dropAsItem && !level().isClientSide()) {
+            spawnAtLocation((ServerLevel) level(), getPickupItem());
+            discard();
+        }
+    }
+
+    @Override
     protected void onHitEntity(EntityHitResult entityHitResult) {
-        if (entityHitResult.getEntity() instanceof LivingEntity target) {
+        if (entityHitResult.getEntity() instanceof LivingEntity target && this.getOwner() instanceof LivingEntity livingEntity) {
             this.dealtDamage = true;
-            Entity owner = this.getOwner();
-            var damageSource = this.damageSources().trident(this, owner);
+            var damageSource = this.damageSources().mobProjectile(this, livingEntity);
 
             double damage = ((AbstractArrowAccessor)this).getBaseDamage();
             if (target.hurtServer((ServerLevel) level(), damageSource, (float) damage)) {
@@ -161,24 +180,18 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
         }
 
         this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01, -0.1, -0.01));
-        this.playSound(SoundEvents.TRIDENT_HIT, 1.0F, 1.0F);
-    }
-
-    @Override
-    protected boolean tryPickup(Player player) {
-        // todo: animate projectile towards player and scale down a bit
-        return super.tryPickup(player) || this.isNoPhysics() && this.ownedBy(player) && player.getInventory().add(this.getPickupItem());
+        this.playSound(SoundEvent.createVariableRangeEvent(config.hitSound), config.hitVolume, config.hitPitch);
     }
 
     @Override
     @NotNull
     protected SoundEvent getDefaultHitGroundSoundEvent() {
-        return SoundEvents.TRIDENT_HIT_GROUND;
+        return SoundEvent.createVariableRangeEvent(config.hitGroundSound);
     }
 
     @Override
     public void playerTouch(Player player) {
-        if (this.ownedBy(player) || this.getOwner() == null) {
+        if (this.noPhysics || this.ownedBy(player) || this.getOwner() == null) {
             super.playerTouch(player);
         }
     }
@@ -187,8 +200,13 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     public void readAdditionalSaveData(ValueInput input) {
         super.readAdditionalSaveData(input);
 
-        this.projectileStack = input.read("Item", ItemStack.CODEC).orElse(ItemStack.EMPTY);
+        this.base = input.read("Item", ItemStack.CODEC).orElse(ItemStack.EMPTY);
+        this.projectileStack = input.read("ProjectileItem", ItemStack.CODEC).orElse(base);
         this.pickupStack = input.read("PickupItem", ItemStack.CODEC).orElse(ItemStack.EMPTY);
+
+        if (this.base.getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.SHOOT))
+            this.config = simpleItem.getOrThrow(Behaviours.SHOOT).getConfig();
+
         this.createMainDisplayElement();
 
         this.dealtDamage = input.getBooleanOr("DealtDamage", true);
@@ -205,9 +223,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     }
 
     @Override
-    public void tickDespawn() {
-        if (this.pickup != Pickup.ALLOWED) {
-            super.tickDespawn();
-        }
+    protected boolean tryPickup(Player player) {
+        return config.canPickUp && super.tryPickup(player);
     }
 }
