@@ -88,6 +88,7 @@ public class Util {
         ((PolymerIdList<?>) Fluid.FLUID_STATE_REGISTRY).polymer$reorderEntries();
     }
 
+    @Deprecated(forRemoval = true)
     public static void damageAndBreak(int i, ItemStack itemStack, LivingEntity livingEntity, EquipmentSlot slot) {
         int newDamage = itemStack.getDamageValue() + i;
         itemStack.setDamageValue(newDamage);
