@@ -1129,8 +1129,12 @@ area_execute:
 <!-- langtabs-end -->
 ~~~
 
+---
+
 ## `ignite_entity` behaviour
 
 Sets an entity on fire when it is inside the block
 
-- `fireDamage`: Damage. Defaults to 1
+~~~admonish info "Configurable Fields"
+- `fireDamage`: Damage. Defaults to `1`
+~~~

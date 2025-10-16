@@ -12,12 +12,13 @@
   "properties": {
     "stackSize": 1
   },
-  "behaviour": {
-    "food": {
-      "fastfood": false,
-      "hunger": 1,
-      "saturation": 0.2,
-      "meat": true
+  "components": {
+    "minecraft:consumable": {
+      "consume_seconds": 1.0
+    },
+    "minecraft:food": {
+      "nutrition": 5,
+      "saturation": 6
     }
   }
 }

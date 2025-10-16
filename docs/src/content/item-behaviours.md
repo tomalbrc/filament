@@ -176,6 +176,7 @@ Executes a command on item use with the player as source, located at the player,
 
 ~~~admonish info "Configurable Fields"
 - `consumes`: Flag whether the item is consumed after running the command(s). Defaults to `false`
+- `damages`: Flag whether the item is damaged after running the command(s). Defaults to `false`
 - `command`: The command string to execute. Empty by default
 - `commands`: List of commands to execute. Empty by default
 - `sound`: Optional sound effect to play during execution. Empty by default
@@ -435,19 +436,28 @@ Alternatively, you can use the `itemModel` field to provide your own item asset 
 
 Defines behaviour for items capable of shooting custom projectiles or being shot themselves.
 
-~~~admonish warning
-This behaviour is deprecated. Use `bow`, `crossbow` or `trident`
-~~~
-
 ~~~admonish info "Configurable Fields"
-- `consumes`: Indicates whether shooting consumes the item. Defaults to `false`
+- `consumes`: Indicates whether the shooting action consumes the item. Defaults to `false`
+- `damages`: Indicates whether the item gets damaged when using. Defaults to `false`
 - `baseDamage`: The base damage of the projectile. Defaults to `2.0`
 - `speed`: The speed at which the projectile is fired. Defaults to `1.0`
+- `cooldown`: Number of ticks between shots. Defaults to `8`
 - `projectile`: The identifier for the projectile item. Empty by default
-- `sound`: Optional sound effect to play when shooting. Empty by default
-- `translation`: Translation offset for the projectile. Defaults to `[0 0 0]`
-- `rotation`: Rotation for the projectile. Defaults to `[0 90 0]`
-- `scale`: Scale for the projectile. Defaults to `0.6`
+- `pickupItem`: Identifier for the item that can be picked up after the projectile lands. Empty by default
+- `dispenserSupport`: Whether this item can be fired from a dispenser. Defaults to `false`
+- `canPickUp`: Whether the projectile can be picked up by players. Defaults to `false`
+- `dropAsItem`: Whether the projectile should drop as an item when it hits. Defaults to `true`
+- `sound`: Sound effect to play when shooting. Defaults to `minecraft:item.trident.throw`
+- `volume`: Volume of the shooting sound. Defaults to `1.0`
+- `pitch`: Pitch of the shooting sound. Defaults to `1.0`
+- `hitSound`: Sound to play when the projectile hits an entity. Defaults to `minecraft:item.trident.hit`
+- `hitVolume`: Volume of the hit sound. Defaults to `1.0`
+- `hitPitch`: Pitch of the hit sound. Defaults to `1.0`
+- `hitGroundSound`: Sound to play when the projectile hits the ground. Defaults to `minecraft:item.trident.hit_ground`
+- `display`: The display context of the item model (e.g. `none`, `fixed`, etc). Defaults to `none`
+- `rotation`: Rotation of the projectile, expressed as a quaternion. Defaults to `[0, 90, 0]` (Y-axis 90°)
+- `translation`: Translation offset for the projectile. Defaults to `[0, 0, 0]`
+- `scale`: Scale for the projectile model. Defaults to `[0.6, 0.6, 0.6]`
 ~~~
 
 ---
@@ -616,4 +626,25 @@ behaviour:
 ```
 <!-- langtabs-end -->
 
+~~~
+
+---
+
+## `snowball` behaviour
+
+Makes the item itself throwable like a snoball.
+
+~~~admonish info "Configurable Fields"
+- `inaccuracy`: Inaccuracy when throwing. Defaults to `1.0`
+- `power`: Initial projectile power. Defaults to `1.5`
+
+- `dispenserSupport`: Defaults to `false`
+
+- `hitCommand`: Commands to run when the projectile hits anything
+- `hitCommands`: List of commands to run when the projectile hits anything
+
+- `entityHitCommand`: Commands to run when the projectile hits an entity. `%target%` gets replaced with the UUID of the hit entity
+- `entityHitCommands`: List of commands to run when the projectile hits an entity. `%target%` gets replaced with the UUID of the hit entity
+
+- `executeAtHit`: Whether to execute the commands at the hit position. Defaults to `true`
 ~~~

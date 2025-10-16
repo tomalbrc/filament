@@ -21,6 +21,10 @@ public class BlockStateMappedProperty<T> {
         return new BlockStateMappedProperty<>(value);
     }
 
+    public static <T> BlockStateMappedProperty<T> empty() {
+        return new BlockStateMappedProperty<>(null);
+    }
+
     public T getValue(BlockState blockState) {
         if (this.isMap()) {
             for (Map.Entry<String, T> entry : valueMap.entrySet()) {
