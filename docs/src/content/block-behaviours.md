@@ -393,11 +393,11 @@ Useful for bushes/plants/crops/flowers and more
 Defines the block as a redstone power source.
 
 ~~~admonish info "Configurable Fields"
-- `value`: The redstone power value the block emits (can be mapped). Defaults to 15
+- `value`: The redstone power value the block emits (can be mapped to a block-state, see below). Defaults to 15
 ~~~
 
 ~~~admonish tip
-The field of this behaviour can be mapped to a block-state.
+The fields of this behaviour can be mapped to a block-state.
 ~~~
 
 ~~~admonish example
@@ -1137,4 +1137,107 @@ Sets an entity on fire when it is inside the block
 
 ~~~admonish info "Configurable Fields"
 - `fireDamage`: Damage. Defaults to `1`
+~~~
+
+---
+
+## `lever` behaviour
+
+Defines the block as an interactive lever that can emit redstone power and play sounds when toggled.
+
+~~~admonish info "Configurable Fields"
+- `powerlevel`: The redstone power level the lever emits when activated (can be mapped to a block-state). Defaults to `15`
+- `sound`: The sound played when the lever is toggled. Defaults to `minecraft:block.lever.click`
+- `volume`: The volume of the toggle sound. Defaults to `0.3`
+- `pitch`: The pitch of the toggle sound. Empty by default
+~~~
+
+~~~admonish tip
+All fields in this behaviour can be mapped to block-states.
+~~~
+
+~~~admonish example
+<!-- langtabs-start -->
+```yml
+behaviour:
+  lever:
+    powerlevel: 15
+    sound: minecraft:block.lever.click
+    volume:
+      powered=true: 0.2
+      powered=false: 0.3
+```
+
+```json
+{
+  "behaviour": {
+    "lever": {
+      "powerlevel": 15,
+      "sound": "minecraft:block.lever.click",
+      "volume": {
+        "powered=true": 0.2,
+        "powered=false": 0.3
+      }
+    }
+  }
+}
+```
+<!-- langtabs-end -->
+~~~
+
+---
+
+## `button` behaviour
+
+Defines the block as an interactive button that can emit redstone power for a limited duration when pressed.
+
+~~~admonish info "Configurable Fields"
+- `powerlevel`: The redstone power level the button emits when activated (can be mapped to a block-state). Defaults to `15`
+- `ticksToStayPressed`: Duration in ticks that the button remains pressed before resetting. Defaults to `100`
+- `canBeActivatedByArrows`: Whether the button can be triggered by arrows or other projectiles. Defaults to `true`
+- `clickOnSound`: Sound played when the button is pressed. Defaults to `minecraft:block.wooden_button.click_on`
+- `clickOffSound`: Sound played when the button is released. Defaults to `minecraft:block.wooden_button.click_off`
+~~~
+
+~~~admonish tip
+All fields except `clickOnSound` and `clickOffSound` can be mapped to block-states.
+~~~
+
+~~~admonish example
+<!-- langtabs-start -->
+```yml
+behaviour:
+  button:
+    powerlevel:
+      powered=false: 0
+      powered=true: 15
+    ticksToStayPressed:
+      material=stone: 20
+      material=wood: 100
+    canBeActivatedByArrows:
+      material=stone: false
+      material=wood: true
+```
+
+```json
+{
+  "behaviour": {
+    "button": {
+      "powerlevel": {
+        "powered=false": 0,
+        "powered=true": 15
+      },
+      "ticksToStayPressed": {
+        "material=stone": 20,
+        "material=wood": 100
+      },
+      "canBeActivatedByArrows": {
+        "material=stone": false,
+        "material=wood": true
+      }
+    }
+  }
+}
+```
+<!-- langtabs-end -->
 ~~~

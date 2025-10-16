@@ -13,7 +13,7 @@ blocks:
 # Add more block config objects as needed
 ```
 
-```json5
+```json
 {
   "blocks": [
     {
@@ -24,7 +24,6 @@ blocks:
       "origin": [2.0, 2.0, 2.0],
       "size": [1.0, 1.0, 1.0]
     }
-    // Add more block config objects as needed
   ]
 }
 ```

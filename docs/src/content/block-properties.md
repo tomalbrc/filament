@@ -83,7 +83,7 @@ Defaults to `0`
 Boolean (true/false) indicating whether the block can conduct redstone signals.
 
 ~~~admonish tip
-All fields of this property can be mapped to a block-state.
+This property can be mapped to a block-state.
 ~~~
 
 The value of this property can be mapped to a blockstate like this:
@@ -97,13 +97,12 @@ properties:
     # etc.
 ```
 
-```json5
+```json
 {
   "properties": {
     "redstoneConductor": {
       "powerlevel=0": true,
       "powerlevel=1": false,
-      // etc.
     }
   }
 }
@@ -119,7 +118,7 @@ Defaults to `true`
 Light level this block emits.
 
 ~~~admonish tip
-All fields of this property can be mapped to a block-state.
+This property can be mapped to a block-state.
 ~~~
 
 The value of this property can be mapped to a blockstate like this:
@@ -134,13 +133,12 @@ properties:
     # etc
 ```
 
-```json5
+```json
 {
   "properties": {
     "lightEmission": {
       "powerlevel=0": 0,
-      "powerlevel=1": 1,
-      // etc
+      "powerlevel=1": 1
     }
   }
 }
