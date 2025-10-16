@@ -33,6 +33,7 @@ public class Behaviours {
     public static final BehaviourType<Shield, Shield.Config> SHIELD = registerBehaviour("shield", Shield.class);
     public static final BehaviourType<Shears, Shears.Config> SHEARS = registerBehaviour("shears", Shears.class);
     public static final BehaviourType<Shovel, Shovel.Config> SHOVEL = registerBehaviour("shovel", Shovel.class);
+    public static final BehaviourType<Snowball, Snowball.Config> SNOWBALL = registerBehaviour("snowball", Snowball.class);
     public static final BehaviourType<Stripper, Stripper.Config> STRIPPER = registerBehaviour("stripper", Stripper.class);
     public static final BehaviourType<Trap, Trap.Config> TRAP = registerBehaviour("trap", Trap.class);
     public static final BehaviourType<Trident, Trident.Config> TRIDENT = registerBehaviour("trident", Trident.class);
@@ -48,8 +49,9 @@ public class Behaviours {
     // Block
     public static final BehaviourType<AreaExecute, AreaExecute.Config> AREA_EXECUTE = registerBehaviour("area_execute", AreaExecute.class);
     public static final BehaviourType<Axis, Axis.Config> AXIS = registerBehaviour("axis", Axis.class);
-    public static final BehaviourType<Budding, Budding.Config> BUDDING = registerBehaviour("budding", Budding.class);
     public static final BehaviourType<Bouncy, Bouncy.Config> BOUNCY = registerBehaviour("bouncy", Bouncy.class);
+    public static final BehaviourType<Budding, Budding.Config> BUDDING = registerBehaviour("budding", Budding.class);
+    public static final BehaviourType<Button, Button.Config> BUTTON = registerBehaviour("button", Button.class);
     public static final BehaviourType<CanSurvive, CanSurvive.Config> CAN_SURVIVE = registerBehaviour("can_survive", CanSurvive.class);
     public static final BehaviourType<Count, Count.Config> COUNT = registerBehaviour("count", Count.class);
     public static final BehaviourType<Crop, Crop.Config> CROP = registerBehaviour("crop", Crop.class);
@@ -68,6 +70,7 @@ public class Behaviours {
     public static final BehaviourType<HorizontalFacing, HorizontalFacing.Config> HORIZONTAL_FACING = registerBehaviour("horizontal_facing", HorizontalFacing.class);
     public static final BehaviourType<Lamp, Lamp.Config> LAMP = registerBehaviour("lamp", Lamp.class);
     public static final BehaviourType<LeafDecay, LeafDecay.Config> LEAF_DECAY = registerBehaviour("leaf_decay", LeafDecay.class);
+    public static final BehaviourType<Lever, Lever.Config> LEVER = registerBehaviour("lever", Lever.class);
     public static final BehaviourType<Oxidizable, Oxidizable.Config> OXIDIZABLE = registerBehaviour("oxidizable", Oxidizable.class);
     public static final BehaviourType<ParticleEmitter, ParticleEmitter.Config> PARTICLE_EMITTER = registerBehaviour("particle_emitter", ParticleEmitter.class);
     public static final BehaviourType<Powerlevel, Powerlevel.Config> POWERLEVEL = registerBehaviour("powerlevel", Powerlevel.class);
