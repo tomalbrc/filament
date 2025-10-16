@@ -65,6 +65,7 @@
     "behaviour.shears.interaction.SheepMixin",
     "behaviour.shears.interaction.SnowGolemMixin",
     "behaviour.shears.interaction.TripWireBlockMixin",
+    "behaviour.snowball.SnowballMixin",
     "behaviour.strippable.AxeItemAccessor",
     "behaviour.strippable.AxeItemMixin",
     "behaviour.trap.MobMixin",

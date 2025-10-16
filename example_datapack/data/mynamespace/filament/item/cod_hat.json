@@ -3,7 +3,7 @@
   "template": "mynamespace:hat_template",
   "itemResource": {
     "models": {
-      "default": "minecraft:item/raw_cod"
+      "default": "minecraft:item/cod"
     }
   }
 }

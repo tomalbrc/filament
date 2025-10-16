@@ -8,6 +8,10 @@ Prints additional debug information
 
 ---
 
+### `use_minimessage`
+
+Uses minimessage instead of fabrics Placeholder API for formatted text.
+
 ### `commands`
 
 Enable `/filament` and its sub-commands

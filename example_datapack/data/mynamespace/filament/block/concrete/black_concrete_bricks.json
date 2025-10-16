@@ -4,7 +4,7 @@
     "parent": "block/cube_all",
     "textures": {
       "default": {
-        "all": "minecraft:custom/block/concrete/black_concrete_bricks"
+        "all": "minecraft:block/custom/concrete/black_concrete_bricks"
       }
     }
   },
