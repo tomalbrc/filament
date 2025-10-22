@@ -17,6 +17,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.ColorRGBA;
 import net.minecraft.util.SegmentedAnglePrecision;
 import net.minecraft.world.Container;
@@ -171,5 +173,9 @@ public class Util {
 
             }
         };
+    }
+
+    public static void clickSound(ServerPlayer player) {
+        player.playNotifySound(SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.MASTER, 0.5f, 1F);
     }
 }

@@ -2,11 +2,13 @@ package de.tomalbrc.filament.util;
 
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import eu.pb4.polymer.core.api.block.PolymerBlockUtils;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
@@ -28,6 +30,16 @@ public class VirtualDestroyStage extends ElementHolder {
     private final List<ItemDisplayElement> destroyElements = new ObjectArrayList<>();
     private int state;
 
+    public static void init() {
+        PolymerBlockUtils.BREAKING_PROGRESS_UPDATE.register(VirtualDestroyStage::updateState);
+        PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
+            if (state.getBlock() instanceof DecorationBlock && !world.isClientSide()) {
+                ((VirtualDestroyStage.ServerGamePacketListenerExtF) ((ServerPlayer) player).connection).filament$getVirtualDestroyStage().setState(-1);
+            }
+        });
+        VirtualDestroyStage.destroy(null);
+    }
+
     public VirtualDestroyStage() {
         for (int i = 0; i < 32; i++) {
             var element = new ItemDisplayElement();
@@ -41,7 +53,6 @@ public class VirtualDestroyStage extends ElementHolder {
     private List<ItemDisplayElement> destroyElements() {
         return this.destroyElements;
     }
-
 
     @Override
     public void destroy() {

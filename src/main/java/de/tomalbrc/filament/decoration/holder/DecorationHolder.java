@@ -1,8 +1,8 @@
 package de.tomalbrc.filament.decoration.holder;
 
 import de.tomalbrc.filament.Filament;
-import de.tomalbrc.filament.decoration.util.DecorationItemDisplayElement;
 import de.tomalbrc.filament.decoration.block.ComplexDecorationBlock;
+import de.tomalbrc.filament.decoration.util.DecorationItemDisplayElement;
 import de.tomalbrc.filament.decoration.util.ItemFrameElement;
 import de.tomalbrc.filament.util.DecorationUtil;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;

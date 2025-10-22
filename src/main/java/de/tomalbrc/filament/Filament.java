@@ -5,20 +5,16 @@ import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.block.Fire;
 import de.tomalbrc.filament.command.FilamentCommand;
 import de.tomalbrc.filament.data.ItemGroupData;
-import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.*;
 import de.tomalbrc.filament.util.*;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
-import eu.pb4.polymer.core.api.block.PolymerBlockUtils;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.kyori.adventure.platform.modcommon.MinecraftServerAudiences;
@@ -63,25 +59,16 @@ public class Filament implements ModInitializer {
         Translations.registerEventHandler();
         EntityRegistry.register();
 
-        var nexoDir = FabricLoader.getInstance().getGameDir().resolve("nexo");
-        var nexoDirFile = nexoDir.toFile();
-        if (!FabricLoader.getInstance().isModLoaded("filament-nexo") && nexoDirFile.exists() && nexoDirFile.isDirectory() && nexoDirFile.listFiles() != null && Arrays.stream(Objects.requireNonNull(nexoDirFile.listFiles())).anyMatch(x -> !FilenameUtils.getBaseName(x.getPath()).startsWith("."))) {
-            throw new RuntimeException("Found nexo folder with packs, please install filament-nexo (https://modrinth.com/mod/filament-nexo) or remove the nexo directory in your game directory!");
-        }
+        nexoHint();
 
         if (FilamentConfig.getInstance().commands) {
-            CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> FilamentCommand.register(dispatcher));
+            FilamentCommand.register();
         }
 
+        VirtualDestroyStage.init();
+        AsyncBlockTicker.init();
         Fire.addRemap();
         PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(Fire::init);
-
-        PolymerBlockUtils.BREAKING_PROGRESS_UPDATE.register(VirtualDestroyStage::updateState);
-        PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
-            if (state.getBlock() instanceof DecorationBlock && !world.isClientSide()) {
-                ((VirtualDestroyStage.ServerGamePacketListenerExtF) ((ServerPlayer) player).connection).filament$getVirtualDestroyStage().setState(-1);
-            }
-        });
 
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
             if (!world.isClientSide() && hand == InteractionHand.MAIN_HAND) {
@@ -118,8 +105,6 @@ public class Filament implements ModInitializer {
         FilamentReloadUtil.registerEarlyReloadListener(new ItemGroupRegistry.ItemGroupDataReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new BiomeModifications.BiomeModificationsDataReloadListener());
 
-        VirtualDestroyStage.destroy(null);
-
         if (FilamentConfig.getInstance().debug) {
             LOGGER.info("Available Polymer block model types:");
             logModelTypes();
@@ -131,12 +116,17 @@ public class Filament implements ModInitializer {
         }
     }
 
+    private static void nexoHint() {
+        var nexoDir = FabricLoader.getInstance().getGameDir().resolve("nexo");
+        var nexoDirFile = nexoDir.toFile();
+        if (!FabricLoader.getInstance().isModLoaded("filament-nexo") && nexoDirFile.exists() && nexoDirFile.isDirectory() && nexoDirFile.listFiles() != null && Arrays.stream(Objects.requireNonNull(nexoDirFile.listFiles())).anyMatch(x -> !FilenameUtils.getBaseName(x.getPath()).startsWith("."))) {
+            throw new RuntimeException("Found nexo folder with packs, please install filament-nexo (https://modrinth.com/mod/filament-nexo) or remove the nexo directory in your game directory!");
+        }
+    }
+
     private void logModelTypes() {
         for (var blockModelType : BlockModelType.values()) {
             LOGGER.info("\t{} = {}", blockModelType.name(), PolymerBlockResourceUtils.getBlocksLeft(blockModelType));
         }
-//        for (var blockModelType : FilamentBlockModelType.values()) {
-//            LOGGER.info("\t{} = {}", blockModelType.name(), PolymerBlockResourceUtils.getBlocksLeft(blockModelType));
-//        }
     }
 }

@@ -3,7 +3,6 @@ package de.tomalbrc.filament.mixin.behaviour.execute;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.item.ExecuteAttackItem;
 import de.tomalbrc.filament.item.FilamentItem;
-import de.tomalbrc.filament.item.SimpleItem;
 import net.minecraft.network.protocol.game.ServerboundSwingPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;

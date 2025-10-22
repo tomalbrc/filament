@@ -3,7 +3,6 @@ package de.tomalbrc.filament.item;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import de.tomalbrc.filament.Filament;
-import de.tomalbrc.filament.api.behaviour.ContainerLike;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.data.Data;

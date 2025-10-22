@@ -7,7 +7,6 @@ import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.ItemPredicateModelProvider;
 import de.tomalbrc.filament.data.AbstractBlockData;
-import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.resource.BlockResource;

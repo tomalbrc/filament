@@ -1,9 +1,11 @@
 package de.tomalbrc.filament.data;
 
-import de.tomalbrc.filament.api.behaviour.*;
+import de.tomalbrc.filament.api.behaviour.Behaviour;
+import de.tomalbrc.filament.api.behaviour.BehaviourType;
+import de.tomalbrc.filament.api.behaviour.ContainerLike;
+import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
-import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import de.tomalbrc.filament.data.properties.DecorationProperties;
 import de.tomalbrc.filament.data.resource.BlockResource;

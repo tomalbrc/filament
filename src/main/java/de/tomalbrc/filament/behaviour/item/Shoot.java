@@ -6,7 +6,6 @@ import de.tomalbrc.filament.item.BaseProjectileEntity;
 import de.tomalbrc.filament.registry.EntityRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -14,7 +13,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
@@ -93,7 +91,7 @@ public class Shoot implements ItemBehaviour<Shoot.Config> {
             level.playSound(null, projectile, this.config.sound != null ? BuiltInRegistries.SOUND_EVENT.getValue(this.config.sound) : SoundEvents.TRIDENT_THROW.value(), SoundSource.NEUTRAL, config.volume, config.pitch);
             if (!user.isCreative()) {
                 if (this.config.consumes) itemStack.shrink(1);
-                else itemStack.hurtAndBreak(1, user, hand);
+                else if (this.config.damages) itemStack.hurtAndBreak(1, user, hand);
             }
         }
 

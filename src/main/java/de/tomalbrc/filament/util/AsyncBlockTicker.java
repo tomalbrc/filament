@@ -7,6 +7,7 @@ import de.tomalbrc.filament.block.SimpleBlock;
 import it.unimi.dsi.fastutil.longs.LongArraySet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.server.MinecraftServer;
@@ -25,6 +26,12 @@ public class AsyncBlockTicker {
 
     private static final Map<Long, TickData> TICKING = new ConcurrentHashMap<>();
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadScheduledExecutor();
+
+    public static void init() {
+        ServerLifecycleEvents.SERVER_STOPPING.register(minecraftServer -> {
+            EXECUTOR_SERVICE.shutdown();
+        });
+    }
 
     public static void tick(MinecraftServer server) {
         CompletableFuture.runAsync(() -> {

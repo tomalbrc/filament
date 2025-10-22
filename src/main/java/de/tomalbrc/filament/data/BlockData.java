@@ -1,7 +1,5 @@
 package de.tomalbrc.filament.data;
 
-import com.google.gson.JsonParseException;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
@@ -12,7 +10,6 @@ import de.tomalbrc.filament.util.FilamentBlockResourceUtils;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceArrayMap;
-import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;

@@ -8,6 +8,7 @@ import de.tomalbrc.filament.registry.BlockRegistry;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.registry.ItemRegistry;
 import de.tomalbrc.filament.util.Constants;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.Person;
 import net.minecraft.commands.CommandSourceStack;
@@ -18,6 +19,12 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class FilamentCommand {
+    public static void register() {
+        CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> {
+            register(dispatcher);
+        });
+    }
+
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         var rootNode = Commands
                 .literal(Constants.MOD_ID).requires(Permissions.require("filament.command", 2))
