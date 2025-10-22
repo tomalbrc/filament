@@ -3,6 +3,7 @@ package de.tomalbrc.filament.registry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.tomalbrc.filament.util.Constants;
+import de.tomalbrc.filament.util.TextUtil;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.other.PolymerComponent;
 import net.minecraft.core.HolderSet;
@@ -12,9 +13,11 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.item.Item;
@@ -37,11 +40,12 @@ public class FilamentComponents {
         PolymerComponent.registerDataComponent(BACKPACK);
     }
 
-    public record BackpackOptions(int size, boolean preventPlacement) {
+    public record BackpackOptions(int size, boolean preventPlacement, String titlePrefix) {
         public static final Codec<BackpackOptions> CODEC = RecordCodecBuilder.create(instance ->
                 instance.group(
                         Codec.INT.fieldOf("size").orElse(27).forGetter(BackpackOptions::size),
-                        Codec.BOOL.fieldOf("prevent_placement").orElse(false).forGetter(BackpackOptions::preventPlacement)
+                        Codec.BOOL.fieldOf("prevent_placement").orElse(false).forGetter(BackpackOptions::preventPlacement),
+                        Codec.STRING.fieldOf("title_prefix").orElse(null).forGetter(BackpackOptions::titlePrefix)
                 ).apply(instance, BackpackOptions::new)
         );
 
@@ -52,7 +56,9 @@ public class FilamentComponents {
                 SimpleContainer container1 = new SimpleContainer(size);
                 container.copyInto(container1.items);
                 container1.addListener(x -> itemStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(container1.items)));
-                player.openMenu(new SimpleMenuProvider((id, inventory, p) -> Util.createMenu(container1, id, inventory, player, false, selectedSlot), itemStack.getOrDefault(DataComponents.CUSTOM_NAME, itemStack.get(DataComponents.ITEM_NAME))));
+
+                MenuProvider provider = new SimpleMenuProvider((id, inventory, p) -> Util.createMenu(container1, id, inventory, player, false, selectedSlot), Component.empty().append(TextUtil.formatText(this.titlePrefix())).append(itemStack.getOrDefault(DataComponents.CUSTOM_NAME, itemStack.get(DataComponents.ITEM_NAME))));
+                player.openMenu(provider);
             }
         }
     }
