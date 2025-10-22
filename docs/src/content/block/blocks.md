@@ -267,7 +267,7 @@ The properties of this block. See [Block Properties](block-properties.md) for de
 
 ## `group`
 
-Defines the item-group for this blocks' item. See [Item Groups](item-groups.md) for more information.
+Defines the item-group for this blocks' item. See [Item Groups](../general/item-groups.md) for more information.
 
 ---
 

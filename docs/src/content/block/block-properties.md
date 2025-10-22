@@ -1,6 +1,6 @@
 # Block Properties
 
-Block properties share the same properties as [items](item-properties.md)
+Block properties share the same properties as [items](../item/item-properties.md)
 
 All properties (excluding the shared item and decoration properties):
 ~~~admonish example

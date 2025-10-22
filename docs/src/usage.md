@@ -67,7 +67,7 @@ Those are:
 - `vanillaItem`: The client-side item to use. This will be used for custom model data values in <= 1.21.1 
 - `blockResource`: Here you can specify models for different blocks-states or just a single model for simple blocks.
 - `itemResource`: Specifies the model of the item. Some item-behaviours may require you to provide models for their "states" (i.e. the `trap` behaviour) 
-- `properties`: Properties differ for each config type, but all share the [item properties](content/item-properties.md).
+- `properties`: Properties differ for each config type, but all share the [item properties](content/item/item-properties.md).
 - `itemTags`: Item tags of the item/block-item/decoration-item. 
 - `blockTags`: Block tag of the block/decoration-block (not supported for items)
 
@@ -96,40 +96,6 @@ Items, Blocks and Decorations also allow to set item/block tags in the config fi
 }
 ```
 ~~~
-
-# Components
-
-Filament comes with 2 components that any item to be skinned (visually) by any other item.
-
-You can for example create a diamond pickaxe skin that can be applied to a wooden pickaxe or a diamond. The wooden pickaxe would look like a diamond pickaxe but function like a wooden pickaxe. You could also allow the diamond pickaxe skin to be applied to shovels too!
-
-Filament cosmetics are also supported, which allows you to create cosmetic skins! 
-
-Player can simply drag a skin onto the item they want the skin applied to.
-
-## Skin Component Format
-
-The `filament:skin` component works similar to the `minecraft:repairable` component. You can either specify a list of items or an item-tag, for which item you want the skin to be applicable for.
-
-```json
-{
-  "components": {
-    "filament:skin": ["minecraft:wooden_pickaxe", "iron_pickaxe"]
-  }
-}
-```
-
-You can also use item-tags:
-```json
-{
-  "components": {
-    "filament:skin": "#minecraft:pickaxes"
-  }
-}
-```
-
-
-For everything else, use behaviours as described below.
 
 # Behaviours 
 

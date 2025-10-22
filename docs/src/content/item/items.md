@@ -150,7 +150,7 @@ Defines various properties for the item. The structure and contents of this fiel
 
 ## `group`
 
-Defines the item-group for this item. See [Item Groups](item-groups.md) for more information.
+Defines the item-group for this item. See [Item Groups](../general/item-groups.md) for more information.
 
 ---
 

@@ -1,6 +1,6 @@
 # Properties
 
-Decoration properties share the same properties as [items](item-properties.md) and a few of [blocks](block-properties.md), like `solid` and `pushReaction`
+Decoration properties share the same properties as [items](../item/item-properties.md) and a few of [blocks](../block/block-properties.md), like `solid` and `pushReaction`
 
 ~~~admonish example "Example of properties"
 <!-- langtabs-start -->

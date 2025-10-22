@@ -101,7 +101,7 @@ behaviour:
 ---
 
 ## `generate_trim_models` behaviour
-<img class="right" src="../img/armor.png" alt="armor">
+<img class="right" src="../../img/armor.png" alt="armor">
 
 Enables automatic generation of the different item models with the trim overlay.
 
@@ -114,7 +114,7 @@ Enables automatic generation of the different item models with the trim overlay.
 ---
 
 ## `compostable` behaviour
-<img class="right" src="../img/compostable.png" alt="compostable">
+<img class="right" src="../../img/compostable.png" alt="compostable">
 
 Makes the item usable in composters.
 
@@ -128,7 +128,7 @@ Makes the item usable in composters.
 ---
 
 ## `cosmetic` behaviour
-<img class="right" src="../img/cosmetic.png" alt="cosmetic">
+<img class="right" src="../../img/cosmetic.png" alt="cosmetic">
 
 Defines cosmetic behaviours for decorations, supporting animated Blockbench models for chestplates and simple item models.
 
@@ -205,7 +205,7 @@ Executes a command when an entity is attacked with the item or when swinging at 
 ---
 
 ## `villager_food` behaviour
-<img class="right" src="../img/villager_food.png" alt="villager_food">
+<img class="right" src="../../img/villager_food.png" alt="villager_food">
 
 Makes the item edible for villagers (for villager breeding).
 
@@ -261,7 +261,7 @@ Gives the item the ability to shears blocks & plants, like vanilla shears do, us
 ---
 
 ## `instrument` behaviour
-<img class="right" src="../img/instrument.png" alt="instrument">
+<img class="right" src="../../img/instrument.png" alt="instrument">
 
 Defines instrument behaviour for items, similar to goat horns.
 
@@ -287,7 +287,7 @@ Gives the item the ability to strip Logs/scrape copper blocks, like an axe. Uses
 ---
 
 ## `trap` behaviour
-<img class="right" src="../img/trap.png" alt="trap">
+<img class="right" src="../../img/trap.png" alt="trap">
 
 Defines trap behaviour for items capable of trapping specific entity types.
 
@@ -304,7 +304,7 @@ Defines trap behaviour for items capable of trapping specific entity types.
 ---
 
 ## `banner_pattern` behaviour
-<img class="right" src="../img/banner_pattern.gif" alt="banner pattern">
+<img class="right" src="../../img/banner_pattern.gif" alt="banner pattern">
 
 Allows you to assign a banner pattern to an item for use in Looms.
 
@@ -318,7 +318,7 @@ See the `mynamespace:bannertestitem` item config in the example datapack in the 
 ---
 
 ## `bow` behaviour
-<img class="right" src="../img/bow.png" alt="bow">
+<img class="right" src="../../img/bow.png" alt="bow">
 
 Vanilla-like bow behaviour. Lets you specify which item can be shot, but anything that is not an arrow or firework rocket will render as normal arrow.
 Allows to specify a power multiplier for shooting power. Supports firework rockets.
@@ -370,7 +370,7 @@ Alternatively, you can use the `itemModel` field to provide your own item asset 
 ---
 
 ## `crossbow` behaviour
-<img class="right" src="../img/crossbow.png" alt="crossbow">
+<img class="right" src="../../img/crossbow.png" alt="crossbow">
 
 Vanilla-like crossbow behaviour. Lets you specify which item can be shot, but anything that is not an arrow or firework rocket will render as normal arrow.
 Allows to specify a power multiplier for shooting power.
