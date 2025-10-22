@@ -4,7 +4,7 @@
 [Using filament](usage.md)
 [Developers](developers.md)
 [Creating content](content/creating-content.md)
-  - General
+  - [General](content/general/general.md)
     - [Config](content/general/config.md)
     - [Oraxen / ItemsAdder compatibility](content/general/third-party-compat.md)
     - [Item Groups](content/general/item-groups.md)

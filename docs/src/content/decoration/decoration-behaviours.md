@@ -482,7 +482,7 @@ Can be either a list of elements or an object as described below:
 - `alignment`: Text alignment. Can be `center`, `left`, `right`. Defaults to `center`
 ~~~
 
-~~~admonish example Sign
+~~~admonish example "Sign"
 <!-- langtabs-start -->
 ```yml
 sign:
@@ -553,4 +553,5 @@ sign:
 }
 ```
 <!-- langtabs-end -->
+
 ~~~
