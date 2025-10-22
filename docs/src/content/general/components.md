@@ -10,9 +10,23 @@ The container size is limited to 27 slots at the moment.
 
 - `size`: Size of the container
 - `prevent_placement`: Prevents placement for block-items
+- `title_prefix`: Allows for a custom background using fonts. Make sure to use negative spacing the width of the menu, in order for the normal container name to be in the correct position.
 
 Example usage:
 `/give @s minecraft:poppy[filament:backpack={size:27,prevent_placement:true},container=[]]`
+
+As json:
+```json
+{
+  "components": {
+    "filament:backpack": {
+      "size": 108,
+      "prevent_placement": true,
+      "title_prefix": "<font:customui:menus>A</font><font:customui:negativespace>X</font>"
+    }
+  }
+}
+```
 
 # Skin Components
 
