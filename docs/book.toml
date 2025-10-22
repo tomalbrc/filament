@@ -25,4 +25,5 @@ additional-css = ["./mdbook-admonish.css", "./custom.css", "langtabs.css"]
 additional-js = ["langtabs.js"]
 
 [output.html.fold]
-enable = false
+enable = true
+level = 1
