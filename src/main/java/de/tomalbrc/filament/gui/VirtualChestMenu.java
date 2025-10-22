@@ -1,6 +1,5 @@
 package de.tomalbrc.filament.gui;
 
-import de.tomalbrc.filament.util.BackpackHotbarSlot;
 import eu.pb4.sgui.api.gui.SlotGuiInterface;
 import eu.pb4.sgui.virtual.inventory.VirtualScreenHandler;
 import eu.pb4.sgui.virtual.inventory.VirtualSlot;

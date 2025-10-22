@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.util;
+package de.tomalbrc.filament.gui;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;

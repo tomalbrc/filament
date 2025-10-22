@@ -19,17 +19,18 @@ import net.minecraft.world.item.Items;
 public class PaginatedContainerGui extends SimpleGui {
     GuiElementBuilder empty = GuiElementBuilder.from(Items.PAPER.getDefaultInstance())
             .hideDefaultTooltip()
+            .setComponent(DataComponents.MAX_STACK_SIZE, 1)
             .hideTooltip()
             .model(FilamentConfig.getInstance().addCustomMenuAssets ? Util.id("blank_gui") : Items.AIR.components().get(DataComponents.ITEM_MODEL));
 
     private final Container container;
+    private final boolean fromBackpack;
     private int currentPage = 0;
 
-    public PaginatedContainerGui(MenuType<?> type, ServerPlayer player, boolean manipulatePlayerSlots, Container container) {
+    public PaginatedContainerGui(MenuType<?> type, ServerPlayer player, boolean manipulatePlayerSlots, Container container, boolean fromBackpack) {
         super(type, player, manipulatePlayerSlots);
-
         this.container = container;
-
+        this.fromBackpack = fromBackpack;
         populateFromContainer(currentPage);
     }
 
@@ -137,19 +138,11 @@ public class PaginatedContainerGui extends SimpleGui {
         return container;
     }
 
-    public static Slot createSlot(Container container, int slotInContainer) {
-        return new Slot(container, slotInContainer, 0, 0) {
+    public Slot createSlot(Container containerx, int slotInContainer) {
+        return new BackpackContainerSlot(containerx, slotInContainer, 0, 0, 0, this.fromBackpack) {
             @Override
             public int getMaxStackSize(ItemStack itemStack) {
-                return container instanceof FilamentContainer filamentContainer ? filamentContainer.getMaxStackSize(slotInContainer) : container.getMaxStackSize(itemStack);
-            }
-
-            @Override
-            public boolean mayPlace(ItemStack itemStack) {
-                if (FilamentContainer.isPickUpContainer(container))
-                    return itemStack.getItem().canFitInsideContainerItems();
-
-                return super.mayPlace(itemStack);
+                return containerx instanceof FilamentContainer filamentContainer ? filamentContainer.getMaxStackSize(slotInContainer) : containerx.getMaxStackSize(itemStack);
             }
         };
     }

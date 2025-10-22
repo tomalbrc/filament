@@ -1,13 +1,9 @@
 package de.tomalbrc.filament.gui;
 
-import de.tomalbrc.filament.util.BackpackHotbarSlot;
-import de.tomalbrc.filament.util.FilamentContainer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
 
 // "almost vanilla chest menu" but with checks to prevent placement of shulkers & friends into portable filament containers
 // and hotbar slot-locking
@@ -32,20 +28,10 @@ public class FilamentChestMenu extends ChestMenu {
 
     @Override
     public void addChestGrid(Container container, int i, int j) {
-        boolean doCheck = FilamentContainer.isPickUpContainer(container);
         for (int y = 0; y < this.getRowCount(); ++y) {
             for (int x = 0; x < 9; ++x) {
-                this.addSlot(new Slot(container, x + y * 9, i + x * 18, j + y * 18) {
-                    @Override
-                    public boolean mayPlace(ItemStack itemStack) {
-                        if (doCheck) {
-                            return itemStack.getItem().canFitInsideContainerItems();
-                        }
-                        return super.mayPlace(itemStack);
-                    }
-                });
+                this.addSlot(new BackpackContainerSlot(container, x, y, i, j, lockSlot != -1));
             }
         }
-
     }
 }
