@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mojang.serialization.JsonOps;
 import de.tomalbrc.filament.data.Data;
+import de.tomalbrc.filament.gui.FilamentChestMenu;
 import de.tomalbrc.filament.gui.PaginatedContainerGui;
 import de.tomalbrc.filament.gui.VirtualChestMenu;
 import de.tomalbrc.filament.item.FilamentItem;
@@ -26,9 +27,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -139,36 +138,17 @@ public class Util {
     }
 
     public static AbstractContainerMenu createMenu(Container container, int id, Inventory inventory, Player player) {
-        return createMenu(container, id, inventory, player, false);
+        return createMenu(container, id, inventory, player, false, -1);
     }
 
-    public static AbstractContainerMenu createMenu(Container container, int id, Inventory inventory, Player player, boolean forceCustom) {
+    public static AbstractContainerMenu createMenu(Container container, int id, Inventory inventory, Player player, boolean forceCustom, int lockSlot) {
         MenuType<?> menuType = forceCustom ? null : de.tomalbrc.filament.behaviour.decoration.Container.getMenuType(container.getContainerSize());
 
         if (menuType == null) {
             var est = de.tomalbrc.filament.behaviour.decoration.Container.estimateMenuType(container.getContainerSize());
-            return new VirtualChestMenu(est, id, new PaginatedContainerGui(est, (ServerPlayer) player, false, container), player, container);
+            return new VirtualChestMenu(est, id, new PaginatedContainerGui(est, (ServerPlayer) player, false, container), player, container, lockSlot);
         }
 
-        return new ChestMenu(menuType, id, inventory, container, container.getContainerSize() / 9) {
-            @Override
-            public void addChestGrid(Container container, int i, int j) {
-                boolean doCheck = FilamentContainer.isPickUpContainer(container);
-                for (int y = 0; y < this.getRowCount(); ++y) {
-                    for (int x = 0; x < 9; ++x) {
-                        this.addSlot(new Slot(container, x + y * 9, i + x * 18, j + y * 18) {
-                            @Override
-                            public boolean mayPlace(ItemStack itemStack) {
-                                if (doCheck) {
-                                    return itemStack.getItem().canFitInsideContainerItems();
-                                }
-                                return super.mayPlace(itemStack);
-                            }
-                        });
-                    }
-                }
-
-            }
-        };
+        return new FilamentChestMenu(menuType, id, inventory, container, lockSlot);
     }
 }

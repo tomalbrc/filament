@@ -2,8 +2,8 @@ package de.tomalbrc.filament.registry;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.tomalbrc.filament.util.BackpackMenu;
 import de.tomalbrc.filament.util.Constants;
+import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.other.PolymerComponent;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
@@ -47,14 +47,13 @@ public class FilamentComponents {
 
         public void open(ItemStack itemStack, ServerPlayer player) {
             ItemContainerContents container = itemStack.get(DataComponents.CONTAINER);
-            assert container != null;
-
-            final int selectedSlot = player.getInventory().getSelectedSlot();
-
-            SimpleContainer container1 = new SimpleContainer(27);
-            container.copyInto(container1.items);
-            container1.addListener(x -> itemStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(container1.items)));
-            player.openMenu(new SimpleMenuProvider((id, inventory, p) -> BackpackMenu.create(id, inventory, container1, selectedSlot), itemStack.getOrDefault(DataComponents.CUSTOM_NAME, itemStack.get(DataComponents.ITEM_NAME))));
+            if (container != null) {
+                final int selectedSlot = player.getInventory().getSelectedSlot();
+                SimpleContainer container1 = new SimpleContainer(size);
+                container.copyInto(container1.items);
+                container1.addListener(x -> itemStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(container1.items)));
+                player.openMenu(new SimpleMenuProvider((id, inventory, p) -> Util.createMenu(container1, id, inventory, player, false, selectedSlot), itemStack.getOrDefault(DataComponents.CUSTOM_NAME, itemStack.get(DataComponents.ITEM_NAME))));
+            }
         }
     }
 }

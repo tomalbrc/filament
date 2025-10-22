@@ -1,11 +1,13 @@
 package de.tomalbrc.filament.gui;
 
+import de.tomalbrc.filament.util.FilamentConfig;
 import de.tomalbrc.filament.util.FilamentContainer;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.sgui.api.GuiHelpers;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -18,7 +20,7 @@ public class PaginatedContainerGui extends SimpleGui {
     GuiElementBuilder empty = GuiElementBuilder.from(Items.PAPER.getDefaultInstance())
             .hideDefaultTooltip()
             .hideTooltip()
-            .model(Util.id("blank_gui"));
+            .model(FilamentConfig.getInstance().addCustomMenuAssets ? Util.id("blank_gui") : Items.AIR.components().get(DataComponents.ITEM_MODEL));
 
     private final Container container;
     private int currentPage = 0;
@@ -53,6 +55,7 @@ public class PaginatedContainerGui extends SimpleGui {
                         .addLoreLine(Component.translatable("book.pageIndicator", Component.literal(String.valueOf(currentPage+1)), Component.literal(String.valueOf(pages+1))).withStyle(ChatFormatting.DARK_GRAY))
                         .model(Util.id("previous_gui"))
                         .setCallback(() -> {
+                            Util.clickSound(player);
                             if (currentPage > 0) {
                                 populateFromContainer(currentPage - 1);
                             }
@@ -69,6 +72,7 @@ public class PaginatedContainerGui extends SimpleGui {
                         .addLoreLine(Component.translatable("book.pageIndicator", Component.literal(String.valueOf(currentPage+1)), Component.literal(String.valueOf(pages+1))).withStyle(ChatFormatting.DARK_GRAY))
                         .model(Util.id("next_gui"))
                         .setCallback(() -> {
+                            Util.clickSound(player);
                             int slotsPerPage = getWidth() * (getHeight() - 1);
                             int maxPage = Math.max(0, (container.getContainerSize() - 1) / slotsPerPage);
                             if (currentPage < maxPage) {

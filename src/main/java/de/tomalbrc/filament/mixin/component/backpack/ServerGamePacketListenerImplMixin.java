@@ -20,7 +20,7 @@ public class ServerGamePacketListenerImplMixin {
 
     @Inject(method = "handleUseItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayerGameMode;useItem(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;"), cancellable = true)
     private void filament$backpackInteraction(ServerboundUseItemPacket serverboundUseItemPacket, CallbackInfo ci, @Local ItemStack itemStack) {
-        if (itemStack.has(FilamentComponents.BACKPACK) && itemStack.has(DataComponents.CONTAINER)) {
+        if (itemStack.getCount() == 1 && itemStack.has(FilamentComponents.BACKPACK) && itemStack.has(DataComponents.CONTAINER)) {
             var backpackOptions = itemStack.get(FilamentComponents.BACKPACK);
             assert backpackOptions != null;
             backpackOptions.open(itemStack, player);
@@ -30,7 +30,7 @@ public class ServerGamePacketListenerImplMixin {
 
     @Inject(method = "handleUseItemOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayerGameMode;useItemOn(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/phys/BlockHitResult;)Lnet/minecraft/world/InteractionResult;"), cancellable = true)
     private void filament$backpackInteraction(ServerboundUseItemOnPacket serverboundUseItemOnPacket, CallbackInfo ci, @Local ItemStack itemStack) {
-        if (itemStack.has(FilamentComponents.BACKPACK)) {
+        if (itemStack.getCount() == 1 && itemStack.has(FilamentComponents.BACKPACK)) {
             var backpackOptions = itemStack.get(FilamentComponents.BACKPACK);
             assert backpackOptions != null;
             if (backpackOptions.preventPlacement()) {
