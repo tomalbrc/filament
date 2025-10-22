@@ -149,7 +149,7 @@ public class Util {
 
         if (menuType == null) {
             var est = de.tomalbrc.filament.behaviour.decoration.Container.estimateMenuType(container.getContainerSize());
-            return new VirtualChestMenu(est, id, new PaginatedContainerGui(est, (ServerPlayer) player, false, container), player, container, lockSlot);
+            return new VirtualChestMenu(est, id, new PaginatedContainerGui(est, (ServerPlayer) player, false, container, lockSlot != -1), player, container, lockSlot);
         }
 
         return new FilamentChestMenu(menuType, id, inventory, container, lockSlot);
