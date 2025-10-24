@@ -30,10 +30,9 @@ public class DecorationHolder extends ElementHolder implements FilamentDecoratio
     @Override
     @SuppressWarnings("all")
     protected void onAttachmentSet(HolderAttachment attachment, @Nullable HolderAttachment oldAttachment) {
-        BlockBoundAttachment boundAttachment;
-        if (attachment != null && (boundAttachment = (BlockBoundAttachment) attachment).getBlockState().getBlock() instanceof ComplexDecorationBlock) {
+        if (attachment instanceof BlockBoundAttachment blockAttachment && blockAttachment.getBlockState().getBlock() instanceof ComplexDecorationBlock) {
             Filament.SERVER.schedule(new TickTask(0, () -> {
-                boundAttachment.setBlockState(boundAttachment.getBlockState());
+                blockAttachment.setBlockState(blockAttachment.getBlockState());
             }));
         }
     }
