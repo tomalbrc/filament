@@ -100,9 +100,10 @@ public class Filament implements ModInitializer {
             SERVER = server;
         });
 
+        AsyncBlockTicker.init();
         ServerTickEvents.END_SERVER_TICK.register(AsyncBlockTicker::tick);
         ServerChunkEvents.CHUNK_UNLOAD.register(AsyncBlockTicker::remove);
-
+        ServerLifecycleEvents.SERVER_STOPPING.register(minecraftServer -> ADVENTURE.close());
         ItemGroupRegistry.register(new ItemGroupData(Constants.ITEM_GROUP_ID, ResourceLocation.withDefaultNamespace("diamond"), TextUtil.formatText("<c:blue>Filament Items")));
         ItemGroupRegistry.register(new ItemGroupData(Constants.BLOCK_GROUP_ID, ResourceLocation.withDefaultNamespace("furnace"), TextUtil.formatText("<c:blue>Filament Blocks")));
         ItemGroupRegistry.register(new ItemGroupData(Constants.DECORATION_GROUP_ID, ResourceLocation.withDefaultNamespace("lantern"), TextUtil.formatText("<c:blue>Filament Decorations")));

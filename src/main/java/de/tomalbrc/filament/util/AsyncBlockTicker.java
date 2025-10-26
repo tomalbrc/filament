@@ -7,6 +7,7 @@ import de.tomalbrc.filament.block.SimpleBlock;
 import it.unimi.dsi.fastutil.longs.LongArraySet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.server.MinecraftServer;
@@ -14,10 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.chunk.LevelChunk;
 
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 public class AsyncBlockTicker {
     public record DataKey(String name) {}
@@ -25,6 +23,19 @@ public class AsyncBlockTicker {
 
     private static final Map<Long, TickData> TICKING = new ConcurrentHashMap<>();
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadScheduledExecutor();
+
+    public static void init() {
+        ServerLifecycleEvents.SERVER_STOPPING.register(minecraftServer -> {
+            try {
+                if (!EXECUTOR_SERVICE.awaitTermination(5, TimeUnit.SECONDS)) {
+                    EXECUTOR_SERVICE.shutdown();
+                }
+            } catch (InterruptedException ignored) {
+            } finally {
+                EXECUTOR_SERVICE.shutdown();
+            }
+        });
+    }
 
     public static void tick(MinecraftServer server) {
         CompletableFuture.runAsync(() -> {
