@@ -15,10 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.chunk.LevelChunk;
 
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 public class AsyncBlockTicker {
     public record DataKey(String name) {}
@@ -29,7 +26,14 @@ public class AsyncBlockTicker {
 
     public static void init() {
         ServerLifecycleEvents.SERVER_STOPPING.register(minecraftServer -> {
-            EXECUTOR_SERVICE.shutdown();
+            try {
+                if (!EXECUTOR_SERVICE.awaitTermination(5, TimeUnit.SECONDS)) {
+                    EXECUTOR_SERVICE.shutdown();
+                }
+            } catch (InterruptedException ignored) {
+            } finally {
+                EXECUTOR_SERVICE.shutdown();
+            }
         });
     }
 
