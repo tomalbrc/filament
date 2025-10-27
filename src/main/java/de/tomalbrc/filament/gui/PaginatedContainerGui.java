@@ -127,7 +127,7 @@ public class PaginatedContainerGui extends SimpleGui {
             }
         }
 
-        if (getHeight() > 1) populateButtons();
+        if (getHeight() > 1 && container.getContainerSize() > getWidth()*getHeight()) populateButtons();
     }
 
     public void setScreenHandler(VirtualChestMenu virtualChestMenu) {

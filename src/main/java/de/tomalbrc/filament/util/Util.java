@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mojang.serialization.JsonOps;
 import de.tomalbrc.filament.data.Data;
-import de.tomalbrc.filament.gui.FilamentChestMenu;
 import de.tomalbrc.filament.gui.PaginatedContainerGui;
 import de.tomalbrc.filament.gui.VirtualChestMenu;
 import de.tomalbrc.filament.item.FilamentItem;
@@ -145,14 +144,8 @@ public class Util {
     }
 
     public static AbstractContainerMenu createMenu(Container container, int id, Inventory inventory, Player player, boolean forceCustom, int lockSlot) {
-        MenuType<?> menuType = forceCustom ? null : de.tomalbrc.filament.behaviour.decoration.Container.getMenuType(container.getContainerSize());
-
-        if (menuType == null) {
-            var est = de.tomalbrc.filament.behaviour.decoration.Container.estimateMenuType(container.getContainerSize());
-            return new VirtualChestMenu(est, id, new PaginatedContainerGui(est, (ServerPlayer) player, false, container, lockSlot != -1), player, container, lockSlot);
-        }
-
-        return new FilamentChestMenu(menuType, id, inventory, container, lockSlot);
+        var est = de.tomalbrc.filament.behaviour.decoration.Container.estimateMenuType(container.getContainerSize());
+        return new VirtualChestMenu(est, id, new PaginatedContainerGui(est, (ServerPlayer) player, false, container, lockSlot != -1), player, container, lockSlot);
     }
 
     public static void clickSound(ServerPlayer player) {
