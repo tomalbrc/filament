@@ -4,7 +4,7 @@
 
 The `filament:backpack` component can be used to turn any item with a container component into a "portable" container that can be opened by using the item in-hand.
 
-The container size is limited to 27 slots at the moment.
+Containers of any size are supported.
 
 ### Fields:
 

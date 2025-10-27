@@ -138,8 +138,9 @@ Cosmetics are worn on the player using item display entities (except for the hea
 - `slot`: The equipment slot for the cosmetic (head or chest).
 - `model`: Optional, the resource location of the animated blockbench or animated-java model for the cosmetic.
 - `autoplay`: Optional, the name of the animation to autoplay, which should be loopable.
-- `scale`: Scale of the chest cosmetic. Defaults to `[1 1 1]`
-- `translation`: Translation of the chest cosmetic. Defaults to `[0 0 0]`.
+- `scale`: Scale of the chest cosmetic. Defaults to `[1, 1, 1]`
+- `translation`: Translation of the chest cosmetic. Defaults to `[0, 0, 0]`.
+- `rotation`: Rotation of the chest cosmetic in euler angles. Defaults to `[0, 0, 0]`.
 ~~~
 
 ~~~admonish example "Backpack"
