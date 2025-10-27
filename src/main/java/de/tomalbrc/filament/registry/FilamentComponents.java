@@ -45,7 +45,7 @@ public class FilamentComponents {
                 instance.group(
                         Codec.INT.optionalFieldOf("size", 27).forGetter(BackpackOptions::size),
                         Codec.BOOL.optionalFieldOf("prevent_placement", false).forGetter(BackpackOptions::preventPlacement),
-                        Codec.STRING.optionalFieldOf("title_prefix", null).forGetter(BackpackOptions::titlePrefix)
+                        Codec.STRING.optionalFieldOf("title_prefix", "").forGetter(BackpackOptions::titlePrefix)
                 ).apply(instance, BackpackOptions::new)
         );
 
