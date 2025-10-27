@@ -43,9 +43,9 @@ public class FilamentComponents {
     public record BackpackOptions(int size, boolean preventPlacement, String titlePrefix) {
         public static final Codec<BackpackOptions> CODEC = RecordCodecBuilder.create(instance ->
                 instance.group(
-                        Codec.INT.fieldOf("size").orElse(27).forGetter(BackpackOptions::size),
-                        Codec.BOOL.fieldOf("prevent_placement").orElse(false).forGetter(BackpackOptions::preventPlacement),
-                        Codec.STRING.fieldOf("title_prefix").orElse(null).forGetter(BackpackOptions::titlePrefix)
+                        Codec.INT.optionalFieldOf("size", 27).forGetter(BackpackOptions::size),
+                        Codec.BOOL.optionalFieldOf("prevent_placement", false).forGetter(BackpackOptions::preventPlacement),
+                        Codec.STRING.optionalFieldOf("title_prefix", null).forGetter(BackpackOptions::titlePrefix)
                 ).apply(instance, BackpackOptions::new)
         );
 
