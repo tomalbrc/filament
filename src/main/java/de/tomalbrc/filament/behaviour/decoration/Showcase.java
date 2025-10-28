@@ -101,7 +101,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
         if (!player.isSecondaryUseActive() && decorationBlockEntity.getOrCreateHolder() != null) {
             if (config.useMenu) {
                 Component containerName = customName() != null && showCustomName() ? customName() : TextUtil.formatText(config.name);
-                player.openMenu(new SimpleMenuProvider((id, inventory, p) -> Util.createMenu(container, id, inventory, p), containerName));
+                player.openMenu(new SimpleMenuProvider((id, inventory, p) -> Util.createMenu(container, id, p), containerName));
                 return InteractionResult.SUCCESS;
             }
 
