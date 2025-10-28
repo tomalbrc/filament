@@ -153,7 +153,8 @@ Works with the `animation` behaviour to play an animation defined in the bbmodel
 Supports copper golem item transport based on block-tags: `c:chests/wooden` and `minecraft:copper_chests`
 
 ~~~admonish info "Configurable Fields"
-- `name`: The default name displayed in the container UI.
+- `name`: The default name displayed in the container UI. Empty by default
+- `titlePrefix`: Prefix for the title, can be used for custom backgrounds for example. Empty by default
 - `showCustomName`: Flag whether to show the name of the placed itemstack. Enabled by default.
 - `size`: The size of the container, has to be 5 slots or a multiple of 9, up to 6 rows of 9 slots.
 - `purge`: Indicates whether the container's contents should be cleared when no player is viewing the inventory.

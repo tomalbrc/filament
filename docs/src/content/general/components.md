@@ -11,6 +11,7 @@ Containers of any size are supported.
 - `size`: Size of the container
 - `prevent_placement`: Prevents placement for block-items
 - `title_prefix`: Allows for a custom background using fonts. Make sure to use negative spacing the width of the menu, in order for the normal container name to be in the correct position.
+- `sneak_only`: Will only open the backpack when the player is sneaking
 
 Example usage:
 `/give @s minecraft:poppy[filament:backpack={size:27,prevent_placement:true},container=[]]`
