@@ -23,8 +23,10 @@ public class ServerGamePacketListenerImplMixin {
         if (itemStack.getCount() == 1 && itemStack.has(FilamentComponents.BACKPACK) && itemStack.has(DataComponents.CONTAINER)) {
             var backpackOptions = itemStack.get(FilamentComponents.BACKPACK);
             assert backpackOptions != null;
-            backpackOptions.open(itemStack, player);
-            ci.cancel();
+            if (!(player.isShiftKeyDown() && backpackOptions.sneakOnly())) {
+                backpackOptions.open(itemStack, player);
+                ci.cancel();
+            }
         }
     }
 
@@ -33,7 +35,7 @@ public class ServerGamePacketListenerImplMixin {
         if (itemStack.getCount() == 1 && itemStack.has(FilamentComponents.BACKPACK)) {
             var backpackOptions = itemStack.get(FilamentComponents.BACKPACK);
             assert backpackOptions != null;
-            if (backpackOptions.preventPlacement()) {
+            if (backpackOptions.preventPlacement() && !(player.isShiftKeyDown() && backpackOptions.sneakOnly())) {
                 backpackOptions.open(itemStack, player);
                 ci.cancel();
             }
