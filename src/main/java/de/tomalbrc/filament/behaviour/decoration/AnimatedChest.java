@@ -484,7 +484,7 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
                     c2.container.unpackLootTable(inventory.player);
 
                     if (c1.canOpen(player) && c2.canOpen(player)) {
-                        return Util.createMenu(container, id, inventory, player);
+                        return Util.createMenu(container, id, player);
                     } else {
                         return null;
                     }
@@ -508,7 +508,7 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
                 @Nullable
                 public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
                     if (c1.canOpen(player)) {
-                        return Util.createMenu(container, id, inventory, player);
+                        return Util.createMenu(container, id, player);
                     } else {
                         return null;
                     }

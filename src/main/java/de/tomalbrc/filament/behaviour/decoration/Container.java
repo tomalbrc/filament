@@ -81,7 +81,7 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
         if (!player.isSecondaryUseActive()) {
             Component containerName = customName() != null && showCustomName() ? customName() : TextUtil.formatText(config.name);
 
-            player.openMenu(new SimpleMenuProvider((id, inventory, p) -> Util.createMenu(container, id, inventory, p), containerName));
+            player.openMenu(new SimpleMenuProvider((id, inventory, p) -> Util.createMenu(container, id, p), containerName));
 
             if (config.angerPiglins) PiglinAi.angerNearbyPiglins(player.level(), player, true);
 
@@ -125,19 +125,6 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
         if (this.lootTable != null) {
             builder.set(DataComponents.CONTAINER_LOOT, new SeededContainerLoot(this.lootTable, this.lootTableSeed));
         }
-    }
-
-    public static MenuType<?> getMenuType(int size) {
-        return switch (size) {
-            case 9 -> MenuType.GENERIC_9x1;
-            case 2 * 9 -> MenuType.GENERIC_9x2;
-            case 3 * 9 -> MenuType.GENERIC_9x3;
-            case 4 * 9 -> MenuType.GENERIC_9x4;
-            case 5 * 9 -> MenuType.GENERIC_9x5;
-            case 6 * 9 -> MenuType.GENERIC_9x6;
-            case 5 -> MenuType.HOPPER;
-            default -> null;
-        };
     }
 
     public static MenuType<?> estimateMenuType(int size) {

@@ -84,8 +84,10 @@ public class PaginatedContainerGui extends SimpleGui {
     }
 
     private void populateFromContainer(int page) {
+        boolean hasPages = getHeight() > 1 && container.getContainerSize() > getWidth()*getHeight();
+
         int w = this.getWidth();
-        int h = this.getHeight() - (getHeight() == 1 ? 0 : 1); // bottom row for buttons
+        int h = this.getHeight() - (hasPages ? 1 : 0); // bottom row for buttons
 
         int containerSize = this.container.getContainerSize();
         int slotsPerPage = slotsPerPage();
@@ -127,7 +129,7 @@ public class PaginatedContainerGui extends SimpleGui {
             }
         }
 
-        if (getHeight() > 1 && container.getContainerSize() > getWidth()*getHeight()) populateButtons();
+        if (hasPages) populateButtons();
     }
 
     public void setScreenHandler(VirtualChestMenu virtualChestMenu) {
@@ -139,7 +141,7 @@ public class PaginatedContainerGui extends SimpleGui {
     }
 
     public Slot createSlot(Container containerx, int slotInContainer) {
-        return new BackpackContainerSlot(containerx, slotInContainer, 0, 0, 0, this.fromBackpack) {
+        return new LimitingContainerSlot(containerx, slotInContainer, 0, 0, 0, this.fromBackpack) {
             @Override
             public int getMaxStackSize(ItemStack itemStack) {
                 return containerx instanceof FilamentContainer filamentContainer ? filamentContainer.getMaxStackSize(slotInContainer) : containerx.getMaxStackSize(itemStack);

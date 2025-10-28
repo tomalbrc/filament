@@ -25,10 +25,8 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -139,11 +137,11 @@ public class Util {
         return stack;
     }
 
-    public static AbstractContainerMenu createMenu(Container container, int id, Inventory inventory, Player player) {
-        return createMenu(container, id, inventory, player, false, -1);
+    public static AbstractContainerMenu createMenu(Container container, int id, Player player) {
+        return createMenu(container, id, player, -1);
     }
 
-    public static AbstractContainerMenu createMenu(Container container, int id, Inventory inventory, Player player, boolean forceCustom, int lockSlot) {
+    public static AbstractContainerMenu createMenu(Container container, int id, Player player, int lockSlot) {
         var est = de.tomalbrc.filament.behaviour.decoration.Container.estimateMenuType(container.getContainerSize());
         return new VirtualChestMenu(est, id, new PaginatedContainerGui(est, (ServerPlayer) player, false, container, lockSlot != -1), player, container, lockSlot);
     }

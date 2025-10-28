@@ -57,7 +57,7 @@ public class FilamentComponents {
                 container.copyInto(container1.items);
                 container1.addListener(x -> itemStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(container1.items)));
 
-                MenuProvider provider = new SimpleMenuProvider((id, inventory, p) -> Util.createMenu(container1, id, inventory, player, false, selectedSlot), Component.empty().append(TextUtil.formatText(this.titlePrefix())).append(itemStack.getOrDefault(DataComponents.CUSTOM_NAME, itemStack.get(DataComponents.ITEM_NAME))));
+                MenuProvider provider = new SimpleMenuProvider((id, inventory, p) -> Util.createMenu(container1, id, player, selectedSlot), Component.empty().append(TextUtil.formatText(this.titlePrefix())).append(itemStack.getOrDefault(DataComponents.CUSTOM_NAME, itemStack.get(DataComponents.ITEM_NAME))));
                 player.openMenu(provider);
             }
         }
