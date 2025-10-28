@@ -80,6 +80,8 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
     public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
         if (!player.isSecondaryUseActive()) {
             Component containerName = customName() != null && showCustomName() ? customName() : TextUtil.formatText(config.name);
+            if (!config.titlePrefix.isEmpty())
+                containerName = Component.empty().append(TextUtil.formatText(config.titlePrefix)).append(containerName);
 
             player.openMenu(new SimpleMenuProvider((id, inventory, p) -> Util.createMenu(container, id, p), containerName));
 
@@ -199,6 +201,8 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
          * The name displayed in the container UI
          */
         public String name = "Container";
+
+        public String titlePrefix = "";
 
         /**
          * The size of the container, has to be 5 slots or a multiple of 9, up to 6 rows of 9 slots.
