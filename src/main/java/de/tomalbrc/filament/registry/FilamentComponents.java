@@ -40,12 +40,13 @@ public class FilamentComponents {
         PolymerComponent.registerDataComponent(BACKPACK);
     }
 
-    public record BackpackOptions(int size, boolean preventPlacement, String titlePrefix) {
+    public record BackpackOptions(int size, boolean preventPlacement, String titlePrefix, boolean sneakOnly) {
         public static final Codec<BackpackOptions> CODEC = RecordCodecBuilder.create(instance ->
                 instance.group(
                         Codec.INT.optionalFieldOf("size", 27).forGetter(BackpackOptions::size),
                         Codec.BOOL.optionalFieldOf("prevent_placement", false).forGetter(BackpackOptions::preventPlacement),
-                        Codec.STRING.optionalFieldOf("title_prefix", "").forGetter(BackpackOptions::titlePrefix)
+                        Codec.STRING.optionalFieldOf("title_prefix", "").forGetter(BackpackOptions::titlePrefix),
+                        Codec.BOOL.optionalFieldOf("sneak_only", false).forGetter(BackpackOptions::sneakOnly)
                 ).apply(instance, BackpackOptions::new)
         );
 
