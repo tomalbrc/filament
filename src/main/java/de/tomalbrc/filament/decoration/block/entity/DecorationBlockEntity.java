@@ -19,6 +19,7 @@ import de.tomalbrc.filament.util.BlockUtil;
 import de.tomalbrc.filament.util.DecorationUtil;
 import de.tomalbrc.filament.util.FilamentConfig;
 import de.tomalbrc.filament.util.Util;
+import eu.pb4.common.protection.api.CommonProtection;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -162,8 +163,9 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     }
 
     public InteractionResult decorationInteract(ServerPlayer player, InteractionHand interactionHand, Vec3 location) {
-        if ((FilamentConfig.getInstance().preventAdventureModeDecorationInteraction && !this.getDecorationData().properties().allowAdventureMode) && player.gameMode.getGameModeForPlayer() == GameType.ADVENTURE)
-            return InteractionResult.PASS;
+        var adventureCheck = (FilamentConfig.getInstance().preventAdventureModeDecorationInteraction && !this.getDecorationData().properties().allowAdventureMode) && player.gameMode.getGameModeForPlayer() == GameType.ADVENTURE;
+        if (adventureCheck || !CommonProtection.canInteractBlock(player.level(), BlockPos.containing(location), player.getGameProfile(), player))
+            return InteractionResult.FAIL;
 
         if (!this.isMain()) {
             return this.getMainBlockEntity().decorationInteract(player, interactionHand, location);
