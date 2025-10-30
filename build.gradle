@@ -1,7 +1,6 @@
 plugins {
     id 'fabric-loom' version '1.11-SNAPSHOT'
     id 'maven-publish'
-    id 'com.gradleup.shadow' version '8.3.6'
 }
 
 version = project.mod_version + "+" + project.minecraft_version
@@ -11,15 +10,11 @@ loom {
     accessWidenerPath = file("src/main/resources/filament.accesswidener")
 }
 
-configurations {
-    shadow
-}
-
 repositories {
     maven { url 'https://maven.tomalbrc.de' }
     maven { url 'https://maven.nucleoid.xyz' }
     maven { url 'https://maven.parchmentmc.org' }
-    mavenLocal()
+    maven { url = 'https://api.modrinth.com/maven' }
 }
 
 dependencies {
@@ -29,8 +24,8 @@ dependencies {
         officialMojangMappings()
         //parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${project.parchment_version}")
     })
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modImplementation ("net.fabricmc:fabric-loader:${project.loader_version}")
+    modImplementation ("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 
     // Polymer
     modImplementation ("eu.pb4:polymer-core:${project.polymer_version}")
@@ -46,14 +41,16 @@ dependencies {
 
     // BIL
     modImplementation include("de.tomalbrc:blockbench-import-library:${project.bil_version}")
-
+    // Text format
     modImplementation include("eu.pb4:placeholder-api:${project.papi_version}")
-
     modImplementation include("net.kyori:adventure-platform-fabric:${project.adventure_platform_version}")
-    implementation "net.kyori:adventure-text-minimessage:${project.adventure_api_version}"
-    implementation "net.kyori:adventure-api:${project.adventure_api_version}"
+    implementation include("net.kyori:adventure-text-minimessage:${project.adventure_api_version}")
+    implementation("net.kyori:adventure-api:${project.adventure_api_version}")
 
-    shadow implementation('org.yaml:snakeyaml:2.4')
+    implementation include('org.yaml:snakeyaml:2.4')
+
+    // claim compat
+    modImplementation include("eu.pb4:common-protection-api:1.0.0")
 }
 
 processResources {
@@ -83,17 +80,6 @@ jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }
-}
-
-shadowJar {
-    configurations = [project.configurations.shadow]
-    zip64 true
-    relocate 'org.yaml.snakeyaml', 'de.tomalbrc.filament.snakeyaml'
-}
-
-remapJar {
-    dependsOn(shadowJar)
-    input.set(shadowJar.archivePath)
 }
 
 // configure the maven publication
