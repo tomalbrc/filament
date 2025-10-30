@@ -6,7 +6,7 @@ import com.mojang.datafixers.DataFixUtils;
 import com.mojang.datafixers.types.Type;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
-import de.tomalbrc.filament.data.EntityData;
+import de.tomalbrc.filament.data.entity.EntityData;
 import de.tomalbrc.filament.decoration.util.SeatEntity;
 import de.tomalbrc.filament.entity.AnimatedFilamentEnemyMob;
 import de.tomalbrc.filament.entity.AnimatedFilamentMob;
