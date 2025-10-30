@@ -1,7 +1,8 @@
 package de.tomalbrc.filament.entity;
 
 import de.tomalbrc.filament.api.behaviour.EntityBehaviour;
-import de.tomalbrc.filament.data.EntityData;
+import de.tomalbrc.filament.data.entity.EntityData;
+import de.tomalbrc.filament.entity.skill.MobSkills;
 import de.tomalbrc.filament.registry.EntityRegistry;
 import eu.pb4.polymer.core.api.entity.PolymerEntity;
 import net.minecraft.core.BlockPos;
@@ -9,10 +10,15 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.JumpControl;
@@ -24,18 +30,32 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class FilamentMob extends Animal implements PolymerEntity {
     EntityData data;
+    MobSkills mobSkills;
+    Map<String, Object> variables;
+    ServerBossEvent bossEvent;
+
+    boolean triggeredDeath = false;
 
     @SuppressWarnings("unchecked")
     public FilamentMob(EntityType<? extends Entity> entityType, Level level) {
         super((EntityType<? extends Animal>) entityType, level);
+        this.mobSkills = new MobSkills(this);
+        var skills = this.data.skills();
+        skills.forEach(this.mobSkills::add);
+
         this.data = getData();
         this.xpReward = data.properties().xpReward;
         registerGoals();
@@ -49,17 +69,20 @@ public class FilamentMob extends Animal implements PolymerEntity {
         this.jumpControl = new JumpControl(this);
     }
 
-
     public EntityData getData() {
         return EntityRegistry.getData(BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
+    }
+
+    public Map<String, Object> getVariables() {
+        return this.variables;
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
 
-        if (data != null) {
-            for (var behaviour : data.goals()) {
+        if (this.data != null) {
+            for (var behaviour : this.data.goals()) {
                 if (behaviour instanceof EntityBehaviour<?> entityBehaviour) {
                     entityBehaviour.registerGoals(this);
                 }
@@ -81,8 +104,8 @@ public class FilamentMob extends Animal implements PolymerEntity {
     }
 
     protected void updateNoActionTime() {
-        float f = this.getLightLevelDependentMagicValue();
-        if (f > 0.5F) {
+        float forbiddenAlchemy = this.getLightLevelDependentMagicValue();
+        if (forbiddenAlchemy > 0.5f) {
             this.noActionTime += 2;
         }
     }
@@ -101,10 +124,10 @@ public class FilamentMob extends Animal implements PolymerEntity {
 
     @Override
     public void aiStep() {
-        if (data.properties().category == MobCategory.MONSTER) this.updateNoActionTime();
+        if (this.data.properties().category == MobCategory.MONSTER) this.updateNoActionTime();
 
         if (this.isAlive()) {
-            boolean burn = data.properties().isSunSensitive && this.isSunBurnTick();
+            boolean burn = this.data.properties().isSunSensitive && this.isSunBurnTick();
             if (burn) {
                 ItemStack itemStack = this.getItemBySlot(EquipmentSlot.HEAD);
                 if (!itemStack.isEmpty()) {
@@ -133,11 +156,12 @@ public class FilamentMob extends Animal implements PolymerEntity {
     public void customServerAiStep(ServerLevel serverLevel) {
         super.customServerAiStep(serverLevel);
 
+        this.mobSkills.tick(serverLevel);
+
         if (this.forcedAgeTimer > 0) {
             if (this.forcedAgeTimer % 4 == 0) {
                 serverLevel.sendParticles(ParticleTypes.HAPPY_VILLAGER, this.getRandomX(1.0), this.getRandomY() + 0.5, this.getRandomZ(1.0), 0, 0.0, 0.0, 0.0, 0.0);
             }
-
             --this.forcedAgeTimer;
         }
     }
@@ -149,6 +173,8 @@ public class FilamentMob extends Animal implements PolymerEntity {
 
     @Override
     public boolean doHurtTarget(ServerLevel serverLevel, Entity entity) {
+        this.mobSkills.onAttack(serverLevel, entity);
+
         serverLevel.broadcastEntityEvent(this, (byte)4);
 
         return super.doHurtTarget(serverLevel, entity);
@@ -157,8 +183,8 @@ public class FilamentMob extends Animal implements PolymerEntity {
     @Override
     @NotNull
     protected SoundEvent getSwimSound() {
-        if (data.properties().sounds != null && data.properties().sounds.swim() != null)
-            return SoundEvent.createVariableRangeEvent(data.properties().sounds.swim());
+        if (this.data.properties().sounds != null && this.data.properties().sounds.swim() != null)
+            return SoundEvent.createVariableRangeEvent(this.data.properties().sounds.swim());
         return super.getSwimSound();
     }
 
@@ -179,7 +205,7 @@ public class FilamentMob extends Animal implements PolymerEntity {
 
     @Override
     protected SoundEvent getDeathSound() {
-        if (data.properties().sounds != null && data.properties().sounds.death() != null)
+        if (this.data.properties().sounds != null && this.data.properties().sounds.death() != null)
             return SoundEvent.createVariableRangeEvent(data.properties().sounds.death());
         return super.getDeathSound();
     }
@@ -187,26 +213,26 @@ public class FilamentMob extends Animal implements PolymerEntity {
     @Override
     @NotNull
     public LivingEntity.Fallsounds getFallSounds() {
-        if (data.properties().sounds != null && data.properties().sounds.fall() != null)
-            return new LivingEntity.Fallsounds(SoundEvent.createVariableRangeEvent(data.properties().sounds.fall().small()), SoundEvent.createVariableRangeEvent(data.properties().sounds.fall().big()));
+        if (this.data.properties().sounds != null && this.data.properties().sounds.fall() != null)
+            return new LivingEntity.Fallsounds(SoundEvent.createVariableRangeEvent(this.data.properties().sounds.fall().small()), SoundEvent.createVariableRangeEvent(this.data.properties().sounds.fall().big()));
         return super.getFallSounds();
     }
 
     @Nullable
     protected SoundEvent getAmbientSound() {
-        if (data.properties().sounds != null && data.properties().sounds.ambient() != null)
-            return SoundEvent.createVariableRangeEvent(data.properties().sounds.ambient());
+        if (this.data.properties().sounds != null && this.data.properties().sounds.ambient() != null)
+            return SoundEvent.createVariableRangeEvent(this.data.properties().sounds.ambient());
         return super.getAmbientSound();
     }
 
     @Override
     public int getAmbientSoundInterval() {
-        return data.properties().ambientSoundInterval;
+        return this.data.properties().ambientSoundInterval;
     }
 
     @Override
     public boolean isFood(ItemStack itemStack) {
-        var food = data.properties().food;
+        var food = this.data.properties().food;
         if (food != null) {
             for (ResourceLocation resourceLocation : food) {
                 if (itemStack.is(BuiltInRegistries.ITEM.getValue(resourceLocation)))
@@ -232,7 +258,7 @@ public class FilamentMob extends Animal implements PolymerEntity {
 
     @Override
     public boolean canUsePortal(boolean bl) {
-        if (!data.properties().canUsePortal) {
+        if (!this.data.properties().canUsePortal) {
             return false;
         }
 
@@ -253,12 +279,12 @@ public class FilamentMob extends Animal implements PolymerEntity {
 
     @Override
     public boolean canBeLeashed() {
-        return data.properties().canBeLeashed;
+        return this.data.properties().canBeLeashed;
     }
 
     @Override
     public boolean removeWhenFarAway(double d) {
-        return data.properties().despawnWhenFarAway && !this.isLeashed() && !this.hasCustomName();
+        return this.data.properties().despawnWhenFarAway && !this.isLeashed() && !this.hasCustomName();
     }
 
     @Override
@@ -270,5 +296,74 @@ public class FilamentMob extends Animal implements PolymerEntity {
         } else {
             return this.isInLove() && animal.isInLove();
         }
+    }
+
+    @Override
+    public void finalizeSpawnChildFromBreeding(ServerLevel level, Animal animal, @Nullable AgeableMob baby) {
+        this.mobSkills.onBreed(animal);
+        super.finalizeSpawnChildFromBreeding(level, animal, baby);
+    }
+
+    @Override
+    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason spawnReason, @Nullable SpawnGroupData spawnGroupData) {
+        this.mobSkills.onSpawn();
+        return super.finalizeSpawn(level, difficulty, spawnReason, spawnGroupData);
+    }
+
+    @Override
+    protected void readAdditionalSaveData(ValueInput input) {
+        super.readAdditionalSaveData(input);
+        this.mobSkills.onLoad();
+    }
+
+    @Override
+    protected void addAdditionalSaveData(ValueOutput output) {
+        super.addAdditionalSaveData(output);
+    }
+
+    @Override
+    protected void tickDeath() {
+        if (!triggeredDeath) {
+            triggeredDeath = true;
+            this.mobSkills.onDeath();
+        }
+        super.tickDeath();
+    }
+
+    @Override
+    public void checkDespawn() {
+        var isRemoved = isRemoved();
+        super.checkDespawn();
+        if (isRemoved() != isRemoved && isRemoved) {
+            this.mobSkills.onDespawn();
+        }
+    }
+
+    @Override
+    public @NotNull InteractionResult mobInteract(Player player, InteractionHand hand) {
+        this.mobSkills.onInteract(player, hand);
+        return super.mobInteract(player, hand);
+    }
+
+    @Override
+    public void setLastHurtByPlayer(Player player, int memoryTime) {
+        super.setLastHurtByPlayer(player, memoryTime);
+    }
+
+    @Override
+    public void setTarget(@Nullable LivingEntity target) {
+        this.variables.put("triggeringEntity", target);
+        this.mobSkills.onChangeTarget(target);
+        super.setTarget(target);
+    }
+
+    @Override
+    public boolean hurtServer(ServerLevel level, DamageSource damageSource, float amount) {
+        this.variables.put("lastDamageCause", damageSource.typeHolder().getRegisteredName());
+        this.variables.put("damageTags", damageSource.typeHolder().tags().map(x -> x.location().toString()).collect(Collectors.toSet()));
+        this.variables.put("lastDamage", amount);
+
+        this.mobSkills.onDamage(level, damageSource, amount);
+        return super.hurtServer(level, damageSource, amount);
     }
 }

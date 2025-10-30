@@ -1,4 +1,4 @@
-package de.tomalbrc.filament.data.properties;
+package de.tomalbrc.filament.data.entity;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.MobCategory;
@@ -10,7 +10,7 @@ import java.util.Set;
 public class EntityProperties {
     public @Nullable List<Float> size;
     public @Nullable MobCategory category;
-    public @Nullable Sounds sounds;
+    public @Nullable EntitySounds sounds;
     public @Nullable Set<ResourceLocation> food;
     public @Nullable ResourceLocation offspring;
     public int ambientSoundInterval = 80;
@@ -28,10 +28,4 @@ public class EntityProperties {
     public boolean despawnWhenFarAway = false;
     public boolean forceEnemy = false;
 
-    public record FallSounds(ResourceLocation small, ResourceLocation big) {
-
-    }
-    public record Sounds(ResourceLocation ambient, ResourceLocation swim, ResourceLocation swimSplash, ResourceLocation hurt, ResourceLocation death, FallSounds fall) {
-
-    }
 }
