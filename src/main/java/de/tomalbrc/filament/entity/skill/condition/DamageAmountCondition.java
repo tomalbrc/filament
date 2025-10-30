@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
+import de.tomalbrc.filament.entity.skill.Variable;
 import net.minecraft.world.entity.LivingEntity;
 
 class DamageAmountCondition implements Condition {
@@ -12,6 +13,7 @@ class DamageAmountCondition implements Condition {
     }
 
     public boolean test(SkillContext ctx, LivingEntity target) {
-        return ctx.vars().getOrDefault("lastDamage", 0) instanceof Number n && n.doubleValue() >= min && n.doubleValue() <= max;
+        var n = ctx.vars().getOrDefault("lastDamage", Variable.EMPTY).asNumber();
+        return n != null && n.doubleValue() >= min && n.doubleValue() <= max;
     }
 }

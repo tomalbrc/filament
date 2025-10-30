@@ -21,12 +21,22 @@ public class Target {
         Target target = new Target();
         target.blockState = blockState;
         target.blockPos = pos;
+        target.position = pos.getCenter();
+        return target;
+    }
+
+    public static Target of(Level level, Vec3 pos) {
+        Target target = new Target();
+        target.position = pos;
+        target.blockPos = BlockPos.containing(pos);
         return target;
     }
 
     public static Target of(Entity entity) {
         Target target = new Target();
         target.entity = entity;
+        if (entity == null) return target;
+
         target.position = entity.position();
         target.level = entity.level();
         return target;
@@ -48,11 +58,11 @@ public class Target {
         return blockState;
     }
 
-    boolean isEntity() {
+    public boolean isEntity() {
         return this.entity != null;
     }
 
-    boolean isBlock() {
+    public boolean isBlock() {
         return this.blockState != null;
     }
 

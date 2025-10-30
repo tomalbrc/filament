@@ -26,11 +26,15 @@ public class SoundMechanic implements Mechanic {
 
     @Override
     public int execute(SkillContext context) {
-        List<Target> targets = targeter.find(context);
-        for (Target target : targets) {
+        if (context.targets() != null) for (Target target : context.targets()) {
             target.level().playSound(null, context.caster(), SoundEvent.createVariableRangeEvent(sound), source, pitch, volume);
         }
 
         return 0;
+    }
+
+    @Override
+    public ResourceLocation id() {
+        return Mechanics.SOUND;
     }
 }

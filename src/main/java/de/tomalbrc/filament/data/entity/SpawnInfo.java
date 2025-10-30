@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -37,7 +38,9 @@ public record SpawnInfo(
 
         Predicate<BiomeSelectionContext> biomeSelectors = spawns.isEmpty() ? ((x) -> false) : BiomeSelectors.spawnsOneOf(spawns);
         if (biomes != null)
-            biomeSelectors = biomeSelectors.or(BiomeSelectors.includeByKey(Biomes.SWAMP, Biomes.MANGROVE_SWAMP));
+            for (ResourceLocation biome : biomes) {
+                biomeSelectors = biomeSelectors.or(BiomeSelectors.includeByKey(ResourceKey.create(Registries.BIOME, biome)));
+            }
         if (biomeTags != null) {
             for (ResourceLocation tag : biomeTags) {
                 biomeSelectors = biomeSelectors.or(BiomeSelectors.tag(TagKey.create(Registries.BIOME, tag)));
