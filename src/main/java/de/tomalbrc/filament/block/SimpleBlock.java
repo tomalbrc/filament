@@ -152,9 +152,9 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
         if (this.getBehaviours() != null)
             this.forEach(x -> x.playerWillDestroy(level, blockPos, blockState, player));
+
         return super.playerWillDestroy(level, blockPos, blockState, player);
     }
-
 
     @Override
     public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, LivingEntity livingEntity, ItemStack itemStack) {
@@ -239,7 +239,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
         if (this.getBehaviours() != null)
             this.forEach(x -> x.onExplosionHit(blockState, level, blockPos, explosion, biConsumer));
 
-        if (!blockState.isAir() && explosion.getBlockInteraction() != Explosion.BlockInteraction.TRIGGER_BLOCK) {
+        if (!blockState.isAir() && (explosion.getBlockInteraction() == Explosion.BlockInteraction.DESTROY || explosion.getBlockInteraction() == Explosion.BlockInteraction.DESTROY_WITH_DECAY)) {
             Block block = blockState.getBlock();
             boolean bl = explosion.getIndirectSourceEntity() instanceof Player;
             if (block.dropFromExplosion(explosion)) {
