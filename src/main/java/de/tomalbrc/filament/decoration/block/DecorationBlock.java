@@ -45,9 +45,10 @@ public abstract class DecorationBlock extends SimpleBlock implements PolymerBloc
 
     public void postRegister() {
         this.stateMap = this.data.createStandardStateMap();
-        if (data.blockResource() != null) {
+        var resource = blockData.blockResource();
+        if (resource != null) {
             for (Map.Entry<BlockState, BlockData.BlockStateMeta> stateMapEntry : this.stateMap.entrySet()) {
-                for (Map.Entry<String, ResourceLocation> blockResourceModelsEntry : this.blockData.blockResource().getModels().entrySet()) {
+                for (Map.Entry<String, ResourceLocation> blockResourceModelsEntry : resource.getModels().entrySet()) {
                     boolean same = blockResourceModelsEntry.getValue().equals(stateMapEntry.getValue().polymerBlockModel().model());
                     if (same) {
                         this.cmdMap.put(stateMapEntry.getValue(), blockResourceModelsEntry.getKey());
@@ -92,8 +93,9 @@ public abstract class DecorationBlock extends SimpleBlock implements PolymerBloc
 
     @Override
     public void onExplosionHit(BlockState blockState, ServerLevel level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
-        if (!blockState.isAir()) {
+        if ((explosion.getBlockInteraction() == Explosion.BlockInteraction.DESTROY || explosion.getBlockInteraction() == Explosion.BlockInteraction.DESTROY_WITH_DECAY) && !blockState.isAir()) {
             this.removeDecoration(level, blockPos, null);
+            this.wasExploded(level, blockPos, explosion);
         }
     }
 
@@ -145,9 +147,4 @@ public abstract class DecorationBlock extends SimpleBlock implements PolymerBloc
     }
 
     abstract public ItemStack visualItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState);
-
-
-    public void postBreak(DecorationBlockEntity decorationBlockEntity, BlockPos blockPos, Player player) {
-
-    }
 }
