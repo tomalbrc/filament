@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.entity.skill;
 
+import de.tomalbrc.filament.entity.FilamentMob;
 import de.tomalbrc.filament.entity.skill.target.Target;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -19,11 +20,11 @@ import java.util.Map;
  */
 public record SkillContext(
         ServerLevel level,
-        LivingEntity caster,
+        FilamentMob caster,
         @Nullable List<Target> targets,
         Vec3 origin,
         Trigger trigger,
-        Map<String, Object> vars
+        Map<String, Variable> vars
 ) {
     public List<Entity> getNearbyEntities(double radius) {
         return caster.level().getEntities(caster, AABB.ofSize(caster.position().subtract(radius / 2.), radius / 2., radius / 2., radius / 2.));

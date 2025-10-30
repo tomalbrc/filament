@@ -3,6 +3,7 @@ package de.tomalbrc.filament.entity;
 import de.tomalbrc.filament.api.behaviour.EntityBehaviour;
 import de.tomalbrc.filament.data.entity.EntityData;
 import de.tomalbrc.filament.entity.skill.MobSkills;
+import de.tomalbrc.filament.entity.skill.Variable;
 import de.tomalbrc.filament.registry.EntityRegistry;
 import eu.pb4.polymer.core.api.entity.PolymerEntity;
 import net.minecraft.core.BlockPos;
@@ -14,11 +15,11 @@ import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.JumpControl;
@@ -41,12 +42,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class FilamentMob extends Animal implements PolymerEntity {
+public class FilamentMob extends Animal implements OwnableEntity, PolymerEntity {
     EntityData data;
     MobSkills mobSkills;
-    Map<String, Object> variables;
+    Map<String, Variable> variables;
     ServerBossEvent bossEvent;
-
+    EntityReference<LivingEntity> owner;
     boolean triggeredDeath = false;
 
     @SuppressWarnings("unchecked")
@@ -57,23 +58,26 @@ public class FilamentMob extends Animal implements PolymerEntity {
         skills.forEach(this.mobSkills::add);
 
         this.data = getData();
-        this.xpReward = data.properties().xpReward;
+        this.xpReward = this.data.properties().xpReward;
         registerGoals();
 
-        this.setInvulnerable(data.properties().invulnerable);
-        this.noPhysics = data.properties().noPhysics;
+        this.setInvulnerable(this.data.properties().invulnerable);
+        this.noPhysics = this.data.properties().noPhysics;
 
         //this.setPathfindingMalus(PathType.BLOCKED);
 
         this.moveControl = new MoveControl(this);
         this.jumpControl = new JumpControl(this);
+
+        if (this.data.skills() != null)
+            this.data.skills().forEach(this.mobSkills::add);
     }
 
     public EntityData getData() {
         return EntityRegistry.getData(BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
     }
 
-    public Map<String, Object> getVariables() {
+    public Map<String, Variable> getVariables() {
         return this.variables;
     }
 
@@ -276,7 +280,6 @@ public class FilamentMob extends Animal implements PolymerEntity {
         //BuiltInRegistries.ENTITY_TYPE.getValue(this.data.entityType());
     //}
 
-
     @Override
     public boolean canBeLeashed() {
         return this.data.properties().canBeLeashed;
@@ -352,18 +355,22 @@ public class FilamentMob extends Animal implements PolymerEntity {
 
     @Override
     public void setTarget(@Nullable LivingEntity target) {
-        this.variables.put("triggeringEntity", target);
         this.mobSkills.onChangeTarget(target);
         super.setTarget(target);
     }
 
     @Override
     public boolean hurtServer(ServerLevel level, DamageSource damageSource, float amount) {
-        this.variables.put("lastDamageCause", damageSource.typeHolder().getRegisteredName());
-        this.variables.put("damageTags", damageSource.typeHolder().tags().map(x -> x.location().toString()).collect(Collectors.toSet()));
-        this.variables.put("lastDamage", amount);
+        this.variables.put("lastDamageCause", new Variable(damageSource.typeHolder().getRegisteredName()));
+        this.variables.put("damageTags", new Variable(damageSource.typeHolder().tags().map(TagKey::location).collect(Collectors.toSet())));
+        this.variables.put("lastDamage", new Variable(amount));
 
         this.mobSkills.onDamage(level, damageSource, amount);
         return super.hurtServer(level, damageSource, amount);
+    }
+
+    @Override
+    public @Nullable EntityReference<LivingEntity> getOwnerReference() {
+        return owner;
     }
 }

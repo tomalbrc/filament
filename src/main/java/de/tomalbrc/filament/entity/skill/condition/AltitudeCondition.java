@@ -14,7 +14,7 @@ class AltitudeCondition implements Condition {
     }
 
     public boolean test(SkillContext ctx, LivingEntity target) {
-        BlockPos pos = new BlockPos(Mth.floor(target.getX()), Mth.floor(target.getY()), Mth.floor(target.getZ()));
+        BlockPos pos = target.blockPosition();
         int groundY = ctx.level().getHeightmapPos(Heightmap.Types.WORLD_SURFACE, pos).getY();
         return (target.getY() - groundY) >= minAboveGround;
     }

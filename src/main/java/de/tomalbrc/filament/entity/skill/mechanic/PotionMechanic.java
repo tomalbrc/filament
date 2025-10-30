@@ -25,13 +25,17 @@ public class PotionMechanic implements Mechanic {
 
     @Override
     public int execute(SkillContext context) {
-        List<Target> targets = targeter.find(context);
-        for (Target target : targets) {
+        if (context.targets() != null) for (Target target : context.targets()) {
             if (target.getEntity() instanceof LivingEntity livingEntity) {
                 livingEntity.addEffect(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.get(potionType).orElseThrow(), duration, level));
             }
         }
 
         return 0;
+    }
+
+    @Override
+    public ResourceLocation id() {
+        return Mechanics.POTION;
     }
 }

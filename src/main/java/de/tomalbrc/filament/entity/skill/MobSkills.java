@@ -15,20 +15,22 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MobSkills {
     private static final Map<String, Variable> GLOBAL_VARIABLES = new Object2ObjectOpenHashMap<>();
     private static final Map<ResourceKey<Level>, Map<String, Variable>> LEVEL_VARIABLES = new Object2ObjectOpenHashMap<>();
+    private static final Map<UUID, Map<String, Variable>> ENTITY_VARIABLES = new Object2ObjectOpenHashMap<>();
 
     private final Map<Trigger, List<Skill>> skills = new EnumMap<>(Trigger.class);
     private final FilamentMob parent;
 
     public MobSkills(FilamentMob parent) {
         this.parent = parent;
+    }
+
+    public static Map<String, Variable> getEntityVariables(UUID entity) {
+        return ENTITY_VARIABLES.computeIfAbsent(entity, (x) -> new Object2ObjectOpenHashMap<>());
     }
 
     public static Map<String, Variable> getWorldVariables(ResourceKey<Level> world) {
@@ -43,14 +45,14 @@ public class MobSkills {
         this.skills.computeIfAbsent(skill.trigger(), k -> new ArrayList<>()).add(skill);
     }
 
-    public void fireTrigger(Trigger trigger) {
+    public void fireTrigger(Trigger trigger, Target triggerer) {
         var ctx = new SkillContext(
                 (ServerLevel) this.parent.level(),
                 this.parent,
                 ImmutableList.of(),
                 this.parent.position(),
-                Trigger.ON_TIMER,
-                this.parent.getVariables()
+                trigger,
+                new Object2ObjectOpenHashMap<>()
         );
 
         List<Skill> skills = this.skills.get(trigger);
@@ -66,11 +68,11 @@ public class MobSkills {
     }
 
     public void tick(ServerLevel serverLevel) {
-        this.fireTrigger(Trigger.ON_TIMER);
+        this.fireTrigger(Trigger.ON_TIMER, Target.of());
     }
 
     public void onAttack(ServerLevel serverLevel, Entity entity) {
-
+        fireTrigger(Trigger.ON_ATTACK, Target.of(entity));
     }
 
     public void onSpawn() {
