@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
-import net.minecraft.world.entity.LivingEntity;
+import de.tomalbrc.filament.entity.skill.target.Target;
 import net.minecraft.world.item.ItemStack;
 
 class TriggerItemTypeCondition implements Condition {
@@ -11,7 +11,7 @@ class TriggerItemTypeCondition implements Condition {
         this.sample = s;
     }
 
-    public boolean test(SkillContext ctx, LivingEntity target) {
+    public boolean test(SkillContext ctx, Target target) {
         Object it = ctx.vars().get("triggerItem");
         if (!(it instanceof ItemStack stack)) return false;
         return ItemStack.isSameItem(stack, sample);

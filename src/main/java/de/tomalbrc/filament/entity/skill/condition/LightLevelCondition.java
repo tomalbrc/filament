@@ -1,8 +1,8 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
+import de.tomalbrc.filament.entity.skill.target.Target;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.LightLayer;
 
 class LightLevelCondition implements Condition {
@@ -13,8 +13,8 @@ class LightLevelCondition implements Condition {
         this.max = max;
     }
 
-    public boolean test(SkillContext ctx, LivingEntity target) {
-        BlockPos pos = target.blockPosition();
+    public boolean test(SkillContext ctx, Target target) {
+        BlockPos pos = target.getBlockPos();
         int l = ctx.level().getBrightness(LightLayer.BLOCK, pos);
         return l >= min && l <= max;
     }

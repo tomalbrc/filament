@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
-import net.minecraft.world.entity.LivingEntity;
+import de.tomalbrc.filament.entity.skill.target.Target;
 
 class HasTagCondition implements Condition {
     private final String tag;
@@ -10,7 +10,7 @@ class HasTagCondition implements Condition {
         this.tag = t;
     }
 
-    public boolean test(SkillContext ctx, LivingEntity target) {
-        return target.getTags().contains(tag);
+    public boolean test(SkillContext ctx, Target target) {
+        return target.getEntity().getTags().contains(tag);
     }
 }

@@ -16,6 +16,9 @@ import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import de.tomalbrc.filament.data.properties.RangedValue;
 import de.tomalbrc.filament.data.properties.RangedVector3f;
 import de.tomalbrc.filament.data.resource.BlockResource;
+import de.tomalbrc.filament.entity.skill.condition.Conditions;
+import de.tomalbrc.filament.entity.skill.mechanic.Mechanics;
+import de.tomalbrc.filament.entity.skill.target.Targeters;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -90,7 +93,10 @@ public class Json {
             // special case to support old format
             // TODO: allow behaviours to specify codec/deserializer
             .registerTypeHierarchyAdapter(Showcase.Config.class, new Showcase.Config.ConfigDeserializer())
-
+            // skills
+            .registerTypeAdapterFactory(Conditions.TYPE_ADAPTER_FACTORY)
+            .registerTypeAdapterFactory(Mechanics.TYPE_ADAPTER_FACTORY)
+            .registerTypeAdapterFactory(Targeters.TYPE_ADAPTER_FACTORY)
             .create();
 
     public static List<InputStream> yamlToJson(InputStream inputStream) {

@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
-import net.minecraft.world.entity.LivingEntity;
+import de.tomalbrc.filament.entity.skill.target.Target;
 
 class VariableContainsCondition implements Condition {
     private final String var;
@@ -12,8 +12,8 @@ class VariableContainsCondition implements Condition {
         this.value = value;
     }
 
-    public boolean test(SkillContext ctx, LivingEntity target) {
-        Object v = ctx.vars().get(var);
-        return v != null && v.toString().contains(value);
+    public boolean test(SkillContext ctx, Target target) {
+        var v = ctx.vars().get(var);
+        return v != null && v.getRaw().toString().contains(value);
     }
 }

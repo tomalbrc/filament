@@ -59,6 +59,9 @@ public class MobSkills {
         if (skills == null) return;
 
         for (Skill skill : skills) {
+            if (trigger == Trigger.ON_TIMER && skill.time() != 0 && parent.tickCount % skill.time() != 0)
+                continue;
+
             if (skill.healthCondition() != null && !skill.healthCondition().isMet(ctx.caster())) continue;
             if (skill.chance() != null && skill.chance() < 1.0 && this.parent.getRandom().nextDouble() > skill.chance()) continue;
 

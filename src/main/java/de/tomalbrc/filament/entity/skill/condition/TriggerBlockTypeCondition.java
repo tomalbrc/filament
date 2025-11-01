@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
-import net.minecraft.world.entity.LivingEntity;
+import de.tomalbrc.filament.entity.skill.target.Target;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -12,7 +12,7 @@ class TriggerBlockTypeCondition implements Condition {
         this.block = b;
     }
 
-    public boolean test(SkillContext ctx, LivingEntity target) {
+    public boolean test(SkillContext ctx, Target target) {
         Object t = ctx.vars().get("triggerBlock");
         if (!(t instanceof BlockState bs)) return false;
         return bs.getBlock() == block;

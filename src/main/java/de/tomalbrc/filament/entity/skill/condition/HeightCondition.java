@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
-import net.minecraft.world.entity.LivingEntity;
+import de.tomalbrc.filament.entity.skill.target.Target;
 
 class HeightCondition implements Condition {
     private final double min, max;
@@ -11,8 +11,8 @@ class HeightCondition implements Condition {
         this.max = max;
     }
 
-    public boolean test(SkillContext ctx, LivingEntity target) {
-        double y = target.getY();
+    public boolean test(SkillContext ctx, Target target) {
+        double y = target.getPosition().y();
         return y >= min && y <= max;
     }
 }

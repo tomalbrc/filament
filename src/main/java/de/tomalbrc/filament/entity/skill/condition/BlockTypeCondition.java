@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
-import net.minecraft.world.entity.LivingEntity;
+import de.tomalbrc.filament.entity.skill.target.Target;
 import net.minecraft.world.level.block.Block;
 
 import java.util.Collection;
@@ -15,7 +15,7 @@ class BlockTypeCondition implements Condition {
         this.blocks = new HashSet<>(blocks);
     }
 
-    public boolean test(SkillContext ctx, LivingEntity target) {
-        return blocks.contains(ctx.level().getBlockState(target.blockPosition()).getBlock());
+    public boolean test(SkillContext ctx, Target target) {
+        return blocks.contains(ctx.level().getBlockState(target.getBlockPos()).getBlock());
     }
 }

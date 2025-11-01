@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
-import net.minecraft.world.entity.LivingEntity;
+import de.tomalbrc.filament.entity.skill.target.Target;
 
 class XDiffCondition implements Condition {
     private final double min, max;
@@ -11,8 +11,8 @@ class XDiffCondition implements Condition {
         this.max = max;
     }
 
-    public boolean test(SkillContext ctx, LivingEntity target) {
-        double d = Math.abs(target.getX() - ctx.caster().getX());
+    public boolean test(SkillContext ctx, Target target) {
+        double d = Math.abs(target.getPosition().x() - ctx.caster().getX());
         return d >= min && d <= max;
     }
 }

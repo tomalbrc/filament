@@ -1,8 +1,8 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
+import de.tomalbrc.filament.entity.skill.target.Target;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 class WearingCondition implements Condition {
@@ -14,7 +14,7 @@ class WearingCondition implements Condition {
         this.sample = sample;
     }
 
-    public boolean test(SkillContext ctx, LivingEntity target) {
-        return ItemStack.isSameItem(target.getItemBySlot(slot), sample);
+    public boolean test(SkillContext ctx, Target target) {
+        return ItemStack.isSameItem(target.getEntity().asLivingEntity().getItemBySlot(slot), sample);
     }
 }

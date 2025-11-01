@@ -27,7 +27,12 @@ public record SkillContext(
         Map<String, Variable> vars
 ) {
     public List<Entity> getNearbyEntities(double radius) {
-        return caster.level().getEntities(caster, AABB.ofSize(caster.position().subtract(radius / 2.), radius / 2., radius / 2., radius / 2.));
+        Vec3 pos = caster.position();
+        AABB box = new AABB(
+                pos.x - radius, pos.y - radius, pos.z - radius,
+                pos.x + radius, pos.y + radius, pos.z + radius
+        );
+        return caster.level().getEntities(caster, box);
     }
 
     public SkillContext withTargets(List<Target> targets) {

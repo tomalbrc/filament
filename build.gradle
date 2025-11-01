@@ -54,6 +54,8 @@ dependencies {
     implementation "net.kyori:adventure-api:${project.adventure_api_version}"
 
     shadow implementation('org.yaml:snakeyaml:2.4')
+
+    implementation include('com.google.code.gson:gson-extras:2.13.2-rc1')
 }
 
 processResources {

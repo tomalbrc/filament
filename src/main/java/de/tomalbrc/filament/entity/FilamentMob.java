@@ -38,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.nucleoid.packettweaker.PacketContext;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -49,6 +50,8 @@ public class FilamentMob extends Animal implements OwnableEntity, PolymerEntity 
     ServerBossEvent bossEvent;
     EntityReference<LivingEntity> owner;
     boolean triggeredDeath = false;
+
+    List<ServerPlayer> tracking = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
     public FilamentMob(EntityType<? extends Entity> entityType, Level level) {
@@ -372,5 +375,19 @@ public class FilamentMob extends Animal implements OwnableEntity, PolymerEntity 
     @Override
     public @Nullable EntityReference<LivingEntity> getOwnerReference() {
         return owner;
+    }
+
+    public void startSeenByPlayer(ServerPlayer serverPlayer) {
+        super.startSeenByPlayer(serverPlayer);
+        tracking.add(serverPlayer);
+    }
+
+    public void stopSeenByPlayer(ServerPlayer serverPlayer) {
+        tracking.remove(serverPlayer);
+        super.stopSeenByPlayer(serverPlayer);
+    }
+
+    public List<ServerPlayer> getTracking() {
+        return tracking;
     }
 }

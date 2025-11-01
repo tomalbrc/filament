@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
-import net.minecraft.world.entity.LivingEntity;
+import de.tomalbrc.filament.entity.skill.target.Target;
 
 class VelocityCondition implements Condition {
     private final double min, max;
@@ -11,8 +11,8 @@ class VelocityCondition implements Condition {
         this.max = max;
     }
 
-    public boolean test(SkillContext ctx, LivingEntity target) {
-        double v = target.getDeltaMovement().length();
+    public boolean test(SkillContext ctx, Target target) {
+        double v = target.getEntity().getDeltaMovement().length();
         return v >= min && v <= max;
     }
 }

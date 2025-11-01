@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
-import net.minecraft.world.entity.LivingEntity;
+import de.tomalbrc.filament.entity.skill.target.Target;
 
 class HealthCondition implements Condition {
     private final double min, max;
@@ -11,8 +11,8 @@ class HealthCondition implements Condition {
         this.max = max;
     }
 
-    public boolean test(SkillContext ctx, LivingEntity target) {
-        double h = target.getHealth();
+    public boolean test(SkillContext ctx, Target target) {
+        double h = target.getEntity().asLivingEntity().getHealth();
         return h >= min && h <= max;
     }
 }

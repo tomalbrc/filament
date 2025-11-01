@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
-import net.minecraft.world.entity.LivingEntity;
+import de.tomalbrc.filament.entity.skill.target.Target;
 
 class IsSkillCondition implements Condition {
     private final String skillName;
@@ -10,7 +10,7 @@ class IsSkillCondition implements Condition {
         this.skillName = s;
     }
 
-    public boolean test(SkillContext ctx, LivingEntity target) {
+    public boolean test(SkillContext ctx, Target target) {
         return ctx.vars().containsKey("skills:" + skillName);
     }
 }

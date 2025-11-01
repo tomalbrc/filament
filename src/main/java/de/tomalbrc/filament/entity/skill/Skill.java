@@ -8,6 +8,7 @@ public record Skill(
         Mechanic mechanic,
         Targeter targeter,
         Trigger trigger,
+        int time,
         @Nullable SkillHealthCondition healthCondition,
         @Nullable Double chance
 ) {

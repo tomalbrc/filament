@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
-import net.minecraft.world.entity.LivingEntity;
+import de.tomalbrc.filament.entity.skill.target.Target;
 
 class VariableInRangeCondition implements Condition {
     private final String var;
@@ -13,10 +13,9 @@ class VariableInRangeCondition implements Condition {
         this.max = max;
     }
 
-    public boolean test(SkillContext ctx, LivingEntity target) {
-        Object v = ctx.vars().get(var);
-        if (!(v instanceof Number n)) return false;
-        double val = n.doubleValue();
+    public boolean test(SkillContext ctx, Target target) {
+        Number v = ctx.vars().get(var).asNumber();
+        double val = v.doubleValue();
         return val >= min && val <= max;
     }
 }
