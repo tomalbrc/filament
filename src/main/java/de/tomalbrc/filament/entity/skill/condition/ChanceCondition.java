@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
-import net.minecraft.world.entity.LivingEntity;
+import de.tomalbrc.filament.entity.skill.target.Target;
 
 class ChanceCondition implements Condition {
     private final double chance;
@@ -10,7 +10,7 @@ class ChanceCondition implements Condition {
         this.chance = chance;
     }
 
-    public boolean test(SkillContext ctx, LivingEntity target) {
+    public boolean test(SkillContext ctx, Target target) {
         return ctx.caster().getRandom().nextDouble() <= chance;
     }
 }

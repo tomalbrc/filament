@@ -1,8 +1,8 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
+import de.tomalbrc.filament.entity.skill.target.Target;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.Block;
 
 class BlockTypeInRadiusCondition implements Condition {
@@ -16,11 +16,11 @@ class BlockTypeInRadiusCondition implements Condition {
         this.radius = radius;
     }
 
-    public boolean test(SkillContext ctx, LivingEntity target) {
+    public boolean test(SkillContext ctx, Target target) {
         int cnt = 0;
-        for (int x = (int) Math.floor(target.getX() - radius); x <= (int) Math.ceil(target.getX() + radius); x++)
-            for (int y = (int) Math.floor(target.getY() - radius); y <= (int) Math.ceil(target.getY() + radius); y++)
-                for (int z = (int) Math.floor(target.getZ() - radius); z <= (int) Math.ceil(target.getZ() + radius); z++)
+        for (int x = (int) Math.floor(target.getBlockPos().getX() - radius); x <= (int) Math.ceil(target.getBlockPos().getX() + radius); x++)
+            for (int y = (int) Math.floor(target.getBlockPos().getY() - radius); y <= (int) Math.ceil(target.getBlockPos().getY() + radius); y++)
+                for (int z = (int) Math.floor(target.getBlockPos().getZ() - radius); z <= (int) Math.ceil(target.getBlockPos().getZ() + radius); z++)
                     if (ctx.level().getBlockState(new BlockPos(x, y, z)).getBlock() == block) ++cnt;
         return cnt >= minCount;
     }

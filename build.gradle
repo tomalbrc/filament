@@ -48,6 +48,7 @@ dependencies {
     implementation("net.kyori:adventure-api:${project.adventure_api_version}")
 
     implementation include('org.yaml:snakeyaml:2.4')
+    implementation include('com.google.code.gson:gson-extras:2.13.2-rc1')
 
     // claim compat
     modImplementation include("eu.pb4:common-protection-api:1.0.0")

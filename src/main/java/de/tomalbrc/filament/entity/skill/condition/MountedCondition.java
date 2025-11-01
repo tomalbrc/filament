@@ -1,10 +1,10 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
-import net.minecraft.world.entity.LivingEntity;
+import de.tomalbrc.filament.entity.skill.target.Target;
 
 class MountedCondition implements Condition {
-    public boolean test(SkillContext ctx, LivingEntity target) {
-        return target.isPassenger();
+    public boolean test(SkillContext ctx, Target target) {
+        return target.getEntity().isPassenger();
     }
 }

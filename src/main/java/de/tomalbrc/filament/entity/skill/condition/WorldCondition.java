@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
-import net.minecraft.world.entity.LivingEntity;
+import de.tomalbrc.filament.entity.skill.target.Target;
 
 class WorldCondition implements Condition {
     private final String worldName;
@@ -10,7 +10,7 @@ class WorldCondition implements Condition {
         this.worldName = w;
     }
 
-    public boolean test(SkillContext ctx, LivingEntity target) {
+    public boolean test(SkillContext ctx, Target target) {
         return ctx.level().dimension().location().toString().equals(worldName);
     }
 }

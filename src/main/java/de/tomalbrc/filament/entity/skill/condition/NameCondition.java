@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
-import net.minecraft.world.entity.LivingEntity;
+import de.tomalbrc.filament.entity.skill.target.Target;
 
 class NameCondition implements Condition {
     private final String name;
@@ -10,7 +10,7 @@ class NameCondition implements Condition {
         this.name = n;
     }
 
-    public boolean test(SkillContext ctx, LivingEntity target) {
-        return target.getName().getString().equals(name);
+    public boolean test(SkillContext ctx, Target target) {
+        return target.getEntity().getName().getString().equals(name);
     }
 }

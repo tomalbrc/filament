@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
+import de.tomalbrc.filament.entity.skill.target.Target;
 import net.minecraft.world.entity.LivingEntity;
 
 public class HealthPercentageCondition implements Condition {
@@ -13,7 +14,7 @@ public class HealthPercentageCondition implements Condition {
     }
 
     @Override
-    public boolean test(SkillContext context, LivingEntity target) {
+    public boolean test(SkillContext context, Target target) {
         LivingEntity e = context.caster().asLivingEntity();
         assert e != null;
         double pct = e.getHealth() / e.getMaxHealth();

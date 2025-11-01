@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
-import net.minecraft.world.entity.LivingEntity;
+import de.tomalbrc.filament.entity.skill.target.Target;
 
 import java.util.Objects;
 
@@ -14,7 +14,7 @@ class VariableEqualsCondition implements Condition {
         this.value = value;
     }
 
-    public boolean test(SkillContext ctx, LivingEntity target) {
-        return Objects.equals(ctx.vars().get(var), value);
+    public boolean test(SkillContext ctx, Target target) {
+        return Objects.equals(ctx.vars().get(var).getRaw(), value);
     }
 }

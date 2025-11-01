@@ -28,7 +28,6 @@ public record EntityData(
 ) {
 
     public EntityData {
-        // Ensure defaults similar to the original class
         if (entityType == null) {
             entityType = BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.PIG);
         }

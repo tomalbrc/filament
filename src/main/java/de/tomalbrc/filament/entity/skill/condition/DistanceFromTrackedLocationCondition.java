@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
-import net.minecraft.world.entity.LivingEntity;
+import de.tomalbrc.filament.entity.skill.target.Target;
 import net.minecraft.world.phys.Vec3;
 
 class DistanceFromTrackedLocationCondition implements Condition {
@@ -14,10 +14,10 @@ class DistanceFromTrackedLocationCondition implements Condition {
         this.max = max;
     }
 
-    public boolean test(SkillContext ctx, LivingEntity target) {
+    public boolean test(SkillContext ctx, Target target) {
         Object o = ctx.vars().get(var);
         if (!(o instanceof Vec3 v)) return false;
-        double d = v.distanceToSqr(target.position());
+        double d = v.distanceToSqr(target.getPosition());
         return d >= min * min && d <= max * max;
     }
 }

@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
-import net.minecraft.world.entity.LivingEntity;
+import de.tomalbrc.filament.entity.skill.target.Target;
 
 class SkillOnCooldownCondition implements Condition {
     private final String skill;
@@ -10,7 +10,7 @@ class SkillOnCooldownCondition implements Condition {
         this.skill = s;
     }
 
-    public boolean test(SkillContext ctx, LivingEntity target) {
+    public boolean test(SkillContext ctx, Target target) {
         Object cd = ctx.vars().get("cooldown:" + skill);
         return cd instanceof Integer i && i > 0;
     }

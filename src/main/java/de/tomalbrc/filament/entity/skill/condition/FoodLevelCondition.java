@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.SkillContext;
-import net.minecraft.world.entity.LivingEntity;
+import de.tomalbrc.filament.entity.skill.target.Target;
 import net.minecraft.world.entity.player.Player;
 
 class FoodLevelCondition implements Condition {
@@ -12,8 +12,8 @@ class FoodLevelCondition implements Condition {
         this.max = max;
     }
 
-    public boolean test(SkillContext ctx, LivingEntity target) {
-        if (!(target instanceof Player p)) return false;
+    public boolean test(SkillContext ctx, Target target) {
+        if (!(target.getEntity() instanceof Player p)) return false;
         return p.getFoodData().getFoodLevel() >= min && p.getFoodData().getFoodLevel() <= max;
     }
 }
