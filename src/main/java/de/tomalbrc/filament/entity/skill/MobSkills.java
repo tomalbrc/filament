@@ -2,9 +2,12 @@ package de.tomalbrc.filament.entity.skill;
 
 import com.google.common.collect.ImmutableList;
 import de.tomalbrc.filament.entity.FilamentMob;
+import de.tomalbrc.filament.entity.skill.condition.Condition;
 import de.tomalbrc.filament.entity.skill.target.Target;
+import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -16,14 +19,21 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MobSkills {
     private static final Map<String, Variable> GLOBAL_VARIABLES = new Object2ObjectOpenHashMap<>();
     private static final Map<ResourceKey<Level>, Map<String, Variable>> LEVEL_VARIABLES = new Object2ObjectOpenHashMap<>();
     private static final Map<UUID, Map<String, Variable>> ENTITY_VARIABLES = new Object2ObjectOpenHashMap<>();
 
-    private final Map<Trigger, List<Skill>> skills = new EnumMap<>(Trigger.class);
+    private final Map<SkillTrigger, List<Skill>> skills = new EnumMap<>(SkillTrigger.class);
     private final FilamentMob parent;
+
+    // per-mob cooldowns: skillId -> expiryServerTick
+    private final Object2LongOpenHashMap<ResourceLocation> cooldowns = new Object2LongOpenHashMap<>();
+
+    // active skilltrees for this mob
+    private final List<SkillTree> activeTrees = new CopyOnWriteArrayList<>();
 
     public MobSkills(FilamentMob parent) {
         this.parent = parent;
@@ -45,64 +55,156 @@ public class MobSkills {
         this.skills.computeIfAbsent(skill.trigger(), k -> new ArrayList<>()).add(skill);
     }
 
-    public void fireTrigger(Trigger trigger, Target triggerer) {
-        var ctx = new SkillContext(
-                (ServerLevel) this.parent.level(),
-                this.parent,
-                ImmutableList.of(),
-                this.parent.position(),
-                trigger,
-                new Object2ObjectOpenHashMap<>()
-        );
+    public boolean isOnCooldown(ResourceLocation skillId, Level serverLevel) {
+        long now = serverLevel.getGameTime();
+        long expiry = this.cooldowns.getLong(skillId); // 0 if absent
+        return expiry > now;
+    }
 
-        List<Skill> skills = this.skills.get(trigger);
-        if (skills == null) return;
+    public void setCooldown(ResourceLocation skillId, int cooldownTicks, Level serverLevel) {
+        long expiry = serverLevel.getGameTime() + Math.max(0, cooldownTicks);
+        this.cooldowns.put(skillId, expiry);
+    }
 
-        for (Skill skill : skills) {
-            if (trigger == Trigger.ON_TIMER && skill.time() != 0 && parent.tickCount % skill.time() != 0)
-                continue;
+    public long getCooldownRemaining(String skillId, Level serverLevel) {
+        long now = serverLevel.getGameTime();
+        long expiry = this.cooldowns.getLong(skillId);
+        return Math.max(0L, expiry - now);
+    }
 
-            if (skill.healthCondition() != null && !skill.healthCondition().isMet(ctx.caster())) continue;
-            if (skill.chance() != null && skill.chance() < 1.0 && this.parent.getRandom().nextDouble() > skill.chance()) continue;
+    public List<Target> applyTargetConditions(List<Condition> targetConditions, List<Target> inputTargets, SkillTree tree) {
+        if (targetConditions == null || targetConditions.isEmpty()) return inputTargets == null ? List.of() : inputTargets;
+        if (inputTargets == null || inputTargets.isEmpty()) return List.of();
 
-            List<Target> targets = skill.targeter().find(ctx);
-            skill.mechanic().execute(ctx.withTargets(targets));
+        List<Target> out = new ArrayList<>();
+        for (Target t : inputTargets) {
+            boolean success = true;
+            for (Condition cond : targetConditions) {
+                if (!cond.test(tree, t)) {
+                    success = false;
+                    break;
+                }
+            }
+            if (success) out.add(t);
         }
+
+        return out;
+    }
+
+    public void submitTree(SkillTree tree) {
+        tree.tick();
+        if (!tree.isFinished()) activeTrees.add(tree);
+    }
+
+    public void cancelAllTrees() {
+        for (SkillTree tree : activeTrees) tree.cancel();
+        activeTrees.clear();
     }
 
     public void tick(ServerLevel serverLevel) {
-        this.fireTrigger(Trigger.ON_TIMER, Target.of());
+        if (!this.parent.isAlive() || this.parent.isRemoved()) {
+            cancelAllTrees();
+            return;
+        }
+
+        fireTrigger(SkillTrigger.ON_TIMER, Target.of());
+
+        // tick and cleanup active trees
+        for (Iterator<SkillTree> it = activeTrees.iterator(); it.hasNext();) {
+            SkillTree tree = it.next();
+
+            if (!this.parent.isAlive() || this.parent.isRemoved()) {
+                tree.cancel();
+                it.remove();
+                continue;
+            }
+
+            tree.tick();
+
+            // remove finished trees
+            if (tree.isFinished()) it.remove();
+        }
+    }
+
+    public void fireTrigger(SkillTrigger skillTrigger, Target triggerer) {
+        List<Skill> list = this.skills.get(skillTrigger);
+        if (list == null) return;
+
+        for (Skill skill : list) {
+            if (skillTrigger == SkillTrigger.ON_TIMER && skill.time() != 0 && parent.tickCount % skill.time() != 0)
+                continue;
+
+            if (!skill.canRun(this.parent))
+                continue;
+
+            SkillTree tree = new SkillTree(
+                    this,
+                    ImmutableList.of(skill),
+                    this.parent,
+                    triggerer,
+                    this.parent.position(),
+                    ImmutableList.of() // inherited targets are resolved via the targeter
+            );
+
+            // resolve targets via the targeter on the new tree
+            List<Target> targets = skill.targeter().find(tree);
+            tree.setCurrentTargets(targets);
+
+            submitTree(tree);
+        }
     }
 
     public void onAttack(ServerLevel serverLevel, Entity entity) {
-        fireTrigger(Trigger.ON_ATTACK, Target.of(entity));
+        fireTrigger(SkillTrigger.ON_ATTACK, Target.of(entity));
     }
 
     public void onSpawn() {
+        this.fireTrigger(SkillTrigger.ON_SPAWN, Target.of(this.parent));
         this.onSpawnOrLoad();
     }
 
     public void onDespawn() {
-
+        this.fireTrigger(SkillTrigger.ON_DESPAWN, Target.of(this.parent));
     }
 
     public void onLoad() {
+        this.fireTrigger(SkillTrigger.ON_LOAD, Target.of(this.parent));
         this.onSpawnOrLoad();
     }
 
     public void onSpawnOrLoad() {
-
+        this.fireTrigger(SkillTrigger.ON_SPAWN_OR_LOAD, Target.of(this.parent));
     }
 
     public void onDeath() {
-
-    }
-
-    public void onTimer() {
-
+        this.fireTrigger(SkillTrigger.ON_DEATH, Target.of(this.parent));
     }
 
     public void onInteract(Player player, InteractionHand hand) {
+        if (hand == InteractionHand.MAIN_HAND) this.fireTrigger(SkillTrigger.ON_INTERACT, Target.of(player));
+    }
+
+    public void onBreed(Animal parent) {
+        this.fireTrigger(SkillTrigger.ON_BREED, Target.of(parent));
+    }
+
+    public void onChangeTarget(LivingEntity entity) {
+        this.fireTrigger(SkillTrigger.ON_CHANGE_TARGET, Target.of(entity));
+    }
+
+    public void onDamage(ServerLevel level, DamageSource damageSource, float amount) {
+        this.fireTrigger(SkillTrigger.ON_DAMAGED, Target.of(damageSource.getEntity()));
+    }
+
+    public void onChangeWorld() {
+
+    }
+
+    public void onBucket() {
+
+    }
+
+    public void onSkillDamage(Skill skill, SkillTree tree) {
 
     }
 
@@ -135,30 +237,6 @@ public class MobSkills {
     }
 
     public void onTame() {
-
-    }
-
-    public void onBreed(Animal parent) {
-
-    }
-
-    public void onChangeWorld() {
-
-    }
-
-    public void onChangeTarget(LivingEntity entity) {
-
-    }
-
-    public void onBucket() {
-
-    }
-
-    public void onSkillDamage(Skill skill, SkillContext context) {
-
-    }
-
-    public void onDamage(ServerLevel level, DamageSource damageSource, float amount) {
 
     }
 }

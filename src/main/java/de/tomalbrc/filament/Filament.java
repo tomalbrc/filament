@@ -100,8 +100,10 @@ public class Filament implements ModInitializer {
         FilamentReloadUtil.registerEarlyReloadListener(new ItemRegistry.ItemDataReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new BlockRegistry.BlockDataReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new DecorationRegistry.DecorationDataReloadListener());
-        if (FilamentConfig.getInstance().entityModule)
+        if (FilamentConfig.getInstance().entityModule) {
+            FilamentReloadUtil.registerEarlyReloadListener(new MetaSkillRegistry.MetaSkillReloadListener());
             FilamentReloadUtil.registerEarlyReloadListener(new EntityRegistry.EntityDataReloadListener());
+        }
         FilamentReloadUtil.registerEarlyReloadListener(new ItemGroupRegistry.ItemGroupDataReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new BiomeModifications.BiomeModificationsDataReloadListener());
 

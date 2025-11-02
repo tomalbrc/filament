@@ -3,9 +3,11 @@ package de.tomalbrc.filament.entity;
 import de.tomalbrc.filament.api.behaviour.EntityBehaviour;
 import de.tomalbrc.filament.data.entity.EntityData;
 import de.tomalbrc.filament.entity.skill.MobSkills;
+import de.tomalbrc.filament.entity.skill.ThreatTable;
 import de.tomalbrc.filament.entity.skill.Variable;
 import de.tomalbrc.filament.registry.EntityRegistry;
 import eu.pb4.polymer.core.api.entity.PolymerEntity;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -44,23 +46,26 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class FilamentMob extends Animal implements OwnableEntity, PolymerEntity {
+    final Map<String, Variable> variables = new Object2ObjectOpenHashMap<>();
+
     EntityData data;
     MobSkills mobSkills;
-    Map<String, Variable> variables;
     ServerBossEvent bossEvent;
     EntityReference<LivingEntity> owner;
     boolean triggeredDeath = false;
+
+    ThreatTable threatTable;
+    ThreatTable threatTable;
 
     List<ServerPlayer> tracking = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
     public FilamentMob(EntityType<? extends Entity> entityType, Level level) {
         super((EntityType<? extends Animal>) entityType, level);
-        this.mobSkills = new MobSkills(this);
-        var skills = this.data.skills();
-        skills.forEach(this.mobSkills::add);
-
         this.data = getData();
+
+        this.mobSkills = new MobSkills(this);
+
         this.xpReward = this.data.properties().xpReward;
         registerGoals();
 
