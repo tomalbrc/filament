@@ -22,6 +22,7 @@ public class Target {
         target.blockState = blockState;
         target.blockPos = pos;
         target.position = pos.getCenter();
+        target.level = level;
         return target;
     }
 
@@ -29,6 +30,7 @@ public class Target {
         Target target = new Target();
         target.position = pos;
         target.blockPos = BlockPos.containing(pos);
+        target.level = level;
         return target;
     }
 

@@ -1,0 +1,35 @@
+package de.tomalbrc.filament.entity.skill;
+
+public enum SkillTrigger {
+    ON_COMBAT, // legacy onSpawn/despawn/unload/attack
+    ON_ATTACK,
+    ON_DAMAGED,
+    ON_SPAWN,
+    ON_DESPAWN,
+    ON_READY,
+    ON_LOAD,
+    ON_SPAWN_OR_LOAD,
+    ON_DEATH,
+    ON_TIMER,
+    ON_INTERACT,
+    ON_PLAYER_KILL,
+    ON_ENTER_COMBAT,
+    ON_DROP_COMBAT,
+    ON_CHANGE_TARGET,
+    ON_EXPLODE,
+    ON_PRIME,
+    ON_CREEPER_CHARGE,
+    ON_TELEPORT,
+    ON_SIGNAL,
+    ON_SHOOT,
+    ON_BOW_HIT,
+    ON_TAME,
+    ON_BREED,
+    ON_TRADE,
+    ON_CHANGE_WORLD,
+    ON_BUCKET,
+    ON_SKILL_DAMAGE,
+    ON_HEAR,
+    ON_PROJECTILE_HIT,
+    ON_PROJECTILE_LAND
+}

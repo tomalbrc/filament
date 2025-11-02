@@ -1,9 +1,7 @@
 package de.tomalbrc.filament.entity.skill.meta;
 
 import de.tomalbrc.filament.entity.skill.Skill;
-import de.tomalbrc.filament.entity.skill.SkillContext;
 import de.tomalbrc.filament.entity.skill.condition.Condition;
-import de.tomalbrc.filament.entity.skill.mechanic.Mechanic;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 
@@ -20,14 +18,8 @@ public record MetaSkill(
         int cooldown,
         Skill onCooldownSkill,
         Skill skill,
-        SkillSequence skills,
-        List<Entity> targets,
+        List<Skill> skills,
         Map<String, Object> skillVariables
-) implements Mechanic {
+) {
 
-    @Override
-    public int execute(SkillContext context) {
-        this.skills.tick(context);
-        return 0;
-    }
 }

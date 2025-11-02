@@ -55,7 +55,6 @@ public abstract class AbstractBlockData<BlockPropertyLike extends BlockPropertie
     @Override
     public abstract @NotNull BlockPropertyLike properties();
 
-    // TODO: those should be part of BlockData, but needs abstract SimpleBlock first
     public abstract boolean virtual();
 
     public abstract Map<BlockState, BlockData.BlockStateMeta> createStandardStateMap();

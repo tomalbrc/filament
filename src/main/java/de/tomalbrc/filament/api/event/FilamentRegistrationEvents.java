@@ -8,6 +8,7 @@ import de.tomalbrc.filament.data.entity.EntityData;
 import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.decoration.DecorationItem;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
+import de.tomalbrc.filament.entity.skill.meta.MetaSkill;
 import de.tomalbrc.filament.item.SimpleItem;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
@@ -38,6 +39,16 @@ public class FilamentRegistrationEvents {
         }
     });
 
+    public static final Event<MetaSkillRegistration> METASKILL = EventFactory.createArrayBacked(MetaSkillRegistration.class, (callbacks) -> (metaSkill) -> {
+        for(MetaSkillRegistration callback : callbacks) {
+            callback.registered(metaSkill);
+        }
+    });
+
+    @FunctionalInterface
+    public interface MetaSkillRegistration {
+        void registered(MetaSkill metaSkill);
+    }
 
     @FunctionalInterface
     public interface EntityRegistration {

@@ -1,14 +1,21 @@
 package de.tomalbrc.filament.entity.skill.condition;
 
-import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
+import de.tomalbrc.filament.entity.skill.RuntimeTypeAdapterFactoryWithAliases;
+import de.tomalbrc.filament.entity.skill.condition.impl.*;
+import de.tomalbrc.filament.entity.skill.target.Targeter;
 import de.tomalbrc.filament.util.Util;
 import net.minecraft.resources.ResourceLocation;
 
 public class Conditions {
-    public static RuntimeTypeAdapterFactory<Condition> TYPE_ADAPTER_FACTORY = RuntimeTypeAdapterFactory.of(Condition.class, "type");
+    public static RuntimeTypeAdapterFactoryWithAliases<Condition> TYPE_ADAPTER_FACTORY = RuntimeTypeAdapterFactoryWithAliases.of(Condition.class, "type");
 
     public static ResourceLocation register(ResourceLocation id, Class<? extends Condition> type) {
-        TYPE_ADAPTER_FACTORY.registerSubtype(type, id.toString());
+        TYPE_ADAPTER_FACTORY.registerSubtype(type, id.getPath());
+        return id;
+    }
+
+    public static ResourceLocation register(ResourceLocation id, Class<? extends Condition> type, String... aliases) {
+        TYPE_ADAPTER_FACTORY.registerSubtypeWithAliases(type, id.toString(), aliases);
         return id;
     }
 

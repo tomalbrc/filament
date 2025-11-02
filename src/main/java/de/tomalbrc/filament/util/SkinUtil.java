@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.util;
 
 import de.tomalbrc.filament.registry.FilamentComponents;
+import eu.pb4.polymer.core.api.block.PolymerBlockUtils;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.core.api.item.PolymerItemUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -22,6 +23,12 @@ public class SkinUtil {
     private static final List<DataComponentType<?>> COMPONENTS_TO_COPY = List.of(DataComponents.ITEM_NAME, DataComponents.CUSTOM_NAME, DataComponents.ATTRIBUTE_MODIFIERS, DataComponents.LORE, DataComponents.DAMAGE, DataComponents.MAX_DAMAGE, DataComponents.MAX_STACK_SIZE, DataComponents.UNBREAKABLE, DataComponents.CHARGED_PROJECTILES, DataComponents.TOOL, DataComponents.ENCHANTMENTS, DataComponents.ENCHANTMENT_GLINT_OVERRIDE);
 
     public static void registerEventHandler() {
+        PolymerBlockUtils.SERVER_SIDE_MINING_CHECK.register((state, pos, player) ->
+        {
+
+            return false;
+        });
+
         PolymerItemUtils.CONTEXT_ITEM_CHECK.register((itemStack, packetContext) -> itemStack.has(FilamentComponents.SKIN_DATA_COMPONENT));
         PolymerItemUtils.ITEM_MODIFICATION_EVENT.register((orig,mod,player) -> {
             var newStack = SkinUtil.wrap(orig, mod, player);
