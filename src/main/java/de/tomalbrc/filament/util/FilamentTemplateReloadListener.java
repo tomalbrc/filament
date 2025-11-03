@@ -8,7 +8,7 @@ import net.minecraft.server.packs.resources.ResourceManager;
 public class FilamentTemplateReloadListener implements FilamentSynchronousResourceReloadListener {
     @Override
     public ResourceLocation getFabricId() {
-        return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "items");
+        return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "template");
     }
 
     @Override
