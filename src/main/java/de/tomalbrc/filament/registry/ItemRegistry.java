@@ -5,6 +5,7 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
 import de.tomalbrc.filament.data.ItemData;
+import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.util.*;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
@@ -43,7 +44,14 @@ public class ItemRegistry {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     static public void register(ItemData data) {
-        if (BuiltInRegistries.ITEM.containsKey(data.id())) return;
+        if (BuiltInRegistries.ITEM.containsKey(data.id())) {
+            var item = BuiltInRegistries.ITEM.getValue(data.id());
+            if (item instanceof FilamentItem filamentItem) {
+                filamentItem.initBehaviours(data.behaviour());
+                postRegistration(filamentItem, data);
+            }
+            return;
+        }
 
         Item.Properties properties = data.properties().toItemProperties();
 
@@ -58,15 +66,19 @@ public class ItemRegistry {
         }
 
         var item = ItemRegistry.registerItem(key(data.id()), (newProps) -> new SimpleItem(newProps, data, data.vanillaItem()), properties, data.group() != null ? data.group() : Constants.ITEM_GROUP_ID, data.itemTags());
-        BehaviourUtil.postInitItem(item, item, data.behaviour());
-        Translations.add(item, null, data);
-        RPUtil.create(item, data);
+        postRegistration(item, data);
 
         if (data.properties().copyTags) {
             COPY_TAGS.put(item, data.vanillaItem());
         }
 
         FilamentRegistrationEvents.ITEM.invoker().registered(data, item);
+    }
+
+    static void postRegistration(FilamentItem item, ItemData data) {
+        BehaviourUtil.postInitItem(item.asItem(), item, data.behaviour());
+        Translations.add(item.asItem(), null, data);
+        RPUtil.create(item, data);
     }
 
     public static ResourceKey<Item> key(ResourceLocation id) {

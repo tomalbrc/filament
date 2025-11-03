@@ -7,8 +7,10 @@ import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
 import de.tomalbrc.filament.block.*;
 import de.tomalbrc.filament.data.BlockData;
+import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.datafixer.config.BlockDataFix;
+import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.util.*;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import net.minecraft.core.Registry;
@@ -54,7 +56,15 @@ public class BlockRegistry {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static void register(BlockData data) {
-        if (BuiltInRegistries.BLOCK.containsKey(data.id())) return;
+        if (BuiltInRegistries.BLOCK.containsKey(data.id())) {
+            var block = BuiltInRegistries.BLOCK.getValue(data.id());
+            if (block instanceof SimpleBlock filamentBlock && block.asItem() instanceof FilamentItem filamentItem) {
+                filamentItem.initBehaviours(data.behaviour());
+                filamentBlock.initBehaviours(data.behaviour());
+                postRegistration(filamentItem, filamentBlock, data);
+            }
+            return;
+        }
 
         BlockProperties properties = data.properties();
         BlockBehaviour.Properties blockProperties = properties.toBlockProperties();
@@ -87,16 +97,20 @@ public class BlockRegistry {
         }
 
         SimpleBlockItem item = ItemRegistry.registerItem(ItemRegistry.key(data.id()), (newProps) -> new SimpleBlockItem(newProps, customBlock, data), itemProperties, data.group() != null ? data.group() : Constants.BLOCK_GROUP_ID, data.itemTags());
-        BehaviourUtil.postInitItem(item, item, data.behaviour());
-        BehaviourUtil.postInitBlock(item, customBlock, customBlock, data.behaviour());
-        Translations.add(item, customBlock, data);
+        postRegistration(item, customBlock, data);
+
+        FilamentRegistrationEvents.BLOCK.invoker().registered(data, item, customBlock);
+    }
+
+    static void postRegistration(FilamentItem item, SimpleBlock customBlock, Data<?> data) {
+        BehaviourUtil.postInitItem(item.asItem(), item, data.behaviour());
+        BehaviourUtil.postInitBlock(customBlock, data.behaviour());
+        Translations.add(item.asItem(), customBlock, data);
 
         // has to run before `postRegister` since it may add block models from textures
         RPUtil.create(item, data);
 
         customBlock.postRegister();
-
-        FilamentRegistrationEvents.BLOCK.invoker().registered(data, item, customBlock);
     }
 
     public static ResourceKey<Block> key(ResourceLocation id) {

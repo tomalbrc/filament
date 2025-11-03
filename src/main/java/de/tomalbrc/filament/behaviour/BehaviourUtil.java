@@ -2,6 +2,7 @@ package de.tomalbrc.filament.behaviour;
 
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
+import de.tomalbrc.filament.block.SimpleBlock;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
@@ -17,6 +18,7 @@ public class BehaviourUtil {
         }
     }
 
+    @Deprecated
     public static void postInitBlock(Item blockItem, Block block, BehaviourHolder behaviourHolder, BehaviourConfigMap configMap) {
         if (configMap == null)
             return;
@@ -24,6 +26,17 @@ public class BehaviourUtil {
         for (var e : behaviourHolder.getBehaviours()) {
             if (e.getValue() instanceof BlockBehaviour<?> blockBehaviour) {
                 blockBehaviour.init(blockItem, block, behaviourHolder);
+            }
+        }
+    }
+
+    public static void postInitBlock(SimpleBlock block, BehaviourConfigMap configMap) {
+        if (configMap == null)
+            return;
+
+        for (var e : block.getBehaviours()) {
+            if (e.getValue() instanceof BlockBehaviour<?> blockBehaviour) {
+                blockBehaviour.init(block.asItem(), block, block);
             }
         }
     }

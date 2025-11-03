@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
-import de.tomalbrc.filament.behaviour.BehaviourUtil;
+import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.datafixer.config.DecorationDataFix;
 import de.tomalbrc.filament.decoration.DecorationItem;
@@ -12,11 +12,16 @@ import de.tomalbrc.filament.decoration.block.ComplexDecorationBlock;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import de.tomalbrc.filament.util.*;
+import de.tomalbrc.filament.item.FilamentItem;
+import de.tomalbrc.filament.util.Constants;
+import de.tomalbrc.filament.util.FilamentSynchronousResourceReloadListener;
+import de.tomalbrc.filament.util.Json;
+import de.tomalbrc.filament.util.Util;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.TypedDataComponent;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
@@ -58,7 +63,15 @@ public class DecorationRegistry {
     @SuppressWarnings({"unchecked", "rawtypes"})
     static public void register(DecorationData data) {
         for (Map.Entry<ResourceLocation, DecorationData> entry : decorations.entrySet()) {
-            if (entry.getKey().equals(data.id())) return;
+            if (entry.getKey().equals(data.id())) {
+                var block = BuiltInRegistries.BLOCK.getValue(data.id());
+                if (block instanceof SimpleBlock filamentBlock && block.asItem() instanceof FilamentItem filamentItem) {
+                    filamentItem.initBehaviours(data.behaviour());
+                    filamentBlock.initBehaviours(data.behaviour());
+                    BlockRegistry.postRegistration(filamentItem, filamentBlock, data);
+                }
+                return;
+            }
         }
 
         decorations.put(data.id(), data);
@@ -86,13 +99,7 @@ public class DecorationRegistry {
         }
 
         var item = ItemRegistry.registerItem(ItemRegistry.key(data.id()), (newProps) -> new DecorationItem(block, data, newProps), properties, data.group() != null ? data.group() : Constants.DECORATION_GROUP_ID, data.itemTags());
-        BehaviourUtil.postInitItem(item, item, data.behaviour());
-        BehaviourUtil.postInitBlock(item, block, block, data.behaviour());
-        Translations.add(item, block, data);
-
-        RPUtil.create(item, data);
-
-        block.postRegister();
+        BlockRegistry.postRegistration(item, block, data);
 
         FilamentRegistrationEvents.DECORATION.invoker().registered(data, item, block);
     }
