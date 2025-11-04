@@ -697,6 +697,7 @@ Allows the block to spread like mycelium or grass blocks do, based on random tic
 - `spreadOffset`: Offset for the spread position. Defaults to `[-1, -3, -1]`
 - `attemptsPerTick`: Attempts to spread, per tick. Defaults to `4`
 - `requiredBrightness`: Range of brightness required for the block to spread. Defaults to `"9..15"`
+- `canDecay`: Flag wether the block decays, similar to grass with solid blocks on top. Defaults to `true`
 - `decayBlockState`: Block-state the block decays into
 - `propagatesToBlocks`: List of List of blocks this block can spread to. Defaults to `["minecraft:dirt"]`
 - `propagatesToBlockTags`: List of block tags this block can spread to. Empty by default

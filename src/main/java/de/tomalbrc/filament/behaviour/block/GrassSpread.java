@@ -40,7 +40,7 @@ public class GrassSpread implements BlockBehaviour<GrassSpread.Config>, SimpleWa
 
     @Override
     public void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
-        if (!SpreadingSnowyDirtBlockAccessor.invokeCanBeGrass(blockState, serverLevel, blockPos)) {
+        if (config.canDecay && !SpreadingSnowyDirtBlockAccessor.invokeCanBeGrass(blockState, serverLevel, blockPos)) {
             serverLevel.setBlockAndUpdate(blockPos, config.decayBlockState);
         } else {
             if (config.requiredBrightness.isInRange(serverLevel.getMaxLocalRawBrightness(blockPos.above()))) {
@@ -78,6 +78,7 @@ public class GrassSpread implements BlockBehaviour<GrassSpread.Config>, SimpleWa
         public BlockStateMappedProperty<Vector3f> spreadOffset = BlockStateMappedProperty.of(new Vector3f(-1, -3, -1));
         public BlockStateMappedProperty<Integer> attemptsPerTick = BlockStateMappedProperty.of(4);
         public RangedValue requiredBrightness = new RangedValue(9, 15);
+        public boolean canDecay = true;
         public BlockState decayBlockState = Blocks.DIRT.defaultBlockState();
         public List<Block> propagatesToBlocks = List.of(Blocks.DIRT);
         public List<ResourceLocation> propagatesToBlockTags = List.of();
