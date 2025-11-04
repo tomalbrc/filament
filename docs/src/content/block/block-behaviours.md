@@ -693,7 +693,11 @@ If the blocks in `grows` have directional/facing block state properties, they di
 Allows the block to spread like mycelium or grass blocks do, based on random ticks.
 
 ~~~admonish info "Configurable Fields"
-- `decayBlockState`: Chance of the block to grow another block or move a block to the next growth stage in percent, from 0 to 100. Defaults to 20
+- `spreadDimensions`: Dimensions for the spread position. Not centered around the block. Use `spreadOffset` to center it. Defaults to `["0..3", "0..5", "0..3]`
+- `spreadOffset`: Offset for the spread position. Defaults to `[-1, -3, -1]`
+- `attemptsPerTick`: Attempts to spread, per tick. Defaults to `4`
+- `requiredBrightness`: Range of brightness required for the block to spread. Defaults to `"9..15"`
+- `decayBlockState`: Block-state the block decays into
 - `propagatesToBlocks`: List of List of blocks this block can spread to. Defaults to `["minecraft:dirt"]`
 - `propagatesToBlockTags`: List of block tags this block can spread to. Empty by default
 ~~~

@@ -1,6 +1,9 @@
 package de.tomalbrc.filament.behaviour.block;
 
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
+import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
+import de.tomalbrc.filament.data.properties.RangedValue;
+import de.tomalbrc.filament.data.properties.RangedVector3f;
 import de.tomalbrc.filament.mixin.behaviour.grass_spread.SpreadingSnowyDirtBlockAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -13,6 +16,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
 
 import java.util.List;
 
@@ -39,11 +43,15 @@ public class GrassSpread implements BlockBehaviour<GrassSpread.Config>, SimpleWa
         if (!SpreadingSnowyDirtBlockAccessor.invokeCanBeGrass(blockState, serverLevel, blockPos)) {
             serverLevel.setBlockAndUpdate(blockPos, config.decayBlockState);
         } else {
-            if (serverLevel.getMaxLocalRawBrightness(blockPos.above()) >= 9) {
+            if (config.requiredBrightness.isInRange(serverLevel.getMaxLocalRawBrightness(blockPos.above()))) {
                 BlockState defaultBlockState = blockState.getBlock().defaultBlockState();
 
-                for (int i = 0; i < 4; ++i) {
-                    BlockPos blockPos2 = blockPos.offset(randomSource.nextInt(3) - 1, randomSource.nextInt(5) - 3, randomSource.nextInt(3) - 1);
+                for (int i = 0; i < config.attemptsPerTick.getValue(blockState); ++i) {
+                    var dim = config.spreadDimensions.getValue(blockState).random(randomSource);
+                    var off = config.spreadOffset.getValue(blockState);
+                    var posOffset = dim.add(off);
+
+                    BlockPos blockPos2 = blockPos.offset(BlockPos.containing(posOffset.x, posOffset.y, posOffset.z));
                     BlockState blockState2 = serverLevel.getBlockState(blockPos2);
                     var canReplace = false;
                     for (Block block : config.propagatesToBlocks) {
@@ -66,6 +74,10 @@ public class GrassSpread implements BlockBehaviour<GrassSpread.Config>, SimpleWa
     }
 
     public static class Config {
+        public BlockStateMappedProperty<RangedVector3f> spreadDimensions = BlockStateMappedProperty.of(new RangedVector3f(new RangedValue(0, 3), new RangedValue(0, 5), new RangedValue(0, 3)));
+        public BlockStateMappedProperty<Vector3f> spreadOffset = BlockStateMappedProperty.of(new Vector3f(-1, -3, -1));
+        public BlockStateMappedProperty<Integer> attemptsPerTick = BlockStateMappedProperty.of(4);
+        public RangedValue requiredBrightness = new RangedValue(9, 15);
         public BlockState decayBlockState = Blocks.DIRT.defaultBlockState();
         public List<Block> propagatesToBlocks = List.of(Blocks.DIRT);
         public List<ResourceLocation> propagatesToBlockTags = List.of();

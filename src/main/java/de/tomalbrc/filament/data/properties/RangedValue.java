@@ -55,6 +55,10 @@ public class RangedValue {
         return min == max;
     }
 
+    public boolean isInRange(double value) {
+        return isFixed() ? value == min : value >= min && value <= max;
+    }
+
     public static final Codec<RangedValue> CODEC = Codec.either(
             Codec.DOUBLE,
             Codec.STRING

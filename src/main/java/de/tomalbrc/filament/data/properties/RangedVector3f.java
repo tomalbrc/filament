@@ -18,6 +18,12 @@ public class RangedVector3f {
         this.z = z;
     }
 
+    public RangedVector3f(double x, double y, double z) {
+        this.x = new RangedValue(x);
+        this.y = new RangedValue(y);
+        this.z = new RangedValue(z);
+    }
+
     public RangedVector3f() {
         this.x = new RangedValue(0);
         this.y = new RangedValue(0);
