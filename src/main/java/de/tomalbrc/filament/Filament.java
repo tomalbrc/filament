@@ -35,7 +35,6 @@ import java.util.Objects;
 
 public class Filament implements ModInitializer {
     public static final Logger LOGGER = LogUtils.getLogger();
-    public static LayeredRegistryAccess<RegistryLayer> REGISTRY_ACCESS;
     public static MinecraftServer SERVER;
 
     public static MinecraftServerAudiences ADVENTURE;

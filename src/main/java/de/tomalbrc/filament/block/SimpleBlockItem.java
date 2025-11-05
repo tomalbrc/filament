@@ -96,7 +96,7 @@ public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentI
                 var codec = entry.getKey().codec();
                 assert codec != null;
 
-                RegistryOps.RegistryInfoLookup registryInfoLookup = Json.DataComponentsDeserializer.createContext(Filament.REGISTRY_ACCESS.compositeAccess());
+                RegistryOps.RegistryInfoLookup registryInfoLookup = Json.DataComponentsDeserializer.createContext(Filament.SERVER.registryAccess());
                 var result = codec.decode(RegistryOps.create(JsonOps.INSTANCE, registryInfoLookup), entry.getValue());
                 if (result.hasResultOrPartial()) {
                     DataComponentType type = entry.getKey();
