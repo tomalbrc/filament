@@ -14,6 +14,7 @@ import de.tomalbrc.filament.decoration.util.BlockEntityWithElementHolder;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.util.FilamentConfig;
 import de.tomalbrc.filament.util.Util;
+import eu.pb4.common.protection.api.CommonProtection;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.attachment.ChunkAttachment;
 import net.minecraft.core.BlockPos;
@@ -168,8 +169,9 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     }
 
     public InteractionResult decorationInteract(ServerPlayer player, InteractionHand interactionHand, Vec3 location) {
-        if (FilamentConfig.getInstance().preventAdventureModeDecorationInteraction && player.gameMode.getGameModeForPlayer() == GameType.ADVENTURE)
-            return InteractionResult.PASS;
+        var adventureCheck = (FilamentConfig.getInstance().preventAdventureModeDecorationInteraction && !this.getDecorationData().properties().allowAdventureMode) && player.gameMode.getGameModeForPlayer() == GameType.ADVENTURE;
+        if (adventureCheck || !CommonProtection.canInteractBlock(player.level(), BlockPos.containing(location), player.getGameProfile(), player))
+            return InteractionResult.FAIL;
 
         if (!this.isMain()) {
             return this.getMainBlockEntity().decorationInteract(player, interactionHand, location);
@@ -177,7 +179,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
         DecorationData decorationData = this.getDecorationData();
         if (decorationData == null) {
-            Filament.LOGGER.warn("Can't interact with decoration: Missing decoration data! Location: {}", location.toString());
+            Filament.LOGGER.warn("Can't interact with decoration: Missing decoration data! Location: {}", location);
             return InteractionResult.FAIL;
         }
 

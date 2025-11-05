@@ -54,6 +54,8 @@ dependencies {
     modImplementation include('me.lucko:fabric-permissions-api:0.3.1')
 
     shadow implementation('org.yaml:snakeyaml:2.0')
+
+    modImplementation include("eu.pb4:common-protection-api:1.0.0")
 }
 
 processResources {

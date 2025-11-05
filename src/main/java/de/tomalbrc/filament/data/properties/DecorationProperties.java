@@ -25,6 +25,7 @@ public class DecorationProperties extends BlockProperties {
 
     public boolean drops = true;
     public Vector3f scale;
+    public boolean allowAdventureMode;
 
     @Override
     public BlockBehaviour.Properties toBlockProperties() {

@@ -7,6 +7,7 @@ import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.util.VirtualDestroyStage;
+import eu.pb4.common.protection.api.CommonProtection;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -112,8 +113,12 @@ public abstract class DecorationBlock extends Block implements PolymerBlock, Sim
 
     @Override
     public void onExplosionHit(BlockState blockState, Level level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
-        if (!blockState.isAir()) {
+        if (explosion.getDirectSourceEntity() instanceof Player player && !CommonProtection.canExplodeBlock(level, blockPos, explosion, player.getGameProfile(), player))
+            return;
+
+        if ((explosion.getBlockInteraction() == Explosion.BlockInteraction.DESTROY || explosion.getBlockInteraction() == Explosion.BlockInteraction.DESTROY_WITH_DECAY) && !blockState.isAir()) {
             this.removeDecoration(level, blockPos, null);
+            this.wasExploded(level, blockPos, explosion);
         }
     }
 

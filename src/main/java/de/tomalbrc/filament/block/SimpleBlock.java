@@ -5,6 +5,7 @@ import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.data.BlockData;
+import eu.pb4.common.protection.api.CommonProtection;
 import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -197,6 +198,9 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     public void onExplosionHit(BlockState blockState, Level level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
+        if (explosion.getDirectSourceEntity() instanceof Player player && !CommonProtection.canExplodeBlock(level, blockPos, explosion, player.getGameProfile(), player))
+            return;
+
         if (this.getBehaviours() != null)
             this.forEach(x -> x.onExplosionHit(blockState, level, blockPos, explosion, biConsumer));
 
