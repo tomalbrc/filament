@@ -260,7 +260,7 @@ public class DecorationUtil {
         if (!(itemStack.getItem() instanceof PolymerItem)) {
             return itemStack.copyWithCount(1);
         } else {
-            return ((PolymerItem)itemStack.getItem()).getPolymerItemStack(itemStack, TooltipFlag.NORMAL, PacketContext.create(Filament.REGISTRY_ACCESS.compositeAccess()));
+            return ((PolymerItem)itemStack.getItem()).getPolymerItemStack(itemStack, TooltipFlag.NORMAL, PacketContext.create(Filament.SERVER.registryAccess()));
         }
     }
 

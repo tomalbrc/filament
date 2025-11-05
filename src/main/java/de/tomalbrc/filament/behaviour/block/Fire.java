@@ -74,7 +74,7 @@ public class Fire implements BlockBehaviour<Fire.Config> {
             for (Map.Entry<Block, JsonArray> entry : holderData.entrySet()) {
                 var arr = entry.getValue();
                 for (JsonElement element : arr) {
-                    var holderSet = setCodec.decode(RegistryOps.create(JsonOps.INSTANCE, Filament.REGISTRY_ACCESS.compositeAccess()), element);
+                    var holderSet = setCodec.decode(RegistryOps.create(JsonOps.INSTANCE, Filament.SERVER.registryAccess()), element);
                     holderSet.ifSuccess(x -> {
                         for (Holder<Block> holder : x.getFirst()) {
                             map.put(holder.value(), entry.getKey());
