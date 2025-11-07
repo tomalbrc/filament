@@ -3,12 +3,14 @@
 [![Documentation](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/generic_64h.png)](https://tomalbrc.de/docs/filament)
 [![Modrinth](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_64h.png)](https://modrinth.com/mod/filament)
 [![CurseForge](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_64h.png)](https://www.curseforge.com/minecraft/mc-mods/filament)
-[![GitHub](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/github_64h.png)](https://github.com/tomalbrc/filament)  
+[![GitHub](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/github_64h.png)](https://github.com/tomalbrc/filament)
+
+[![discord](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/social/discord-plural_64h.png)](https://discord.gg/9X6w2kfy89)
 
 
 filament simplifies adding custom content to Fabric-based Minecraft servers. It allows server owners to add new items, blocks, decorations and even mobs using JSON files—no coding required. Configure a block, item, decoration, or armor, and you're ready to go!
 
-Clients can connect to servers using filament without installing any mods, as it relies on a resource pack, item display entities, and packet-based methods. 
+Clients can connect to servers using filament without installing any mods, as it relies on a resource pack, item display entities, and packet-based methods.
 
 Decorations and other features have minimal server performance impact due to their packet-based nature.
 
@@ -53,21 +55,18 @@ An example datapack is available in the GitHub repo. Just drop it into your worl
 
 ## Mods using filament
 These mods & datapacks demonstrate filament's capabilities:
-- [Backported Shelvesby palm1](https://modrinth.com/datapack/backported-shelves)
+- [Hat Club by MJRamon](https://modrinth.com/datapack/hat-club)
+- [Backported Shelves by palm1](https://modrinth.com/datapack/backported-shelves)
 - [Planked Chests by palm1](https://modrinth.com/datapack/planked-chests)
-- [Toms Server Additions: Decorations & Furniture](https://modrinth.com/mod/tsa-decorations)  
-- [Toms Server Additions: Stone!](https://modrinth.com/mod/tsa-stone)  
-- [Toms Server Additions: Planks!](https://modrinth.com/mod/tsa-planks)  
-- [Toms Server Additions: Concrete!](https://modrinth.com/mod/tsa-concrete)  
+- [Toms Server Additions: Decorations & Furniture](https://modrinth.com/mod/tsa-decorations)
+- [Toms Server Additions: Stone!](https://modrinth.com/mod/tsa-stone)
+- [Toms Server Additions: Planks!](https://modrinth.com/mod/tsa-planks)
+- [Toms Server Additions: Concrete!](https://modrinth.com/mod/tsa-concrete)
 
 Archived:
-- [Decorative Boxes by swzo](https://modrinth.com/mod/decorative-boxes)  
-- [Better Amethyst Polymerized by swzo](https://modrinth.com/mod/better-amethyst-polymerized)  
+- [Decorative Boxes by swzo](https://modrinth.com/mod/decorative-boxes)
+- [Better Amethyst Polymerized by swzo](https://modrinth.com/mod/better-amethyst-polymerized)
 
 ## Credits
 This project includes code from [FactoryTools](https://github.com/Patbox/FactoryTools) by Patbox, specifically the Virtual Destroy stages for decorations.  
 A copy of the FactoryTools LGPL3 license is included in `factorytools-license.txt`.
-
----
-
-[![discord](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/social/discord-singular_64h.png)](https://discord.gg/9X6w2kfy89)  
