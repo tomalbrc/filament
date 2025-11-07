@@ -1,15 +1,12 @@
 package de.tomalbrc.filament.entity.skill.mechanic;
 
-import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 import de.tomalbrc.filament.entity.skill.RuntimeTypeAdapterFactoryWithAliases;
 import de.tomalbrc.filament.entity.skill.mechanic.impl.*;
-import de.tomalbrc.filament.entity.skill.mechanic.impl.effect.EnderEffectMechanic;
-import de.tomalbrc.filament.entity.skill.mechanic.impl.effect.ParticleEffectMechanic;
-import de.tomalbrc.filament.entity.skill.mechanic.impl.effect.ParticleRingEffectMechanic;
-import de.tomalbrc.filament.entity.skill.target.Targeter;
+import de.tomalbrc.filament.entity.skill.mechanic.impl.effect.*;
 import de.tomalbrc.filament.util.Util;
 import net.minecraft.resources.ResourceLocation;
 
+@SuppressWarnings("unused")
 public class Mechanics {
     public static RuntimeTypeAdapterFactoryWithAliases<Mechanic> TYPE_ADAPTER_FACTORY = RuntimeTypeAdapterFactoryWithAliases.of(Mechanic.class, "type");
 
@@ -32,6 +29,9 @@ public class Mechanics {
     public static ResourceLocation ENDER_EFFECT = register(Util.id("ender_effect"), EnderEffectMechanic.class, "ender", "effect:ender", "e:ender");
     public static ResourceLocation PARTICLE_EFFECT = register(Util.id("particle"), ParticleEffectMechanic.class);
     public static ResourceLocation PARTICLE_RING_EFFECT = register(Util.id("particle_ring"), ParticleRingEffectMechanic.class);
+    public static ResourceLocation PARTICLE_LINE_EFFECT = register(Util.id("particle_line"), ParticleLineEffectMechanic.class);
+    public static ResourceLocation PARTICLE_LINE_HELIX = register(Util.id("particle_line_helix"), ParticleLineHelix.class, "ParticleLineHelix", "effect:particlelinehelix", "particlehelixline");
+    public static ResourceLocation PARTICLE_SPHERE = register(Util.id("particle_sphere"), ParticleSphereEffectMechanic.class, "effect:particlesphere", "e:ps", "ps");
 
     public static ResourceLocation FEED = register(Util.id("feed"), FeedMechanic.class);
     public static ResourceLocation IGNITE = register(Util.id("ignite"), IgniteMechanic.class);

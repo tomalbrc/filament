@@ -1,8 +1,8 @@
 package de.tomalbrc.filament.entity.skill.mechanic.impl;
 
+import de.tomalbrc.filament.entity.skill.ExecutionResult;
 import de.tomalbrc.filament.entity.skill.SkillTree;
 import de.tomalbrc.filament.entity.skill.mechanic.AbstractMechanic;
-import de.tomalbrc.filament.entity.skill.mechanic.Mechanic;
 import de.tomalbrc.filament.entity.skill.mechanic.Mechanics;
 import de.tomalbrc.filament.entity.skill.target.Target;
 import net.minecraft.resources.ResourceLocation;
@@ -24,14 +24,14 @@ public class SoundMechanic extends AbstractMechanic {
     }
 
     @Override
-    public int execute(SkillTree context) {
+    public ExecutionResult execute(SkillTree context) {
         if (context.getCurrentTargets() != null) {
             for (Target target : context.getCurrentTargets()) {
                 target.level().playSound(null, context.caster(), SoundEvent.createVariableRangeEvent(sound), source, pitch, volume);
             }
         }
 
-        return 0;
+        return ExecutionResult.NULL;
     }
 
     @Override

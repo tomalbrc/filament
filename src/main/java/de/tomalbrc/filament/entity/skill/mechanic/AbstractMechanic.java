@@ -7,6 +7,11 @@ public abstract class AbstractMechanic implements Mechanic {
         this.delay = delay;
     }
 
+    public AbstractMechanic() {
+        this(0);
+    }
+
+    // TODO: cause delay before running in new skilltree maybe
     public int getDelay() {
         return delay;
     }

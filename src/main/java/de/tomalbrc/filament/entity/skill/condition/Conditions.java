@@ -2,10 +2,10 @@ package de.tomalbrc.filament.entity.skill.condition;
 
 import de.tomalbrc.filament.entity.skill.RuntimeTypeAdapterFactoryWithAliases;
 import de.tomalbrc.filament.entity.skill.condition.impl.*;
-import de.tomalbrc.filament.entity.skill.target.Targeter;
 import de.tomalbrc.filament.util.Util;
 import net.minecraft.resources.ResourceLocation;
 
+@SuppressWarnings("unused")
 public class Conditions {
     public static RuntimeTypeAdapterFactoryWithAliases<Condition> TYPE_ADAPTER_FACTORY = RuntimeTypeAdapterFactoryWithAliases.of(Condition.class, "type");
 

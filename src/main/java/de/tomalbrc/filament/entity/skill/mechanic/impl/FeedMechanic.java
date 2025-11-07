@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.entity.skill.mechanic.impl;
 
 import com.google.gson.annotations.SerializedName;
+import de.tomalbrc.filament.entity.skill.ExecutionResult;
 import de.tomalbrc.filament.entity.skill.SkillTree;
 import de.tomalbrc.filament.entity.skill.mechanic.Mechanic;
 import de.tomalbrc.filament.entity.skill.mechanic.Mechanics;
@@ -26,7 +27,7 @@ public class FeedMechanic implements Mechanic {
     }
 
     @Override
-    public int execute(SkillTree tree) {
+    public ExecutionResult execute(SkillTree tree) {
         List<Target> targets = tree.getCurrentTargets();
         if (targets != null) {
             for (Target target : targets) {
@@ -36,7 +37,7 @@ public class FeedMechanic implements Mechanic {
             }
         }
 
-        return 0;
+        return null;
     }
 
     @Override

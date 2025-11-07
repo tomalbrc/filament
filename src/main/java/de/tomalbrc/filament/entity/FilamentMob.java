@@ -2,8 +2,9 @@ package de.tomalbrc.filament.entity;
 
 import de.tomalbrc.filament.api.behaviour.EntityBehaviour;
 import de.tomalbrc.filament.data.entity.EntityData;
+import de.tomalbrc.filament.entity.skill.EntityRefTable;
 import de.tomalbrc.filament.entity.skill.MobSkills;
-import de.tomalbrc.filament.entity.skill.ThreatTable;
+import de.tomalbrc.filament.entity.skill.SkilledEntity;
 import de.tomalbrc.filament.entity.skill.Variable;
 import de.tomalbrc.filament.registry.EntityRegistry;
 import eu.pb4.polymer.core.api.entity.PolymerEntity;
@@ -45,26 +46,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class FilamentMob extends Animal implements OwnableEntity, PolymerEntity {
+public class FilamentMob extends Animal implements OwnableEntity, PolymerEntity, SkilledEntity<FilamentMob> {
     final Map<String, Variable> variables = new Object2ObjectOpenHashMap<>();
+    final List<ServerPlayer> tracking = new ArrayList<>();
 
     EntityData data;
-    MobSkills mobSkills;
-    ServerBossEvent bossEvent;
-    EntityReference<LivingEntity> owner;
+    MobSkills<FilamentMob> mobSkills;
+
     boolean triggeredDeath = false;
 
-    ThreatTable threatTable;
-    ThreatTable threatTable;
+    EntityRefTable threatTable;
+    EntityRefTable immunityTable;
 
-    List<ServerPlayer> tracking = new ArrayList<>();
+    ServerBossEvent bossEvent;
+
+    EntityReference<LivingEntity> owner;
 
     @SuppressWarnings("unchecked")
     public FilamentMob(EntityType<? extends Entity> entityType, Level level) {
         super((EntityType<? extends Animal>) entityType, level);
         this.data = getData();
 
-        this.mobSkills = new MobSkills(this);
+        this.mobSkills = new MobSkills<>(this);
+
+        if (this.data.properties().threatTable) this.threatTable = new EntityRefTable();
+        if (this.data.properties().immunityTable) this.immunityTable = new EntityRefTable();
 
         this.xpReward = this.data.properties().xpReward;
         registerGoals();
@@ -81,10 +87,16 @@ public class FilamentMob extends Animal implements OwnableEntity, PolymerEntity 
             this.data.skills().forEach(this.mobSkills::add);
     }
 
+    @Nullable
+    public LivingEntity getOwner() {
+        return EntityReference.getLivingEntity(this.getOwnerReference(), this.level());
+    }
+
     public EntityData getData() {
         return EntityRegistry.getData(BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
     }
 
+    @Override
     public Map<String, Variable> getVariables() {
         return this.variables;
     }
@@ -124,7 +136,8 @@ public class FilamentMob extends Animal implements OwnableEntity, PolymerEntity 
 
     @Override
     public float getWalkTargetValue(BlockPos blockPos, LevelReader levelReader) {
-        if (data.properties().category == MobCategory.MONSTER) return -levelReader.getPathfindingCostFromLightLevels(blockPos);
+        if (data.properties().category == MobCategory.MONSTER)
+            return -levelReader.getPathfindingCostFromLightLevels(blockPos);
         return super.getWalkTargetValue(blockPos, levelReader);
     }
 
@@ -185,11 +198,18 @@ public class FilamentMob extends Animal implements OwnableEntity, PolymerEntity 
 
     @Override
     public boolean doHurtTarget(ServerLevel serverLevel, Entity entity) {
-        this.mobSkills.onAttack(serverLevel, entity);
+        var res = this.mobSkills.onAttack(serverLevel, entity);
+        if (res.consumesAction())
+            return false;
 
-        serverLevel.broadcastEntityEvent(this, (byte)4);
+        serverLevel.broadcastEntityEvent(this, (byte) 4);
 
         return super.doHurtTarget(serverLevel, entity);
+    }
+
+    @Override
+    protected void doHurtEquipment(DamageSource damageSource, float damageAmount, EquipmentSlot... slots) {
+        super.doHurtEquipment(damageSource, damageAmount, slots);
     }
 
     @Override
@@ -285,7 +305,7 @@ public class FilamentMob extends Animal implements OwnableEntity, PolymerEntity 
 
     //@Override
     //public void modifyRawTrackedData(List<SynchedEntityData.DataValue<?>> data, ServerPlayer player, boolean initial) {
-        //BuiltInRegistries.ENTITY_TYPE.getValue(this.data.entityType());
+    //BuiltInRegistries.ENTITY_TYPE.getValue(this.data.entityType());
     //}
 
     @Override
@@ -352,7 +372,10 @@ public class FilamentMob extends Animal implements OwnableEntity, PolymerEntity 
 
     @Override
     public @NotNull InteractionResult mobInteract(Player player, InteractionHand hand) {
-        this.mobSkills.onInteract(player, hand);
+        var res = this.mobSkills.onInteract(player, hand);
+        if (res.consumesAction())
+            return res;
+
         return super.mobInteract(player, hand);
     }
 
@@ -373,7 +396,15 @@ public class FilamentMob extends Animal implements OwnableEntity, PolymerEntity 
         this.variables.put("damageTags", new Variable(damageSource.typeHolder().tags().map(TagKey::location).collect(Collectors.toSet())));
         this.variables.put("lastDamage", new Variable(amount));
 
-        this.mobSkills.onDamage(level, damageSource, amount);
+        if (damageSource.getEntity() != null) {
+            if (this.threatTable != null) this.threatTable.add(damageSource.getEntity(), amount);
+            if (this.immunityTable != null) this.immunityTable.set(damageSource.getEntity(), level.getGameTime());
+        }
+
+        var res = this.mobSkills.onDamage(level, damageSource, amount);
+        if (res.consumesAction())
+            return false;
+
         return super.hurtServer(level, damageSource, amount);
     }
 
@@ -394,5 +425,25 @@ public class FilamentMob extends Animal implements OwnableEntity, PolymerEntity 
 
     public List<ServerPlayer> getTracking() {
         return tracking;
+    }
+
+    @Override
+    public MobSkills<FilamentMob> mobSkills() {
+        return this.mobSkills;
+    }
+
+    @Override
+    public EntityRefTable threatTable() {
+        return this.threatTable;
+    }
+
+    @Override
+    public EntityRefTable immunityTable() {
+        return this.immunityTable;
+    }
+
+    @Override
+    public ServerBossEvent bossEvent() {
+        return bossEvent;
     }
 }

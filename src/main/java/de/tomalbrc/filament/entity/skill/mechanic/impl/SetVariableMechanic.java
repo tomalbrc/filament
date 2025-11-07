@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.entity.skill.mechanic.impl;
 
+import de.tomalbrc.filament.entity.skill.ExecutionResult;
 import de.tomalbrc.filament.entity.skill.MobSkills;
 import de.tomalbrc.filament.entity.skill.SkillTree;
 import de.tomalbrc.filament.entity.skill.Variable;
@@ -20,7 +21,7 @@ public class SetVariableMechanic implements Mechanic {
     }
 
     @Override
-    public int execute(SkillTree tree) {
+    public ExecutionResult execute(SkillTree tree) {
         var vars = switch (scope) {
             case GLOBAL -> MobSkills.getGlobalVariables();
             case WORLD -> MobSkills.getWorldVariables(tree.caster.level().dimension());
@@ -40,7 +41,7 @@ public class SetVariableMechanic implements Mechanic {
             vars.put(key, value);
         }
 
-        return 0;
+        return ExecutionResult.NULL;
     }
 
 

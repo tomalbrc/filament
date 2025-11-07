@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.entity.skill.mechanic.impl;
 
 import com.google.gson.annotations.SerializedName;
+import de.tomalbrc.filament.entity.skill.ExecutionResult;
 import de.tomalbrc.filament.entity.skill.SkillTree;
 import de.tomalbrc.filament.entity.skill.mechanic.Mechanic;
 import de.tomalbrc.filament.entity.skill.mechanic.Mechanics;
@@ -16,12 +17,14 @@ public class IgniteMechanic implements Mechanic {
     }
 
     @Override
-    public int execute(SkillTree context) {
-        if (context.getCurrentTargets() != null) for (Target target : context.getCurrentTargets()) {
-            target.getEntity().igniteForTicks(ticks);
+    public ExecutionResult execute(SkillTree context) {
+        if (context.getCurrentTargets() != null) {
+            for (Target target : context.getCurrentTargets()) {
+                target.getEntity().igniteForTicks(ticks);
+            }
         }
 
-        return 0;
+        return ExecutionResult.NULL;
     }
 
     @Override
