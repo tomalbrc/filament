@@ -1,9 +1,8 @@
 package de.tomalbrc.filament.entity.skill;
 
-import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
-import de.tomalbrc.filament.entity.FilamentMob;
 import de.tomalbrc.filament.entity.skill.mechanic.Mechanic;
 import de.tomalbrc.filament.entity.skill.target.Target;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -12,9 +11,8 @@ import net.minecraft.world.phys.Vec3;
 import java.util.*;
 
 public class SkillTree {
-    private final MobSkills mobSkills;
     private final Level level;
-    public final FilamentMob caster;
+    public final SkilledEntity<?> caster;
     private final Target trigger;
     private final Vec3 origin;
     private final Map<String, Variable> vars = new HashMap<>(); // skill-scoped vars
@@ -23,9 +21,9 @@ public class SkillTree {
     private int delayRemaining = 0;
 
     private boolean cancelled = false;
+    private ExecutionResult result = ExecutionResult.NULL;
 
-    public SkillTree(MobSkills mobSkills, List<Skill> skills, FilamentMob caster, Target trigger, Vec3 origin, List<Target> inheritedTargets) {
-        this.mobSkills = mobSkills;
+    public SkillTree(List<Skill> skills, SkilledEntity<?> caster, Target trigger, Vec3 origin, List<Target> inheritedTargets) {
         this.level = caster.level();
         this.caster = caster;
         this.trigger = trigger;
@@ -36,31 +34,54 @@ public class SkillTree {
     }
 
     public SkillTree copyWith(Skill skill) {
-        return new SkillTree(mobSkills, List.of(skill), caster, trigger, origin, currentTargets);
+        return new SkillTree(List.of(skill), caster, trigger, origin, currentTargets);
     }
 
     public SkillTree copyWith(List<Skill> skills) {
-        return new SkillTree(mobSkills, skills, caster, trigger, origin, currentTargets);
+        return new SkillTree(skills, caster, trigger, origin, currentTargets);
+    }
+
+    public SkillTree copyWith(List<Skill> skills, List<Target> targets) {
+        return new SkillTree(skills, caster, trigger, origin, targets);
+    }
+
+    public SkillTree copyWithTargets(List<Target> targets) {
+        return new SkillTree(List.of(), caster, trigger, origin, targets);
     }
 
     public boolean isFinished() {
         return stack.isEmpty() || cancelled;
     }
 
-    public void tick() {
-        if (cancelled) return;
-        if (delayRemaining > 0) { delayRemaining--; return; }
+    public InteractionResult tick() {
+        if (cancelled) return InteractionResult.FAIL;
+        if (delayRemaining > 0) { delayRemaining--; return InteractionResult.PASS; }
 
         while (!stack.isEmpty()) {
-            Skill top = stack.pop();
-            Mechanic mechanic = top.mechanic();
-            // todo: target conditions
-            int delay = mechanic.execute(this);
-            if (delay > 0) {
-                this.delayRemaining = delay;
-                return;
+            Skill skill = stack.pollLast();
+            Mechanic mechanic = skill.mechanic();
+
+            List<Target> targets = null;
+            if (skill.targeter() != null) {
+                targets = skill.targeter().find(this);
+                targets = skill.targeter().sort(caster.level(), caster.threatTable(), caster.position(), targets);
+
+            }
+
+            if (!skill.canRun(caster)) {
+                continue;
+            }
+
+            ExecutionResult executed = mechanic.execute(targets == null ? this : this.copyWithTargets(targets));
+            if (executed.delay() > 0) {
+                this.delayRemaining = executed.delay();
+                return InteractionResult.PASS;
+            } else {
+                return executed.result();
             }
         }
+
+        return InteractionResult.PASS;
     }
 
     public void setCurrentTargets(List<Target> newTargets) {
@@ -76,16 +97,12 @@ public class SkillTree {
     }
 
     public List<Entity> getNearbyEntities(double radius) {
-        Vec3 pos = caster.position();
-        AABB box = new AABB(
-                pos.x - radius, pos.y - radius, pos.z - radius,
-                pos.x + radius, pos.y + radius, pos.z + radius
-        );
-        return caster.level().getEntities(caster, box);
+        AABB box = AABB.unitCubeFromLowerCorner(caster().position()).inflate(radius);
+        return caster.level().getEntities((Entity) caster, box);
     }
 
-    public FilamentMob caster() {
-        return caster;
+    public <T extends Entity & SkilledEntity<?>> T caster() {
+        return (T) caster;
     }
 
     public Map<String, Variable> vars() {
@@ -104,7 +121,11 @@ public class SkillTree {
         return trigger;
     }
 
-    public MobSkills mobSkills() {
-        return mobSkills;
+    public MobSkills<?> mobSkills() {
+        return caster.mobSkills();
+    }
+
+    public ExecutionResult result() {
+        return ExecutionResult.NULL;
     }
 }

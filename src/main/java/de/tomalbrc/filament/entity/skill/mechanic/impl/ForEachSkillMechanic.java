@@ -10,16 +10,15 @@ import de.tomalbrc.filament.entity.skill.meta.MetaSkill;
 import de.tomalbrc.filament.entity.skill.target.Target;
 import de.tomalbrc.filament.registry.MetaSkillRegistry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionResult;
 
 import java.util.List;
 
-public class SkillMechanic implements Mechanic {
+public class ForEachSkillMechanic implements Mechanic {
     private final ResourceLocation skill;
 
     transient private MetaSkill metaSkill;
 
-    public SkillMechanic(ResourceLocation skill) {
+    public ForEachSkillMechanic(ResourceLocation skill) {
         this.skill = skill;
     }
 
@@ -31,34 +30,37 @@ public class SkillMechanic implements Mechanic {
         List<Skill> skillList = null;
 
         if (context.mobSkills().isOnCooldown(skill, context.caster().level())) {
-            if (metaSkill.onCooldownSkill() != null) {
-                skillList = ImmutableList.of(metaSkill.onCooldownSkill());
-            } else return ExecutionResult.NULL;
+            Skill cds = metaSkill.onCooldownSkill();
+            if (cds != null) {
+                skillList = ImmutableList.of(cds);
+            } else return null;
         } else {
             // TODO: condition actions to fire even more skills
             final var ct = Target.of(context.caster());
             boolean success = metaSkill.conditions() == null || metaSkill.conditions().stream().allMatch(x -> x.test(context, ct));
+
+            // TODO: filter instead if testing
             boolean success2 = metaSkill.targetConditions() == null || metaSkill.targetConditions().stream().allMatch(x -> x.test(context, context.trigger()));
 
             if (success && success2) {
                 skillList = metaSkill.skills();
                 if (metaSkill.skill() != null) {
-                    // TODO: target conditions
-                    context.mobSkills().submitTree(context.copyWith(List.of(metaSkill.skill())));
+                    // TODO: pass target conditions
+
+                    context.mobSkills().submitTree(context.copyWith(skillList));
                 }
             } else if (metaSkill.failedConditionsSkill() != null) {
                 skillList = ImmutableList.of(metaSkill.failedConditionsSkill());
             }
         }
 
-        InteractionResult res = InteractionResult.PASS;
-        if (skillList != null)
-            res = context.mobSkills().submitTree(context.copyWith(skillList));
+        if (skillList != null) {
+            for (Target target : context.getCurrentTargets()) {
+                context.mobSkills().submitTree(context.copyWith(skillList, List.of(target)));
+            }
+        }
 
-        if (res.consumesAction())
-            return ExecutionResult.CONSUME;
-
-        return ExecutionResult.NULL;
+        return null;
     }
 
     @Override

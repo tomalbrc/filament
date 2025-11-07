@@ -16,6 +16,8 @@ import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import de.tomalbrc.filament.data.properties.RangedValue;
 import de.tomalbrc.filament.data.properties.RangedVector3f;
 import de.tomalbrc.filament.data.resource.BlockResource;
+import de.tomalbrc.filament.entity.skill.Resolvable;
+import de.tomalbrc.filament.entity.skill.SkillHealthCondition;
 import de.tomalbrc.filament.entity.skill.condition.Conditions;
 import de.tomalbrc.filament.entity.skill.mechanic.Mechanics;
 import de.tomalbrc.filament.entity.skill.target.Targeters;
@@ -97,6 +99,8 @@ public class Json {
             .registerTypeAdapterFactory(Conditions.TYPE_ADAPTER_FACTORY)
             .registerTypeAdapterFactory(Mechanics.TYPE_ADAPTER_FACTORY)
             .registerTypeAdapterFactory(Targeters.TYPE_ADAPTER_FACTORY)
+            .registerTypeHierarchyAdapter(SkillHealthCondition.class, new SkillHealthCondition.Deserializer())
+            .registerTypeHierarchyAdapter(Resolvable.class, new Resolvable.Deserializer<>())
             .create();
 
     public static List<InputStream> yamlToJson(InputStream inputStream) {

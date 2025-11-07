@@ -49,7 +49,7 @@ public class Target {
     }
 
     public Vec3 getPosition() {
-        return position;
+        return entity != null ? entity.position() : position;
     }
 
     public BlockPos getBlockPos() {

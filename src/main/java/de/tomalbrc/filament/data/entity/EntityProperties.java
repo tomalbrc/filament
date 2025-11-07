@@ -27,5 +27,7 @@ public class EntityProperties {
     public boolean canBeLeashed = false;
     public boolean despawnWhenFarAway = false;
     public boolean forceEnemy = false;
+    public boolean threatTable = false;
+    public boolean immunityTable = false;
 
 }

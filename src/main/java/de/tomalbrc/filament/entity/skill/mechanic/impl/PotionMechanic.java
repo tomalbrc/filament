@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.entity.skill.mechanic.impl;
 
+import de.tomalbrc.filament.entity.skill.ExecutionResult;
 import de.tomalbrc.filament.entity.skill.SkillTree;
 import de.tomalbrc.filament.entity.skill.mechanic.Mechanic;
 import de.tomalbrc.filament.entity.skill.mechanic.Mechanics;
@@ -21,14 +22,14 @@ public class PotionMechanic implements Mechanic {
     }
 
     @Override
-    public int execute(SkillTree context) {
+    public ExecutionResult execute(SkillTree context) {
         if (context.getCurrentTargets() != null) for (Target target : context.getCurrentTargets()) {
             if (target.getEntity() instanceof LivingEntity livingEntity) {
                 livingEntity.addEffect(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.get(potionType).orElseThrow(), duration, level));
             }
         }
 
-        return 0;
+        return ExecutionResult.NULL;
     }
 
     @Override

@@ -1,41 +1,40 @@
 package de.tomalbrc.filament.entity.skill;
 
 import com.google.common.collect.ImmutableList;
-import de.tomalbrc.filament.entity.FilamentMob;
 import de.tomalbrc.filament.entity.skill.condition.Condition;
 import de.tomalbrc.filament.entity.skill.target.Target;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-public class MobSkills {
+public class MobSkills<T extends Entity & SkilledEntity<T>> {
     private static final Map<String, Variable> GLOBAL_VARIABLES = new Object2ObjectOpenHashMap<>();
     private static final Map<ResourceKey<Level>, Map<String, Variable>> LEVEL_VARIABLES = new Object2ObjectOpenHashMap<>();
     private static final Map<UUID, Map<String, Variable>> ENTITY_VARIABLES = new Object2ObjectOpenHashMap<>();
 
     private final Map<SkillTrigger, List<Skill>> skills = new EnumMap<>(SkillTrigger.class);
-    private final FilamentMob parent;
+    private final T parent;
 
     // per-mob cooldowns: skillId -> expiryServerTick
     private final Object2LongOpenHashMap<ResourceLocation> cooldowns = new Object2LongOpenHashMap<>();
 
     // active skilltrees for this mob
-    private final List<SkillTree> activeTrees = new CopyOnWriteArrayList<>();
+    private final List<SkillTree> activeTrees = new ObjectArrayList<>();
 
-    public MobSkills(FilamentMob parent) {
+    public MobSkills(T parent) {
         this.parent = parent;
     }
 
@@ -91,9 +90,12 @@ public class MobSkills {
         return out;
     }
 
-    public void submitTree(SkillTree tree) {
-        tree.tick();
-        if (!tree.isFinished()) activeTrees.add(tree);
+    public InteractionResult submitTree(SkillTree tree) {
+        var res = tree.tick();
+        if (!tree.isFinished()) {
+            activeTrees.add(tree);
+        }
+        return res;
     }
 
     public void cancelAllTrees() {
@@ -126,10 +128,11 @@ public class MobSkills {
         }
     }
 
-    public void fireTrigger(SkillTrigger skillTrigger, Target triggerer) {
+    public InteractionResult fireTrigger(SkillTrigger skillTrigger, Target triggerer) {
         List<Skill> list = this.skills.get(skillTrigger);
-        if (list == null) return;
+        if (list == null) return InteractionResult.PASS;
 
+        boolean consume = false;
         for (Skill skill : list) {
             if (skillTrigger == SkillTrigger.ON_TIMER && skill.time() != 0 && parent.tickCount % skill.time() != 0)
                 continue;
@@ -138,7 +141,6 @@ public class MobSkills {
                 continue;
 
             SkillTree tree = new SkillTree(
-                    this,
                     ImmutableList.of(skill),
                     this.parent,
                     triggerer,
@@ -148,14 +150,18 @@ public class MobSkills {
 
             // resolve targets via the targeter on the new tree
             List<Target> targets = skill.targeter().find(tree);
+            targets = skill.targeter().sort(parent.level(), parent.threatTable(), parent.position(), targets);
             tree.setCurrentTargets(targets);
 
-            submitTree(tree);
+            var res = submitTree(tree);
+            consume |= res.consumesAction();
         }
+
+        return consume ? InteractionResult.CONSUME : InteractionResult.PASS;
     }
 
-    public void onAttack(ServerLevel serverLevel, Entity entity) {
-        fireTrigger(SkillTrigger.ON_ATTACK, Target.of(entity));
+    public InteractionResult onAttack(ServerLevel serverLevel, Entity entity) {
+        return fireTrigger(SkillTrigger.ON_ATTACK, Target.of(entity));
     }
 
     public void onSpawn() {
@@ -180,8 +186,11 @@ public class MobSkills {
         this.fireTrigger(SkillTrigger.ON_DEATH, Target.of(this.parent));
     }
 
-    public void onInteract(Player player, InteractionHand hand) {
-        if (hand == InteractionHand.MAIN_HAND) this.fireTrigger(SkillTrigger.ON_INTERACT, Target.of(player));
+    public InteractionResult onInteract(Player player, InteractionHand hand) {
+        if (hand == InteractionHand.MAIN_HAND)
+            return this.fireTrigger(SkillTrigger.ON_INTERACT, Target.of(player));
+
+        return InteractionResult.PASS;
     }
 
     public void onBreed(Animal parent) {
@@ -192,51 +201,7 @@ public class MobSkills {
         this.fireTrigger(SkillTrigger.ON_CHANGE_TARGET, Target.of(entity));
     }
 
-    public void onDamage(ServerLevel level, DamageSource damageSource, float amount) {
-        this.fireTrigger(SkillTrigger.ON_DAMAGED, Target.of(damageSource.getEntity()));
-    }
-
-    public void onChangeWorld() {
-
-    }
-
-    public void onBucket() {
-
-    }
-
-    public void onSkillDamage(Skill skill, SkillTree tree) {
-
-    }
-
-    public void onPlayerKill(Player player) {
-
-    }
-
-    public void onExplode() {
-
-    }
-
-    public void onPrime() {
-
-    }
-
-    public void onCreeperCharge() {
-
-    }
-
-    public void onSignal(String signal) {
-
-    }
-
-    public void onShoot(Projectile projectile) {
-
-    }
-
-    public void onBowHit(Projectile projectile) {
-
-    }
-
-    public void onTame() {
-
+    public InteractionResult onDamage(ServerLevel level, DamageSource damageSource, float amount) {
+        return this.fireTrigger(SkillTrigger.ON_DAMAGED, Target.of(damageSource.getEntity()));
     }
 }

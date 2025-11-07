@@ -5,13 +5,10 @@ import de.tomalbrc.filament.entity.skill.target.AbstractTargeter;
 import de.tomalbrc.filament.entity.skill.target.Target;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class TrackedTargeter extends AbstractTargeter {
+public class SelfLocationTargeter extends AbstractTargeter {
     @Override
     public List<Target> find(SkillTree context) {
-        return context.caster.getTracking().stream()
-                .map(Target::of)
-                .collect(Collectors.toList());
+        return List.of(Target.of(context.level(), context.caster.position()));
     }
 }
