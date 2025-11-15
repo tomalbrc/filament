@@ -655,9 +655,8 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
         return max;
     }
 
-
     @Override
-    public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity, InsideBlockEffectApplier insideBlockEffectApplier) {
+    public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity, InsideBlockEffectApplier insideBlockEffectApplier, boolean bl) {
         if (this.getBehaviours() != null) {
             this.getBehaviours().forEach(behaviourTypeBehaviourEntry -> {
                 if (behaviourTypeBehaviourEntry.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviourWithEntity)
