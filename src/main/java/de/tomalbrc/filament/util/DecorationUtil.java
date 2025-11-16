@@ -233,7 +233,6 @@ public class DecorationUtil {
         converted.remove(DataComponents.CUSTOM_NAME);
 
         // TODO: this should be a behaviour
-        // TODO: 1.21.1
         if (itemStack.getItem() instanceof FilamentItem filamentItem) {
             if (wall && itemResource.getModels().containsKey("wall")) {
                 converted.set(DataComponents.CUSTOM_MODEL_DATA, filamentItem.getModelData().get("wall").asComponent());

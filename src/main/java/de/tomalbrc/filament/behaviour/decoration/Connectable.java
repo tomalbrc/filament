@@ -12,7 +12,6 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
@@ -49,7 +48,7 @@ public class Connectable implements BlockBehaviour<Connectable.Config>, Decorati
 
     @Override
     public ItemStack visualItemStack(DecorationBlockEntity decorationBlockEntity, ItemStack itemStack, BlockState blockState) {
-        if (itemStack.getItem() instanceof FilamentItem filamentItem) {
+        if (decorationBlockEntity.getItem().getItem() instanceof FilamentItem filamentItem) {
             filamentItem.getModelData();
             var c = blockState.getValue(SHAPE).customModelData();
             if (filamentItem.getModelData().containsKey(c)) {

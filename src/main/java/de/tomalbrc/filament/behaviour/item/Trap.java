@@ -99,7 +99,7 @@ public class Trap implements ItemBehaviour<Trap.Config> {
 
     @Override
     public void modifyPolymerItemStack(Map<String, ResourceLocation> modelData, ItemStack original, ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
-        if (modelData != null && itemStack.getItem() instanceof FilamentItem filamentItem) {
+        if (modelData != null && original.getItem() instanceof FilamentItem filamentItem) {
             // TODO: 1.21.1
             var cmd = filamentItem.getModelData().get(canSpawn(original) ? "trapped" : "default");
             itemStack.set(DataComponents.CUSTOM_MODEL_DATA, cmd.asComponent());

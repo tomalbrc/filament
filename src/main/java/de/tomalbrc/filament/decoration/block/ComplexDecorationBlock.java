@@ -6,11 +6,9 @@ import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.item.FilamentItem;
-import de.tomalbrc.filament.item.SimpleItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -28,9 +26,10 @@ public class ComplexDecorationBlock extends DecorationBlock implements EntityBlo
 
     @Override
     public ItemStack visualItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
-        var item = ((DecorationBlockEntity) Objects.requireNonNull(levelReader.getBlockEntity(blockPos))).visualItemStack(blockState);
+        var be = ((DecorationBlockEntity) Objects.requireNonNull(levelReader.getBlockEntity(blockPos)));
+        var item = be.visualItemStack(blockState);
 
-        if (stateMap != null && cmdMap != null && item.getItem() instanceof FilamentItem filamentItem) {
+        if (stateMap != null && cmdMap != null && be.getItem().getItem() instanceof FilamentItem filamentItem) {
             var val = stateMap.get(behaviourModifiedBlockState(blockState, blockState));
             if (val != null && cmdMap.containsKey(val)) {
                 var v = filamentItem.getModelData().get(cmdMap.get(val));
