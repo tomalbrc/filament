@@ -17,14 +17,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Half;
@@ -141,16 +140,16 @@ public class Stairs implements BlockBehaviour<Stairs.Config>, SimpleWaterloggedB
   }
 
   @Override
-  public boolean canPlaceLiquid(@Nullable LivingEntity livingEntity, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
+  public boolean canPlaceLiquid(@Nullable Player livingEntity, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
     return SimpleWaterloggedBlock.super.canPlaceLiquid(livingEntity, blockGetter, blockPos, blockState, fluid);
   }
 
   @Override
-  public BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
+  public BlockState updateShape(BlockState state, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos pos, BlockPos blockPos2) {
     if (state.getValue(StairBlock.WATERLOGGED)) {
-      scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+      levelAccessor.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(levelAccessor));
     }
-    return direction.getAxis().isHorizontal() ? state.setValue(StairBlock.SHAPE, getStairsShape(state, level, pos)) : state;
+    return direction.getAxis().isHorizontal() ? state.setValue(StairBlock.SHAPE, getStairsShape(state, levelAccessor, pos)) : state;
   }
 
   @Override
@@ -188,7 +187,7 @@ public class Stairs implements BlockBehaviour<Stairs.Config>, SimpleWaterloggedB
       BlockStateParser.BlockResult parsed;
       String str = String.format("%s[%s]", data.id(), entry.getKey());
       try {
-        parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK, str, false);
+        parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), str, false);
       } catch (CommandSyntaxException e) {
         throw new JsonParseException("Invalid BlockState value: " + str);
       }
