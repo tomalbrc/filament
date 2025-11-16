@@ -25,20 +25,11 @@ public class AsyncBlockTicker {
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadScheduledExecutor();
 
     public static void init() {
-        ServerLifecycleEvents.SERVER_STOPPING.register(minecraftServer -> {
-            try {
-                if (!EXECUTOR_SERVICE.awaitTermination(5, TimeUnit.SECONDS)) {
-                    EXECUTOR_SERVICE.shutdown();
-                }
-            } catch (InterruptedException ignored) {
-            } finally {
-                EXECUTOR_SERVICE.shutdown();
-            }
-        });
+        ServerLifecycleEvents.SERVER_STOPPING.register(minecraftServer -> EXECUTOR_SERVICE.shutdown());
     }
 
     public static void tick(MinecraftServer server) {
-        CompletableFuture.runAsync(() -> {
+        if (!EXECUTOR_SERVICE.isShutdown()) CompletableFuture.runAsync(() -> {
             for (TickData entry : TICKING.values()) {
                 tick(entry);
             }

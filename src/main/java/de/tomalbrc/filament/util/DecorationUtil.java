@@ -232,6 +232,7 @@ public class DecorationUtil {
 
     public static ItemStack placementAdjustedItem(ItemStack itemStack, ItemResource itemResource, boolean wall, boolean ceiling) {
         var converted = clientsideItem(itemStack);
+        converted.remove(DataComponents.CUSTOM_NAME);
 
         // TODO: this should be a behaviour
         if (wall && itemResource.getModels().containsKey("wall")) {
@@ -249,7 +250,6 @@ public class DecorationUtil {
             return converted;
         }
 
-        converted.remove(DataComponents.CUSTOM_NAME);
         return converted;
     }
 

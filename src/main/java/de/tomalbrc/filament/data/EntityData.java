@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.data;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.gson.annotations.SerializedName;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.BehaviourList;
 import de.tomalbrc.filament.data.properties.EntityProperties;
@@ -27,6 +28,7 @@ public class EntityData {
     private final @Nullable Map<String, String> translations;
     private final @Nullable AnimationInfo animation;
     private @Nullable EntityProperties properties;
+    @SerializedName(value = "behaviour", alternate = {"behaviours", "behaviors", "behavior"})
     private @Nullable BehaviourConfigMap behaviour;
     private final @Nullable BehaviourList goals;
     private final @Nullable Set<ResourceLocation> entityTags;

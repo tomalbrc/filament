@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.data;
 
 import com.google.gson.JsonElement;
+import com.google.gson.annotations.SerializedName;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.data.resource.ItemResource;
@@ -26,6 +27,7 @@ public abstract class Data<PropertyType extends ItemProperties> {
     protected final @Nullable Component displayName;
     protected final @Nullable ItemResource itemResource;
     protected final @Nullable ResourceLocation itemModel;
+    @SerializedName(value = "behaviour", alternate = {"behaviours", "behaviors", "behavior"})
     protected @Nullable BehaviourConfigMap behaviour;
     protected final @Nullable DataComponentMap components;
     protected final @Nullable ResourceLocation group;

@@ -12,6 +12,7 @@ import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,11 +37,20 @@ public class ModelRegistry {
 
         @Override
         public void onResourceManagerReload(ResourceManager resourceManager) {
-            var resources = resourceManager.listResources("filament/model", path -> path.getPath().endsWith(AJMODEL_SUFFIX) || path.getPath().endsWith(BBMODEL_SUFFIX) || path.getPath().endsWith(AJBP_SUFFIX));
+            var resources = resourceManager.listResources("filament/model", path -> path.getPath().endsWith(".ajmodel") || path.getPath().endsWith(".ajblueprint") || path.getPath().endsWith(".bbmodel"));
 
             for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
                 try (var inputStream = entry.getValue().open()) {
-                    Model model = entry.getKey().getPath().endsWith(AJMODEL_SUFFIX) ? new AjModelLoader().load(inputStream, entry.getKey().getPath()) : entry.getKey().getPath().endsWith(AJBP_SUFFIX) ? new AjBlueprintLoader().load(inputStream, entry.getKey().getPath()) : new BbModelLoader().load(inputStream, entry.getKey().getPath());
+                    String path = entry.getKey().getPath();
+                    Model model;
+                    if (path.endsWith(".ajmodel")) {
+                        model = new AjModelLoader().load(inputStream, FilenameUtils.getBaseName(path));
+                    } else if (path.endsWith(".ajblueprint")) {
+                        model = new AjBlueprintLoader().load(inputStream, FilenameUtils.getBaseName(path));
+                    } else {
+                        model = new BbModelLoader().load(inputStream, FilenameUtils.getBaseName(path));
+                    }
+
                     ajmodels.put(sanitize(entry.getKey()), model);
                 } catch (IOException | IllegalStateException e) {
                     Filament.LOGGER.error("Failed to load decoration resource \"{}\".", entry.getKey());
