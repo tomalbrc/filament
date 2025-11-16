@@ -1,6 +1,5 @@
 package de.tomalbrc.filament.util;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -43,7 +42,6 @@ import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -55,10 +53,12 @@ import java.io.InputStreamReader;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class Json {
-    public static final Set<String> BEHAVIOUR_ALIASES = ImmutableSet.of("behavior", "behaviors", "behaviours");
     public static Codec<Vector2f> VECTOR2F = Codec.FLOAT.listOf().comapFlatMap((list) -> Util.fixedSize(list, 2).map((listx) -> new Vector2f(listx.get(0), listx.get(1))), (vector2f) -> List.of(vector2f.x(), vector2f.y()));
 
     public static final Gson GSON = new GsonBuilder()
@@ -146,21 +146,8 @@ public class Json {
         return result;
     }
 
-    @Nullable
-    private static String aliasReplace(String string) {
-        if (BEHAVIOUR_ALIASES.contains(string)) {
-            return "behaviour";
-        }
-        return null;
-    }
-
     @NotNull
     private static String camelToSnakeCaseKey(String key) {
-        String replacement = aliasReplace(key);
-        if (replacement != null) {
-            return replacement;
-        }
-
         StringBuilder snakeCase = new StringBuilder();
         for (int i = 0; i < key.length(); i++) {
             char c = key.charAt(i);

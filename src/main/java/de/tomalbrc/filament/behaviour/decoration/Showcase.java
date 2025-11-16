@@ -233,13 +233,13 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
             if (element instanceof BlockDisplayElement blockDisplayElement && itemStack.getItem() instanceof BlockItem blockItem) {
                 blockDisplayElement.getDataTracker().set(DisplayTrackedData.Block.BLOCK_STATE, blockItem.getBlock().defaultBlockState(), true);
             } else if (element instanceof ItemDisplayElement itemDisplayElement) {
-                itemDisplayElement.setItem(itemStack);
+                itemDisplayElement.getDataTracker().set(DisplayTrackedData.Item.ITEM, itemStack.copy(), true);
             }
 
             this.showcases.put(showcase, element);
         }
 
-        decorationBlockEntity.getOrCreateHolder().tick();
+        holder.tick();
     }
 
     private BlockDisplayElement element(BlockItem blockItem) {
