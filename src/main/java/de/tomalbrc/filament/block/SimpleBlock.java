@@ -653,7 +653,6 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
         return max;
     }
 
-
     @Override
     public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
         if (this.getBehaviours() != null) {

@@ -79,6 +79,8 @@ public class Behaviours {
     @Deprecated public static final BehaviourType<Waterloggable, Waterloggable.Config> SIMPLE_WATERLOGGABLE = registerBehaviour("simple_waterloggable", Waterloggable.class);
     public static final BehaviourType<Waterloggable, Waterloggable.Config> WATERLOGGABLE = registerBehaviour("waterloggable", Waterloggable.class);
     public static final BehaviourType<Slab, Slab.Config> SLAB = registerBehaviour("slab", Slab.class);
+    public static final BehaviourType<Stairs, Stairs.Config> STAIRS = registerBehaviour("stairs", Stairs.class);
+
     public static final BehaviourType<StatusEffectEmitter, StatusEffectEmitter.Config> STATUS_EFFECT_EMITTER = registerBehaviour("status_effect_emitter", StatusEffectEmitter.class);
     public static final BehaviourType<Strippable, Strippable.Config> STRIPPABLE = registerBehaviour("strippable", Strippable.class);
     public static final BehaviourType<Tnt, Tnt.Config> TNT = registerBehaviour("tnt", Tnt.class);

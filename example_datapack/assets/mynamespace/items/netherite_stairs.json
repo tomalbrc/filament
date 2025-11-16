@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "mynamespace:block/netherite_stairs"
+  }
+}
