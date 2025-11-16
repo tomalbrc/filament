@@ -12,6 +12,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MaceItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -36,30 +37,36 @@ public class Mace implements ItemBehaviour<Mace.Config> {
     }
 
     @Override
-    public void hurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
-        if (MaceItem.canSmashAttack(livingEntity2)) {
-            ServerLevel serverLevel = (ServerLevel)livingEntity2.level();
-            livingEntity2.setDeltaMovement(livingEntity2.getDeltaMovement().with(Direction.Axis.Y, 0.01F));
-            if (livingEntity2 instanceof ServerPlayer serverPlayer) {
-                serverPlayer.currentImpulseImpactPos = this.calculateImpactPosition(serverPlayer);
-                serverPlayer.setIgnoreFallDamageFromCurrentImpulse(true);
-                serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
-            }
-
-            if (livingEntity.onGround()) {
-                if (livingEntity2 instanceof ServerPlayer serverPlayer) {
-                    serverPlayer.setSpawnExtraParticlesOnFall(true);
+    public boolean hurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
+        if (livingEntity2 instanceof ServerPlayer serverPlayer) {
+            if (MaceItem.canSmashAttack(serverPlayer)) {
+                ServerLevel serverLevel = (ServerLevel) livingEntity2.level();
+                if (serverPlayer.isIgnoringFallDamageFromCurrentImpulse() && serverPlayer.currentImpulseImpactPos != null) {
+                    if (serverPlayer.currentImpulseImpactPos.y > serverPlayer.position().y) {
+                        serverPlayer.currentImpulseImpactPos = serverPlayer.position();
+                    }
+                } else {
+                    serverPlayer.currentImpulseImpactPos = serverPlayer.position();
                 }
 
-                SoundEvent soundEvent = livingEntity2.fallDistance > 5.0F ? SoundEvents.MACE_SMASH_GROUND_HEAVY : SoundEvents.MACE_SMASH_GROUND;
-                serverLevel.playSound(null, livingEntity2.getX(), livingEntity2.getY(), livingEntity2.getZ(), soundEvent, livingEntity2.getSoundSource(), 1.0F, 1.0F);
-            } else {
-                serverLevel.playSound(null, livingEntity2.getX(), livingEntity2.getY(), livingEntity2.getZ(), SoundEvents.MACE_SMASH_AIR, livingEntity2.getSoundSource(), 1.0F, 1.0F);
-            }
+                serverPlayer.setIgnoreFallDamageFromCurrentImpulse(true);
+                serverPlayer.setDeltaMovement(serverPlayer.getDeltaMovement().with(Direction.Axis.Y, (double) 0.01F));
+                serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
+                if (livingEntity.onGround()) {
+                    serverPlayer.setSpawnExtraParticlesOnFall(true);
+                    SoundEvent soundEvent = serverPlayer.fallDistance > 5.0F ? SoundEvents.MACE_SMASH_GROUND_HEAVY : SoundEvents.MACE_SMASH_GROUND;
+                    serverLevel.playSound(null, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), soundEvent, serverPlayer.getSoundSource(), 1.0F, 1.0F);
+                } else {
+                    serverLevel.playSound(null, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), SoundEvents.MACE_SMASH_AIR, serverPlayer.getSoundSource(), 1.0F, 1.0F);
+                }
 
-            MaceItemAccessor.invokeKnockback(serverLevel, livingEntity2, livingEntity);
+                MaceItemAccessor.invokeKnockback(serverLevel, serverPlayer, livingEntity);
+            }
         }
+
+        return true;
     }
+
 
     @Override
     public void postHurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
@@ -77,7 +84,7 @@ public class Mace implements ItemBehaviour<Mace.Config> {
             if (!MaceItem.canSmashAttack(livingEntity)) {
                 return 0.0F;
             } else {
-                float fallDistance = (float) livingEntity.fallDistance;
+                float fallDistance = livingEntity.fallDistance;
                 float fallDistanceMul;
                 if (fallDistance <= 3.0F) {
                     fallDistanceMul = 4.0F * fallDistance;
@@ -98,15 +105,12 @@ public class Mace implements ItemBehaviour<Mace.Config> {
         }
     }
 
-    @Override
-    @Nullable
-    public DamageSource getDamageSource(LivingEntity livingEntity) {
-        return MaceItem.canSmashAttack(livingEntity) ? livingEntity.damageSources().mace(livingEntity) : null;
-    }
-
-    private Vec3 calculateImpactPosition(ServerPlayer serverPlayer) {
-        return serverPlayer.isIgnoringFallDamageFromCurrentImpulse() && serverPlayer.currentImpulseImpactPos != null && serverPlayer.currentImpulseImpactPos.y <= serverPlayer.position().y ? serverPlayer.currentImpulseImpactPos : serverPlayer.position();
-    }
+    // TODO: 1.21.1?
+//    @Override
+//    @Nullable
+//    public DamageSource getDamageSource(LivingEntity livingEntity) {
+//        return MaceItem.canSmashAttack(livingEntity) ? livingEntity.damageSources().mace(livingEntity) : null;
+//    }
 
     public static class Config {
         public float damageMultiplier = 1.0f;

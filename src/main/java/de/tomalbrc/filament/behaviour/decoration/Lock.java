@@ -3,15 +3,15 @@ package de.tomalbrc.filament.behaviour.decoration;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.util.ExecuteUtil;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +43,7 @@ public class Lock implements DecorationBehaviour<Lock.Config> {
     public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
         if (this.unlocked && !config.repeatable) return InteractionResult.PASS;
 
-        Item key = this.config.key == null ? null : BuiltInRegistries.ITEM.getValue(this.config.key);
+        Item key = this.config.key == null ? null : BuiltInRegistries.ITEM.get(this.config.key);
         ItemStack mainHandItem = player.getItemInHand(InteractionHand.MAIN_HAND);
         boolean hasHandItem = !mainHandItem.isEmpty();
         boolean holdsKeyAndIsValid = hasHandItem && key != null && mainHandItem.is(key);
@@ -80,13 +80,17 @@ public class Lock implements DecorationBehaviour<Lock.Config> {
     }
 
     @Override
-    public void read(ValueInput input, DecorationBlockEntity blockEntity) {
-        input.child("Lock").ifPresent(lock -> this.unlocked = lock.getBooleanOr("Unlocked", this.unlocked));
+    public void read(CompoundTag input, HolderLookup.Provider lookup, DecorationBlockEntity blockEntity) {
+        if (input.contains("Lock")) {
+            var lock = input.getCompound("Lock");
+            this.unlocked = lock.contains("Unlocked") ?
+                lock.getBoolean("Unlocked") : this.unlocked;
+        }
     }
 
     @Override
-    public void write(ValueOutput output, DecorationBlockEntity blockEntity) {
-        ValueOutput lockTag = output.child("Lock");
+    public void write(CompoundTag output, HolderLookup.Provider lookup, DecorationBlockEntity blockEntity) {
+        CompoundTag lockTag = output.getCompound("Lock");
         lockTag.putBoolean("Unlocked", this.unlocked);
     }
 

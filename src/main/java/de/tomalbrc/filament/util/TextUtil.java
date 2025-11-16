@@ -13,7 +13,7 @@ public class TextUtil {
 
         if (FilamentConfig.getInstance().minimessage) {
             var parsed = MiniMessage.miniMessage().deserialize(text);
-            return Filament.adventure().asNative(parsed);
+            return Filament.adventure().toNative(parsed);
         }
         else
             return TagParser.SIMPLIFIED_TEXT_FORMAT.parseText(text, ParserContext.of());

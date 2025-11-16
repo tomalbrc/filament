@@ -50,7 +50,7 @@ public class BreedGoal implements EntityBehaviour<BreedGoal.Config> {
 
         public BreedGoalImpl(FilamentMob filamentMob, double d) {
             this.animal = filamentMob;
-            this.level = getServerLevel(filamentMob);
+            this.level = (ServerLevel) filamentMob.level();
             this.speedModifier = d;
             this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
         }

@@ -12,6 +12,7 @@ import de.tomalbrc.filament.util.mixin.RegistryUnfreezer;
 import eu.pb4.polymer.core.api.item.PolymerItemUtils;
 import eu.pb4.polymer.core.impl.interfaces.PolymerIdList;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -30,17 +31,17 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static net.minecraft.core.component.DataComponents.ITEM_MODEL;
+import static net.minecraft.core.component.DataComponents.CUSTOM_MODEL_DATA;
 
 public class Util {
     public static final SegmentedAnglePrecision SEGMENTED_ANGLE8 = new SegmentedAnglePrecision(3); // 3 bits precision = 8
@@ -81,9 +82,6 @@ public class Util {
         ((RegistryUnfreezer) BuiltInRegistries.BLOCK_ENTITY_TYPE).filament$freeze();
         ((RegistryUnfreezer) BuiltInRegistries.ENTITY_TYPE).filament$freeze();
         ((RegistryUnfreezer) BuiltInRegistries.CREATIVE_MODE_TAB).filament$freeze();
-
-        ((PolymerIdList<?>) Block.BLOCK_STATE_REGISTRY).polymer$reorderEntries();
-        ((PolymerIdList<?>) Fluid.FLUID_STATE_REGISTRY).polymer$reorderEntries();
     }
 
     @Deprecated(forRemoval = true)
@@ -111,28 +109,28 @@ public class Util {
             JsonObject comp = element.getAsJsonObject().get("components").getAsJsonObject();
             for (String key : comp.keySet()) {
                 comps.stream().filter(x -> x.toString().equals(key) || x.getPath().equals(key)).findAny().ifPresent(compId -> {
-                    data.putAdditional(BuiltInRegistries.DATA_COMPONENT_TYPE.getValue(compId), comp.get(key));
+                    data.putAdditional(BuiltInRegistries.DATA_COMPONENT_TYPE.get(compId), comp.get(key));
                 });
             }
         }
     }
 
-    public static ItemStack filamentItemStack(ItemStack itemStack, TooltipFlag tooltipType, PacketContext packetContext, FilamentItem filamentItem) {
-        ItemStack stack = PolymerItemUtils.createItemStack(itemStack, tooltipType, packetContext);
+    public static ItemStack filamentItemStack(ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, ServerPlayer packetContext, FilamentItem filamentItem) {
+        ItemStack stack = PolymerItemUtils.createItemStack(itemStack, lookup, packetContext);
 
-        ResourceLocation dataComponentModel = null;
-        if (filamentItem.getData() != null && filamentItem.getData().components().has(ITEM_MODEL)) {
-            dataComponentModel = filamentItem.getData().components().get(ITEM_MODEL);
+        CustomModelData dataComponentModel = null;
+        if (filamentItem.getData() != null && filamentItem.getData().components().has(CUSTOM_MODEL_DATA)) {
+            dataComponentModel = filamentItem.getData().components().get(CUSTOM_MODEL_DATA);
         } else if (filamentItem.getData() != null) {
             if (filamentItem.getData().itemModel() != null) {
-                dataComponentModel = filamentItem.getData().itemModel();
+                dataComponentModel = new CustomModelData(filamentItem.getData().itemModel());
             } else {
-                dataComponentModel = filamentItem.getData().preferredResource() == null ? filamentItem.getData().vanillaItem().components().get(ITEM_MODEL) : null;
+                dataComponentModel = filamentItem.getData().preferredResource() == null ? filamentItem.getData().vanillaItem().components().get(CUSTOM_MODEL_DATA) : null;
             }
         }
-        if (dataComponentModel != null) stack.set(ITEM_MODEL, dataComponentModel);
+        if (dataComponentModel != null) stack.set(CUSTOM_MODEL_DATA, dataComponentModel);
 
-        filamentItem.getDelegate().modifyPolymerItemStack(filamentItem.getModelMap(), itemStack, stack, tooltipType, packetContext.getRegistryWrapperLookup(), packetContext.getPlayer());
+        filamentItem.getDelegate().modifyPolymerItemStack(filamentItem.getModelMap(), itemStack, stack, tooltipType, lookup, packetContext);
 
         return stack;
     }

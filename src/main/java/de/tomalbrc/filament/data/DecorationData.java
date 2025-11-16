@@ -47,7 +47,7 @@ public final class DecorationData extends AbstractBlockData<DecorationProperties
             @Nullable Component displayName,
             @Nullable ItemResource itemResource,
             @Nullable BlockResource blockResource,
-            @Nullable ResourceLocation itemModel,
+            @Nullable Integer itemModel,
             @Nullable BehaviourConfigMap behaviourConfig,
             @Nullable DataComponentMap components,
             @Nullable ResourceLocation itemGroup,
@@ -143,7 +143,7 @@ public final class DecorationData extends AbstractBlockData<DecorationProperties
         if (blockResource() != null && blockResource().models() != null) {
             for (Map.Entry<String, PolymerBlockModel> entry : this.blockResource().models().entrySet()) {
                 if (entry.getKey().equals("default")) {
-                    var customState = BuiltInRegistries.BLOCK.getValue(id).defaultBlockState();
+                    var customState = BuiltInRegistries.BLOCK.get(id).defaultBlockState();
                     val.put(customState, BlockData.BlockStateMeta.of(null, entry.getValue()));
                 } else {
                     BlockState state = blockState(String.format("%s[%s]", id, entry.getKey()));

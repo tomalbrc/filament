@@ -2,6 +2,7 @@ package de.tomalbrc.filament.mixin.behaviour.strippable;
 
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.block.Strippable;
+import de.tomalbrc.filament.behaviour.decoration.Container;
 import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.registry.StrippableRegistry;
 import net.minecraft.core.BlockPos;
@@ -44,7 +45,7 @@ public class AxeItemMixin {
                 level.levelEvent(null, LevelEvent.PARTICLES_SCRAPE, blockPos, 0);
 
                 if (blockState.hasProperty(ChestBlock.TYPE) && blockState.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
-                    ((ServerPlayer)player).connection.send(new ClientboundLevelEventPacket(LevelEvent.PARTICLES_SCRAPE, ChestBlock.getConnectedBlockPos(blockPos, blockState), 0, false));
+                    ((ServerPlayer)player).connection.send(new ClientboundLevelEventPacket(LevelEvent.PARTICLES_SCRAPE, Container.chestConnectedBlockPos(blockPos, blockState), 0, false));
                 }
             }
 
@@ -52,13 +53,13 @@ public class AxeItemMixin {
                 level.levelEvent(null, LevelEvent.PARTICLES_WAX_OFF, blockPos, 0);
 
                 if (blockState.hasProperty(ChestBlock.TYPE) && blockState.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
-                    ((ServerPlayer)player).connection.send(new ClientboundLevelEventPacket(LevelEvent.PARTICLES_WAX_OFF, ChestBlock.getConnectedBlockPos(blockPos, blockState), 0, false));
+                    ((ServerPlayer)player).connection.send(new ClientboundLevelEventPacket(LevelEvent.PARTICLES_WAX_OFF, Container.chestConnectedBlockPos(blockPos, blockState), 0, false));
                 }
             }
 
             var lootId = StrippableRegistry.getLootTable(blockState.getBlock());
             if (lootId != null) {
-                var tableReference = level.registryAccess().get(ResourceKey.create(Registries.LOOT_TABLE, lootId));
+                var tableReference = level.registryAccess().asGetterLookup().get(Registries.LOOT_TABLE, ResourceKey.create(Registries.LOOT_TABLE, lootId));
                 var table = tableReference.orElseThrow().value();
                 table.getRandomItems(new LootParams.Builder((ServerLevel) level)
                         .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(blockPos))

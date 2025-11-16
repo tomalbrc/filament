@@ -31,7 +31,7 @@ public class LookAtMobGoal implements EntityBehaviour<LookAtMobGoal.Config> {
     public void registerGoals(FilamentMob mob) {
         EntityBehaviour.super.registerGoals(mob);
 
-        mob.getGoalSelector().addGoal(config.priority, new LookAtMobGoalImpl(mob, BuiltInRegistries.ENTITY_TYPE.getValue(config.target), config.lookDistance, config.probability, config.onlyHorizontal));
+        mob.getGoalSelector().addGoal(config.priority, new LookAtMobGoalImpl(mob, BuiltInRegistries.ENTITY_TYPE.get(config.target), config.lookDistance, config.probability, config.onlyHorizontal));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class LookAtMobGoal implements EntityBehaviour<LookAtMobGoal.Config> {
             this.setFlags(EnumSet.of(Flag.LOOK));
             if (entityType == EntityType.PLAYER) {
                 Predicate<Entity> predicate = EntitySelector.notRiding(mob);
-                this.lookAtContext = TargetingConditions.forNonCombat().range(f).selector((livingEntity, serverLevel) -> predicate.test(livingEntity));
+                this.lookAtContext = TargetingConditions.forNonCombat().range(f).selector(predicate::test);
             } else {
                 this.lookAtContext = TargetingConditions.forNonCombat().range(f);
             }
@@ -82,11 +82,10 @@ public class LookAtMobGoal implements EntityBehaviour<LookAtMobGoal.Config> {
                     this.lookAt = this.mob.getTarget();
                 }
 
-                ServerLevel serverLevel = getServerLevel(this.mob);
                 if (this.lookAtType == EntityType.PLAYER) {
-                    this.lookAt = serverLevel.getNearestPlayer(this.lookAtContext, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+                    this.lookAt = mob.level().getNearestPlayer(this.lookAtContext, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
                 } else {
-                    this.lookAt = serverLevel.getNearestEntity(this.mob.level().getEntitiesOfClass(Mob.class, this.mob.getBoundingBox().inflate(this.lookDistance, 3.0F, this.lookDistance), (livingEntity) -> livingEntity.getType() == lookAtType), this.lookAtContext, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+                    this.lookAt = mob.level().getNearestEntity(this.mob.level().getEntitiesOfClass(Mob.class, this.mob.getBoundingBox().inflate(this.lookDistance, 3.0F, this.lookDistance), (livingEntity) -> livingEntity.getType() == lookAtType), this.lookAtContext, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
                 }
 
                 return this.lookAt != null;

@@ -94,10 +94,12 @@ public abstract class ItemMixin {
 
     @Unique
     private static boolean filament$isWearing(Player player, ItemStack itemStack) {
-        for (EquipmentSlot slot : EquipmentSlotGroup.ARMOR.slots()) {
-            ItemStack stack = player.getItemBySlot(slot);
-            if (stack == itemStack) {
-                return true;
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            if (EquipmentSlotGroup.ARMOR.test(slot)) {
+                ItemStack stack = player.getItemBySlot(slot);
+                if (stack == itemStack) {
+                    return true;
+                }
             }
         }
         return false;

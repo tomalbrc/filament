@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
+import java.util.function.Predicate;
 
 /**
  * NearestAttackableTargetGoal
@@ -30,10 +31,10 @@ public class NearestAttackableTargetGoal implements EntityBehaviour<NearestAttac
     public void registerGoals(FilamentMob mob) {
         EntityBehaviour.super.registerGoals(mob);
 
-        mob.getTargetSelector().addGoal(config.priority, new NearestAttackableTargetGoalImpl(mob, BuiltInRegistries.ENTITY_TYPE.getValue(config.target), config.randomInterval, config.mustSee, config.mustReach, this::check));
+        mob.getTargetSelector().addGoal(config.priority, new NearestAttackableTargetGoalImpl(mob, BuiltInRegistries.ENTITY_TYPE.get(config.target), config.randomInterval, config.mustSee, config.mustReach, this::check));
     }
 
-    boolean check(LivingEntity livingEntity, ServerLevel serverLevel) {
+    boolean check(LivingEntity livingEntity) {
         return (!config.ignoreBaby || livingEntity.isBaby()) && (!config.ignoreInWater || !livingEntity.isInWater());
     }
 
@@ -60,7 +61,7 @@ public class NearestAttackableTargetGoal implements EntityBehaviour<NearestAttac
         protected LivingEntity target;
         protected TargetingConditions targetConditions;
 
-        public NearestAttackableTargetGoalImpl(Mob mob, EntityType<?> entityType, int interval, boolean mustSee, boolean mustReach, TargetingConditions.@Nullable Selector selector) {
+        public NearestAttackableTargetGoalImpl(Mob mob, EntityType<?> entityType, int interval, boolean mustSee, boolean mustReach, Predicate<LivingEntity> selector) {
             super(mob, mustSee, mustReach);
             this.targetType = entityType;
             this.randomInterval = reducedTickDelay(interval);
@@ -82,7 +83,7 @@ public class NearestAttackableTargetGoal implements EntityBehaviour<NearestAttac
         }
 
         protected void findTarget() {
-            ServerLevel serverLevel = getServerLevel(this.mob);
+            ServerLevel serverLevel = (ServerLevel) this.mob.level();
             if (this.targetType != EntityType.PLAYER) {
                 this.target = serverLevel.getNearestEntity(this.mob.level().getEntitiesOfClass(Mob.class, this.getTargetSearchArea(this.getFollowDistance()), (livingEntity) -> livingEntity.getType() == this.targetType), this.getTargetConditions(), this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
             } else {

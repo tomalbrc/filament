@@ -41,7 +41,7 @@ public class ExecuteAttackItem implements ItemBehaviour<ExecuteAttackItem.Config
 
             if (this.config.sound != null) {
                 var sound = this.config.sound;
-                serverPlayer.level().playSound(null, serverPlayer, BuiltInRegistries.SOUND_EVENT.getValue(sound), SoundSource.NEUTRAL, 1.0F, 1.0F);
+                serverPlayer.level().playSound(null, serverPlayer, BuiltInRegistries.SOUND_EVENT.get(sound), SoundSource.NEUTRAL, 1.0F, 1.0F);
             }
 
             if (this.config.consumes) {
@@ -51,10 +51,11 @@ public class ExecuteAttackItem implements ItemBehaviour<ExecuteAttackItem.Config
     }
 
     @Override
-    public void hurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
+    public boolean hurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
         if (config.onEntityAttack && livingEntity2 instanceof ServerPlayer player) {
             runCommandItem(player, itemStack.getItem(), InteractionHand.MAIN_HAND);
         }
+        return true;
     }
 
     private List<String> commands() {

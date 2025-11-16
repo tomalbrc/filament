@@ -23,7 +23,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -31,7 +30,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Consumer;
+import java.util.List;
 
 public class DecorationItem extends SimpleBlockItem implements PolymerItem, BehaviourHolder {
     final private DecorationData decorationData;
@@ -47,12 +46,12 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, TooltipDisplay tooltipDisplay, Consumer<Component> consumer, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
         if (this.decorationData.vanillaItem().components().has(DataComponents.DYED_COLOR) || this.decorationData.components().has(DataComponents.DYED_COLOR)) {
-            consumer.accept(Component.literal("§9Dyeable"));
+            list.add(Component.literal("§9Dyeable"));
         }
 
-        super.appendHoverText(itemStack, tooltipContext, tooltipDisplay, consumer, tooltipFlag);
+        super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
     }
 
     @Override
@@ -101,7 +100,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
             SoundEvent placeSound = properties.blockBase.defaultBlockState().getSoundType().getPlaceSound();
             level.playSound(null, blockPos, placeSound, SoundSource.BLOCKS, 1.0F, 1.0F);
 
-            return InteractionResult.SUCCESS_SERVER;
+            return InteractionResult.SUCCESS;
         }
 
         return InteractionResult.FAIL;

@@ -17,23 +17,26 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.*;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.ARGB;
 import net.minecraft.util.Brightness;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Display;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
@@ -43,8 +46,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LevelEvent;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -87,7 +89,7 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
 
                 if (!itemStack.isDamageableItem())
                     itemStack.consume(1, player);
-                else itemStack.hurtAndBreak(1, player, hand);
+                else itemStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
 
                 this.isWaxed = true;
                 decorationBlockEntity.setChanged();
@@ -100,7 +102,7 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
             if (config.dyeable && !empty && itemStack.getItem() instanceof DyeItem dyeItem && apply(player.level(), decorationBlockEntity, e, dyeItem.getDyeColor(), sd.glow)) {
                 if (!itemStack.isDamageableItem())
                     itemStack.consume(1, player);
-                else itemStack.hurtAndBreak(1, player, hand);
+                else itemStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
 
                 return InteractionResult.CONSUME;
             }
@@ -112,7 +114,7 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
 
                 if (!itemStack.isDamageableItem())
                     itemStack.consume(1, player);
-                else itemStack.hurtAndBreak(1, player, hand);
+                else itemStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
 
                 return InteractionResult.CONSUME;
             }
@@ -143,7 +145,7 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
             }
         }
 
-        if (executeClickCommandsIfPresent(player.level(), player, decorationBlockEntity.getBlockPos(), sd.text)) {
+        if (executeClickCommandsIfPresent(player.serverLevel(), player, decorationBlockEntity.getBlockPos(), sd.text)) {
             return InteractionResult.CONSUME;
         }
 
@@ -151,26 +153,15 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
     }
 
 
-    public boolean executeClickCommandsIfPresent(ServerLevel serverLevel, Player player, BlockPos blockPos, Component[] components) {
+    public boolean executeClickCommandsIfPresent(ServerLevel level, Player player, BlockPos blockPos, Component[] components) {
         boolean bl2 = false;
 
-        for (Component component : components) {
+        for(Component component : components) {
             Style style = component.getStyle();
-            switch (style.getClickEvent()) {
-                case ClickEvent.RunCommand runCommand:
-                    serverLevel.getServer().getCommands().performPrefixedCommand(createCommandSourceStack(player, serverLevel, blockPos), runCommand.command());
-                    bl2 = true;
-                    break;
-                case ClickEvent.ShowDialog showDialog:
-                    player.openDialog(showDialog.dialog());
-                    bl2 = true;
-                    break;
-                case ClickEvent.Custom custom:
-                    serverLevel.getServer().handleCustomClickAction(custom.id(), custom.payload());
-                    bl2 = true;
-                    continue;
-                case null:
-                default:
+            ClickEvent clickEvent = style.getClickEvent();
+            if (clickEvent != null && clickEvent.getAction() == ClickEvent.Action.RUN_COMMAND) {
+                player.getServer().getCommands().performPrefixedCommand(createCommandSourceStack(player, level, blockPos), clickEvent.getValue());
+                bl2 = true;
             }
         }
 
@@ -184,39 +175,51 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
     }
 
     @Override
-    public void read(ValueInput output, DecorationBlockEntity blockEntity) {
-        this.isWaxed = output.getBooleanOr("IsWaxed", false);
-        output.read("SignData", SignData.CODEC.listOf()).ifPresent(x -> {
-            for (int i = 0; i < config.elements.size(); i++) {
-                ConfiguredSignElement signElement = config.elements.get(i);
-                this.signData.put(signElement, x.get(i));
-                changed(blockEntity, signElement);
-            }
-        });
+    public void read(CompoundTag output, HolderLookup.Provider lookup, DecorationBlockEntity blockEntity) {
+        this.isWaxed = output.contains("IsWaxed") && output.getBoolean("IsWaxed");
+
+        if (output.contains("SignData")) {
+            var tag = output.get("SignData");
+            var dec = SignData.CODEC.listOf().decode(lookup.createSerializationContext(NbtOps.INSTANCE), tag);
+            dec.ifSuccess(pair -> {
+                var x = pair.getFirst();
+                for (int i = 0; i < config.elements.size(); i++) {
+                    ConfiguredSignElement signElement = config.elements.get(i);
+                    this.signData.put(signElement, x.get(i));
+                    changed(blockEntity, signElement);
+                }
+            });
+        }
     }
 
     @Override
-    public void write(ValueOutput input, DecorationBlockEntity blockEntity) {
+    public void write(CompoundTag input, HolderLookup.Provider lookup, DecorationBlockEntity blockEntity) {
         input.putBoolean("IsWaxed", this.isWaxed);
         List<SignData> data = new ObjectArrayList<>();
         for (int i = 0; i < this.config.elements.size(); i++) {
             ConfiguredSignElement signElement = config.elements.get(i);
             data.add(i, getSignData(signElement));
         }
-        input.store("SignData", SignData.CODEC.listOf(), data);
+        input.put("SignData", SignData.CODEC.listOf().encodeStart(lookup.createSerializationContext(NbtOps.INSTANCE), data).getOrThrow());
     }
 
     @Override
-    public void applyImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentGetter dataComponentGetter) {
+    public void applyImplicitComponents(DecorationBlockEntity decorationBlockEntity, BlockEntity.DataComponentInput dataComponentGetter) {
         var data = dataComponentGetter.get(DataComponents.CUSTOM_DATA);
         if (data != null) {
-            data.copyTag().read("SignData", SignData.CODEC.listOf()).ifPresent(res -> {
-                for (int i = 0; i < config.elements.size(); i++) {
-                    ConfiguredSignElement signElement = config.elements.get(i);
-                    this.signData.put(signElement, res.get(i));
-                    changed(decorationBlockEntity, signElement);
-                }
-            });
+            if (data.contains("SignData")) {
+                var t = data.copyTag();
+                var sd = t.get("SignData");
+                SignData.CODEC.listOf().decode(RegistryOps.create(NbtOps.INSTANCE, Filament.SERVER.registryAccess()), sd).ifSuccess(pair -> {
+                    var res = pair.getFirst();
+                    for (int i = 0; i < config.elements.size(); i++) {
+                        ConfiguredSignElement signElement = config.elements.get(i);
+                        this.signData.put(signElement, res.get(i));
+                        changed(decorationBlockEntity, signElement);
+                    }
+                });
+            }
+
         } else {
             for (int i = 0; i < config.elements.size(); i++) {
                 ConfiguredSignElement signElement = config.elements.get(i);
@@ -424,10 +427,10 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
                 return -988212;
             } else {
                 int i = color.getTextureDiffuseColor();
-                int j = (int) ((double) ARGB.red(i) * 0.4);
-                int k = (int) ((double) ARGB.green(i) * 0.4);
-                int l = (int) ((double) ARGB.blue(i) * 0.4);
-                return ARGB.color(0, j, k, l);
+                int j = (int) ((double) FastColor.ARGB32.red(i) * 0.4);
+                int k = (int) ((double) FastColor.ARGB32.green(i) * 0.4);
+                int l = (int) ((double) FastColor.ARGB32.blue(i) * 0.4);
+                return FastColor.ARGB32.color(0, j, k, l);
             }
         }
 

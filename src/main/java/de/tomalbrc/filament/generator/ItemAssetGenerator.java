@@ -1,192 +1,119 @@
 package de.tomalbrc.filament.generator;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import de.tomalbrc.filament.data.resource.ItemResource;
-import de.tomalbrc.filament.data.resource.ResourceProvider;
 import de.tomalbrc.filament.util.Json;
 import eu.pb4.polymer.resourcepack.api.AssetPaths;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
-import eu.pb4.polymer.resourcepack.extras.api.format.item.ItemAsset;
-import eu.pb4.polymer.resourcepack.extras.api.format.item.model.*;
-import eu.pb4.polymer.resourcepack.extras.api.format.item.property.bool.FishingRodCastProperty;
-import eu.pb4.polymer.resourcepack.extras.api.format.item.property.bool.UsingItemProperty;
-import eu.pb4.polymer.resourcepack.extras.api.format.item.property.numeric.UseDurationProperty;
-import eu.pb4.polymer.resourcepack.extras.api.format.item.property.select.ChargeTypeProperty;
-import eu.pb4.polymer.resourcepack.extras.api.format.item.property.select.CustomModelDataStringProperty;
-import eu.pb4.polymer.resourcepack.extras.api.format.item.special.ShieldSpecialModel;
-import eu.pb4.polymer.resourcepack.extras.api.format.item.tint.DyeTintSource;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.CrossbowItem;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public class ItemAssetGenerator {
-    public static void createDefault(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider resourceProvider, boolean tint) {
-        var def = resourceProvider.getModels().get("default");
-        var defaultModel = new BasicItemModel(def == null ? resourceProvider.getModels().values().iterator().next() : def, !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
-        if (resourceProvider.getModels().size() > 1) {
-            var list = getCases(resourceProvider, tint);
-            builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
-                    new SelectItemModel<>(
-                            new SelectItemModel.Switch<>(
-                                    new CustomModelDataStringProperty(0),
-                                    list
-                            ),
-                            Optional.of(defaultModel)
-                    ), ItemAsset.Properties.DEFAULT).toBytes()
-            );
-        } else {
-            builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
-                    defaultModel,
-                    ItemAsset.Properties.DEFAULT).toBytes()
-            );
-        }
+    public static void createBow(ResourcePackBuilder builder, ResourceLocation id, ItemResource itemResource, boolean dye) {
+        var defaultModel = itemResource.getModels().get("default");
+        var pulling_0 = itemResource.getModels().get("pulling_0");
+        var pulling_1 = itemResource.getModels().get("pulling_1");
+        var pulling_2 = itemResource.getModels().get("pulling_2");
+
+        JsonObject bowModel = new JsonObject();
+        bowModel.addProperty("parent", defaultModel.toString()); // Use "default" as parent
+
+        JsonArray overrides = new JsonArray();
+
+        overrides.add(createOverride(1, pulling_0.toString(), null));
+        overrides.add(createOverride(1, pulling_1.toString(), 0.65));
+        overrides.add(createOverride(1, pulling_2.toString(), 0.9));
+
+        bowModel.add("overrides", overrides);
+
+        builder.addData(AssetPaths.itemModel(id), bowModel.toString().getBytes(StandardCharsets.UTF_8));
     }
 
-    @NotNull
-    private static ObjectArrayList<SelectItemModel.Case<String>> getCases(ResourceProvider itemResource, boolean tint) {
-        var list = new ObjectArrayList<SelectItemModel.Case<String>>();
+    public static void createCrossbow(ResourcePackBuilder builder, ResourceLocation id, ItemResource itemResource, boolean dye) {
+        var defaultModel = itemResource.getModels().get("default");
+        var rocket = itemResource.getModels().get("rocket");
+        var arrow = itemResource.getModels().get("arrow");
+        var pulling_0 = itemResource.getModels().get("pulling_0");
+        var pulling_1 = itemResource.getModels().get("pulling_1");
+        var pulling_2 = itemResource.getModels().get("pulling_2");
 
-        for (var modelPathEntry : itemResource.getModels().entrySet()) {
-            if (modelPathEntry.getKey().equals("default")) continue;
+        JsonObject crossbowModel = new JsonObject();
+        crossbowModel.addProperty("parent", defaultModel.toString()); // Use "default" as parent
 
-            var modelId = modelPathEntry.getValue();
-            ItemModel model = new BasicItemModel(modelId, !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
-            list.add(new SelectItemModel.Case<>(List.of(modelPathEntry.getKey()), model));
-        }
+        JsonArray overrides = new JsonArray();
 
-        return list;
+        overrides.add(createOverride(1, pulling_0.toString(), null));
+        overrides.add(createOverride(1, pulling_1.toString(), 0.58));
+        overrides.add(createOverride(1, pulling_2.toString(), 1.0));
+        overrides.add(createOverride("charged", rocket.toString(), 1));
+        overrides.add(createOverride("charged", arrow.toString(), 1));
+
+        crossbowModel.add("overrides", overrides);
+
+        builder.addData(AssetPaths.itemModel(id), crossbowModel.toString().getBytes(StandardCharsets.UTF_8));
     }
 
-    public static void createBow(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource, boolean tint) {
-        var defaultModel = new BasicItemModel(itemResource.getModels().get("default"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
-        var pulling_0 = new BasicItemModel(itemResource.getModels().get("pulling_0"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
-        var pulling_1 = new BasicItemModel(itemResource.getModels().get("pulling_1"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
-        var pulling_2 = new BasicItemModel(itemResource.getModels().get("pulling_2"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
+    public static void createShield(ResourcePackBuilder builder, ResourceLocation id, ItemResource itemResource) {
+        var defaultModel = itemResource.getModels().get("default");
+        var blocking = itemResource.getModels().get("blocking");
 
-        var rangeModelBuilder = RangeDispatchItemModel.builder(new UseDurationProperty(false)).scale(0.05f);
-        rangeModelBuilder.entry(0.65f, pulling_1);
-        rangeModelBuilder.entry(0.9f, pulling_2);
-        rangeModelBuilder.fallback(pulling_0);
+        JsonObject shieldModel = new JsonObject();
+        shieldModel.addProperty("parent", defaultModel.toString()); // Use "default" as parent
 
-        builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
-                new ConditionItemModel(new UsingItemProperty(), rangeModelBuilder.build(), defaultModel),
-                ItemAsset.Properties.DEFAULT).toBytes()
-        );
+        JsonArray overrides = new JsonArray();
+
+        overrides.add(createOverride("blocking", blocking.toString(), 1));
+
+        shieldModel.add("overrides", overrides);
+
+        builder.addData(AssetPaths.itemModel(id), shieldModel.toString().getBytes(StandardCharsets.UTF_8));
     }
 
-    public static void createCrossbow(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource, boolean tint) {
-        var defaultModel = new BasicItemModel(itemResource.getModels().get("default"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
-        var rocket = new BasicItemModel(itemResource.getModels().get("rocket"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
-        var arrow = new BasicItemModel(itemResource.getModels().get("arrow"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
-        var pulling_0 = new BasicItemModel(itemResource.getModels().get("pulling_0"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
-        var pulling_1 = new BasicItemModel(itemResource.getModels().get("pulling_1"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
-        var pulling_2 = new BasicItemModel(itemResource.getModels().get("pulling_2"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFFFF)));
+    public static void createFishingRod(ResourcePackBuilder builder, ResourceLocation id, ItemResource itemResource, boolean dye) {
+        var defaultModel = itemResource.getModels().get("default");
+        var cast = itemResource.getModels().get("cast");
 
-        var rangeModelBuilder = RangeDispatchItemModel.builder(new UseDurationProperty(false)).scale(0.05f);
-        rangeModelBuilder.entry(0.58f, pulling_1);
-        rangeModelBuilder.entry(1.f, pulling_2);
-        rangeModelBuilder.fallback(pulling_0);
+        JsonObject rodModel = new JsonObject();
+        rodModel.addProperty("parent", defaultModel.toString()); // Use "default" as parent
 
-        var notUsed = SelectItemModel.builder(new ChargeTypeProperty());
-        notUsed.withCase(CrossbowItem.ChargeType.ARROW, arrow);
-        notUsed.withCase(CrossbowItem.ChargeType.ROCKET, rocket);
-        notUsed.fallback(defaultModel);
+        JsonArray overrides = new JsonArray();
 
-        builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
-                new ConditionItemModel(new UsingItemProperty(), rangeModelBuilder.build(), notUsed.build()),
-                ItemAsset.Properties.DEFAULT).toBytes()
-        );
+        overrides.add(createOverride("cast", cast.toString(), 1));
+
+        rodModel.add("overrides", overrides);
+
+        builder.addData(AssetPaths.itemModel(id), rodModel.toString().getBytes(StandardCharsets.UTF_8));
     }
 
-    public static void createShield(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource) {
-        var defaultModel = new SpecialItemModel(itemResource.getModels().get("default"), new ShieldSpecialModel());
-        var blocking = new SpecialItemModel(itemResource.getModels().get("blocking"), new ShieldSpecialModel());
-
-        builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
-                new ConditionItemModel(new UsingItemProperty(), blocking, defaultModel),
-                ItemAsset.Properties.DEFAULT).toBytes()
-        );
-    }
-
-    public static void createFishingRod(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource, boolean tint) {
-        var defaultModel = new BasicItemModel(itemResource.getModels().get("default"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
-        var cast = new BasicItemModel(itemResource.getModels().get("cast"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
-        builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
-                new ConditionItemModel(new FishingRodCastProperty(), cast, defaultModel),
-                ItemAsset.Properties.DEFAULT).toBytes()
-        );
-    }
-
-    public static void createTrident(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource, boolean tint) {
-        var defaultModel = new BasicItemModel(itemResource.getModels().get("default"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
-        var throwing = new BasicItemModel(itemResource.getModels().get("throwing"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
-
-        builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
-                new ConditionItemModel(new UsingItemProperty(), throwing, defaultModel),
-                ItemAsset.Properties.DEFAULT).toBytes()
-        );
-    }
-
-    public static void createTrimModels(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource, boolean tint) {
-        Gson gson = new Gson();
-        JsonObject root = new JsonObject();
-        JsonObject model = new JsonObject();
-        model.addProperty("type", "select");
-
-        JsonArray cases = new JsonArray();
-        for (Map.Entry<String, ResourceLocation> entry : itemResource.getModels().entrySet()) {
-            if (entry.getKey().equals("default"))
-                continue;
-
-            JsonObject caseObj = new JsonObject();
-            JsonObject caseModel = new JsonObject();
-            caseModel.addProperty("type", "model");
-            caseModel.addProperty("model", entry.getValue().withPrefix("item/").toString());
-
-            if (tint) {
-                JsonArray tints = new JsonArray();
-                JsonObject tintObj = new JsonObject();
-                tintObj.addProperty("type", "dye");
-                tintObj.addProperty("default", 0xFFFFFF);
-                tints.add(tintObj);
-                caseModel.add("tints", tints);
-            }
-
-            caseObj.add("model", caseModel);
-            caseObj.addProperty("when", entry.getKey());
-            cases.add(caseObj);
-        }
-        model.add("cases", cases);
-
-        JsonObject fallback = new JsonObject();
-        fallback.addProperty("type", "model");
-        fallback.addProperty("model", itemResource.getModels().get("default").toString());
-
-        if (tint) {
-            JsonArray tints = new JsonArray();
-            JsonObject tintObj = new JsonObject();
-            tintObj.addProperty("type", "dye");
-            tintObj.addProperty("default", 0xFFFFFF);
-            tints.add(tintObj);
-            fallback.add("tints", tints);
+    private static JsonObject createOverride(int pulling, String model, Double pull) {
+        JsonObject predicate = new JsonObject();
+        predicate.addProperty("pulling", pulling);
+        if (pull != null) {
+            predicate.addProperty("pull", pull);
         }
 
-        model.add("fallback", fallback);
-        model.addProperty("property", "trim_material");
+        JsonObject override = new JsonObject();
+        override.add("predicate", predicate);
+        override.addProperty("model", model);
 
-        root.add("model", model);
-        String jsonOutput = gson.toJson(root);
-        builder.addData(AssetPaths.itemAsset(id), jsonOutput.getBytes(StandardCharsets.UTF_8));
+        return override;
+    }
+
+    private static JsonObject createOverride(String predicateKey, String model, int value) {
+        JsonObject predicate = new JsonObject();
+        predicate.addProperty(predicateKey, value);
+
+        JsonObject override = new JsonObject();
+        override.add("predicate", predicate);
+        override.addProperty("model", model);
+
+        return override;
     }
 
     public static void createItemModels(ResourceLocation id, ItemResource itemResource) {
@@ -208,5 +135,9 @@ public class ItemAssetGenerator {
                 itemResource.getModels().put(entry.getKey(), modelId);
             }
         }
+    }
+
+    public static void createTrident(ResourcePackBuilder resourcePackBuilder, @NotNull ResourceLocation id, ItemResource itemResource, boolean b) {
+        // TODO: 1.21.1 maybe?
     }
 }

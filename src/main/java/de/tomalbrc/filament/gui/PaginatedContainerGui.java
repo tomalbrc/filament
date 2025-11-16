@@ -1,6 +1,5 @@
 package de.tomalbrc.filament.gui;
 
-import de.tomalbrc.filament.util.FilamentConfig;
 import de.tomalbrc.filament.util.FilamentContainer;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.sgui.api.GuiHelpers;
@@ -17,11 +16,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public class PaginatedContainerGui extends SimpleGui {
-    GuiElementBuilder empty = GuiElementBuilder.from(Items.PAPER.getDefaultInstance())
+    GuiElementBuilder empty = GuiElementBuilder.from(Items.LIGHT_GRAY_STAINED_GLASS_PANE.getDefaultInstance())
             .hideDefaultTooltip()
             .setComponent(DataComponents.MAX_STACK_SIZE, 1)
-            .hideTooltip()
-            .model(FilamentConfig.getInstance().addCustomMenuAssets ? Util.id("blank_gui") : Items.AIR.components().get(DataComponents.ITEM_MODEL));
+            .hideTooltip();
+    // TODO: 1.21.1
+            //.model(FilamentConfig.getInstance().addCustomMenuAssets ? Util.id("blank_gui") : Items.AIR.components().get(DataComponents.ITEM_MODEL));
 
     private final Container container;
     private final boolean fromBackpack;
@@ -50,11 +50,11 @@ public class PaginatedContainerGui extends SimpleGui {
         int prevIdx = GuiHelpers.posToIndex(3, getHeight() - 1, getHeight(), getWidth());
         if (currentPage > 0) this.setSlot(
                 prevIdx,
-                GuiElementBuilder.from(Items.PAPER.getDefaultInstance())
+                GuiElementBuilder.from(Items.ARROW.getDefaultInstance())
                         .hideDefaultTooltip()
-                        .setName(Component.translatable("book.page_button.previous"))
+                        .setName(Component.translatable("spectatorMenu.previous_page"))
                         .addLoreLine(Component.translatable("book.pageIndicator", Component.literal(String.valueOf(currentPage+1)), Component.literal(String.valueOf(pages+1))).withStyle(ChatFormatting.DARK_GRAY))
-                        .model(Util.id("previous_gui"))
+                        //.model(Util.id("previous_gui"))
                         .setCallback(() -> {
                             Util.clickSound(player);
                             if (currentPage > 0) {
@@ -67,11 +67,11 @@ public class PaginatedContainerGui extends SimpleGui {
         int nextIdx = GuiHelpers.posToIndex(getWidth()-4, getHeight() - 1, getHeight(), getWidth());
         if (currentPage < pages) this.setSlot(
                 nextIdx,
-                GuiElementBuilder.from(Items.PAPER.getDefaultInstance())
+                GuiElementBuilder.from(Items.ARROW.getDefaultInstance())
                         .hideDefaultTooltip()
-                        .setName(Component.translatable("book.page_button.next"))
+                        .setName(Component.translatable("spectatorMenu.next_page"))
                         .addLoreLine(Component.translatable("book.pageIndicator", Component.literal(String.valueOf(currentPage+1)), Component.literal(String.valueOf(pages+1))).withStyle(ChatFormatting.DARK_GRAY))
-                        .model(Util.id("next_gui"))
+                        //.model(Util.id("next_gui"))
                         .setCallback(() -> {
                             Util.clickSound(player);
                             int slotsPerPage = getWidth() * (getHeight() - 1);

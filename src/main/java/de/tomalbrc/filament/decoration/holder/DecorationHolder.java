@@ -12,11 +12,9 @@ import eu.pb4.polymer.virtualentity.api.attachment.HolderAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
 import net.minecraft.server.TickTask;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class DecorationHolder extends ElementHolder implements FilamentDecorationHolder {
@@ -31,7 +29,7 @@ public class DecorationHolder extends ElementHolder implements FilamentDecoratio
     @SuppressWarnings("all")
     protected void onAttachmentSet(HolderAttachment attachment, @Nullable HolderAttachment oldAttachment) {
         if (attachment instanceof BlockBoundAttachment blockAttachment && blockAttachment.getBlockState().getBlock() instanceof ComplexDecorationBlock) {
-            Filament.SERVER.schedule(new TickTask(0, () -> {
+            Filament.SERVER.tell(new TickTask(0, () -> {
                 blockAttachment.setBlockState(blockAttachment.getBlockState());
             }));
         }
@@ -49,9 +47,9 @@ public class DecorationHolder extends ElementHolder implements FilamentDecoratio
     }
 
     @Override
-    public void playAnimation(ServerPlayer serverPlayer, String animation, int priority, Consumer<ServerPlayer> onFinish) {
+    public void playAnimation(String animation, int priority, Runnable onFinish) {
         if (onFinish != null)
-            onFinish.accept(serverPlayer);
+            onFinish.run();
     }
 
     @Override

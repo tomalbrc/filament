@@ -9,7 +9,6 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -50,7 +49,7 @@ public class Seat implements DecorationBehaviour<Seat.Config> {
     }
 
     public void seatPlayer(DecorationBlockEntity decorationBlockEntity, SeatConfigData seat, ServerPlayer player) {
-        SeatEntity seatEntity = EntityRegistry.SEAT_ENTITY.create(player.level(), EntitySpawnReason.TRIGGERED);
+        SeatEntity seatEntity = EntityRegistry.SEAT_ENTITY.create(player.level());
         assert seatEntity != null;
         seatEntity.setPos(this.seatTranslation(decorationBlockEntity, seat).add(decorationBlockEntity.getOrCreateHolder().getPos()));
         player.level().addFreshEntity(seatEntity);

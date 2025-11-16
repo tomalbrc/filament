@@ -1,29 +1,43 @@
 package de.tomalbrc.filament.mixin.component.skin;
 
 import de.tomalbrc.filament.registry.FilamentComponents;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.function.Consumer;
-
 @Mixin(ItemStack.class)
-public class ItemStackMixin {
-    @Inject(method = "applyDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isBroken()Z"))
-    private void filament$dontDestroySkin(int i, ServerPlayer serverPlayer, Consumer<Item> consumer, CallbackInfo ci) {
+public abstract class ItemStackMixin {
+    @Shadow public abstract boolean isDamageableItem();
+
+    @Shadow public abstract int getDamageValue();
+
+    @Shadow public abstract int getMaxDamage();
+
+    @Inject(method = "hurtAndBreak(ILnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/EquipmentSlot;)V", at = @At(value = "TAIL"))
+    private void filament$dontDestroySkin(int i, LivingEntity livingEntity, EquipmentSlot equipmentSlot, CallbackInfo ci) {
         var self = ItemStack.class.cast(this);
-        if (self.isBroken() && self.has(FilamentComponents.SKIN_DATA_COMPONENT)) {
+        var b = this.isDamageableItem() && this.getDamageValue() >= this.getMaxDamage();
+        if (b && self.has(FilamentComponents.SKIN_DATA_COMPONENT)) {
             var skinItem = self.get(FilamentComponents.SKIN_DATA_COMPONENT);
             if (skinItem != null && !skinItem.isEmpty()) {
-                if (!serverPlayer.addItem(skinItem))
-                    serverPlayer.spawnAtLocation(serverPlayer.level(), skinItem);
-
                 self.remove(FilamentComponents.SKIN_DATA_COMPONENT);
+
+                if (livingEntity instanceof Player serverPlayer) {
+                    if (!serverPlayer.addItem(skinItem))
+                        serverPlayer.spawnAtLocation(skinItem);
+                } else {
+                    livingEntity.spawnAtLocation(skinItem);
+                }
+
             }
         }
     }
+
+
 }

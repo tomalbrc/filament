@@ -13,13 +13,10 @@ import de.tomalbrc.filament.registry.WaxableRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.TickTask;
-import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.storage.TagValueInput;
-import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,7 +31,7 @@ public abstract class LevelChunkMixin {
     )
     private void filament$filamentDecorationInit(BlockEntity blockEntity, CallbackInfo ci) {
         if (blockEntity instanceof BlockEntityWithElementHolder blockEntityWithElementHolder) {
-            Filament.SERVER.schedule(new TickTask(0, () -> blockEntityWithElementHolder.attach((LevelChunk)(Object) this)));
+            Filament.SERVER.tell(new TickTask(0, () -> blockEntityWithElementHolder.attach((LevelChunk)(Object) this)));
         }
     }
 
@@ -47,12 +44,8 @@ public abstract class LevelChunkMixin {
             if (filament$replace(old.getBlock(), fresh.getBlock())) {
                 CompoundTag compoundTag = old.saveWithoutMetadata(Filament.SERVER.registryAccess());
 
-                try (ProblemReporter.ScopedCollector scopedCollector = new ProblemReporter.ScopedCollector(blockEntity.problemPath(), Filament.LOGGER)) {
-                    fresh.loadAdditional(TagValueInput.create(scopedCollector, Filament.SERVER.registryAccess(), compoundTag));
-                    fresh.setChanged();
-                } catch (Throwable throwable) {
-                    Filament.LOGGER.error("Failed to copy data for decoration {} for block {} at position {} to new decoration {}", old.getType(), old.getBlockPos(), old.getBlockState(), fresh.getType(), throwable);
-                }
+                fresh.loadAdditional(compoundTag, Filament.SERVER.registryAccess());
+                fresh.setChanged();
             }
         }
     }
@@ -65,13 +58,14 @@ public abstract class LevelChunkMixin {
         }
     }
 
-    @WrapOperation(method = "setBlockState", at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;[Ljava/lang/Object;)V", remap = false))
-    private void filament$avoidRemovalOxidationWarn(Logger instance, String s, Object[] objects, Operation<Void> original, @Local(ordinal = 0, argsOnly = true) BlockState blockState, @Local(ordinal = 1) BlockState blockStateOld, @Local(argsOnly = true) BlockPos blockPos) {
-        var oxiDeco = !blockStateOld.isAir() && blockStateOld.getBlock() instanceof DecorationBlock && blockState.getBlock() instanceof DecorationBlock && filament$replace(blockStateOld.getBlock(), blockState.getBlock());
-        if (!oxiDeco) {
-            original.call(instance, s, objects);
-        }
-    }
+    //TODO: 1.21.1
+//    @WrapOperation(method = "setBlockState", at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;[Ljava/lang/Object;)V", remap = false))
+//    private void filament$avoidRemovalOxidationWarn(Logger instance, String s, Object[] objects, Operation<Void> original, @Local(ordinal = 0, argsOnly = true) BlockState blockState, @Local(ordinal = 1) BlockState blockStateOld, @Local(argsOnly = true) BlockPos blockPos) {
+//        var oxiDeco = !blockStateOld.isAir() && blockStateOld.getBlock() instanceof DecorationBlock && blockState.getBlock() instanceof DecorationBlock && filament$replace(blockStateOld.getBlock(), blockState.getBlock());
+//        if (!oxiDeco) {
+//            original.call(instance, s, objects);
+//        }
+//    }
 
     @Unique
     private boolean filament$replace(Block old, Block fresh) {

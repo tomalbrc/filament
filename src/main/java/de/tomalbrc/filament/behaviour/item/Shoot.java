@@ -11,8 +11,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
@@ -48,17 +48,17 @@ public class Shoot implements ItemBehaviour<Shoot.Config> {
     }
 
     @Override
-    public InteractionResult use(Item item, Level level, Player user, InteractionHand hand) {
-        user.getCooldowns().addCooldown(user.getItemInHand(hand), config.cooldown);
+    public InteractionResultHolder<ItemStack> use(Item item, Level level, Player user, InteractionHand hand) {
+        user.getCooldowns().addCooldown(user.getItemInHand(hand).getItem(), config.cooldown);
         ItemStack itemStack = user.getItemInHand(hand);
 
         if (!level.isClientSide()) {
-            BaseProjectileEntity projectile = EntityRegistry.BASE_PROJECTILE.create(level, EntitySpawnReason.TRIGGERED);
+            BaseProjectileEntity projectile = EntityRegistry.BASE_PROJECTILE.create(level);
             if (projectile != null) {
                 projectile.config = config;
 
                 projectile.setPos(user.position().add(0, user.getEyeHeight(), 0));
-                itemStack.hurtAndBreak(1, user, hand);
+                itemStack.hurtAndBreak(1, user, LivingEntity.getSlotForHand(hand));
 
                 float pitch = user.getXRot();
                 float yaw = user.getYRot();
@@ -74,8 +74,8 @@ public class Shoot implements ItemBehaviour<Shoot.Config> {
                 projectile.setXRot(user.getXRot());
                 projectile.setDeltaMovement(deltaMovement.x, deltaMovement.y, deltaMovement.z);
 
-                ItemStack projItem = this.config.projectile != null ? BuiltInRegistries.ITEM.getValue(this.config.projectile).getDefaultInstance() : itemStack.copyWithCount(1);
-                ItemStack pickupItem = this.config.pickupItem != null ? BuiltInRegistries.ITEM.getValue(this.config.pickupItem).getDefaultInstance() : projItem;
+                ItemStack projItem = this.config.projectile != null ? BuiltInRegistries.ITEM.get(this.config.projectile).getDefaultInstance() : itemStack.copyWithCount(1);
+                ItemStack pickupItem = this.config.pickupItem != null ? BuiltInRegistries.ITEM.get(this.config.pickupItem).getDefaultInstance() : projItem;
                 projectile.setOwner(user);
                 projectile.setPickupStack(pickupItem);
                 projectile.setBase(itemStack.copy());
@@ -88,16 +88,16 @@ public class Shoot implements ItemBehaviour<Shoot.Config> {
             }
 
             level.addFreshEntity(projectile);
-            level.playSound(null, projectile, this.config.sound != null ? BuiltInRegistries.SOUND_EVENT.getValue(this.config.sound) : SoundEvents.TRIDENT_THROW.value(), SoundSource.NEUTRAL, config.volume, config.pitch);
+            level.playSound(null, projectile, this.config.sound != null ? BuiltInRegistries.SOUND_EVENT.get(this.config.sound) : SoundEvents.TRIDENT_THROW.value(), SoundSource.NEUTRAL, config.volume, config.pitch);
             if (!user.isCreative()) {
                 if (this.config.consumes) itemStack.shrink(1);
-                else if (this.config.damages) itemStack.hurtAndBreak(1, user, hand);
+                else if (this.config.damages) itemStack.hurtAndBreak(1, user, LivingEntity.getSlotForHand(hand));
             }
         }
 
         user.awardStat(Stats.ITEM_USED.get(item));
 
-        return InteractionResult.CONSUME;
+        return InteractionResultHolder.consume(user.getItemInHand(hand));
     }
 
     public static class Config {
@@ -140,15 +140,15 @@ public class Shoot implements ItemBehaviour<Shoot.Config> {
         /**
          * Sound effect to play when shooting
          */
-        public ResourceLocation sound = SoundEvents.TRIDENT_THROW.value().location();
+        public ResourceLocation sound = SoundEvents.TRIDENT_THROW.value().getLocation();
         public float volume = 1.f;
         public float pitch = 1.f;
 
-        public ResourceLocation hitSound = SoundEvents.TRIDENT_HIT.location();
+        public ResourceLocation hitSound = SoundEvents.TRIDENT_HIT.getLocation();
         public float hitVolume = 1.f;
         public float hitPitch = 1.f;
 
-        public ResourceLocation hitGroundSound = SoundEvents.TRIDENT_HIT_GROUND.location();
+        public ResourceLocation hitGroundSound = SoundEvents.TRIDENT_HIT_GROUND.getLocation();
 
         /**
          * Display context of the item display

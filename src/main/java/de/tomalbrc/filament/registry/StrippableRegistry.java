@@ -15,7 +15,7 @@ public class StrippableRegistry {
         if (!has(block))
             return null;
 
-        return BuiltInRegistries.BLOCK.getValue(strippables.get(block).getFirst());
+        return BuiltInRegistries.BLOCK.get(strippables.get(block).getFirst());
     }
 
     public static ResourceLocation getLootTable(Block block) {

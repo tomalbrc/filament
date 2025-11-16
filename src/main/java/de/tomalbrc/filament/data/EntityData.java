@@ -127,7 +127,7 @@ public class EntityData {
             if (spawns == null) {
                 spawns = new ObjectArraySet<>();
                 for (ResourceLocation resourceLocation : spawnsLike) {
-                    spawns.add(BuiltInRegistries.ENTITY_TYPE.getValue(resourceLocation));
+                    spawns.add(BuiltInRegistries.ENTITY_TYPE.get(resourceLocation));
                 }
             }
 

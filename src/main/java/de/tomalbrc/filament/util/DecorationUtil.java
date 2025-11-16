@@ -1,6 +1,5 @@
 package de.tomalbrc.filament.util;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.math.Axis;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.DecorationData;
@@ -8,6 +7,7 @@ import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
 import de.tomalbrc.filament.decoration.util.DecorationItemDisplayElement;
 import de.tomalbrc.filament.decoration.util.ItemFrameElement;
+import de.tomalbrc.filament.item.FilamentItem;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
@@ -30,7 +30,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.BlockHitResult;
@@ -41,7 +40,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.*;
 import org.joml.Math;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 import java.util.Optional;
@@ -93,10 +91,10 @@ public class DecorationUtil {
             element.setSize(1.f, direction.equals(Direction.DOWN) ? 1.f : .5f); // default
         }
 
-        element.setInteractionHandler(new VirtualElement.InteractionHandler() {
+        element.setHandler(new VirtualElement.InteractionHandler() {
             @Override
             public void interactAt(ServerPlayer player, InteractionHand hand, Vec3 pos) {
-                ServerLevel serverLevel = player.level();
+                ServerLevel serverLevel = player.serverLevel();
                 BlockPos blockPos = BlockPos.containing(element.getHolder().getAttachment().getPos());
                 InteractionResult result = InteractionResult.PASS;
                 if (onInteract != null && serverLevel.mayInteract(player, blockPos)) {
@@ -108,13 +106,13 @@ public class DecorationUtil {
 
             @Override
             public void attack(ServerPlayer player) {
-                ServerLevel serverLevel = player.level();
+                ServerLevel serverLevel = player.serverLevel();
                 BlockPos blockPos = BlockPos.containing(element.getHolder().getAttachment().getPos());
-                player.gameMode.handleBlockBreakAction(blockPos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, Direction.UP, serverLevel.getMaxY(), 0);
+                player.gameMode.handleBlockBreakAction(blockPos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, Direction.UP, serverLevel.getMaxBuildHeight(), 0);
             }
         });
 
-        var dirUnitVec = direction.getUnitVec3i();
+        var dirUnitVec = direction.getNormal();
         if (direction != Direction.DOWN && direction != Direction.UP) {
             element.setOffset(new Vec3(dirUnitVec.getX(), dirUnitVec.getY() + element.getHeight(), dirUnitVec.getZ()).multiply(1.f-element.getWidth(), 1, 1.f-element.getWidth()).scale(-0.5f));
         } else {
@@ -149,7 +147,7 @@ public class DecorationUtil {
         element.setDisplayHeight(size.y * 3.f);
 
         element.setTransformation(matrix4f);
-        element.setItemDisplayContext(data.properties().display);
+        element.setModelTransformation(data.properties().display);
 
         return element;
     }
@@ -214,7 +212,7 @@ public class DecorationUtil {
                         double xOffset = deltaX * dx + minX;
                         double yOffset = deltaY * dy + minY;
                         double zOffset = deltaZ * dz + minZ;
-                        packets.add(new ClientboundLevelParticlesPacket(new ItemParticleOption(ParticleTypes.ITEM, stack), true, false, blockPos.getX() + xOffset, blockPos.getY() + yOffset, blockPos.getZ() + zOffset, (float)deltaX - 0.5f, (float)deltaY - 0.5f, (float)deltaZ - 0.5f, 0.25f, 0));
+                        packets.add(new ClientboundLevelParticlesPacket(new ItemParticleOption(ParticleTypes.ITEM, stack), false, blockPos.getX() + xOffset, blockPos.getY() + yOffset, blockPos.getZ() + zOffset, (float)deltaX - 0.5f, (float)deltaY - 0.5f, (float)deltaZ - 0.5f, 0.25f, 0));
                     }
                 }
             }
@@ -232,24 +230,27 @@ public class DecorationUtil {
 
     public static ItemStack placementAdjustedItem(ItemStack itemStack, ItemResource itemResource, boolean wall, boolean ceiling) {
         var converted = clientsideItem(itemStack);
+        converted.remove(DataComponents.CUSTOM_NAME);
 
         // TODO: this should be a behaviour
-        if (wall && itemResource.getModels().containsKey("wall")) {
-            converted.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(ImmutableList.of(), ImmutableList.of(), ImmutableList.of("wall"), ImmutableList.of()));
-            return converted;
+        // TODO: 1.21.1
+        if (itemStack.getItem() instanceof FilamentItem filamentItem) {
+            if (wall && itemResource.getModels().containsKey("wall")) {
+                converted.set(DataComponents.CUSTOM_MODEL_DATA, filamentItem.getModelData().get("wall").asComponent());
+                return converted;
+            }
+
+            if (ceiling && itemResource.getModels().containsKey("ceiling")) {
+                converted.set(DataComponents.CUSTOM_MODEL_DATA, filamentItem.getModelData().get("ceiling").asComponent());
+                return converted;
+            }
+
+            if (itemResource.getModels().containsKey("floor")) {
+                converted.set(DataComponents.CUSTOM_MODEL_DATA, filamentItem.getModelData().get("floor").asComponent());
+                return converted;
+            }
         }
 
-        if (ceiling && itemResource.getModels().containsKey("ceiling")) {
-            converted.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(ImmutableList.of(), ImmutableList.of(), ImmutableList.of("ceiling"), ImmutableList.of()));
-            return converted;
-        }
-
-        if (itemResource.getModels().containsKey("floor")) {
-            converted.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(ImmutableList.of(), ImmutableList.of(), ImmutableList.of("floor"), ImmutableList.of()));
-            return converted;
-        }
-
-        converted.remove(DataComponents.CUSTOM_NAME);
         return converted;
     }
 
@@ -260,7 +261,7 @@ public class DecorationUtil {
         if (!(itemStack.getItem() instanceof PolymerItem)) {
             return itemStack.copyWithCount(1);
         } else {
-            return ((PolymerItem)itemStack.getItem()).getPolymerItemStack(itemStack, TooltipFlag.NORMAL, PacketContext.create(Filament.REGISTRY_ACCESS.compositeAccess()));
+            return ((PolymerItem)itemStack.getItem()).getPolymerItemStack(itemStack, TooltipFlag.NORMAL, Filament.REGISTRY_ACCESS.compositeAccess(), null);
         }
     }
 
@@ -286,7 +287,7 @@ public class DecorationUtil {
     }
 
     public static void defaultVirtualInteraction(ServerPlayer player, InteractionHand hand, BlockPos blockPos, Vec3 position, float height) {
-        player.connection.handleUseItemOn(new ServerboundUseItemOnPacket(hand, new BlockHitResult(blockPos.getCenter().add(position), Direction.getApproximateNearest(position.multiply(1, 1.f/height * 0.5, 1)), blockPos, false), 0));
+        player.connection.handleUseItemOn(new ServerboundUseItemOnPacket(hand, new BlockHitResult(blockPos.getCenter().add(position), Direction.getNearest(position.multiply(1, 1.f/height * 0.5, 1)), blockPos, false), 0));
     }
 
     @FunctionalInterface

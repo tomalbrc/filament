@@ -15,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -85,7 +86,7 @@ public class VirtualDestroyStage extends ElementHolder {
 
         if (self.getAttachment() == null || !self.getAttachment().getPos().equals(vecPos)) {
             // init display list
-            BlockBoundAttachment.of(self, player.level(), vecPos);
+            BlockBoundAttachment.of(self, player.serverLevel(), vecPos);
             self.destroyElements().getFirst().setTranslation(new Vector3f());
 
             if (state.getBlock() instanceof DecorationBlock decorationBlock1 && decorationBlock1.getDecorationData().hasBlocks()) {
@@ -120,7 +121,7 @@ public class VirtualDestroyStage extends ElementHolder {
     static {
         for (int i = 0; i < DESTROY_STAGE_MODELS.length; i++) {
             ItemStack stack = Items.STICK.getDefaultInstance();
-            stack.set(DataComponents.ITEM_MODEL, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "special/destroy_stage_" + i));
+            stack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(PolymerResourcePackUtils.requestModel(stack.getItem(), ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "special/destroy_stage_" + i)).value()));
             DESTROY_STAGE_MODELS[i] = stack;
         }
 

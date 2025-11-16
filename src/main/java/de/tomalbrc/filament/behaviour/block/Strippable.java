@@ -54,6 +54,6 @@ public class Strippable implements BlockBehaviour<Strippable.Config> {
         /**
          * Sound to play
          */
-        public ResourceLocation sound = SoundEvents.AXE_STRIP.location();
+        public ResourceLocation sound = SoundEvents.AXE_STRIP.getLocation();
     }
 }

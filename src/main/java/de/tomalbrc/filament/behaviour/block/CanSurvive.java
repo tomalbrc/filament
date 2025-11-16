@@ -8,9 +8,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -47,7 +46,7 @@ public class CanSurvive implements BlockBehaviour<CanSurvive.Config> {
         var belowState = levelReader.getBlockState(blockPos.relative(direction));
         if (this.config.blocks != null) {
             for (ResourceLocation resourceLocation : this.config.blocks) {
-                var block = BuiltInRegistries.BLOCK.getValue(resourceLocation);
+                var block = BuiltInRegistries.BLOCK.get(resourceLocation);
                 if (belowState.is(block)) {
                     return !belowState.is(Blocks.WATER) || levelReader.getFluidState(blockPos.relative(direction)).isSource();
                 }
@@ -98,8 +97,8 @@ public class CanSurvive implements BlockBehaviour<CanSurvive.Config> {
 
 
     @Override
-    public BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
-        return !blockState.canSurvive(levelReader, blockPos) ? Blocks.AIR.defaultBlockState() : blockState;
+    public BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) {
+        return !blockState.canSurvive(levelAccessor, blockPos) ? Blocks.AIR.defaultBlockState() : blockState;
     }
 
     public static class Config {

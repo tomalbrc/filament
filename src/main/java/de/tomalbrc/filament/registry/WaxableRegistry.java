@@ -13,7 +13,7 @@ public class WaxableRegistry {
     private static final Supplier<BiMap<ResourceLocation, Block>> waxables_prev = Suppliers.memoize(waxables::inverse);
 
     public static Block getWaxed(Block block) {
-        return BuiltInRegistries.BLOCK.getValue(waxables.get(block));
+        return BuiltInRegistries.BLOCK.get(waxables.get(block));
     }
 
     public static Block getPrevious(Block block) {

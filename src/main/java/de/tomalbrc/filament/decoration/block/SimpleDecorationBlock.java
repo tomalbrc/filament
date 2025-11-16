@@ -2,6 +2,7 @@ package de.tomalbrc.filament.decoration.block;
 
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.holder.DecorationHolder;
+import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.util.BlockUtil;
 import de.tomalbrc.filament.util.DecorationUtil;
 import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
@@ -46,13 +47,14 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
 
     @Override
     public ItemStack visualItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
-        var item = BuiltInRegistries.ITEM.getValue(this.data.id()).getDefaultInstance();
+        var item = BuiltInRegistries.ITEM.get(this.data.id()).getDefaultInstance();
 
-        if (stateMap != null && cmdMap != null) {
+        if (stateMap != null && cmdMap != null && item.getItem() instanceof FilamentItem filamentItem) {
             var val = stateMap.get(behaviourModifiedBlockState(blockState, blockState));
             if (val != null && cmdMap.containsKey(val)) {
-                item.set(DataComponents.ITEM_MODEL, data.id().withPrefix("block/"));
-                item.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(), List.of(), List.of(cmdMap.get(val)), List.of()));
+
+                var v = filamentItem.getModelData().get(cmdMap.get(val));
+                if (v != null) item.set(DataComponents.CUSTOM_MODEL_DATA, v.asComponent());
             }
         }
 
@@ -63,7 +65,7 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
     @NotNull
     public List<ItemStack> getDrops(BlockState blockState, LootParams.Builder builder) {
         if (this.getDecorationData().properties().drops) {
-            List<ItemStack> list = ObjectArrayList.of(BuiltInRegistries.ITEM.getValue(this.decorationId).getDefaultInstance());
+            List<ItemStack> list = ObjectArrayList.of(BuiltInRegistries.ITEM.get(this.decorationId).getDefaultInstance());
             list.addAll(super.getDrops(blockState, builder));
             return list;
         } else {
@@ -78,6 +80,6 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
         BlockUtil.playBreakSound(level, blockPos, blockState);
 
         if (data.properties().showBreakParticles)
-            DecorationUtil.showBreakParticle((ServerLevel) level, data.properties().useItemParticles ? BuiltInRegistries.ITEM.getValue(this.decorationId).getDefaultInstance() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+            DecorationUtil.showBreakParticle((ServerLevel) level, data.properties().useItemParticles ? BuiltInRegistries.ITEM.get(this.decorationId).getDefaultInstance() : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
     }
 }

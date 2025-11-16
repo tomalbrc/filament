@@ -9,6 +9,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -49,7 +50,7 @@ public class Hoe implements ItemBehaviour<Hoe.Config> {
                 if (!level.isClientSide()) {
                     consumer.accept(useOnContext);
                     if (player != null) {
-                        useOnContext.getItemInHand().hurtAndBreak(1, player, useOnContext.getHand());
+                        useOnContext.getItemInHand().hurtAndBreak(1, player, LivingEntity.getSlotForHand(useOnContext.getHand()));
                     }
                 }
 
@@ -61,6 +62,6 @@ public class Hoe implements ItemBehaviour<Hoe.Config> {
     }
 
     public static class Config {
-        public ResourceLocation sound = SoundEvents.HOE_TILL.location();
+        public ResourceLocation sound = SoundEvents.HOE_TILL.getLocation();
     }
 }

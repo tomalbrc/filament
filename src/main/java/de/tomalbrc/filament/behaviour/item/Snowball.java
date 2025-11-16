@@ -9,13 +9,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -53,20 +52,25 @@ public class Snowball implements ItemBehaviour<Snowball.Config> {
     }
 
     @Override
-    public InteractionResult use(Item item, Level level, Player player, InteractionHand hand) {
-        ItemStack itemStack = player.getItemInHand(hand);
+    public InteractionResultHolder<ItemStack> use(Item item, Level level, Player player, InteractionHand interactionHand) {
+        ItemStack itemStack = player.getItemInHand(interactionHand);
         level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
-        if (level instanceof ServerLevel serverLevel) {
-            Projectile.spawnProjectileFromRotation(net.minecraft.world.entity.projectile.Snowball::new, serverLevel, itemStack, player, 0.0F, config.power, config.inaccuracy);
+        if (!level.isClientSide) {
+            net.minecraft.world.entity.projectile.Snowball snowball = new net.minecraft.world.entity.projectile.Snowball(level, player);
+            snowball.setItem(itemStack);
+            snowball.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, config.power, config.inaccuracy);
+            level.addFreshEntity(snowball);
         }
 
         player.awardStat(Stats.ITEM_USED.get(item));
         itemStack.consume(1, player);
-        return InteractionResult.SUCCESS;
+        return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
     }
 
     public Projectile asProjectile(Level level, Position pos, ItemStack stack, Direction direction) {
-        return new net.minecraft.world.entity.projectile.Snowball(level, pos.x(), pos.y(), pos.z(), stack);
+        var sb = new net.minecraft.world.entity.projectile.Snowball(level, pos.x(), pos.y(), pos.z());
+        sb.setItem(stack);
+        return sb;
     }
 
     public List<String> commands() {
@@ -138,12 +142,15 @@ public class Snowball implements ItemBehaviour<Snowball.Config> {
         }
 
         @Override
-        public @NotNull ItemStack execute(BlockSource blockSource, ItemStack item) {
-            ServerLevel serverLevel = blockSource.level();
+        public @NotNull ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
+            Level level = blockSource.level();
             Direction direction = blockSource.state().getValue(DispenserBlock.FACING);
             Position position = this.dispenseConfig.positionFunction().getDispensePosition(blockSource, direction);
-            Projectile.spawnProjectileUsingShoot(this.projectileItem.getOrThrow(Behaviours.SNOWBALL).asProjectile(serverLevel, position, item, direction), serverLevel, item, direction.getStepX(), direction.getStepY(), direction.getStepZ(), this.dispenseConfig.power(), this.dispenseConfig.uncertainty());
-            return item;
+            Projectile projectile = this.projectileItem.getOrThrow(Behaviours.SNOWBALL).asProjectile(level, position, itemStack, direction);
+            projectile.shoot(direction.getStepX(), direction.getStepY(), direction.getStepZ(), this.dispenseConfig.power(), this.dispenseConfig.uncertainty());
+            level.addFreshEntity(projectile);
+            itemStack.shrink(1);
+            return itemStack;
         }
 
         @Override

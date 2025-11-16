@@ -16,18 +16,17 @@ import de.tomalbrc.filament.util.TextUtil;
 import de.tomalbrc.filament.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.*;
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -41,10 +40,10 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.DoubleBlockCombiner;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -52,14 +51,11 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiPredicate;
@@ -87,7 +83,7 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     @Override
     public void init(Item item, Block block, BehaviourHolder behaviourHolder) {
         var id = block.builtInRegistryHolder().key().location();
-        TYPE = (BlockEntityType<DecorationBlockEntity>) BuiltInRegistries.BLOCK_ENTITY_TYPE.getValue(id);
+        TYPE = (BlockEntityType<DecorationBlockEntity>) BuiltInRegistries.BLOCK_ENTITY_TYPE.get(id);
     }
 
     @Override
@@ -125,7 +121,7 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
         builder.add(BlockStateProperties.CHEST_TYPE);
     }
 
-    protected BlockState updateShapeSimple(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockState blockState2) {
+    protected BlockState updateShapeSimple(BlockState blockState, LevelReader levelReader, LevelAccessor scheduledTickAccess, BlockPos blockPos, Direction direction, BlockState blockState2) {
         if (blockState.getValue(BlockStateProperties.WATERLOGGED)) {
             scheduledTickAccess.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelReader));
         }
@@ -143,8 +139,8 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     }
 
     @Override
-    public BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
-        var blockState3 = updateShapeSimple(blockState, levelReader, scheduledTickAccess, blockPos, direction, blockState2);
+    public BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) {
+        var blockState3 = updateShapeSimple(blockState, levelAccessor, levelAccessor, blockPos, direction, blockState2);
 
         if (canConnectTo(blockState, blockState2) && !blockState3.getValue(ChestBlock.TYPE).equals(ChestType.SINGLE) && ChestBlock.getConnectedDirection(blockState3) == direction) {
             return blockState2.getBlock().withPropertiesOf(blockState3);
@@ -226,15 +222,15 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     }
 
     @Override
-    public void write(ValueOutput output, DecorationBlockEntity decorationBlockEntity) {
+    public void write(CompoundTag output, HolderLookup.Provider lookup, DecorationBlockEntity decorationBlockEntity) {
         if (!container.trySaveLootTable(output))
-            ContainerHelper.saveAllItems(output.child("Container"), this.container.items);
+            output.put("Container", ContainerHelper.saveAllItems(new CompoundTag(), this.container.items, lookup));
     }
 
     @Override
-    public void read(ValueInput input, DecorationBlockEntity decorationBlockEntity) {
-        if (!container.tryLoadLootTable(input))
-            input.child("Container").ifPresent(x -> ContainerHelper.loadAllItems(x, container.items));
+    public void read(CompoundTag input, HolderLookup.Provider lookup, DecorationBlockEntity decorationBlockEntity) {
+        if (!container.tryLoadLootTable(input) && input.contains("Container"))
+            ContainerHelper.loadAllItems(input.getCompound("Container"), container.items, lookup);
     }
 
     @Override
@@ -243,7 +239,7 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos, Direction direction) {
+    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos) {
         return AbstractContainerMenu.getRedstoneSignalFromContainer(getContainer(blockState, level, blockPos, config.ignoreBlock));
     }
 
@@ -254,7 +250,7 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
             if (menuProvider != null) {
                 player.openMenu(menuProvider);
                 player.awardStat(Stats.CUSTOM.get(Stats.OPEN_CHEST));
-                if (config.angerPiglins) PiglinAi.angerNearbyPiglins(serverLevel, player, true);
+                if (config.angerPiglins) PiglinAi.angerNearbyPiglins(player, true);
             }
         }
 
@@ -267,8 +263,9 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     }
 
     @Override
-    public void affectNeighborsAfterRemoval(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, boolean bl) {
-        Containers.updateNeighboursAfterDestroy(blockState, serverLevel, blockPos);
+    public void affectNeighborsAfterRemoval(BlockState state, Level level, BlockPos pos, BlockState blockState2, boolean bl) {
+        Containers.dropContentsOnDestroy(state, blockState2, level, pos);
+
     }
 
     @Override
@@ -277,7 +274,7 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     }
 
     @Override
-    public void applyImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentGetter dataComponentGetter) {
+    public void applyImplicitComponents(DecorationBlockEntity decorationBlockEntity, BlockEntity.DataComponentInput dataComponentGetter) {
         dataComponentGetter.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(this.container.items);
         SeededContainerLoot seededContainerLoot = dataComponentGetter.get(DataComponents.CONTAINER_LOOT);
         if (seededContainerLoot != null) {
@@ -295,9 +292,9 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     }
 
     @Override
-    public void removeComponentsFromTag(DecorationBlockEntity decorationBlockEntity, ValueOutput valueOutput) {
-        valueOutput.discard("LootTable");
-        valueOutput.discard("LootTableSeed");
+    public void removeComponentsFromTag(DecorationBlockEntity decorationBlockEntity, CompoundTag valueOutput, HolderLookup.Provider lookup) {
+        valueOutput.remove("LootTable");
+        valueOutput.remove("LootTableSeed");
     }
 
     @Override
@@ -442,10 +439,10 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
             var c1 = container.getOrThrow(Behaviours.ANIMATED_CHEST).container;
             var c2 = container2.getOrThrow(Behaviours.ANIMATED_CHEST).container;
             return Optional.of(new CompoundContainer(c1, c2) {
-                @Override
-                public @NotNull List<ContainerUser> getEntitiesWithContainerOpen() {
-                    return container2.getOrThrow(Behaviours.ANIMATED_CHEST).container.getEntitiesWithContainerOpen();
-                }
+//                @Override
+//                public @NotNull List<Player> getEntitiesWithContainerOpen() {
+//                    return container2.getOrThrow(Behaviours.ANIMATED_CHEST).container.getEntitiesWithContainerOpen();
+//                }
             });
         }
 
@@ -470,10 +467,10 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
             var c1 = chestBlockEntity.getOrThrow(Behaviours.ANIMATED_CHEST);
             var c2 = chestBlockEntity2.getOrThrow(Behaviours.ANIMATED_CHEST);
             final Container container = new CompoundContainer(c1.container, c2.container) {
-                @Override
-                public @NotNull List<ContainerUser> getEntitiesWithContainerOpen() {
-                    return c2.container.getEntitiesWithContainerOpen();
-                }
+//                @Override
+//                public @NotNull List<Player> getEntitiesWithContainerOpen() {
+//                    return c2.container.getEntitiesWithContainerOpen();
+//                }
             };
 
             return Optional.of(new MenuProvider() {

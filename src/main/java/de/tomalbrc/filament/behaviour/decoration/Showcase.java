@@ -19,10 +19,13 @@ import eu.pb4.polymer.virtualentity.api.tracker.DisplayTrackedData;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -40,10 +43,10 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.component.SeededContainerLoot;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -139,16 +142,16 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     }
 
     @Override
-    public void read(ValueInput input, DecorationBlockEntity blockEntity) {
+    public void read(CompoundTag input, HolderLookup.Provider lookup, DecorationBlockEntity blockEntity) {
         if (!container.tryLoadLootTable(input)) {
-            var showcaseInput = input.child(SHOWCASE_KEY);
-            if (showcaseInput.isPresent() && blockEntity.getOrCreateHolder() != null) {
-                ValueInput showcaseTag = showcaseInput.orElseThrow();
+            if (input.contains(SHOWCASE_KEY) && blockEntity.getOrCreateHolder() != null) {
+                var showcaseTag = input.getCompound(SHOWCASE_KEY);
 
                 for (int i = 0; i < this.config.elements.size(); i++) {
                     String key = ITEM + i;
-                    if (showcaseTag.child(key).isPresent()) {
-                        container.items.set(i, showcaseTag.read(key, ItemStack.CODEC).orElseThrow());
+                    if (showcaseTag.contains(key)) {
+                        var itemData = showcaseTag.get(key);
+                        container.items.set(i, ItemStack.CODEC.decode(lookup.createSerializationContext(NbtOps.INSTANCE), itemData).getOrThrow().getFirst());
                     }
                 }
                 container.setChanged();
@@ -158,15 +161,15 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     }
 
     @Override
-    public void write(ValueOutput output, DecorationBlockEntity blockEntity) {
+    public void write(CompoundTag output, HolderLookup.Provider lookup, DecorationBlockEntity blockEntity) {
         if (!container.trySaveLootTable(output)) {
             if (blockEntity.getOrCreateHolder() != null) {
-                ValueOutput showcaseTag = output.child(SHOWCASE_KEY);
+                CompoundTag showcaseTag = output.getCompound(SHOWCASE_KEY);
 
                 for (int i = 0; i < config.elements.size(); i++) {
                     Showcase.ShowcaseMeta showcase = config.elements.get(i);
                     if (showcase != null && !getShowcaseItemStack(showcase).isEmpty())
-                        showcaseTag.store(ITEM + i, ItemStack.CODEC, getShowcaseItemStack(showcase));
+                        showcaseTag.put(ITEM + 1, ItemStack.CODEC.encodeStart(lookup.createSerializationContext(NbtOps.INSTANCE), getShowcaseItemStack(showcase)).getOrThrow());
                 }
             }
         }
@@ -247,7 +250,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
 
     private DisplayElement element(ShowcaseMeta showcase, ItemStack itemStack) {
         ItemDisplayElement displayElement = new ItemDisplayElement(itemStack.copy());
-        displayElement.setItemDisplayContext(showcase.display);
+        displayElement.setModelTransformation(showcase.display);
         displayElement.setInvisible(true);
         return displayElement;
     }
@@ -331,12 +334,17 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     }
 
     @Override
+    public BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) {
+        return BlockBehaviour.super.updateShape(blockState, direction, blockState2, levelAccessor, blockPos, blockPos2);
+    }
+
+    @Override
     public ItemStack getCloneItemStack(ItemStack itemStack, LevelReader levelReader, BlockPos blockPos, BlockState blockState, boolean includeData) {
         return itemStack;
     }
 
     @Override
-    public void applyImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentGetter dataComponentGetter) {
+    public void applyImplicitComponents(DecorationBlockEntity decorationBlockEntity, BlockEntity.DataComponentInput dataComponentGetter) {
         SeededContainerLoot seededContainerLoot = dataComponentGetter.get(DataComponents.CONTAINER_LOOT);
         if (seededContainerLoot != null) {
             this.lootTable = seededContainerLoot.lootTable();
@@ -383,9 +391,9 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     }
 
     @Override
-    public void removeComponentsFromTag(DecorationBlockEntity decorationBlockEntity, ValueOutput valueOutput) {
-        valueOutput.discard("LootTable");
-        valueOutput.discard("LootTableSeed");
+    public void removeComponentsFromTag(DecorationBlockEntity decorationBlockEntity, CompoundTag valueOutput, HolderLookup.Provider lookup) {
+        valueOutput.remove("LootTable");
+        valueOutput.remove("LootTableSeed");
     }
 
     @Override
@@ -439,9 +447,9 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
          */
         public List<ResourceLocation> filterTags;
 
-        public ResourceLocation addItemSound = SoundEvents.ITEM_FRAME_ADD_ITEM.location();
+        public ResourceLocation addItemSound = SoundEvents.ITEM_FRAME_ADD_ITEM.getLocation();
 
-        public ResourceLocation removeItemSound = SoundEvents.ITEM_FRAME_REMOVE_ITEM.location();
+        public ResourceLocation removeItemSound = SoundEvents.ITEM_FRAME_REMOVE_ITEM.getLocation();
 
         public int maxStackSize = 1;
 

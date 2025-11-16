@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.redstone.Orientation;
 import org.jetbrains.annotations.NotNull;
 
 public class Powerlevel implements BlockBehaviour<Powerlevel.Config> {
@@ -56,7 +55,7 @@ public class Powerlevel implements BlockBehaviour<Powerlevel.Config> {
     }
 
     @Override
-    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, Orientation orientation, boolean bl) {
+    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos2, boolean bl) {
         if (!level.isClientSide()) {
             int power = blockState.getValue(POWERS[Math.max(0, config.max-1)]);
             int signal = level.getBestNeighborSignal(blockPos);

@@ -24,7 +24,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -79,19 +79,19 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
     }
 
     @Override
-    public InteractionResult use(Item item, Level level, Player player, InteractionHand interactionHand) {
+    public InteractionResultHolder<ItemStack> use(Item item, Level level, Player player, InteractionHand interactionHand) {
         ItemStack itemStack = player.getItemInHand(interactionHand);
         ChargedProjectiles chargedProjectiles = itemStack.get(DataComponents.CHARGED_PROJECTILES);
         if (chargedProjectiles != null && !chargedProjectiles.isEmpty()) {
             this.performShooting(level, player, interactionHand, itemStack, getShootingPower(chargedProjectiles) * config.powerMultiplier, 1.0F, null);
-            return InteractionResult.CONSUME;
+            return InteractionResultHolder.consume(player.getItemInHand(interactionHand));
         } else if (!this.getProjectile(player).isEmpty()) {
             this.startSoundPlayed = false;
             this.midLoadSoundPlayed = false;
             player.startUsingItem(interactionHand);
-            return InteractionResult.CONSUME;
+            return InteractionResultHolder.consume(player.getItemInHand(interactionHand));
         } else {
-            return InteractionResult.FAIL;
+            return InteractionResultHolder.fail(player.getItemInHand(interactionHand));
         }
     }
 
@@ -100,16 +100,13 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
     }
 
     @Override
-    public boolean releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int i) {
+    public void releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int i) {
         int j = this.getUseDuration(itemStack, livingEntity).orElseThrow() - i;
         float f = CrossbowItemInvoker.invokeGetPowerForTime(j, itemStack, livingEntity);
         if (f >= 1.f && !CrossbowItem.isCharged(itemStack) && livingEntity instanceof ServerPlayer serverPlayer && tryLoadProjectiles(serverPlayer, itemStack)) {
             CrossbowItem.ChargingSounds chargingSounds = this.getChargingSounds(itemStack);
             chargingSounds.end().ifPresent((holder) -> level.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), holder.value(), livingEntity.getSoundSource(), 1.0F, 1.0F / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F));
-
-            return true;
         }
-        return false;
     }
 
     private boolean tryLoadProjectiles(Player shooter, ItemStack weapon) {
@@ -208,7 +205,7 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
                 Projectile projectile = this.createProjectile(serverLevel, livingEntity, itemStack, itemStack2, bl);
                 this.shootProjectile(livingEntity, projectile, l, f, g, m, livingEntity2);
                 serverLevel.addFreshEntity(projectile);
-                itemStack.hurtAndBreak(this.getDurabilityUse(itemStack2), livingEntity, interactionHand);
+                itemStack.hurtAndBreak(this.getDurabilityUse(itemStack2), livingEntity, LivingEntity.getSlotForHand(interactionHand));
                 if (itemStack.isEmpty()) {
                     break;
                 }
@@ -254,11 +251,6 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
         return Optional.of(getChargeDuration(itemStack, livingEntity) + 3);
     }
 
-    @Override
-    public ItemUseAnimation getUseAnimation(ItemStack itemStack) {
-        return ItemUseAnimation.CROSSBOW;
-    }
-
     public static int getChargeDuration(ItemStack itemStack, LivingEntity livingEntity) {
         float f = EnchantmentHelper.modifyCrossbowChargingTime(itemStack, livingEntity, 1.25F);
         return Mth.floor(f * 20.0F);
@@ -276,7 +268,7 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
     public Predicate<ItemStack> supportedProjectiles() {
         return itemStack -> {
             for (var itemId : config.supportedProjectiles) {
-                if (itemStack.is(BuiltInRegistries.ITEM.get(itemId).orElseThrow()))
+                if (itemStack.is(BuiltInRegistries.ITEM.get(itemId)))
                     return true;
             }
             return false;
@@ -286,7 +278,7 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
     public Predicate<ItemStack> supportedHeldProjectiles() {
         return itemStack -> {
             for (var itemId : config.supportedHeldProjectiles) {
-                if (itemStack.is(BuiltInRegistries.ITEM.get(itemId).orElseThrow()))
+                if (itemStack.is(BuiltInRegistries.ITEM.get(itemId)))
                     return true;
             }
             return false;
@@ -337,10 +329,10 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
         public List<ResourceLocation> supportedProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"), ResourceLocation.withDefaultNamespace("firework_rocket"));
         public List<ResourceLocation> supportedHeldProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"), ResourceLocation.withDefaultNamespace("firework_rocket"));
 
-        public ResourceLocation shootSound = SoundEvents.CROSSBOW_SHOOT.location();
+        public ResourceLocation shootSound = SoundEvents.CROSSBOW_SHOOT.getLocation();
 
-        public ResourceLocation loadingStartSound = SoundEvents.CROSSBOW_LOADING_START.value().location();
-        public ResourceLocation loadingMiddleSound = SoundEvents.CROSSBOW_LOADING_MIDDLE.value().location();
-        public ResourceLocation loadingEndSound = SoundEvents.CROSSBOW_LOADING_END.value().location();
+        public ResourceLocation loadingStartSound = SoundEvents.CROSSBOW_LOADING_START.value().getLocation();
+        public ResourceLocation loadingMiddleSound = SoundEvents.CROSSBOW_LOADING_MIDDLE.value().getLocation();
+        public ResourceLocation loadingEndSound = SoundEvents.CROSSBOW_LOADING_END.value().getLocation();
     }
 }

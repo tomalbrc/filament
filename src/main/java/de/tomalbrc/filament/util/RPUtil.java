@@ -5,6 +5,7 @@ import com.google.gson.JsonPrimitive;
 import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
+import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.behaviour.ItemPredicateModelProvider;
 import de.tomalbrc.filament.data.AbstractBlockData;
 import de.tomalbrc.filament.data.Data;
@@ -34,7 +35,7 @@ public class RPUtil {
             createBlockModels(blockData.id(), blockData.blockResource());
         }
 
-        if (resource != null && !data.components().has(DataComponents.ITEM_MODEL) && data.itemModel() == null && (resource.getModels() != null || resource.couldGenerate())) {
+        if (resource != null && !data.components().has(DataComponents.CUSTOM_MODEL_DATA) && data.itemModel() == null && (resource.getModels() != null || resource.couldGenerate())) {
             if (behaviourHolder.getBehaviours() != null && !behaviourHolder.getBehaviours().isEmpty()) {
                 for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> entry : behaviourHolder.getBehaviours()) {
                     if (entry.getValue() instanceof ItemPredicateModelProvider modelProvider && modelProvider.hasRequiredModels(data)) {
@@ -51,29 +52,31 @@ public class RPUtil {
             if (resource instanceof ItemResource ir) {
                 ItemAssetGenerator.createItemModels(data.id(), ir);
             }
-
-            ResourceProvider finalItemResources = resource;
-            PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder ->
-                    ItemAssetGenerator.createDefault(
-                            resourcePackBuilder,
-                            data.id(),
-                            finalItemResources,
-                            data.components().has(DataComponents.DYED_COLOR) || data.vanillaItem().components().has(DataComponents.DYED_COLOR)
-                    )
-            );
+// TODO: 1.21.1
+//            ResourceProvider finalItemResources = resource;
+//            PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder ->
+//                    ItemAssetGenerator.createDefault(
+//                            resourcePackBuilder,
+//                            data.id(),
+//                            finalItemResources,
+//                            data.components().has(DataComponents.DYED_COLOR) || data.vanillaItem().components().has(DataComponents.DYED_COLOR)
+//                    )
+//            );
         }
     }
 
     // Item assets for virtual blocks that use item displays (NOT DECORATIONS!)
     public static void createBlockItemAssets(ResourceLocation id, BlockResource blockResource) {
-        if (blockResource != null) PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder ->
-                ItemAssetGenerator.createDefault(
-                        resourcePackBuilder,
-                        id.withPrefix("block/"),
-                        blockResource,
-                        false
-                )
-        );
+        // TODO: 1.21.1
+
+//        if (blockResource != null) PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder ->
+//                ItemAssetGenerator.createDefault(
+//                        resourcePackBuilder,
+//                        id.withPrefix("block/"),
+//                        blockResource,
+//                        false
+//                )
+//        );
     }
 
     private static void createBlockModels(ResourceLocation id, BlockResource blockResource) {

@@ -1,7 +1,6 @@
 package de.tomalbrc.filament.decoration.holder;
 
-import de.tomalbrc.bil.core.element.PerPlayerTransformableElement;
-import de.tomalbrc.bil.core.holder.base.SimpleAnimatedHolder;
+import de.tomalbrc.bil.core.holder.positioned.PositionedHolder;
 import de.tomalbrc.bil.core.holder.wrapper.Bone;
 import de.tomalbrc.bil.core.holder.wrapper.DisplayWrapper;
 import de.tomalbrc.bil.core.model.Frame;
@@ -12,13 +11,16 @@ import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.decoration.Animation;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.util.DecorationItemDisplayElement;
 import de.tomalbrc.filament.decoration.util.ItemFrameElement;
 import de.tomalbrc.filament.util.DecorationUtil;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockAwareAttachment;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
 import eu.pb4.polymer.virtualentity.api.attachment.HolderAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
+import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,12 +31,12 @@ import org.joml.Vector3f;
 
 import java.util.function.Consumer;
 
-public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements FilamentDecorationHolder {
+public class AnimatedDecorationHolder extends PositionedHolder implements FilamentDecorationHolder {
     private final DecorationBlockEntity parent;
     private BlockStateMappedProperty<String> variantProperty;
 
     public AnimatedDecorationHolder(DecorationBlockEntity blockEntity, Model model) {
-        super(model);
+        super((ServerLevel) blockEntity.getLevel(), blockEntity.getBlockPos().getCenter(), model);
         this.parent = blockEntity;
 
         if (this.parent.has(Behaviours.ANIMATION)) {
@@ -60,39 +62,39 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
         }
     }
 
-    @Override
-    public boolean canRunEffects(ServerPlayer serverPlayer, Frame frame) {
-        BlockState state = parent.getBlockState();
-
-        // TODO: This should be done through decoration behaviours...
-        if (state.hasProperty(BlockStateProperties.CHEST_TYPE)) {
-            return state.getValue(BlockStateProperties.CHEST_TYPE) != ChestType.RIGHT;
-        }
-
-        return super.canRunEffects(serverPlayer, frame);
-    }
+//    @Override
+//    public boolean canRunEffects(ServerPlayer serverPlayer, Frame frame) {
+//        BlockState state = parent.getBlockState();
+//
+//        // TODO: This should be done through decoration behaviours...
+//        if (state.hasProperty(BlockStateProperties.CHEST_TYPE)) {
+//            return state.getValue(BlockStateProperties.CHEST_TYPE) != ChestType.RIGHT;
+//        }
+//
+//        return super.canRunEffects(serverPlayer, frame);
+//    }
 
     @Override
     public void setYaw(float rotation) {
         this.getElements().forEach(x -> {
-            if (x instanceof PerPlayerTransformableElement displayElement) {
-                displayElement.setTeleportDuration(null,0);
+            if (x instanceof ItemDisplayElement displayElement) {
+                displayElement.setTeleportDuration(0);
                 displayElement.setYaw(rotation-180);
             }
         });
     }
 
     @Override
-    public void applyPose(ServerPlayer serverPlayer, Pose pose, DisplayWrapper<?> display) {
-        super.applyPose(serverPlayer, pose, display);
-        display.element().setTranslation(serverPlayer, pose.translation().get(new Vector3f()).sub(0, 0.5f, 0));
+    public void applyPose(Pose pose, DisplayWrapper<?> display) {
+        super.applyPose(pose, display);
+        display.element().setTranslation(pose.translation().get(new Vector3f()).sub(0, 0.5f, 0));
     }
 
     @Override
     protected void onDataLoaded() {
         super.onDataLoaded();
         if (this.bones != null && this.parent.getDecorationData() != null && this.parent.getDecorationData().size() != null) {
-            for (Bone<?> bone : this.bones) {
+            for (Bone bone : this.bones) {
                 bone.element().setDisplaySize(this.parent.getDecorationData().size().get(0) * 1.5f, this.parent.getDecorationData().size().get(1) * 1.5f);
             }
         }
@@ -130,8 +132,8 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
     }
 
     @Override
-    public void playAnimation(ServerPlayer serverPlayer, String animation, int priority, Consumer<ServerPlayer> onFinish) {
-        this.getAnimator().playAnimation(serverPlayer, animation, priority, onFinish);
+    public void playAnimation(String animation, int priority, Runnable onFinish) {
+        this.getAnimator().playAnimation(animation, priority, onFinish);
     }
 
     @Override

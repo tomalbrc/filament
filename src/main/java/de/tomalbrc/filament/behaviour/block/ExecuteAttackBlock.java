@@ -43,7 +43,7 @@ public class ExecuteAttackBlock implements BlockBehaviour<ExecuteAttackBlock.Con
 
             if (this.config.sound != null) {
                 var sound = this.config.sound;
-                user.level().playSound(null, user, BuiltInRegistries.SOUND_EVENT.getValue(sound), SoundSource.NEUTRAL, 1.0F, 1.0F);
+                user.level().playSound(null, user, BuiltInRegistries.SOUND_EVENT.get(sound), SoundSource.NEUTRAL, 1.0F, 1.0F);
             }
 
             if (this.config.consumes) {

@@ -11,7 +11,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.RandomizableContainer;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -22,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class FilamentContainer extends SimpleContainer implements RandomizableContainer {
-    List<ContainerUser> menus = new ObjectArrayList<>();
+    List<Player> menus = new ObjectArrayList<>();
 
     private boolean valid = true;
 
@@ -38,11 +37,6 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
         this.addListener(x -> blockEntity.setChanged());
         this.blockEntity = blockEntity;
         this.purge = purge;
-    }
-
-    @Override
-    public @NotNull List<ContainerUser> getEntitiesWithContainerOpen() {
-        return menus;
     }
 
     @Override
@@ -66,7 +60,7 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
 
     public void setValid(boolean valid) {
         if (!valid) {
-            for (ContainerUser entity : this.menus) {
+            for (Player entity : this.menus) {
                 if (entity instanceof ServerPlayer player) player.closeContainer();
             }
         }
@@ -78,11 +72,11 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
     }
 
     @Override
-    public void startOpen(ContainerUser containerUser) {
-        if (containerUser.getLivingEntity() instanceof ServerPlayer serverPlayer) this.unpackLootTable(serverPlayer);
+    public void startOpen(Player containerUser) {
+        if (containerUser instanceof ServerPlayer serverPlayer) this.unpackLootTable(serverPlayer);
         super.startOpen(containerUser);
 
-        if (!containerUser.getLivingEntity().isSpectator() && this.menus.isEmpty() && this.openCallback != null) {
+        if (!containerUser.isSpectator() && this.menus.isEmpty() && this.openCallback != null) {
             this.openCallback.run();
         }
 
@@ -90,7 +84,7 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
     }
 
     @Override
-    public void stopOpen(ContainerUser containerUser) {
+    public void stopOpen(Player containerUser) {
         super.stopOpen(containerUser);
 
         this.menus.remove(containerUser);

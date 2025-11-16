@@ -25,7 +25,7 @@ public class StatusEffectEmitter implements BlockBehaviour<StatusEffectEmitter.C
     }
 
     private MobEffectInstance decode(EffectElement element) {
-        return new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.get(element.effect).orElseThrow(), element.duration, element.amplifier, element.ambient, element.visible, element.showIcon);
+        return new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.getHolder(element.effect).orElseThrow(), element.duration, element.amplifier, element.ambient, element.visible, element.showIcon);
     }
 
     @Override

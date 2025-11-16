@@ -5,9 +5,9 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
-import de.tomalbrc.bil.json.SimpleCodecDeserializer;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.BehaviourList;
@@ -19,6 +19,7 @@ import de.tomalbrc.filament.data.resource.BlockResource;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.Util;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
@@ -58,13 +59,14 @@ import java.util.*;
 
 public class Json {
     public static final Set<String> BEHAVIOUR_ALIASES = ImmutableSet.of("behavior", "behaviors", "behaviours");
+    public static Codec<Vector2f> VECTOR2F = Codec.FLOAT.listOf().comapFlatMap((list) -> Util.fixedSize(list, 2).map((listx) -> new Vector2f(listx.get(0), listx.get(1))), (vector2f) -> List.of(vector2f.x(), vector2f.y()));
 
     public static final Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .registerTypeHierarchyAdapter(BlockState.class, new BlockStateDeserializer())
             .registerTypeHierarchyAdapter(Vector3f.class, new SimpleCodecDeserializer<>(ExtraCodecs.VECTOR3F))
-            .registerTypeHierarchyAdapter(Vector2f.class, new SimpleCodecDeserializer<>(ExtraCodecs.VECTOR2F))
+            .registerTypeHierarchyAdapter(Vector2f.class, new SimpleCodecDeserializer<>(VECTOR2F))
             .registerTypeHierarchyAdapter(Quaternionf.class, new QuaternionfDeserializer())
             .registerTypeAdapter(ResourceLocation.class, new SimpleCodecDeserializer<>(ResourceLocation.CODEC))
             .registerTypeHierarchyAdapter(Component.class, new ComponentDeserializer())
@@ -217,7 +219,7 @@ public class Json {
 
             BlockStateParser.BlockResult parsed;
             try {
-                parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK, name, false);
+                parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), name, false);
             } catch (CommandSyntaxException e) {
                 throw new JsonParseException("Invalid BlockState value: " + name);
             }
@@ -314,7 +316,7 @@ public class Json {
     private record RegistryDeserializer<T>(Registry<T> registry) implements JsonDeserializer<T> {
         @Override
         public T deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
-            return this.registry.getValue(ResourceLocation.parse(element.getAsString()));
+            return this.registry.get(ResourceLocation.parse(element.getAsString()));
         }
     }
 
@@ -332,12 +334,7 @@ public class Json {
             DataResult<Pair<DataComponentMap, JsonElement>> result = DataComponentMap.CODEC.decode(RegistryOps.create(JsonOps.INSTANCE, registryInfoLookup), jsonElement);
 
             if (result.resultOrPartial().isEmpty()) {
-                Filament.LOGGER.error("Skipping broken components; could not load: {}", jsonElement.toString());
-                Filament.LOGGER.error("Minecraft error message: {}", result.error().orElseThrow().message());
                 return null;
-            } else if (result.error().isPresent()) {
-                Filament.LOGGER.warn("Could not load some components: {}", jsonElement.toString());
-                Filament.LOGGER.warn("Minecraft error message: {}", result.error().orElseThrow().message());
             }
 
             return result.resultOrPartial().get().getFirst();
@@ -347,16 +344,14 @@ public class Json {
             final Map<ResourceKey<? extends Registry<?>>, RegistryOps.RegistryInfo<?>> map = new HashMap<>();
             registryAccess.registries().forEach((registryEntry) -> map.put(registryEntry.key(), createInfoForContextRegistry(registryEntry.value())));
             return new RegistryOps.RegistryInfoLookup() {
-                @NotNull
-                @SuppressWarnings("unchecked")
                 public <T> Optional<RegistryOps.RegistryInfo<T>> lookup(ResourceKey<? extends Registry<? extends T>> resourceKey) {
-                    return Optional.ofNullable((RegistryOps.RegistryInfo<T>) map.get(resourceKey));
+                    return Optional.ofNullable((RegistryOps.RegistryInfo<T>)map.get(resourceKey));
                 }
             };
         }
 
-        public static <T> RegistryOps.RegistryInfo<T> createInfoForContextRegistry(Registry<T> registry) {
-            return new RegistryOps.RegistryInfo<>(registry, registry, registry.registryLifecycle());
+        private static <T> RegistryOps.RegistryInfo<T> createInfoForContextRegistry(Registry<T> registry) {
+            return new RegistryOps.RegistryInfo<>(registry.asLookup(), registry.asTagAddingLookup(), registry.registryLifecycle());
         }
     }
 }

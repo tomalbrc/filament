@@ -18,8 +18,10 @@ public abstract class ServerPlayerMixin implements CosmeticInterface {
     @Inject(method = "initInventoryMenu", at = @At(value = "TAIL"))
     private void filament$onInitInventoryMenu(CallbackInfo ci) {
         if ((Object)this instanceof ServerPlayer serverPlayer) {
-            var slots = EquipmentSlotGroup.ARMOR.slots();
-            for (EquipmentSlot slot : slots) {
+            for (EquipmentSlot slot : EquipmentSlot.values()) {
+                if (!EquipmentSlotGroup.ARMOR.test(slot))
+                    continue;
+
                 if (slot == EquipmentSlot.HEAD) {
                     continue;
                 }
@@ -38,8 +40,10 @@ public abstract class ServerPlayerMixin implements CosmeticInterface {
     @Inject(method = "hasChangedDimension", at = @At("TAIL"))
     private void filament$onChangeDimension(CallbackInfo ci) {
         if ((Object)this instanceof ServerPlayer serverPlayer) {
-            var slots = EquipmentSlotGroup.ARMOR.slots();
-            for (EquipmentSlot slot : slots) {
+            for (EquipmentSlot slot : EquipmentSlot.values()) {
+                if (!EquipmentSlotGroup.ARMOR.test(slot))
+                    continue;
+
                 if (slot == EquipmentSlot.HEAD) {
                     continue;
                 }

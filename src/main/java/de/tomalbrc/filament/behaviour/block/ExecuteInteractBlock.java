@@ -36,7 +36,7 @@ public class ExecuteInteractBlock implements BlockBehaviour<ExecuteInteractBlock
     public InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
         if (player instanceof ServerPlayer serverPlayer) {
             runCommandBlock(serverPlayer, blockPos);
-            return InteractionResult.SUCCESS_SERVER;
+            return InteractionResult.SUCCESS;
         }
         return BlockBehaviour.super.useWithoutItem(blockState, level, blockPos, player, blockHitResult);
     }
@@ -45,7 +45,7 @@ public class ExecuteInteractBlock implements BlockBehaviour<ExecuteInteractBlock
     public @Nullable InteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         if (player instanceof ServerPlayer serverPlayer) {
             runCommandBlock(serverPlayer, blockPos);
-            return InteractionResult.SUCCESS_SERVER;
+            return InteractionResult.SUCCESS;
         }
         return BlockBehaviour.super.useItemOn(itemStack, blockState, level, blockPos, player, interactionHand, blockHitResult);
     }
@@ -63,7 +63,7 @@ public class ExecuteInteractBlock implements BlockBehaviour<ExecuteInteractBlock
 
             if (this.config.sound != null) {
                 var sound = this.config.sound;
-                user.level().playSound(null, user, BuiltInRegistries.SOUND_EVENT.getValue(sound), SoundSource.NEUTRAL, 1.0F, 1.0F);
+                user.level().playSound(null, user, BuiltInRegistries.SOUND_EVENT.get(sound), SoundSource.NEUTRAL, 1.0F, 1.0F);
             }
 
             if (this.config.consumes) {

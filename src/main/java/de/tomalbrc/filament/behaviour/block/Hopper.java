@@ -10,7 +10,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -19,7 +18,6 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -39,7 +37,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -194,7 +191,7 @@ public class Hopper implements BlockBehaviourWithEntity<Hopper.Config> {
     }
 
     @Override
-    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, @Nullable Orientation orientation, boolean bl) {
+    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos2, boolean bl) {
         this.checkPoweredState(level, blockPos, blockState);
     }
 
@@ -206,8 +203,8 @@ public class Hopper implements BlockBehaviourWithEntity<Hopper.Config> {
     }
 
     @Override
-    public void affectNeighborsAfterRemoval(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, boolean movedByPiston) {
-        Containers.updateNeighboursAfterDestroy(blockState, serverLevel, blockPos);
+    public void affectNeighborsAfterRemoval(BlockState state, Level level, BlockPos pos, BlockState blockState2, boolean movedByPiston) {
+        Containers.dropContentsOnDestroy(state, blockState2, level, pos);
     }
 
     @Override
@@ -216,7 +213,7 @@ public class Hopper implements BlockBehaviourWithEntity<Hopper.Config> {
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos, Direction direction) {
+    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos) {
         return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(level.getBlockEntity(blockPos));
     }
 
@@ -236,7 +233,7 @@ public class Hopper implements BlockBehaviourWithEntity<Hopper.Config> {
     }
 
     @Override
-    public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity, InsideBlockEffectApplier insideBlockEffectApplier) {
+    public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         if (blockEntity instanceof HopperBlockEntity) {
             HopperBlockEntity.entityInside(level, blockPos, blockState, entity, (HopperBlockEntity) blockEntity);
@@ -272,7 +269,7 @@ public class Hopper implements BlockBehaviourWithEntity<Hopper.Config> {
                         if (string.startsWith("#")) {
                             this.itemTagFilter.add(TagKey.create(Registries.ITEM, ResourceLocation.parse(string.substring(1))));
                         } else {
-                            this.itemFilter.add(BuiltInRegistries.ITEM.getValue(ResourceLocation.parse(string)));
+                            this.itemFilter.add(BuiltInRegistries.ITEM.get(ResourceLocation.parse(string)));
                         }
                     }
                 }

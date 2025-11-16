@@ -15,6 +15,7 @@ repositories {
     maven { url 'https://maven.nucleoid.xyz' }
     maven { url 'https://maven.parchmentmc.org' }
     maven { url = 'https://api.modrinth.com/maven' }
+    mavenLocal()
 }
 
 dependencies {
@@ -22,7 +23,6 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings(loom.layered {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${project.parchment_version}")
     })
     modImplementation ("net.fabricmc:fabric-loader:${project.loader_version}")
     modImplementation ("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
@@ -31,13 +31,11 @@ dependencies {
     modImplementation ("eu.pb4:polymer-core:${project.polymer_version}")
     modImplementation ("eu.pb4:polymer-blocks:${project.polymer_version}")
     modImplementation ("eu.pb4:polymer-resource-pack:${project.polymer_version}")
-    modImplementation ("eu.pb4:polymer-resource-pack-extras:${project.polymer_version}")
     modImplementation ("eu.pb4:polymer-virtual-entity:${project.polymer_version}")
     modImplementation ("eu.pb4:polymer-networking:${project.polymer_version}")
     modImplementation ("eu.pb4:polymer-autohost:${project.polymer_version}")
-    modImplementation ("eu.pb4:polymer-sound-patcher:${project.polymer_version}")
 
-    modImplementation include("eu.pb4:sgui:1.10.2+1.21.8")
+    modImplementation include("eu.pb4:sgui:1.6.1+1.21.1")
 
     // BIL
     modImplementation include("de.tomalbrc:blockbench-import-library:${project.bil_version}")

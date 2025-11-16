@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
@@ -38,7 +39,7 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
 
     @Override
     public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
-        Item key = this.config.key == null ? null : BuiltInRegistries.ITEM.getValue(this.config.key);
+        Item key = this.config.key == null ? null : BuiltInRegistries.ITEM.get(this.config.key);
         ItemStack mainHandItem = player.getItemInHand(InteractionHand.MAIN_HAND);
         boolean hasHandItem = !mainHandItem.isEmpty();
         boolean holdsKeyAndIsValid = hasHandItem && key != null && mainHandItem.is(key);
@@ -48,11 +49,12 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
             if (this.config.consumeKey && hasHandItem) {
                 mainHandItem.shrink(1);
             } else if (this.config.damageKey) {
-                mainHandItem.hurtAndBreak(1, player, hand);
+                mainHandItem.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
             }
 
             if (this.config.animation != null && !config.animation.isEmpty() && decorationBlockEntity.getOrCreateHolder() != null) {
-                decorationBlockEntity.getOrCreateHolder().playAnimation(config.animatePerPlayer ? player : null, config.animation, 0, commandsPost() == null ? null : (serverPlayer -> {
+                // TODO: 1.21.1 per player animation
+                decorationBlockEntity.getOrCreateHolder().playAnimation(config.animation, 0, commandsPost() == null ? null : (() -> {
                     var cmdsPost = commandsPost();
                     if (cmdsPost != null) {
                         if (getConfig().console) {
@@ -64,7 +66,8 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
                     }
 
                     if (config.animationPost != null) {
-                        decorationBlockEntity.getOrCreateHolder().playAnimation(config.animatePerPlayer ? player : null, config.animationPost);
+                        // TODO: 1.21.1 per player animation
+                        decorationBlockEntity.getOrCreateHolder().playAnimation(config.animationPost);
                     }
                 }));
             }
@@ -97,7 +100,8 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
             }
 
             if (config.animationIncorrectKey != null) {
-                decorationBlockEntity.getOrCreateHolder().playAnimation(config.animatePerPlayer ? player : null, config.animationIncorrectKey);
+                // TODO: 1.21.1 per player animation
+                decorationBlockEntity.getOrCreateHolder().playAnimation(config.animationIncorrectKey);
             }
         }
 

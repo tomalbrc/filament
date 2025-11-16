@@ -5,6 +5,8 @@ import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.data.resource.ResourceProvider;
+import eu.pb4.polymer.resourcepack.api.PolymerModelData;
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentType;
@@ -25,7 +27,7 @@ public abstract class Data<PropertyType extends ItemProperties> {
     protected final @Nullable Map<String, String> translations;
     protected final @Nullable Component displayName;
     protected final @Nullable ItemResource itemResource;
-    protected final @Nullable ResourceLocation itemModel;
+    protected final @Nullable Integer itemModel;
     protected @Nullable BehaviourConfigMap behaviour;
     protected final @Nullable DataComponentMap components;
     protected final @Nullable ResourceLocation group;
@@ -40,7 +42,7 @@ public abstract class Data<PropertyType extends ItemProperties> {
             @Nullable Map<String, String> translations,
             @Nullable Component displayName,
             @Nullable ItemResource itemResource,
-            @Nullable ResourceLocation itemModel,
+            @Nullable Integer itemModel,
             @Nullable PropertyType properties,
             @Nullable BehaviourConfigMap behaviour,
             @Nullable DataComponentMap components,
@@ -96,7 +98,7 @@ public abstract class Data<PropertyType extends ItemProperties> {
         return itemResource();
     }
 
-    public @Nullable ResourceLocation itemModel() {
+    public @Nullable Integer itemModel() {
         return itemModel;
     }
 
@@ -127,5 +129,14 @@ public abstract class Data<PropertyType extends ItemProperties> {
         if (obj == null || obj.getClass() != this.getClass()) return false;
         var that = (Data<?>) obj;
         return Objects.equals(this.id, that.id);
+    }
+
+    public Object2ObjectOpenHashMap<String, PolymerModelData> requestModels() {
+        Object2ObjectOpenHashMap<String, PolymerModelData> map = new Object2ObjectOpenHashMap<>();
+        if (itemResource != null) {
+            itemResource.getModels().forEach((key, value) -> map.put(key, PolymerResourcePackUtils.requestModel(this.vanillaItem == null ? Items.PAPER : this.vanillaItem, value)));
+        }
+
+        return map;
     }
 }

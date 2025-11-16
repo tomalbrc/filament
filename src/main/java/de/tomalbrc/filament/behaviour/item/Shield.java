@@ -7,11 +7,11 @@ import de.tomalbrc.filament.generator.ItemAssetGenerator;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,14 +40,9 @@ public class Shield implements ItemBehaviour<Shield.Config>, ItemPredicateModelP
     }
 
     @Override
-    public InteractionResult use(Item self, Level level, Player player, InteractionHand interactionHand) {
+    public InteractionResultHolder<ItemStack> use(Item self, Level level, Player player, InteractionHand interactionHand) {
         player.startUsingItem(interactionHand);
-        return InteractionResult.CONSUME;
-    }
-
-    @Override
-    public ItemUseAnimation getUseAnimation(ItemStack itemStack) {
-        return ItemUseAnimation.BLOCK;
+        return InteractionResultHolder.consume(player.getItemInHand(interactionHand));
     }
 
     @Override

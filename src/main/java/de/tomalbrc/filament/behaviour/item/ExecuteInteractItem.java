@@ -9,8 +9,11 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,19 +33,19 @@ public class ExecuteInteractItem implements ItemBehaviour<ExecuteInteractItem.Co
     }
 
     @Override
-    public InteractionResult use(Item item, Level level, Player user, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Item item, Level level, Player user, InteractionHand hand) {
         var cmds = commands();
 
         if (cmds != null && user instanceof ServerPlayer serverPlayer) {
             runCommandItem(serverPlayer, item, hand);
-            return InteractionResult.CONSUME;
+            return InteractionResultHolder.consume(user.getItemInHand(hand));
         }
 
         return ItemBehaviour.super.use(item, level, user, hand);
     }
 
     public void runCommandItem(ServerPlayer serverPlayer, Item item, InteractionHand hand) {
-        if (serverPlayer.getCooldowns().isOnCooldown(serverPlayer.getItemInHand(hand)))
+        if (serverPlayer.getCooldowns().isOnCooldown(item))
             return;
 
         var cmds = commands();
@@ -57,13 +60,13 @@ public class ExecuteInteractItem implements ItemBehaviour<ExecuteInteractItem.Co
 
             if (this.config.sound != null) {
                 var sound = this.config.sound;
-                serverPlayer.level().playSound(null, serverPlayer, BuiltInRegistries.SOUND_EVENT.getValue(sound), SoundSource.NEUTRAL, 1.0F, 1.0F);
+                serverPlayer.level().playSound(null, serverPlayer, BuiltInRegistries.SOUND_EVENT.get(sound), SoundSource.NEUTRAL, 1.0F, 1.0F);
             }
 
             if (this.config.consumes) {
                 serverPlayer.getItemInHand(hand).shrink(1);
             } else if (this.config.damages) {
-                serverPlayer.getItemInHand(hand).hurtAndBreak(1, serverPlayer, hand);
+                serverPlayer.getItemInHand(hand).hurtAndBreak(1, serverPlayer, LivingEntity.getSlotForHand(hand));
             }
         }
     }

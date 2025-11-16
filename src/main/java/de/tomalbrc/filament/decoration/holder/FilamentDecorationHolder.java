@@ -33,20 +33,14 @@ public interface FilamentDecorationHolder {
 
     }
 
-    void playAnimation(ServerPlayer serverPlayer, String animation, int priority, Consumer<ServerPlayer> onFinish);
-
-    default void playAnimation(ServerPlayer serverPlayer, String animation, int priority) {
-        playAnimation(null, animation, priority, null);
-    }
+    void playAnimation(String animation, int priority, Runnable onFinish);
     default void playAnimation(String animation, int priority) {
-        playAnimation(null, animation, priority, null);
-    }
-    default void playAnimation(ServerPlayer serverPlayer, String animation) {
-        playAnimation(serverPlayer, animation, 0, null);
+        playAnimation(animation, priority, null);
     }
     default void playAnimation(String animation) {
-        playAnimation(null, animation, 0, null);
+        playAnimation(animation, 0, null);
     }
+
 
     default void setYaw(float rotation) {
         for (VirtualElement element : this.asPolymerHolder().getElements()) {

@@ -39,8 +39,6 @@ public class Behaviours {
     public static final BehaviourType<Trident, Trident.Config> TRIDENT = registerBehaviour("trident", Trident.class);
     public static final BehaviourType<VillagerFood, VillagerFood.Config> VILLAGER_FOOD = registerBehaviour("villager_food", VillagerFood.class);
     public static final BehaviourType<Wax, Wax.Config> WAX = registerBehaviour("wax", Wax.class);
-    public static final BehaviourType<GenerateTrimModels, GenerateTrimModels.Config> GENERATE_TRIM_MODELS = registerBehaviour("generate_trim_models", GenerateTrimModels.class);
-
 
     // Item + Block
     @Deprecated(forRemoval = true)

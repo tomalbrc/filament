@@ -83,14 +83,15 @@ public class EntityRegistry {
             builder.noSave();
         if (data.properties().noSummon)
             builder.noSummon();
-        if (data.properties().shouldDespawnInPeaceful)
-            builder.notInPeaceful();
+        // TODO: 1.21.1
+        //if (data.properties().shouldDespawnInPeaceful)
+        //    builder.notInPeaceful();
 
         AttributeSupplier.Builder attributeBuilder = Mob.createMobAttributes();
         var attrMap = data.attributes();
         if (attrMap != null) {
             for (Map.Entry<ResourceLocation, Double> entry : attrMap.entrySet()) {
-                var attr = BuiltInRegistries.ATTRIBUTE.get(entry.getKey());
+                var attr = BuiltInRegistries.ATTRIBUTE.getHolder(entry.getKey());
                 if (attr.isEmpty()) {
                     Filament.LOGGER.error("Invalid attribute id {} for entity {}", entry.getKey(), data.id());
                     continue;
@@ -129,10 +130,10 @@ public class EntityRegistry {
     }
 
     private static <T extends Entity> EntityType registerEntity(ResourceLocation id, EntityType.Builder type) {
-        Map<String, Type<?>> types = (Map<String, Type<?>>) DataFixers.getDataFixer().getSchema(DataFixUtils.makeKey(SharedConstants.getCurrentVersion().dataVersion().version())).findChoiceType(References.ENTITY).types();
+        Map<String, Type<?>> types = (Map<String, Type<?>>) DataFixers.getDataFixer().getSchema(DataFixUtils.makeKey(SharedConstants.getCurrentVersion().getDataVersion().getVersion())).findChoiceType(References.ENTITY).types();
         types.put(id.toString(), types.get(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ZOMBIE).toString()));
 
-        var res = Registry.register(BuiltInRegistries.ENTITY_TYPE, id, type.build(ResourceKey.create(Registries.ENTITY_TYPE, id)));
+        var res = Registry.register(BuiltInRegistries.ENTITY_TYPE, id, type.build(id.toString()));
         PolymerEntityUtils.registerType(res);
 
         return res;

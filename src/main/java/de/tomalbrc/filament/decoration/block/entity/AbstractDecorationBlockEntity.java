@@ -5,11 +5,13 @@ import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 
 public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     public static final String MAIN = "Main";
@@ -46,25 +48,27 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
-        super.loadAdditional(input);
+    protected void loadAdditional(CompoundTag input, HolderLookup.Provider lookup) {
+        super.loadAdditional(input, lookup);
 
-        this.version = input.getInt(VERSION).orElse(2);
-        input.read(MAIN, BlockPos.CODEC).ifPresent(main -> this.main = main);
+        this.version = input.contains(VERSION) ? input.getInt(VERSION) : 2;
+        if (input.contains(MAIN)) BlockPos.CODEC.decode(RegistryOps.create(NbtOps.INSTANCE, lookup), input.get(MAIN)).ifSuccess(x -> {
+            this.main = x.getFirst();
+        });
 
         if (!this.isMain())
             return;
 
-        this.direction = Direction.from3DDataValue(input.getIntOr(DIRECTION, Direction.UP.get3DDataValue()));
+        this.direction = input.contains(DIRECTION) ? Direction.from3DDataValue(input.getInt(DIRECTION)) : Direction.UP;
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
-        super.saveAdditional(output);
+    protected void saveAdditional(CompoundTag output, HolderLookup.Provider lookup) {
+        super.saveAdditional(output, lookup);
 
         if (this.main == null) this.main = BlockPos.ZERO;
 
-        output.store(MAIN, BlockPos.CODEC, this.main);
+        output.put(MAIN, BlockPos.CODEC.encodeStart(RegistryOps.create(NbtOps.INSTANCE, lookup), this.main).getOrThrow());
         output.putInt(VERSION, this.version);
 
         if (this.isMain()) {

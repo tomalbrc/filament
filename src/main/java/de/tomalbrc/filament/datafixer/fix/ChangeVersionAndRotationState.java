@@ -21,8 +21,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.PalettedContainer;
-import net.minecraft.world.level.chunk.Strategy;
-import net.minecraft.world.level.chunk.storage.SerializableChunkData;
 
 import java.util.*;
 
@@ -78,7 +76,7 @@ public class ChangeVersionAndRotationState extends com.mojang.datafixers.DataFix
 
                     var states = section.get("block_states");
 
-                    PalettedContainer<BlockState> palettedContainer = states.read(CompoundTag.CODEC).mapOrElse(tag -> BLOCK_STATE_CODEC.parse(NbtOps.INSTANCE, tag).promotePartial(string -> {}).getOrThrow(SerializableChunkData.ChunkReadException::new), (tagError) -> new PalettedContainer<>(Blocks.AIR.defaultBlockState(), Strategy.createForBlockStates(Block.BLOCK_STATE_REGISTRY)));
+                    PalettedContainer<BlockState> palettedContainer = states.read(CompoundTag.CODEC).mapOrElse(tag -> BLOCK_STATE_CODEC.parse(NbtOps.INSTANCE, tag).promotePartial(string -> {}).getOrThrow(), (tagError) -> new PalettedContainer<>(Block.BLOCK_STATE_REGISTRY, Blocks.AIR.defaultBlockState(), PalettedContainer.Strategy.SECTION_STATES));
 
                     for (Dynamic<?> blockEntityData : entries) {
                         var yData = blockEntityData.get("y").asInt(0);
@@ -115,6 +113,6 @@ public class ChangeVersionAndRotationState extends com.mojang.datafixers.DataFix
     }
 
     private static final Codec<PalettedContainer<BlockState>> BLOCK_STATE_CODEC = PalettedContainer.codecRW(
-            BlockState.CODEC, Strategy.createForBlockStates(Block.BLOCK_STATE_REGISTRY), Blocks.AIR.defaultBlockState()
+            Block.BLOCK_STATE_REGISTRY, BlockState.CODEC, PalettedContainer.Strategy.SECTION_STATES, Blocks.AIR.defaultBlockState()
     );
 }

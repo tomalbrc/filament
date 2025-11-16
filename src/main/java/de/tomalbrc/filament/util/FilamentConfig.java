@@ -41,6 +41,8 @@ public class FilamentConfig {
     @SerializedName("version")
     public Integer version;
 
+    public boolean trimArmorReplaceChainmail;
+
     public static FilamentConfig getInstance() {
         if (instance == null) {
             if (!load()) { // only save if file wasn't just created

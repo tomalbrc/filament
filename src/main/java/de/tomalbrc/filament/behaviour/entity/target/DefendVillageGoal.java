@@ -57,7 +57,7 @@ public class DefendVillageGoal implements EntityBehaviour<DefendVillageGoal.Conf
 
         public boolean canUse() {
             AABB aABB = this.pathfinderMob.getBoundingBox().inflate(10.0F, 8.0F, 10.0F);
-            ServerLevel serverLevel = getServerLevel(this.pathfinderMob);
+            ServerLevel serverLevel = (ServerLevel) this.pathfinderMob.level();
             List<? extends LivingEntity> list = serverLevel.getNearbyEntities(Villager.class, this.attackTargeting, this.pathfinderMob, aABB);
             List<Player> list2 = serverLevel.getNearbyPlayers(this.attackTargeting, this.pathfinderMob, aABB);
 

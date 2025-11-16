@@ -43,12 +43,12 @@ public class CosmeticHolder extends ElementHolder {
 
         Cosmetic.Config cosmeticData = CosmeticUtil.getCosmeticData(itemStack);
         if (cosmeticData != null) {
-            this.displayElement.setItemDisplayContext(cosmeticData.display);
+            this.displayElement.setModelTransformation(cosmeticData.display);
             this.displayElement.setLeftRotation(cosmeticData.rotation);
             this.displayElement.setTranslation(cosmeticData.translation);
             this.displayElement.setScale(cosmeticData.scale);
             if (FilamentConfig.getInstance().alternativeCosmeticPlacement) {
-                this.displayElement.setItemDisplayContext(ItemDisplayContext.HEAD);
+                this.displayElement.setModelTransformation(ItemDisplayContext.HEAD);
                 this.displayElement.setTranslation(new Vector3f(0, 1.25f,0));
                 this.displayElement.setScale(new Vector3f(0.625f));
             }

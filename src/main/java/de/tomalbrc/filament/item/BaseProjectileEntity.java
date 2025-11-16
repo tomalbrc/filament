@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.item;
 
 import com.mojang.math.Axis;
+import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.item.Shoot;
 import de.tomalbrc.filament.mixin.accessor.AbstractArrowAccessor;
@@ -11,6 +12,7 @@ import eu.pb4.polymer.virtualentity.api.attachment.EntityAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.tracker.EntityTrackedData;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
@@ -28,8 +30,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -37,7 +37,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -72,7 +71,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
             VirtualEntityUtils.addVirtualPassenger(this, this.mainDisplayElement.getEntityId());
         }
 
-        this.mainDisplayElement.setItemDisplayContext(config.display);
+        this.mainDisplayElement.setModelTransformation(config.display);
         this.mainDisplayElement.setLeftRotation(Axis.ZP.rotationDegrees(180));
         this.mainDisplayElement.setRightRotation(new Quaternionf().rotateY((float) Math.toRadians(getYRot())).mul(config.rotation).normalize());
         this.mainDisplayElement.setTranslation(new Vector3f(0.f, 0.15f, 0.f).add(config.translation));
@@ -127,7 +126,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     }
 
     @Override
-    public EntityType<?> getPolymerEntityType(PacketContext packetContext) {
+    public EntityType<?> getPolymerEntityType(ServerPlayer packetContext) {
         return EntityType.ARMOR_STAND;
     }
 
@@ -155,7 +154,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
         super.onHit(result);
 
         if (config.dropAsItem && !level().isClientSide()) {
-            spawnAtLocation((ServerLevel) level(), getPickupItem());
+            spawnAtLocation(getPickupItem());
             discard();
         }
     }
@@ -167,7 +166,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
             var damageSource = this.damageSources().mobProjectile(this, livingEntity);
 
             double damage = ((AbstractArrowAccessor)this).getBaseDamage();
-            if (target.hurtServer((ServerLevel) level(), damageSource, (float) damage)) {
+            if (target.hurt(damageSource, (float) damage)) {
                 if (target.getType() != EntityType.ENDERMAN && this.getOwner() instanceof LivingEntity livingOwner) {
                     EnchantmentHelper.doPostAttackEffectsWithItemSource((ServerLevel) target.level(), livingOwner, damageSource, this.getWeaponItem());
                     this.doPostHurtEffects(target);
@@ -193,27 +192,27 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     }
 
     @Override
-    public void readAdditionalSaveData(ValueInput input) {
+    public void readAdditionalSaveData(CompoundTag input) {
         super.readAdditionalSaveData(input);
 
-        this.base = input.read("Item", ItemStack.CODEC).orElse(ItemStack.EMPTY);
-        this.projectileStack = input.read("ProjectileItem", ItemStack.CODEC).orElse(base);
-        this.pickupStack = input.read("PickupItem", ItemStack.CODEC).orElse(ItemStack.EMPTY);
+        this.base = input.contains("Item") ? ItemStack.parseOptional(Filament.SERVER.registryAccess(), input.getCompound("Item")) : ItemStack.EMPTY;
+        this.projectileStack = input.contains("ProjectileItem") ? ItemStack.parseOptional(Filament.SERVER.registryAccess(), input.getCompound("ProjectileItem")) : base;
+        this.pickupStack = input.contains("PickupItem") ? ItemStack.parseOptional(Filament.SERVER.registryAccess(), input.getCompound("PickupItem")) : ItemStack.EMPTY;;
 
         if (this.base.getItem() instanceof SimpleItem simpleItem && simpleItem.has(Behaviours.SHOOT))
             this.config = simpleItem.getOrThrow(Behaviours.SHOOT).getConfig();
 
         this.createMainDisplayElement();
 
-        this.dealtDamage = input.getBooleanOr("DealtDamage", true);
+        this.dealtDamage = !input.contains("DealtDamage") || input.getBoolean("DealtDamage");
     }
 
     @Override
-    public void addAdditionalSaveData(ValueOutput output) {
+    public void addAdditionalSaveData(CompoundTag output) {
         super.addAdditionalSaveData(output);
 
-        if (this.projectileStack != null && !this.projectileStack.isEmpty()) output.store("Item", ItemStack.CODEC, this.projectileStack);
-        if (this.pickupStack != null && !this.pickupStack.isEmpty()) output.store("PickupItem", ItemStack.CODEC, this.pickupStack);
+        if (this.projectileStack != null && !this.projectileStack.isEmpty()) output.put("Item", this.projectileStack.save(Filament.SERVER.registryAccess()));
+        if (this.pickupStack != null && !this.pickupStack.isEmpty()) output.put("PickupItem", this.pickupStack.save(Filament.SERVER.registryAccess()));
 
         output.putBoolean("DealtDamage", this.dealtDamage);
     }

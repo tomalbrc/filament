@@ -1,8 +1,6 @@
 package de.tomalbrc.filament.data.properties;
 
 import com.google.gson.annotations.SerializedName;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.Block;
@@ -11,8 +9,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Optional;
 
 @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})
 public class BlockProperties extends ItemProperties {
@@ -57,10 +53,11 @@ public class BlockProperties extends ItemProperties {
         if (this.requiresTool) props.requiresCorrectToolForDrops();
         if (this.replaceable) props.replaceable();
         if (this.transparent) props.noOcclusion();
-        if (!this.collision) props.noCollision();
+        if (!this.collision) props.noCollission();
 
-        if (this.lootTable != null)
-            props.overrideLootTable(Optional.of(ResourceKey.create(Registries.LOOT_TABLE, this.lootTable)));
+        // TODO: 1.21.1
+        //if (this.lootTable != null)
+        //    props.overrideLootTable(Optional.of(ResourceKey.create(Registries.LOOT_TABLE, this.lootTable)));
 
         if (this.isSuffocating != null)
             props.isSuffocating((blockState, blockGetter, blockPos) -> this.isSuffocating.getValue(blockState));

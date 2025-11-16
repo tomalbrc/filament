@@ -35,7 +35,7 @@ public abstract class AbstractBlockData<BlockPropertyLike extends BlockPropertie
             @Nullable Component displayName,
             @Nullable ItemResource itemResource,
             @Nullable BlockResource blockResource,
-            @Nullable ResourceLocation itemModel,
+            @Nullable Integer itemModel,
             @Nullable BehaviourConfigMap behaviourConfig,
             @Nullable DataComponentMap components,
             @Nullable ResourceLocation itemGroup,
@@ -97,7 +97,7 @@ public abstract class AbstractBlockData<BlockPropertyLike extends BlockPropertie
     protected static BlockState blockState(String str) {
         BlockStateParser.BlockResult parsed;
         try {
-            parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK, str, false);
+            parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), str, false);
         } catch (CommandSyntaxException e) {
             throw new JsonParseException("Invalid BlockState value: " + str);
         }

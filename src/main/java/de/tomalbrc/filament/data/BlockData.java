@@ -33,7 +33,7 @@ public class BlockData extends AbstractBlockData<BlockProperties> {
             @Nullable Map<String, String> translations,
             @Nullable Component displayName,
             @Nullable ItemResource itemResource,
-            @Nullable ResourceLocation itemModel,
+            @Nullable Integer itemModel,
             @Nullable BehaviourConfigMap behaviourConfig,
             @Nullable DataComponentMap components,
             @Nullable ResourceLocation itemGroup,
@@ -70,7 +70,7 @@ public class BlockData extends AbstractBlockData<BlockProperties> {
                 if (entry.getKey().equals("default")) {
                     var type = safeBlockModelType(this.blockModelType.getRawValue());
                     BlockState requestedState = type == null ? null : FilamentBlockResourceUtils.requestBlock(type, entry.getValue(), this.virtual());
-                    val.put(BuiltInRegistries.BLOCK.getValue(id).defaultBlockState(), BlockStateMeta.of(type == null ? Blocks.BEDROCK.defaultBlockState() : requestedState, entry.getValue()));
+                    val.put(BuiltInRegistries.BLOCK.get(id).defaultBlockState(), BlockStateMeta.of(type == null ? Blocks.BEDROCK.defaultBlockState() : requestedState, entry.getValue()));
                 } else {
                     BlockState state = blockState(String.format("%s[%s]", id, entry.getKey()));
                     BlockModelType type;

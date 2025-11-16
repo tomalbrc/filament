@@ -5,6 +5,7 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.ItemStack;
@@ -42,7 +43,7 @@ public class Wax implements ItemBehaviour<Wax.Config> {
             }
 
             if (config.reduceDurability && player != null)
-                itemStack.hurtAndBreak(1, player, useOnContext.getHand());
+                itemStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(useOnContext.getHand()));
             else itemStack.shrink(1);
 
             level.setBlock(blockPos, blockStatex,  Block.UPDATE_ALL_IMMEDIATE);

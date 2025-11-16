@@ -16,7 +16,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -61,7 +61,7 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
             Projectile projectile = this.createProjectile(serverLevel, livingEntity, itemStack, itemStack2, fullPower);
             this.shootProjectile(livingEntity, projectile, f, (float) 1.0, m);
             serverLevel.addFreshEntity(projectile);
-            itemStack.hurtAndBreak(this.getDurabilityUse(itemStack2), livingEntity, interactionHand);
+            itemStack.hurtAndBreak(this.getDurabilityUse(itemStack2), livingEntity, LivingEntity.getSlotForHand(interactionHand));
             if (itemStack.isEmpty()) break;
         }
     }
@@ -89,18 +89,18 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
     }
 
     @Override
-    public boolean releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int useDuration) {
+    public void releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int useDuration) {
         if (!(livingEntity instanceof Player player)) {
-            return false;
+            return;
         }
         ItemStack itemStack2 = this.getProjectile(player);
         if (itemStack2.isEmpty()) {
-            return false;
+            return;
         }
         int j = this.getUseDuration(itemStack, livingEntity).orElseThrow() - useDuration;
         float currentPower = BowItem.getPowerForTime(j);
         if (currentPower < 0.1) {
-            return false;
+            return;
         }
 
         List<ItemStack> list = ProjectileWeaponItemInvoker.invokeDraw(itemStack, itemStack2, player);
@@ -110,7 +110,6 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
 
         level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvent.createVariableRangeEvent(config.shootSound), SoundSource.PLAYERS, 1.0f, 1.0f / (level.getRandom().nextFloat() * 0.4f + 1.2f) + currentPower * 0.5f);
         player.awardStat(Stats.ITEM_USED.get(itemStack.getItem()));
-        return true;
     }
 
     public void shootProjectile(LivingEntity livingEntity, Projectile projectile, float f, float g, float h) {
@@ -123,24 +122,19 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
     }
 
     @Override
-    public ItemUseAnimation getUseAnimation(ItemStack itemStack) {
-        return ItemUseAnimation.BOW;
-    }
-
-    @Override
-    public InteractionResult use(Item item, Level level, Player player, InteractionHand interactionHand) {
+    public InteractionResultHolder<ItemStack> use(Item item, Level level, Player player, InteractionHand interactionHand) {
         boolean hasProjectile = !this.getProjectile(player).isEmpty();
         if (player.hasInfiniteMaterials() || hasProjectile) {
             player.startUsingItem(interactionHand);
-            return InteractionResult.CONSUME;
+            return InteractionResultHolder.consume(player.getItemInHand(interactionHand));
         }
-        return InteractionResult.FAIL;
+        return InteractionResultHolder.fail(player.getItemInHand(interactionHand));
     }
 
     public Predicate<ItemStack> supportedProjectiles() {
         return itemStack -> {
             for (var itemId : config.supportedProjectiles) {
-                if (itemStack.is(BuiltInRegistries.ITEM.get(itemId).orElseThrow()))
+                if (itemStack.is(BuiltInRegistries.ITEM.get(itemId)))
                     return true;
             }
             return false;
@@ -150,7 +144,7 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
     public Predicate<ItemStack> supportedHeldProjectiles() {
         return itemStack -> {
             for (var itemId : config.supportedHeldProjectiles) {
-                if (itemStack.is(BuiltInRegistries.ITEM.get(itemId).orElseThrow()))
+                if (itemStack.is(BuiltInRegistries.ITEM.get(itemId)))
                     return true;
             }
             return false;
@@ -201,6 +195,6 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
         public List<ResourceLocation> supportedProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"));
         public List<ResourceLocation> supportedHeldProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"), ResourceLocation.withDefaultNamespace("firework_rocket"));
 
-        public ResourceLocation shootSound = SoundEvents.ARROW_SHOOT.location();
+        public ResourceLocation shootSound = SoundEvents.ARROW_SHOOT.getLocation();
     }
 }

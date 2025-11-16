@@ -11,6 +11,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -36,12 +37,12 @@ public class Execute implements ItemBehaviour<Execute.Config>, BlockBehaviour<Ex
     }
 
     @Override
-    public InteractionResult use(Item item, Level level, Player user, InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Item item, Level level, Player user, InteractionHand hand) {
         var cmds = commands();
 
         if (cmds != null && user instanceof ServerPlayer serverPlayer) {
             runCommandItem(serverPlayer, item, hand);
-            return InteractionResult.CONSUME;
+            return InteractionResultHolder.success(serverPlayer.getItemInHand(hand));
         }
 
         return ItemBehaviour.super.use(item, level, user, hand);
@@ -51,7 +52,7 @@ public class Execute implements ItemBehaviour<Execute.Config>, BlockBehaviour<Ex
     public InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
         if (player instanceof ServerPlayer serverPlayer) {
             runCommandBlock(serverPlayer, blockPos);
-            return InteractionResult.SUCCESS_SERVER;
+            return InteractionResult.SUCCESS;
         }
         return BlockBehaviour.super.useWithoutItem(blockState, level, blockPos, player, blockHitResult);
     }
@@ -60,7 +61,7 @@ public class Execute implements ItemBehaviour<Execute.Config>, BlockBehaviour<Ex
     public @Nullable InteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         if (player instanceof ServerPlayer serverPlayer) {
             runCommandBlock(serverPlayer, blockPos);
-            return InteractionResult.SUCCESS_SERVER;
+            return InteractionResult.SUCCESS;
         }
         return BlockBehaviour.super.useItemOn(itemStack, blockState, level, blockPos, player, interactionHand, blockHitResult);
     }
@@ -78,7 +79,7 @@ public class Execute implements ItemBehaviour<Execute.Config>, BlockBehaviour<Ex
 
             if (this.config.sound != null) {
                 var sound = this.config.sound;
-                serverPlayer.level().playSound(null, serverPlayer, BuiltInRegistries.SOUND_EVENT.getValue(sound), SoundSource.NEUTRAL, 1.0F, 1.0F);
+                serverPlayer.level().playSound(null, serverPlayer, BuiltInRegistries.SOUND_EVENT.get(sound), SoundSource.NEUTRAL, 1.0F, 1.0F);
             }
 
             if (this.config.consumes) {
@@ -106,7 +107,7 @@ public class Execute implements ItemBehaviour<Execute.Config>, BlockBehaviour<Ex
 
             if (this.config.sound != null) {
                 var sound = this.config.sound;
-                user.level().playSound(null, user, BuiltInRegistries.SOUND_EVENT.getValue(sound), SoundSource.NEUTRAL, 1.0F, 1.0F);
+                user.level().playSound(null, user, BuiltInRegistries.SOUND_EVENT.get(sound), SoundSource.NEUTRAL, 1.0F, 1.0F);
             }
 
             if (this.config.consumes) {

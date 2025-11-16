@@ -10,7 +10,6 @@
     "MappedRegistryMixin",
     "ReferenceMixin",
     "ReloadableServerResourcesMixin",
-    "ServerGamePacketListenerImplMixin",
     "StateDefinitionBuilderMixin",
     "TagLoaderMixin",
     "WorldLoaderMixin",
@@ -18,7 +17,6 @@
     "accessor.ChestBlockInvoker",
     "accessor.CrossbowItemInvoker",
     "accessor.DoublePlantBlockInvoker",
-    "accessor.EntityInvoker",
     "accessor.FireBlockInvoker",
     "accessor.HoeItemAccessor",
     "accessor.HopperBlockEntityAccessor",
@@ -27,7 +25,6 @@
     "accessor.MaceItemAccessor",
     "accessor.MappedRegistryAccessor",
     "accessor.PlayerAccessor",
-    "accessor.PrimedTntAccessor",
     "accessor.ProjectileWeaponItemInvoker",
     "accessor.ShovelItemAccessor",
     "behaviour.FuelValuesMixin",
@@ -36,10 +33,8 @@
     "behaviour.banner.LoomMenuMixin",
     "behaviour.bed.LivingEntityMixin",
     "behaviour.bed.ServerPlayerMixin",
-    "behaviour.container.CopperGolemAiMixin",
     "behaviour.container.HopperBlockEntityMixin",
     "behaviour.container.LootCommandMixin",
-    "behaviour.container.TransportItemsBetweenContainersMixin",
     "behaviour.cosmetic.LivingEntityMixin",
     "behaviour.cosmetic.ServerPlayerMixin",
     "behaviour.crop.BeeMixin",
@@ -61,7 +56,6 @@
     "behaviour.shears.interaction.BeehiveBlockMixin",
     "behaviour.shears.interaction.BoggedMixin",
     "behaviour.shears.interaction.EntityMixin",
-    "behaviour.shears.interaction.LeashFenceKnotEntityMixin",
     "behaviour.shears.interaction.MushroomCowMixin",
     "behaviour.shears.interaction.PumpkinBlockMixin",
     "behaviour.shears.interaction.SheepMixin",
@@ -85,8 +79,5 @@
   "injectors": {
     "defaultRequire": 1,
     "maxShiftBy": 3
-  },
-  "client": [
-    "accessor.PolymerResourcePackAccessor"
-  ]
+  }
 }

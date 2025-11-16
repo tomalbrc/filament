@@ -64,7 +64,7 @@ public class DecorationRegistry {
     static public void register(DecorationData data) {
         for (Map.Entry<ResourceLocation, DecorationData> entry : decorations.entrySet()) {
             if (entry.getKey().equals(data.id())) {
-                var block = BuiltInRegistries.BLOCK.getValue(data.id());
+                var block = BuiltInRegistries.BLOCK.get(data.id());
                 if (block instanceof SimpleBlock filamentBlock && block.asItem() instanceof FilamentItem filamentItem) {
                     filamentItem.initBehaviours(data.behaviour());
                     filamentBlock.initBehaviours(data.behaviour());
@@ -95,7 +95,7 @@ public class DecorationRegistry {
         }
 
         if (data.vanillaItem() == Items.LEATHER_HORSE_ARMOR || data.vanillaItem() == Items.FIREWORK_STAR) {
-            properties.component(DataComponents.DYED_COLOR, new DyedItemColor(0xdaad6d));
+            properties.component(DataComponents.DYED_COLOR, new DyedItemColor(0xdaad6d, true));
         }
 
         var item = ItemRegistry.registerItem(ItemRegistry.key(data.id()), (newProps) -> new DecorationItem(block, data, newProps), properties, data.group() != null ? data.group() : Constants.DECORATION_GROUP_ID, data.itemTags());

@@ -2,8 +2,8 @@ package de.tomalbrc.filament.decoration.util;
 
 import eu.pb4.polymer.core.api.entity.PolymerEntity;
 import eu.pb4.polymer.virtualentity.api.tracker.EntityTrackedData;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -11,11 +11,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 
@@ -48,15 +45,14 @@ public class SeatEntity extends Entity implements PolymerEntity {
     }
 
     @Override
-    public boolean hurtServer(ServerLevel serverLevel, DamageSource damageSource, float f) {
+    public boolean hurt(DamageSource damageSource, float f) {
         return false;
     }
 
     @Override
-    public EntityType<?> getPolymerEntityType(PacketContext packetContext) {
+    public EntityType<?> getPolymerEntityType(ServerPlayer serverPlayer) {
         return EntityType.ARMOR_STAND;
     }
-
 
     @Override
     @NotNull
@@ -69,8 +65,8 @@ public class SeatEntity extends Entity implements PolymerEntity {
     }
 
     @Override
-    public void readAdditionalSaveData(ValueInput input) {}
+    protected void readAdditionalSaveData(CompoundTag compoundTag) {}
 
     @Override
-    public void addAdditionalSaveData(ValueOutput output) {}
+    protected void addAdditionalSaveData(CompoundTag compoundTag) {}
 }

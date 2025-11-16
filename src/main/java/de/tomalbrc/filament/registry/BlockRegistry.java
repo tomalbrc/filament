@@ -57,7 +57,7 @@ public class BlockRegistry {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static void register(BlockData data) {
         if (BuiltInRegistries.BLOCK.containsKey(data.id())) {
-            var block = BuiltInRegistries.BLOCK.getValue(data.id());
+            var block = BuiltInRegistries.BLOCK.get(data.id());
             if (block instanceof SimpleBlock filamentBlock && block.asItem() instanceof FilamentItem filamentItem) {
                 filamentItem.initBehaviours(data.behaviour());
                 filamentBlock.initBehaviours(data.behaviour());
@@ -109,6 +109,7 @@ public class BlockRegistry {
 
         // has to run before `postRegister` since it may add block models from textures
         RPUtil.create(item, data);
+        item.requestModels(); // 1.21.1
 
         customBlock.postRegister();
     }
@@ -118,7 +119,7 @@ public class BlockRegistry {
     }
 
     public static <T extends Block> T registerBlock(ResourceKey<Block> resourceKey, Function<BlockBehaviour.Properties, T> function, BlockBehaviour.Properties properties, @Nullable Set<ResourceLocation> blockTags) {
-        T block = function.apply(properties.setId(resourceKey));
+        T block = function.apply(properties);
         if (blockTags != null) for (ResourceLocation tag : blockTags) {
             var list = BLOCKS_TAGS.computeIfAbsent(tag, x -> new ArrayList<>());
             list.add(resourceKey.location());

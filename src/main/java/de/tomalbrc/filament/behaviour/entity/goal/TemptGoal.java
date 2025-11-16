@@ -27,7 +27,7 @@ public class TemptGoal implements EntityBehaviour<TemptGoal.Config> {
         mob.getGoalSelector().addGoal(config.priority, new net.minecraft.world.entity.ai.goal.TemptGoal(mob, config.speedModifier, x -> {
             if (config.items != null) {
                 for (ResourceLocation resourceLocation : config.items) {
-                    if (x.is(BuiltInRegistries.ITEM.getValue(resourceLocation)))
+                    if (x.is(BuiltInRegistries.ITEM.get(resourceLocation)))
                         return true;
                 }
             }

@@ -54,10 +54,11 @@ public class VirtualChestMenu extends VirtualScreenHandler {
         this.container.stopOpen(player);
     }
 
-    @Override
     protected void addInventoryHotbarSlots(Container container, int x, int y) {
         if (lockSlot == -1) {
-            super.addInventoryHotbarSlots(container, x, y);
+            for (int slot = 0; slot < 9; ++slot) {
+                this.addSlot(new Slot(container, slot, x + slot * 18, y));
+            }
         } else {
             for (int slot = 0; slot < 9; ++slot) {
                 this.addSlot(new BackpackHotbarSlot(container, lockSlot, slot, x + slot * 18, y));

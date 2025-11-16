@@ -33,14 +33,14 @@ public class HurtByTargetGoal implements EntityBehaviour<HurtByTargetGoal.Config
         var size = config.ignoreFrom == null ? 0 : config.ignoreFrom.size();
         EntityType<?>[] classes = new EntityType[size];
         for (int i = 0; i < size; i++) {
-            classes[i] = BuiltInRegistries.ENTITY_TYPE.getValue(config.ignoreFrom.get(i));
+            classes[i] = BuiltInRegistries.ENTITY_TYPE.get(config.ignoreFrom.get(i));
         }
 
         var goal = new HurtByTargetGoalImpl(mob, classes);
         if (config.alertOthers != null && !config.alertOthers.isEmpty()) {
             EntityType<?>[] classes2 = new EntityType[config.alertOthers.size()];
             for (int i = 0; i < config.alertOthers.size(); i++) {
-                classes2[i] = BuiltInRegistries.ENTITY_TYPE.getValue(config.alertOthers.get(i));
+                classes2[i] = BuiltInRegistries.ENTITY_TYPE.get(config.alertOthers.get(i));
             }
             goal = goal.setAlertOthers(classes2);
         }
@@ -78,7 +78,7 @@ public class HurtByTargetGoal implements EntityBehaviour<HurtByTargetGoal.Config
             int i = this.mob.getLastHurtByMobTimestamp();
             LivingEntity livingEntity = this.mob.getLastHurtByMob();
             if (i != this.timestamp && livingEntity != null) {
-                if (livingEntity.getType() == EntityType.PLAYER && getServerLevel(this.mob).getGameRules().getBoolean(GameRules.RULE_UNIVERSAL_ANGER)) {
+                if (livingEntity.getType() == EntityType.PLAYER && this.mob.level().getGameRules().getBoolean(GameRules.RULE_UNIVERSAL_ANGER)) {
                     return false;
                 } else {
                     for(EntityType<?> type : this.toIgnoreDamage) {

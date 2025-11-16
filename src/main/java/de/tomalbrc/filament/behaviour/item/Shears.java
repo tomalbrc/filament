@@ -84,7 +84,7 @@ public class Shears implements ItemBehaviour<Shears.Config> {
                 level.setBlockAndUpdate(blockPos, blockState2);
                 level.gameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Context.of(useOnContext.getPlayer(), blockState2));
                 if (player != null) {
-                    itemStack.hurtAndBreak(1, player, useOnContext.getHand());
+                    itemStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(useOnContext.getHand()));
                 }
 
                 return InteractionResult.SUCCESS;
@@ -99,6 +99,6 @@ public class Shears implements ItemBehaviour<Shears.Config> {
     }
 
     public static class Config {
-        public ResourceLocation sound = SoundEvents.GROWING_PLANT_CROP.location();
+        public ResourceLocation sound = SoundEvents.GROWING_PLANT_CROP.getLocation();
     }
 }

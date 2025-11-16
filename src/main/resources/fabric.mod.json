@@ -26,14 +26,12 @@
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric-api": "*",
-    "minecraft": ">=1.21.6",
+    "minecraft": "1.21.1",
     "polymer-core": "*",
     "polymer-blocks": "*",
     "polymer-resource-pack": "*",
-    "polymer-resource-pack-extras": "*",
     "polymer-virtual-entity": "*",
     "polymer-networking": "*",
-    "polymer-sound-patcher": "*",
     "bil": ">=${bil_version}"
   },
   "accessWidener": "filament.accesswidener"

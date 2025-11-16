@@ -28,7 +28,7 @@ public abstract class FallingBlockEntityMixin extends Entity {
     }
 
     @Inject(method = "causeFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/tags/TagKey;)Z"), cancellable = true)
-    private void filament$damageChangeBlockState(double d, float f, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
+    private void filament$damageChangeBlockState(float f, float g, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
         if (this.blockState.getBlock() instanceof SimpleBlock simpleBlock && simpleBlock.has(Behaviours.FALLING_BLOCK)) {
             FallingBlock behaviour = simpleBlock.get(Behaviours.FALLING_BLOCK);
             assert behaviour != null;
@@ -42,7 +42,7 @@ public abstract class FallingBlockEntityMixin extends Entity {
                     if (conf.damagedBlock == null) {
                         this.cancelDrop = true;
                     } else {
-                        this.blockState = BuiltInRegistries.BLOCK.getValue(conf.damagedBlock.getValue(this.blockState)).withPropertiesOf(this.blockState);
+                        this.blockState = BuiltInRegistries.BLOCK.get(conf.damagedBlock.getValue(this.blockState)).withPropertiesOf(this.blockState);
                     }
                     cir.setReturnValue(false);
                 }

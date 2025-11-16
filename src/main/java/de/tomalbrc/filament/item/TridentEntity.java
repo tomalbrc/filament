@@ -10,6 +10,7 @@ import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.tracker.EntityTrackedData;
 import eu.pb4.polymer.virtualentity.mixin.accessors.DisplayEntityAccessor;
 import eu.pb4.polymer.virtualentity.mixin.accessors.ItemDisplayEntityAccessor;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -23,12 +24,9 @@ import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -92,7 +90,7 @@ public class TridentEntity extends ThrownTrident implements PolymerEntity {
     }
 
     @Override
-    public EntityType<?> getPolymerEntityType(PacketContext packetContext) {
+    public EntityType<?> getPolymerEntityType(ServerPlayer packetContext) {
         return EntityType.ITEM_DISPLAY;
     }
 
@@ -118,19 +116,19 @@ public class TridentEntity extends ThrownTrident implements PolymerEntity {
     @Override
     public void tick() {
         super.tick();
-        if (!isInGround())
+        if (!inGround)
             updateRotation();
     }
 
     @Override
-    public void readAdditionalSaveData(ValueInput input) {
+    public void readAdditionalSaveData(CompoundTag input) {
         super.readAdditionalSaveData(input);
-        super.setXRot(input.getFloatOr("TridentXRot", 0));
-        super.setYRot(input.getFloatOr("TridentYRot", 0));
+        super.setXRot(input.contains("TridentXRot") ? input.getFloat("TridentXRot"):0);
+        super.setYRot(input.contains("TridentYRot") ? input.getFloat("TridentYRot"):0);
     }
 
     @Override
-    public void addAdditionalSaveData(ValueOutput output) {
+    public void addAdditionalSaveData(CompoundTag output) {
         super.addAdditionalSaveData(output);
         output.putFloat("TridentXRot", getXRot());
         output.putFloat("TridentYRot", getYRot());

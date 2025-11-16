@@ -2,6 +2,7 @@ package de.tomalbrc.filament.item;
 
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.data.Data;
+import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -24,4 +25,8 @@ public interface FilamentItem extends BehaviourHolder {
     default Item asItem() {
         return (Item) this;
     }
+
+    void requestModels();
+
+    Map<String, PolymerModelData> getModelData();
 }

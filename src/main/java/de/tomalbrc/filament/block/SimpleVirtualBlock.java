@@ -1,9 +1,10 @@
 package de.tomalbrc.filament.block;
 
-import com.google.common.collect.ImmutableList;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.util.BlockUtil;
 import de.tomalbrc.filament.util.DecorationUtil;
+import eu.pb4.polymer.resourcepack.api.PolymerModelData;
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockAwareAttachment;
@@ -31,7 +32,7 @@ import org.joml.Vector3f;
 import java.util.Map;
 
 public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementHolder {
-    private final Map<BlockData.BlockStateMeta, String> cmdMap = new Reference2ObjectOpenHashMap<>();
+    private final Map<BlockData.BlockStateMeta, PolymerModelData> cmdMap = new Reference2ObjectOpenHashMap<>();
 
     public SimpleVirtualBlock(Properties properties, BlockData data) {
         super(properties, data);
@@ -45,7 +46,7 @@ public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementH
             for (Map.Entry<String, ResourceLocation> blockResourceModelsEntry : this.blockData.blockResource().getModels().entrySet()) {
                 boolean same = blockResourceModelsEntry.getValue().equals(stateMapEntry.getValue().polymerBlockModel().model());
                 if (same) {
-                    this.cmdMap.put(stateMapEntry.getValue(), blockResourceModelsEntry.getKey());
+                    this.cmdMap.put(stateMapEntry.getValue(), PolymerResourcePackUtils.requestModel(data().vanillaItem(), stateMapEntry.getValue().polymerBlockModel().model()));
                 }
             }
         }
@@ -64,10 +65,9 @@ public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementH
         public VirtualBlockHolder(BlockState blockState) {
             this.virtualBlock = (SimpleVirtualBlock) blockState.getBlock();
             this.displayStack = this.virtualBlock.asItem().getDefaultInstance();
-            this.displayStack.set(DataComponents.ITEM_MODEL, virtualBlock.blockData.id().withPrefix("block/"));
 
             this.displayElement = new ItemDisplayElement(this.displayStack);
-            this.displayElement.setItemDisplayContext(ItemDisplayContext.NONE);
+            this.displayElement.setModelTransformation(ItemDisplayContext.NONE);
             this.displayElement.setScale(new Vector3f(1.0001f));
             this.displayElement.setDisplaySize(1.f, 1.f);
             this.displayElement.setInvisible(true);
@@ -82,12 +82,7 @@ public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementH
         public void update(BlockState blockState, boolean update) {
             var state = this.virtualBlock.behaviourModifiedBlockState(blockState, blockState);
             var meta = this.virtualBlock.stateMap.get(state);
-            this.displayStack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(
-                    ImmutableList.of(),
-                    ImmutableList.of(),
-                    ImmutableList.of(this.virtualBlock.cmdMap.get(meta)),
-                    ImmutableList.of()
-            ));
+            this.displayStack.set(DataComponents.CUSTOM_MODEL_DATA, this.virtualBlock.cmdMap.get(meta).asComponent());
 
             var polymerBlockModel = meta.polymerBlockModel();
             this.displayElement.setLeftRotation(new Quaternionf().rotateX(polymerBlockModel.x() * Mth.DEG_TO_RAD).rotateY((-polymerBlockModel.y()+180) * Mth.DEG_TO_RAD));

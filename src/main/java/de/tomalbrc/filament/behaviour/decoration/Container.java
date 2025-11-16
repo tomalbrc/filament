@@ -6,9 +6,12 @@ import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.util.FilamentContainer;
 import de.tomalbrc.filament.util.TextUtil;
 import de.tomalbrc.filament.util.Util;
-import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,8 +21,9 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.component.SeededContainerLoot;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -64,16 +68,21 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
         }
     }
 
-    @Override
-    public void write(ValueOutput output, DecorationBlockEntity decorationBlockEntity) {
-        if (!container.trySaveLootTable(output))
-            ContainerHelper.saveAllItems(output.child("Container"), this.container.items);
+    public static BlockPos chestConnectedBlockPos(BlockPos blockPos, BlockState blockState) {
+        Direction direction = ChestBlock.getConnectedDirection(blockState);
+        return blockPos.relative(direction);
     }
 
     @Override
-    public void read(ValueInput input, DecorationBlockEntity decorationBlockEntity) {
-        if (!container.tryLoadLootTable(input))
-            input.child("Container").ifPresent(x -> ContainerHelper.loadAllItems(x, container.items));
+    public void write(CompoundTag output, HolderLookup.Provider lookup, DecorationBlockEntity decorationBlockEntity) {
+        if (!container.trySaveLootTable(output))
+            output.put("Container", ContainerHelper.saveAllItems(new CompoundTag(), this.container.items, lookup));
+    }
+
+    @Override
+    public void read(CompoundTag input, HolderLookup.Provider lookup, DecorationBlockEntity decorationBlockEntity) {
+        if (!container.tryLoadLootTable(input) && input.contains("Container"))
+            ContainerHelper.loadAllItems(input.getCompound("Container"), container.items, lookup);
     }
 
     @Override
@@ -85,7 +94,7 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
 
             player.openMenu(new SimpleMenuProvider((id, inventory, p) -> Util.createMenu(container, id, p), containerName));
 
-            if (config.angerPiglins) PiglinAi.angerNearbyPiglins(player.level(), player, true);
+            if (config.angerPiglins) PiglinAi.angerNearbyPiglins(player, true);
 
             decorationBlockEntity.setChanged();
 
@@ -110,7 +119,7 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
     }
 
     @Override
-    public void applyImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentGetter dataComponentGetter) {
+    public void applyImplicitComponents(DecorationBlockEntity decorationBlockEntity, BlockEntity.DataComponentInput dataComponentGetter) {
         dataComponentGetter.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(this.container.items);
 
         SeededContainerLoot seededContainerLoot = dataComponentGetter.get(DataComponents.CONTAINER_LOOT);
@@ -171,9 +180,9 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
     }
 
     @Override
-    public void removeComponentsFromTag(DecorationBlockEntity decorationBlockEntity, ValueOutput valueOutput) {
-        valueOutput.discard("LootTable");
-        valueOutput.discard("LootTableSeed");
+    public void removeComponentsFromTag(DecorationBlockEntity decorationBlockEntity, CompoundTag valueOutput, HolderLookup.Provider lookup) {
+        valueOutput.remove("LootTable");
+        valueOutput.remove("LootTableSeed");
     }
 
     @Override

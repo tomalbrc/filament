@@ -3,7 +3,6 @@ package de.tomalbrc.filament.behaviour.block;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
-import de.tomalbrc.filament.mixin.accessor.PrimedTntAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
@@ -30,7 +29,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -75,7 +73,7 @@ public class Tnt implements BlockBehaviour<Tnt.Config> {
     }
 
     @Override
-    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, @Nullable Orientation orientation, boolean bl) {
+    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos2, boolean bl) {
         if (level.hasNeighborSignal(blockPos)) {
             explode(level, blockPos, null, blockState);
             level.removeBlock(blockPos, false);
@@ -105,7 +103,7 @@ public class Tnt implements BlockBehaviour<Tnt.Config> {
             level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_NEIGHBORS | Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE);
             Item item = itemStack.getItem();
             if (itemStack.isDamageableItem()) {
-                itemStack.hurtAndBreak(1, player, interactionHand);
+                itemStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(interactionHand));
             } else {
                 itemStack.consume(1, player);
             }
@@ -138,7 +136,8 @@ public class Tnt implements BlockBehaviour<Tnt.Config> {
 
             PrimedTnt tntEntity = new PrimedTnt(level, blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, livingEntity);
             tntEntity.setFuse(fuse);
-            ((PrimedTntAccessor)tntEntity).setExplosionPower(config.explosionPower.getValue(bs));
+            // TODO: 1.21.1
+            //((PrimedTntAccessor)tntEntity).setExplosionPower(config.explosionPower.getValue(bs));
             tntEntity.setBlockState(bs);
             level.addFreshEntity(tntEntity);
 
@@ -155,6 +154,6 @@ public class Tnt implements BlockBehaviour<Tnt.Config> {
         public BlockStateMappedProperty<Boolean> unstable = BlockStateMappedProperty.of(false);
         public BlockStateMappedProperty<Float> explosionPower = BlockStateMappedProperty.of(4f);
         public BlockStateMappedProperty<Integer> fuseTime = BlockStateMappedProperty.of(80);
-        public BlockStateMappedProperty<ResourceLocation> primeSound = BlockStateMappedProperty.of(SoundEvents.TNT_PRIMED.location());
+        public BlockStateMappedProperty<ResourceLocation> primeSound = BlockStateMappedProperty.of(SoundEvents.TNT_PRIMED.getLocation());
     }
 }

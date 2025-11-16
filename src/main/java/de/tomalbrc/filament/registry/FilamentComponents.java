@@ -53,12 +53,12 @@ public class FilamentComponents {
         public void open(ItemStack itemStack, ServerPlayer player) {
             ItemContainerContents container = itemStack.get(DataComponents.CONTAINER);
             if (container != null) {
-                final int selectedSlot = player.getInventory().getSelectedSlot();
+                final int selectedSlot = player.getInventory().selected;
                 SimpleContainer container1 = new SimpleContainer(size);
                 container.copyInto(container1.items);
                 container1.addListener(x -> itemStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(container1.items)));
 
-                MenuProvider provider = new SimpleMenuProvider((id, inventory, p) -> Util.createMenu(container1, id, player, selectedSlot), Component.empty().append(TextUtil.formatText(this.titlePrefix())).append(itemStack.getOrDefault(DataComponents.CUSTOM_NAME, itemStack.get(DataComponents.ITEM_NAME))));
+                MenuProvider provider = new SimpleMenuProvider((id, inventory, p) -> Util.createMenu(container1, id, player, selectedSlot), Component.empty().append(TextUtil.formatText(this.titlePrefix())).append(itemStack.getHoverName()));
                 player.openMenu(provider);
             }
         }

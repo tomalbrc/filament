@@ -2,7 +2,6 @@ package de.tomalbrc.filament.behaviour.block;
 
 import de.tomalbrc.filament.api.behaviour.BlockBehaviourWithEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.Containers;
@@ -75,8 +74,8 @@ public class Furnace implements BlockBehaviourWithEntity<Furnace.Config> {
     }
 
     @Override
-    public void affectNeighborsAfterRemoval(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, boolean movedByPiston) {
-        Containers.updateNeighboursAfterDestroy(blockState, serverLevel, blockPos);
+    public void affectNeighborsAfterRemoval(BlockState state, Level level, BlockPos pos, BlockState blockState2, boolean movedByPiston) {
+        Containers.dropContentsOnDestroy(state, blockState2, level, pos);
     }
 
     @Override
@@ -85,7 +84,7 @@ public class Furnace implements BlockBehaviourWithEntity<Furnace.Config> {
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos, Direction direction) {
+    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos) {
         return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(level.getBlockEntity(blockPos));
     }
 

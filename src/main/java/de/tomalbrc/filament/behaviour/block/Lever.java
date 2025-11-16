@@ -21,8 +21,6 @@ import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.redstone.ExperimentalRedstoneUtils;
-import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -68,9 +66,9 @@ public class Lever implements BlockBehaviour<Lever.Config> {
     }
 
     @Override
-    public void affectNeighborsAfterRemoval(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, boolean bl) {
-        if (!bl && blockState.getValue(LeverBlock.POWERED)) {
-            this.updateNeighbours(blockState, serverLevel, blockPos);
+    public void affectNeighborsAfterRemoval(BlockState state, Level level, BlockPos pos, BlockState blockState2, boolean bl) {
+        if (!bl && state.getValue(LeverBlock.POWERED)) {
+            this.updateNeighbours(state, level, pos);
         }
 
     }
@@ -91,10 +89,8 @@ public class Lever implements BlockBehaviour<Lever.Config> {
     }
 
     private void updateNeighbours(BlockState blockState, Level level, BlockPos blockPos) {
-        Direction direction = getConnectedDirection(blockState).getOpposite();
-        Orientation orientation = ExperimentalRedstoneUtils.initialOrientation(level, direction, direction.getAxis().isHorizontal() ? Direction.UP : blockState.getValue(LeverBlock.FACING));
-        level.updateNeighborsAt(blockPos, blockState.getBlock(), orientation);
-        level.updateNeighborsAt(blockPos.relative(direction), blockState.getBlock(), orientation);
+        level.updateNeighborsAt(blockPos, blockState.getBlock());
+        level.updateNeighborsAt(blockPos.relative(getConnectedDirection(blockState).getOpposite()), blockState.getBlock());
     }
 
     @Override
@@ -112,7 +108,7 @@ public class Lever implements BlockBehaviour<Lever.Config> {
 
     public static class Config {
         public BlockStateMappedProperty<Integer> powerlevel = BlockStateMappedProperty.of(15);
-        public BlockStateMappedProperty<ResourceLocation> sound = BlockStateMappedProperty.of(SoundEvents.LEVER_CLICK.location());
+        public BlockStateMappedProperty<ResourceLocation> sound = BlockStateMappedProperty.of(SoundEvents.LEVER_CLICK.getLocation());
         public BlockStateMappedProperty<Float> volume = BlockStateMappedProperty.of(0.3f);
         public BlockStateMappedProperty<Float> pitch = BlockStateMappedProperty.empty();
     }

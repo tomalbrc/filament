@@ -28,7 +28,7 @@ public abstract class ReferenceMixin<T> implements Holder<T> {
         if (ItemRegistry.COPY_TAGS.containsKey(value)) {
             var x = ItemRegistry.COPY_TAGS.get(value);
             if (x != null) {
-                MappedRegistry.TagSet<T> set = ((MappedRegistryAccessor)BuiltInRegistries.ITEM).getAllTags();
+                var set = ((MappedRegistryAccessor<T>)BuiltInRegistries.ITEM).getTags();
                 var newSet = new ReferenceArraySet<TagKey<T>>();
                 set.forEach((tagKey,holders) -> {
                     for (Holder<?> holder : holders) {

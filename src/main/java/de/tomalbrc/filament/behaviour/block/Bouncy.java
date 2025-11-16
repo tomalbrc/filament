@@ -2,7 +2,6 @@ package de.tomalbrc.filament.behaviour.block;
 
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,7 +30,7 @@ public class Bouncy implements BlockBehaviour<Bouncy.Config> {
     @Override
     public boolean fallOn(Level level, BlockState blockState, BlockPos blockPos, Entity entity, double d) {
         if (!entity.isSuppressingBounce()) {
-            entity.causeFallDamage(d, 0.0F, level.damageSources().fall());
+            entity.causeFallDamage((float) d, 0.0F, level.damageSources().fall());
         }
 
         return true;
@@ -40,7 +39,7 @@ public class Bouncy implements BlockBehaviour<Bouncy.Config> {
     @Override
     public boolean updateEntityMovementAfterFallOn(BlockGetter blockGetter, Entity entity) {
         Vec3 deltaMovement = entity.getDeltaMovement();
-        if (deltaMovement.y < -0.4 && !entity.isSuppressingBounce() && (entity instanceof ServerPlayer serverPlayer && serverPlayer.getLastClientInput().jump())) {
+        if (deltaMovement.y < -0.4 && !entity.isSuppressingBounce()) {
             if (config.bounciness > 0) setVel(entity, new Vec3(deltaMovement.x, Mth.clamp(0, -deltaMovement.y * config.bounciness, config.max), deltaMovement.z));
         } else if (deltaMovement.y < -0.08 && !entity.isSuppressingBounce()) {
             double rebounce = entity instanceof LivingEntity ? 1.0 : 0.8;

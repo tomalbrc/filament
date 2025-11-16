@@ -12,7 +12,7 @@ import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -28,7 +28,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -65,7 +64,7 @@ public abstract class DecorationBlock extends SimpleBlock implements PolymerBloc
     }
 
     @Override
-    public BlockState getPolymerBlockState(BlockState state, PacketContext packetContext) {
+    public BlockState getPolymerBlockState(BlockState state, ServerPlayer packetContext) {
         DecorationData decorationData = getDecorationData();
         if (decorationData != null) {
             boolean passthrough = !decorationData.hasBlocks();
@@ -93,7 +92,7 @@ public abstract class DecorationBlock extends SimpleBlock implements PolymerBloc
     }
 
     @Override
-    public void onExplosionHit(BlockState blockState, ServerLevel level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
+    public void onExplosionHit(BlockState blockState, Level level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
         if (explosion.getDirectSourceEntity() instanceof Player player && !CommonProtection.canExplodeBlock(level, blockPos, explosion, player.getGameProfile(), player))
             return;
 

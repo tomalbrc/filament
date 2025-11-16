@@ -52,15 +52,15 @@ public class AnimatedCosmeticHolder extends EntityHolder {
     }
 
     @Override
-    protected void updateElement(ServerPlayer serverPlayer, DisplayWrapper<?> display) {
+    protected void updateElement(DisplayWrapper<?> display) {
         display.element().ignorePositionUpdates();
         display.element().setYaw(access().filament$bodyYaw());
-        super.updateElement(serverPlayer, display);
+        super.updateElement(display);
     }
 
     @Override
     public CommandSourceStack createCommandSourceStack() {
-        return this.entity.createCommandSourceStackForNameResolution(this.getLevel()).withMaximumPermission(4);
+        return this.entity.createCommandSourceStack().withMaximumPermission(4);
     }
 
     public Vec3 getPos() {

@@ -17,7 +17,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -45,7 +47,7 @@ public class ItemRegistry {
     @SuppressWarnings({"unchecked", "rawtypes"})
     static public void register(ItemData data) {
         if (BuiltInRegistries.ITEM.containsKey(data.id())) {
-            var item = BuiltInRegistries.ITEM.getValue(data.id());
+            var item = BuiltInRegistries.ITEM.get(data.id());
             if (item instanceof FilamentItem filamentItem) {
                 filamentItem.initBehaviours(data.behaviour());
                 postRegistration(filamentItem, data);
@@ -79,6 +81,7 @@ public class ItemRegistry {
         BehaviourUtil.postInitItem(item.asItem(), item, data.behaviour());
         Translations.add(item.asItem(), null, data);
         RPUtil.create(item, data);
+        item.requestModels();
     }
 
     public static ResourceKey<Item> key(ResourceLocation id) {
@@ -86,8 +89,12 @@ public class ItemRegistry {
     }
 
     public static <T extends Item> T registerItem(ResourceKey<Item> identifier, Function<Item.Properties, T> function, Item.Properties properties, ResourceLocation itemGroup, @Nullable Collection<ResourceLocation> tags) {
-        T item = function.apply(properties.setId(identifier));
-        Registry.register(BuiltInRegistries.ITEM, identifier, item);
+        T item = function.apply(properties);
+        if (item instanceof BlockItem blockItem) {
+            Items.registerBlock(blockItem);
+        } else {
+            Items.registerItem(identifier, item);
+        }
         ItemGroupRegistry.addItem(itemGroup, item);
 
         if (tags != null) for (ResourceLocation tag : tags) {

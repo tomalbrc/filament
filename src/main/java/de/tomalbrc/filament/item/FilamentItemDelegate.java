@@ -12,22 +12,21 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 // shared behaviour delegate for SimpleItem and SimpleBlockItem - DecorationItem just inherits SimpleItem
@@ -46,15 +45,12 @@ public class FilamentItemDelegate {
         }
     }
 
-    public boolean releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int useDuration, Supplier<Boolean> fallback) {
+    public void releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int useDuration) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : holder.getBehaviours()) {
             if (entry.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
-                if (itemBehaviour.releaseUsing(itemStack, level, livingEntity, useDuration)) {
-                    return true;
-                }
+                itemBehaviour.releaseUsing(itemStack, level, livingEntity, useDuration);
             }
         }
-        return fallback.get();
     }
 
     public boolean useOnRelease(ItemStack itemStack, Supplier<Boolean> fallback) {
@@ -78,22 +74,14 @@ public class FilamentItemDelegate {
         return fallback.get();
     }
 
-    public ItemUseAnimation getUseAnimation(ItemStack itemStack, Supplier<ItemUseAnimation> fallback) {
-        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : holder.getBehaviours()) {
-            if (entry.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
-                ItemUseAnimation anim = itemBehaviour.getUseAnimation(itemStack);
-                if (anim != ItemUseAnimation.NONE) return anim;
-            }
-        }
-        return fallback.get();
-    }
-
-    public void hurtEnemy(ItemStack itemStack, LivingEntity attacker, LivingEntity target) {
+    public boolean hurtEnemy(ItemStack itemStack, LivingEntity attacker, LivingEntity target) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : holder.getBehaviours()) {
             if (entry.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
                 itemBehaviour.hurtEnemy(itemStack, attacker, target);
             }
         }
+
+        return true;
     }
 
     public void postHurtEnemy(ItemStack itemStack, LivingEntity attacker, LivingEntity target) {
@@ -106,10 +94,10 @@ public class FilamentItemDelegate {
             itemStack.hurtAndBreak(1, target, attacker.getEquipmentSlotForItem(itemStack));
     }
 
-    public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, TooltipDisplay tooltipDisplay, Consumer<Component> consumer, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> consumer, TooltipFlag tooltipFlag) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : holder.getBehaviours()) {
             if (entry.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
-                itemBehaviour.appendHoverText(itemStack, tooltipContext, tooltipDisplay, consumer, tooltipFlag);
+                itemBehaviour.appendHoverText(itemStack, tooltipContext, consumer, tooltipFlag);
             }
         }
     }
@@ -122,16 +110,16 @@ public class FilamentItemDelegate {
         }
     }
 
-    public InteractionResult use(Item item, Level level, Player player, InteractionHand hand, Supplier<InteractionResult> fallback) {
-        InteractionResult result = fallback.get();
-        if (result.consumesAction()) {
+    public InteractionResultHolder<ItemStack> use(Item item, Level level, Player player, InteractionHand hand, Supplier<InteractionResultHolder<ItemStack>> fallback) {
+        InteractionResultHolder<ItemStack> result = fallback.get();
+        if (result.getResult().consumesAction()) {
             return result;
         }
 
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : holder.getBehaviours()) {
             if (entry.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
                 result = itemBehaviour.use(item, level, player, hand);
-                if (result.consumesAction()) {
+                if (result.getResult().consumesAction()) {
                     return result;
                 }
             }

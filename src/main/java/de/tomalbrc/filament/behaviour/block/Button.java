@@ -12,7 +12,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
@@ -25,13 +24,13 @@ import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.redstone.ExperimentalRedstoneUtils;
-import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
+
+import static de.tomalbrc.filament.behaviour.block.Lever.getConnectedDirection;
 
 public class Button implements BlockBehaviour<Button.Config> {
     private final Config config;
@@ -80,7 +79,7 @@ public class Button implements BlockBehaviour<Button.Config> {
     }
 
     @Override
-    public void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston) {
+    public void affectNeighborsAfterRemoval(BlockState state, Level level, BlockPos pos, BlockState blockState2, boolean movedByPiston) {
         if (!movedByPiston && state.getValue(ButtonBlock.POWERED)) {
             this.updateNeighbours(state, level, pos);
         }
@@ -93,7 +92,7 @@ public class Button implements BlockBehaviour<Button.Config> {
 
     @Override
     public int getDirectSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
-        return state.getValue(ButtonBlock.POWERED) && Lever.getConnectedDirection(state) == direction ? this.config.powerlevel.getValue(state) : 0;
+        return state.getValue(ButtonBlock.POWERED) && getConnectedDirection(state) == direction ? this.config.powerlevel.getValue(state) : 0;
     }
 
     @Override
@@ -109,7 +108,7 @@ public class Button implements BlockBehaviour<Button.Config> {
     }
 
     @Override
-    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier) {
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (!level.isClientSide() && this.config.canBeActivatedByArrows.getValue(state) && !(Boolean)state.getValue(ButtonBlock.POWERED)) {
             this.pressCheck(state, level, pos);
         }
@@ -131,11 +130,9 @@ public class Button implements BlockBehaviour<Button.Config> {
         }
     }
 
-    private void updateNeighbours(BlockState state, Level level, BlockPos pos) {
-        Direction direction = Lever.getConnectedDirection(state).getOpposite();
-        Orientation orientation = ExperimentalRedstoneUtils.initialOrientation(level, direction, direction.getAxis().isHorizontal() ? Direction.UP : state.getValue(ButtonBlock.FACING));
-        level.updateNeighborsAt(pos, state.getBlock(), orientation);
-        level.updateNeighborsAt(pos.relative(direction), state.getBlock(), orientation);
+    private void updateNeighbours(BlockState blockState, Level level, BlockPos blockPos) {
+        level.updateNeighborsAt(blockPos, blockState.getBlock());
+        level.updateNeighborsAt(blockPos.relative(getConnectedDirection(blockState).getOpposite()), blockState.getBlock());
     }
 
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
@@ -146,7 +143,7 @@ public class Button implements BlockBehaviour<Button.Config> {
         public BlockStateMappedProperty<Integer> powerlevel = BlockStateMappedProperty.of(15);
         public BlockStateMappedProperty<Integer> ticksToStayPressed = BlockStateMappedProperty.of(100);
         public BlockStateMappedProperty<Boolean> canBeActivatedByArrows = BlockStateMappedProperty.of(true);
-        public ResourceLocation clickOnSound = SoundEvents.WOODEN_BUTTON_CLICK_ON.location();
-        public ResourceLocation clickOffSound = SoundEvents.WOODEN_BUTTON_CLICK_OFF.location();
+        public ResourceLocation clickOnSound = SoundEvents.WOODEN_BUTTON_CLICK_ON.getLocation();
+        public ResourceLocation clickOffSound = SoundEvents.WOODEN_BUTTON_CLICK_OFF.getLocation();
     }
 }

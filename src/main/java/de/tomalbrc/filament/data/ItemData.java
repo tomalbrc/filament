@@ -21,7 +21,7 @@ public final class ItemData extends Data<ItemProperties> {
             @Nullable Map<String, String> translations,
             @Nullable Component displayName,
             @Nullable ItemResource itemResource,
-            @Nullable ResourceLocation itemModel,
+            @Nullable Integer itemModel,
             @Nullable BehaviourConfigMap behaviourConfig,
             @Nullable ItemProperties properties,
             @Nullable DataComponentMap components,

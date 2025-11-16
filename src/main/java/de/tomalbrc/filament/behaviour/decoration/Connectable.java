@@ -5,17 +5,17 @@ import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.api.behaviour.DecorationRotationProvider;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.item.FilamentItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -25,8 +25,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class Connectable implements BlockBehaviour<Connectable.Config>, DecorationRotationProvider, DecorationBehaviour<Connectable.Config> {
     private final Config config;
@@ -51,15 +49,21 @@ public class Connectable implements BlockBehaviour<Connectable.Config>, Decorati
 
     @Override
     public ItemStack visualItemStack(DecorationBlockEntity decorationBlockEntity, ItemStack itemStack, BlockState blockState) {
-        itemStack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(), List.of(), List.of(blockState.getValue(SHAPE).customModelData()), List.of()));
+        if (itemStack.getItem() instanceof FilamentItem filamentItem) {
+            filamentItem.getModelData();
+            var c = blockState.getValue(SHAPE).customModelData();
+            if (filamentItem.getModelData().containsKey(c)) {
+                itemStack.set(DataComponents.CUSTOM_MODEL_DATA, filamentItem.getModelData().get(c).asComponent());
+            }
+        }
         return itemStack;
     }
 
     @Override
-    public BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction dir, BlockPos neighbourPos, BlockState neighbourState, RandomSource randomSource) {
+    public BlockState updateShape(BlockState blockState, Direction dir, BlockState neighbourState, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos neighbourPos) {
         Direction direction = blockState.getValue(FACING);
         if (direction.getAxis().isHorizontal()) {
-            var newShape = getShape(blockState, levelReader, blockPos);
+            var newShape = getShape(blockState, levelAccessor, blockPos);
             return blockState.setValue(SHAPE, newShape);
         }
 

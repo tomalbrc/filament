@@ -16,8 +16,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.redstone.ExperimentalRedstoneUtils;
-import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.ticks.TickPriority;
 import org.jetbrains.annotations.NotNull;
 
@@ -75,7 +73,7 @@ public class Repeater implements BlockBehaviour<Repeater.Config> {
     }
 
     @Override
-    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, Orientation orientation, boolean bl) {
+    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos2, boolean bl) {
         this.checkTickOnNeighbor(blockState.getBlock(), level, blockPos, blockState);
     }
 
@@ -146,17 +144,16 @@ public class Repeater implements BlockBehaviour<Repeater.Config> {
     }
 
     @Override
-    public void affectNeighborsAfterRemoval(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, boolean movedByPiston) {
+    public void affectNeighborsAfterRemoval(BlockState state, Level level, BlockPos pos, BlockState blockState2, boolean movedByPiston) {
         if (!movedByPiston)
-            this.updateNeighborsInFront(serverLevel, blockPos, blockState);
+            this.updateNeighborsInFront(level, pos, state);
     }
 
-    protected void updateNeighborsInFront(Level level, BlockPos pos, BlockState state) {
-        Direction direction = state.getValue(FACING);
-        BlockPos blockPos = pos.relative(direction.getOpposite());
-        Orientation orientation = ExperimentalRedstoneUtils.initialOrientation(level, direction.getOpposite(), Direction.UP);
-        level.neighborChanged(blockPos, state.getBlock(), orientation);
-        level.updateNeighborsAtExceptFromFacing(blockPos, state.getBlock(), direction, orientation);
+    protected void updateNeighborsInFront(Level level, BlockPos blockPos, BlockState blockState) {
+        Direction direction = blockState.getValue(FACING);
+        BlockPos blockPos2 = blockPos.relative(direction.getOpposite());
+        level.neighborChanged(blockPos2, blockState.getBlock(), blockPos);
+        level.updateNeighborsAtExceptFromFacing(blockPos2, blockState.getBlock(), direction);
     }
 
     @Override

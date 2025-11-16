@@ -22,9 +22,9 @@ public class SkinUtil {
     private static final List<DataComponentType<?>> COMPONENTS_TO_COPY = List.of(DataComponents.ITEM_NAME, DataComponents.CUSTOM_NAME, DataComponents.ATTRIBUTE_MODIFIERS, DataComponents.LORE, DataComponents.DAMAGE, DataComponents.MAX_DAMAGE, DataComponents.MAX_STACK_SIZE, DataComponents.UNBREAKABLE, DataComponents.CHARGED_PROJECTILES, DataComponents.TOOL, DataComponents.ENCHANTMENTS, DataComponents.ENCHANTMENT_GLINT_OVERRIDE);
 
     public static void registerEventHandler() {
-        PolymerItemUtils.CONTEXT_ITEM_CHECK.register((itemStack, packetContext) -> itemStack.has(FilamentComponents.SKIN_DATA_COMPONENT));
+        PolymerItemUtils.ITEM_CHECK.register((itemStack) -> itemStack.has(FilamentComponents.SKIN_DATA_COMPONENT));
         PolymerItemUtils.ITEM_MODIFICATION_EVENT.register((orig,mod,player) -> {
-            var newStack = SkinUtil.wrap(orig, mod, player);
+            var newStack = SkinUtil.wrap(orig, mod, player == null ? PacketContext.of() : PacketContext.of(player));
             if (mod == newStack) return mod;
             newStack.set(DataComponents.CUSTOM_DATA, mod.get(DataComponents.CUSTOM_DATA));
             return newStack;
@@ -38,7 +38,7 @@ public class SkinUtil {
                 // important
                 var oldWrapped = wrappedItemStack;
                 if (wrappedItemStack.getItem() instanceof PolymerItem polymerItem) {
-                    wrappedItemStack = polymerItem.getPolymerItemStack(wrappedItemStack, TooltipFlag.NORMAL, context);
+                    wrappedItemStack = polymerItem.getPolymerItemStack(wrappedItemStack, TooltipFlag.NORMAL, context.getRegistryWrapperLookup(), context.getPlayer());
                 }
                 else wrappedItemStack = wrappedItemStack.copy();
 

@@ -76,8 +76,8 @@ public class FilamentMob extends Animal implements PolymerEntity {
     }
 
     @Override
-    public EntityType<?> getPolymerEntityType(PacketContext packetContext) {
-        return BuiltInRegistries.ENTITY_TYPE.getValue(getData().entityType());
+    public EntityType<?> getPolymerEntityType(ServerPlayer packetContext) {
+        return BuiltInRegistries.ENTITY_TYPE.get(getData().entityType());
     }
 
     protected void updateNoActionTime() {
@@ -96,7 +96,7 @@ public class FilamentMob extends Animal implements PolymerEntity {
     @Override
     public @Nullable AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
         var id = data.properties().offspring;
-        return (AgeableMob) BuiltInRegistries.ENTITY_TYPE.getValue(id).create(serverLevel, EntitySpawnReason.BREEDING);
+        return (AgeableMob) BuiltInRegistries.ENTITY_TYPE.get(id).create(serverLevel);
     }
 
     @Override
@@ -130,12 +130,12 @@ public class FilamentMob extends Animal implements PolymerEntity {
     }
 
     @Override
-    public void customServerAiStep(ServerLevel serverLevel) {
-        super.customServerAiStep(serverLevel);
+    public void customServerAiStep() {
+        super.customServerAiStep();
 
         if (this.forcedAgeTimer > 0) {
             if (this.forcedAgeTimer % 4 == 0) {
-                serverLevel.sendParticles(ParticleTypes.HAPPY_VILLAGER, this.getRandomX(1.0), this.getRandomY() + 0.5, this.getRandomZ(1.0), 0, 0.0, 0.0, 0.0, 0.0);
+                ((ServerLevel) level()).sendParticles(ParticleTypes.HAPPY_VILLAGER, this.getRandomX(1.0), this.getRandomY() + 0.5, this.getRandomZ(1.0), 0, 0.0, 0.0, 0.0, 0.0);
             }
 
             --this.forcedAgeTimer;
@@ -148,10 +148,10 @@ public class FilamentMob extends Animal implements PolymerEntity {
     }
 
     @Override
-    public boolean doHurtTarget(ServerLevel serverLevel, Entity entity) {
-        serverLevel.broadcastEntityEvent(this, (byte)4);
+    public boolean doHurtTarget(Entity entity) {
+        level().broadcastEntityEvent(this, (byte)4);
 
-        return super.doHurtTarget(serverLevel, entity);
+        return super.doHurtTarget(entity);
     }
 
     @Override
@@ -209,7 +209,7 @@ public class FilamentMob extends Animal implements PolymerEntity {
         var food = data.properties().food;
         if (food != null) {
             for (ResourceLocation resourceLocation : food) {
-                if (itemStack.is(BuiltInRegistries.ITEM.getValue(resourceLocation)))
+                if (itemStack.is(BuiltInRegistries.ITEM.get(resourceLocation)))
                     return true;
             }
         }
@@ -240,7 +240,7 @@ public class FilamentMob extends Animal implements PolymerEntity {
     }
 
     @Override
-    public void modifyRawEntityAttributeData(List<ClientboundUpdateAttributesPacket.AttributeSnapshot> data, ServerPlayer player, boolean initial) {
+    public void modifyRawEntityAttributeData(List<ClientboundUpdateAttributesPacket.AttributeSnapshot> data, PacketContext player, boolean initial) {
 
         data.add(new ClientboundUpdateAttributesPacket.AttributeSnapshot(Attributes.MAX_HEALTH, 1.0, List.of()));
     }
