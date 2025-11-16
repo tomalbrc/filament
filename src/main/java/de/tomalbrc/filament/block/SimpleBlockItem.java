@@ -181,7 +181,7 @@ public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentI
         }
 
         return this.modelData != null && !this.modelData.isEmpty() ?
-                this.modelData.get("default").value() : data.components().has(DataComponents.CUSTOM_DATA) ?
+                this.modelData.getOrDefault("default", this.modelData.values().iterator().next()).value() : data.components().has(DataComponents.CUSTOM_DATA) ?
                 Objects.requireNonNull(data.components().get(DataComponents.CUSTOM_MODEL_DATA)).value() : -1;
     }
 
