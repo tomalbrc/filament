@@ -3,10 +3,12 @@ package de.tomalbrc.filament.api.behaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import eu.pb4.polymer.resourcepack.api.PolymerModelData;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -32,6 +34,10 @@ public interface ItemBehaviour<T> extends Behaviour<T> {
     }
 
     default void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> consumer, TooltipFlag tooltipFlag) {
+    }
+
+    default boolean isValidRepairItem(ItemStack itemStack, ItemStack itemStack2) {
+        return false;
     }
 
     default InteractionResultHolder<ItemStack> use(Item item, Level level, Player player, InteractionHand interactionHand) {
@@ -87,5 +93,13 @@ public interface ItemBehaviour<T> extends Behaviour<T> {
 
     default int modifyPolymerCustomModelData(Map<String, PolymerModelData> modelData, ItemStack itemStack, @Nullable ServerPlayer player) {
         return -1;
+    }
+
+    default Holder<SoundEvent> getEquipSound() {
+        return null;
+    }
+
+    default Optional<Integer> getEnchantmentValue() {
+        return Optional.empty();
     }
 }
