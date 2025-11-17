@@ -17,6 +17,8 @@ import net.minecraft.resources.ResourceLocation;
 public class Behaviours {
     // Item
     public static final BehaviourType<Armor, Armor.Config> ARMOR = registerBehaviour("armor", Armor.class);
+    public static final BehaviourType<Enchantable, Enchantable.Config> ENCHANTABLE = registerBehaviour("enchantable", Enchantable.class);
+    public static final BehaviourType<Elytra, Elytra.Config> ELYTRA = registerBehaviour("elytra", Elytra.class);
     public static final BehaviourType<BannerPattern, BannerPattern.Config> BANNER_PATTERN = registerBehaviour("banner_pattern", BannerPattern.class); // TODO: deprecated?
     public static final BehaviourType<Bow, Bow.Config> BOW = registerBehaviour("bow", Bow.class);
     public static final BehaviourType<Compostable, Compostable.CompostableConfig> COMPOSTABLE = registerBehaviour("compostable", Compostable.class);
