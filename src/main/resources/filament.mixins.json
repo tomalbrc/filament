@@ -10,6 +10,7 @@
     "MappedRegistryMixin",
     "ReferenceMixin",
     "ReloadableServerResourcesMixin",
+    "ServerGamePacketListenerImplMixin",
     "StateDefinitionBuilderMixin",
     "TagLoaderMixin",
     "WorldLoaderMixin",
