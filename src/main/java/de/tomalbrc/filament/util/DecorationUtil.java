@@ -232,6 +232,9 @@ public class DecorationUtil {
         var converted = clientsideItem(itemStack);
         converted.remove(DataComponents.CUSTOM_NAME);
 
+        if (itemResource == null)
+            return converted;
+
         // TODO: this should be a behaviour
         if (itemStack.getItem() instanceof FilamentItem filamentItem) {
             if (wall && itemResource.getModels().containsKey("wall")) {
