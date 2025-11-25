@@ -234,6 +234,9 @@ public class DecorationUtil {
         var converted = clientsideItem(itemStack);
         converted.remove(DataComponents.CUSTOM_NAME);
 
+        if (itemResource == null)
+            return converted;
+
         // TODO: this should be a behaviour
         if (wall && itemResource.getModels().containsKey("wall")) {
             converted.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(ImmutableList.of(), ImmutableList.of(), ImmutableList.of("wall"), ImmutableList.of()));

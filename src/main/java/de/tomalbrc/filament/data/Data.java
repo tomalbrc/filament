@@ -25,7 +25,7 @@ public abstract class Data<PropertyType extends ItemProperties> {
     protected final @Nullable Item vanillaItem;
     protected final @Nullable Map<String, String> translations;
     protected final @Nullable Component displayName;
-    protected final @Nullable ItemResource itemResource;
+    protected @Nullable ItemResource itemResource;
     protected final @Nullable ResourceLocation itemModel;
     @SerializedName(value = "behaviour", alternate = {"behaviours", "behaviors", "behavior"})
     protected @Nullable BehaviourConfigMap behaviour;
@@ -92,6 +92,10 @@ public abstract class Data<PropertyType extends ItemProperties> {
 
     public @Nullable ItemResource itemResource() {
         return itemResource;
+    }
+
+    public void setItemResource(ItemResource itemResource) {
+        this.itemResource = itemResource;
     }
 
     public @Nullable ResourceProvider preferredResource() {
