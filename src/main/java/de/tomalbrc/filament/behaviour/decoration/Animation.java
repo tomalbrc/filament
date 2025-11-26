@@ -8,8 +8,9 @@ import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.decoration.holder.AnimatedDecorationHolder;
 import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
 import de.tomalbrc.filament.registry.ModelRegistry;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.NotNull;
 
 /**fi
@@ -46,10 +47,10 @@ public class Animation implements DecorationBehaviour<Animation.Config> {
     }
 
     @Override
-    public void read(ValueInput output, DecorationBlockEntity blockEntity) {
+    public void read(CompoundTag output, HolderLookup.Provider lookup, DecorationBlockEntity blockEntity) {
         output.getString("Animation").ifPresent(x -> blockEntity.getOrCreateHolder().playAnimation(x));
 
-        DecorationBehaviour.super.read(output, blockEntity);
+        DecorationBehaviour.super.read(output, lookup, blockEntity);
     }
 
     public static class Config {
