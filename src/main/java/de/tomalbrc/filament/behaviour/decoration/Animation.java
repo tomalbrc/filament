@@ -48,7 +48,7 @@ public class Animation implements DecorationBehaviour<Animation.Config> {
 
     @Override
     public void read(CompoundTag output, HolderLookup.Provider lookup, DecorationBlockEntity blockEntity) {
-        output.getString("Animation").ifPresent(x -> blockEntity.getOrCreateHolder().playAnimation(x));
+        if (output.contains("Animation")) blockEntity.getOrCreateHolder().playAnimation(output.getString("Animation"));
 
         DecorationBehaviour.super.read(output, lookup, blockEntity);
     }
