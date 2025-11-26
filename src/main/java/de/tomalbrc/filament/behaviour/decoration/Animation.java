@@ -33,9 +33,7 @@ public class Animation implements DecorationBehaviour<Animation.Config> {
         if (model == null) {
             Filament.LOGGER.error("No Animated model named '{}' was found!", config.model);
         } else {
-            var holder = new AnimatedDecorationHolder(blockEntity, model);
-            holder.setScale(config.scale);
-            return holder;
+            return new AnimatedDecorationHolder(blockEntity, model);
         }
 
         return null;
@@ -58,7 +56,5 @@ public class Animation implements DecorationBehaviour<Animation.Config> {
         public String autoplay = null;
 
         public BlockStateMappedProperty<String> variant = BlockStateMappedProperty.of("default");
-
-        public float scale = 1f;
     }
 }
