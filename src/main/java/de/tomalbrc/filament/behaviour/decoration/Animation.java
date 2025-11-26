@@ -9,9 +9,10 @@ import de.tomalbrc.filament.decoration.holder.AnimatedDecorationHolder;
 import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
 import de.tomalbrc.filament.registry.ModelRegistry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.NotNull;
 
-/**
+/**fi
  * Animation behaviour for decoration using animated java models
  */
 public class Animation implements DecorationBehaviour<Animation.Config> {
@@ -42,6 +43,13 @@ public class Animation implements DecorationBehaviour<Animation.Config> {
     @Override
     public void onHolderAttach(DecorationBlockEntity blockEntity, FilamentDecorationHolder holder) {
         holder.setYaw(blockEntity.getVisualRotationYInDegrees());
+    }
+
+    @Override
+    public void read(ValueInput output, DecorationBlockEntity blockEntity) {
+        output.getString("Animation").ifPresent(x -> blockEntity.getOrCreateHolder().playAnimation(x));
+
+        DecorationBehaviour.super.read(output, blockEntity);
     }
 
     public static class Config {
