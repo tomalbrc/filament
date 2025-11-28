@@ -43,6 +43,9 @@ public class DecorationHolder extends ElementHolder implements FilamentDecoratio
             if (element instanceof DecorationItemDisplayElement itemDisplayElement) {
                 itemDisplayElement.setItem(newItem);
             }
+            else if (element instanceof ItemFrameElement itemDisplayElement) {
+                itemDisplayElement.setItem(newItem);
+            }
         }
 
         this.tick();
