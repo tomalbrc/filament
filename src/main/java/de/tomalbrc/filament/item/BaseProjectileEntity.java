@@ -221,6 +221,6 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
 
     @Override
     protected boolean tryPickup(Player player) {
-        return config.canPickUp && super.tryPickup(player);
+        return config != null && config.canPickUp && super.tryPickup(player);
     }
 }
