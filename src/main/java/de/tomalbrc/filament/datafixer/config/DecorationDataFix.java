@@ -37,7 +37,7 @@ public class DecorationDataFix {
         }
 
         var veryOldFormat_Model = element.getAsJsonObject().get("model");
-        if (!root.has("itemResource")) {
+        if (veryOldFormat_Model != null && !root.has("itemResource")) {
             try {
                 var map = new HashMap<String, ResourceLocation>();
                 map.put("default", ResourceLocation.parse(veryOldFormat_Model.getAsString()));
