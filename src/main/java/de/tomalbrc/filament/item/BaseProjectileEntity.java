@@ -21,6 +21,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -181,7 +182,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     @Override
     @NotNull
     protected SoundEvent getDefaultHitGroundSoundEvent() {
-        return SoundEvent.createVariableRangeEvent(config.hitGroundSound);
+        return config == null ? SoundEvents.EMPTY : SoundEvent.createVariableRangeEvent(config.hitGroundSound);
     }
 
     @Override
@@ -219,6 +220,6 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
 
     @Override
     protected boolean tryPickup(Player player) {
-        return config.canPickUp && super.tryPickup(player);
+        return config != null && config.canPickUp && super.tryPickup(player);
     }
 }

@@ -85,4 +85,8 @@ public class ItemFrameElement extends GenericEntityElement {
     public void setYaw(float yaw) {
         this.dataTracker.set(ItemFrameAccessor.getDATA_ROTATION(), Util.SEGMENTED_ANGLE8.fromDegrees(yaw-180));
     }
+
+    public void setItem(ItemStack item) {
+        this.dataTracker.set(ItemFrameEntityAccessor.getITEM_STACK(), item.copy());
+    }
 }
