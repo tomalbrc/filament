@@ -38,11 +38,14 @@ public abstract class AbstractDecorationBlockEntity extends BlockEntity {
 
     public DecorationBlockEntity getMainBlockEntity() {
         assert this.level != null;
-        return (DecorationBlockEntity)this.level.getBlockEntity(new BlockPos(this.worldPosition).subtract(this.main));
+        if (this.level.getBlockEntity(this.mainPosition()) instanceof DecorationBlockEntity decorationBlockEntity) {
+            return decorationBlockEntity;
+        }
+        return (DecorationBlockEntity) this;
     }
 
     public BlockPos mainPosition() {
-        return new BlockPos(this.worldPosition).subtract(this.main);
+        return this.worldPosition.subtract(this.main);
     }
 
     @Override
