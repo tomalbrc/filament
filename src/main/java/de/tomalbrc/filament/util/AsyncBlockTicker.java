@@ -4,8 +4,6 @@ import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.behaviour.AsyncTickingBlockBehaviour;
 import de.tomalbrc.filament.block.SimpleBlock;
-import it.unimi.dsi.fastutil.longs.LongArraySet;
-import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.core.BlockPos;
@@ -25,23 +23,26 @@ public class AsyncBlockTicker {
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newSingleThreadScheduledExecutor();
 
     public static void init() {
-        ServerLifecycleEvents.SERVER_STOPPING.register(minecraftServer -> EXECUTOR_SERVICE.shutdown());
+        ServerLifecycleEvents.SERVER_STOPPING.register(minecraftServer -> EXECUTOR_SERVICE.shutdownNow());
     }
 
     public static void tick(MinecraftServer server) {
-        if (!EXECUTOR_SERVICE.isShutdown()) CompletableFuture.runAsync(() -> {
-            for (TickData entry : TICKING.values()) {
-                tick(entry);
-            }
-        }, EXECUTOR_SERVICE);
+        try {
+            CompletableFuture.runAsync(() -> {
+                for (TickData entry : TICKING.values()) {
+                    if (entry != null) tick(entry);
+                }
+            }, EXECUTOR_SERVICE);
+        } catch (RejectedExecutionException ignored) {}
     }
 
     private static void tick(TickData tickData) {
+        var state = tickData.serverLevel.getBlockState(tickData.blockPos);
+        if (state.getBlock() != tickData.block) return;
+
         for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : tickData.block.getBehaviours()) {
             if (behaviour.getValue() instanceof AsyncTickingBlockBehaviour blockBehaviour) {
-                var state = tickData.serverLevel.getBlockState(tickData.blockPos);
-                if (state.getBlock() == tickData.block)
-                    blockBehaviour.tickAsync(tickData.serverLevel.getBlockState(tickData.blockPos), tickData.serverLevel, tickData.blockPos, tickData.serverLevel.random);
+                blockBehaviour.tickAsync(state, tickData.serverLevel, tickData.blockPos, tickData.serverLevel.random);
             }
         }
     }
@@ -59,13 +60,9 @@ public class AsyncBlockTicker {
     }
 
     public static void remove(ServerLevel serverLevel, LevelChunk chunk) {
-        LongSet s = new LongArraySet();
-        for (Map.Entry<Long, TickData> entry : TICKING.entrySet()) {
-            if (entry.getValue().serverLevel == serverLevel && SectionPos.of(entry.getValue().blockPos).chunk().equals(chunk.getPos())) {
-                s.add(entry.getKey());
-            }
-        }
-        s.forEach(TICKING::remove);
+        TICKING.entrySet().removeIf(e ->
+                e.getValue().serverLevel == serverLevel && SectionPos.of(e.getValue().blockPos).chunk().equals(chunk.getPos())
+        );
     }
 
     public static TickData get(BlockPos pos) {
