@@ -217,7 +217,7 @@ public class SimpleItem extends Item implements PolymerItem, FilamentItem, Equip
         }
 
         return this.modelData != null ?
-                this.modelData.get("default").value() : itemData.components().has(DataComponents.CUSTOM_DATA) ?
+                this.modelData.get("default").value() : itemData.components().has(DataComponents.CUSTOM_MODEL_DATA) ?
                 Objects.requireNonNull(itemData.components().get(DataComponents.CUSTOM_MODEL_DATA)).value() : -1;
     }
 
