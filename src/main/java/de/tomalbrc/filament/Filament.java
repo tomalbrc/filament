@@ -52,7 +52,8 @@ public class Filament implements ModInitializer {
         if (FilamentConfig.getInstance().addCustomMenuAssets)
             PolymerResourcePackUtils.addModAssets(Constants.MOD_ID);
 
-        PolymerResourcePackUtils.markAsRequired();
+        if (FilamentConfig.getInstance().resourcepackRequired)
+            PolymerResourcePackUtils.markAsRequired();
         FilamentComponents.register();
         Behaviours.register();
         SkinUtil.registerEventHandler();
@@ -100,8 +101,7 @@ public class Filament implements ModInitializer {
         FilamentReloadUtil.registerEarlyReloadListener(new ItemRegistry.ItemDataReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new BlockRegistry.BlockDataReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new DecorationRegistry.DecorationDataReloadListener());
-        if (FilamentConfig.getInstance().entityModule)
-            FilamentReloadUtil.registerEarlyReloadListener(new EntityRegistry.EntityDataReloadListener());
+        FilamentReloadUtil.registerEarlyReloadListener(new EntityRegistry.EntityDataReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new ItemGroupRegistry.ItemGroupDataReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new BiomeModifications.BiomeModificationsDataReloadListener());
 
