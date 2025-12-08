@@ -41,9 +41,6 @@ public class Filament implements ModInitializer {
     public static FabricServerAudiences ADVENTURE;
 
     public static FabricServerAudiences adventure() {
-        if (ADVENTURE == null) {
-            throw new IllegalStateException("Tried to access Adventure without a running server!");
-        }
         return ADVENTURE;
     }
 
