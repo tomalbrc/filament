@@ -3,7 +3,6 @@ package de.tomalbrc.filament.behaviour.block;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.Behaviours;
-import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.util.BlockUtil;
 import net.fabricmc.fabric.api.registry.VillagerInteractionRegistries;
 import net.minecraft.core.BlockPos;
@@ -165,7 +164,7 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
     }
 
     private boolean isCrop(Block block1) {
-        return block1 instanceof SimpleBlock simpleBlock && simpleBlock.has(Behaviours.CROP) && Objects.requireNonNull(simpleBlock.get(Behaviours.CROP)).config == config;
+        return block1.isFilamentBlock() && block1.has(Behaviours.CROP) && Objects.requireNonNull(block1.get(Behaviours.CROP)).config == config;
     }
 
     protected boolean hasSufficientLight(LevelReader levelReader, BlockPos blockPos) {
@@ -184,7 +183,7 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
 
     @Override
     public void performBonemeal(ServerLevel serverLevel, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
-        if (blockState.getBlock() instanceof SimpleBlock polymerBlock && !(polymerBlock.getPolymerBlockState(blockState, PacketContext.create()).getBlock() instanceof BonemealableBlock)) {
+        if (blockState.getBlock().isFilamentBlock() && !(blockState.getBlock().asFilamentBlock().getPolymerBlockState(blockState, PacketContext.create()).getBlock() instanceof BonemealableBlock)) {
             BlockUtil.handleBoneMealEffects(serverLevel, blockPos);
         }
 

@@ -6,7 +6,6 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import de.tomalbrc.filament.item.FilamentItem;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.elements.TextDisplayElement;
 import eu.pb4.sgui.api.gui.SignGui;
@@ -81,7 +80,7 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
 
         if (config.canEdit) {
             var itemStack = player.getItemInHand(hand);
-            if (config.waxable && !isWaxed && (itemStack.is(Items.HONEYCOMB) || itemStack.getItem() instanceof FilamentItem filamentItem && filamentItem.has(Behaviours.WAX))) {
+            if (config.waxable && !isWaxed && (itemStack.is(Items.HONEYCOMB) || itemStack.getItem().isFilamentItem() && itemStack.getItem().has(Behaviours.WAX))) {
                 CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(player, decorationBlockEntity.getBlockPos(), itemStack);
                 player.level().levelEvent(null, LevelEvent.PARTICLES_AND_SOUND_WAX_ON, decorationBlockEntity.getBlockPos(), 0);
 
@@ -233,11 +232,7 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
             data.add(i, getSignData(signElement));
         }
 
-        builder.set(DataComponents.CUSTOM_DATA, CustomData.EMPTY.update(x -> {
-            SignData.CODEC.listOf().encodeStart(NbtOps.INSTANCE, data).ifSuccess(res -> {
-                x.put("SignData", res);
-            });
-        }));
+        builder.set(DataComponents.CUSTOM_DATA, CustomData.EMPTY.update(x -> SignData.CODEC.listOf().encodeStart(NbtOps.INSTANCE, data).ifSuccess(res -> x.put("SignData", res))));
     }
 
     private Component getLine(ConfiguredSignElement element, int i) {

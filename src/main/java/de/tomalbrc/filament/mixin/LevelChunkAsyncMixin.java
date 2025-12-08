@@ -37,8 +37,8 @@ public abstract class LevelChunkAsyncMixin extends ChunkAccess {
         if (x != null) {
             if (x != blockState.getBlock()) {
                 AsyncBlockTicker.remove(blockPos);
-            } else if (blockState.getBlock() instanceof SimpleBlock simpleBlock && level instanceof ServerLevel serverLevel && AsyncBlockTicker.get(blockPos) == null) {
-                AsyncBlockTicker.add(blockPos, simpleBlock, serverLevel);
+            } else if (blockState.getBlock().isFilamentBlock() && level instanceof ServerLevel serverLevel && AsyncBlockTicker.get(blockPos) == null) {
+                AsyncBlockTicker.add(blockPos, blockState.getBlock().asFilamentBlock(), serverLevel);
             }
         }
     }
@@ -46,8 +46,8 @@ public abstract class LevelChunkAsyncMixin extends ChunkAccess {
     @Inject(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;isClientSide()Z", ordinal = 1, shift = At.Shift.BEFORE))
     private void filament$addAsyncTicker(BlockPos blockPos, BlockState blockState, int i, CallbackInfoReturnable<BlockState> cir) {
         var x = AsyncBlockTicker.getBlock(blockPos);
-        if (x == null && this.level instanceof ServerLevel serverLevel && blockState.getBlock() instanceof SimpleBlock simpleBlock && filament$isAsyncTickingBlock(simpleBlock)) {
-            AsyncBlockTicker.add(blockPos, simpleBlock, serverLevel);
+        if (x == null && this.level instanceof ServerLevel serverLevel && blockState.getBlock().isFilamentBlock() && filament$isAsyncTickingBlock(blockState.getBlock().asFilamentBlock())) {
+            AsyncBlockTicker.add(blockPos, blockState.getBlock().asFilamentBlock(), serverLevel);
         }
     }
 
@@ -59,16 +59,16 @@ public abstract class LevelChunkAsyncMixin extends ChunkAccess {
                 var section = sections[i];
                 if (section != null && !section.hasOnlyAir()) {
                     var container = section.getStates();
-                    if (container.maybeHas(blockState -> blockState.getBlock() instanceof SimpleBlock simpleBlock && filament$isAsyncTickingBlock(simpleBlock))) {
+                    if (container.maybeHas(blockState -> blockState.getBlock().isFilamentBlock() && filament$isAsyncTickingBlock(blockState.getBlock().asFilamentBlock()))) {
                         BlockState state;
                         for (byte x = 0; x < 16; x++) {
                             for (byte z = 0; z < 16; z++) {
                                 for (byte y = 0; y < 16; y++) {
                                     state = container.get(x, y, z);
-                                    if (state.getBlock() instanceof SimpleBlock simpleBlock && simpleBlock.hasData()) {
-                                        if (filament$isAsyncTickingBlock(simpleBlock)) {
+                                    if (state.getBlock().isFilamentBlock() && state.getBlock().asFilamentBlock().hasData()) {
+                                        if (filament$isAsyncTickingBlock(state.getBlock().asFilamentBlock())) {
                                             var blockPos = chunkPos.getBlockAt(x, this.getSectionYFromSectionIndex(i) * 16 + y, z);
-                                            AsyncBlockTicker.add(blockPos, simpleBlock, serverLevel);
+                                            AsyncBlockTicker.add(blockPos, state.getBlock().asFilamentBlock(), serverLevel);
                                         }
                                     }
                                 }

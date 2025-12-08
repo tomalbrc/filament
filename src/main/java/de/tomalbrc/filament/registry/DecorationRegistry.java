@@ -65,10 +65,10 @@ public class DecorationRegistry {
         for (Map.Entry<ResourceLocation, DecorationData> entry : decorations.entrySet()) {
             if (entry.getKey().equals(data.id())) {
                 var block = BuiltInRegistries.BLOCK.getValue(data.id());
-                if (block instanceof SimpleBlock filamentBlock && block.asItem() instanceof FilamentItem filamentItem) {
-                    filamentItem.initBehaviours(data.behaviour());
-                    filamentBlock.initBehaviours(data.behaviour());
-                    BlockRegistry.postRegistration(filamentItem, filamentBlock, data);
+                if (block.isFilamentBlock() && block.asItem().isFilamentItem()) {
+                    block.asItem().asFilamentItem().initBehaviours(data.behaviour());
+                    block.asFilamentBlock().initBehaviours(data.behaviour());
+                    BlockRegistry.postRegistration(block.asItem().asFilamentItem(), block.asFilamentBlock(), data);
                 }
                 return;
             }

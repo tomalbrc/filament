@@ -26,7 +26,7 @@
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric-api": "*",
-    "minecraft": ">=1.21.6",
+    "minecraft": ">=1.21.10",
     "polymer-core": "*",
     "polymer-blocks": "*",
     "polymer-resource-pack": "*",
@@ -36,5 +36,11 @@
     "polymer-sound-patcher": "*",
     "bil": ">=${bil_version}"
   },
-  "accessWidener": "filament.accesswidener"
+  "accessWidener": "filament.accesswidener",
+  "custom": {
+    "loom:injected_interfaces": {
+      "net/minecraft/class_1792": ["de/tomalbrc/filament/injection/FilamentItemExtension"],
+      "net/minecraft/class_2248": ["de/tomalbrc/filament/injection/FilamentBlockExtension"]
+    }
+  }
 }

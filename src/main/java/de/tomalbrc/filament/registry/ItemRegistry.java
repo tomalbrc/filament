@@ -46,9 +46,9 @@ public class ItemRegistry {
     static public void register(ItemData data) {
         if (BuiltInRegistries.ITEM.containsKey(data.id())) {
             var item = BuiltInRegistries.ITEM.getValue(data.id());
-            if (item instanceof FilamentItem filamentItem) {
-                filamentItem.initBehaviours(data.behaviour());
-                postRegistration(filamentItem, data);
+            if (item.isFilamentItem()) {
+                item.asFilamentItem().initBehaviours(data.behaviour());
+                postRegistration(item.asFilamentItem(), data);
             }
             return;
         }

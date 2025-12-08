@@ -1,7 +1,6 @@
 package de.tomalbrc.filament.mixin.behaviour.fishing_rod;
 
 import de.tomalbrc.filament.behaviour.Behaviours;
-import de.tomalbrc.filament.item.FilamentItem;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.ItemStack;
@@ -24,6 +23,6 @@ public class FishingHookMixin {
 
     @Unique
     private boolean isRod(ItemStack itemStack) {
-        return itemStack.getItem() instanceof FilamentItem filamentItem && filamentItem.has(Behaviours.FISHING_ROD);
+        return itemStack.getItem().isFilamentItem() && itemStack.getItem().has(Behaviours.FISHING_ROD);
     }
 }

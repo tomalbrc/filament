@@ -2,7 +2,6 @@ package de.tomalbrc.filament.mixin.behaviour.waxable;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import de.tomalbrc.filament.behaviour.Behaviours;
-import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.registry.WaxableRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundLevelEventPacket;
@@ -27,8 +26,8 @@ import java.util.Optional;
 public class HoneycombItemMixin {
     @Inject(method = "getWaxed", at = @At("RETURN"), cancellable = true)
     private static void filament$customWaxable(BlockState blockState, CallbackInfoReturnable<Optional<BlockState>> cir) {
-        if (cir.getReturnValue().isEmpty() && blockState.getBlock() instanceof SimpleBlock block && block.has(Behaviours.WAXABLE)) {
-            cir.setReturnValue(Optional.of(WaxableRegistry.getWaxed(block).withPropertiesOf(blockState)));
+        if (cir.getReturnValue().isEmpty() && blockState.getBlock().isFilamentBlock() && blockState.getBlock().has(Behaviours.WAXABLE)) {
+            cir.setReturnValue(Optional.of(WaxableRegistry.getWaxed(blockState.getBlock()).withPropertiesOf(blockState)));
         }
     }
 

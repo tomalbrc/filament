@@ -2,7 +2,6 @@ package de.tomalbrc.filament.mixin.behaviour.falling_block;
 
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.block.FallingBlock;
-import de.tomalbrc.filament.block.SimpleBlock;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
@@ -29,8 +28,8 @@ public abstract class FallingBlockEntityMixin extends Entity {
 
     @Inject(method = "causeFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/tags/TagKey;)Z"), cancellable = true)
     private void filament$damageChangeBlockState(double d, float f, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
-        if (this.blockState.getBlock() instanceof SimpleBlock simpleBlock && simpleBlock.has(Behaviours.FALLING_BLOCK)) {
-            FallingBlock behaviour = simpleBlock.get(Behaviours.FALLING_BLOCK);
+        if (this.blockState.getBlock().isFilamentBlock() && this.blockState.getBlock().has(Behaviours.FALLING_BLOCK)) {
+            FallingBlock behaviour = this.blockState.getBlock().get(Behaviours.FALLING_BLOCK);
             assert behaviour != null;
 
             var conf = behaviour.getConfig();

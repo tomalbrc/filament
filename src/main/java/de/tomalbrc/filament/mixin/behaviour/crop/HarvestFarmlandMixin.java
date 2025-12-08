@@ -2,7 +2,6 @@ package de.tomalbrc.filament.mixin.behaviour.crop;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import de.tomalbrc.filament.behaviour.Behaviours;
-import de.tomalbrc.filament.block.SimpleBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -44,7 +43,7 @@ public abstract class HarvestFarmlandMixin {
     @Inject(method = "validPos", at = @At("RETURN"), cancellable = true)
     private void filament$validPos(BlockPos blockPos, ServerLevel serverLevel, CallbackInfoReturnable<Boolean> cir) {
         BlockState blockState = serverLevel.getBlockState(blockPos);
-        if (blockState.getBlock() instanceof SimpleBlock simpleBlock && simpleBlock.has(Behaviours.CROP) && simpleBlock.get(Behaviours.CROP).isMaxAge(blockState)) {
+        if (blockState.getBlock().isFilamentBlock() && blockState.getBlock().has(Behaviours.CROP) && blockState.getBlock().getOrThrow(Behaviours.CROP).isMaxAge(blockState)) {
             cir.setReturnValue(true);
         }
     }
@@ -53,8 +52,8 @@ public abstract class HarvestFarmlandMixin {
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/server/level/ServerLevel;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;", shift = At.Shift.BY, by = 3, ordinal = 1))
     private void filament$onTick(ServerLevel serverLevel, Villager villager, long l, CallbackInfo ci, @Local BlockState blockState, @Local(ordinal = 0) Block block, @Local(ordinal = 1) Block block2) {
-        if (block instanceof SimpleBlock simpleBlock) {
-            if (filament$isCustomCrop(block) && simpleBlock.get(Behaviours.CROP).isMaxAge(blockState)) {
+        if (block.isFilamentBlock()) {
+            if (filament$isCustomCrop(block) && block.getOrThrow(Behaviours.CROP).isMaxAge(blockState) && aboveFarmlandPos != null) {
                 serverLevel.destroyBlock(this.aboveFarmlandPos, true, villager);
 
                 if (blockState.isAir() && filament$isCustomCrop(block2) && villager.hasFarmSeeds()) {
@@ -76,7 +75,7 @@ public abstract class HarvestFarmlandMixin {
                     }
                 }
 
-                if (!simpleBlock.get(Behaviours.CROP).isMaxAge(blockState)) {
+                if (!block.getOrThrow(Behaviours.CROP).isMaxAge(blockState)) {
                     this.validFarmlandAroundVillager.remove(this.aboveFarmlandPos);
                     this.aboveFarmlandPos = this.getValidFarmland(serverLevel);
                     if (this.aboveFarmlandPos != null) {
@@ -90,6 +89,6 @@ public abstract class HarvestFarmlandMixin {
     }
 
     @Unique boolean filament$isCustomCrop(Block block) {
-        return block instanceof SimpleBlock simpleBlock && simpleBlock.has(Behaviours.CROP) && simpleBlock.get(Behaviours.CROP).getConfig().villagerInteraction;
+        return block.isFilamentBlock() && block.has(Behaviours.CROP) && block.getOrThrow(Behaviours.CROP).getConfig().villagerInteraction;
     }
 }

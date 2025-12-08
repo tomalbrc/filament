@@ -95,6 +95,10 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
         return this.blockData;
     }
 
+    public SimpleBlock asFilamentBlock() {
+        return this;
+    }
+
     @Override
     public @NotNull MutableComponent getName() {
         var dataName = this.blockData.displayName();

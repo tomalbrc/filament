@@ -6,7 +6,6 @@ import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.ItemPredicateModelProvider;
 import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.generator.ItemAssetGenerator;
-import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.mixin.accessor.CrossbowItemInvoker;
 import de.tomalbrc.filament.mixin.accessor.ProjectileWeaponItemInvoker;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
@@ -270,7 +269,7 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
 
     @Override
     public boolean useOnRelease(ItemStack itemStack) {
-        return itemStack.getItem() instanceof FilamentItem filamentItem && filamentItem.has(Behaviours.CROSSBOW);
+        return itemStack.getItem().isFilamentItem() && itemStack.getItem().has(Behaviours.CROSSBOW);
     }
 
     public Predicate<ItemStack> supportedProjectiles() {

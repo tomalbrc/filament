@@ -3,7 +3,6 @@ package de.tomalbrc.filament.mixin;
 import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviourWithEntity;
-import de.tomalbrc.filament.block.SimpleBlock;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,8 +20,8 @@ public abstract class BlockEntityTypeMixin {
 
     @Inject(method = "isValid", at = @At(value = "HEAD"), cancellable = true)
     private void filament$isValid(BlockState blockState, CallbackInfoReturnable<Boolean> cir) {
-        if (blockState.getBlock() instanceof SimpleBlock simpleBlock) {
-            for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : simpleBlock.getBehaviours()) {
+        if (blockState.getBlock().isFilamentBlock()) {
+            for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : blockState.getBlock().getBehaviours()) {
                 if (behaviour.getValue() instanceof BlockBehaviourWithEntity<?> blockBehaviourWithEntity && BlockEntityType.class.cast(this) == blockBehaviourWithEntity.blockEntityType()) {
                     cir.setReturnValue(true);
                     return;

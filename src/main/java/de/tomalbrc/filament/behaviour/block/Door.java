@@ -4,7 +4,6 @@ import com.google.gson.JsonParseException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.behaviour.Behaviours;
-import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.data.AbstractBlockData;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
@@ -123,7 +122,7 @@ public class Door implements BlockBehaviour<Door.Config> {
     }
 
     private boolean isSame(Block block) {
-        return (block instanceof SimpleBlock simpleBlock && simpleBlock.has(Behaviours.DOOR)) || block instanceof DoorBlock;
+        return (block.isFilamentBlock() && block.has(Behaviours.DOOR)) || block instanceof DoorBlock;
     }
 
     private DoorHingeSide getHinge(BlockPlaceContext blockPlaceContext) {
@@ -175,7 +174,7 @@ public class Door implements BlockBehaviour<Door.Config> {
     }
 
     public void setOpen(@Nullable Entity entity, Level level, BlockState blockState, BlockPos blockPos, boolean bl) {
-        if (!(blockState.getBlock() instanceof SimpleBlock simpleBlock && simpleBlock.has(Behaviours.DOOR)) || blockState.getValue(BlockStateProperties.OPEN) == bl) {
+        if (!(blockState.getBlock().isFilamentBlock() && blockState.getBlock().has(Behaviours.DOOR)) || blockState.getValue(BlockStateProperties.OPEN) == bl) {
             return;
         }
         level.setBlock(blockPos, blockState.setValue(BlockStateProperties.OPEN, bl), Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE);
@@ -204,7 +203,7 @@ public class Door implements BlockBehaviour<Door.Config> {
         if (blockState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.LOWER) {
             return blockState2.isFaceSturdy(levelReader, blockPos2, Direction.UP);
         }
-        return blockState2.getBlock() instanceof SimpleBlock simpleBlock && simpleBlock.has(Behaviours.DOOR);
+        return blockState2.getBlock().isFilamentBlock() && blockState2.getBlock().has(Behaviours.DOOR);
     }
 
     private void playSound(@Nullable Entity entity, Level level, BlockPos blockPos, boolean open) {
@@ -242,7 +241,7 @@ public class Door implements BlockBehaviour<Door.Config> {
 
     @Override
     public boolean modifyStateMap(Map<BlockState, BlockData.BlockStateMeta> map, AbstractBlockData<? extends BlockProperties> data) {
-        for (Map.Entry<String, PolymerBlockModel> entry : data.blockResource().models().entrySet()) {
+        if (data.blockResource() != null) for (Map.Entry<String, PolymerBlockModel> entry : data.blockResource().models().entrySet()) {
             PolymerBlockModel blockModel = entry.getValue();
 
             BlockStateParser.BlockResult parsed;

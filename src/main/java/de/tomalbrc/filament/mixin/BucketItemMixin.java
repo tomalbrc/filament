@@ -1,7 +1,6 @@
 package de.tomalbrc.filament.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import de.tomalbrc.filament.block.SimpleBlock;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -23,7 +22,7 @@ public abstract class BucketItemMixin {
 
     @Inject(cancellable = true, method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getBlock()Lnet/minecraft/world/level/block/Block;", ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT)
     private void filament$preventBucketInteraction(Level level, Player player, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResult> cir, @Local BlockState blockState, @Local ItemStack itemStack) {
-        if (blockState.getBlock() instanceof SimpleBlock && !blockState.hasProperty(BlockStateProperties.WATERLOGGED))
+        if (blockState.getBlock().isFilamentBlock() && !blockState.hasProperty(BlockStateProperties.WATERLOGGED))
             cir.setReturnValue(InteractionResult.FAIL);
     }
 }
