@@ -41,9 +41,6 @@ public class Filament implements ModInitializer {
     public static MinecraftServerAudiences ADVENTURE;
 
     public static MinecraftServerAudiences adventure() {
-        if (ADVENTURE == null) {
-            throw new IllegalStateException("Tried to access Adventure without a running server!");
-        }
         return ADVENTURE;
     }
 
