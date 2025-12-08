@@ -106,7 +106,7 @@ behaviour:
 Enables automatic generation of the different item models with the trim overlay.
 
 ~~~admonish info "Configurable Fields"
-- `type_prefix`: Chance of raising the composter level by 1 between 0 and 100
+- `type_prefix`: Allows to specify a custom trim overlay texture. See the vanilla texture atlas files for the different paletted permutations and `assets/minecraft/textures/trims/items/` for a list of textures available. For armors: This prefix will replace the default armor slot texture path like this: `assets/minecraft/textures/trims/items/<prefix>_trim_<material>`. For non-armors it will insert the prefix as the full path. If not specified it will automatically chose correct prefix for the slot the item can be equipped in. 
 - `custom_materials`: List of identifiers for custom trim materials. Empty by default
 - `materials`: List of vanilla trim materials. Default values include all vanilla trim materials: `["minecraft:quartz", "minecraft:iron", "minecraft:netherite", "minecraft:redstone", ...]`
 ~~~
