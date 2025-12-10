@@ -14,7 +14,8 @@ import eu.pb4.polymer.core.impl.interfaces.PolymerIdList;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.sounds.SoundEvents;
@@ -45,8 +46,8 @@ import static net.minecraft.core.component.DataComponents.ITEM_MODEL;
 public class Util {
     public static final SegmentedAnglePrecision SEGMENTED_ANGLE8 = new SegmentedAnglePrecision(3); // 3 bits precision = 8
 
-    public static ResourceLocation id(String s) {
-        return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, s);
+    public static Identifier id(String s) {
+        return Identifier.fromNamespaceAndPath(Constants.MOD_ID, s);
     }
 
     public static Optional<Integer> validateAndConvertHexColor(String hexColor) {
@@ -99,7 +100,7 @@ public class Util {
     }
 
     public static void handleComponentsCustom(JsonElement element, Data<?> data) {
-        List<ResourceLocation> comps = List.of(
+        List<Identifier> comps = List.of(
                 Objects.requireNonNull(BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(DataComponents.JUKEBOX_PLAYABLE)),
                 Objects.requireNonNull(BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(DataComponents.ENCHANTMENTS)),
                 Objects.requireNonNull(BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(DataComponents.TRIM)),
@@ -120,7 +121,7 @@ public class Util {
     public static ItemStack filamentItemStack(ItemStack itemStack, TooltipFlag tooltipType, PacketContext packetContext, FilamentItem filamentItem) {
         ItemStack stack = PolymerItemUtils.createItemStack(itemStack, tooltipType, packetContext);
 
-        ResourceLocation dataComponentModel = null;
+        Identifier dataComponentModel = null;
         if (filamentItem.getData() != null && filamentItem.getData().components().has(ITEM_MODEL)) {
             dataComponentModel = filamentItem.getData().components().get(ITEM_MODEL);
         } else if (filamentItem.getData() != null) {
@@ -147,6 +148,6 @@ public class Util {
     }
 
     public static void clickSound(ServerPlayer player) {
-        player.playNotifySound(SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.MASTER, 0.5f, 1F);
+        player.connection.send(new ClientboundSoundPacket(SoundEvents.UI_BUTTON_CLICK, SoundSource.MASTER, player.getX(), player.getY(), player.getZ(), 0.5f, 0.1f, 0));
     }
 }

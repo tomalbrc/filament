@@ -9,7 +9,7 @@ import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.polymer.resourcepack.extras.api.format.model.ModelAsset;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.item.equipment.trim.MaterialAssetGroup;
@@ -51,7 +51,7 @@ public class GenerateTrimModels implements ItemBehaviour<GenerateTrimModels.Conf
         if (slot != null && config.typePrefix == null) {
             for (ArmorType type : ArmorType.values()) {
                 if (type.getSlot() == slot) {
-                    namespace = ResourceLocation.DEFAULT_NAMESPACE;
+                    namespace = Identifier.DEFAULT_NAMESPACE;
                     armorType = "trims/items/" + type.getName() + "_trim_";
                     break;
                 }
@@ -59,7 +59,7 @@ public class GenerateTrimModels implements ItemBehaviour<GenerateTrimModels.Conf
         } else if (config.typePrefix != null) {
             // support non wearable items like axes
             if (config.typePrefix.contains(":")) {
-                var r = ResourceLocation.parse(config.typePrefix);
+                var r = Identifier.parse(config.typePrefix);
                 armorType = r.getPath();
                 namespace = r.getNamespace();
             }
@@ -72,8 +72,8 @@ public class GenerateTrimModels implements ItemBehaviour<GenerateTrimModels.Conf
         if (armorType != null && itemResource != null) {
             ItemAssetGenerator.createItemModels(data.id(), itemResource);
 
-            final Object2ObjectArrayMap<ResourceLocation, byte[]> map = new Object2ObjectArrayMap<>();
-            var list = new ArrayList<ResourceLocation>();
+            final Object2ObjectArrayMap<Identifier, byte[]> map = new Object2ObjectArrayMap<>();
+            var list = new ArrayList<Identifier>();
             list.addAll(config.customMaterials);
             list.addAll(config.materials);
 
@@ -82,8 +82,8 @@ public class GenerateTrimModels implements ItemBehaviour<GenerateTrimModels.Conf
             //                    var trimMaterialReference = resourceKeyTrimMaterialEntry.getValue();
             //                    var assetInfo = trimMaterialReference.assets().assetId(Objects.requireNonNull(eq).assetId().orElseThrow());
 
-            for (ResourceLocation suffix : list) {
-                var layer1 = ResourceLocation.fromNamespaceAndPath(namespace == null ? suffix.getNamespace() : namespace, String.format("%s%s", armorType, suffix.getPath()));
+            for (Identifier suffix : list) {
+                var layer1 = Identifier.fromNamespaceAndPath(namespace == null ? suffix.getNamespace() : namespace, String.format("%s%s", armorType, suffix.getPath()));
                 var name = data.id().getPath() + MaterialAssetGroup.SEPARATOR + suffix.getPath();
                 ModelAsset.Builder modelAsset = ModelAsset.builder();
 
@@ -93,7 +93,7 @@ public class GenerateTrimModels implements ItemBehaviour<GenerateTrimModels.Conf
                 modelAsset.texture("layer0", layer0.get("layer0").toString());
                 modelAsset.texture("layer1", layer1.toString());
 
-                var model = ResourceLocation.fromNamespaceAndPath(data.id().getNamespace(), name);
+                var model = Identifier.fromNamespaceAndPath(data.id().getNamespace(), name);
                 var models = itemResource.getModels();
                 if (models != null)
                     models.put(suffix.getPath(), model);
@@ -125,19 +125,19 @@ public class GenerateTrimModels implements ItemBehaviour<GenerateTrimModels.Conf
 
     public static class Config {
         public String typePrefix = null;
-        public List<ResourceLocation> customMaterials = List.of();
-        public List<ResourceLocation> materials = List.of(
-                ResourceLocation.withDefaultNamespace("quartz"),
-                ResourceLocation.withDefaultNamespace("iron"),
-                ResourceLocation.withDefaultNamespace("netherite"),
-                ResourceLocation.withDefaultNamespace("redstone"),
-                ResourceLocation.withDefaultNamespace("copper"),
-                ResourceLocation.withDefaultNamespace("gold"),
-                ResourceLocation.withDefaultNamespace("emerald"),
-                ResourceLocation.withDefaultNamespace("diamond"),
-                ResourceLocation.withDefaultNamespace("lapis"),
-                ResourceLocation.withDefaultNamespace("amethyst"),
-                ResourceLocation.withDefaultNamespace("resin")
+        public List<Identifier> customMaterials = List.of();
+        public List<Identifier> materials = List.of(
+                Identifier.withDefaultNamespace("quartz"),
+                Identifier.withDefaultNamespace("iron"),
+                Identifier.withDefaultNamespace("netherite"),
+                Identifier.withDefaultNamespace("redstone"),
+                Identifier.withDefaultNamespace("copper"),
+                Identifier.withDefaultNamespace("gold"),
+                Identifier.withDefaultNamespace("emerald"),
+                Identifier.withDefaultNamespace("diamond"),
+                Identifier.withDefaultNamespace("lapis"),
+                Identifier.withDefaultNamespace("amethyst"),
+                Identifier.withDefaultNamespace("resin")
         );
     }
 }

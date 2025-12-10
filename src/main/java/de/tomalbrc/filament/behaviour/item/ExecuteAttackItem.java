@@ -3,7 +3,7 @@ package de.tomalbrc.filament.behaviour.item;
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.util.ExecuteUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -67,7 +67,7 @@ public class ExecuteAttackItem implements ItemBehaviour<ExecuteAttackItem.Config
         public String command;
         public List<String> commands;
 
-        public ResourceLocation sound;
+        public Identifier sound;
 
         public boolean onEntityAttack = true;
         public boolean console = false;

@@ -25,6 +25,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.PermissionSet;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.ARGB;
@@ -179,7 +180,7 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
     private static CommandSourceStack createCommandSourceStack(@Nullable Player player, ServerLevel serverLevel, BlockPos blockPos) {
         String string = player == null ? "Decoration" : player.getName().getString();
         Component component = player == null ? Component.literal("Decoration") : player.getDisplayName();
-        return new CommandSourceStack(CommandSource.NULL, Vec3.atCenterOf(blockPos), Vec2.ZERO, serverLevel, 2, string, component, serverLevel.getServer(), player);
+        return new CommandSourceStack(CommandSource.NULL, Vec3.atCenterOf(blockPos), Vec2.ZERO, serverLevel, PermissionSet.ALL_PERMISSIONS, string, component, serverLevel.getServer(), player);
     }
 
     @Override

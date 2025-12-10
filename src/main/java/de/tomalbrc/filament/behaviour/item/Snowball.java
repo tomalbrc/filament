@@ -57,7 +57,7 @@ public class Snowball implements ItemBehaviour<Snowball.Config> {
         ItemStack itemStack = player.getItemInHand(hand);
         level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
         if (level instanceof ServerLevel serverLevel) {
-            Projectile.spawnProjectileFromRotation(net.minecraft.world.entity.projectile.Snowball::new, serverLevel, itemStack, player, 0.0F, config.power, config.inaccuracy);
+            Projectile.spawnProjectileFromRotation(net.minecraft.world.entity.projectile.throwableitemprojectile.Snowball::new, serverLevel, itemStack, player, 0.0F, config.power, config.inaccuracy);
         }
 
         player.awardStat(Stats.ITEM_USED.get(item));
@@ -66,7 +66,7 @@ public class Snowball implements ItemBehaviour<Snowball.Config> {
     }
 
     public Projectile asProjectile(Level level, Position pos, ItemStack stack, Direction direction) {
-        return new net.minecraft.world.entity.projectile.Snowball(level, pos.x(), pos.y(), pos.z(), stack);
+        return new net.minecraft.world.entity.projectile.throwableitemprojectile.Snowball(level, pos.x(), pos.y(), pos.z(), stack);
     }
 
     public List<String> commands() {
@@ -77,7 +77,7 @@ public class Snowball implements ItemBehaviour<Snowball.Config> {
         return config.entityHitCommands == null ? this.config.entityHitCommand == null ? null : List.of(this.config.entityHitCommand) : config.entityHitCommands;
     }
 
-    public void run(net.minecraft.world.entity.projectile.Snowball snowball, Vec3 pos) {
+    public void run(net.minecraft.world.entity.projectile.throwableitemprojectile.Snowball snowball, Vec3 pos) {
         if (config.hitCommand == null && config.hitCommands == null)
             return;
 
@@ -89,7 +89,7 @@ public class Snowball implements ItemBehaviour<Snowball.Config> {
         }
     }
 
-    public void runEntity(net.minecraft.world.entity.projectile.Snowball snowball, Vec3 pos, Entity entity) {
+    public void runEntity(net.minecraft.world.entity.projectile.throwableitemprojectile.Snowball snowball, Vec3 pos, Entity entity) {
         if (config.entityHitCommand == null && config.entityHitCommands == null && config.hitCommand == null && config.hitCommands == null)
             return;
 

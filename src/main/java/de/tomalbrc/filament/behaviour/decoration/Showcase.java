@@ -25,7 +25,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -437,11 +437,11 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
         /**
          * Items with given item tags to allow
          */
-        public List<ResourceLocation> filterTags;
+        public List<Identifier> filterTags;
 
-        public ResourceLocation addItemSound = SoundEvents.ITEM_FRAME_ADD_ITEM.location();
+        public Identifier addItemSound = SoundEvents.ITEM_FRAME_ADD_ITEM.location();
 
-        public ResourceLocation removeItemSound = SoundEvents.ITEM_FRAME_REMOVE_ITEM.location();
+        public Identifier removeItemSound = SoundEvents.ITEM_FRAME_REMOVE_ITEM.location();
 
         public int maxStackSize = 1;
 

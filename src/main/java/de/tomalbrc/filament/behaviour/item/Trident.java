@@ -19,7 +19,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -74,7 +74,7 @@ public class Trident implements ItemBehaviour<Trident.Config>, ItemPredicateMode
                 } else if (itemStack.nextDamageWillBreak()) {
                     return false;
                 } else {
-                    Holder<SoundEvent> holder = EnchantmentHelper.pickHighestLevel(itemStack, EnchantmentEffectComponents.TRIDENT_SOUND).orElse(SoundEvents.TRIDENT_THROW);
+                    Holder<@NotNull SoundEvent> holder = EnchantmentHelper.pickHighestLevel(itemStack, EnchantmentEffectComponents.TRIDENT_SOUND).orElse(SoundEvents.TRIDENT_THROW);
                     player.awardStat(Stats.ITEM_USED.get(item));
                     if (level instanceof ServerLevel serverLevel) {
                         itemStack.hurtWithoutBreaking(1, player);

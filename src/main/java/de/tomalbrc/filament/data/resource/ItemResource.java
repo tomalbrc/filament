@@ -1,30 +1,30 @@
 package de.tomalbrc.filament.data.resource;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Map;
 
 public class ItemResource implements ResourceProvider {
-    private Map<String, ResourceLocation> models = new Object2ObjectArrayMap<>();
-    private ResourceLocation parent;
-    private Map<String, Map<String, ResourceLocation>> textures;
+    private Map<String, Identifier> models = new Object2ObjectArrayMap<>();
+    private Identifier parent;
+    private Map<String, Map<String, Identifier>> textures;
 
     public ItemResource() {}
 
-    public ItemResource(Map<String, ResourceLocation> models, ResourceLocation parent, Map<String, Map<String, ResourceLocation>> textures) {
+    public ItemResource(Map<String, Identifier> models, Identifier parent, Map<String, Map<String, Identifier>> textures) {
         this.models = models;
         this.parent = parent;
         this.textures = textures;
     }
 
-    public ResourceLocation parent() {
+    public Identifier parent() {
         if (parent == null)
-            parent = ResourceLocation.withDefaultNamespace("item/generated");
+            parent = Identifier.withDefaultNamespace("item/generated");
         return parent;
     }
 
-    public Map<String, Map<String, ResourceLocation>> textures() {
+    public Map<String, Map<String, Identifier>> textures() {
         return textures;
     }
 
@@ -33,7 +33,7 @@ public class ItemResource implements ResourceProvider {
     }
 
     @Override
-    public Map<String, ResourceLocation> getModels() {
+    public Map<String, Identifier> getModels() {
         return this.models;
     }
 }

@@ -4,7 +4,7 @@ import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -112,7 +112,7 @@ public class Lever implements BlockBehaviour<Lever.Config> {
 
     public static class Config {
         public BlockStateMappedProperty<Integer> powerlevel = BlockStateMappedProperty.of(15);
-        public BlockStateMappedProperty<ResourceLocation> sound = BlockStateMappedProperty.of(SoundEvents.LEVER_CLICK.location());
+        public BlockStateMappedProperty<Identifier> sound = BlockStateMappedProperty.of(SoundEvents.LEVER_CLICK.location());
         public BlockStateMappedProperty<Float> volume = BlockStateMappedProperty.of(0.3f);
         public BlockStateMappedProperty<Float> pitch = BlockStateMappedProperty.empty();
     }

@@ -11,7 +11,7 @@ import eu.pb4.polymer.core.api.block.PolymerBlock;
 import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 public abstract class DecorationBlock extends SimpleBlock implements PolymerBlock, BlockWithElementHolder, SimpleWaterloggedBlock, VirtualDestroyStage.Marker {
-    final protected ResourceLocation decorationId;
+    final protected Identifier decorationId;
     final protected DecorationData data;
     final protected Map<BlockData.BlockStateMeta, String> cmdMap = new Reference2ObjectOpenHashMap<>();
 
@@ -49,7 +49,7 @@ public abstract class DecorationBlock extends SimpleBlock implements PolymerBloc
         var resource = blockData.blockResource();
         if (resource != null) {
             for (Map.Entry<BlockState, BlockData.BlockStateMeta> stateMapEntry : this.stateMap.entrySet()) {
-                for (Map.Entry<String, ResourceLocation> blockResourceModelsEntry : resource.getModels().entrySet()) {
+                for (Map.Entry<String, Identifier> blockResourceModelsEntry : resource.getModels().entrySet()) {
                     boolean same = blockResourceModelsEntry.getValue().equals(stateMapEntry.getValue().polymerBlockModel().model());
                     if (same) {
                         this.cmdMap.put(stateMapEntry.getValue(), blockResourceModelsEntry.getKey());

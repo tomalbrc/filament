@@ -3,7 +3,7 @@ package de.tomalbrc.filament.behaviour.entity.goal;
 import de.tomalbrc.filament.api.behaviour.EntityBehaviour;
 import de.tomalbrc.filament.entity.FilamentMob;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +34,6 @@ public class PanicGoal implements EntityBehaviour<PanicGoal.Config> {
     public static class Config {
         int priority;
         float speedModifier = 1.f;
-        ResourceLocation damageType = DamageTypeTags.PANIC_CAUSES.location();
+        Identifier damageType = DamageTypeTags.PANIC_CAUSES.location();
     }
 }

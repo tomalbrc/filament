@@ -10,7 +10,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
@@ -21,33 +21,33 @@ import java.util.Objects;
 import java.util.Set;
 
 public abstract class Data<PropertyType extends ItemProperties> {
-    protected final @NotNull ResourceLocation id;
+    protected final @NotNull Identifier id;
     protected final @Nullable Item vanillaItem;
     protected final @Nullable Map<String, String> translations;
     protected final @Nullable Component displayName;
     protected @Nullable ItemResource itemResource;
-    protected final @Nullable ResourceLocation itemModel;
+    protected final @Nullable Identifier itemModel;
     @SerializedName(value = "behaviour", alternate = {"behaviours", "behaviors", "behavior"})
     protected @Nullable BehaviourConfigMap behaviour;
     protected final @Nullable DataComponentMap components;
-    protected final @Nullable ResourceLocation group;
-    protected final @Nullable Set<ResourceLocation> itemTags;
+    protected final @Nullable Identifier group;
+    protected final @Nullable Set<Identifier> itemTags;
     protected @Nullable PropertyType properties;
 
     transient protected Map<DataComponentType<?>, JsonElement> additionalComponents;
 
     protected Data(
-            @NotNull ResourceLocation id,
+            @NotNull Identifier id,
             @Nullable Item vanillaItem,
             @Nullable Map<String, String> translations,
             @Nullable Component displayName,
             @Nullable ItemResource itemResource,
-            @Nullable ResourceLocation itemModel,
+            @Nullable Identifier itemModel,
             @Nullable PropertyType properties,
             @Nullable BehaviourConfigMap behaviour,
             @Nullable DataComponentMap components,
-            @Nullable ResourceLocation group,
-            @Nullable Set<ResourceLocation> itemTags
+            @Nullable Identifier group,
+            @Nullable Set<Identifier> itemTags
             ) {
         this.id = id;
         this.vanillaItem = vanillaItem;
@@ -75,7 +75,7 @@ public abstract class Data<PropertyType extends ItemProperties> {
 
     public abstract @NotNull ItemProperties properties();
 
-    public @NotNull ResourceLocation id() {
+    public @NotNull Identifier id() {
         return id;
     }
 
@@ -102,7 +102,7 @@ public abstract class Data<PropertyType extends ItemProperties> {
         return itemResource();
     }
 
-    public @Nullable ResourceLocation itemModel() {
+    public @Nullable Identifier itemModel() {
         return itemModel;
     }
 
@@ -117,11 +117,11 @@ public abstract class Data<PropertyType extends ItemProperties> {
         return components == null ? DataComponentMap.EMPTY : components;
     }
 
-    public @Nullable ResourceLocation group() {
+    public @Nullable Identifier group() {
         return group;
     }
 
-    public @Nullable Set<ResourceLocation> itemTags() { return this.itemTags; }
+    public @Nullable Set<Identifier> itemTags() { return this.itemTags; }
 
     public @Nullable Component displayName() {
         return this.displayName;

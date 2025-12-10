@@ -5,7 +5,7 @@ import com.google.gson.*;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.registry.Templates;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.NotNull;
@@ -23,9 +23,9 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 public interface FilamentSynchronousResourceReloadListener extends SimpleSynchronousResourceReloadListener {
-    default void loadJson(@NotNull String root, @Nullable String endsWith, @NotNull ResourceManager resourceManager, @NotNull BiConsumer<ResourceLocation, InputStream> onRead) {
+    default void loadJson(@NotNull String root, @Nullable String endsWith, @NotNull ResourceManager resourceManager, @NotNull BiConsumer<Identifier, InputStream> onRead) {
         var resources = resourceManager.listResources(root, path -> path.getPath().endsWith((endsWith == null ? "" : endsWith) + ".json"));
-        for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
+        for (Map.Entry<Identifier, Resource> entry : resources.entrySet()) {
             try (InputStream inputStream = entry.getValue().open()) {
                 Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
                 var json = JsonParser.parseReader(new InputStreamReader(inputStream));
@@ -50,12 +50,12 @@ public interface FilamentSynchronousResourceReloadListener extends SimpleSynchro
         }
     }
 
-    default void loadYaml(@NotNull String root, @Nullable String endsWith, @NotNull ResourceManager resourceManager, @NotNull BiConsumer<ResourceLocation, InputStream> onRead) {
+    default void loadYaml(@NotNull String root, @Nullable String endsWith, @NotNull ResourceManager resourceManager, @NotNull BiConsumer<Identifier, InputStream> onRead) {
         var resources = resourceManager.listResources(root, path ->
                 path.getPath().endsWith((endsWith == null ? "" : endsWith) + ".yaml") ||
                         path.getPath().endsWith((endsWith == null ? "" : endsWith) + ".yml"));
 
-        for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
+        for (Map.Entry<Identifier, Resource> entry : resources.entrySet()) {
             try (InputStream inputStream = entry.getValue().open()) {
                 var list = Json.yamlToJson(inputStream);
                 for (InputStream stream : list) {
@@ -67,7 +67,7 @@ public interface FilamentSynchronousResourceReloadListener extends SimpleSynchro
         }
     }
 
-    default void load(@NotNull String root, @Nullable String endsWith, @NotNull ResourceManager resourceManager, @NotNull BiConsumer<ResourceLocation, InputStream> onRead) {
+    default void load(@NotNull String root, @Nullable String endsWith, @NotNull ResourceManager resourceManager, @NotNull BiConsumer<Identifier, InputStream> onRead) {
         loadYaml(root, endsWith, resourceManager, (id, input) -> {
             if (!loadAsTemplate(input))
                 onRead.accept(id, template(input));
@@ -93,8 +93,8 @@ public interface FilamentSynchronousResourceReloadListener extends SimpleSynchro
         return false;
     }
 
-    static void error(ResourceLocation resourceLocation, Exception e) {
-        Filament.LOGGER.error("Failed to load resource \"{}\".", resourceLocation, e);
+    static void error(Identifier Identifier, Exception e) {
+        Filament.LOGGER.error("Failed to load resource \"{}\".", Identifier, e);
     }
 
     static InputStream template(InputStream inputStream) {
@@ -109,18 +109,18 @@ public interface FilamentSynchronousResourceReloadListener extends SimpleSynchro
             return inputStream;
 
         var parsedObject = parsed.getAsJsonObject();
-        var realId = ResourceLocation.parse(parsedObject.getAsJsonPrimitive("id").getAsString());
+        var realId = Identifier.parse(parsedObject.getAsJsonPrimitive("id").getAsString());
         var multiTemp = parsedObject.has("templates");
         var singleTemp = parsedObject.has("template");
         if (multiTemp || singleTemp) {
-            List<ResourceLocation> templates = new ArrayList<>();
+            List<Identifier> templates = new ArrayList<>();
             if (multiTemp) {
                 JsonElement templateEl = parsedObject.get("templates");
                 if (templateEl.isJsonArray()) {
                     JsonArray array = templateEl.getAsJsonArray();
                     for (JsonElement element : array) {
                         if (element.isJsonPrimitive()) {
-                            templates.add(ResourceLocation.parse(element.getAsJsonPrimitive().getAsString()));
+                            templates.add(Identifier.parse(element.getAsJsonPrimitive().getAsString()));
                         }
                     }
                 }
@@ -128,11 +128,11 @@ public interface FilamentSynchronousResourceReloadListener extends SimpleSynchro
             else {
                 JsonElement templateEl = parsedObject.get("template");
                 if (templateEl.isJsonPrimitive()) {
-                    templates.add(ResourceLocation.parse(templateEl.getAsString()));
+                    templates.add(Identifier.parse(templateEl.getAsString()));
                 }
             }
 
-            for (ResourceLocation template : templates) {
+            for (Identifier template : templates) {
                 parsed = Templates.merge(template, realId, parsed.getAsJsonObject());
             }
 

@@ -8,7 +8,7 @@ import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.decoration.holder.AnimatedDecorationHolder;
 import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
 import de.tomalbrc.filament.registry.ModelRegistry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.NotNull;
 
@@ -56,7 +56,7 @@ public class Animation implements DecorationBehaviour<Animation.Config> {
         /**
          * The name of the animated model associated with this animation (if applicable).
          */
-        public ResourceLocation model = null;
+        public Identifier model = null;
 
         /**
          * The name of the animation to autoplay (if specified)

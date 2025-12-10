@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.behaviour.item;
 
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -24,6 +24,6 @@ public class BannerPattern implements ItemBehaviour<BannerPattern.Config> {
         /**
          * The id of the banner pattern
          */
-        public ResourceLocation id;
+        public Identifier id;
     }
 }

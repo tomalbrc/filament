@@ -15,8 +15,10 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -50,8 +52,8 @@ public class Bed implements DecorationBehaviour<Bed.Config> {
     private InteractionResult startSleeping(ServerPlayer player, DecorationBlockEntity decorationBlockEntity, BlockPos blockPos) {
         var res = this.startSleepInBed(player, decorationBlockEntity, blockPos);
         res.ifLeft((bedSleepingProblem) -> {
-            if (bedSleepingProblem.getMessage() != null) {
-                player.displayClientMessage(bedSleepingProblem.getMessage(), true);
+            if (bedSleepingProblem.message() != null) {
+                player.displayClientMessage(bedSleepingProblem.message(), true);
             }
         });
 
@@ -81,8 +83,8 @@ public class Bed implements DecorationBehaviour<Bed.Config> {
     public Either<Player.BedSleepingProblem, Unit> startSleepInBed(ServerPlayer player, DecorationBlockEntity decorationBlockEntity, BlockPos blockPos) {
         if (!player.isSleeping() && player.isAlive()) {
             Pair<Boolean, Boolean> testRes = inRangeOrBlocked(player, decorationBlockEntity);
-            if (!player.level().dimensionType().natural()) {
-                return Either.left(Player.BedSleepingProblem.NOT_POSSIBLE_HERE);
+            if (player.level().environmentAttributes().getValue(EnvironmentAttributes.BED_RULE, blockPos).canSetSpawn(player.level())) {
+                return Either.left(Player.BedSleepingProblem.OTHER_PROBLEM);
             } else if (!testRes.getFirst()) {
                 return Either.left(Player.BedSleepingProblem.TOO_FAR_AWAY);
             } else if (testRes.getSecond()) {
@@ -90,7 +92,7 @@ public class Bed implements DecorationBehaviour<Bed.Config> {
             } else {
                 player.setRespawnPosition(new ServerPlayer.RespawnConfig(new LevelData.RespawnData(GlobalPos.of(player.level().dimension(), blockPos), player.getYRot(), player.getXRot()), false), true);
                 if (player.level().isBrightOutside()) {
-                    return Either.left(Player.BedSleepingProblem.NOT_POSSIBLE_NOW);
+                    return Either.left(Player.BedSleepingProblem.OTHER_PROBLEM);
                 } else {
                     if (!player.isCreative()) {
                         double hRange = 8.0F;

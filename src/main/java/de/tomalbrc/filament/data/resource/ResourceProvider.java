@@ -1,11 +1,11 @@
 package de.tomalbrc.filament.data.resource;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Map;
 
 public interface ResourceProvider {
-    Map<String, ResourceLocation> getModels();
+    Map<String, Identifier> getModels();
 
     boolean couldGenerate();
 }

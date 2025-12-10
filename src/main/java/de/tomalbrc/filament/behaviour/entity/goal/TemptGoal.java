@@ -4,7 +4,7 @@ import de.tomalbrc.filament.api.behaviour.EntityBehaviour;
 import de.tomalbrc.filament.entity.FilamentMob;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,14 +26,14 @@ public class TemptGoal implements EntityBehaviour<TemptGoal.Config> {
 
         mob.getGoalSelector().addGoal(config.priority, new net.minecraft.world.entity.ai.goal.TemptGoal(mob, config.speedModifier, x -> {
             if (config.items != null) {
-                for (ResourceLocation resourceLocation : config.items) {
-                    if (x.is(BuiltInRegistries.ITEM.getValue(resourceLocation)))
+                for (Identifier Identifier : config.items) {
+                    if (x.is(BuiltInRegistries.ITEM.getValue(Identifier)))
                         return true;
                 }
             }
             if (config.itemTags != null) {
-                for (ResourceLocation resourceLocation : config.itemTags) {
-                    if (x.is(TagKey.create(Registries.ITEM, resourceLocation)))
+                for (Identifier Identifier : config.itemTags) {
+                    if (x.is(TagKey.create(Registries.ITEM, Identifier)))
                         return true;
                 }
             }
@@ -51,7 +51,7 @@ public class TemptGoal implements EntityBehaviour<TemptGoal.Config> {
         int priority;
         float speedModifier = 1.f;
         boolean canScare;
-        Set<ResourceLocation> items;
-        Set<ResourceLocation> itemTags;
+        Set<Identifier> items;
+        Set<Identifier> itemTags;
     }
 }

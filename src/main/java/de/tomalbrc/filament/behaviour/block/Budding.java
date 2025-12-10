@@ -5,7 +5,7 @@ import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
@@ -123,7 +123,7 @@ public class Budding implements BlockBehaviour<Budding.Config>, SimpleWaterlogge
 
     public static class Config {
         public int chance = 20;
-        public List<ResourceLocation> grows = ImmutableList.of(ResourceLocation.withDefaultNamespace("chain"), ResourceLocation.withDefaultNamespace("end_rod"));
+        public List<Identifier> grows = ImmutableList.of(Identifier.withDefaultNamespace("chain"), Identifier.withDefaultNamespace("end_rod"));
         public List<Direction> sides = Arrays.stream(Direction.values()).toList();
     }
 }

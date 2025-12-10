@@ -28,7 +28,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.util.datafix.fixes.References;
@@ -49,9 +49,9 @@ import java.util.Objects;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class EntityRegistry {
-    public static Map<ResourceLocation, Collection<ResourceLocation>> ENTITY_TAGS = new Object2ReferenceOpenHashMap<>();
+    public static Map<Identifier, Collection<Identifier>> ENTITY_TAGS = new Object2ReferenceOpenHashMap<>();
 
-    private static final Reference2ObjectOpenHashMap<ResourceLocation, EntityData> types = new Reference2ObjectOpenHashMap<>();
+    private static final Reference2ObjectOpenHashMap<Identifier, EntityData> types = new Reference2ObjectOpenHashMap<>();
 
     public static final EntityType<BaseProjectileEntity> BASE_PROJECTILE = registerEntity("projectile", EntityType.Builder.of(BaseProjectileEntity::new, MobCategory.MISC).sized(0.5f, 0.5f).noSummon());
     public static final EntityType<TridentEntity> FILAMENT_TRIDENT = registerEntity("trident", EntityType.Builder.of(TridentEntity::new, MobCategory.MISC).sized(0.5f, 0.5f).eyeHeight(0.13f).noSummon());
@@ -89,7 +89,7 @@ public class EntityRegistry {
         AttributeSupplier.Builder attributeBuilder = Mob.createMobAttributes();
         var attrMap = data.attributes();
         if (attrMap != null) {
-            for (Map.Entry<ResourceLocation, Double> entry : attrMap.entrySet()) {
+            for (Map.Entry<Identifier, Double> entry : attrMap.entrySet()) {
                 var attr = BuiltInRegistries.ATTRIBUTE.get(entry.getKey());
                 if (attr.isEmpty()) {
                     Filament.LOGGER.error("Invalid attribute id {} for entity {}", entry.getKey(), data.id());
@@ -104,7 +104,7 @@ public class EntityRegistry {
 
         Translations.add(type, data);
 
-        if (data.entityTags() != null) for (ResourceLocation tag : data.entityTags()) {
+        if (data.entityTags() != null) for (Identifier tag : data.entityTags()) {
             var list = ENTITY_TAGS.computeIfAbsent(tag, x -> new ArrayList<>());
             list.add(data.id());
         }
@@ -116,19 +116,19 @@ public class EntityRegistry {
         FilamentRegistrationEvents.ENTITY.invoker().registered(data, type);
     }
 
-    public static EntityData getData(ResourceLocation resourceLocation) {
-        return types.get(resourceLocation);
+    public static EntityData getData(Identifier Identifier) {
+        return types.get(Identifier);
     }
 
     public static void register() {
     }
 
     private static <T extends Entity> EntityType registerEntity(String str, EntityType.Builder type) {
-        var id = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, str);
+        var id = Identifier.fromNamespaceAndPath(Constants.MOD_ID, str);
         return registerEntity(id, type);
     }
 
-    private static <T extends Entity> EntityType registerEntity(ResourceLocation id, EntityType.Builder type) {
+    private static <T extends Entity> EntityType registerEntity(Identifier id, EntityType.Builder type) {
         Map<String, Type<?>> types = (Map<String, Type<?>>) DataFixers.getDataFixer().getSchema(DataFixUtils.makeKey(SharedConstants.getCurrentVersion().dataVersion().version())).findChoiceType(References.ENTITY).types();
         types.put(id.toString(), types.get(BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ZOMBIE).toString()));
 
@@ -138,7 +138,7 @@ public class EntityRegistry {
         return res;
     }
 
-    public static ResourceKey<BlockEntityType<?>> key(ResourceLocation id) {
+    public static ResourceKey<BlockEntityType<?>> key(Identifier id) {
         return ResourceKey.create(Registries.BLOCK_ENTITY_TYPE, id);
     }
 
@@ -150,8 +150,8 @@ public class EntityRegistry {
 
     public static class EntityDataReloadListener implements FilamentSynchronousResourceReloadListener {
         @Override
-        public ResourceLocation getFabricId() {
-            return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "entities");
+        public Identifier getFabricId() {
+            return Identifier.fromNamespaceAndPath(Constants.MOD_ID, "entities");
         }
 
         @Override

@@ -1,10 +1,14 @@
 plugins {
-    id 'fabric-loom' version '1.11-SNAPSHOT'
+    id 'fabric-loom' version '1.14-SNAPSHOT'
     id 'maven-publish'
 }
 
 version = project.mod_version + "+" + project.minecraft_version
 group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
 
 loom {
     accessWidenerPath = file("src/main/resources/filament.accesswidener")
@@ -15,6 +19,7 @@ repositories {
     maven { url 'https://maven.nucleoid.xyz' }
     maven { url 'https://maven.parchmentmc.org' }
     maven { url = 'https://api.modrinth.com/maven' }
+    maven { url 'https://maven.blamejared.com' }
 }
 
 dependencies {
@@ -36,11 +41,12 @@ dependencies {
     modImplementation ("eu.pb4:polymer-networking:${project.polymer_version}")
     modImplementation ("eu.pb4:polymer-autohost:${project.polymer_version}")
     modImplementation ("eu.pb4:polymer-sound-patcher:${project.polymer_version}")
-
     modImplementation include("eu.pb4:sgui:1.10.2+1.21.8")
+    modImplementation include('me.lucko:fabric-permissions-api:0.5.0')
 
     // BIL
     modImplementation include("de.tomalbrc:blockbench-import-library:${project.bil_version}")
+
     // Text format
     modImplementation include("eu.pb4:placeholder-api:${project.papi_version}")
     modImplementation include("net.kyori:adventure-platform-fabric:${project.adventure_platform_version}")
@@ -78,7 +84,7 @@ java {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}" }
+        rename { "${it}_${project.archives_base_name}" }
     }
 }
 

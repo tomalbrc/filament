@@ -7,7 +7,7 @@ import de.tomalbrc.filament.data.properties.RangedVector3f;
 import de.tomalbrc.filament.mixin.behaviour.grass_spread.SpreadingSnowyDirtBlockAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
@@ -59,7 +59,7 @@ public class GrassSpread implements BlockBehaviour<GrassSpread.Config>, SimpleWa
                         if (canReplace) break;
                     }
                     if (!canReplace && config.propagatesToBlocks != null && !config.propagatesToBlockTags.isEmpty()) {
-                        for (ResourceLocation tag : config.propagatesToBlockTags) {
+                        for (Identifier tag : config.propagatesToBlockTags) {
                             canReplace |= blockState2.is(TagKey.create(Registries.BLOCK, tag));
                             if (canReplace) break;
                         }
@@ -81,6 +81,6 @@ public class GrassSpread implements BlockBehaviour<GrassSpread.Config>, SimpleWa
         public boolean canDecay = true;
         public BlockState decayBlockState = Blocks.DIRT.defaultBlockState();
         public List<Block> propagatesToBlocks = List.of(Blocks.DIRT);
-        public List<ResourceLocation> propagatesToBlockTags = List.of();
+        public List<Identifier> propagatesToBlockTags = List.of();
     }
 }

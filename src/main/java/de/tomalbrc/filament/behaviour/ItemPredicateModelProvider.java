@@ -3,7 +3,7 @@ package de.tomalbrc.filament.behaviour;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.data.resource.ItemResource;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +21,7 @@ public interface ItemPredicateModelProvider {
         return hasRequired(data.id(), data.itemResource(), requiredModels());
     }
 
-    private static boolean hasRequired(ResourceLocation info, ItemResource resource, Collection<String> req) {
+    private static boolean hasRequired(Identifier info, ItemResource resource, Collection<String> req) {
         for (String string : req) {
             if ((resource.getModels() == null || !resource.getModels().containsKey(string)) && (resource.textures() == null || !resource.textures().containsKey(string))) {
                 Filament.LOGGER.error("Could not generate item asset model for '{}' - requires the following 'models' / 'textures' object keys: {}", info, req);

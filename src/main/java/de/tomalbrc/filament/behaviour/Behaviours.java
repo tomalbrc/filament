@@ -11,7 +11,7 @@ import de.tomalbrc.filament.behaviour.entity.target.HurtByTargetGoal;
 import de.tomalbrc.filament.behaviour.entity.target.NearestAttackableTargetGoal;
 import de.tomalbrc.filament.behaviour.item.*;
 import de.tomalbrc.filament.util.Constants;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 @SuppressWarnings("unused")
 public class Behaviours {
@@ -134,7 +134,7 @@ public class Behaviours {
 
 
     private static <T extends Behaviour<E>,E> BehaviourType<T, E> registerBehaviour(String name, Class<T> type) {
-        return BehaviourRegistry.registerBehaviour(ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, name), type);
+        return BehaviourRegistry.registerBehaviour(Identifier.fromNamespaceAndPath(Constants.MOD_ID, name), type);
     }
 
     public static void register() {

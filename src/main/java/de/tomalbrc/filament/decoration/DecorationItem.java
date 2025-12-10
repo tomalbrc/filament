@@ -147,7 +147,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
 
     public static void place(ItemStack itemStack, Level level, BlockState blockState, BlockPos blockPos, Direction placeDirection, Direction direction, UseOnContext useOnContext, boolean forceReplace) {
         if (!(itemStack.getItem() instanceof DecorationItem decorationItem)) {
-            Filament.LOGGER.error("Tried to place non-decoration item as decoration! Item: {}", itemStack.getItem().builtInRegistryHolder().key().location());
+            Filament.LOGGER.error("Tried to place non-decoration item as decoration! Item: {}", itemStack.getItem().builtInRegistryHolder().key().identifier());
             return;
         }
 

@@ -5,7 +5,7 @@ import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -16,17 +16,17 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public final class ItemData extends Data<ItemProperties> {
     public ItemData(
-            @NotNull ResourceLocation id,
+            @NotNull Identifier id,
             @Nullable Item vanillaItem,
             @Nullable Map<String, String> translations,
             @Nullable Component displayName,
             @Nullable ItemResource itemResource,
-            @Nullable ResourceLocation itemModel,
+            @Nullable Identifier itemModel,
             @Nullable BehaviourConfigMap behaviourConfig,
             @Nullable ItemProperties properties,
             @Nullable DataComponentMap components,
-            @Nullable ResourceLocation itemGroup,
-            @Nullable Set<ResourceLocation> itemTags
+            @Nullable Identifier itemGroup,
+            @Nullable Set<Identifier> itemTags
     ) {
         super(id, vanillaItem, translations, displayName, itemResource, itemModel, properties, behaviourConfig, components, itemGroup, itemTags);
     }

@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.behaviour.item;
 
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -47,7 +47,7 @@ public class Instrument implements ItemBehaviour<Instrument.Config> {
     }
 
     public static class Config {
-        public ResourceLocation sound = null;
+        public Identifier sound = null;
 
         public int range = 0;
 

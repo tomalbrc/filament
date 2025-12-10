@@ -14,7 +14,7 @@ import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -25,23 +25,23 @@ import java.util.Set;
 
 @SuppressWarnings("unused")
 public abstract class AbstractBlockData<BlockPropertyLike extends BlockProperties> extends Data<BlockPropertyLike> {
-    private final @Nullable Set<ResourceLocation> blockTags;
+    private final @Nullable Set<Identifier> blockTags;
     private final @Nullable BlockResource blockResource;
 
     public AbstractBlockData(
-            @NotNull ResourceLocation id,
+            @NotNull Identifier id,
             @Nullable Item vanillaItem,
             @Nullable Map<String, String> translations,
             @Nullable Component displayName,
             @Nullable ItemResource itemResource,
             @Nullable BlockResource blockResource,
-            @Nullable ResourceLocation itemModel,
+            @Nullable Identifier itemModel,
             @Nullable BehaviourConfigMap behaviourConfig,
             @Nullable DataComponentMap components,
-            @Nullable ResourceLocation itemGroup,
+            @Nullable Identifier itemGroup,
             @Nullable BlockPropertyLike properties,
-            @Nullable Set<ResourceLocation> itemTags,
-            @Nullable Set<ResourceLocation> blockTags
+            @Nullable Set<Identifier> itemTags,
+            @Nullable Set<Identifier> blockTags
     ) {
         super(id, vanillaItem, translations, displayName, itemResource, itemModel, properties, behaviourConfig, components, itemGroup, itemTags);
         this.blockTags = blockTags;
@@ -64,7 +64,7 @@ public abstract class AbstractBlockData<BlockPropertyLike extends BlockPropertie
         return this.blockResource;
     }
 
-    public @Nullable Set<ResourceLocation> blockTags() {
+    public @Nullable Set<Identifier> blockTags() {
         return this.blockTags;
     }
 

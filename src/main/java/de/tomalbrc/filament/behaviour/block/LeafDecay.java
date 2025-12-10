@@ -4,7 +4,7 @@ import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -134,7 +134,7 @@ public class LeafDecay implements BlockBehaviour<LeafDecay.Config> {
     }
 
     public static class Config {
-        ResourceLocation blockTag;
+        Identifier blockTag;
         float decayChance = 1.f;
 
         transient private TagKey<Block> supportBlock = BlockTags.LOGS;

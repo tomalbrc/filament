@@ -15,7 +15,7 @@ import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class ItemRegistry {
-    public static Map<ResourceLocation, List<ResourceLocation>> ITEMS_TAGS = new Object2ReferenceOpenHashMap<>();
+    public static Map<Identifier, List<Identifier>> ITEMS_TAGS = new Object2ReferenceOpenHashMap<>();
     public static Map<Item, Item> COPY_TAGS = new Reference2ReferenceOpenHashMap<>(); // custom->vanilla
 
     public static void register(InputStream inputStream) throws IOException {
@@ -81,18 +81,18 @@ public class ItemRegistry {
         RPUtil.create(item, data);
     }
 
-    public static ResourceKey<Item> key(ResourceLocation id) {
+    public static ResourceKey<Item> key(Identifier id) {
         return ResourceKey.create(Registries.ITEM, id);
     }
 
-    public static <T extends Item> T registerItem(ResourceKey<Item> identifier, Function<Item.Properties, T> function, Item.Properties properties, ResourceLocation itemGroup, @Nullable Collection<ResourceLocation> tags) {
+    public static <T extends Item> T registerItem(ResourceKey<Item> identifier, Function<Item.Properties, T> function, Item.Properties properties, Identifier itemGroup, @Nullable Collection<Identifier> tags) {
         T item = function.apply(properties.setId(identifier));
         Registry.register(BuiltInRegistries.ITEM, identifier, item);
         ItemGroupRegistry.addItem(itemGroup, item);
 
-        if (tags != null) for (ResourceLocation tag : tags) {
+        if (tags != null) for (Identifier tag : tags) {
             var list = ITEMS_TAGS.computeIfAbsent(tag, x -> new ArrayList<>());
-            list.add(identifier.location());
+            list.add(identifier.identifier());
         }
 
         return item;
@@ -100,8 +100,8 @@ public class ItemRegistry {
 
     public static class ItemDataReloadListener implements FilamentSynchronousResourceReloadListener {
         @Override
-        public ResourceLocation getFabricId() {
-            return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "items");
+        public Identifier getFabricId() {
+            return Identifier.fromNamespaceAndPath(Constants.MOD_ID, "items");
         }
 
         @Override

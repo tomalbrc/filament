@@ -11,7 +11,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -120,7 +120,7 @@ public class VirtualDestroyStage extends ElementHolder {
     static {
         for (int i = 0; i < DESTROY_STAGE_MODELS.length; i++) {
             ItemStack stack = Items.STICK.getDefaultInstance();
-            stack.set(DataComponents.ITEM_MODEL, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "special/destroy_stage_" + i));
+            stack.set(DataComponents.ITEM_MODEL, Identifier.fromNamespaceAndPath(Constants.MOD_ID, "special/destroy_stage_" + i));
             DESTROY_STAGE_MODELS[i] = stack;
         }
 

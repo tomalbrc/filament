@@ -20,7 +20,7 @@ import eu.pb4.polymer.resourcepack.extras.api.format.item.property.select.Custom
 import eu.pb4.polymer.resourcepack.extras.api.format.item.special.ShieldSpecialModel;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.tint.DyeTintSource;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CrossbowItem;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class ItemAssetGenerator {
-    public static void createDefault(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider resourceProvider, boolean tint) {
+    public static void createDefault(ResourcePackBuilder builder, Identifier id, ResourceProvider resourceProvider, boolean tint) {
         var def = resourceProvider.getModels().get("default");
         var defaultModel = new BasicItemModel(def == null ? resourceProvider.getModels().values().iterator().next() : def, !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
         if (resourceProvider.getModels().size() > 1) {
@@ -67,7 +67,7 @@ public class ItemAssetGenerator {
         return list;
     }
 
-    public static void createBow(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource, boolean tint) {
+    public static void createBow(ResourcePackBuilder builder, Identifier id, ResourceProvider itemResource, boolean tint) {
         var defaultModel = new BasicItemModel(itemResource.getModels().get("default"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
         var pulling_0 = new BasicItemModel(itemResource.getModels().get("pulling_0"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
         var pulling_1 = new BasicItemModel(itemResource.getModels().get("pulling_1"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
@@ -84,7 +84,7 @@ public class ItemAssetGenerator {
         );
     }
 
-    public static void createCrossbow(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource, boolean tint) {
+    public static void createCrossbow(ResourcePackBuilder builder, Identifier id, ResourceProvider itemResource, boolean tint) {
         var defaultModel = new BasicItemModel(itemResource.getModels().get("default"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
         var rocket = new BasicItemModel(itemResource.getModels().get("rocket"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
         var arrow = new BasicItemModel(itemResource.getModels().get("arrow"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
@@ -108,7 +108,7 @@ public class ItemAssetGenerator {
         );
     }
 
-    public static void createShield(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource) {
+    public static void createShield(ResourcePackBuilder builder, Identifier id, ResourceProvider itemResource) {
         var defaultModel = new SpecialItemModel(itemResource.getModels().get("default"), new ShieldSpecialModel());
         var blocking = new SpecialItemModel(itemResource.getModels().get("blocking"), new ShieldSpecialModel());
 
@@ -118,7 +118,7 @@ public class ItemAssetGenerator {
         );
     }
 
-    public static void createFishingRod(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource, boolean tint) {
+    public static void createFishingRod(ResourcePackBuilder builder, Identifier id, ResourceProvider itemResource, boolean tint) {
         var defaultModel = new BasicItemModel(itemResource.getModels().get("default"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
         var cast = new BasicItemModel(itemResource.getModels().get("cast"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
         builder.addData(AssetPaths.itemAsset(id), new ItemAsset(
@@ -127,7 +127,7 @@ public class ItemAssetGenerator {
         );
     }
 
-    public static void createTrident(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource, boolean tint) {
+    public static void createTrident(ResourcePackBuilder builder, Identifier id, ResourceProvider itemResource, boolean tint) {
         var defaultModel = new BasicItemModel(itemResource.getModels().get("default"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
         var throwing = new BasicItemModel(itemResource.getModels().get("throwing"), !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
 
@@ -137,14 +137,14 @@ public class ItemAssetGenerator {
         );
     }
 
-    public static void createTrimModels(ResourcePackBuilder builder, ResourceLocation id, ResourceProvider itemResource, boolean tint) {
+    public static void createTrimModels(ResourcePackBuilder builder, Identifier id, ResourceProvider itemResource, boolean tint) {
         Gson gson = new Gson();
         JsonObject root = new JsonObject();
         JsonObject model = new JsonObject();
         model.addProperty("type", "select");
 
         JsonArray cases = new JsonArray();
-        for (Map.Entry<String, ResourceLocation> entry : itemResource.getModels().entrySet()) {
+        for (Map.Entry<String, Identifier> entry : itemResource.getModels().entrySet()) {
             if (entry.getKey().equals("default"))
                 continue;
 
@@ -189,17 +189,17 @@ public class ItemAssetGenerator {
         builder.addData(AssetPaths.itemAsset(id), jsonOutput.getBytes(StandardCharsets.UTF_8));
     }
 
-    public static void createItemModels(ResourceLocation id, ItemResource itemResource) {
+    public static void createItemModels(Identifier id, ItemResource itemResource) {
         if (itemResource.couldGenerate()) {
-            for (Map.Entry<String, Map<String, ResourceLocation>> entry : itemResource.textures().entrySet()) {
+            for (Map.Entry<String, Map<String, Identifier>> entry : itemResource.textures().entrySet()) {
                 final var modelId = id.withPrefix("item/").withSuffix("_" + entry.getKey());
                 PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(builder -> {
                     JsonObject object = new JsonObject();
-                    object.add("parent", new JsonPrimitive(itemResource.parent().getNamespace().equals(ResourceLocation.DEFAULT_NAMESPACE) ? itemResource.parent().getPath() : itemResource.parent().toString()));
+                    object.add("parent", new JsonPrimitive(itemResource.parent().getNamespace().equals(Identifier.DEFAULT_NAMESPACE) ? itemResource.parent().getPath() : itemResource.parent().toString()));
 
                     JsonObject textures = new JsonObject();
-                    for (Map.Entry<String, ResourceLocation> texturesMapEntry : entry.getValue().entrySet()) {
-                        textures.add(texturesMapEntry.getKey(), new JsonPrimitive(texturesMapEntry.getValue().getNamespace().equals(ResourceLocation.DEFAULT_NAMESPACE) ? texturesMapEntry.getValue().getPath() : texturesMapEntry.getValue().toString()));
+                    for (Map.Entry<String, Identifier> texturesMapEntry : entry.getValue().entrySet()) {
+                        textures.add(texturesMapEntry.getKey(), new JsonPrimitive(texturesMapEntry.getValue().getNamespace().equals(Identifier.DEFAULT_NAMESPACE) ? texturesMapEntry.getValue().getPath() : texturesMapEntry.getValue().toString()));
                     }
                     object.add("textures", textures);
 

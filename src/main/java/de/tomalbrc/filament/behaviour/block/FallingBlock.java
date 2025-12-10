@@ -4,7 +4,7 @@ import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -83,10 +83,10 @@ public class FallingBlock implements BlockBehaviour<FallingBlock.Config> {
         public BlockStateMappedProperty<Integer> maxDamage = BlockStateMappedProperty.of(40);
         BlockStateMappedProperty<Boolean> disableDrops = BlockStateMappedProperty.of(false);
         BlockStateMappedProperty<Boolean> silent = BlockStateMappedProperty.of(false);
-        BlockStateMappedProperty<ResourceLocation> breakSound = BlockStateMappedProperty.of(SoundEvents.ANVIL_BREAK.location());
-        BlockStateMappedProperty<ResourceLocation> landSound = BlockStateMappedProperty.of(SoundEvents.ANVIL_LAND.location());
+        BlockStateMappedProperty<Identifier> breakSound = BlockStateMappedProperty.of(SoundEvents.ANVIL_BREAK.location());
+        BlockStateMappedProperty<Identifier> landSound = BlockStateMappedProperty.of(SoundEvents.ANVIL_LAND.location());
         public BlockStateMappedProperty<Boolean> canBeDamaged = BlockStateMappedProperty.of(false);
-        public BlockStateMappedProperty<ResourceLocation> damagedBlock = null;
+        public BlockStateMappedProperty<Identifier> damagedBlock = null;
         public BlockStateMappedProperty<Float> baseBreakChance = BlockStateMappedProperty.of(0.05f);
         public BlockStateMappedProperty<Float> breakChancePerDistance = BlockStateMappedProperty.of(0.05f);
     }

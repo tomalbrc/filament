@@ -6,7 +6,7 @@ import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.registry.BehaviourRegistry;
 import de.tomalbrc.filament.util.Constants;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Type;
@@ -43,16 +43,16 @@ public class BehaviourList implements Iterable<Behaviour<?>> {
             for (JsonElement entry : array) {
                 JsonObject obj = entry.getAsJsonObject();
                 String typeId = obj.get("type").getAsString();
-                ResourceLocation resourceLocation;
+                Identifier id;
                 if (typeId.contains(":"))
-                    resourceLocation = ResourceLocation.parse(typeId);
+                    id = Identifier.parse(typeId);
                 else
-                    resourceLocation = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, typeId);
+                    id = Identifier.fromNamespaceAndPath(Constants.MOD_ID, typeId);
 
-                var behaviourType = BehaviourRegistry.getType(resourceLocation);
+                var behaviourType = BehaviourRegistry.getType(id);
 
                 if (behaviourType == null || behaviourType.configType() == null) {
-                    Filament.LOGGER.error("Could not load behaviour {}", resourceLocation);
+                    Filament.LOGGER.error("Could not load behaviour {}", id);
                     continue;
                 }
 

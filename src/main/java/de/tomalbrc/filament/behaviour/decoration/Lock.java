@@ -4,7 +4,7 @@ import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.util.ExecuteUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -99,7 +99,7 @@ public class Lock implements DecorationBehaviour<Lock.Config> {
         /**
          * The identifier of the key required to unlock.
          */
-        public ResourceLocation key = null;
+        public Identifier key = null;
 
         /**
          * Determines whether the key should be consumed upon unlocking.

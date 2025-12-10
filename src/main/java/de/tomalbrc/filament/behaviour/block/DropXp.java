@@ -10,8 +10,8 @@ import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,7 +51,8 @@ public class DropXp implements BlockBehaviour<DropXp.Config> {
     }
 
     private void spawnXp(ServerLevel serverLevel, BlockPos blockPos, int amount) {
-        if (serverLevel.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS)) {
+        var rule = serverLevel.getGameRules().get(GameRules.BLOCK_DROPS);
+        if (rule) {
             ExperienceOrb.award(serverLevel, Vec3.atCenterOf(blockPos), amount);
         }
     }

@@ -7,7 +7,7 @@ import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.api.registry.BehaviourRegistry;
 import de.tomalbrc.filament.util.Constants;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -68,21 +68,21 @@ public class BehaviourConfigMap {
             JsonObject object = jsonElement.getAsJsonObject();
             BehaviourConfigMap behaviourConfigMap = new BehaviourConfigMap();
             for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
-                ResourceLocation resourceLocation;
+                Identifier id;
                 if (entry.getKey().contains(":"))
-                    resourceLocation = ResourceLocation.parse(entry.getKey());
+                    id = Identifier.parse(entry.getKey());
                 else
-                    resourceLocation = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, entry.getKey());
+                    id = Identifier.fromNamespaceAndPath(Constants.MOD_ID, entry.getKey());
 
-                var behaviourType = BehaviourRegistry.getType(resourceLocation);
+                var behaviourType = BehaviourRegistry.getType(id);
 
                 if (behaviourType == null || behaviourType.configType() == null) {
-                    Filament.LOGGER.error("Could not load behaviour {}", resourceLocation);
+                    Filament.LOGGER.error("Could not load behaviour {}", id);
                     continue;
                 }
                 var clazz = behaviourType.configType();
                 Object deserialized = jsonDeserializationContext.deserialize(entry.getValue(), clazz);
-                behaviourConfigMap.put(BehaviourRegistry.getType(resourceLocation), deserialized);
+                behaviourConfigMap.put(BehaviourRegistry.getType(id), deserialized);
             }
             return behaviourConfigMap;
         }

@@ -3,7 +3,7 @@ package de.tomalbrc.filament.behaviour.entity.goal;
 import de.tomalbrc.filament.api.behaviour.EntityBehaviour;
 import de.tomalbrc.filament.entity.FilamentMob;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
@@ -42,7 +42,7 @@ public class LookAtMobGoal implements EntityBehaviour<LookAtMobGoal.Config> {
 
     public static class Config {
         int priority;
-        ResourceLocation target;
+        Identifier target;
         float lookDistance;
         float probability;
         boolean onlyHorizontal;

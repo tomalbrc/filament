@@ -9,7 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
@@ -270,9 +270,9 @@ public class Hopper implements BlockBehaviourWithEntity<Hopper.Config> {
                 if (this.filterItems != null) {
                     for (String string : this.filterItems) {
                         if (string.startsWith("#")) {
-                            this.itemTagFilter.add(TagKey.create(Registries.ITEM, ResourceLocation.parse(string.substring(1))));
+                            this.itemTagFilter.add(TagKey.create(Registries.ITEM, Identifier.parse(string.substring(1))));
                         } else {
-                            this.itemFilter.add(BuiltInRegistries.ITEM.getValue(ResourceLocation.parse(string)));
+                            this.itemFilter.add(BuiltInRegistries.ITEM.getValue(Identifier.parse(string)));
                         }
                     }
                 }

@@ -8,7 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -208,8 +208,8 @@ public class FilamentMob extends Animal implements PolymerEntity {
     public boolean isFood(ItemStack itemStack) {
         var food = data.properties().food;
         if (food != null) {
-            for (ResourceLocation resourceLocation : food) {
-                if (itemStack.is(BuiltInRegistries.ITEM.getValue(resourceLocation)))
+            for (Identifier Identifier : food) {
+                if (itemStack.is(BuiltInRegistries.ITEM.getValue(Identifier)))
                     return true;
             }
         }

@@ -6,7 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelReader;
@@ -46,8 +46,8 @@ public class CanSurvive implements BlockBehaviour<CanSurvive.Config> {
     private boolean test(Direction direction, BlockPos blockPos, LevelReader levelReader, BlockState blockState) {
         var belowState = levelReader.getBlockState(blockPos.relative(direction));
         if (this.config.blocks != null) {
-            for (ResourceLocation resourceLocation : this.config.blocks) {
-                var block = BuiltInRegistries.BLOCK.getValue(resourceLocation);
+            for (Identifier Identifier : this.config.blocks) {
+                var block = BuiltInRegistries.BLOCK.getValue(Identifier);
                 if (belowState.is(block)) {
                     return !belowState.is(Blocks.WATER) || levelReader.getFluidState(blockPos.relative(direction)).isSource();
                 }
@@ -55,7 +55,7 @@ public class CanSurvive implements BlockBehaviour<CanSurvive.Config> {
         }
 
         if (this.config.tags != null) {
-            for (ResourceLocation tag : this.config.tags) {
+            for (Identifier tag : this.config.tags) {
                 var tagKey = TagKey.create(Registries.BLOCK, tag);
                 if (belowState.is(tagKey))
                     return true;
@@ -103,7 +103,7 @@ public class CanSurvive implements BlockBehaviour<CanSurvive.Config> {
     }
 
     public static class Config {
-        public List<ResourceLocation> blocks;
-        public List<ResourceLocation> tags;
+        public List<Identifier> blocks;
+        public List<Identifier> tags;
     }
 }

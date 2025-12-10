@@ -5,7 +5,7 @@ import de.tomalbrc.filament.behaviour.AsyncTickingBlockBehaviour;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -72,7 +72,7 @@ public class StatusEffectEmitter implements BlockBehaviour<StatusEffectEmitter.C
         BlockStateMappedProperty<Integer> interval = BlockStateMappedProperty.of(1);
         BlockStateMappedProperty<Integer> radius = BlockStateMappedProperty.of(16);
 
-        ResourceLocation effect = ResourceLocation.withDefaultNamespace("speed");
+        Identifier effect = Identifier.withDefaultNamespace("speed");
         int duration = 20;
         int amplifier = 0;
         boolean ambient = true;

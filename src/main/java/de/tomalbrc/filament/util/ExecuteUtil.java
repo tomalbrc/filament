@@ -4,11 +4,13 @@ import de.tomalbrc.filament.Filament;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.PermissionLevel;
+import net.minecraft.server.permissions.PermissionSet;
 import net.minecraft.world.phys.Vec3;
 
 public class ExecuteUtil {
     public static void asPlayer(ServerPlayer user, Vec3 at, String ...cmd) {
-        var commandSourceStack = Filament.SERVER.createCommandSourceStack().withEntity(user).withPosition(user.position()).withMaximumPermission(4);
+        var commandSourceStack = Filament.SERVER.createCommandSourceStack().withEntity(user).withPosition(user.position()).withMaximumPermission(PermissionSet.ALL_PERMISSIONS);
         if (at != null) {
             commandSourceStack = commandSourceStack.withPosition(at);
         }
@@ -22,7 +24,7 @@ public class ExecuteUtil {
     }
 
     public static void asConsole(ServerPlayer user, Vec3 at, String ... cmd) {
-        var commandSourceStack = Filament.SERVER.createCommandSourceStack().withEntity(user).withPosition(user.position()).withRotation(user.getRotationVector()).withMaximumPermission(4);
+        var commandSourceStack = Filament.SERVER.createCommandSourceStack().withEntity(user).withPosition(user.position()).withRotation(user.getRotationVector()).withMaximumPermission(PermissionSet.ALL_PERMISSIONS);
         if (at != null) {
             commandSourceStack = commandSourceStack.withPosition(at);
         }

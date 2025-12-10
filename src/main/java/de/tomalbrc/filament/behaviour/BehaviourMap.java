@@ -10,8 +10,8 @@ import java.util.Map;
 
 public class BehaviourMap implements Iterable<Map.Entry<BehaviourType<? extends Behaviour<?>,?>, Behaviour<?>>> {
     private final Map<BehaviourType<?,?>, Behaviour<?>> behaviourMap = new Reference2ObjectOpenHashMap<>();
-    public <T extends Behaviour<E>, E> void put(BehaviourType<T, E> resourceLocation, Behaviour<?> behaviour) {
-        this.behaviourMap.put(resourceLocation, behaviour);
+    public <T extends Behaviour<E>, E> void put(BehaviourType<T, E> Identifier, Behaviour<?> behaviour) {
+        this.behaviourMap.put(Identifier, behaviour);
     }
 
     @SuppressWarnings("unchecked")

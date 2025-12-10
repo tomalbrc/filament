@@ -8,7 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -114,7 +114,7 @@ public class FilamentItemDelegate {
         }
     }
 
-    public void modifyPolymerItemStack(Map<String, ResourceLocation> modelMap, ItemStack original, ItemStack polymer, TooltipFlag tooltipFlag, HolderLookup.Provider lookup, ServerPlayer player) {
+    public void modifyPolymerItemStack(Map<String, Identifier> modelMap, ItemStack original, ItemStack polymer, TooltipFlag tooltipFlag, HolderLookup.Provider lookup, ServerPlayer player) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : holder.getBehaviours()) {
             if (entry.getValue() instanceof ItemBehaviour<?> itemBehaviour) {
                 itemBehaviour.modifyPolymerItemStack(modelMap, original, polymer, tooltipFlag, lookup, player);

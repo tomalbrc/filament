@@ -26,7 +26,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
@@ -65,7 +65,7 @@ public class Json {
             .registerTypeHierarchyAdapter(Vector3f.class, new SimpleCodecDeserializer<>(ExtraCodecs.VECTOR3F))
             .registerTypeHierarchyAdapter(Vector2f.class, new SimpleCodecDeserializer<>(ExtraCodecs.VECTOR2F))
             .registerTypeHierarchyAdapter(Quaternionf.class, new QuaternionfDeserializer())
-            .registerTypeAdapter(ResourceLocation.class, new SimpleCodecDeserializer<>(ResourceLocation.CODEC))
+            .registerTypeAdapter(Identifier.class, new SimpleCodecDeserializer<>(Identifier.CODEC))
             .registerTypeHierarchyAdapter(Component.class, new ComponentDeserializer())
             .registerTypeHierarchyAdapter(DataComponentMap.class, new DataComponentsDeserializer())
             .registerTypeHierarchyAdapter(Display.BillboardConstraints.class, new SimpleCodecDeserializer<>(Display.BillboardConstraints.CODEC))
@@ -239,11 +239,11 @@ public class Json {
             if (json.isJsonPrimitive()) {
                 JsonPrimitive primitive = json.getAsJsonPrimitive();
                 if (primitive.isString()) {
-                    return PolymerBlockModel.of(ResourceLocation.tryParse(primitive.getAsString()));
+                    return PolymerBlockModel.of(Identifier.tryParse(primitive.getAsString()));
                 }
             } else if (json.isJsonObject()) {
                 JsonObject object = json.getAsJsonObject();
-                ResourceLocation model = ResourceLocation.parse(object.get("model").getAsString());
+                Identifier model = Identifier.parse(object.get("model").getAsString());
                 int x = object.has("x") ? object.get("x").getAsInt() : 0;
                 int y = object.has("y") ? object.get("y").getAsInt() : 0;
                 boolean uvLock = object.has("uvLock") && object.get("uvLock").getAsBoolean();
@@ -261,8 +261,8 @@ public class Json {
             if (json.isJsonObject()) {
                 JsonObject object = json.getAsJsonObject();
 
-                Map<String, ResourceLocation> map;
-                Type mapType = new TypeToken<Map<String, ResourceLocation>>() {}.getType();
+                Map<String, Identifier> map;
+                Type mapType = new TypeToken<Map<String, Identifier>>() {}.getType();
                 if (object.has("textures")) {
                     map = context.deserialize(object.get("textures").getAsJsonObject(), mapType);
                 } else {
@@ -300,7 +300,7 @@ public class Json {
     private record RegistryDeserializer<T>(Registry<T> registry) implements JsonDeserializer<T> {
         @Override
         public T deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
-            return this.registry.getValue(ResourceLocation.parse(element.getAsString()));
+            return this.registry.getValue(Identifier.parse(element.getAsString()));
         }
     }
 

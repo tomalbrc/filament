@@ -17,7 +17,7 @@ import it.unimi.dsi.fastutil.objects.Reference2ReferenceArrayMap;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,18 +41,18 @@ public final class DecorationData extends AbstractBlockData<DecorationProperties
     private final @Nullable BlockStateMappedProperty<BlockState> block;
 
     public DecorationData(
-            @NotNull ResourceLocation id,
+            @NotNull Identifier id,
             @Nullable Item vanillaItem,
             @Nullable Map<String, String> translations,
             @Nullable Component displayName,
             @Nullable ItemResource itemResource,
             @Nullable BlockResource blockResource,
-            @Nullable ResourceLocation itemModel,
+            @Nullable Identifier itemModel,
             @Nullable BehaviourConfigMap behaviourConfig,
             @Nullable DataComponentMap components,
-            @Nullable ResourceLocation itemGroup,
-            @Nullable Set<ResourceLocation> itemTags,
-            @Nullable Set<ResourceLocation> blockTags,
+            @Nullable Identifier itemGroup,
+            @Nullable Set<Identifier> itemTags,
+            @Nullable Set<Identifier> blockTags,
             @Nullable DecorationProperties properties,
             @Nullable List<BlockConfig> blocks,
             @Nullable BlockStateMappedProperty<BlockState> block,

@@ -8,7 +8,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
@@ -57,7 +57,7 @@ public class Trap implements ItemBehaviour<Trap.Config> {
     public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, TooltipDisplay tooltipDisplay, Consumer<Component> consumer, TooltipFlag tooltipFlag) {
         var bucketData = itemStack.get(DataComponents.BUCKET_ENTITY_DATA);
         if (bucketData != null && bucketData.copyTag().contains("Type")) {
-            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(ResourceLocation.parse(bucketData.copyTag().getString("Type").orElse("minecraft:pig")));
+            EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(bucketData.copyTag().getString("Type").orElse("minecraft:pig")));
             consumer.accept(Component.literal("Contains ").append(Component.translatable(type.getDescriptionId()))); // todo: make "Contains " translateable?
         } else {
             if (this.config.requiredEffects != null) {
@@ -101,7 +101,7 @@ public class Trap implements ItemBehaviour<Trap.Config> {
     }
 
     @Override
-    public void modifyPolymerItemStack(Map<String, ResourceLocation> modelData, ItemStack original, ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
+    public void modifyPolymerItemStack(Map<String, Identifier> modelData, ItemStack original, ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
         if (modelData != null) {
             itemStack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(), List.of(), List.of(canSpawn(original) ? "trapped" : "default"), List.of()));
         }
@@ -116,7 +116,7 @@ public class Trap implements ItemBehaviour<Trap.Config> {
         if (bucketData != null) {
             var compoundTag = bucketData.copyTag();
 
-            EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.getValue(ResourceLocation.parse(compoundTag.getString("Type").orElse("minecraft:pig")));
+            EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(compoundTag.getString("Type").orElse("minecraft:pig")));
             Entity entity = entityType.spawn(serverLevel, blockPos.above(1), EntitySpawnReason.BUCKET);
             if (entity instanceof Mob mob) {
                 this.loadFromTag(mob, compoundTag);
@@ -127,14 +127,14 @@ public class Trap implements ItemBehaviour<Trap.Config> {
     }
 
     public boolean canUseOn(Mob mob) {
-        ResourceLocation mobType = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
+        Identifier mobType = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
         if (this.config.types != null) {
             var isType = this.config.types.contains(mobType);
             if (isType)
                 return true;
         }
         if (this.config.tags != null) {
-            for (ResourceLocation tag : this.config.tags) {
+            for (Identifier tag : this.config.tags) {
                 if (mob.getType().is(TagKey.create(Registries.ENTITY_TYPE, tag))) {
                     return true;
                 }
@@ -163,10 +163,10 @@ public class Trap implements ItemBehaviour<Trap.Config> {
         // todo: read additional nbt, Bucketable not good enough
         Bucketable.saveDefaultDataToBucketTag(mob, itemStack);
 
-        ResourceLocation resourceLocation = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
+        Identifier Identifier = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType());
 
         CustomData.update(DataComponents.BUCKET_ENTITY_DATA, itemStack, (tag) -> {
-            tag.putString("Type", resourceLocation.toString());
+            tag.putString("Type", Identifier.toString());
         });
     }
 
@@ -178,10 +178,10 @@ public class Trap implements ItemBehaviour<Trap.Config> {
 
     public static class Config {
         // allowed util types to trap
-        public List<ResourceLocation> types = null;
-        public List<ResourceLocation> tags = null;
+        public List<Identifier> types = null;
+        public List<Identifier> tags = null;
 
-        public List<ResourceLocation> requiredEffects = null;
+        public List<Identifier> requiredEffects = null;
 
         public int chance = 50;
 

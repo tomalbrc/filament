@@ -18,7 +18,7 @@ import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -35,7 +35,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 public class BlockRegistry {
-    public static Map<ResourceLocation, Collection<ResourceLocation>> BLOCKS_TAGS = new Object2ReferenceOpenHashMap<>();
+    public static Map<Identifier, Collection<Identifier>> BLOCKS_TAGS = new Object2ReferenceOpenHashMap<>();
 
     public static void register(InputStream inputStream) throws IOException {
         JsonElement element = JsonParser.parseReader(new InputStreamReader(inputStream));
@@ -113,23 +113,23 @@ public class BlockRegistry {
         customBlock.postRegister();
     }
 
-    public static ResourceKey<Block> key(ResourceLocation id) {
+    public static ResourceKey<Block> key(Identifier id) {
         return ResourceKey.create(Registries.BLOCK, id);
     }
 
-    public static <T extends Block> T registerBlock(ResourceKey<Block> resourceKey, Function<BlockBehaviour.Properties, T> function, BlockBehaviour.Properties properties, @Nullable Set<ResourceLocation> blockTags) {
+    public static <T extends Block> T registerBlock(ResourceKey<Block> resourceKey, Function<BlockBehaviour.Properties, T> function, BlockBehaviour.Properties properties, @Nullable Set<Identifier> blockTags) {
         T block = function.apply(properties.setId(resourceKey));
-        if (blockTags != null) for (ResourceLocation tag : blockTags) {
+        if (blockTags != null) for (Identifier tag : blockTags) {
             var list = BLOCKS_TAGS.computeIfAbsent(tag, x -> new ArrayList<>());
-            list.add(resourceKey.location());
+            list.add(resourceKey.identifier());
         }
         return Registry.register(BuiltInRegistries.BLOCK, resourceKey, block);
     }
 
     public static class BlockDataReloadListener implements FilamentSynchronousResourceReloadListener {
         @Override
-        public ResourceLocation getFabricId() {
-            return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, Constants.MOD_ID);
+        public Identifier getFabricId() {
+            return Identifier.fromNamespaceAndPath(Constants.MOD_ID, Constants.MOD_ID);
         }
 
         @Override

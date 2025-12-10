@@ -3,28 +3,28 @@ package de.tomalbrc.filament.data.resource;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Map;
 
 public class BlockResource implements ResourceProvider {
     private Map<String, PolymerBlockModel> models = new Object2ObjectArrayMap<>();
-    private ResourceLocation parent;
+    private Identifier parent;
     private Map<String, TextureBlockModel> textures;
 
     public BlockResource(Map<String, PolymerBlockModel> models) {
         this(models, null, null);
     }
 
-    public BlockResource(Map<String, PolymerBlockModel> models, ResourceLocation parent, Map<String, TextureBlockModel> textures) {
+    public BlockResource(Map<String, PolymerBlockModel> models, Identifier parent, Map<String, TextureBlockModel> textures) {
         this.models = models;
         this.parent = parent;
         this.textures = textures;
     }
 
-    public ResourceLocation parent() {
+    public Identifier parent() {
         if (parent == null)
-            parent = ResourceLocation.withDefaultNamespace("block/cube_all");
+            parent = Identifier.withDefaultNamespace("block/cube_all");
         return parent;
     }
 
@@ -37,8 +37,8 @@ public class BlockResource implements ResourceProvider {
     }
 
     @Override
-    public Map<String, ResourceLocation> getModels() {
-        var map = new Object2ObjectOpenHashMap<String, ResourceLocation>();
+    public Map<String, Identifier> getModels() {
+        var map = new Object2ObjectOpenHashMap<String, Identifier>();
         if (this.models == null) {
             this.models = new Object2ObjectArrayMap<>();
             return map;
@@ -60,5 +60,5 @@ public class BlockResource implements ResourceProvider {
         this.models.put(key, blockModel);
     }
 
-    public record TextureBlockModel(Map<String, ResourceLocation> textures, int x, int y, boolean uvLock, int weight) {}
+    public record TextureBlockModel(Map<String, Identifier> textures, int x, int y, boolean uvLock, int weight) {}
 }

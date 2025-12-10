@@ -11,7 +11,7 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.biome.Biomes;
@@ -23,28 +23,28 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public class EntityData {
-    private final @NotNull ResourceLocation id;
-    private final @Nullable ResourceLocation entityType;
+    private final @NotNull Identifier id;
+    private final @Nullable Identifier entityType;
     private final @Nullable Map<String, String> translations;
     private final @Nullable AnimationInfo animation;
     private @Nullable EntityProperties properties;
     @SerializedName(value = "behaviour", alternate = {"behaviours", "behaviors", "behavior"})
     private @Nullable BehaviourConfigMap behaviour;
     private final @Nullable BehaviourList goals;
-    private final @Nullable Set<ResourceLocation> entityTags;
-    private final @Nullable Map<ResourceLocation, Double> attributes;
+    private final @Nullable Set<Identifier> entityTags;
+    private final @Nullable Map<Identifier, Double> attributes;
     private final @Nullable SpawnInfo spawn;
 
     protected EntityData(
-            @NotNull ResourceLocation id,
+            @NotNull Identifier id,
             @Nullable Map<String, String> translations,
             @Nullable AnimationInfo animation,
-            @Nullable ResourceLocation entityType,
+            @Nullable Identifier entityType,
             @Nullable EntityProperties properties,
             @Nullable BehaviourList goals,
             @Nullable BehaviourConfigMap behaviour,
-            @Nullable Set<ResourceLocation> entityTags,
-            @Nullable Map<ResourceLocation, Double> attributes,
+            @Nullable Set<Identifier> entityTags,
+            @Nullable Map<Identifier, Double> attributes,
             @Nullable SpawnInfo spawn
             ) {
         this.id = id;
@@ -59,11 +59,11 @@ public class EntityData {
         this.spawn = spawn;
     }
 
-    public @NotNull ResourceLocation id() {
+    public @NotNull Identifier id() {
         return id;
     }
 
-    public @NotNull ResourceLocation entityType() {
+    public @NotNull Identifier entityType() {
         return entityType == null ? BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.PIG) : entityType;
     }
 
@@ -81,11 +81,11 @@ public class EntityData {
         return behaviour;
     }
 
-    public @Nullable Set<ResourceLocation> entityTags() {
+    public @Nullable Set<Identifier> entityTags() {
         return entityTags;
     }
 
-    public @Nullable Map<ResourceLocation, Double> attributes() {
+    public @Nullable Map<Identifier, Double> attributes() {
         return attributes;
     }
 
@@ -108,7 +108,7 @@ public class EntityData {
     }
 
     public record AnimationInfo(
-            ResourceLocation model,
+            Identifier model,
             String idleAnimation,
             String walkAnimation
     ) {}
@@ -120,23 +120,23 @@ public class EntityData {
         boolean foundInOverworld,
         boolean foundInNether,
         boolean foundInEnd,
-        Set<ResourceLocation> spawnsLike,
-        Set<ResourceLocation> biomes,
-        Set<ResourceLocation> biomeTags
+        Set<Identifier> spawnsLike,
+        Set<Identifier> biomes,
+        Set<Identifier> biomeTags
     ) {
         public void add(EntityType<?> entityType) {
             Set<EntityType<?>> spawns = spawnsLike == null ? ImmutableSet.of() : null;
             if (spawns == null) {
                 spawns = new ObjectArraySet<>();
-                for (ResourceLocation resourceLocation : spawnsLike) {
-                    spawns.add(BuiltInRegistries.ENTITY_TYPE.getValue(resourceLocation));
+                for (Identifier Identifier : spawnsLike) {
+                    spawns.add(BuiltInRegistries.ENTITY_TYPE.getValue(Identifier));
                 }
             }
 
             Predicate<BiomeSelectionContext> biomeSelectors = spawns.isEmpty() ? ((x) -> false) : BiomeSelectors.spawnsOneOf(spawns);
             if (biomes != null) biomeSelectors = biomeSelectors.or(BiomeSelectors.includeByKey(Biomes.SWAMP, Biomes.MANGROVE_SWAMP));
             if (biomeTags != null) {
-                for (ResourceLocation tag : biomeTags) {
+                for (Identifier tag : biomeTags) {
                     biomeSelectors = biomeSelectors.or(BiomeSelectors.tag(TagKey.create(Registries.BIOME, tag)));
                 }
             }

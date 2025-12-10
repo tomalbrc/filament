@@ -7,7 +7,7 @@ import de.tomalbrc.filament.mixin.accessor.PrimedTntAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -155,6 +155,6 @@ public class Tnt implements BlockBehaviour<Tnt.Config> {
         public BlockStateMappedProperty<Boolean> unstable = BlockStateMappedProperty.of(false);
         public BlockStateMappedProperty<Float> explosionPower = BlockStateMappedProperty.of(4f);
         public BlockStateMappedProperty<Integer> fuseTime = BlockStateMappedProperty.of(80);
-        public BlockStateMappedProperty<ResourceLocation> primeSound = BlockStateMappedProperty.of(SoundEvents.TNT_PRIMED.location());
+        public BlockStateMappedProperty<Identifier> primeSound = BlockStateMappedProperty.of(SoundEvents.TNT_PRIMED.location());
     }
 }

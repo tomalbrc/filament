@@ -6,7 +6,7 @@ import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.util.BlockUtil;
 import de.tomalbrc.filament.util.DecorationUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -99,6 +99,6 @@ public class Lamp implements BlockBehaviour<Lamp.Config> {
         List<Integer> cycle;
         Boolean models;
 
-        public BlockStateMappedProperty<ResourceLocation> sound;
+        public BlockStateMappedProperty<Identifier> sound;
     }
 }

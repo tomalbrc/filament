@@ -9,7 +9,7 @@ import de.tomalbrc.filament.mixin.accessor.ProjectileWeaponItemInvoker;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -19,7 +19,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
@@ -198,9 +198,9 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
          */
         public float powerMultiplier = 3.f;
 
-        public List<ResourceLocation> supportedProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"));
-        public List<ResourceLocation> supportedHeldProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"), ResourceLocation.withDefaultNamespace("firework_rocket"));
+        public List<Identifier> supportedProjectiles = ImmutableList.of(Identifier.withDefaultNamespace("arrow"), Identifier.withDefaultNamespace("spectral_arrow"));
+        public List<Identifier> supportedHeldProjectiles = ImmutableList.of(Identifier.withDefaultNamespace("arrow"), Identifier.withDefaultNamespace("spectral_arrow"), Identifier.withDefaultNamespace("firework_rocket"));
 
-        public ResourceLocation shootSound = SoundEvents.ARROW_SHOOT.location();
+        public Identifier shootSound = SoundEvents.ARROW_SHOOT.location();
     }
 }

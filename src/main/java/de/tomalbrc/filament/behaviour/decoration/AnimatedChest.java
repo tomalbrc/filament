@@ -86,7 +86,7 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
 
     @Override
     public void init(Item item, Block block, BehaviourHolder behaviourHolder) {
-        var id = block.builtInRegistryHolder().key().location();
+        var id = block.builtInRegistryHolder().key().identifier();
         TYPE = (BlockEntityType<DecorationBlockEntity>) BuiltInRegistries.BLOCK_ENTITY_TYPE.getValue(id);
     }
 

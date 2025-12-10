@@ -17,7 +17,7 @@ import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -65,7 +65,7 @@ public class RPUtil {
     }
 
     // Item assets for virtual blocks that use item displays (NOT DECORATIONS!)
-    public static void createBlockItemAssets(ResourceLocation id, BlockResource blockResource) {
+    public static void createBlockItemAssets(Identifier id, BlockResource blockResource) {
         if (blockResource != null) PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder ->
                 ItemAssetGenerator.createDefault(
                         resourcePackBuilder,
@@ -76,10 +76,10 @@ public class RPUtil {
         );
     }
 
-    private static void createBlockModels(ResourceLocation id, BlockResource blockResource) {
+    private static void createBlockModels(Identifier id, BlockResource blockResource) {
         if (blockResource != null && blockResource.couldGenerate()) {
             int index = 1;
-            Map<Map<String, ResourceLocation>, ResourceLocation> localCache = new Object2ObjectOpenHashMap<>();
+            Map<Map<String, Identifier>, Identifier> localCache = new Object2ObjectOpenHashMap<>();
 
             for (Map.Entry<String, BlockResource.TextureBlockModel> entry : blockResource.textures().entrySet()) {
                 var model = id.withPrefix("block/").withSuffix("_" + index);
@@ -91,11 +91,11 @@ public class RPUtil {
                     final var modelId = model;
                     PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(builder -> {
                         JsonObject object = new JsonObject();
-                        object.add("parent", new JsonPrimitive(blockResource.parent().getNamespace().equals(ResourceLocation.DEFAULT_NAMESPACE) ? blockResource.parent().getPath() : blockResource.parent().toString()));
+                        object.add("parent", new JsonPrimitive(blockResource.parent().getNamespace().equals(Identifier.DEFAULT_NAMESPACE) ? blockResource.parent().getPath() : blockResource.parent().toString()));
 
                         JsonObject textures = new JsonObject();
-                        for (Map.Entry<String, ResourceLocation> texturesMapEntry : entry.getValue().textures().entrySet()) {
-                            textures.add(texturesMapEntry.getKey(), new JsonPrimitive(texturesMapEntry.getValue().getNamespace().equals(ResourceLocation.DEFAULT_NAMESPACE) ? texturesMapEntry.getValue().getPath() : texturesMapEntry.getValue().toString()));
+                        for (Map.Entry<String, Identifier> texturesMapEntry : entry.getValue().textures().entrySet()) {
+                            textures.add(texturesMapEntry.getKey(), new JsonPrimitive(texturesMapEntry.getValue().getNamespace().equals(Identifier.DEFAULT_NAMESPACE) ? texturesMapEntry.getValue().getPath() : texturesMapEntry.getValue().toString()));
                         }
                         object.add("textures", textures);
 

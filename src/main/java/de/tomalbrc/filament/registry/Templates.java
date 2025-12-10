@@ -3,24 +3,24 @@ package de.tomalbrc.filament.registry;
 import com.google.gson.*;
 import de.tomalbrc.filament.util.Json;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
 
 public class Templates {
-    private static final Map<ResourceLocation, JsonObject> TEMPLATES = new Object2ObjectOpenHashMap<>();
+    private static final Map<Identifier, JsonObject> TEMPLATES = new Object2ObjectOpenHashMap<>();
 
     public static void add(InputStream inputStream) throws Exception {
         JsonElement element = JsonParser.parseReader(new InputStreamReader(Json.camelToSnakeCase(inputStream)));
         if (element != null && element.isJsonObject()) {
             JsonObject object = element.getAsJsonObject();
-            TEMPLATES.put(ResourceLocation.parse(object.getAsJsonPrimitive("id").getAsString()), object);
+            TEMPLATES.put(Identifier.parse(object.getAsJsonPrimitive("id").getAsString()), object);
         }
     }
 
-    public static JsonElement handlePlaceholder(JsonElement element, ResourceLocation id) {
+    public static JsonElement handlePlaceholder(JsonElement element, Identifier id) {
         if (element.isJsonObject()) {
             JsonObject obj = new JsonObject();
             for (var entry : element.getAsJsonObject().entrySet()) {
@@ -68,7 +68,7 @@ public class Templates {
         return sb.toString().trim();
     }
 
-    public static JsonObject merge(ResourceLocation templateId, ResourceLocation contentId, JsonObject json2) {
+    public static JsonObject merge(Identifier templateId, Identifier contentId, JsonObject json2) {
         JsonObject template = TEMPLATES.get(templateId);
         if (template == null)
             throw new IllegalArgumentException(String.format("Template id '%s' not found for '%s'!", templateId, contentId));

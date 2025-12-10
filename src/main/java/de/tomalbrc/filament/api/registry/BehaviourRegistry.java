@@ -4,19 +4,19 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
 
 public class BehaviourRegistry {
-    private static final Map<ResourceLocation, BehaviourType<? extends Behaviour<?>, ?>> behaviourMap = new Object2ObjectOpenHashMap<>();
+    private static final Map<Identifier, BehaviourType<? extends Behaviour<?>, ?>> behaviourMap = new Object2ObjectOpenHashMap<>();
 
-    public static <T extends Behaviour<E>,E> BehaviourType<T, E> registerBehaviour(ResourceLocation resourceLocation, Class<T> type) {
+    public static <T extends Behaviour<E>,E> BehaviourType<T, E> registerBehaviour(Identifier Identifier, Class<T> type) {
         Class<E> configType = BehaviourRegistry.inferConfigType(type);
-        BehaviourType<T, E> behaviourType = new BehaviourType(resourceLocation, type, configType);
-        behaviourMap.put(resourceLocation, behaviourType);
+        BehaviourType<T, E> behaviourType = new BehaviourType(Identifier, type, configType);
+        behaviourMap.put(Identifier, behaviourType);
         return behaviourType;
     }
 
@@ -32,7 +32,7 @@ public class BehaviourRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends Behaviour<E>, E> BehaviourType<T, E> getType(ResourceLocation key) {
+    public static <T extends Behaviour<E>, E> BehaviourType<T, E> getType(Identifier key) {
         BehaviourType<?, ?> info = behaviourMap.get(key);
         if (info == null) {
             Filament.LOGGER.error("Could not find behaviour " + key);

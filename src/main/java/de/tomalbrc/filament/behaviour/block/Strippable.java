@@ -3,7 +3,7 @@ package de.tomalbrc.filament.behaviour.block;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.registry.StrippableRegistry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -35,11 +35,11 @@ public class Strippable implements BlockBehaviour<Strippable.Config> {
         /**
          * Replacement block
          */
-        public ResourceLocation replacement;
+        public Identifier replacement;
         /**
          * Loot to drop when a block is stripped
          */
-        public ResourceLocation lootTable;
+        public Identifier lootTable;
 
         /**
          * Copper-like scrape particles
@@ -54,6 +54,6 @@ public class Strippable implements BlockBehaviour<Strippable.Config> {
         /**
          * Sound to play
          */
-        public ResourceLocation sound = SoundEvents.AXE_STRIP.location();
+        public Identifier sound = SoundEvents.AXE_STRIP.location();
     }
 }

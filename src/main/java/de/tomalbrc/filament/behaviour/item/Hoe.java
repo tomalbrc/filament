@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.mixin.accessor.HoeItemAccessor;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -61,6 +61,6 @@ public class Hoe implements ItemBehaviour<Hoe.Config> {
     }
 
     public static class Config {
-        public ResourceLocation sound = SoundEvents.HOE_TILL.location();
+        public Identifier sound = SoundEvents.HOE_TILL.location();
     }
 }

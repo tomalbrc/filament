@@ -13,7 +13,7 @@ import it.unimi.dsi.fastutil.objects.Reference2ReferenceArrayMap;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,20 +28,20 @@ public class BlockData extends AbstractBlockData<BlockProperties> {
     private final @Nullable BlockStateMappedProperty<BlockModelType> blockModelType;
 
     public BlockData(
-            @NotNull ResourceLocation id,
+            @NotNull Identifier id,
             @Nullable Item vanillaItem,
             @Nullable Map<String, String> translations,
             @Nullable Component displayName,
             @Nullable ItemResource itemResource,
-            @Nullable ResourceLocation itemModel,
+            @Nullable Identifier itemModel,
             @Nullable BehaviourConfigMap behaviourConfig,
             @Nullable DataComponentMap components,
-            @Nullable ResourceLocation itemGroup,
+            @Nullable Identifier itemGroup,
             @NotNull BlockResource blockResource,
             @Nullable BlockStateMappedProperty<BlockModelType> blockModelType,
             @Nullable BlockProperties properties,
-            @Nullable Set<ResourceLocation> itemTags,
-            @Nullable Set<ResourceLocation> blockTags
+            @Nullable Set<Identifier> itemTags,
+            @Nullable Set<Identifier> blockTags
     ) {
         super(id, vanillaItem, translations, displayName, itemResource, blockResource, itemModel, behaviourConfig, components, itemGroup, properties, itemTags, blockTags);
         this.blockModelType = blockModelType;

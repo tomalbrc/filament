@@ -2,13 +2,13 @@ package de.tomalbrc.filament.util;
 
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.registry.Templates;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 public class FilamentTemplateReloadListener implements FilamentSynchronousResourceReloadListener {
     @Override
-    public ResourceLocation getFabricId() {
-        return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "template");
+    public Identifier getFabricId() {
+        return Identifier.fromNamespaceAndPath(Constants.MOD_ID, "template");
     }
 
     @Override

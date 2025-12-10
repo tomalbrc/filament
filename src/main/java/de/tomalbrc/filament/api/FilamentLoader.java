@@ -8,7 +8,7 @@ import de.tomalbrc.filament.registry.ItemRegistry;
 import de.tomalbrc.filament.registry.ModelRegistry;
 import de.tomalbrc.filament.util.Json;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -80,7 +80,7 @@ public class FilamentLoader {
         search(modid, f -> {
             try {
                 if (f.getFileName() != null)
-                    ModelRegistry.registerAjModel(Files.newInputStream(f), ResourceLocation.fromNamespaceAndPath(namespace, f.getFileName().toString()));
+                    ModelRegistry.registerAjModel(Files.newInputStream(f), Identifier.fromNamespaceAndPath(namespace, f.getFileName().toString()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -89,7 +89,7 @@ public class FilamentLoader {
         search(modid, f -> {
             try {
                 if (f.getFileName() != null)
-                    ModelRegistry.registerBbModel(Files.newInputStream(f), ResourceLocation.fromNamespaceAndPath(namespace, f.getFileName().toString()));
+                    ModelRegistry.registerBbModel(Files.newInputStream(f), Identifier.fromNamespaceAndPath(namespace, f.getFileName().toString()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -98,7 +98,7 @@ public class FilamentLoader {
         search(modid, f -> {
             try {
                 if (f.getFileName() != null)
-                    ModelRegistry.registerAjBlueprintModel(Files.newInputStream(f), ResourceLocation.fromNamespaceAndPath(namespace, f.getFileName().toString()));
+                    ModelRegistry.registerAjBlueprintModel(Files.newInputStream(f), Identifier.fromNamespaceAndPath(namespace, f.getFileName().toString()));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

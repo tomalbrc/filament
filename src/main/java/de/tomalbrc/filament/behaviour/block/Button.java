@@ -4,7 +4,7 @@ import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -14,7 +14,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
@@ -146,7 +146,7 @@ public class Button implements BlockBehaviour<Button.Config> {
         public BlockStateMappedProperty<Integer> powerlevel = BlockStateMappedProperty.of(15);
         public BlockStateMappedProperty<Integer> ticksToStayPressed = BlockStateMappedProperty.of(100);
         public BlockStateMappedProperty<Boolean> canBeActivatedByArrows = BlockStateMappedProperty.of(true);
-        public ResourceLocation clickOnSound = SoundEvents.WOODEN_BUTTON_CLICK_ON.location();
-        public ResourceLocation clickOffSound = SoundEvents.WOODEN_BUTTON_CLICK_OFF.location();
+        public Identifier clickOnSound = SoundEvents.WOODEN_BUTTON_CLICK_ON.location();
+        public Identifier clickOffSound = SoundEvents.WOODEN_BUTTON_CLICK_OFF.location();
     }
 }

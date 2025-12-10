@@ -3,7 +3,7 @@ package de.tomalbrc.filament.behaviour.entity.target;
 import de.tomalbrc.filament.api.behaviour.EntityBehaviour;
 import de.tomalbrc.filament.entity.FilamentMob;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -45,7 +45,7 @@ public class NearestAttackableTargetGoal implements EntityBehaviour<NearestAttac
 
     public static class Config {
         int priority;
-        ResourceLocation target;
+        Identifier target;
         int randomInterval = 10;
         boolean mustSee = true;
         boolean mustReach = true;

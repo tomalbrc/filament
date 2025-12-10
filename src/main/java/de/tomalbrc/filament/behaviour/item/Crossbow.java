@@ -13,7 +13,7 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -26,7 +26,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
@@ -72,7 +72,7 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
     }
 
     @Override
-    public void modifyPolymerItemStack(Map<String, ResourceLocation> models, ItemStack original, ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
+    public void modifyPolymerItemStack(Map<String, Identifier> models, ItemStack original, ItemStack itemStack, TooltipFlag tooltipType, HolderLookup.Provider lookup, @Nullable ServerPlayer player) {
         // polymer removes that component, so we have to add it back again.
         itemStack.set(DataComponents.CHARGED_PROJECTILES, original.get(DataComponents.CHARGED_PROJECTILES));
     }
@@ -333,13 +333,13 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
          */
         public float powerMultiplier = 1.f;
 
-        public List<ResourceLocation> supportedProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"), ResourceLocation.withDefaultNamespace("firework_rocket"));
-        public List<ResourceLocation> supportedHeldProjectiles = ImmutableList.of(ResourceLocation.withDefaultNamespace("arrow"), ResourceLocation.withDefaultNamespace("spectral_arrow"), ResourceLocation.withDefaultNamespace("firework_rocket"));
+        public List<Identifier> supportedProjectiles = ImmutableList.of(Identifier.withDefaultNamespace("arrow"), Identifier.withDefaultNamespace("spectral_arrow"), Identifier.withDefaultNamespace("firework_rocket"));
+        public List<Identifier> supportedHeldProjectiles = ImmutableList.of(Identifier.withDefaultNamespace("arrow"), Identifier.withDefaultNamespace("spectral_arrow"), Identifier.withDefaultNamespace("firework_rocket"));
 
-        public ResourceLocation shootSound = SoundEvents.CROSSBOW_SHOOT.location();
+        public Identifier shootSound = SoundEvents.CROSSBOW_SHOOT.location();
 
-        public ResourceLocation loadingStartSound = SoundEvents.CROSSBOW_LOADING_START.value().location();
-        public ResourceLocation loadingMiddleSound = SoundEvents.CROSSBOW_LOADING_MIDDLE.value().location();
-        public ResourceLocation loadingEndSound = SoundEvents.CROSSBOW_LOADING_END.value().location();
+        public Identifier loadingStartSound = SoundEvents.CROSSBOW_LOADING_START.value().location();
+        public Identifier loadingMiddleSound = SoundEvents.CROSSBOW_LOADING_MIDDLE.value().location();
+        public Identifier loadingEndSound = SoundEvents.CROSSBOW_LOADING_END.value().location();
     }
 }

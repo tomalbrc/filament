@@ -3,7 +3,7 @@ package de.tomalbrc.filament.mixin.behaviour.shears.interaction;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import de.tomalbrc.filament.behaviour.item.Shears;
-import net.minecraft.world.entity.monster.Bogged;
+import net.minecraft.world.entity.monster.skeleton.Bogged;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;

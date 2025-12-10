@@ -3,11 +3,11 @@ package de.tomalbrc.filament.behaviour.entity.target;
 import de.tomalbrc.filament.api.behaviour.EntityBehaviour;
 import de.tomalbrc.filament.entity.FilamentMob;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -55,8 +55,8 @@ public class HurtByTargetGoal implements EntityBehaviour<HurtByTargetGoal.Config
 
     public static class Config {
         int priority;
-        List<ResourceLocation> ignoreFrom;
-        List<ResourceLocation> alertOthers;
+        List<Identifier> ignoreFrom;
+        List<Identifier> alertOthers;
     }
 
     public static class HurtByTargetGoalImpl extends TargetGoal {
@@ -78,7 +78,7 @@ public class HurtByTargetGoal implements EntityBehaviour<HurtByTargetGoal.Config
             int i = this.mob.getLastHurtByMobTimestamp();
             LivingEntity livingEntity = this.mob.getLastHurtByMob();
             if (i != this.timestamp && livingEntity != null) {
-                if (livingEntity.getType() == EntityType.PLAYER && getServerLevel(this.mob).getGameRules().getBoolean(GameRules.RULE_UNIVERSAL_ANGER)) {
+                if (livingEntity.getType() == EntityType.PLAYER && getServerLevel(this.mob).getGameRules().get(GameRules.UNIVERSAL_ANGER)) {
                     return false;
                 } else {
                     for(EntityType<?> type : this.toIgnoreDamage) {

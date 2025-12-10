@@ -6,7 +6,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.LoomMenu;
@@ -43,8 +43,8 @@ public abstract class LoomMenuMixin extends AbstractContainerMenu {
     @Inject(method = "getSelectablePatterns(Lnet/minecraft/world/item/ItemStack;)Ljava/util/List;", at = @At("RETURN"), cancellable = true)
     private void filament$onGetSelectablePatterns(ItemStack itemStack, CallbackInfoReturnable<List<Holder<BannerPattern>>> cir) {
         if (itemStack.getItem().isFilamentItem() && itemStack.getItem().getBehaviours().has(Behaviours.BANNER_PATTERN)) {
-            ResourceLocation resourceLocation = itemStack.getItem().getBehaviours().get(Behaviours.BANNER_PATTERN).getConfig().id;
-            Holder<BannerPattern> res = this.patternGetter.get(ResourceKey.create(Registries.BANNER_PATTERN, resourceLocation)).orElseThrow();
+            Identifier Identifier = itemStack.getItem().getBehaviours().get(Behaviours.BANNER_PATTERN).getConfig().id;
+            Holder<BannerPattern> res = this.patternGetter.get(ResourceKey.create(Registries.BANNER_PATTERN, Identifier)).orElseThrow();
             cir.setReturnValue(ImmutableList.of(res));
         }
     }

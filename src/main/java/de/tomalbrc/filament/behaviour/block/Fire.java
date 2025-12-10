@@ -3,7 +3,11 @@ package de.tomalbrc.filament.behaviour.block;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.mojang.serialization.JsonOps;
+import com.mojang.datafixers.util.Either;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.*;
+import com.mojang.serialization.codecs.BaseMapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
@@ -14,9 +18,6 @@ import de.tomalbrc.filament.mixin.accessor.FireBlockInvoker;
 import eu.pb4.polymer.blocks.impl.BlockExtBlockMapper;
 import eu.pb4.polymer.blocks.impl.DefaultModelData;
 import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
-import eu.pb4.polymer.resourcepack.extras.api.format.blockstate.BlockStateAsset;
-import eu.pb4.polymer.resourcepack.extras.api.format.blockstate.StateModelVariant;
-import eu.pb4.polymer.resourcepack.extras.api.format.blockstate.StateMultiPartDefinition;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
@@ -27,9 +28,10 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
@@ -48,10 +50,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public class Fire implements BlockBehaviour<Fire.Config> {
     private static final List<FireModelEntry> FIRE_MODELS = ObjectArrayList.of(FireModelEntry.DEFAULT);
@@ -93,12 +92,12 @@ public class Fire implements BlockBehaviour<Fire.Config> {
     public void init(Item item, Block block, BehaviourHolder behaviourHolder) {
         JsonArray arr = new JsonArray();
         if (config.blocks != null) {
-            for (ResourceLocation location : config.blocks) {
+            for (Identifier location : config.blocks) {
                 arr.add(location.toString());
             }
         }
         if (config.blockTags != null) {
-            for (ResourceLocation location : config.blockTags) {
+            for (Identifier location : config.blockTags) {
                 arr.add("#" + location.toString());
             }
         }
@@ -117,8 +116,8 @@ public class Fire implements BlockBehaviour<Fire.Config> {
         public boolean tick = true;
         public boolean lightPortal = true;
         public float damage = 1.f;
-        public List<ResourceLocation> blocks;
-        public List<ResourceLocation> blockTags;
+        public List<Identifier> blocks;
+        public List<Identifier> blockTags;
     }
 
     @Override
@@ -141,32 +140,32 @@ public class Fire implements BlockBehaviour<Fire.Config> {
 
     @Override
     public BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
-        return blockState.getBlock().withPropertiesOf(((FireBlockInvoker)FIRE_BLOCK).invokeUpdateShape(blockState, levelReader, scheduledTickAccess, blockPos, direction, blockPos2, blockState2, randomSource));
+        return blockState.getBlock().withPropertiesOf(((FireBlockInvoker) FIRE_BLOCK).invokeUpdateShape(blockState, levelReader, scheduledTickAccess, blockPos, direction, blockPos2, blockState2, randomSource));
     }
 
     @Override
     public BlockState getStateForPlacement(BlockState blockState, BlockPlaceContext blockPlaceContext) {
-        return blockState.getBlock().withPropertiesOf(((FireBlockInvoker)FIRE_BLOCK).invokeGetStateForPlacement(blockPlaceContext.getLevel(), blockPlaceContext.getClickedPos()));
+        return blockState.getBlock().withPropertiesOf(((FireBlockInvoker) FIRE_BLOCK).invokeGetStateForPlacement(blockPlaceContext.getLevel(), blockPlaceContext.getClickedPos()));
     }
 
     @Override
     public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
-        return ((FireBlockInvoker)FIRE_BLOCK).invokeCanSurvive(blockState, levelReader, blockPos);
+        return ((FireBlockInvoker) FIRE_BLOCK).invokeCanSurvive(blockState, levelReader, blockPos);
     }
 
     @Override
     public void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
-        ((FireBlockInvoker)FIRE_BLOCK).invokeTick(blockState, serverLevel, blockPos, randomSource);
+        ((FireBlockInvoker) FIRE_BLOCK).invokeTick(blockState, serverLevel, blockPos, randomSource);
     }
 
     @Override
     public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
-        ((FireBlockInvoker)FIRE_BLOCK).invokeOnPlace(blockState, level, blockPos, blockState2, bl);
+        ((FireBlockInvoker) FIRE_BLOCK).invokeOnPlace(blockState, level, blockPos, blockState2, bl);
     }
 
     @Override
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        ((FireBlockInvoker)FIRE_BLOCK).invokeCreateBlockStateDefinition(builder);
+        ((FireBlockInvoker) FIRE_BLOCK).invokeCreateBlockStateDefinition(builder);
     }
 
     @Override
@@ -191,7 +190,6 @@ public class Fire implements BlockBehaviour<Fire.Config> {
 
         return true;
     }
-
 
 
     public static void addRemap() {
@@ -235,7 +233,7 @@ public class Fire implements BlockBehaviour<Fire.Config> {
         if (fireAsset.multipart().isPresent()) {
             for (StateMultiPartDefinition partDefinition : fireAsset.multipart().get()) {
                 var currVar = partDefinition.apply().getFirst();
-                List<ResourceLocation> models;
+                List<Identifier> models;
                 if (currVar.model().getPath().contains("block/fire_floor")) {
                     models = modelEntry.floor;
                 } else if (currVar.model().getPath().contains("block/fire_side")) {
@@ -245,17 +243,17 @@ public class Fire implements BlockBehaviour<Fire.Config> {
                 }
 
                 List<StateModelVariant> newVariants = new ObjectArrayList<>();
-                for (ResourceLocation model : models) {
+                for (Identifier model : models) {
                     newVariants.add(new StateModelVariant(model, currVar.x(), currVar.y(), currVar.uvlock(), currVar.weigth()));
                 }
 
                 var when = partDefinition.when();
 
                 Map<String, String> base = null;
-                if (when.base().isPresent()) {
+                if (when.base.isPresent()) {
                     base = new Object2ObjectArrayMap<>();
                     base.put("age", String.valueOf(modelEntry.age));
-                    base.putAll(when.base().get());
+                    base.putAll(when.base.get());
                 }
 
                 List<Map<String, String>> or = null;
@@ -275,13 +273,101 @@ public class Fire implements BlockBehaviour<Fire.Config> {
         return list;
     }
 
-    record FireModelEntry(@Nullable ResourceLocation id, int age, List<ResourceLocation> up, List<ResourceLocation> side, List<ResourceLocation> floor) {
+    record FireModelEntry(@Nullable Identifier id, int age, List<Identifier> up, List<Identifier> side,
+                          List<Identifier> floor) {
         public static FireModelEntry DEFAULT = new FireModelEntry(
                 null,
                 0,
-                List.of(ResourceLocation.withDefaultNamespace("block/fire_up0"), ResourceLocation.withDefaultNamespace("block/fire_up1"), ResourceLocation.withDefaultNamespace("block/fire_up_alt0"), ResourceLocation.withDefaultNamespace("block/fire_up_alt1")),
-                List.of(ResourceLocation.withDefaultNamespace("block/fire_side0"), ResourceLocation.withDefaultNamespace("block/fire_side1"), ResourceLocation.withDefaultNamespace("block/fire_side_alt0"), ResourceLocation.withDefaultNamespace("block/fire_side_alt1")),
-                List.of(ResourceLocation.withDefaultNamespace("block/fire_floor0"), ResourceLocation.withDefaultNamespace("block/fire_floor1"))
+                List.of(Identifier.withDefaultNamespace("block/fire_up0"), Identifier.withDefaultNamespace("block/fire_up1"), Identifier.withDefaultNamespace("block/fire_up_alt0"), Identifier.withDefaultNamespace("block/fire_up_alt1")),
+                List.of(Identifier.withDefaultNamespace("block/fire_side0"), Identifier.withDefaultNamespace("block/fire_side1"), Identifier.withDefaultNamespace("block/fire_side_alt0"), Identifier.withDefaultNamespace("block/fire_side_alt1")),
+                List.of(Identifier.withDefaultNamespace("block/fire_floor0"), Identifier.withDefaultNamespace("block/fire_floor1"))
         );
+    }
+
+
+    public record BlockStateAsset(Optional<Map<String, List<StateModelVariant>>> variants,
+                                  Optional<List<StateMultiPartDefinition>> multipart) {
+        public static final Codec<BlockStateAsset> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                StateModelVariant.MAP.optionalFieldOf("variants").forGetter(BlockStateAsset::variants),
+                StateMultiPartDefinition.CODEC.listOf().optionalFieldOf("multipart").forGetter(BlockStateAsset::multipart)
+        ).apply(instance, BlockStateAsset::new));
+    }
+
+    public record StateModelVariant(Identifier model, int x, int y, boolean uvlock, int weigth) {
+        private static final Codec<StateModelVariant> BASE = RecordCodecBuilder.create(instance -> instance.group(
+                        Identifier.CODEC.fieldOf("model").forGetter(StateModelVariant::model),
+                        Codec.INT.optionalFieldOf("x", 0).forGetter(StateModelVariant::x),
+                        Codec.INT.optionalFieldOf("y", 0).forGetter(StateModelVariant::y),
+                        Codec.BOOL.optionalFieldOf("uvlock", false).forGetter(StateModelVariant::uvlock),
+                        Codec.INT.optionalFieldOf("weigth", 1).forGetter(StateModelVariant::weigth)
+                ).apply(instance, StateModelVariant::new)
+        );
+
+        public static final Codec<List<StateModelVariant>> CODEC = Codec.withAlternative(BASE.listOf(), BASE, List::of);
+        public static final Codec<Map<String, List<StateModelVariant>>> MAP = SortedMapCodec.of(Codec.STRING, CODEC);
+    }
+
+    public record SortedMapCodec<K, V>(Codec<K> keyCodec, Codec<V> elementCodec,
+                                       Comparator<Map.Entry<K, V>> comparator) implements Codec<Map<K, V>>, BaseMapCodec<K, V> {
+        public static <K extends Comparable<K>, V> SortedMapCodec<K, V> of(Codec<K> keyCodec, Codec<V> elementCodec) {
+            return new SortedMapCodec<>(keyCodec, elementCodec, Map.Entry.comparingByKey());
+        }
+
+        public static <K, V> SortedMapCodec<K, V> of(Codec<K> keyCodec, Codec<V> elementCodec, Comparator<K> comparator) {
+            return new SortedMapCodec<>(keyCodec, elementCodec, Map.Entry.comparingByKey(comparator));
+        }
+
+        @Override
+        public <T> DataResult<Pair<Map<K, V>, T>> decode(final DynamicOps<T> ops, final T input) {
+            return ops.getMap(input).setLifecycle(Lifecycle.stable()).flatMap(map -> decode(ops, map)).map(r -> Pair.of(r, input));
+        }
+
+        @Override
+        public <T> DataResult<T> encode(final Map<K, V> input, final DynamicOps<T> ops, final T prefix) {
+            return encode(input, ops, ops.mapBuilder()).build(prefix);
+        }
+
+        @Override
+        public <T> RecordBuilder<T> encode(final Map<K, V> input, final DynamicOps<T> ops, final RecordBuilder<T> prefix) {
+            var entries = new ArrayList<>(input.entrySet());
+            entries.sort(this.comparator);
+
+            for (final var entry : entries) {
+                prefix.add(keyCodec.encodeStart(ops, entry.getKey()), elementCodec.encodeStart(ops, entry.getValue()));
+            }
+            return prefix;
+        }
+
+        @Override
+        public @NotNull String toString() {
+            return "SortedMapCodec[" + keyCodec + " -> " + elementCodec + ']';
+        }
+    }
+
+    public record StateMultiPartDefinition(When when, List<StateModelVariant> apply) {
+        public static final Codec<StateMultiPartDefinition> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                        When.CODEC.optionalFieldOf("when", When.DEFAULT).forGetter(StateMultiPartDefinition::when),
+                        StateModelVariant.CODEC.fieldOf("apply").forGetter(StateMultiPartDefinition::apply)
+                ).apply(instance, StateMultiPartDefinition::new)
+        );
+
+        public record When(Optional<List<Map<String, String>>> or, Optional<List<Map<String, String>>> and,
+                           Optional<Map<String, String>> base) {
+            public static final When DEFAULT = new When(Optional.empty(), Optional.empty(), Optional.empty());
+
+            private static final Codec<Map<String, String>> STR_MAP = SortedMapCodec.of(Codec.STRING, Codec.withAlternative(Codec.STRING, ExtraCodecs.JAVA, String::valueOf));
+            private static final Codec<List<Map<String, String>>> LIST_STR_MAP = STR_MAP.listOf();
+            public static final Codec<When> CODEC = Codec.either(
+                    LIST_STR_MAP.fieldOf("OR")
+                            .xmap(x -> new When(Optional.of(x), Optional.empty(), Optional.empty()), x -> x.or.orElseThrow()).codec(),
+                    Codec.either(
+                            LIST_STR_MAP.fieldOf("AND")
+                                    .xmap(x -> new When(Optional.empty(), Optional.of(x), Optional.empty()), x -> x.and.orElseThrow()).codec(),
+                            STR_MAP.xmap(x -> new When(Optional.empty(), Optional.empty(), Optional.of(x)), x -> x.base.orElseThrow()))
+            ).xmap(x -> x.left().orElseGet(() -> x.right().orElseThrow().left().orElseGet(x.right().flatMap(right -> right.right())::get)),
+                    x -> x.or.isPresent() ? Either.left(x)
+                            : x.and.isPresent() ? Either.right(Either.left(x)) : Either.right(Either.right(x))
+            );
+        }
     }
 }

@@ -3,7 +3,7 @@ package de.tomalbrc.filament.data.properties;
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -35,7 +35,7 @@ public class BlockProperties extends ItemProperties {
 
     public PushReaction pushReaction = PushReaction.NORMAL;
 
-    public ResourceLocation lootTable = null;
+    public Identifier lootTable = null;
 
     public boolean virtual;
     public boolean showBreakParticles = true;
@@ -79,11 +79,11 @@ public class BlockProperties extends ItemProperties {
     public record Sounds(
             float volume,
             float pitch,
-            @SerializedName("break") ResourceLocation breakSound,
-            @SerializedName("step") ResourceLocation stepSound,
-            @SerializedName("place") ResourceLocation placeSound,
-            @SerializedName("hit") ResourceLocation hitSound,
-            @SerializedName("fall") ResourceLocation fallSound
+            @SerializedName("break") Identifier breakSound,
+            @SerializedName("step") Identifier stepSound,
+            @SerializedName("place") Identifier placeSound,
+            @SerializedName("hit") Identifier hitSound,
+            @SerializedName("fall") Identifier fallSound
     ) {
         SoundType asSoundType() {
             return new SoundType(

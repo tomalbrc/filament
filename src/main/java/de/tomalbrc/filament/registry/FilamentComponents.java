@@ -15,7 +15,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -31,9 +31,9 @@ public class FilamentComponents {
     public static final DataComponentType<BackpackOptions> BACKPACK = new DataComponentType.Builder<BackpackOptions>().persistent(BackpackOptions.CODEC).build();
 
     public static void register() {
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "skin_data"), SKIN_DATA_COMPONENT);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "skin"), SKIN_COMPONENT);
-        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "backpack"), BACKPACK);
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Identifier.fromNamespaceAndPath(Constants.MOD_ID, "skin_data"), SKIN_DATA_COMPONENT);
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Identifier.fromNamespaceAndPath(Constants.MOD_ID, "skin"), SKIN_COMPONENT);
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Identifier.fromNamespaceAndPath(Constants.MOD_ID, "backpack"), BACKPACK);
 
         PolymerComponent.registerDataComponent(SKIN_COMPONENT);
         PolymerComponent.registerDataComponent(SKIN_DATA_COMPONENT);

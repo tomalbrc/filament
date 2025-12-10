@@ -16,6 +16,7 @@ import net.minecraft.network.protocol.game.ClientboundBundlePacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.server.permissions.PermissionSet;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.phys.Vec3;
@@ -60,7 +61,7 @@ public class AnimatedCosmeticHolder extends EntityHolder {
 
     @Override
     public CommandSourceStack createCommandSourceStack() {
-        return this.entity.createCommandSourceStackForNameResolution(this.getLevel()).withMaximumPermission(4);
+        return this.entity.createCommandSourceStackForNameResolution(this.getLevel()).withMaximumPermission(PermissionSet.ALL_PERMISSIONS);
     }
 
     public Vec3 getPos() {

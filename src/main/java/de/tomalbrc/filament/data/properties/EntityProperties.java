@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.data.properties;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.MobCategory;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,8 +11,8 @@ public class EntityProperties {
     public @Nullable List<Float> size;
     public @Nullable MobCategory category;
     public @Nullable Sounds sounds;
-    public @Nullable Set<ResourceLocation> food;
-    public @Nullable ResourceLocation offspring;
+    public @Nullable Set<Identifier> food;
+    public @Nullable Identifier offspring;
     public int ambientSoundInterval = 80;
     public int xpReward = 5;
     public boolean isSunSensitive = false;
@@ -28,10 +28,10 @@ public class EntityProperties {
     public boolean despawnWhenFarAway = false;
     public boolean forceEnemy = false;
 
-    public record FallSounds(ResourceLocation small, ResourceLocation big) {
+    public record FallSounds(Identifier small, Identifier big) {
 
     }
-    public record Sounds(ResourceLocation ambient, ResourceLocation swim, ResourceLocation swimSplash, ResourceLocation hurt, ResourceLocation death, FallSounds fall) {
+    public record Sounds(Identifier ambient, Identifier swim, Identifier swimSplash, Identifier hurt, Identifier death, FallSounds fall) {
 
     }
 }

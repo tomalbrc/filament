@@ -15,7 +15,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -55,7 +55,7 @@ public class ChangeVersionAndRotationState extends com.mojang.datafixers.DataFix
 
             Map<Integer, List<Dynamic<?>>> map = new HashMap<>();
             for (Dynamic<?> blockEntity : blockEntities) {
-                var id = blockEntity.get("id").read(ResourceLocation.CODEC);
+                var id = blockEntity.get("id").read(Identifier.CODEC);
                 if (id.isError())
                     continue;
 
@@ -64,7 +64,7 @@ public class ChangeVersionAndRotationState extends com.mojang.datafixers.DataFix
                     continue;
 
                 var version = v.asInt(0);
-                if (!id.getOrThrow().getNamespace().equals(ResourceLocation.DEFAULT_NAMESPACE) && version < DataFix.VERSION) {
+                if (!id.getOrThrow().getNamespace().equals(Identifier.DEFAULT_NAMESPACE) && version < DataFix.VERSION) {
                     var yData = blockEntity.get("y").asInt(0);
                     var idx = (yData - min * 16) / 16;
                     map.computeIfAbsent(idx, (x) -> new ArrayList<>()).add(blockEntity);

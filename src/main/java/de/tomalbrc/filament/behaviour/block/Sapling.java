@@ -9,7 +9,7 @@ import de.tomalbrc.filament.util.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
@@ -67,11 +67,11 @@ public class Sapling implements BlockBehaviour<Sapling.Config>, BonemealableBloc
     }
 
     @Nullable
-    private ResourceKey<ConfiguredFeature<?, ?>> key(ResourceLocation resourceLocation) {
-        if (resourceLocation == null)
+    private ResourceKey<ConfiguredFeature<?, ?>> key(Identifier Identifier) {
+        if (Identifier == null)
             return null;
 
-        return ResourceKey.create(Registries.CONFIGURED_FEATURE, resourceLocation);
+        return ResourceKey.create(Registries.CONFIGURED_FEATURE, Identifier);
     }
 
     @Override
@@ -128,11 +128,11 @@ public class Sapling implements BlockBehaviour<Sapling.Config>, BonemealableBloc
         float randomTickGrowthChance = 0.15f;
         float bonemealGrowthChance = 0.45f;
         float secondaryChance = 0.f;
-        ResourceLocation megaTree = null;
-        ResourceLocation secondaryMegaTree = null;
-        ResourceLocation tree = null;
-        ResourceLocation secondaryTree = null;
-        ResourceLocation flowers = null;
-        ResourceLocation secondaryFlowers = null;
+        Identifier megaTree = null;
+        Identifier secondaryMegaTree = null;
+        Identifier tree = null;
+        Identifier secondaryTree = null;
+        Identifier flowers = null;
+        Identifier secondaryFlowers = null;
     }
 }

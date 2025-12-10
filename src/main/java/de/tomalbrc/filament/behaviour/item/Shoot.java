@@ -5,7 +5,7 @@ import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.item.BaseProjectileEntity;
 import de.tomalbrc.filament.registry.EntityRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -14,7 +14,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -129,9 +129,9 @@ public class Shoot implements ItemBehaviour<Shoot.Config> {
         /**
          * The identifier for the projectile item
          */
-        public ResourceLocation projectile;
+        public Identifier projectile;
 
-        public ResourceLocation pickupItem;
+        public Identifier pickupItem;
 
         public boolean dispenserSupport = false;
         public boolean canPickUp = false;
@@ -140,15 +140,15 @@ public class Shoot implements ItemBehaviour<Shoot.Config> {
         /**
          * Sound effect to play when shooting
          */
-        public ResourceLocation sound = SoundEvents.TRIDENT_THROW.value().location();
+        public Identifier sound = SoundEvents.TRIDENT_THROW.value().location();
         public float volume = 1.f;
         public float pitch = 1.f;
 
-        public ResourceLocation hitSound = SoundEvents.TRIDENT_HIT.location();
+        public Identifier hitSound = SoundEvents.TRIDENT_HIT.location();
         public float hitVolume = 1.f;
         public float hitPitch = 1.f;
 
-        public ResourceLocation hitGroundSound = SoundEvents.TRIDENT_HIT_GROUND.location();
+        public Identifier hitGroundSound = SoundEvents.TRIDENT_HIT_GROUND.location();
 
         /**
          * Display context of the item display

@@ -22,7 +22,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -42,8 +42,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class DecorationRegistry {
-    private static final Reference2ObjectOpenHashMap<ResourceLocation, DecorationData> decorations = new Reference2ObjectOpenHashMap<>();
-    private static final Reference2ObjectOpenHashMap<ResourceLocation, Block> decorationBlocks = new Reference2ObjectOpenHashMap<>();
+    private static final Reference2ObjectOpenHashMap<Identifier, DecorationData> decorations = new Reference2ObjectOpenHashMap<>();
+    private static final Reference2ObjectOpenHashMap<Identifier, Block> decorationBlocks = new Reference2ObjectOpenHashMap<>();
     private static final Reference2ObjectOpenHashMap<Block, BlockEntityType<DecorationBlockEntity>> decorationBlockEntities = new Reference2ObjectOpenHashMap<>();
     public static int REGISTERED_BLOCK_ENTITIES = 0;
     public static int REGISTERED_DECORATIONS = 0;
@@ -62,7 +62,7 @@ public class DecorationRegistry {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     static public void register(DecorationData data) {
-        for (Map.Entry<ResourceLocation, DecorationData> entry : decorations.entrySet()) {
+        for (Map.Entry<Identifier, DecorationData> entry : decorations.entrySet()) {
             if (entry.getKey().equals(data.id())) {
                 var block = BuiltInRegistries.BLOCK.getValue(data.id());
                 if (block.isFilamentBlock() && block.asItem().isFilamentItem()) {
@@ -129,16 +129,16 @@ public class DecorationRegistry {
         return gen;
     }
 
-    public static DecorationData getDecorationData(ResourceLocation resourceLocation) {
-        return decorations.get(resourceLocation);
+    public static DecorationData getDecorationData(Identifier Identifier) {
+        return decorations.get(Identifier);
     }
 
     public static boolean isDecoration(BlockState blockState) {
         return blockState.getBlock() instanceof DecorationBlock;
     }
 
-    public static DecorationBlock getDecorationBlock(ResourceLocation resourceLocation) {
-        return (DecorationBlock) decorationBlocks.get(resourceLocation);
+    public static DecorationBlock getDecorationBlock(Identifier Identifier) {
+        return (DecorationBlock) decorationBlocks.get(Identifier);
     }
 
     public static BlockEntityType<DecorationBlockEntity> getBlockEntityType(BlockState blockState) {
@@ -148,8 +148,8 @@ public class DecorationRegistry {
 
     public static class DecorationDataReloadListener implements FilamentSynchronousResourceReloadListener {
         @Override
-        public ResourceLocation getFabricId() {
-            return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "decorations");
+        public Identifier getFabricId() {
+            return Identifier.fromNamespaceAndPath(Constants.MOD_ID, "decorations");
         }
 
         @Override

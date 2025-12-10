@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.behaviour.entity;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 
 import java.lang.reflect.Field;
@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EntityClassMapGenerator {
-    private static final Map<ResourceLocation, Class<?>> ENTITY_CLASS_MAP = new HashMap<>();
+    private static final Map<Identifier, Class<?>> ENTITY_CLASS_MAP = new HashMap<>();
 
     // not sure if there is a better way but this works for now
     static {
@@ -22,7 +22,7 @@ public class EntityClassMapGenerator {
                 try {
                     field.setAccessible(true);
                     EntityType<?> entityType = (EntityType<?>) field.get(null);
-                    ResourceLocation id = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
+                    Identifier id = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
 
                     Type genericType = field.getGenericType();
                     if (genericType instanceof ParameterizedType) {
@@ -38,11 +38,11 @@ public class EntityClassMapGenerator {
         }
     }
 
-    public static Class<?> getEntityClass(ResourceLocation id) {
+    public static Class<?> getEntityClass(Identifier id) {
         return ENTITY_CLASS_MAP.get(id);
     }
 
-    public static Map<ResourceLocation, Class<?>> getAllEntityClasses() {
+    public static Map<Identifier, Class<?>> getAllEntityClasses() {
         return ENTITY_CLASS_MAP;
     }
 }

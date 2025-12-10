@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.behaviour.item;
 
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemDisplayContext;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +33,7 @@ public class Cosmetic implements ItemBehaviour<Cosmetic.Config> {
         /**
          * The resource location of the animated model for the cosmetic.
          */
-        public ResourceLocation model;
+        public Identifier model;
 
         /**
          * The name of the animation to autoplay. The animation should be loopable

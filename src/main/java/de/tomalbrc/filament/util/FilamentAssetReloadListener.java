@@ -2,7 +2,7 @@ package de.tomalbrc.filament.util;
 
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.AbstractPackResources;
 import net.minecraft.server.packs.FilePackResources;
 import net.minecraft.server.packs.PackResources;
@@ -21,8 +21,8 @@ public class FilamentAssetReloadListener implements FilamentSynchronousResourceR
     Consumer<ResourcePackBuilder> lastConsumer = null;
 
     @Override
-    public ResourceLocation getFabricId() {
-        return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "assets");
+    public Identifier getFabricId() {
+        return Identifier.fromNamespaceAndPath(Constants.MOD_ID, "assets");
     }
 
     @Override
@@ -34,18 +34,18 @@ public class FilamentAssetReloadListener implements FilamentSynchronousResourceR
                     boolean isZip = packResources instanceof FilePackResources;
                     for (String namespace : clientResources) {
                         if (isZip) {
-                            listResources((FilePackResources)packResources, PackType.CLIENT_RESOURCES, namespace, "", (resourceLocation,ioSupplier) -> {
+                            listResources((FilePackResources)packResources, PackType.CLIENT_RESOURCES, namespace, "", (Identifier,ioSupplier) -> {
                                 try {
-                                    resourcePackBuilder.addData("assets/" + resourceLocation.getNamespace() + "/" + resourceLocation.getPath(), ioSupplier.get().readAllBytes());
+                                    resourcePackBuilder.addData("assets/" + Identifier.getNamespace() + "/" + Identifier.getPath(), ioSupplier.get().readAllBytes());
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }
                             });
                         }
 
-                        abstractPackResources.listResources(PackType.CLIENT_RESOURCES, isZip ? namespace : "", !isZip ? namespace : "", (resourceLocation,ioSupplier) -> {
+                        abstractPackResources.listResources(PackType.CLIENT_RESOURCES, isZip ? namespace : "", !isZip ? namespace : "", (Identifier,ioSupplier) -> {
                             try {
-                                resourcePackBuilder.addData("assets/" + resourceLocation.getPath(), ioSupplier.get().readAllBytes());
+                                resourcePackBuilder.addData("assets/" + Identifier.getPath(), ioSupplier.get().readAllBytes());
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
@@ -73,9 +73,9 @@ public class FilamentAssetReloadListener implements FilamentSynchronousResourceR
                     String string5 = zipEntry.getName();
                     if (string5.startsWith(string4)) {
                         String string6 = string5.substring(string3.length());
-                        ResourceLocation resourceLocation = ResourceLocation.tryBuild(string, string6);
-                        if (resourceLocation != null) {
-                            resourceOutput.accept(resourceLocation, IoSupplier.create(zipFile, zipEntry));
+                        Identifier id = Identifier.tryBuild(string, string6);
+                        if (id != null) {
+                            resourceOutput.accept(id, IoSupplier.create(zipFile, zipEntry));
                         }
                     }
                 }

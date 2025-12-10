@@ -7,7 +7,7 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.ShearsDispenseItemBehavior;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -98,6 +98,6 @@ public class Shears implements ItemBehaviour<Shears.Config> {
     }
 
     public static class Config {
-        public ResourceLocation sound = SoundEvents.GROWING_PLANT_CROP.location();
+        public Identifier sound = SoundEvents.GROWING_PLANT_CROP.location();
     }
 }

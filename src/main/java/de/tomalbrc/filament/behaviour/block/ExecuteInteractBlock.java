@@ -4,7 +4,7 @@ import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.util.ExecuteUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -86,7 +86,7 @@ public class ExecuteInteractBlock implements BlockBehaviour<ExecuteInteractBlock
 
         public boolean dropBlock = false;
 
-        public ResourceLocation sound;
+        public Identifier sound;
         public boolean console;
     }
 }

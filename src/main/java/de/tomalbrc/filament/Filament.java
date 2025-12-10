@@ -20,7 +20,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.kyori.adventure.platform.modcommon.MinecraftServerAudiences;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.LayeredRegistryAccess;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.RegistryLayer;
 import net.minecraft.server.level.ServerPlayer;
@@ -88,9 +88,9 @@ public class Filament implements ModInitializer {
         ServerTickEvents.END_SERVER_TICK.register(AsyncBlockTicker::tick);
         ServerChunkEvents.CHUNK_UNLOAD.register(AsyncBlockTicker::remove);
         ServerLifecycleEvents.SERVER_STOPPING.register(minecraftServer -> ADVENTURE.close());
-        ItemGroupRegistry.register(new ItemGroupData(Constants.ITEM_GROUP_ID, ResourceLocation.withDefaultNamespace("diamond"), TextUtil.formatText("<c:blue>Filament Items")));
-        ItemGroupRegistry.register(new ItemGroupData(Constants.BLOCK_GROUP_ID, ResourceLocation.withDefaultNamespace("furnace"), TextUtil.formatText("<c:blue>Filament Blocks")));
-        ItemGroupRegistry.register(new ItemGroupData(Constants.DECORATION_GROUP_ID, ResourceLocation.withDefaultNamespace("lantern"), TextUtil.formatText("<c:blue>Filament Decorations")));
+        ItemGroupRegistry.register(new ItemGroupData(Constants.ITEM_GROUP_ID, Identifier.withDefaultNamespace("diamond"), TextUtil.formatText("<c:blue>Filament Items")));
+        ItemGroupRegistry.register(new ItemGroupData(Constants.BLOCK_GROUP_ID, Identifier.withDefaultNamespace("furnace"), TextUtil.formatText("<c:blue>Filament Blocks")));
+        ItemGroupRegistry.register(new ItemGroupData(Constants.DECORATION_GROUP_ID, Identifier.withDefaultNamespace("lantern"), TextUtil.formatText("<c:blue>Filament Decorations")));
 
         FilamentReloadUtil.registerEarlyReloadListener(new FilamentAssetReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new FilamentTemplateReloadListener());

@@ -172,8 +172,8 @@ public class SimpleItem extends Item implements PolymerItem, FilamentItem, Behav
 
     @Override
     @Nullable
-    public DamageSource getDamageSource(LivingEntity livingEntity) {
-        return this.delegate.getDamageSource(livingEntity, () -> super.getDamageSource(livingEntity));
+    public DamageSource getItemDamageSource(@NotNull LivingEntity livingEntity) {
+        return this.delegate.getDamageSource(livingEntity, () -> super.getItemDamageSource(livingEntity));
     }
 
     @Override

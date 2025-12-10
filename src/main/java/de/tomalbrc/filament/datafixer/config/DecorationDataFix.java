@@ -8,7 +8,7 @@ import de.tomalbrc.filament.behaviour.block.Rotating;
 import de.tomalbrc.filament.behaviour.block.Waterloggable;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.resource.ItemResource;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.HashMap;
 
@@ -39,8 +39,8 @@ public class DecorationDataFix {
         var veryOldFormat_Model = element.getAsJsonObject().get("model");
         if (veryOldFormat_Model != null && !root.has("itemResource")) {
             try {
-                var map = new HashMap<String, ResourceLocation>();
-                map.put("default", ResourceLocation.parse(veryOldFormat_Model.getAsString()));
+                var map = new HashMap<String, Identifier>();
+                map.put("default", Identifier.parse(veryOldFormat_Model.getAsString()));
                 data.setItemResource(new ItemResource(map, null, null));
             } catch (Exception e) {
                 Filament.LOGGER.error("Could not fix legacy 'model' field");

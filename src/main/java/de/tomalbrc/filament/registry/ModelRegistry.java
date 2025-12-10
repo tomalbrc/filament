@@ -9,7 +9,7 @@ import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.FilamentSynchronousResourceReloadListener;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.apache.commons.io.FilenameUtils;
@@ -23,23 +23,23 @@ public class ModelRegistry {
     private static final String AJMODEL_SUFFIX = ".ajmodel";
     private static final String AJBP_SUFFIX = ".ajblueprint";
 
-    private static final Object2ReferenceMap<ResourceLocation, Model> ajmodels = new Object2ReferenceArrayMap<>();
+    private static final Object2ReferenceMap<Identifier, Model> ajmodels = new Object2ReferenceArrayMap<>();
 
-    public static Model getModel(ResourceLocation model) {
+    public static Model getModel(Identifier model) {
         return ajmodels.get(model);
     }
 
     public static class AjModelReloadListener implements FilamentSynchronousResourceReloadListener {
         @Override
-        public ResourceLocation getFabricId() {
-            return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "model");
+        public Identifier getFabricId() {
+            return Identifier.fromNamespaceAndPath(Constants.MOD_ID, "model");
         }
 
         @Override
         public void onResourceManagerReload(ResourceManager resourceManager) {
             var resources = resourceManager.listResources("filament/model", path -> path.getPath().endsWith(".ajmodel") || path.getPath().endsWith(".ajblueprint") || path.getPath().endsWith(".bbmodel"));
 
-            for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
+            for (Map.Entry<Identifier, Resource> entry : resources.entrySet()) {
                 try (var inputStream = entry.getValue().open()) {
                     String path = entry.getKey().getPath();
                     Model model;
@@ -61,21 +61,21 @@ public class ModelRegistry {
         }
     }
 
-    public static ResourceLocation sanitize(ResourceLocation resourceLocation) {
-        String path = resourceLocation.getPath();
+    public static Identifier sanitize(Identifier Identifier) {
+        String path = Identifier.getPath();
         String customPath = path.substring(path.contains("/") ? path.lastIndexOf('/')+1 : 0, path.lastIndexOf('.'));
-        return ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(), customPath);
+        return Identifier.fromNamespaceAndPath(Identifier.getNamespace(), customPath);
     }
 
-    public static void registerAjModel(InputStream inputStream, ResourceLocation resourceLocation) throws IOException {
-        ajmodels.put(sanitize(resourceLocation), new AjModelLoader().load(inputStream, resourceLocation.getPath()));
+    public static void registerAjModel(InputStream inputStream, Identifier Identifier) throws IOException {
+        ajmodels.put(sanitize(Identifier), new AjModelLoader().load(inputStream, Identifier.getPath()));
     }
 
-    public static void registerBbModel(InputStream inputStream, ResourceLocation resourceLocation) throws IOException {
-        ajmodels.put(sanitize(resourceLocation), new BbModelLoader().load(inputStream, resourceLocation.getPath()));
+    public static void registerBbModel(InputStream inputStream, Identifier Identifier) throws IOException {
+        ajmodels.put(sanitize(Identifier), new BbModelLoader().load(inputStream, Identifier.getPath()));
     }
 
-    public static void registerAjBlueprintModel(InputStream inputStream, ResourceLocation resourceLocation) throws IOException {
-        ajmodels.put(sanitize(resourceLocation), new AjBlueprintLoader().load(inputStream, resourceLocation.getPath()));
+    public static void registerAjBlueprintModel(InputStream inputStream, Identifier Identifier) throws IOException {
+        ajmodels.put(sanitize(Identifier), new AjBlueprintLoader().load(inputStream, Identifier.getPath()));
     }
 }

@@ -13,7 +13,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.LayeredRegistryAccess;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.RegistryLayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.biome.Biome;
@@ -26,12 +26,12 @@ import java.io.InputStreamReader;
 import java.util.Map;
 
 public class BiomeModifications {
-    public static final Map<ResourceLocation, JsonObject> TO_REGISTER = new Object2ObjectOpenHashMap<>();
+    public static final Map<Identifier, JsonObject> TO_REGISTER = new Object2ObjectOpenHashMap<>();
     private static boolean locked = false;
 
     public record AddFeaturesBiomeModifier(HolderSet<Biome> biomes, HolderSet<PlacedFeature> features,
                                            GenerationStep.Decoration step) {
-        public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "add_features");
+        public static final Identifier ID = Identifier.fromNamespaceAndPath(Constants.MOD_ID, "add_features");
         public static final MapCodec<AddFeaturesBiomeModifier> CODEC = RecordCodecBuilder.mapCodec(
                 builder -> builder
                         .group(
@@ -42,15 +42,15 @@ public class BiomeModifications {
         );
     }
 
-    public static void register(InputStream inputStream, ResourceLocation id) throws IOException {
+    public static void register(InputStream inputStream, Identifier id) throws IOException {
         var json = JsonParser.parseReader(new InputStreamReader(inputStream)).getAsJsonObject();
         TO_REGISTER.put(id, json);
     }
 
     public static void addAll(LayeredRegistryAccess<RegistryLayer> server) {
-        for (Map.Entry<ResourceLocation, JsonObject> element : TO_REGISTER.entrySet()) {
+        for (Map.Entry<Identifier, JsonObject> element : TO_REGISTER.entrySet()) {
             var type = element.getValue().get("type").getAsJsonPrimitive().getAsString();
-            if (ResourceLocation.parse(type).equals(AddFeaturesBiomeModifier.ID)) {
+            if (Identifier.parse(type).equals(AddFeaturesBiomeModifier.ID)) {
                 var dataResult = AddFeaturesBiomeModifier.CODEC.decoder().decode(RegistryOps.create(JsonOps.INSTANCE, server.compositeAccess()), element.getValue());
                 var modifier = dataResult.getOrThrow().getFirst();
                 addFeatureModifier(modifier);
@@ -77,8 +77,8 @@ public class BiomeModifications {
 
     public static class BiomeModificationsDataReloadListener implements FilamentSynchronousResourceReloadListener {
         @Override
-        public ResourceLocation getFabricId() {
-            return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "biome_modifications");
+        public Identifier getFabricId() {
+            return Identifier.fromNamespaceAndPath(Constants.MOD_ID, "biome_modifications");
         }
 
         @Override

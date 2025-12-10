@@ -11,7 +11,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -22,8 +22,8 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 public class ItemGroupRegistry {
-    public static final Object2ObjectLinkedOpenHashMap<ResourceLocation, List<Item>> TAB_GROUP_ITEMS = new Object2ObjectLinkedOpenHashMap<>();
-    public static final Object2ObjectLinkedOpenHashMap<ResourceLocation, CreativeModeTab> TAB_GROUPS = new Object2ObjectLinkedOpenHashMap<>();
+    public static final Object2ObjectLinkedOpenHashMap<Identifier, List<Item>> TAB_GROUP_ITEMS = new Object2ObjectLinkedOpenHashMap<>();
+    public static final Object2ObjectLinkedOpenHashMap<Identifier, CreativeModeTab> TAB_GROUPS = new Object2ObjectLinkedOpenHashMap<>();
 
     public static void register(InputStream inputStream) throws IOException {
         List<ItemGroupData> data = Json.GSON.fromJson(new InputStreamReader(inputStream), TypeToken.getParameterized(List.class, ItemGroupData.class).getType());
@@ -49,7 +49,7 @@ public class ItemGroupRegistry {
         }
     }
 
-    public static void addItem(ResourceLocation identifier, Item item) {
+    public static void addItem(Identifier identifier, Item item) {
         TAB_GROUP_ITEMS.putIfAbsent(identifier, new ObjectArrayList<>());
         TAB_GROUP_ITEMS.get(identifier).add(item);
 
@@ -60,8 +60,8 @@ public class ItemGroupRegistry {
 
     public static class ItemGroupDataReloadListener implements FilamentSynchronousResourceReloadListener {
         @Override
-        public ResourceLocation getFabricId() {
-            return ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "item_groups");
+        public Identifier getFabricId() {
+            return Identifier.fromNamespaceAndPath(Constants.MOD_ID, "item_groups");
         }
 
         @Override
