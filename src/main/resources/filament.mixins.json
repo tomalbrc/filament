@@ -80,7 +80,9 @@
     "component.skin.ItemStackMixin",
     "datafix.ChunkStorageMixin",
     "decoration.FlowingFluidMixin",
-    "decoration.LevelChunkMixin"
+    "decoration.LevelChunkMixin",
+    "injection.BlockMixin",
+    "injection.ItemMixin"
   ],
   "injectors": {
     "defaultRequire": 1,
