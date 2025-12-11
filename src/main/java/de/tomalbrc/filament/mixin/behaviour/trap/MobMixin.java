@@ -1,6 +1,5 @@
 package de.tomalbrc.filament.mixin.behaviour.trap;
 
-import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.item.Trap;
 import net.minecraft.core.particles.ParticleTypes;
@@ -22,8 +21,8 @@ public class MobMixin {
         ItemStack itemStack = player.getItemInHand(interactionHand);
 
         Mob mob = Mob.class.cast(this);
-        if (itemStack.getItem() instanceof BehaviourHolder behaviourHolder && behaviourHolder.getBehaviours().has(Behaviours.TRAP) && !player.getCooldowns().isOnCooldown(itemStack)) {
-            Trap trap = behaviourHolder.get(Behaviours.TRAP);
+        if (itemStack.getItem().isFilamentItem() && itemStack.getItem().getBehaviours().has(Behaviours.TRAP) && !player.getCooldowns().isOnCooldown(itemStack)) {
+            Trap trap = itemStack.getItem().get(Behaviours.TRAP);
             assert trap != null;
             boolean canUse = trap.canUseOn(mob);
 

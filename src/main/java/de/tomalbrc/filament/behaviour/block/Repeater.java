@@ -1,7 +1,6 @@
 package de.tomalbrc.filament.behaviour.block;
 
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
-import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -96,7 +95,7 @@ public class Repeater implements BlockBehaviour<Repeater.Config> {
     }
 
     public static boolean isRelay(BlockState blockState) {
-        return blockState.getBlock() instanceof BehaviourHolder behaviourHolder && behaviourHolder.has(Behaviours.REPEATER);
+        return blockState.getBlock().isFilamentBlock() && blockState.getBlock().has(Behaviours.REPEATER);
     }
 
     public boolean shouldPrioritize(BlockGetter blockGetter, BlockPos blockPos, BlockState blockState) {
