@@ -114,6 +114,9 @@ Models are placed in `data/mynamespace/filament/model/mymodel.bbmodel`.
 
 You would reference it as `mynamespace:mymodel` in the `model` field.
 
+Animations for placed blocks can be triggered by modifying the block entity's Animation NBT field:
+`/data modify block ~ ~ ~ Animation set value myAnimationName`
+
 ~~~admonish info "Configurable Fields"
 - `model`: The name of the animated model associated with this animation (if applicable).
 - `autoplay`: The name of the animation to autoplay (if specified).
@@ -270,8 +273,7 @@ The `command` or `commands` are run as player but with elevated permissions, opt
 
 This behaviour runs a command, plays an animation and runs a command once the animation finished.
 
-It behaves similar to the `lock` behaviour, but will always
-It's similar to the `execute` item-behaviour or `interact_execute` decoration behaviour.
+It behaves similar to the `lock` behaviour, but will always run, even with specified key. 
 
 The command will only run once if a key is specified, the key can be empty to always run the commands/animations on
 interaction.
@@ -287,7 +289,7 @@ The `command` or `commands` are run as player but with elevated permissions, opt
 - `discard`: Specifies whether the decoration should be destroyed after interacting with it. Defaults to `false`
 - `animation`: Name of the animation to play when interacting.
 - `animationPost`: Name of animation to player after the first one ended
-- `command`: Command to execute when the lock is successfully unlocked (if a key is specified, otherwise the command is always run).
+- `command`: Command to execute when the player holds the correct key (if a key is specified, otherwise the command is always run).
 - `commands`: List of commands, as above
 - `atBlock`: false/true flag whether the command should be run at the blocks' position
 - `commandPostAnimation`: Command to run when the first animation stops playing
