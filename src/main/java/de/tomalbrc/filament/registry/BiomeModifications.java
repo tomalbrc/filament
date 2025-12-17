@@ -52,7 +52,53 @@ public class BiomeModifications {
 
     public static void register(InputStream inputStream, ResourceLocation id) throws IOException {
         var json = JsonParser.parseReader(new InputStreamReader(inputStream)).getAsJsonObject();
+        validateBiomesField(json, id);
         TO_REGISTER.put(id, json);
+    }
+
+    private static void validateBiomesField(JsonObject json, ResourceLocation fileId) {
+        JsonElement biomesElement = json.get("biomes");
+        if (biomesElement == null) {
+            Filament.LOGGER.warn("Biome modification \"{}\" has no 'biomes' field, will match all biomes", fileId);
+            return;
+        }
+
+        if (biomesElement.isJsonPrimitive()) {
+            validateSingleBiomeEntry(biomesElement.getAsString(), fileId);
+        } else if (biomesElement.isJsonArray()) {
+            JsonArray array = biomesElement.getAsJsonArray();
+            if (array.isEmpty()) {
+                Filament.LOGGER.warn("Biome modification \"{}\" has empty 'biomes' array, will match all biomes",
+                        fileId);
+            }
+            for (JsonElement elem : array) {
+                if (elem.isJsonPrimitive()) {
+                    validateSingleBiomeEntry(elem.getAsString(), fileId);
+                } else {
+                    Filament.LOGGER.error("Biome modification \"{}\" has invalid biome entry (not a string): {}",
+                            fileId, elem);
+                }
+            }
+        } else {
+            Filament.LOGGER.error(
+                    "Biome modification \"{}\" has invalid 'biomes' field type (expected string or array): {}", fileId,
+                    biomesElement);
+        }
+    }
+
+    private static void validateSingleBiomeEntry(String value, ResourceLocation fileId) {
+        if (value == null || value.isBlank()) {
+            Filament.LOGGER.error("Biome modification \"{}\" has empty biome entry", fileId);
+            return;
+        }
+
+        String toValidate = value.startsWith("#") ? value.substring(1) : value;
+
+        if (ResourceLocation.tryParse(toValidate) == null) {
+            Filament.LOGGER.error("Biome modification \"{}\" has invalid biome/tag identifier: \"{}\"", fileId, value);
+        } else {
+            Filament.LOGGER.info("Biome modification \"{}\" registered biome selector: {}", fileId, value);
+        }
     }
 
     public static void addAll(LayeredRegistryAccess<RegistryLayer> server) {
@@ -88,12 +134,16 @@ public class BiomeModifications {
         List<Predicate<BiomeSelectionContext>> predicates = new ArrayList<>();
 
         if (biomesElement.isJsonPrimitive()) {
-            predicates.add(parseSingleBiomeOrTag(biomesElement.getAsString()));
+            var predicate = parseSingleBiomeOrTag(biomesElement.getAsString());
+            if (predicate != null)
+                predicates.add(predicate);
         } else if (biomesElement.isJsonArray()) {
             JsonArray array = biomesElement.getAsJsonArray();
             for (JsonElement elem : array) {
                 if (elem.isJsonPrimitive()) {
-                    predicates.add(parseSingleBiomeOrTag(elem.getAsString()));
+                    var predicate = parseSingleBiomeOrTag(elem.getAsString());
+                    if (predicate != null)
+                        predicates.add(predicate);
                 }
             }
         }
@@ -113,14 +163,23 @@ public class BiomeModifications {
     }
 
     private static Predicate<BiomeSelectionContext> parseSingleBiomeOrTag(String value) {
-        if (value.startsWith("#")) {
-            String tagPath = value.substring(1);
-            ResourceLocation tagId = ResourceLocation.parse(tagPath);
-            TagKey<Biome> tagKey = TagKey.create(Registries.BIOME, tagId);
-            return BiomeSelectors.tag(tagKey);
-        } else {
-            ResourceLocation biomeId = ResourceLocation.parse(value);
-            return ctx -> ctx.getBiomeKey().location().equals(biomeId);
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+
+        try {
+            if (value.startsWith("#")) {
+                String tagPath = value.substring(1);
+                ResourceLocation tagId = ResourceLocation.parse(tagPath);
+                TagKey<Biome> tagKey = TagKey.create(Registries.BIOME, tagId);
+                return BiomeSelectors.tag(tagKey);
+            } else {
+                ResourceLocation biomeId = ResourceLocation.parse(value);
+                return ctx -> ctx.getBiomeKey().location().equals(biomeId);
+            }
+        } catch (Exception e) {
+            Filament.LOGGER.error("Failed to parse biome selector \"{}\": {}", value, e.getMessage());
+            return null;
         }
     }
 
