@@ -212,7 +212,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
                         if (data.properties().showBreakParticles)
                             DecorationUtil.showBreakParticle((ServerLevel) this.level, data.properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase.asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
                         this.getLevel().destroyBlock(blockPos, false);
-                        this.getLevel().removeBlockEntity(this.getBlockPos());
+                        this.getLevel().removeBlockEntity(blockPos);
                     }
                 });
             } else {
