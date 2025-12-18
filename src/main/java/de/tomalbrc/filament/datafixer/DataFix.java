@@ -6,6 +6,7 @@ import com.mojang.datafixers.schemas.Schema;
 import de.tomalbrc.filament.datafixer.fix.ChangeVersionAndRotationState;
 import de.tomalbrc.filament.datafixer.schema.FilamentNamedspacedSchema;
 import de.tomalbrc.filament.datafixer.schema.Version1;
+import de.tomalbrc.filament.util.FilamentConfig;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +20,7 @@ public class DataFix {
 
     public static float getVisualRotationYInDegrees(Direction direction, int rotation) {
         int i = direction.getAxis().isVertical() ? 90 * direction.getAxisDirection().getStep() : 0;
-        return (float) Mth.wrapDegrees(180 + direction.get2DDataValue() * 90 + rotation * 45 + i);
+        return (float) Mth.wrapDegrees((FilamentConfig.getInstance().alternativeBlockPlacement ? 0 : 180) + direction.get2DDataValue() * 90 + rotation * 45 + i);
     }
 
     public static @NotNull DataFixer getDataFixer() {
