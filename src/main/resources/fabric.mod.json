@@ -5,7 +5,41 @@
   "name": "filament",
   "description": "",
   "authors": ["tomalbrc"],
-  "contributors": ["Furqit", "CapybaraIsSwagDev", "drakosoldier298", "Skyy", "FlamedDogo99"],
+  "contributors": [
+    {
+      "name": "Furqit",
+      "contact": {
+        "homepage": "https://github.com/Furqit"
+      }
+    },
+    {
+      "name": "CapybaraIsSwagDev",
+      "contact": {
+        "homepage": "https://github.com/CapybaraIsSwagDev"
+      }
+    },
+    {
+      "name": "drakosoldier298",
+      "contact": {
+        "homepage": "https://github.com/drakosoldier298"
+      }
+    },
+    {
+      "name": "Skyy"
+    },
+    {
+      "name": "FlamedDogo99",
+      "contact": {
+        "homepage": "https://github.com/FlamedDogo99"
+      }
+    },
+    {
+      "name": "ssquadteam",
+      "contact": {
+        "homepage": "https://github.com/ssquadteam"
+      }
+    }
+  ],
   "icon": "filament-icon@256.png",
   "contact": {
     "repo": "https://github.com/tomalbrc/filament"
