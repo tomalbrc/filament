@@ -10,7 +10,7 @@ import de.tomalbrc.filament.gui.VirtualChestMenu;
 import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.util.mixin.RegistryUnfreezer;
 import eu.pb4.polymer.core.api.item.PolymerItemUtils;
-import eu.pb4.polymer.core.impl.interfaces.PolymerIdList;
+import eu.pb4.polymer.core.impl.interfaces.PolymerIdMapper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -83,8 +83,8 @@ public class Util {
         ((RegistryUnfreezer) BuiltInRegistries.ENTITY_TYPE).filament$freeze();
         ((RegistryUnfreezer) BuiltInRegistries.CREATIVE_MODE_TAB).filament$freeze();
 
-        ((PolymerIdList<?>) Block.BLOCK_STATE_REGISTRY).polymer$reorderEntries();
-        ((PolymerIdList<?>) Fluid.FLUID_STATE_REGISTRY).polymer$reorderEntries();
+        ((PolymerIdMapper<?>) Block.BLOCK_STATE_REGISTRY).polymer$reorderEntries();
+        ((PolymerIdMapper<?>) Fluid.FLUID_STATE_REGISTRY).polymer$reorderEntries();
     }
 
     @Deprecated(forRemoval = true)
