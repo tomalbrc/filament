@@ -10,7 +10,7 @@ import eu.pb4.polymer.virtualentity.api.attachment.BlockAwareAttachment;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
 import eu.pb4.polymer.virtualentity.api.attachment.HolderAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
-import eu.pb4.polymer.virtualentity.mixin.accessors.ItemDisplayEntityAccessor;
+import eu.pb4.polymer.virtualentity.mixin.accessors.ItemDisplayAccessor;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
@@ -92,7 +92,7 @@ public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementH
             var polymerBlockModel = meta.polymerBlockModel();
             this.displayElement.setLeftRotation(new Quaternionf().rotateX(polymerBlockModel.x() * Mth.DEG_TO_RAD).rotateY((-polymerBlockModel.y()+180) * Mth.DEG_TO_RAD));
             if (update) {
-                this.displayElement.getDataTracker().setDirty(ItemDisplayEntityAccessor.getITEM(), true);
+                this.displayElement.getDataTracker().setDirty(ItemDisplayAccessor.getDATA_ITEM_STACK_ID(), true);
                 this.displayElement.tick();
             }
         }

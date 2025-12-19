@@ -8,8 +8,8 @@ import eu.pb4.polymer.virtualentity.api.VirtualEntityUtils;
 import eu.pb4.polymer.virtualentity.api.attachment.EntityAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.tracker.EntityTrackedData;
-import eu.pb4.polymer.virtualentity.mixin.accessors.DisplayEntityAccessor;
-import eu.pb4.polymer.virtualentity.mixin.accessors.ItemDisplayEntityAccessor;
+import eu.pb4.polymer.virtualentity.mixin.accessors.DisplayAccessor;
+import eu.pb4.polymer.virtualentity.mixin.accessors.ItemDisplayAccessor;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -99,10 +99,10 @@ public class TridentEntity extends ThrownTrident implements PolymerEntity {
     @Override
     public void modifyRawTrackedData(List<SynchedEntityData.DataValue<?>> data, ServerPlayer player, boolean initial) {
         data.add(SynchedEntityData.DataValue.create(EntityTrackedData.FLAGS, (byte) (1 << EntityTrackedData.INVISIBLE_FLAG_INDEX)));
-        data.add(SynchedEntityData.DataValue.create(ItemDisplayEntityAccessor.getITEM(), getPickupItem()));
-        data.add(SynchedEntityData.DataValue.create(DisplayEntityAccessor.getTELEPORT_DURATION(), 2));
-        data.add(SynchedEntityData.DataValue.create(DisplayEntityAccessor.getLEFT_ROTATION(), new Quaternionf().rotateZ(Mth.HALF_PI).rotateX(-Mth.HALF_PI).rotateY(Mth.PI).normalize()));
-        data.add(SynchedEntityData.DataValue.create(DisplayEntityAccessor.getTRANSLATION(), new Vector3f(0.f, -1.0f, 0.f).rotateX(-Mth.HALF_PI)));
+        data.add(SynchedEntityData.DataValue.create(ItemDisplayAccessor.getDATA_ITEM_STACK_ID(), getPickupItem()));
+        data.add(SynchedEntityData.DataValue.create(DisplayAccessor.getDATA_POS_ROT_INTERPOLATION_DURATION_ID(), 2));
+        data.add(SynchedEntityData.DataValue.create(DisplayAccessor.getDATA_LEFT_ROTATION_ID(), new Quaternionf().rotateZ(Mth.HALF_PI).rotateX(-Mth.HALF_PI).rotateY(Mth.PI).normalize()));
+        data.add(SynchedEntityData.DataValue.create(DisplayAccessor.getDATA_TRANSLATION_ID(), new Vector3f(0.f, -1.0f, 0.f).rotateX(-Mth.HALF_PI)));
     }
 
     @Override

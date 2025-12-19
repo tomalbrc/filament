@@ -4,7 +4,6 @@ import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.mixin.accessor.ItemFrameAccessor;
 import de.tomalbrc.filament.util.DecorationUtil;
 import de.tomalbrc.filament.util.Util;
-import eu.pb4.polymer.core.mixin.entity.ItemFrameEntityAccessor;
 import eu.pb4.polymer.virtualentity.api.elements.GenericEntityElement;
 import eu.pb4.polymer.virtualentity.api.tracker.DataTrackerLike;
 import eu.pb4.polymer.virtualentity.api.tracker.EntityTrackedData;
@@ -39,7 +38,7 @@ public class ItemFrameElement extends GenericEntityElement {
         this.glow = decorationData.properties().glow;
 
         this.dataTracker.set(EntityTrackedData.FLAGS, (byte) 0);
-        this.dataTracker.set(ItemFrameEntityAccessor.getITEM_STACK(), itemStack);
+        this.dataTracker.set(ItemFrameAccessor.getDATA_ITEM(), itemStack);
         this.dataTracker.set(ItemFrameAccessor.getDATA_ROTATION(), rotation);
         this.setInvisible(true);
 
@@ -87,6 +86,6 @@ public class ItemFrameElement extends GenericEntityElement {
     }
 
     public void setItem(ItemStack item) {
-        this.dataTracker.set(ItemFrameEntityAccessor.getITEM_STACK(), item.copy());
+        this.dataTracker.set(ItemFrameAccessor.getDATA_ITEM(), item.copy());
     }
 }
