@@ -168,13 +168,13 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
         if (adventureCheck || !CommonProtection.canInteractBlock(player.level(), BlockPos.containing(location), player.getGameProfile(), player))
             return InteractionResult.FAIL;
 
-        if (this.main == null && level != null) {
-            Filament.LOGGER.error("Destroying invalid decoration block: ");
-            level.removeBlock(getBlockPos(), false);
-        }
-
         if (!this.isMain()) {
-            return this.getMainBlockEntity().decorationInteract(player, interactionHand, location);
+            if (level != null && !isMain() && !(this.level.getBlockEntity(this.mainPosition()) instanceof DecorationBlockEntity)) {
+                Filament.LOGGER.error("Destroying invalid decoration block: ");
+                level.removeBlock(getBlockPos(), false);
+            } else {
+                return this.getMainBlockEntity().decorationInteract(player, interactionHand, location);
+            }
         }
 
         DecorationData decorationData = this.getDecorationData();
