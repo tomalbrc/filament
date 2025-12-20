@@ -13,7 +13,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-/**fi
+/**
  * Animation behaviour for decoration using animated java models
  */
 public class Animation implements DecorationBehaviour<Animation.Config> {

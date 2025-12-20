@@ -133,6 +133,7 @@ public class AnimatedDecorationHolder extends PositionedHolder implements Filame
 
     @Override
     public void playAnimation(String animation, int priority, Runnable onFinish) {
+        this.getModel().animations().keySet().forEach(this.getAnimator()::stopAnimation);
         this.getAnimator().playAnimation(animation, priority, onFinish);
     }
 
