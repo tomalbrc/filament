@@ -131,6 +131,7 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
 
     @Override
     public void playAnimation(ServerPlayer serverPlayer, String animation, int priority, Consumer<ServerPlayer> onFinish) {
+        this.getModel().animations().keySet().forEach(this.getAnimator()::stopAnimation);
         this.getAnimator().playAnimation(serverPlayer, animation, priority, onFinish);
     }
 

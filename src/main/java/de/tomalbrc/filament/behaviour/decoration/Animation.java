@@ -12,7 +12,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.ValueInput;
 import org.jetbrains.annotations.NotNull;
 
-/**fi
+/**
  * Animation behaviour for decoration using animated java models
  */
 public class Animation implements DecorationBehaviour<Animation.Config> {
