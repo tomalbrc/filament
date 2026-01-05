@@ -102,7 +102,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
         if (!this.getBlock().isEnabled(level.enabledFeatures()) || player == null || !this.mayPlace(player, direction, itemStack, relativeBlockPos) || !propertyPlaceCheck) {
             return InteractionResult.FAIL;
         } else if ((forceReplace || this.canPlaceAt(level, relativeBlockPos, angle)) && itemStack.getItem() instanceof DecorationItem) {
-            DecorationItem.place(itemStack, level, blockState, relativeBlockPos, actualDir, direction, useOnContext, forceReplace);
+            DecorationItem.place(itemStack, level, blockState, relativeBlockPos, actualDir, direction, useOnContext);
 
             player.startUsingItem(useOnContext.getHand());
             itemStack.consume(1, player);
@@ -141,11 +141,12 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
         return true;
     }
 
-    public static void place(ItemStack itemStack, Level level, BlockState blockState, BlockPos blockPos, Direction direction, UseOnContext useOnContext) {
-        place(itemStack, level, blockState, blockPos, direction, direction, useOnContext, false);
+    @Deprecated(forRemoval = true)
+    public static void place(ItemStack itemStack, Level level, BlockState blockState, BlockPos blockPos, Direction direction, UseOnContext useOnContext, boolean q) {
+        place(itemStack, level, blockState, blockPos, direction, direction, useOnContext);
     }
 
-    public static void place(ItemStack itemStack, Level level, BlockState blockState, BlockPos blockPos, Direction placeDirection, Direction direction, UseOnContext useOnContext, boolean forceReplace) {
+    public static void place(ItemStack itemStack, Level level, BlockState blockState, BlockPos blockPos, Direction placeDirection, Direction direction, UseOnContext useOnContext) {
         if (!(itemStack.getItem() instanceof DecorationItem decorationItem)) {
             Filament.LOGGER.error("Tried to place non-decoration item as decoration! Item: {}", itemStack.getItem().builtInRegistryHolder().key().identifier());
             return;
@@ -168,7 +169,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
                     if (useOnContext.getPlayer() != null) CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) useOnContext.getPlayer(), blockPos, itemStack);
                 }
 
-                if (!forceReplace && decorationData.requiresEntityBlock() && level.getBlockEntity(blockPos2) instanceof DecorationBlockEntity decorationBlockEntity) {
+                if (decorationData.requiresEntityBlock() && level.getBlockEntity(blockPos2) instanceof DecorationBlockEntity decorationBlockEntity) {
                     decorationBlockEntity.setMain(new BlockPos(blockPos2).subtract(blockPos));
                     decorationBlockEntity.setDirection(direction);
                     if (decorationBlockEntity.isMain()) updateComponents(decorationBlockEntity, itemStack);
@@ -180,7 +181,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
             blockState.getBlock().setPlacedBy(level, blockPos, blockState, useOnContext.getPlayer(), itemStack);
             if (useOnContext.getPlayer() != null) CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) useOnContext.getPlayer(), blockPos, itemStack);
 
-            if (!forceReplace && decorationData.requiresEntityBlock() && level.getBlockEntity(blockPos) instanceof DecorationBlockEntity decorationBlockEntity) {
+            if (decorationData.requiresEntityBlock() && level.getBlockEntity(blockPos) instanceof DecorationBlockEntity decorationBlockEntity) {
                 decorationBlockEntity.setMain(BlockPos.ZERO);
                 decorationBlockEntity.setDirection(direction);
                 updateComponents(decorationBlockEntity, itemStack);
