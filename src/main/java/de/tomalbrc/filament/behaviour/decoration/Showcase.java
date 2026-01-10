@@ -169,8 +169,10 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
                 for (int i = 0; i < config.elements.size(); i++) {
                     Showcase.ShowcaseMeta showcase = config.elements.get(i);
                     if (showcase != null && !getShowcaseItemStack(showcase).isEmpty())
-                        showcaseTag.put(ITEM + 1, ItemStack.CODEC.encodeStart(lookup.createSerializationContext(NbtOps.INSTANCE), getShowcaseItemStack(showcase)).getOrThrow());
+                        showcaseTag.put(ITEM + i, ItemStack.CODEC.encodeStart(lookup.createSerializationContext(NbtOps.INSTANCE), getShowcaseItemStack(showcase)).getOrThrow());
                 }
+
+                output.put(SHOWCASE_KEY, showcaseTag);
             }
         }
     }
