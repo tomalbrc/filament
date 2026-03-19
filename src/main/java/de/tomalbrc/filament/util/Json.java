@@ -24,9 +24,9 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
@@ -39,18 +39,23 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.jspecify.annotations.NonNull;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -90,7 +95,68 @@ public class Json {
             // TODO: allow behaviours to specify codec/deserializer
             .registerTypeHierarchyAdapter(Showcase.Config.class, new Showcase.Config.ConfigDeserializer())
 
+            //.registerTypeAdapterFactory(new SkipDefaultsTypeAdapterFactory())
             .create();
+
+
+    public static class SkipDefaultsTypeAdapterFactory implements TypeAdapterFactory {
+        private static JsonElement prune(JsonElement element) {
+            if (element == null || element.isJsonNull()) {
+                return null;
+            }
+
+            if (element.isJsonPrimitive()) {
+                JsonPrimitive p = element.getAsJsonPrimitive();
+
+                if (p.isBoolean()) {
+                    return p.getAsBoolean() ? p : null;
+                }
+
+                if (p.isString()) {
+                    return p.getAsString().isEmpty() ? null : p;
+                }
+
+                if (p.isNumber()) {
+                    try {
+                        BigDecimal n = new BigDecimal(p.getAsNumber().toString());
+                        return n.compareTo(BigDecimal.ZERO) == 0 ? null : p;
+                    } catch (NumberFormatException ignored) {
+                        return p;
+                    }
+                }
+
+                return p;
+            }
+
+            return element;
+        }
+
+        @Override
+        public <T> TypeAdapter<T> create(Gson gson, com.google.gson.reflect.TypeToken<T> type) {
+            TypeAdapter<T> delegate = gson.getDelegateAdapter(this, type);
+            TypeAdapter<JsonElement> jsonElementAdapter = gson.getAdapter(JsonElement.class);
+
+            return new TypeAdapter<>() {
+                @Override
+                public void write(com.google.gson.stream.JsonWriter out, T value) throws IOException {
+                    if (value == null) {
+                        out.nullValue();
+                        return;
+                    }
+
+                    JsonElement tree = delegate.toJsonTree(value);
+                    JsonElement cleaned = prune(tree);
+                    if (cleaned == null || cleaned.isJsonNull()) out.nullValue();
+                    else jsonElementAdapter.write(out, cleaned);
+                }
+
+                @Override
+                public T read(com.google.gson.stream.JsonReader in) throws IOException {
+                    return delegate.read(in);
+                }
+            };
+        }
+    }
 
     public static List<InputStream> yamlToJson(InputStream inputStream) {
         Yaml yaml = new Yaml();
@@ -108,7 +174,6 @@ public class Json {
         }
         return list;
     }
-
 
     public static InputStream camelToSnakeCase(InputStream inputStream) {
         Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
@@ -156,7 +221,7 @@ public class Json {
         return snakeCase.toString();
     }
 
-    public static class BlockStateMappedPropertyDeserializer<T> implements JsonDeserializer<BlockStateMappedProperty<T>> {
+    public static class BlockStateMappedPropertyDeserializer<T> implements JsonDeserializer<BlockStateMappedProperty<T>>, JsonSerializer<BlockStateMappedProperty<T>> {
         @Override
         public BlockStateMappedProperty<T> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             if (json.isJsonPrimitive()) {
@@ -171,6 +236,23 @@ public class Json {
             }
 
             throw new JsonParseException("Invalid format for MappedProperty");
+        }
+
+        @Override
+        public JsonElement serialize(BlockStateMappedProperty<T> src, Type typeOfSrc, JsonSerializationContext context) {
+            try {
+                for (Field field : src.getClass().getDeclaredFields()) {
+                    field.setAccessible(true);
+                    Object val = field.get(src);
+                    if (val instanceof Map) {
+                        return context.serialize(val);
+                    } else if (val != null) {
+                        return context.serialize(val);
+                    }
+                }
+            } catch (Exception ignored) {
+            }
+            return new JsonObject();
         }
 
         @NotNull
@@ -196,7 +278,7 @@ public class Json {
         }
     }
 
-    public static class BlockStateDeserializer implements JsonDeserializer<BlockState> {
+    public static class BlockStateDeserializer implements JsonDeserializer<BlockState>, JsonSerializer<BlockState> {
         @Override
         public BlockState deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             String name = json.getAsString().toLowerCase();
@@ -210,9 +292,32 @@ public class Json {
 
             return parsed.blockState();
         }
+
+        @Override
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        public JsonElement serialize(BlockState src, Type typeOfSrc, JsonSerializationContext context) {
+            StringBuilder builder = new StringBuilder();
+            builder.append(BuiltInRegistries.BLOCK.getKey(src.getBlock()).toString());
+            if (!src.getValues().isEmpty()) {
+                builder.append('[');
+                boolean first = true;
+                for (Map.Entry<Property<?>, Comparable<?>> entry : src.getValues().entrySet()) {
+                    if (!first) {
+                        builder.append(',');
+                    }
+                    first = false;
+                    Property property = entry.getKey();
+                    builder.append(property.getName())
+                            .append('=')
+                            .append(property.getName(entry.getValue()));
+                }
+                builder.append(']');
+            }
+            return new JsonPrimitive(builder.toString());
+        }
     }
 
-    public static class LowercaseEnumDeserializer<T extends Enum<T>> implements JsonDeserializer<T> {
+    public static class LowercaseEnumDeserializer<T extends Enum<T>> implements JsonDeserializer<T>, JsonSerializer<T> {
 
         private final Class<T> enumClass;
 
@@ -231,9 +336,14 @@ public class Json {
 
             throw new JsonParseException("Invalid " + enumClass.getSimpleName() + " value: " + value);
         }
+
+        @Override
+        public JsonElement serialize(T src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.name().toLowerCase());
+        }
     }
 
-    public static class PolymerBlockModelDeserializer implements JsonDeserializer<PolymerBlockModel> {
+    public static class PolymerBlockModelDeserializer implements JsonDeserializer<PolymerBlockModel>, JsonSerializer<PolymerBlockModel> {
         @Override
         public PolymerBlockModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             if (json.isJsonPrimitive()) {
@@ -253,9 +363,24 @@ public class Json {
 
             throw new JsonParseException("Invalid PolymerBlockModel value: " + json);
         }
+
+        @Override
+        public JsonElement serialize(PolymerBlockModel src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject object = new JsonObject();
+            try {
+                object.addProperty("model", src.model().toString());
+                if (src.x() != 0) object.addProperty("x", src.x());
+                if (src.y() != 0) object.addProperty("y", src.y());
+                if (src.uvLock()) object.addProperty("uvLock", true);
+                if (src.weight() != 1) object.addProperty("weight", src.weight());
+            } catch (Exception e) {
+                return new JsonPrimitive(src.toString());
+            }
+            return object;
+        }
     }
 
-    public static class TextureBlockModelDeserializer implements JsonDeserializer<BlockResource.TextureBlockModel> {
+    public static class TextureBlockModelDeserializer implements JsonDeserializer<BlockResource.TextureBlockModel>, JsonSerializer<BlockResource.TextureBlockModel> {
         @Override
         public BlockResource.TextureBlockModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             if (json.isJsonObject()) {
@@ -278,9 +403,23 @@ public class Json {
 
             throw new JsonParseException("Invalid TextureBlockModel value: " + json);
         }
+
+        @Override
+        public JsonElement serialize(BlockResource.TextureBlockModel src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject object = new JsonObject();
+            try {
+                object.add("textures", context.serialize(src.textures()));
+                if (src.x() != 0) object.addProperty("x", src.x());
+                if (src.y() != 0) object.addProperty("y", src.y());
+                if (src.uvLock()) object.addProperty("uvLock", true);
+                if (src.weight() != 1) object.addProperty("weight", src.weight());
+            } catch (Exception ignored) {
+            }
+            return object;
+        }
     }
 
-    public static class QuaternionfDeserializer implements JsonDeserializer<Quaternionf> {
+    public static class QuaternionfDeserializer implements JsonDeserializer<Quaternionf>, JsonSerializer<Quaternionf> {
         @Override
         public Quaternionf deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
             JsonArray jsonArray = jsonElement.getAsJsonArray();
@@ -295,23 +434,43 @@ public class Json {
 
             return new Quaternionf().rotateXYZ(x * Mth.DEG_TO_RAD, y * Mth.DEG_TO_RAD, z * Mth.DEG_TO_RAD);
         }
+
+        @Override
+        public JsonElement serialize(Quaternionf src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonArray array = new JsonArray();
+            Vector3f euler = src.getEulerAnglesXYZ(new Vector3f());
+            array.add(euler.x * Mth.RAD_TO_DEG);
+            array.add(euler.y * Mth.RAD_TO_DEG);
+            array.add(euler.z * Mth.RAD_TO_DEG);
+            return array;
+        }
     }
 
-    private record RegistryDeserializer<T>(Registry<T> registry) implements JsonDeserializer<T> {
+    private record RegistryDeserializer<T>(Registry<T> registry) implements JsonDeserializer<T>, JsonSerializer<T> {
         @Override
         public T deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
             return this.registry.getValue(Identifier.parse(element.getAsString()));
         }
+
+        @Override
+        public JsonElement serialize(T src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(this.registry.getKey(src).toString());
+        }
     }
 
-    private record ComponentDeserializer() implements JsonDeserializer<Component> {
+    private record ComponentDeserializer() implements JsonDeserializer<Component>, JsonSerializer<Component> {
         @Override
         public Component deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
             return TextUtil.formatText(element.getAsString());
         }
+
+        @Override
+        public JsonElement serialize(Component src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.getString());
+        }
     }
 
-    public static class DataComponentsDeserializer implements JsonDeserializer<DataComponentMap> {
+    public static class DataComponentsDeserializer implements JsonDeserializer<DataComponentMap>, JsonSerializer<DataComponentMap> {
         @Override
         public DataComponentMap deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
             RegistryOps.RegistryInfoLookup registryInfoLookup = createContext(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
@@ -329,13 +488,19 @@ public class Json {
             return result.resultOrPartial().get().getFirst();
         }
 
+        @Override
+        public JsonElement serialize(DataComponentMap src, Type typeOfSrc, JsonSerializationContext context) {
+            RegistryOps.RegistryInfoLookup registryInfoLookup = createContext(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
+            return DataComponentMap.CODEC.encodeStart(RegistryOps.create(JsonOps.INSTANCE, registryInfoLookup), src).getOrThrow();
+        }
+
         public static RegistryOps.RegistryInfoLookup createContext(RegistryAccess registryAccess) {
             final Map<ResourceKey<? extends Registry<?>>, RegistryOps.RegistryInfo<?>> map = new HashMap<>();
             registryAccess.registries().forEach((registryEntry) -> map.put(registryEntry.key(), createInfoForContextRegistry(registryEntry.value())));
             return new RegistryOps.RegistryInfoLookup() {
                 @NotNull
                 @SuppressWarnings("unchecked")
-                public <T> Optional<RegistryOps.RegistryInfo<T>> lookup(ResourceKey<? extends Registry<? extends T>> resourceKey) {
+                public <T> Optional<RegistryOps.RegistryInfo<T>> lookup(@NonNull ResourceKey<? extends Registry<? extends T>> resourceKey) {
                     return Optional.ofNullable((RegistryOps.RegistryInfo<T>) map.get(resourceKey));
                 }
             };

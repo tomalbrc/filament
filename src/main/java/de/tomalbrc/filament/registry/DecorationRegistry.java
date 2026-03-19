@@ -157,7 +157,7 @@ public class DecorationRegistry {
             load("filament/decoration", null, resourceManager, (id, inputStream) -> {
                 try {
                     DecorationRegistry.register(inputStream);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     Filament.LOGGER.error("Failed to load decoration resource \"{}\".", id);
                 }
             });

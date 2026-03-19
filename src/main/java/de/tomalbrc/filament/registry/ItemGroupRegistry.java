@@ -69,7 +69,7 @@ public class ItemGroupRegistry {
             load(Constants.MOD_ID, "item-groups", resourceManager, (id, inputStream) -> {
                 try {
                     ItemGroupRegistry.register(inputStream);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     Filament.LOGGER.error("Failed to load item group config \"{}\".", id);
                 }
             });

@@ -109,7 +109,7 @@ public class ItemRegistry {
             load("filament/item", null, resourceManager, (id, inputStream) -> {
                 try {
                     ItemRegistry.register(inputStream);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     Filament.LOGGER.error("Failed to load item resource \"{}\".", id, e);
                 }
             });

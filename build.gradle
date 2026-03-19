@@ -54,6 +54,16 @@ dependencies {
 
     implementation include('org.yaml:snakeyaml:2.4')
 
+    implementation('org.eclipse.jetty:jetty-server:12.1.6') {
+        exclude group: 'org.eclipse.jetty', module: 'jetty-logging'
+    }
+    implementation 'org.eclipse.jetty.ee10.websocket:jetty-ee10-websocket-jakarta-server:12.1.6'
+    implementation 'jakarta.websocket:jakarta.websocket-api:2.1.1'
+    implementation 'com.github.victools:jsonschema-generator:4.35.0'
+    implementation 'com.j2html:j2html:1.6.0'
+    implementation 'org.everit.json:org.everit.json.schema:1.5.1'
+    implementation 'org.json:json:20231013'
+
     // claim compat
     modImplementation include("eu.pb4:common-protection-api:1.0.0")
 }

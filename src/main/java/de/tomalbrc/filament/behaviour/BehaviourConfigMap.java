@@ -62,7 +62,7 @@ public class BehaviourConfigMap {
         return this.behaviourConfigMap.isEmpty();
     }
 
-    public static class Deserializer implements JsonDeserializer<BehaviourConfigMap> {
+    public static class Deserializer implements JsonDeserializer<BehaviourConfigMap>, JsonSerializer<BehaviourConfigMap> {
         @Override
         public BehaviourConfigMap deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
             JsonObject object = jsonElement.getAsJsonObject();
@@ -85,6 +85,18 @@ public class BehaviourConfigMap {
                 behaviourConfigMap.put(BehaviourRegistry.getType(id), deserialized);
             }
             return behaviourConfigMap;
+        }
+
+        @Override
+        public JsonElement serialize(BehaviourConfigMap src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject object = new JsonObject();
+            for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Object> entry : src.behaviourConfigMap.entrySet()) {
+                Identifier id = entry.getKey().id();
+                if (id != null) {
+                    object.add(id.toString(), context.serialize(entry.getValue()));
+                }
+            }
+            return object;
         }
     }
 }

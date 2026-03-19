@@ -89,7 +89,7 @@ public class BiomeModifications {
             load("worldgen/biome_modifications", null, resourceManager, (id, inputStream) -> {
                 try {
                     BiomeModifications.register(inputStream, id);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     Filament.LOGGER.error("Failed to load biome modifications \"{}\".", id);
                 }
             });

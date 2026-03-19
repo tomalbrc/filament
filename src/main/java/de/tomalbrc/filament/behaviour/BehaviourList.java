@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Type;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 public class BehaviourList implements Iterable<Behaviour<?>> {
     public static final BehaviourList EMPTY = new BehaviourList();
@@ -35,7 +36,7 @@ public class BehaviourList implements Iterable<Behaviour<?>> {
         return this.behaviourList.iterator();
     }
 
-    public static class Deserializer implements JsonDeserializer<BehaviourList> {
+    public static class Deserializer implements JsonDeserializer<BehaviourList>, JsonSerializer<BehaviourList> {
         @Override
         public BehaviourList deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
             JsonArray array = jsonElement.getAsJsonArray();
@@ -61,6 +62,23 @@ public class BehaviourList implements Iterable<Behaviour<?>> {
                 behaviourConfigMap.add(behaviourType.createInstance(deserialized));
             }
             return behaviourConfigMap;
+        }
+
+        @Override
+        public JsonElement serialize(BehaviourList src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonArray array = new JsonArray();
+            for (Behaviour<?> behaviour : src) {
+                JsonElement configElement = context.serialize(behaviour.getConfig());
+                if (configElement.isJsonObject()) {
+                    JsonObject obj = configElement.getAsJsonObject().deepCopy();
+                    Identifier id = Objects.requireNonNull(BehaviourRegistry.getType(behaviour)).id();
+                    if (id != null) {
+                        obj.addProperty("type", id.toString());
+                    }
+                    array.add(obj);
+                }
+            }
+            return array;
         }
     }
 }

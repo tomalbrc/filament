@@ -156,7 +156,7 @@ public class EntityRegistry {
             load("filament/entity", null, resourceManager, (id, inputStream) -> {
                 try {
                     EntityRegistry.register(inputStream);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     Filament.LOGGER.error("Failed to load entity resource \"{}\".", id);
                 }
             });

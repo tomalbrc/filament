@@ -8,6 +8,7 @@ import de.tomalbrc.filament.data.ItemGroupData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.*;
 import de.tomalbrc.filament.util.*;
+import de.tomalbrc.filamentweb.EditorServer;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
@@ -51,6 +52,7 @@ public class Filament implements ModInitializer {
 
         if (FilamentConfig.getInstance().resourcepackRequired)
             PolymerResourcePackUtils.markAsRequired();
+
         FilamentComponents.register();
         Behaviours.register();
         SkinUtil.registerEventHandler();
@@ -68,6 +70,12 @@ public class Filament implements ModInitializer {
         Fire.addRemap();
         PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(Fire::init);
 
+        EditorServer.init();
+        PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(EditorServer::init);
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            EditorServer.runServer();
+        });
+
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
             if (!world.isClientSide() && hand == InteractionHand.MAIN_HAND) {
                 BlockPos pos = hitResult.getBlockPos();
@@ -81,7 +89,7 @@ public class Filament implements ModInitializer {
         });
 
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            ADVENTURE = MinecraftServerAudiences.of(server);
+            if (false) ADVENTURE = MinecraftServerAudiences.of(server);
             SERVER = server;
         });
 

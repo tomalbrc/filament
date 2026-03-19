@@ -8,6 +8,7 @@ import net.minecraft.resources.Identifier;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.Map;
 
 public class BehaviourRegistry {
@@ -39,5 +40,19 @@ public class BehaviourRegistry {
             return null;
         }
         return (BehaviourType<T, E>) behaviourMap.get(info.id());
+    }
+
+    public static Collection<BehaviourType<? extends Behaviour<?>,?>> getTypes() {
+        return behaviourMap.values();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Behaviour<E>, E> BehaviourType<T, E> getType(Behaviour<E> key) {
+        for (BehaviourType<? extends Behaviour<?>, ?> type : behaviourMap.values()) {
+            if (type.type().isInstance(key)) {
+                return (BehaviourType<T, E>) type;
+            }
+        }
+        return null;
     }
 }

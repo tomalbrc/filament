@@ -13,11 +13,8 @@ import net.minecraft.world.item.component.DyedItemColor;
 
 public class DyeCommand {
     public static LiteralCommandNode<CommandSourceStack> register() {
-        var dyeNode = Commands
-                .literal("dye").requires(Permissions.require("filament.command.dye", 2));
-
+        var dyeNode = Commands.literal("dye").requires(Permissions.require("filament.command.dye", 2));
         var colorArg = Commands.argument("color", HexColorArgument.hexColor());
-
         return dyeNode.then(colorArg.executes(DyeCommand::execute)).build();
     }
 

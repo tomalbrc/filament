@@ -137,7 +137,7 @@ public class BlockRegistry {
             load("filament/block", null, resourceManager, (id, inputStream) -> {
                 try {
                     BlockRegistry.register(inputStream);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     Filament.LOGGER.error("Failed to load block resource \"{}\".", id);
                 }
             });

@@ -52,7 +52,7 @@ public class ModelRegistry {
                     }
 
                     ajmodels.put(sanitize(entry.getKey()), model);
-                } catch (IOException | IllegalStateException e) {
+                } catch (Exception e) {
                     Filament.LOGGER.error("Failed to load decoration resource \"{}\".", entry.getKey());
                 }
             }
