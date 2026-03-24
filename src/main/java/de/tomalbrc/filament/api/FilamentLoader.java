@@ -25,7 +25,7 @@ public class FilamentLoader {
                 if (f.endsWith(".yaml") || f.endsWith(".yml")) {
                     var list = Json.yamlToJson(Files.newInputStream(f));
                     for (InputStream stream : list) {
-                        BlockRegistry.register(stream);
+                        BlockRegistry.register(f, stream);
                     }
                 }
                 else {
@@ -44,7 +44,7 @@ public class FilamentLoader {
                 if (f.endsWith(".yaml") || f.endsWith(".yml")) {
                     var list = Json.yamlToJson(Files.newInputStream(f));
                     for (InputStream stream : list) {
-                        ItemRegistry.register(stream);
+                        ItemRegistry.register(f, stream);
                     }
                 }
                 else {
@@ -63,7 +63,7 @@ public class FilamentLoader {
                 if (f.endsWith(".yaml") || f.endsWith(".yml")) {
                     var list = Json.yamlToJson(Files.newInputStream(f));
                     for (InputStream stream : list) {
-                        DecorationRegistry.register(stream);
+                        DecorationRegistry.register(f, stream);
                     }
                 }
                 else {

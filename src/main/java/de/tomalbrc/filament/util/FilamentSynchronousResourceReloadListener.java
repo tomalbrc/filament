@@ -3,9 +3,11 @@ package de.tomalbrc.filament.util;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
 import de.tomalbrc.filament.Filament;
+import de.tomalbrc.filament.mixin.accessor.PathPackResourcesAccessor;
 import de.tomalbrc.filament.registry.Templates;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.PathPackResources;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.NotNull;
@@ -17,12 +19,23 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
 public interface FilamentSynchronousResourceReloadListener extends SimpleSynchronousResourceReloadListener {
+    default Path obtainPath(Identifier id, ResourceManager resourceManager) {
+        Path path = null;
+        var resource = resourceManager.getResource(id);
+        if (resource.isPresent() && resource.get().source() instanceof PathPackResources pathPackResources) {
+            path = ((PathPackResourcesAccessor)pathPackResources).getRoot().resolve(id.getNamespace()).resolve(id.getPath());
+        }
+
+        return path;
+    }
+
     default void loadJson(@NotNull String root, @Nullable String endsWith, @NotNull ResourceManager resourceManager, @NotNull BiConsumer<Identifier, InputStream> onRead) {
         var resources = resourceManager.listResources(root, path -> path.getPath().endsWith((endsWith == null ? "" : endsWith) + ".json"));
         for (Map.Entry<Identifier, Resource> entry : resources.entrySet()) {

@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import de.tomalbrc.bil.util.Permissions;
 import de.tomalbrc.filament.command.subcommand.*;
 import de.tomalbrc.filament.util.Constants;
+import de.tomalbrc.filamentweb.EditorCommand;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.Person;
@@ -38,6 +39,7 @@ public class FilamentCommand {
                 });
 
         rootNode.then(HatCommand.register());
+        rootNode.then(EditorCommand.register());
         rootNode.then(DyeCommand.register());
         rootNode.then(PickCommand.register());
         rootNode.then(ServerItemCommand.register());

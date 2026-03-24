@@ -17,8 +17,8 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -37,21 +38,24 @@ import java.util.function.Function;
 public class BlockRegistry {
     public static Map<Identifier, Collection<Identifier>> BLOCKS_TAGS = new Object2ReferenceOpenHashMap<>();
 
-    public static void register(InputStream inputStream) throws IOException {
+    public static void register(Path filepath, InputStream inputStream) throws IOException {
         JsonElement element = JsonParser.parseReader(new InputStreamReader(inputStream));
         try {
             BlockData data = Json.GSON.fromJson(element, BlockData.class);
+            data.filepath = filepath;
             BlockDataFix.fixup(element, data);
-
             Util.handleComponentsCustom(element, data);
 
             register(data);
         } catch (Exception e) {
             Filament.LOGGER.error("Could not load file! Error: {}", String.valueOf(e.fillInStackTrace()));
-            Filament.LOGGER.info(element.toString());
-            if (FilamentConfig.getInstance().debug)
-                e.printStackTrace();
+            Filament.LOGGER.info("Path: {}", filepath);
+            Filament.LOGGER.info("File: \n{}", element.toString());
         }
+    }
+
+    public static void register(InputStream inputStream) throws IOException {
+        register(null, inputStream);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -86,7 +90,7 @@ public class BlockRegistry {
         }
 
         Item.Properties itemProperties = data.properties().toItemProperties();
-        if (data.properties().copyComponents) {
+        if (data.properties().copyComponents == Boolean.TRUE) {
             for (TypedDataComponent component : data.vanillaItem().components()) {
                 itemProperties.component(component.type(), component.value());
             }
@@ -136,7 +140,7 @@ public class BlockRegistry {
         public void onResourceManagerReload(ResourceManager resourceManager) {
             load("filament/block", null, resourceManager, (id, inputStream) -> {
                 try {
-                    BlockRegistry.register(inputStream);
+                    BlockRegistry.register(obtainPath(id, resourceManager), inputStream);
                 } catch (Exception e) {
                     Filament.LOGGER.error("Failed to load block resource \"{}\".", id);
                 }

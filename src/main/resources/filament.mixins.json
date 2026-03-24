@@ -26,6 +26,7 @@
     "accessor.ItemInvoker",
     "accessor.MaceItemAccessor",
     "accessor.MappedRegistryAccessor",
+    "accessor.PathPackResourcesAccessor",
     "accessor.PlayerAccessor",
     "accessor.PrimedTntAccessor",
     "accessor.ProjectileWeaponItemInvoker",

@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.registry;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
@@ -14,8 +15,8 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -33,13 +35,22 @@ public class ItemRegistry {
     public static Map<Identifier, List<Identifier>> ITEMS_TAGS = new Object2ReferenceOpenHashMap<>();
     public static Map<Item, Item> COPY_TAGS = new Reference2ReferenceOpenHashMap<>(); // custom->vanilla
 
+    public static void register(Path filepath, InputStream inputStream) throws IOException {
+        JsonElement element = JsonParser.parseReader(new InputStreamReader(inputStream));
+        try {
+            ItemData data = Json.GSON.fromJson(element, ItemData.class);
+            data.filepath = filepath;
+            Util.handleComponentsCustom(element, data);
+            register(data);
+        } catch (Exception e) {
+            Filament.LOGGER.error("Could not load file! Error: {}", String.valueOf(e.fillInStackTrace()));
+            Filament.LOGGER.info("Path: {}", filepath);
+            Filament.LOGGER.info("File: \n{}", element.toString());
+        }
+    }
+
     public static void register(InputStream inputStream) throws IOException {
-        var element = JsonParser.parseReader(new InputStreamReader(inputStream));
-        ItemData data = Json.GSON.fromJson(element, ItemData.class);
-
-        Util.handleComponentsCustom(element, data);
-
-        register(data);
+        register(null, inputStream);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -55,7 +66,7 @@ public class ItemRegistry {
 
         Item.Properties properties = data.properties().toItemProperties();
 
-        if (data.properties().copyComponents) {
+        if (data.properties().copyComponents == Boolean.TRUE) {
             for (TypedDataComponent component : data.vanillaItem().components()) {
                 properties.component(component.type(), component.value());
             }
@@ -68,7 +79,7 @@ public class ItemRegistry {
         var item = ItemRegistry.registerItem(key(data.id()), (newProps) -> new SimpleItem(newProps, data, data.vanillaItem()), properties, data.group() != null ? data.group() : Constants.ITEM_GROUP_ID, data.itemTags());
         postRegistration(item, data);
 
-        if (data.properties().copyTags) {
+        if (data.properties().copyTags == Boolean.TRUE) {
             COPY_TAGS.put(item, data.vanillaItem());
         }
 
@@ -108,7 +119,7 @@ public class ItemRegistry {
         public void onResourceManagerReload(ResourceManager resourceManager) {
             load("filament/item", null, resourceManager, (id, inputStream) -> {
                 try {
-                    ItemRegistry.register(inputStream);
+                    ItemRegistry.register(obtainPath(id, resourceManager), inputStream);
                 } catch (Exception e) {
                     Filament.LOGGER.error("Failed to load item resource \"{}\".", id, e);
                 }

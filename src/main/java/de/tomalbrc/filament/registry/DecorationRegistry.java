@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
-import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.datafixer.config.DecorationDataFix;
 import de.tomalbrc.filament.decoration.DecorationItem;
@@ -12,7 +11,6 @@ import de.tomalbrc.filament.decoration.block.ComplexDecorationBlock;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
-import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.FilamentSynchronousResourceReloadListener;
 import de.tomalbrc.filament.util.Json;
@@ -38,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -48,16 +47,26 @@ public class DecorationRegistry {
     public static int REGISTERED_BLOCK_ENTITIES = 0;
     public static int REGISTERED_DECORATIONS = 0;
 
-    public static void register(InputStream inputStream) throws IOException {
+    public static void register(Path filepath, InputStream inputStream) throws IOException {
         JsonElement element = JsonParser.parseReader(new InputStreamReader(inputStream));
-        DecorationData data = Json.GSON.fromJson(element, DecorationData.class);
 
-        // backwards compatibility
-        DecorationDataFix.fixup(element, data);
+        try {
+            DecorationData data = Json.GSON.fromJson(element, DecorationData.class);
+            data.filepath = filepath;
+            // backwards compatibility
+            DecorationDataFix.fixup(element, data);
+            Util.handleComponentsCustom(element, data);
 
-        Util.handleComponentsCustom(element, data);
+            register(data);
+        } catch (Exception e) {
+            Filament.LOGGER.error("Could not load file! Error: {}", String.valueOf(e.fillInStackTrace()));
+            Filament.LOGGER.info("Path: {}", filepath);
+            Filament.LOGGER.info("File: \n{}", element.toString());
+        }
+    }
 
-        register(data);
+    public static void register(InputStream inputStream) throws IOException {
+        register(null, inputStream);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -81,7 +90,7 @@ public class DecorationRegistry {
         decorationBlocks.put(data.id(), block);
 
         Item.Properties properties = data.properties().toItemProperties();
-        if (data.properties().copyComponents) {
+        if (data.properties().copyComponents == Boolean.TRUE) {
             for (TypedDataComponent component : data.vanillaItem().components()) {
                 properties.component(component.type(), component.value());
             }
@@ -156,7 +165,7 @@ public class DecorationRegistry {
         public void onResourceManagerReload(ResourceManager resourceManager) {
             load("filament/decoration", null, resourceManager, (id, inputStream) -> {
                 try {
-                    DecorationRegistry.register(inputStream);
+                    DecorationRegistry.register(obtainPath(id, resourceManager), inputStream);
                 } catch (Exception e) {
                     Filament.LOGGER.error("Failed to load decoration resource \"{}\".", id);
                 }

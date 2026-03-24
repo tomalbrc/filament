@@ -59,6 +59,7 @@ public class FilamentConfig {
                 if (CONFIG_FILE_PATH.toFile().createNewFile()) {
                     FileOutputStream stream = new FileOutputStream(CONFIG_FILE_PATH.toFile());
                     stream.write(Json.GSON.toJson(instance).getBytes(StandardCharsets.UTF_8));
+                    stream.close();
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);

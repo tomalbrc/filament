@@ -68,7 +68,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
         super(properties);
 
         this.initBehaviours(data.behaviour());
-        this.breakEventState = data.properties().blockBase.defaultBlockState();
+        this.breakEventState = data.properties().blockBase().defaultBlockState();
         this.blockData = data;
 
         for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : behaviours) {
@@ -374,7 +374,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     protected boolean canBeReplaced(BlockState blockState, Fluid fluid) {
-        return blockState.canBeReplaced() || !blockData.properties().solid;
+        return blockState.canBeReplaced() || !blockData.properties().solid();
     }
 
     @Override
@@ -401,12 +401,12 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
             }
         }
 
-        if (!blockData.properties().solid) {
+        if (!blockData.properties().solid()) {
             levelAccessor.destroyBlock(blockPos, true);
             levelAccessor.setBlock(blockPos, fluidState.createLegacyBlock(), Block.UPDATE_ALL);
         }
 
-        return !blockData.properties().solid;
+        return !blockData.properties().solid();
     }
 
     @Override
@@ -416,7 +416,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
                 return waterloggedBlock.canPlaceLiquid(livingEntity, blockGetter, blockPos, blockState, fluid);
             }
         }
-        return !blockData.properties().solid;
+        return !blockData.properties().solid();
     }
 
     @Override
@@ -745,7 +745,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     protected void spawnDestroyParticles(Level level, Player player, BlockPos blockPos, BlockState blockState) {
-        if (blockData.properties().showBreakParticles) {
+        if (blockData.properties().showBreakParticles()) {
             super.spawnDestroyParticles(level, player, blockPos, blockState);
         }
     }

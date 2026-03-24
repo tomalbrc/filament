@@ -94,69 +94,7 @@ public class Json {
             // special case to support old format
             // TODO: allow behaviours to specify codec/deserializer
             .registerTypeHierarchyAdapter(Showcase.Config.class, new Showcase.Config.ConfigDeserializer())
-
-            //.registerTypeAdapterFactory(new SkipDefaultsTypeAdapterFactory())
             .create();
-
-
-    public static class SkipDefaultsTypeAdapterFactory implements TypeAdapterFactory {
-        private static JsonElement prune(JsonElement element) {
-            if (element == null || element.isJsonNull()) {
-                return null;
-            }
-
-            if (element.isJsonPrimitive()) {
-                JsonPrimitive p = element.getAsJsonPrimitive();
-
-                if (p.isBoolean()) {
-                    return p.getAsBoolean() ? p : null;
-                }
-
-                if (p.isString()) {
-                    return p.getAsString().isEmpty() ? null : p;
-                }
-
-                if (p.isNumber()) {
-                    try {
-                        BigDecimal n = new BigDecimal(p.getAsNumber().toString());
-                        return n.compareTo(BigDecimal.ZERO) == 0 ? null : p;
-                    } catch (NumberFormatException ignored) {
-                        return p;
-                    }
-                }
-
-                return p;
-            }
-
-            return element;
-        }
-
-        @Override
-        public <T> TypeAdapter<T> create(Gson gson, com.google.gson.reflect.TypeToken<T> type) {
-            TypeAdapter<T> delegate = gson.getDelegateAdapter(this, type);
-            TypeAdapter<JsonElement> jsonElementAdapter = gson.getAdapter(JsonElement.class);
-
-            return new TypeAdapter<>() {
-                @Override
-                public void write(com.google.gson.stream.JsonWriter out, T value) throws IOException {
-                    if (value == null) {
-                        out.nullValue();
-                        return;
-                    }
-
-                    JsonElement tree = delegate.toJsonTree(value);
-                    JsonElement cleaned = prune(tree);
-                    if (cleaned == null || cleaned.isJsonNull()) out.nullValue();
-                    else jsonElementAdapter.write(out, cleaned);
-                }
-
-                @Override
-                public T read(com.google.gson.stream.JsonReader in) throws IOException {
-                    return delegate.read(in);
-                }
-            };
-        }
-    }
 
     public static List<InputStream> yamlToJson(InputStream inputStream) {
         Yaml yaml = new Yaml();
@@ -373,6 +311,9 @@ public class Json {
                 if (src.y() != 0) object.addProperty("y", src.y());
                 if (src.uvLock()) object.addProperty("uvLock", true);
                 if (src.weight() != 1) object.addProperty("weight", src.weight());
+
+                if (object.size() == 1)
+                    return new JsonPrimitive(object.get("model").getAsString());
             } catch (Exception e) {
                 return new JsonPrimitive(src.toString());
             }

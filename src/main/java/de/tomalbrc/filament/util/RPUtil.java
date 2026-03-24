@@ -28,7 +28,7 @@ public class RPUtil {
         if (data instanceof AbstractBlockData<?> blockData) {
             if (data.itemResource() == null && blockData.blockResource() != null) resource = blockData.blockResource();
 
-            if (blockData.properties().virtual || blockData instanceof DecorationData)
+            if (blockData.properties().virtual() || blockData instanceof DecorationData)
                 createBlockItemAssets(blockData.id(), blockData.blockResource());
 
             createBlockModels(blockData.id(), blockData.blockResource());

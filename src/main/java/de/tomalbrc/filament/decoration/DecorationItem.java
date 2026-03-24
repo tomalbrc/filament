@@ -107,7 +107,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
             player.startUsingItem(useOnContext.getHand());
             itemStack.consume(1, player);
 
-            SoundEvent placeSound = properties.blockBase.defaultBlockState().getSoundType().getPlaceSound();
+            SoundEvent placeSound = properties.blockBase().defaultBlockState().getSoundType().getPlaceSound();
             level.playSound(null, blockPos, placeSound, SoundSource.BLOCKS, 1.0F, 1.0F);
 
             return InteractionResult.CONSUME;

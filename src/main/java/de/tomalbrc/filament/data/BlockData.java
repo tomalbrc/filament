@@ -58,7 +58,7 @@ public class BlockData extends AbstractBlockData<BlockProperties> {
 
     @Override
     public boolean virtual() {
-        return this.properties().virtual;
+        return this.properties().virtual();
     }
 
     @Override

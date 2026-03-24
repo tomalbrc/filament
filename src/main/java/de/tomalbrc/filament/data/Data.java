@@ -6,6 +6,7 @@ import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.data.resource.ResourceProvider;
+import de.tomalbrc.filament.util.annotation.Description;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentType;
@@ -13,26 +14,51 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
 public abstract class Data<PropertyType extends ItemProperties> {
+    @Description("Your custom identifier for this item")
     protected final @NotNull Identifier id;
+
+    @Description("Vanilla item to send to clients")
     protected final @Nullable Item vanillaItem;
+
+    @Description("Localized item name, will get written to the resource-pack")
     protected final @Nullable Map<String, String> translations;
+
+    @Description("Name of the item, supports formatting")
     protected final @Nullable Component displayName;
+
+    @Description("Item model / set of item models")
     protected @Nullable ItemResource itemResource;
+
+    @Description("1.21.4+ item_model in items/")
     protected final @Nullable Identifier itemModel;
+
+    @Description("Behaviours")
     @SerializedName(value = "behaviour", alternate = {"behaviours", "behaviors", "behavior"})
     protected @Nullable BehaviourConfigMap behaviour;
+
+    @Description("Item data components")
     protected final @Nullable DataComponentMap components;
+
+    @Description("Creative tab group for this item")
     protected final @Nullable Identifier group;
+
+    @Description("Item tags for the item. Specify without #")
     protected final @Nullable Set<Identifier> itemTags;
+
     protected @Nullable PropertyType properties;
+
+    @ApiStatus.Experimental
+    transient public Path filepath;
 
     transient protected Map<DataComponentType<?>, JsonElement> additionalComponents;
 

@@ -11,36 +11,105 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
 @SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})
 public class BlockProperties extends ItemProperties {
     @NotNull
-    public Block blockBase = Blocks.STONE;
-    public boolean requiresTool = true;
-    public float explosionResistance = Float.MIN_VALUE;
-    public float destroyTime = Float.MIN_VALUE;
+    private Block blockBase = Blocks.STONE;
+    @Nullable private Boolean requiresTool = true;
+    private Float explosionResistance = null;
+    private Float destroyTime = null;
 
-    public BlockStateMappedProperty<Boolean> isSuffocating = null;
-    public BlockStateMappedProperty<Boolean> redstoneConductor = null;
-    public BlockStateMappedProperty<Integer> lightEmission = null;
+    private BlockStateMappedProperty<Boolean> isSuffocating = null;
+    private BlockStateMappedProperty<Boolean> redstoneConductor = null;
+    private BlockStateMappedProperty<Integer> lightEmission = null;
 
-    public boolean transparent = false;
-    public boolean allowsSpawning = false;
-    public boolean replaceable = false;
-    public boolean collision = true;
+    private Boolean transparent = false;
+    private Boolean allowsSpawning = false;
+    private Boolean replaceable = false;
+    private Boolean collision = true;
 
-    public boolean solid = true;
+    private Boolean solid = true;
 
-    public PushReaction pushReaction = PushReaction.NORMAL;
+    private PushReaction pushReaction = PushReaction.NORMAL;
 
-    public Identifier lootTable = null;
+    private Identifier lootTable = null;
 
-    public boolean virtual;
-    public boolean showBreakParticles = true;
+    public Boolean virtual;
+    private Boolean showBreakParticles = true;
 
-    public Sounds sounds;
+    private Sounds sounds;
+
+    public @NotNull Block blockBase() {
+        return blockBase;
+    }
+
+    public boolean requiresTool() {
+        return requiresTool == null ? false : requiresTool;
+    }
+
+    public float explosionResistance() {
+        return explosionResistance == null ? 0 : explosionResistance;
+    }
+
+    public float destroyTime() {
+        return destroyTime == null ? 0 : destroyTime;
+    }
+
+    public BlockStateMappedProperty<Boolean> isSuffocating() {
+        return isSuffocating;
+    }
+
+    public BlockStateMappedProperty<Boolean> redstoneConductor() {
+        return redstoneConductor;
+    }
+
+    public BlockStateMappedProperty<Integer> lightEmission() {
+        return lightEmission;
+    }
+
+    public boolean transparent() {
+        return transparent == null ? false : transparent;
+    }
+
+    public boolean allowsSpawning() {
+        return allowsSpawning == null ? false : allowsSpawning;
+    }
+
+    public boolean replaceable() {
+        return replaceable == null ? false : replaceable;
+    }
+
+    public boolean collision() {
+        return collision == null ? false : collision;
+    }
+
+    public boolean solid() {
+        return solid  == null ? false : solid;
+    }
+
+    public PushReaction pushReaction() {
+        return pushReaction;
+    }
+
+    public Identifier lootTable() {
+        return lootTable;
+    }
+
+    public boolean virtual() {
+        return virtual == null ? false : virtual;
+    }
+
+    public boolean showBreakParticles() {
+        return showBreakParticles == null ? false : showBreakParticles;
+    }
+
+    public Sounds sounds() {
+        return sounds;
+    }
 
     public BlockBehaviour.Properties toBlockProperties() {
         BlockBehaviour.Properties props = BlockBehaviour.Properties.of();
@@ -49,15 +118,15 @@ public class BlockProperties extends ItemProperties {
             props.sound(this.sounds.asSoundType());
         }
 
-        if (this.destroyTime != Float.MIN_VALUE) props.destroyTime(this.destroyTime);
-        if (this.explosionResistance != Float.MIN_VALUE) props.explosionResistance(this.explosionResistance);
-        else if (this.destroyTime != Float.MIN_VALUE) props.explosionResistance(this.destroyTime);
+        if (this.destroyTime != null) props.destroyTime(this.destroyTime);
+        if (this.explosionResistance != null) props.explosionResistance(this.explosionResistance);
+        else if (this.destroyTime != null) props.explosionResistance(this.destroyTime);
         if (this.lightEmission != null) props.lightLevel((state) -> this.lightEmission.getOrDefault(state, 0));
         if (this.redstoneConductor != null) props.isRedstoneConductor((blockState, blockGetter, blockPos) -> this.redstoneConductor.getOrDefault(blockState, false));
-        if (this.requiresTool) props.requiresCorrectToolForDrops();
-        if (this.replaceable) props.replaceable();
-        if (this.transparent) props.noOcclusion();
-        if (!this.collision) props.noCollision();
+        if (this.requiresTool == Boolean.TRUE) props.requiresCorrectToolForDrops();
+        if (this.replaceable == Boolean.TRUE) props.replaceable();
+        if (this.transparent == Boolean.TRUE) props.noOcclusion();
+        if (!this.collision == Boolean.TRUE) props.noCollision();
 
         if (this.lootTable != null)
             props.overrideLootTable(Optional.of(ResourceKey.create(Registries.LOOT_TABLE, this.lootTable)));
@@ -67,7 +136,7 @@ public class BlockProperties extends ItemProperties {
 
         props.mapColor(this.blockBase.defaultMapColor());
 
-        if (this.solid) props.forceSolidOn();
+        if (this.solid == Boolean.TRUE) props.forceSolidOn();
         else props.forceSolidOff();
 
         props.isValidSpawn((blockState, blockGetter, blockPos, entityType) -> this.allowsSpawning);

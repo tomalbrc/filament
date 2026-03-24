@@ -77,7 +77,7 @@ public abstract class FlowingFluidMixin {
     @Unique
     private static boolean filament$isSolid(DecorationBlock decorationBlock) {
         if (decorationBlock.getDecorationData() != null) {
-            return decorationBlock.getDecorationData().properties().solid;
+            return decorationBlock.getDecorationData().properties().solid();
         }
 
         return false;

@@ -5,6 +5,9 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.Identifier;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 
 public class BlockResource implements ResourceProvider {
@@ -38,15 +41,21 @@ public class BlockResource implements ResourceProvider {
 
     @Override
     public Map<String, Identifier> getModels() {
-        var map = new Object2ObjectOpenHashMap<String, Identifier>();
-        if (this.models == null) {
-            this.models = new Object2ObjectArrayMap<>();
-            return map;
-        }
+        if (this.models == null || this.models.isEmpty()) return Collections.emptyMap();
 
-        for (Map.Entry<String, PolymerBlockModel> entry : models.entrySet()) {
-            var model = entry.getValue().model();
-            map.put(entry.getKey(), model);
+        var map = new Object2ObjectOpenHashMap<String, Identifier>(this.models.size());
+
+        for (var entry : this.models.entrySet()) {
+            String rawKey = entry.getKey();
+            String processedKey = rawKey;
+
+            if (rawKey.indexOf(',') != -1) {
+                String[] parts = rawKey.split(",");
+                Arrays.sort(parts);
+                processedKey = String.join(",", parts);
+            }
+
+            map.put(processedKey, entry.getValue().model());
         }
         return map;
     }

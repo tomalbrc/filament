@@ -110,7 +110,7 @@ public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementH
 
     @Override
     protected void spawnDestroyParticles(Level level, Player player, BlockPos blockPos, BlockState blockState) {
-        if (blockData.properties().showBreakParticles) {
+        if (blockData.properties().showBreakParticles()) {
             var attachment = BlockBoundAttachment.get(player.level(), blockPos);
             if (attachment != null && player.level() instanceof ServerLevel serverLevel) {
                 var holder = (VirtualBlockHolder)attachment.holder();
