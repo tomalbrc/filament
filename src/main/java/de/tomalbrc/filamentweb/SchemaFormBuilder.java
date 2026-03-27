@@ -11,16 +11,23 @@ import de.tomalbrc.filament.data.resource.ResourceProvider;
 import de.tomalbrc.filament.util.Json;
 import de.tomalbrc.filamentweb.asset.Asset;
 import de.tomalbrc.filamentweb.asset.AssetStore;
+import de.tomalbrc.filamentweb.service.FragmentServlet;
+import de.tomalbrc.filamentweb.util.SchemaUtil;
+import de.tomalbrc.filamentweb.util.WebPaths;
 import eu.pb4.polymer.resourcepack.api.AssetPaths;
 import j2html.tags.ContainerTag;
+import j2html.tags.DomContent;
 import j2html.tags.Tag;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.Identifier;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -28,10 +35,6 @@ import static j2html.TagCreator.*;
 
 public class SchemaFormBuilder {
     private static final String LABEL_STYLE = "width: 25%; text-overflow: ellipsis; white-space: nowrap;";
-
-    private static String urlEncode(String s) {
-        return URLEncoder.encode(s, StandardCharsets.UTF_8);
-    }
 
     private static String safeId(String prefix, String uuid, String path) {
         String raw = prefix + "-" + uuid + "-" + (path == null ? "" : path);
@@ -163,7 +166,7 @@ public class SchemaFormBuilder {
                 .withType("button")
                 .withClass("btn btn-sm btn-link text-danger text-decoration-none fw-bold ms-1")
                 .withStyle("background: #149;")
-                .attr("hx-post", "/rest/fragment?name=" + urlEncode(uuid) + "&op=" + "removeObjectEntry" + "&path=" + urlEncode(path) + "&key=" + urlEncode(key))
+                .attr("hx-post", WebPaths.fragment(FragmentServlet.Operation.REMOVE_OBJECT_ENTRY.toString(), uuid, path))
                 .attr("hx-target", "#" + targetId)
                 .attr("hx-swap", "outerHTML");
     }
@@ -191,7 +194,7 @@ public class SchemaFormBuilder {
         return div().withClass("input-group input-group-sm mb-1").with(
                 input().withType("text").withClass("form-control").withId(safe).withName("newKey").withValue(currentKey).withPlaceholder("Rename key..."),
                 button("Rename").withType("button").withClass("btn btn-outline-secondary")
-                        .attr("hx-post", "/rest/fragment?name=" + urlEncode(uuid) + "&op=renameObjectEntry&path=" + urlEncode(objectPath) + "&key=" + urlEncode(currentKey))
+                        .attr("hx-post", WebPaths.fragment(FragmentServlet.Operation.RENAME_OBJECT_ENTRY.toString(), uuid, objectPath, currentKey))
                         .attr("hx-include", "#" + safe)
                         .attr("hx-target", "#" + fieldsContainerId(uuid, objectPath))
                         .attr("hx-swap", "outerHTML")
@@ -200,7 +203,7 @@ public class SchemaFormBuilder {
 
     private static Tag<?> renderPrimitiveInput(JsonObject schema, String name, JsonElement value, String id, String uuid) {
         if (schema == null) schema = new JsonObject();
-        String updateUrl = uuid != null ? "/rest/fragment?name=" + urlEncode(uuid) + "&op=updateField&path=" + urlEncode(name) : null;
+        String updateUrl = uuid != null ? WebPaths.fragment(FragmentServlet.Operation.UPDATE_FIELD.toString(), uuid, name) : null;
 
         if (schema.has("const")) {
             String constValue = schema.get("const").isJsonNull() ? "" : schema.get("const").getAsString();
@@ -286,7 +289,7 @@ public class SchemaFormBuilder {
             choice.with(opt);
         }
 
-        choice.attr("hx-post", "/rest/fragment?name=" + urlEncode(uuid) + "&op=updateComposedChoice&path=" + urlEncode(path));
+        choice.attr("hx-post", WebPaths.fragment(FragmentServlet.Operation.UPDATE_COMPOSED_CHOICE.toString(), uuid, path));
         choice.attr("hx-target", "#" + containerId);
         choice.attr("hx-swap", "outerHTML").attr("hx-trigger", "change");
 
@@ -310,6 +313,60 @@ public class SchemaFormBuilder {
         if (asset == null) throw new IllegalArgumentException();
 
         String displayName = asset.data.id().toString();
+        var regItem = BuiltInRegistries.ITEM.get(asset.data.id());
+        if (regItem.isPresent()) {
+            var holder = regItem.get();
+            Component component = holder.value().getDefaultInstance().getDisplayName();
+            List<DomContent> elements = new ArrayList<>();
+
+            Component s = holder.value().getDefaultInstance().getDisplayName();
+            s.visit((style,string) -> {
+                if (string.isEmpty()) {
+                    return Optional.empty(); // Skip empty segments to keep the HTML clean
+                }
+
+                var span = span(string);
+                StringBuilder css = new StringBuilder();
+
+                TextColor color = style.getColor();
+                if (color != null) {
+                    css.append(String.format("color: #%06X;", color.getValue() & 0xFFFFFF));
+                }
+
+                Integer shadow = style.getShadowColor();
+                if (shadow != null) {
+                    css.append(String.format("text-shadow: 1px 1px 0 #%06X;", shadow & 0xFFFFFF));
+                }
+
+                if (style.isBold()) css.append("font-weight: bold;");
+                if (style.isItalic()) css.append("font-style: italic;");
+
+                boolean strike = style.isStrikethrough();
+                boolean under = style.isUnderlined();
+                if (strike && under) {
+                    css.append("text-decoration: underline line-through;");
+                } else if (strike) {
+                    css.append("text-decoration: line-through;");
+                } else if (under) {
+                    css.append("text-decoration: underline;");
+                }
+
+                if (style.isObfuscated()) {
+                    span.withClass("mc-obfuscated");
+                }
+
+                if (!css.isEmpty()) {
+                    span.withStyle(css.toString().trim());
+                }
+
+                elements.add(span);
+
+                return Optional.empty();
+            }, Style.EMPTY);
+
+            displayName = div().withClass("mc-component").with(elements).render();
+        }
+
         JsonElement contentJson = JsonParser.parseString(Json.GSON.toJson(asset.data));
 
         var paneFormContainer = div().withClass("editor-container p-2").withId("pane-" + uuid);
@@ -323,8 +380,8 @@ public class SchemaFormBuilder {
             paneFormContainer.with(form().withClass("json-editor-form").with(
                     input().withType("hidden").withName("name").withValue(uuid),
                     div().withClass("row md-0").with(
-                            div().withClass("col-md-4").with(
-                                    h5(displayName).withClass("mb-3 text-truncate border-bottom pb-2"),
+                            div().withClass("col-md-4 px-2").with(
+                                    h5(rawHtml(displayName)).withClass("mb-3 text-truncate border-bottom pb-2"),
                                     modelSection,
                                     jsonPreviewSection
                             ),
@@ -405,14 +462,14 @@ public class SchemaFormBuilder {
         }
 
         String s = (prefix == null || prefix.isEmpty() ? "root" : prefix).replaceAll("[^a-zA-Z0-9_-]", "_");
-        List<String> missingOptional = props.keySet().stream().filter(p -> !dataObj.has(p) && !requiredFields.contains(p)).sorted().toList();
+        List<String> missingOptional = props.keySet().stream().filter(p -> !dataObj.has(p) && !requiredFields.contains(p)).sorted().toList(); // todo: sort by type, primitives first
 
         if (!missingOptional.isEmpty()) {
             String pickerId = "picker-" + s;
             container.with(div().withClass("input-group input-group-sm mt-3").with(
                     select().withClass("form-select").withId(pickerId).with(option("Add property...").withValue(""), each(missingOptional, p -> option(p).withValue(p))),
                     button("Add").withType("button").withClass("btn btn-primary")
-                            .attr("hx-post", "/rest/fragment?name=" + urlEncode(uuid) + "&op=addObjectEntry&path=" + urlEncode(prefix))
+                            .attr("hx-post", WebPaths.fragment(FragmentServlet.Operation.ADD_OBJECT_ENTRY.toString(), uuid, prefix))
                             .attr("hx-vals", "js:{key: document.getElementById('" + pickerId + "').value}")
                             .attr("hx-target", "#" + fieldsContainerId(uuid, prefix)).attr("hx-swap", "outerHTML")
             ));
@@ -450,7 +507,7 @@ public class SchemaFormBuilder {
                     input().withType("text").withClass("form-control").withId(customKeyId).withPlaceholder("New key name..."),
                     typeSelect,
                     button("Add Entry").withType("button").withClass("btn btn-primary")
-                            .attr("hx-post", "/rest/fragment?name=" + urlEncode(uuid) + "&op=addObjectEntry&path=" + urlEncode(prefix))
+                            .attr("hx-post", WebPaths.fragment(FragmentServlet.Operation.ADD_OBJECT_ENTRY.toString(), uuid, prefix))
                             .attr("hx-vals", "js:{key: document.getElementById('" + customKeyId + "').value, type: document.getElementById('" + typeSelectId + "').value}")
                             .attr("hx-target", "#" + fieldsContainerId(uuid, prefix))
                             .attr("hx-swap", "outerHTML")
@@ -490,9 +547,7 @@ public class SchemaFormBuilder {
                         .withValue(currentKey)
                         .withPlaceholder("Rename key..."),
                 button("Rename").withType("button").withClass("btn btn-outline-secondary")
-                        .attr("hx-post", "/rest/fragment?name=" + urlEncode(uuid) +
-                                "&op=renameObjectEntry&path=" + urlEncode(objectPath) +
-                                "&key=" + urlEncode(currentKey))
+                        .attr("hx-post", WebPaths.fragment(FragmentServlet.Operation.RENAME_OBJECT_ENTRY.toString(), uuid, objectPath, currentKey))
                         .attr("hx-include", "#" + safe)
                         .attr("hx-target", "#" + fieldsContainerId(uuid, objectPath))
                         .attr("hx-swap", "outerHTML")
@@ -519,7 +574,7 @@ public class SchemaFormBuilder {
         for (int i = 0; i < arr.size(); i++) container.with(renderArrayItemElement(uuid, path, itemsSchema, arr.get(i), i, root));
         return container.with(
                 button("+ Add Item").withType("button").withClass("btn btn-sm btn-outline-primary w-100 mt-1")
-                        .attr("hx-post", "/rest/fragment?name=" + urlEncode(uuid) + "&op=addArray&path=" + urlEncode(path))
+                        .attr("hx-post", WebPaths.fragment(FragmentServlet.Operation.ADD_ARRAY.toString(), uuid, path))
                         .attr("hx-target", "#" + safe).attr("hx-swap", "outerHTML")
         );
     }
@@ -545,7 +600,7 @@ public class SchemaFormBuilder {
     public static ContainerTag<?> renderModelViewerFragment(String uuid, boolean oob) {
         Asset asset = AssetStore.getAsset(UUID.fromString(uuid));
 
-        Map<String, byte[]> models = resolveModel(asset);
+        var models = resolveModel(asset);
         String previewId = "model-viewer-" + uuid;
 
         if (models.isEmpty()) {
@@ -562,23 +617,27 @@ public class SchemaFormBuilder {
                 .withClass("d-flex flex-wrap gap-1");
 
         int i = 0;
-        for (Map.Entry<String, byte[]> entry : models.entrySet()) {
-            byte[] modelBytes = entry.getValue();
+        for (var entry : models) {
+            byte[] modelBytes = entry.data();
             if (modelBytes == null || modelBytes.length == 0) {
                 continue;
             }
 
             String modelId = previewId + "-" + i++;
-            String label = entry.getKey() == null ? "" : entry.getKey();
+            String label = entry.type() == null ? "" : entry.type();
+            String label2 = entry.id() == null ? "" : entry.id();
             String src = "data:model/gltf-binary;base64," + Base64.getEncoder().encodeToString(modelBytes);
 
             var card = div()
-                    .withClass("border bg-black flex-column")
+                    .withClass("border bg-black flex-column p-1")
                     .withStyle("min-width: 150px; flex: 1 1 100px;")
                     .with(
                             div()
                                     .withClass("text-muted small mb-2 text-truncate")
-                                    .withText(label)
+                                    .withText(label),
+                            div()
+                                    .withClass("text-muted small mb-2 text-truncate")
+                                    .withText(label2)
                     )
                     .with(
                             rawHtml(String.format(
@@ -604,8 +663,12 @@ public class SchemaFormBuilder {
         return wrapper;
     }
 
-    private static Map<String, byte[]> resolveModel(Asset asset) {
-        Map<String, byte[]> models = new LinkedHashMap<>();
+    record Model(String type, String id, String assetPath, byte[] data) {
+
+    }
+
+    private static List<Model> resolveModel(Asset asset) {
+        List<Model> models = new ArrayList<>();
 
         try {
             ResourceProvider res = null;
@@ -626,25 +689,22 @@ public class SchemaFormBuilder {
 
             }
 
+            String type = "Item via JSON";
             if (asset.data instanceof ItemData id) {
                 res = id.itemResource();
             }
             else if (asset.data instanceof BlockData bd) {
                 res = bd.blockResource() != null ? bd.blockResource() : bd.itemResource();
-
-                if (res != null) {
-                    for (Map.Entry<String, Identifier> entry : res.getModels().entrySet()) {
-                        models.put(entry.getKey(), EditorServer.CONVERTER.toGlb(entry.getValue()));
-                    }
-                }
+                type = "Block via JSON";
             }
             else if (asset.data instanceof DecorationData dd) {
                 res = dd.itemResource();
+                type = "Decoration via JSON";
             }
 
             if (res != null && !res.getModels().isEmpty()) {
                 for (Map.Entry<String, Identifier> entry : res.getModels().entrySet()) {
-                    models.put(entry.getKey(), EditorServer.CONVERTER.toGlb(entry.getValue()));
+                    models.add(new Model(type, entry.getKey(), AssetPaths.model(entry.getValue()), EditorServer.CONVERTER.toGlb(entry.getValue())));
                 }
             }
 
@@ -666,7 +726,7 @@ public class SchemaFormBuilder {
         return models;
     }
 
-    private static void collectModels(JsonElement el, String path, Map<String, byte[]> models) {
+    private static void collectModels(JsonElement el, String path, List<Model> models) {
         if (el == null || el.isJsonNull()) return;
 
         if (el.isJsonObject()) {
@@ -680,7 +740,8 @@ public class SchemaFormBuilder {
                 if ("model".equals(key) && value.isJsonPrimitive() && value.getAsJsonPrimitive().isString()) {
                     try {
                         Identifier id = Identifier.tryParse(value.getAsString());
-                        models.put(newPath, EditorServer.CONVERTER.toGlb(id));
+                        if (id != null && !id.getPath().isBlank())
+                            models.add(new Model("Model(s) in items/", newPath, AssetPaths.model(id) + ".json", EditorServer.CONVERTER.toGlb(id)));
                     } catch (Exception ignored) {}
                 }
 

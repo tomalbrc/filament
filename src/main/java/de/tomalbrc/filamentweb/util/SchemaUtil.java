@@ -1,11 +1,11 @@
-package de.tomalbrc.filamentweb;
+package de.tomalbrc.filamentweb.util;
 
 import com.google.gson.*;
 
 import java.util.*;
 
 public final class SchemaUtil {
-    static final Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
+    public static final Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
 
     private SchemaUtil() {}
 
@@ -148,7 +148,7 @@ public final class SchemaUtil {
                 if (!entry.getValue().isJsonObject()) continue;
 
                 // TODO: handle "required" properly instead of this hard coded check
-                JsonElement child = "components".equals(entry.getKey()) ? new JsonObject() : createDefaultForSchema(entry.getValue().getAsJsonObject(), rootSchema);
+                JsonElement child = "components".equals(entry.getKey()) || "behaviour".equals(entry.getKey()) ? new JsonObject() : createDefaultForSchema(entry.getValue().getAsJsonObject(), rootSchema);
                 if (child != null && !child.isJsonNull()) {
                     result.add(entry.getKey(), child);
                 }

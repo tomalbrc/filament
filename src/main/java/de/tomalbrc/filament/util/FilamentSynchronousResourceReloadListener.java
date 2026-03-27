@@ -30,7 +30,7 @@ public interface FilamentSynchronousResourceReloadListener extends SimpleSynchro
         Path path = null;
         var resource = resourceManager.getResource(id);
         if (resource.isPresent() && resource.get().source() instanceof PathPackResources pathPackResources) {
-            path = ((PathPackResourcesAccessor)pathPackResources).getRoot().resolve(id.getNamespace()).resolve(id.getPath());
+            path = ((PathPackResourcesAccessor)pathPackResources).getRoot().resolve("data").resolve(id.getNamespace()).resolve(id.getPath());
         }
 
         return path;

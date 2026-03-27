@@ -33,8 +33,7 @@ public class EditorCommand {
         }
 
         if (player != null) {
-
-            var uri = "http://localhost:8080/login?id=" + player.getStringUUID();
+            var uri = FilamentEditorConfig.getInstance().externalAddress + "/login?id=" + player.getStringUUID();
             context.getSource().sendSystemMessage(
                     Component.literal("Open Editor: " + uri)
                             .withStyle(Style.EMPTY
@@ -48,7 +47,7 @@ public class EditorCommand {
             var id = UUID.randomUUID();
             AuthFilter.SERVER_REQUEST.put(id, key.toString());
 
-            var uri = "http://localhost:8080/login?id=" + id;
+            var uri = FilamentEditorConfig.getInstance().externalAddress + "/login?id=" + id;
             context.getSource().sendSystemMessage(
                     Component.literal("Open Editor: " + uri)
                             .withStyle(Style.EMPTY

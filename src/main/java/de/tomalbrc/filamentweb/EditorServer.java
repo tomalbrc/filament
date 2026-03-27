@@ -6,20 +6,21 @@ import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filamentweb.asset.AssetStore;
 import de.tomalbrc.filamentweb.service.*;
+import de.tomalbrc.filamentweb.util.Mc2Glb;
 import eu.pb4.polymer.resourcepack.api.AssetPaths;
 import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
 import jakarta.servlet.DispatcherType;
 import net.minecraft.resources.Identifier;
+import org.eclipse.jetty.ee10.servlet.ResourceServlet;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee10.servlet.ServletHolder;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.eclipse.jetty.util.resource.ResourceFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Paths;
 import java.util.EnumSet;
 import java.util.function.Function;
 
@@ -34,10 +35,11 @@ public class EditorServer implements Runnable {
         return RP_BUILDER;
     }
 
-    public EditorServer(int port) throws Exception {
+    public EditorServer() throws Exception {
         server = new Server();
         ServerConnector connector = new ServerConnector(server);
-        connector.setPort(port);
+        connector.setPort(FilamentEditorConfig.getInstance().bindPort);
+        connector.setHost(FilamentEditorConfig.getInstance().bindIp);
         server.addConnector(connector);
 
         ContextHandlerCollection handlers = new ContextHandlerCollection();
@@ -48,18 +50,19 @@ public class EditorServer implements Runnable {
     }
 
     private void addResourceHandler(ContextHandlerCollection contextHandlerCollection) throws Exception {
-        URL url = EditorServer.class.getClassLoader().getResource("filamentweb");
-
-        if (url == null) {
-            throw new Exception("Could not find the web files");
-        }
-
         ServletContextHandler handler = new ServletContextHandler(ServletContextHandler.SESSIONS);
         handler.setContextPath("/");
-        handler.setBaseResourceAsPath(Paths.get(url.toURI()));
+
+        var webRoot = ResourceFactory.of(handler).newClassLoaderResource("docs");
+        if (webRoot == null) {
+            throw new IllegalStateException("docs not found on the classpath");
+        }
+        handler.setBaseResource(webRoot);
 
         AuthFilter auth = new AuthFilter();
 
+        handler.addServlet(new ServletHolder(new ResourceServlet()), "/docs/*");
+        handler.addServlet(new ServletHolder(new ActionServlet()), "/action/*");
         handler.addServlet(new ServletHolder(new LoginServlet(auth)), "/login");
         handler.addServlet(new ServletHolder(new LogoutServlet()), "/logout");
         handler.addServlet(new ServletHolder(new AssetEditorServlet()), "/");
@@ -106,7 +109,7 @@ public class EditorServer implements Runnable {
         }
 
         try {
-            EditorServer server = new EditorServer(8080);
+            EditorServer server = new EditorServer();
             var thread = new Thread(server);
             thread.start();
         } catch (Exception e) {

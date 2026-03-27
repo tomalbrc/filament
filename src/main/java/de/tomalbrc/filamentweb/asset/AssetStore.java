@@ -2,11 +2,11 @@ package de.tomalbrc.filamentweb.asset;
 
 import com.fasterxml.classmate.ResolvedType;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.victools.jsonschema.generator.*;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.behaviour.BehaviourType;
@@ -19,7 +19,7 @@ import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import de.tomalbrc.filament.data.resource.BlockResource;
 import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.util.annotation.Description;
-import de.tomalbrc.filamentweb.PojoComponents;
+import de.tomalbrc.filamentweb.util.PojoComponents;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import net.minecraft.core.Registry;
@@ -45,8 +45,8 @@ import org.joml.Quaternionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
@@ -55,9 +55,18 @@ public class AssetStore {
     public static byte[] DEFAULT_MODEL;
 
     static Map<UUID, Asset> assetsByUuid = new ConcurrentHashMap<>();
+    static Map<Path, Asset> assetsByPath = new ConcurrentHashMap<>();
 
     public static void registerAsset(Asset asset) {
+        if (asset.schema == null) {
+            asset.schema = getSchema(asset.data, asset.type);
+        }
+
+        if (assetsByPath.containsKey(asset.path))
+            return;
+
         assetsByUuid.put(asset.uuid, asset);
+        assetsByPath.put(asset.path, asset);
     }
 
     public static Asset getAsset(UUID uuid) {
@@ -73,9 +82,12 @@ public class AssetStore {
         asset.uuid = UUID.randomUUID();
         asset.data = data;
         asset.path = data.filepath;
-        asset.modid = "Unknown";
         asset.type = clazz;
+        asset.schema = getSchema(instance, asset.type);
+        AssetStore.registerAsset(asset);
+    }
 
+    public static JsonElement getSchema(Object instance, Type assetType) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
@@ -388,8 +400,7 @@ public class AssetStore {
         SchemaGeneratorConfig config = configBuilder.build();
         SchemaGenerator generator = new SchemaGenerator(config);
 
-        asset.schema = JsonParser.parseString(generator.generateSchema(asset.type).toString());
-        AssetStore.registerAsset(asset);
+        return JsonParser.parseString(generator.generateSchema(assetType).toString());
     }
 
     private static Object getDefaultInstance(Class<?> clazz) throws Exception {

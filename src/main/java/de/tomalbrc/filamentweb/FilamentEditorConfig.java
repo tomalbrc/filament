@@ -22,6 +22,10 @@ public class FilamentEditorConfig {
     public String defaultUser;
     public String defaultPassword;
 
+    public String bindIp = "0.0.0.0";
+    public int bindPort = 25599;
+    public String externalAddress = "http://127.0.0.1:25599";
+
     public static FilamentEditorConfig getInstance() {
         if (instance == null) {
             if (!load()) {

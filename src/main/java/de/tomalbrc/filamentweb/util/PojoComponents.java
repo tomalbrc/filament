@@ -1,4 +1,4 @@
-package de.tomalbrc.filamentweb;
+package de.tomalbrc.filamentweb.util;
 
 import com.google.common.reflect.TypeToken;
 import net.minecraft.core.component.DataComponentMap;

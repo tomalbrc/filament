@@ -1,4 +1,4 @@
-package de.tomalbrc.filamentweb;
+package de.tomalbrc.filamentweb.util;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

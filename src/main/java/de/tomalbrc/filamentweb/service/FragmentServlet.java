@@ -1,9 +1,9 @@
 package de.tomalbrc.filamentweb.service;
 
 import com.google.gson.*;
-import de.tomalbrc.filamentweb.JsonPathUtil;
+import de.tomalbrc.filamentweb.util.JsonPathUtil;
 import de.tomalbrc.filamentweb.SchemaFormBuilder;
-import de.tomalbrc.filamentweb.SchemaUtil;
+import de.tomalbrc.filamentweb.util.SchemaUtil;
 import de.tomalbrc.filamentweb.asset.Asset;
 import de.tomalbrc.filamentweb.asset.AssetStore;
 import jakarta.servlet.http.HttpServlet;
@@ -14,13 +14,38 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class FragmentServlet extends HttpServlet {
-    private static final Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
+    public enum Operation {
+        UPDATE_FIELD("updateField"),
+        UPDATE_COMPOSED_CHOICE("updateComposedChoice"),
+        ADD_ARRAY("addArray"),
+        RENAME_OBJECT_ENTRY("renameObjectEntry"),
+        ADD_OBJECT_ENTRY("addObjectEntry"),
+        REMOVE_OBJECT_ENTRY("removeObjectEntry");
+
+        final String op;
+        static final Map<String, Operation> map = new HashMap<>();
+
+        Operation(String op) {
+            this.op = op;
+        }
+
+        public static Operation fromString(String op) {
+            return map.get(op);
+        }
+
+        public String toString() {
+            return this.op;
+        }
+
+        static {
+            for (Operation operation : values()) {
+                map.put(operation.op, operation);
+            }
+        }
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -29,7 +54,7 @@ public class FragmentServlet extends HttpServlet {
         resp.setContentType("text/html; charset=UTF-8");
 
         String uuid = req.getParameter("name");
-        String op = req.getParameter("op");
+        Operation op = Operation.fromString(req.getParameter("op"));
         String path = req.getParameter("path");
         String key = req.getParameter("key");
         String value = req.getParameter("value");
@@ -60,7 +85,7 @@ public class FragmentServlet extends HttpServlet {
         JsonElement documentJson = asset.readJson();
 
         switch (op) {
-            case "updateField": {
+            case UPDATE_FIELD: {
                 JsonObject fieldSchema = effectiveSchemaAtPath(schemaRoot, documentJson, path);
                 JsonElement currentValue = JsonPathUtil.getElementAtPath(documentJson, path);
                 String submittedRaw = extractSubmittedRawValue(req, path, value);
@@ -68,13 +93,13 @@ public class FragmentServlet extends HttpServlet {
                 JsonElement coerced = coerceSubmittedValue(submitted, fieldSchema, currentValue);
 
                 JsonPathUtil.setValueAtPath(documentJson, path, coerced);
-                asset.writeJson(documentJson);
+                asset.apply(documentJson);
 
                 resp.getWriter().write(SchemaFormBuilder.renderJsonPreviewFragment(uuid, documentJson, true).render());
                 return;
             }
 
-            case "updateComposedChoice": {
+            case UPDATE_COMPOSED_CHOICE: {
                 JsonObject nodeSchema = effectiveSchemaAtPath(schemaRoot, documentJson, path);
                 List<JsonObject> branches = SchemaUtil.extractBranches(nodeSchema, schemaRoot);
 
@@ -92,14 +117,14 @@ public class FragmentServlet extends HttpServlet {
                 JsonObject selectedBranch = branches.get(selectedIndex);
                 JsonElement replacement = SchemaUtil.createDefaultForSchema(selectedBranch, schemaRoot);
                 JsonPathUtil.setValueAtPath(documentJson, path, replacement);
-                asset.writeJson(documentJson);
+                asset.apply(documentJson);
 
                 resp.getWriter().write(SchemaFormBuilder.renderComposedFieldFragment(uuid, path, nodeSchema, replacement, schemaRoot).render());
                 resp.getWriter().write(SchemaFormBuilder.renderJsonPreviewFragment(uuid, documentJson, true).render());
                 return;
             }
 
-            case "addArray": {
+            case ADD_ARRAY: {
                 JsonElement target = JsonPathUtil.getElementAtPath(documentJson, path);
                 if (target == null || !target.isJsonArray()) {
                     resp.setStatus(400);
@@ -116,16 +141,16 @@ public class FragmentServlet extends HttpServlet {
 
                 JsonElement newItem = SchemaUtil.createDefaultForSchema(itemsSchema, schemaRoot);
                 arr.add(newItem);
-                asset.writeJson(documentJson);
+                asset.apply(documentJson);
 
                 resp.getWriter().write(SchemaFormBuilder.renderArrayContainer(uuid, path, itemsSchema, arr, schemaRoot).render());
                 resp.getWriter().write(SchemaFormBuilder.renderJsonPreviewFragment(uuid, documentJson, true).render());
                 return;
             }
 
-            case "renameObjectEntry":
-            case "addObjectEntry":
-            case "removeObjectEntry": {
+            case RENAME_OBJECT_ENTRY:
+            case ADD_OBJECT_ENTRY:
+            case REMOVE_OBJECT_ENTRY: {
                 JsonElement el = JsonPathUtil.getElementAtPath(documentJson, path);
 
                 if (el == null || el.isJsonNull()) {
@@ -138,7 +163,7 @@ public class FragmentServlet extends HttpServlet {
                     JsonObject obj = el.getAsJsonObject();
                     JsonObject objectSchema = effectiveSchemaAtPath(schemaRoot, documentJson, path);
 
-                    if ("addObjectEntry".equals(op)) {
+                    if (op == Operation.ADD_OBJECT_ENTRY) {
                         String newKey = req.getParameter("key");
                         if (newKey == null || newKey.isBlank()) {
                             newKey = "newKey";
@@ -150,15 +175,15 @@ public class FragmentServlet extends HttpServlet {
                             JsonElement newVal = SchemaUtil.createDefaultForSchema(propertySchema, schemaRoot);
 
                             // TODO: only create required fields for the "newVal" default value!
-                            if ("components".equalsIgnoreCase(newKey)) newVal = new JsonObject();
+                            if ("components".equals(newKey) || "behaviour".equals(newKey)) newVal = new JsonObject();
                             obj.add(newKey, newVal);
-                            asset.writeJson(documentJson);
+                            asset.apply(documentJson);
                         }
 
-                    } else if ("removeObjectEntry".equals(op)) {
+                    } else if (op == Operation.REMOVE_OBJECT_ENTRY) {
                         if (key != null) {
                             obj.remove(key);
-                            asset.writeJson(documentJson);
+                            asset.apply(documentJson);
                         }
                     } else {
                         String newKey = req.getParameter("newKey");
@@ -167,7 +192,7 @@ public class FragmentServlet extends HttpServlet {
                         if (key != null && newKey != null && !newKey.isBlank() && !key.equals(newKey) && obj.has(key) && !obj.has(newKey)) {
                             JsonElement moved = obj.remove(key);
                             obj.add(newKey, moved);
-                            asset.writeJson(documentJson);
+                            asset.apply(documentJson);
                         }
                     }
 
@@ -175,12 +200,12 @@ public class FragmentServlet extends HttpServlet {
                 } else if (el.isJsonArray()) {
                     JsonArray arr = el.getAsJsonArray();
 
-                    if ("removeObjectEntry".equals(op) && key != null) {
+                    if (op == Operation.REMOVE_OBJECT_ENTRY && key != null) {
                         try {
                             int idx = Integer.parseInt(key);
                             if (idx >= 0 && idx < arr.size()) {
                                 arr.remove(idx);
-                                asset.writeJson(documentJson);
+                                asset.apply(documentJson);
                             }
                         } catch (NumberFormatException ignored) {
                         }
@@ -470,6 +495,7 @@ public class FragmentServlet extends HttpServlet {
         }
 
         currentSchema = SchemaUtil.normalizeSchema(currentSchema, rootSchema);
+        // todo
         //currentSchema = SchemaUtil.chooseMatchingBranch(currentSchema, currentValue, rootSchema);
         return currentSchema == null ? new JsonObject() : currentSchema;
     }

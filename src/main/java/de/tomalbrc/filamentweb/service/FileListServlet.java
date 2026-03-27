@@ -1,5 +1,6 @@
 package de.tomalbrc.filamentweb.service;
 
+import de.tomalbrc.filamentweb.util.WebPaths;
 import de.tomalbrc.filamentweb.asset.Asset;
 import de.tomalbrc.filamentweb.asset.AssetStore;
 import jakarta.servlet.http.HttpServlet;
@@ -124,7 +125,7 @@ public class FileListServlet extends HttpServlet {
         if (depth == 0) {
             return div().withClass("list-group list-group-flush w-100 p-0").with(children);
         } else {
-            String folderId = "f-" + UUID.randomUUID().toString().substring(0, 8);
+            String folderId = "f-" + UUID.randomUUID();
 
             return div().with(
                     a().withClass("list-group-item list-group-item-action list-group-item-dark text-truncate border-0 py-2 d-flex align-items-center rounded-0 folder-toggle")
@@ -132,7 +133,7 @@ public class FileListServlet extends HttpServlet {
                             .attr("href", "#" + folderId)
                             .attr("role", "button")
                             .attr("aria-expanded", "true")
-                            .attr("style", "padding-left:" + (depth * 12) + "px; cursor: pointer;")
+                            .attr("style", "padding-left:" + (depth * 5) + "px; cursor: pointer;")
                             .with(
                                     span("▼").withClass("chevron me-2").attr("style", "font-size: 0.6rem;"),
                                     span("📁 " + node.name).withClass("fw-semibold text-truncate")
@@ -149,8 +150,8 @@ public class FileListServlet extends HttpServlet {
 
         return a()
                 .withClass("list-group-item list-group-item-action border-0 py-1 pe-2 rounded-0")
-                .attr("style", "cursor:pointer; padding-left:" + (depth * 12 + 24) + "px;")
-                .attr("hx-get", "/rest/file?name=" + asset.uuid)
+                .attr("style", "cursor:pointer; padding-left:" + (depth * 5 + 12) + "px;")
+                .attr("hx-get", WebPaths.file(asset.uuid.toString()))
                 .attr("hx-target", "#editor-pane")
                 .attr("hx-swap", "innerHTML")
                 .attr("title", "Open " + id)
@@ -167,7 +168,7 @@ public class FileListServlet extends HttpServlet {
         return a()
                 .withClass("list-group-item list-group-item-action border-0 py-1 px-2 rounded-0")
                 .attr("style", "cursor:pointer;")
-                .attr("hx-get", "/rest/file?name=" + asset.uuid)
+                .attr("hx-get", WebPaths.file(asset.uuid.toString()))
                 .attr("hx-target", "#editor-pane")
                 .attr("hx-swap", "innerHTML")
                 .attr("title", "Open " + id)
@@ -199,6 +200,7 @@ public class FileListServlet extends HttpServlet {
     }
 
     private static Path commonPrefix(List<Path> paths) {
+        // todo: hmm
         if (true) {
             return Path.of("world", "datapacks");
         }

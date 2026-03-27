@@ -2,12 +2,12 @@ package de.tomalbrc.filamentweb.service;
 
 import com.google.gson.*;
 import de.tomalbrc.filament.Filament;
-import de.tomalbrc.filamentweb.JsonPathUtil;
+import de.tomalbrc.filamentweb.util.JsonPathUtil;
 import de.tomalbrc.filamentweb.SchemaFormBuilder;
-import de.tomalbrc.filamentweb.SchemaUtil;
+import de.tomalbrc.filamentweb.util.SchemaUtil;
 import de.tomalbrc.filamentweb.asset.Asset;
 import de.tomalbrc.filamentweb.asset.AssetStore;
-import jakarta.servlet.ServletException;
+import j2html.tags.ContainerTag;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static j2html.TagCreator.div;
+import static j2html.TagCreator.input;
 
 public class ReadFileServlet extends HttpServlet {
     @Override
@@ -36,6 +37,21 @@ public class ReadFileServlet extends HttpServlet {
 
         var pane = SchemaFormBuilder.renderPane(name);
         resp.getWriter().write(pane.render());
+
+        var currentUuidField = input()
+                .withType("hidden")
+                .withId("current-file-uuid")
+                .withName("uuid")
+                .withValue(name)
+                .attr("hx-swap-oob", "true");
+
+        resp.getWriter().write(currentUuidField.render());
+    }
+
+    public static ContainerTag<?> renderOob(String uuid) {
+        return div().withId("editor-pane").attr("hx-swap-oob", "true").with(
+                SchemaFormBuilder.renderPane(uuid)
+        );
     }
 
     @Override
