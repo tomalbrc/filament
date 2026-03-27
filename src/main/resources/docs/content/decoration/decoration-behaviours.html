@@ -1,0 +1,894 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Behaviours - Filament Documentation (1.3.x)</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../.././mdbook-admonish.css">
+        <link rel="stylesheet" href="../.././custom.css">
+        <link rel="stylesheet" href="../../langtabs.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Filament Documentation (1.3.x)</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="decoration-behaviours"><a class="header" href="#decoration-behaviours">Decoration Behaviours</a></h1>
+<p>Example of some behaviours for decorations:</p>
+<div id="admonition-example" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-title">
+<div class="admonition-title">
+<div id="admonition-example-title">
+<p>Example</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-example"></a>
+</div>
+<div>
+<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+<div class="langtabs-code active" data-lang="yaml-0">
+<pre><code class="language-yml">id: mynamespace:clown_horn
+vanillaItem: minecraft:paper
+itemResource:
+  models:
+    default: mynamespace:custom/misc/clown_horn
+behaviour:
+  animation:
+    model: mynamespace:mymodel
+    autoplay: myAnimationName
+  container:
+    name: Example Container
+    size: 9
+    purge: false
+    openAnimation: openAnimation
+    closeAnimation: closeAnimation
+  lock:
+    key: minecraft:tripwire_hook
+    consumeKey: false
+    discard: false
+    unlockAnimation: unlockAnimation
+    command: "say Unlocked"
+  seat:
+    - offset: [0.0, 0.0, 0.0]
+      direction: 0.0
+  showcase:
+    - offset: [0.0, 0.0, 0.0]
+      scale: [1.0, 1.0, 1.0]
+      rotation: [0.0, 0.0, 0.0, 1.0]
+      type: item
+      filterItems: null
+      filterTags: null
+  cosmetic:
+    slot: head
+    model: mynamespace:clown_backpack_animated
+    autoplay: idle
+    scale: [1.5, 1.5, 1.5]
+    translation: [0.0, 0.5, 0.0]
+</code></pre>
+</div>
+<div class="langtabs-code" data-lang="json-1">
+<pre><code class="language-json">{
+  "id": "mynamespace:clown_horn",
+  "vanillaItem": "minecraft:paper",
+  "itemResource": {
+    "models": {
+      "default": "mynamespace:custom/misc/clown_horn"
+    }
+  },
+  "behaviour": {
+    "animation": {
+      "model": "mynamespace:mymodel",
+      "autoplay": "myAnimationName"
+    },
+    "container": {
+      "name": "Example Container",
+      "size": 9,
+      "purge": false,
+      "openAnimation": "openAnimation",
+      "closeAnimation": "closeAnimation"
+    },
+    "lock": {
+      "key": "minecraft:tripwire_hook",
+      "consumeKey": false,
+      "discard": false,
+      "unlockAnimation": "unlockAnimation",
+      "command": "say Unlocked"
+    },
+    "seat": [
+      {
+        "offset": [0.0, 0.0, 0.0],
+        "direction": 0.0
+      }
+    ],
+    "showcase": [
+      {
+        "offset": [0.0, 0.0, 0.0],
+        "scale": [1.0, 1.0, 1.0],
+        "rotation": [0.0, 0.0, 0.0, 1.0],
+        "type": "item",
+        "filterItems": null,
+        "filterTags": null
+      }
+    ],
+    "cosmetic": {
+      "slot": "head",
+      "model": "mynamespace:clown_backpack_animated",
+      "autoplay": "idle",
+      "scale": [1.5, 1.5, 1.5],
+      "translation": [0.0, 0.5, 0.0]
+    }
+  }
+}
+</code></pre>
+</div></div></div>
+</div>
+</div>
+<h1 id="behaviours"><a class="header" href="#behaviours">Behaviours</a></h1>
+<hr />
+<h2 id="animation-behaviour"><a class="header" href="#animation-behaviour"><code>animation</code> behaviour</a></h2>
+<p>Defines an animation behaviour for decorations. Supports ajmodel/bbmodels.</p>
+<p>Models are placed in <code>data/mynamespace/filament/model/mymodel.bbmodel</code>.</p>
+<p>You would reference it as <code>mynamespace:mymodel</code> in the <code>model</code> field.</p>
+<p>Animations for placed blocks can be triggered by modifying the block entity's Animation NBT field:
+<code>/data modify block ~ ~ ~ Animation set value myAnimationName</code></p>
+<div id="admonition-configurable-fields" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-title">
+<div class="admonition-title">
+<div id="admonition-configurable-fields-title">
+<p>Configurable Fields</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-configurable-fields"></a>
+</div>
+<div>
+<ul>
+<li><code>model</code>: The name of the animated model associated with this animation (if applicable).</li>
+<li><code>autoplay</code>: The name of the animation to autoplay (if specified).</li>
+<li><code>variant</code>: The model variant to display (for Animated-Java models). Can be mapped to a block-state</li>
+</ul>
+</div>
+</div>
+<div id="admonition-example-1" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-1-title">
+<div class="admonition-title">
+<div id="admonition-example-1-title">
+<p>Example</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-example-1"></a>
+</div>
+<div>
+<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+<div class="langtabs-code active" data-lang="yaml-0">
+<pre><code class="language-yml">animation:
+  model: mynamespace:mymodel
+  autoplay: myAnimationName
+</code></pre>
+</div>
+<div class="langtabs-code" data-lang="json-1">
+<pre><code class="language-json">{
+  "animation": {
+    "model": "mynamespace:mymodel",
+    "autoplay": "myAnimationName"
+  }
+}
+</code></pre>
+</div></div></div>
+</div>
+</div>
+<hr />
+<h2 id="container-behaviour"><a class="header" href="#container-behaviour"><code>container</code> behaviour</a></h2>
+<p>Defines a container behaviour for decorations.</p>
+<p>Allows to create barrels, trashcans, etc.</p>
+<p>Works with the <code>animation</code> behaviour to play an animation defined in the bbmodel/ajblueprint.</p>
+<p>Supports copper golem item transport based on block-tags: <code>c:chests/wooden</code> and <code>minecraft:copper_chests</code></p>
+<div id="admonition-configurable-fields-1" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-1-title">
+<div class="admonition-title">
+<div id="admonition-configurable-fields-1-title">
+<p>Configurable Fields</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-configurable-fields-1"></a>
+</div>
+<div>
+<ul>
+<li><code>name</code>: The default name displayed in the container UI. Empty by default</li>
+<li><code>titlePrefix</code>: Prefix for the title, can be used for custom backgrounds for example. Empty by default</li>
+<li><code>showCustomName</code>: Flag whether to show the name of the placed itemstack. Enabled by default.</li>
+<li><code>size</code>: The size of the container, has to be 5 slots or a multiple of 9, up to 6 rows of 9 slots.</li>
+<li><code>purge</code>: Indicates whether the container's contents should be cleared when no player is viewing the inventory.</li>
+<li><code>openAnimation</code>: The name of the animation to play when the container is opened (if applicable).</li>
+<li><code>closeAnimation</code>: The name of the animation to play when the container is closed (if applicable).</li>
+<li><code>canPickup</code>: Flag whether the container will not drop its items when broken but store it as component in the dropped item</li>
+<li><code>hopperDropperSupport</code>: Flag whether hoppers/droppers can interact with this container</li>
+<li><code>angerPiglins</code>: Flag whether opening the container will anger piglins. Enabled by default.</li>
+</ul>
+</div>
+</div>
+<div id="admonition-example-2" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-2-title">
+<div class="admonition-title">
+<div id="admonition-example-2-title">
+<p>Example</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-example-2"></a>
+</div>
+<div>
+<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+<div class="langtabs-code active" data-lang="yaml-0">
+<pre><code class="language-yml">container:
+  name: Example Container
+  size: 9
+  purge: false
+  openAnimation: openAnimation
+  closeAnimation: closeAnimation
+</code></pre>
+</div>
+<div class="langtabs-code" data-lang="json-1">
+<pre><code class="language-json">{
+  "container": {
+    "name": "Example Container",
+    "size": 9,
+    "purge": false,
+    "openAnimation": "openAnimation",
+    "closeAnimation": "closeAnimation"
+  }
+}
+</code></pre>
+</div></div></div>
+</div>
+</div>
+<hr />
+<h2 id="animated_chest-behaviour"><a class="header" href="#animated_chest-behaviour"><code>animated_chest</code> behaviour</a></h2>
+<p>Allows to make animated connectable containers with a left and right side.</p>
+<p>Requires with the <code>animation</code> behaviour to play an animation defined in the bbmodel/ajblueprint.</p>
+<p>Supports copper golem item transport based on block-tags: <code>c:chests/wooden</code> and <code>minecraft:copper_chests</code></p>
+<div id="admonition-configurable-fields-2" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-2-title">
+<div class="admonition-title">
+<div id="admonition-configurable-fields-2-title">
+<p>Configurable Fields</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-configurable-fields-2"></a>
+</div>
+<div>
+<ul>
+<li><code>name</code>: The default name displayed in the container UI.</li>
+<li><code>showCustomName</code>: Flag whether to show the name of the placed itemstack if it has a custom name. Enabled by default.</li>
+<li><code>size</code>: The size of the container, has to be 5 slots or a multiple of 9, up to 6 rows of 9 slots.</li>
+<li><code>purge</code>: Indicates whether the container's contents should be cleared when no player is viewing the inventory.</li>
+<li><code>openAnimation</code>: The name of the animation to play when the container is opened (if applicable).</li>
+<li><code>closeAnimation</code>: The name of the animation to play when the container is closed (if applicable).</li>
+<li><code>canPickup</code>: Flag whether the container will not drop its items when broken but store it as component in the dropped item</li>
+<li><code>hopperDropperSupport</code>: Flag whether hoppers/droppers can interact with this container</li>
+<li><code>angerPiglins</code>: Flag whether opening the container will anger piglins. Enabled by default.</li>
+<li><code>ignoreBlock</code>: Flag whether the block in direction as specified in <code>blockDirection</code> prevents the chest from being opened. Enabled by default</li>
+<li><code>blockDirection</code>: Direction for the <code>ignoreBlock</code> check. Can be <code>up</code>, <code>down</code>, <code>north</code>, <code>east</code>, <code>south</code>, <code>west</code>. <code>up</code> by default.</li>
+</ul>
+</div>
+</div>
+<div id="admonition-example-3" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-3-title">
+<div class="admonition-title">
+<div id="admonition-example-3-title">
+<p>Example</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-example-3"></a>
+</div>
+<div>
+<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+<div class="langtabs-code active" data-lang="yaml-0">
+<pre><code class="language-yml">animated_chest:
+  name: Example Chest
+  size: 27
+  openAnimation: openAnimation
+  closeAnimation: closeAnimation
+</code></pre>
+</div>
+<div class="langtabs-code" data-lang="json-1">
+<pre><code class="language-json">{
+  "animated_chest": {
+    "name": "Example Chest",
+    "size": 27,
+    "openAnimation": "openAnimation",
+    "closeAnimation": "closeAnimation"
+  }
+}
+</code></pre>
+</div></div></div>
+</div>
+</div>
+<hr />
+<h2 id="lock-behaviour"><a class="header" href="#lock-behaviour"><code>lock</code> behaviour</a></h2>
+<p>This behaviour runs a command, optionally with a key item.</p>
+<p>It's similar to the <code>execute</code> item-behaviour or <code>interact_execute</code> decoration behaviour.</p>
+<p>The command will only run once if a key is specified, the key can be empty to always run the commands/animations on
+interaction.
+The <code>repeatable</code> flag can be set to overwrite this.</p>
+<p>The <code>command</code> or <code>commands</code> are run as player but with elevated permissions, optionally at the decoration block itself.</p>
+<div id="admonition-configurable-fields-3" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-3-title">
+<div class="admonition-title">
+<div id="admonition-configurable-fields-3-title">
+<p>Configurable Fields</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-configurable-fields-3"></a>
+</div>
+<div>
+<ul>
+<li><code>key</code>: The identifier of the key required to unlock. Optional, if left empty the unlockAnimation will play (if applicable) and the commands will be run and the decoration will be discarded based on the <code>discard</code> flag.</li>
+<li><code>consumeKey</code>: Determines whether the key should be consumed upon unlocking.</li>
+<li><code>discard</code>: Specifies whether the decoration should be destroyed after interacting with it.</li>
+<li><code>unlockAnimation</code>: Name of the animation to play upon successful unlocking with a key (if applicable).</li>
+<li><code>command</code>: Command to execute when the lock is successfully unlocked (if specified).</li>
+<li><code>commands</code>: List of commands to execute when the lock is successfully unlocked (if specified).</li>
+<li><code>atBlock</code>: false/true flag whether the command should be run at the blocks' position</li>
+<li><code>console</code>: Run as server/console instead of as player</li>
+</ul>
+</div>
+</div>
+<hr />
+<h2 id="interact_execute-behaviour"><a class="header" href="#interact_execute-behaviour"><code>interact_execute</code> behaviour</a></h2>
+<p>This behaviour runs a command, plays an animation and runs a command once the animation finished.</p>
+<p>It behaves similar to the <code>lock</code> behaviour, but will always run, even with specified key.</p>
+<p>The command will only run once if a key is specified, the key can be empty to always run the commands/animations on
+interaction.
+The <code>repeatable</code> flag can be set to overwrite this.</p>
+<p>The <code>command</code> or <code>commands</code> are run as player but with elevated permissions, optionally at the decoration block itself.</p>
+<div id="admonition-configurable-fields-4" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-4-title">
+<div class="admonition-title">
+<div id="admonition-configurable-fields-4-title">
+<p>Configurable Fields</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-configurable-fields-4"></a>
+</div>
+<div>
+<ul>
+<li><code>key</code>: The identifier of the item held by player required to run commands/animations. Optional, if left empty the animation will play (if applicable) and the commands will be run and the decoration will be discarded based on the <code>discard</code> flag.</li>
+<li><code>consumeKey</code>: Determines whether the key should be consumed upon unlocking. Defaults to <code>false</code></li>
+<li><code>damageKey</code>: Determines whether the key should be damaged upon unlocking. Defaults to <code>false</code></li>
+<li><code>animate_per_player</code>: Flag to play animations per-player. Defaults to <code>false</code></li>
+<li><code>discard</code>: Specifies whether the decoration should be destroyed after interacting with it. Defaults to <code>false</code></li>
+<li><code>animation</code>: Name of the animation to play when interacting.</li>
+<li><code>animationPost</code>: Name of animation to player after the first one ended</li>
+<li><code>command</code>: Command to execute when the player holds the correct key (if a key is specified, otherwise the command is always run).</li>
+<li><code>commands</code>: List of commands, as above</li>
+<li><code>atBlock</code>: false/true flag whether the command should be run at the blocks' position</li>
+<li><code>commandPostAnimation</code>: Command to run when the first animation stops playing</li>
+<li><code>commandsPostAnimation</code>: List of commands, as above</li>
+<li><code>commandIncorrectKey</code>: Command to run when the player has an incorrect key</li>
+<li><code>commandsIncorrectKey</code>: List of commands, as above</li>
+<li><code>animationIncorrectKey</code>: Animation to play when the player has an incorrect key</li>
+<li><code>console</code>: Run as server/console instead of as player</li>
+</ul>
+</div>
+</div>
+<hr />
+<h2 id="break_execute-behaviour"><a class="header" href="#break_execute-behaviour"><code>break_execute</code> behaviour</a></h2>
+<p>This behaviour runs a command when the decoration is broken by a player</p>
+<div id="admonition-configurable-fields-5" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-5-title">
+<div class="admonition-title">
+<div id="admonition-configurable-fields-5-title">
+<p>Configurable Fields</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-configurable-fields-5"></a>
+</div>
+<div>
+<ul>
+<li><code>command</code>: Command to execute when the lock is successfully unlocked (if specified).</li>
+<li><code>commands</code>: List of commands to execute when interacted with</li>
+<li><code>atBlock</code>: false/true flag whether the command should be run at the blocks' position</li>
+<li><code>console</code>: Run as server/console instead of as player</li>
+</ul>
+</div>
+</div>
+<hr />
+<h2 id="seat-behaviour"><a class="header" href="#seat-behaviour"><code>seat</code> behaviour</a></h2>
+<p>Defines a seating behaviour for decorations.</p>
+<p>For chairs, benches, etc.</p>
+<div id="admonition-configurable-fields-6" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-6-title">
+<div class="admonition-title">
+<div id="admonition-configurable-fields-6-title">
+<p>Configurable Fields</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-configurable-fields-6"></a>
+</div>
+<div>
+<ul>
+<li><code>offset</code>: The player seating offset.</li>
+<li><code>direction</code>: The rotation offset of the seat in degrees. Defaults to <code>180</code></li>
+</ul>
+</div>
+</div>
+<div id="admonition-single-seat" class="admonition admonish-example" role="note" aria-labelledby="admonition-single-seat-title">
+<div class="admonition-title">
+<div id="admonition-single-seat-title">
+<p>Single seat</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-single-seat"></a>
+</div>
+<div>
+<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+<div class="langtabs-code active" data-lang="yaml-0">
+<pre><code class="language-yml">seat:
+  - offset: [0.0, 0.0, 0.0]
+    direction: 0.0
+</code></pre>
+</div>
+<div class="langtabs-code" data-lang="json-1">
+<pre><code class="language-json">{
+  "seat": [
+    {
+      "offset": [0.0, 0.0, 0.0],
+      "direction": 0.0
+    }
+  ]
+}
+</code></pre>
+</div></div></div>
+</div>
+</div>
+<hr />
+<h2 id="showcase-behaviour"><a class="header" href="#showcase-behaviour"><code>showcase</code> behaviour</a></h2>
+<p>Defines a showcase behaviour for decorations.</p>
+<p>Allows you to create shelves / item-frame like decorations.</p>
+<p>Can be either a list of elements or an object as described below:</p>
+<p>Supports copper golem item transport based on block-tags: <code>c:chests/wooden</code> and <code>minecraft:copper_chests</code></p>
+<div id="admonition-configurable-fields-7" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-7-title">
+<div class="admonition-title">
+<div id="admonition-configurable-fields-7-title">
+<p>Configurable Fields</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-configurable-fields-7"></a>
+</div>
+<div>
+<ul>
+<li><code>useMenu</code>: Use a container menu instead of the in-world insert interaction</li>
+<li><code>name</code>: The default name displayed in the container UI.</li>
+<li><code>canPickup</code>: Flag whether the container will not drop its items when broken but store it as component in the dropped item</li>
+<li><code>showCustomName</code>: Show the name of the itemstack inside the container menu. Defaults to <code>true</code></li>
+<li><code>hopperDropperSupport</code>: Enables hopper and dropper interaction. Defaults to <code>true</code></li>
+<li><code>elements</code>: List of elements</li>
+</ul>
+</div>
+</div>
+<div id="admonition-fields-for-each-element" class="admonition admonish-info" role="note" aria-labelledby="admonition-fields-for-each-element-title">
+<div class="admonition-title">
+<div id="admonition-fields-for-each-element-title">
+<p>Fields for each element</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-fields-for-each-element"></a>
+</div>
+<div>
+<ul>
+<li><code>offset</code>: Offset for positioning the showcased item.</li>
+<li><code>scale</code>: Scale of the showcased item.</li>
+<li><code>rotation</code>: Rotation of the showcased item.</li>
+<li><code>type</code>: Display entity type to use, <code>block</code> for block display, <code>item</code> for item display, <code>dynamic</code> uses block displays if possible, otherwise item displays.</li>
+<li><code>filterItems</code>: Items to allow.</li>
+<li><code>filterTags</code>: Items with given item tags to allow.</li>
+<li><code>addItemSound</code>: Sound to use when inserting an item by a player. Defaults to item frame sounds</li>
+<li><code>removeItemSound</code>: Sound to use when an item is removed by a player. Defaults to item frame sounds</li>
+<li><code>maxStackSize</code>: Max stack size for this showcase element. Defaults to 1</li>
+</ul>
+</div>
+</div>
+<div id="admonition-showcase-with-menu" class="admonition admonish-example" role="note" aria-labelledby="admonition-showcase-with-menu-title">
+<div class="admonition-title">
+<div id="admonition-showcase-with-menu-title">
+<p>Showcase with menu</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-showcase-with-menu"></a>
+</div>
+<div>
+<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+<div class="langtabs-code active" data-lang="yaml-0">
+<pre><code class="language-yml">showcase:
+  - offset: [0.0, 0.0, 0.0]
+    scale: [1.0, 1.0, 1.0]
+    rotation: [0.0, 0.0, 0.0, 1.0]
+    type: item
+    filterItems:
+      - minecraft:paper
+    filterTags:
+      - minecraft:tag_example
+</code></pre>
+</div>
+<div class="langtabs-code" data-lang="json-1">
+<pre><code class="language-json">{
+  "showcase": [
+    {
+      "offset": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "rotation": [0.0, 0.0, 0.0, 1.0],
+      "type": "item",
+      "filterItems": ["minecraft:paper"],
+      "filterTags": ["minecraft:tag_example"]
+    }
+  ]
+}
+</code></pre>
+</div></div></div>
+</div>
+</div>
+<div id="admonition-showcase-with-menu-1" class="admonition admonish-example" role="note" aria-labelledby="admonition-showcase-with-menu-1-title">
+<div class="admonition-title">
+<div id="admonition-showcase-with-menu-1-title">
+<p>Showcase with menu</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-showcase-with-menu-1"></a>
+</div>
+<div>
+<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+<div class="langtabs-code active" data-lang="yaml-0">
+<pre><code class="language-yml">showcase:
+  hopperDropperSupport: true
+  useMenu: true
+  name: "Showcase"
+  showCustomName: false
+  canPickup: false
+  elements:
+    - offset: [0, 0, 0]
+      scale: [1, 1, 1]
+      rotation: [0, 0, 0]
+      type: item
+      addItemSound: minecraft:item_frame.add_item
+      removeItemSound: minecraft:item_frame.remove_item
+      maxStackSize: 1
+</code></pre>
+</div>
+<div class="langtabs-code" data-lang="json-1">
+<pre><code class="language-json">{
+   "showcase":{
+      "hopperDropperSupport": true,
+      "useMenu": false,
+      "name": "Showcase",
+      "showCustomName":false,
+      "canPickup":false,
+      "elements":[
+         {
+            "offset":[0, 0, 0],
+            "scale":[1, 1, 1],
+            "rotation":[0, 0, 0],
+            "type": "item",
+            "addItemSound": "minecraft:item_frame.add_item",
+            "removeItemSound": "minecraft:item_frame.remove_item",
+            "maxStackSize": 1
+         }
+      ]
+   }
+}
+</code></pre>
+</div></div></div>
+</div>
+</div>
+<hr />
+<h2 id="sign-behaviour"><a class="header" href="#sign-behaviour"><code>sign</code> behaviour</a></h2>
+<p>Allows you to create signs with multiple text displays.</p>
+<p>Can be either a list of elements or an object as described below:</p>
+<div id="admonition-configurable-fields-8" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-8-title">
+<div class="admonition-title">
+<div id="admonition-configurable-fields-8-title">
+<p>Configurable Fields</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-configurable-fields-8"></a>
+</div>
+<div>
+<ul>
+<li><code>canEdit</code>: Flag wether the sign elements can be edited. Defaults to <code>true</code></li>
+<li><code>waxable</code>: Flag wether the sign is waxable. Defaults to <code>true</code></li>
+<li><code>dyeable</code>: Flag wether the sign is dyeable. Defaults to <code>true</code></li>
+<li><code>block</code>: Sign block to use for the Sign Edit GUI. Defaults to <code>minecraft:oak_sign</code></li>
+<li><code>elements</code>: List of elements. See below</li>
+</ul>
+</div>
+</div>
+<div id="admonition-fields-for-each-element-1" class="admonition admonish-info" role="note" aria-labelledby="admonition-fields-for-each-element-1-title">
+<div class="admonition-title">
+<div id="admonition-fields-for-each-element-1-title">
+<p>Fields for each element</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-fields-for-each-element-1"></a>
+</div>
+<div>
+<ul>
+<li><code>offset</code>: Offset for positioning the text element. Defaults to <code>[0, 0, 0.5]</code></li>
+<li><code>scale</code>: Scale of the text element. Defaults to <code>[0.5, 0.5, 0.5]</code></li>
+<li><code>rotation</code>: Rotation of the showcased item.</li>
+<li><code>lines</code>: Number of lines for this sign element. Defaults to <code>4</code></li>
+<li><code>text</code>: List of predefined lines of text for this sign element.</li>
+<li><code>billboardMode</code>: Billboard mode of this element. Can be <code>fixed</code>, <code>vertical</code>, <code>horizontal</code>, <code>center</code>. Defaults to <code>fixed</code></li>
+<li><code>backgroundColor</code>: Background color of the text element. Defaults to <code>0</code></li>
+<li><code>seeThrough</code>: See-through flag. Defaults to <code>false</code></li>
+<li><code>alignment</code>: Text alignment. Can be <code>center</code>, <code>left</code>, <code>right</code>. Defaults to <code>center</code></li>
+</ul>
+</div>
+</div>
+<div id="admonition-sign" class="admonition admonish-example" role="note" aria-labelledby="admonition-sign-title">
+<div class="admonition-title">
+<div id="admonition-sign-title">
+<p>Sign</p>
+</div>
+<a class="admonition-anchor-link" href="#admonition-sign"></a>
+</div>
+<div>
+<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+<div class="langtabs-code active" data-lang="yaml-0">
+<pre><code class="language-yml">sign:
+  can_edit: true
+  elements:
+    - offset:
+        - 0
+        - 0
+        - -0.51
+      rotation:
+        - 0
+        - 180
+        - 0
+      text:
+        - "&lt;rainbow&gt;Color test 2&lt;/rainbow&gt;"
+        - "Very cool!"
+        - "this is the backside"
+        - ""
+    - offset:
+        - 0
+        - 0
+        - -0.55
+      text:
+        - "&lt;rainbow&gt;Color test 1&lt;/rainbow&gt;"
+        - "Very cool!"
+        - "this is the front side"
+        - ""
+</code></pre>
+</div>
+<div class="langtabs-code" data-lang="json-1">
+<pre><code class="language-json">{
+   "sign":{
+      "can_edit":true,
+      "elements":[
+         {
+            "offset":[
+               0,
+               0,
+               -0.51
+            ],
+            "rotation":[
+               0,
+               180,
+               0
+            ],
+            "text":[
+               "&lt;rainbow&gt;Color test 2&lt;/rainbow&gt;",
+               "Very cool!",
+               "this is the backside",
+               ""
+            ]
+         },
+         {
+            "offset":[
+               0,
+               0,
+               -0.55
+            ],
+            "text":[
+               "&lt;rainbow&gt;Color test 1&lt;/rainbow&gt;",
+               "Very cool!",
+               "this is the front side",
+               ""
+            ]
+         }
+      ]
+   }
+}
+</code></pre>
+</div></div></div>
+</div>
+</div>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../content/decoration/decoration-properties.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../content/decoration/decoration-blocks.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../content/decoration/decoration-properties.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../content/decoration/decoration-blocks.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../langtabs.js"></script>
+
+
+
+    </div>
+    </body>
+</html>
