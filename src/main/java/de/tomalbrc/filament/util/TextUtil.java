@@ -15,7 +15,7 @@ public class TextUtil {
         //    return adventure == null ? toNative(parsed) : adventure.asNative(parsed);
         //}
         else
-            return TagParser.createSimplifiedTextFormat().parseComponent(text, ParserContext.of());
+            return TagParser.createQuickTextWithSTF().parseComponent(text, ParserContext.of());
     }
 
     //private static Component toNative(net.kyori.adventure.text.Component component) {
