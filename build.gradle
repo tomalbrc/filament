@@ -68,8 +68,9 @@ dependencies {
 }
 
 jar {
+    from zipTree(shadowJar.archiveFile)
     dependsOn shadowJar
-//    inputFile.set(shadowJar.archiveFile)
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 shadowJar {

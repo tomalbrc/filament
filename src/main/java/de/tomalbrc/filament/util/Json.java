@@ -73,7 +73,7 @@ public class Json {
             .registerTypeHierarchyAdapter(DataComponentMap.class, new DataComponentsDeserializer())
             .registerTypeHierarchyAdapter(Display.BillboardConstraints.class, new SimpleCodecDeserializer<>(Display.BillboardConstraints.CODEC))
             .registerTypeHierarchyAdapter(EquipmentSlot.class, new SimpleCodecDeserializer<>(EquipmentSlot.CODEC))
-            .registerTypeHierarchyAdapter(BlockModelType.class, new LowercaseEnumDeserializer<>(BlockModelType.class))
+            .registerTypeHierarchyAdapter(BlockModelType.class, new BlockModelTypeDeserializer())
             .registerTypeHierarchyAdapter(Difficulty.class, new SimpleCodecDeserializer<>(Difficulty.CODEC))
             .registerTypeHierarchyAdapter(MobCategory.class, new SimpleCodecDeserializer<>(MobCategory.CODEC))
             .registerTypeHierarchyAdapter(ItemDisplayContext.class, new SimpleCodecDeserializer<>(ItemDisplayContext.CODEC))
@@ -250,6 +250,76 @@ public class Json {
                 builder.append(']');
             }
             return new JsonPrimitive(builder.toString());
+        }
+    }
+
+    public static class BlockModelTypeDeserializer implements JsonDeserializer<BlockModelType>, JsonSerializer<BlockModelType> {
+        private static final Map<String, BlockModelType> LOOKUP = new HashMap<>();
+
+        static {
+            for (BlockModelType type : BlockModelType.values()) {
+                String newName = type.name();
+
+                LOOKUP.put(newName.toLowerCase(), type);
+                LOOKUP.put((newName + "_BLOCK").toLowerCase(), type);
+
+                handlePositionalSwaps(newName, type);
+
+                if (newName.endsWith("_ACTIVE")) {
+                    String base = newName.replace("_ACTIVE", "");
+                    LOOKUP.put(("ACTIVE_" + base).toLowerCase(), type);
+                    LOOKUP.put(("ACTIVE_" + base + "_BLOCK").toLowerCase(), type);
+                }
+            }
+
+            manualMap("TRANSPARENT_BLOCK", "LEAVES");
+            manualMap("TRANSPARENT_BLOCK_WATERLOGGED", "LEAVES_WATERLOGGED");
+            manualMap("BIOME_TRANSPARENT_BLOCK", "BIOME_COLORED_LEAVES");
+            manualMap("BIOME_TRANSPARENT_BLOCK_WATERLOGGED", "BIOME_COLORED_LEAVES_WATERLOGGED");
+
+            manualMap("TOP_SLAB", "STAB_TOP");
+            manualMap("TOP_SLAB_WATERLOGGED", "SLAB_TOP_WATERLOGGED");
+        }
+
+        private static void handlePositionalSwaps(String newName, BlockModelType type) {
+            String[] parts = newName.split("_");
+            if (parts.length >= 2) {
+                String prefix = parts[0];
+                if (prefix.equals("DOOR") || prefix.equals("SHELF") || prefix.equals("TRAPDOOR") || prefix.equals("GATE") || prefix.equals("SCAFFOLDING")) {
+                    String remainder = newName.substring(prefix.length() + 1);
+                    LOOKUP.put((remainder + "_" + prefix).toLowerCase(), type);
+                    LOOKUP.put((remainder + "_" + prefix + "_GATE").toLowerCase(), type);
+                }
+            }
+        }
+
+        private static void manualMap(String oldJsonName, String newEnumName) {
+            try {
+                LOOKUP.put(oldJsonName.toLowerCase(), BlockModelType.valueOf(newEnumName));
+            } catch (IllegalArgumentException ignored) {
+
+            }
+        }
+
+        @Override
+        public BlockModelType deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            String value = json.getAsString().toLowerCase();
+
+            BlockModelType type = LOOKUP.get(value);
+            if (type != null) {
+                return type;
+            }
+
+            try {
+                return BlockModelType.valueOf(value.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new JsonParseException("Unsupported BlockModelType: " + value);
+            }
+        }
+
+        @Override
+        public JsonElement serialize(BlockModelType src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.name().toLowerCase());
         }
     }
 
