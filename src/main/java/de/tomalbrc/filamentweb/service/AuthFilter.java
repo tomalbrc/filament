@@ -5,6 +5,7 @@ import de.tomalbrc.filamentweb.FilamentEditorConfig;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import me.lucko.fabric.api.permissions.v0.Permissions;
+import net.minecraft.server.permissions.PermissionLevel;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -15,7 +16,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class AuthFilter implements Filter {
     public static final String SESSION_KEY = "SESSION_KEY";
-    public static final String PLAYER_KEY = "PLAYER_KEY";
 
     public static Map<UUID, String> REQUESTS = new ConcurrentHashMap<>();
     public static Map<UUID, String> SERVER_REQUEST = new ConcurrentHashMap<>();
@@ -48,7 +48,7 @@ public final class AuthFilter implements Filter {
                 } else {
                     if (session.player != null) {
                         var player = Filament.SERVER.getPlayerList().getPlayer(session.player);
-                        authenticated = player != null && Permissions.check(player, "filament.editor");
+                        authenticated = player != null && Permissions.check(player, "filament.editor", PermissionLevel.ADMINS);
                     } else {
                         authenticated = true;
                     }

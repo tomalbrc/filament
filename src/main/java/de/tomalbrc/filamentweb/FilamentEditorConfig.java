@@ -1,6 +1,5 @@
 package de.tomalbrc.filamentweb;
 
-import com.google.gson.annotations.SerializedName;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.Json;
 
@@ -15,8 +14,7 @@ public class FilamentEditorConfig {
     static Path CONFIG_FILE_PATH = Constants.CONFIG_DIR.resolve("filament-editor.json");
     static FilamentEditorConfig instance;
 
-    @SerializedName("debug")
-    public boolean debug = false;
+    public boolean enabled = false;
 
     public boolean passwordLogin = false;
     public String defaultUser;

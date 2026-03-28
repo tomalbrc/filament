@@ -1,5 +1,6 @@
 package de.tomalbrc.filamentweb;
 
+import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.DecorationData;
@@ -91,6 +92,10 @@ public class EditorServer implements Runnable {
     }
 
     public static void runServer() {
+        if (CONVERTER != null) { // TODO: better check if already running lol
+            return;
+        }
+
         try {
             // todo: handle non-existing files.
             Function<Identifier, InputStream> modelProvider = identifier -> {
@@ -103,17 +108,19 @@ public class EditorServer implements Runnable {
             };
 
             CONVERTER = new Mc2Glb(modelProvider, textureProvider);
-            AssetStore.DEFAULT_MODEL = CONVERTER.toGlb(Identifier.withDefaultNamespace("block/campfire"));
+            AssetStore.DEFAULT_MODEL = CONVERTER.toGlb(Identifier.withDefaultNamespace("block/stone"));
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
         try {
             EditorServer server = new EditorServer();
-            var thread = new Thread(server);
+            var thread = new Thread(server, "Filament-Editor-Server");
             thread.start();
+            Filament.LOGGER.info("Started Filament Editor server!");
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            Filament.LOGGER.error("Failed to start editor server", e);
         }
     }
 
@@ -123,7 +130,7 @@ public class EditorServer implements Runnable {
             start();
             join();
         } catch (Exception e) {
-            e.printStackTrace();
+            Filament.LOGGER.error("Failed to start editor server", e);
         }
     }
 

@@ -13,8 +13,6 @@ public class AssetEditorServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        var player = req.getSession().getAttribute("player");
-
         resp.setContentType("text/html");
         resp.setCharacterEncoding("UTF-8");
 
@@ -57,7 +55,7 @@ public class AssetEditorServlet extends HttpServlet {
 
                                 nav().withClass("navbar bg-body-tertiary border-bottom").with(
                                         div().withClass("container-fluid d-flex justify-content-between align-items-center").with(
-                                                span("Filament Asset Editor").withClass("navbar-brand mb-0 h1"),
+                                                span("Filament Editor").withClass("navbar-brand mb-0 h1"),
 
                                                 div().withClass("d-flex gap-3 align-items-center").with(
 
@@ -80,13 +78,13 @@ public class AssetEditorServlet extends HttpServlet {
                                                                 ),
 
                                                         div().withClass("btn-group").attr("role", "group").attr("aria-label", "File Actions").with(
-                                                                button("Save")
+                                                                button("Write to file")
                                                                         .withId("save-btn")
                                                                         .withClass("btn btn-sm btn-outline-primary hint--bottom")
                                                                         .attr("hx-get", "/action/save")
                                                                         .attr("hx-include", "#current-file-uuid")
                                                                         .attr("hx-swap", "none")
-                                                                        .attr("aria-label", "Write to file"),
+                                                                        .attr("aria-label", "Write the opened config to file"),
 
                                                                 button("Reload behaviours")
                                                                         .withId("reregister-btn")

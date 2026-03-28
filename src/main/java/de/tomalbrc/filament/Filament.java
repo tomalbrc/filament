@@ -9,6 +9,7 @@ import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.*;
 import de.tomalbrc.filament.util.*;
 import de.tomalbrc.filamentweb.EditorServer;
+import de.tomalbrc.filamentweb.FilamentEditorConfig;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
@@ -73,7 +74,8 @@ public class Filament implements ModInitializer {
         EditorServer.init();
         PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(EditorServer::init);
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            EditorServer.runServer();
+            if (FilamentEditorConfig.getInstance().enabled)
+                EditorServer.runServer();
         });
 
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
@@ -89,7 +91,7 @@ public class Filament implements ModInitializer {
         });
 
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            if (false) ADVENTURE = MinecraftServerAudiences.of(server);
+            ADVENTURE = MinecraftServerAudiences.of(server);
             SERVER = server;
         });
 

@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.permissions.PermissionLevel;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -121,7 +122,7 @@ public class LoginServlet extends HttpServlet {
 
     private boolean isValidLoginTarget(UUID uuid) {
         var player = Filament.SERVER.getPlayerList().getPlayer(uuid);
-        return (player != null && Permissions.check(player, "filament.editor")) || (AuthFilter.REQUESTS.containsKey(uuid) || AuthFilter.SERVER_REQUEST.containsKey(uuid));
+        return (player != null && Permissions.check(player, "filament.editor", PermissionLevel.ADMINS)) || (AuthFilter.REQUESTS.containsKey(uuid) || AuthFilter.SERVER_REQUEST.containsKey(uuid));
     }
 
     private String expectedKey(UUID uuid) {
