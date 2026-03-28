@@ -4,10 +4,10 @@ import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.mixin.accessor.ItemFrameAccessor;
 import de.tomalbrc.filament.util.DecorationUtil;
 import de.tomalbrc.filament.util.Util;
+import eu.pb4.polymer.virtualentity.api.data.EntityData;
+import eu.pb4.polymer.virtualentity.api.data.SimpleSynchedEntityData;
+import eu.pb4.polymer.virtualentity.api.data.SynchedEntityDataLike;
 import eu.pb4.polymer.virtualentity.api.elements.GenericEntityElement;
-import eu.pb4.polymer.virtualentity.api.tracker.DataTrackerLike;
-import eu.pb4.polymer.virtualentity.api.tracker.EntityTrackedData;
-import eu.pb4.polymer.virtualentity.api.tracker.SimpleDataTracker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.Packet;
@@ -37,14 +37,14 @@ public class ItemFrameElement extends GenericEntityElement {
         this.rotation = rotation;
         this.glow = decorationData.properties().glow;
 
-        this.dataTracker.set(EntityTrackedData.FLAGS, (byte) 0);
-        this.dataTracker.set(ItemFrameAccessor.getDATA_ITEM(), itemStack);
-        this.dataTracker.set(ItemFrameAccessor.getDATA_ROTATION(), rotation);
+        this.syncedData.set(EntityData.FLAGS, (byte) 0);
+        this.syncedData.set(ItemFrameAccessor.getDATA_ITEM(), itemStack);
+        this.syncedData.set(ItemFrameAccessor.getDATA_ROTATION(), rotation);
         this.setInvisible(true);
 
         this.setInteractionHandler(new InteractionHandler() {
             @Override
-            public void interactAt(ServerPlayer player, InteractionHand hand, Vec3 pos) {
+            public void interact(ServerPlayer player, InteractionHand hand, Vec3 pos, boolean secondaryAction) {
                 ServerLevel serverLevel = player.level();
                 BlockPos blockPos = BlockPos.containing(getHolder().getAttachment().getPos());
                 InteractionResult result = InteractionResult.PASS;
@@ -76,16 +76,16 @@ public class ItemFrameElement extends GenericEntityElement {
     }
 
     @Override
-    protected DataTrackerLike createDataTracker() {
-        return new SimpleDataTracker(EntityType.ITEM_FRAME);
+    protected SynchedEntityDataLike createSynchedEntityData() {
+        return new SimpleSynchedEntityData(EntityType.ITEM_FRAME);
     }
 
     @Override
     public void setYaw(float yaw) {
-        this.dataTracker.set(ItemFrameAccessor.getDATA_ROTATION(), Util.SEGMENTED_ANGLE8.fromDegrees(yaw-180));
+        this.syncedData.set(ItemFrameAccessor.getDATA_ROTATION(), Util.SEGMENTED_ANGLE8.fromDegrees(yaw-180));
     }
 
     public void setItem(ItemStack item) {
-        this.dataTracker.set(ItemFrameAccessor.getDATA_ITEM(), item.copy());
+        this.syncedData.set(ItemFrameAccessor.getDATA_ITEM(), item.copy());
     }
 }

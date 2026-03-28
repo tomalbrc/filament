@@ -1,9 +1,11 @@
 package de.tomalbrc.filament.util;
 
+import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.registry.FilamentComponents;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.core.api.item.PolymerItemUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
@@ -14,7 +16,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ItemLore;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class SkinUtil {
     private static final List<DataComponentType<?>> COMPONENTS_TO_COPY = List.of(DataComponents.ITEM_NAME, DataComponents.CUSTOM_NAME, DataComponents.ATTRIBUTE_MODIFIERS, DataComponents.LORE, DataComponents.DAMAGE, DataComponents.MAX_DAMAGE, DataComponents.MAX_STACK_SIZE, DataComponents.UNBREAKABLE, DataComponents.CHARGED_PROJECTILES, DataComponents.TOOL, DataComponents.ENCHANTMENTS, DataComponents.ENCHANTMENT_GLINT_OVERRIDE);
 
     public static void registerEventHandler() {
-        PolymerItemUtils.CONTEXT_ITEM_CHECK.register((itemStack, packetContext) -> itemStack.has(FilamentComponents.SKIN_DATA_COMPONENT));
+        PolymerItemUtils.CONTEXT_ITEM_CHECK.register((itemStack, packetContext) -> itemStack.get(FilamentComponents.SKIN_DATA_COMPONENT) != null);
         PolymerItemUtils.ITEM_MODIFICATION_EVENT.register((orig,mod,player) -> {
             var newStack = SkinUtil.wrap(orig, mod, player);
             if (mod == newStack) return mod;
@@ -38,7 +39,7 @@ public class SkinUtil {
                 // important
                 var oldWrapped = wrappedItemStack;
                 if (wrappedItemStack.getItem() instanceof PolymerItem polymerItem) {
-                    wrappedItemStack = polymerItem.getPolymerItemStack(wrappedItemStack, TooltipFlag.NORMAL, context);
+                    wrappedItemStack = polymerItem.getPolymerItemStack(wrappedItemStack, TooltipFlag.NORMAL, context, Filament.SERVER.registryAccess());
                 }
                 else wrappedItemStack = wrappedItemStack.copy();
 

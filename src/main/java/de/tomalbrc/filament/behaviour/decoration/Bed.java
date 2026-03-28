@@ -18,7 +18,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.storage.LevelData;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -53,7 +52,7 @@ public class Bed implements DecorationBehaviour<Bed.Config> {
         var res = this.startSleepInBed(player, decorationBlockEntity, blockPos);
         res.ifLeft((bedSleepingProblem) -> {
             if (bedSleepingProblem.message() != null) {
-                player.displayClientMessage(bedSleepingProblem.message(), true);
+                player.sendSystemMessage(bedSleepingProblem.message(), true);
             }
         });
 
@@ -109,7 +108,7 @@ public class Bed implements DecorationBehaviour<Bed.Config> {
                         CriteriaTriggers.SLEPT_IN_BED.trigger(player);
                     });
                     if (!player.level().canSleepThroughNights()) {
-                        player.displayClientMessage(Component.translatable("sleep.not_possible"), true);
+                        player.sendSystemMessage(Component.translatable("sleep.not_possible"), true);
                     }
 
                     player.level().updateSleepingPlayerList();

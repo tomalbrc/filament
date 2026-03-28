@@ -19,7 +19,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.loader.api.FabricLoader;
-import net.kyori.adventure.platform.modcommon.MinecraftServerAudiences;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.LayeredRegistryAccess;
 import net.minecraft.resources.Identifier;
@@ -40,11 +39,11 @@ public class Filament implements ModInitializer {
     public static LayeredRegistryAccess<RegistryLayer> REGISTRY_ACCESS;
     public static MinecraftServer SERVER;
 
-    public static MinecraftServerAudiences ADVENTURE;
+    //public static MinecraftServerAudiences ADVENTURE;
 
-    public static MinecraftServerAudiences adventure() {
-        return ADVENTURE;
-    }
+    //public static MinecraftServerAudiences adventure() {
+    //    return ADVENTURE;
+    //}
 
     @Override
     public void onInitialize() {
@@ -91,15 +90,15 @@ public class Filament implements ModInitializer {
         });
 
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            ADVENTURE = MinecraftServerAudiences.of(server);
+            //ADVENTURE = MinecraftServerAudiences.of(server);
             SERVER = server;
         });
 
         ServerTickEvents.END_SERVER_TICK.register(AsyncBlockTicker::tick);
         ServerChunkEvents.CHUNK_UNLOAD.register(AsyncBlockTicker::remove);
-        ServerLifecycleEvents.SERVER_STOPPING.register(minecraftServer -> {
-            if (ADVENTURE != null) ADVENTURE.close();
-        });
+        //ServerLifecycleEvents.SERVER_STOPPING.register(minecraftServer -> {
+        //    if (ADVENTURE != null) ADVENTURE.close();
+        //});
         ItemGroupRegistry.register(new ItemGroupData(Constants.ITEM_GROUP_ID, Identifier.withDefaultNamespace("diamond"), TextUtil.formatText("<c:blue>Filament Items")));
         ItemGroupRegistry.register(new ItemGroupData(Constants.BLOCK_GROUP_ID, Identifier.withDefaultNamespace("furnace"), TextUtil.formatText("<c:blue>Filament Blocks")));
         ItemGroupRegistry.register(new ItemGroupData(Constants.DECORATION_GROUP_ID, Identifier.withDefaultNamespace("lantern"), TextUtil.formatText("<c:blue>Filament Decorations")));

@@ -76,7 +76,7 @@ public class CosmeticHolder extends ElementHolder {
                 showForAll(this);
                 this.updatePosition();
 
-                var packet = VirtualEntityUtils.createRidePacket(entity.getId(), ((EntityExt)entity).polymerVE$getVirtualRidden());
+                var packet = VirtualEntityUtils.createClientboundSetPassengersPacket(entity.getId(), ((EntityExt)entity).polymerVE$getVirtualRidden());
                 this.sendPacket(packet);
 
                 hidden = false;

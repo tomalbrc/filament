@@ -1,8 +1,8 @@
 package de.tomalbrc.filament.gui;
 
-import eu.pb4.sgui.api.gui.SlotGuiInterface;
-import eu.pb4.sgui.virtual.inventory.VirtualScreenHandler;
-import eu.pb4.sgui.virtual.inventory.VirtualSlot;
+import eu.pb4.sgui.api.containerwrappers.SlotBasedWrapperMenu;
+import eu.pb4.sgui.api.containerwrappers.slot.WrappingSlot;
+import eu.pb4.sgui.api.gui.SlotBasedGui;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -11,13 +11,13 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class VirtualChestMenu extends VirtualScreenHandler {
-    private final SlotGuiInterface gui;
+public class VirtualChestMenu extends SlotBasedWrapperMenu {
+    private final SlotBasedGui gui;
     private final Container container;
 
     int lockSlot;
 
-    public VirtualChestMenu(MenuType<?> type, int syncId, SlotGuiInterface gui, Player player, Container container, int lockSlot) {
+    public VirtualChestMenu(MenuType<?> type, int syncId, SlotBasedGui gui, Player player, Container container, int lockSlot) {
         super(type, syncId, gui, player);
         this.gui = gui;
         this.container = container;
@@ -74,11 +74,11 @@ public class VirtualChestMenu extends VirtualScreenHandler {
         int m;
 
         for (n = 0; n < this.gui.getVirtualSize(); ++n) {
-            Slot slot = this.gui.getSlotRedirect(n);
+            Slot slot = this.gui.getSlotRedirectOrPlayer(n);
             if (slot != null) {
                 this.addSlot(slot);
             } else {
-                this.addSlot(new VirtualSlot(gui, n, 0, 0));
+                this.addSlot(new WrappingSlot(gui, n, 0, 0));
             }
         }
 
@@ -86,7 +86,7 @@ public class VirtualChestMenu extends VirtualScreenHandler {
             int size = this.gui.getHeight() * this.gui.getWidth();
             for (n = 0; n < 4; ++n) {
                 for (m = 0; m < 9; ++m) {
-                    this.addSlot(new VirtualSlot(gui, m + n * 9 + size, 0, 0));
+                    this.addSlot(new WrappingSlot(gui, m + n * 9 + size, 0, 0));
                 }
             }
         } else {

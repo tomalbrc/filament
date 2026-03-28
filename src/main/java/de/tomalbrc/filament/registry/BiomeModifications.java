@@ -12,13 +12,14 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.LayeredRegistryAccess;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.RegistryLayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import org.jspecify.annotations.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,7 +66,7 @@ public class BiomeModifications {
             featureHolder.unwrapKey().ifPresent(feature -> {
                 net.fabricmc.fabric.api.biome.v1.BiomeModifications.addFeature(x -> {
                     for (Holder<Biome> biomeHolder : modifier.biomes) {
-                        if (x.getBiomeRegistryEntry().is(biomeHolder))
+                        if (x.getBiomeHolder().is(biomeHolder))
                             return true;
                     }
 
@@ -77,12 +78,12 @@ public class BiomeModifications {
 
     public static class BiomeModificationsDataReloadListener implements FilamentSynchronousResourceReloadListener {
         @Override
-        public Identifier getFabricId() {
+        public @NonNull Identifier getFabricId() {
             return Identifier.fromNamespaceAndPath(Constants.MOD_ID, "biome_modifications");
         }
 
         @Override
-        public void onResourceManagerReload(ResourceManager resourceManager) {
+        public void onResourceManagerReload(@NonNull ResourceManager resourceManager) {
             if (locked) {
                 return;
             }

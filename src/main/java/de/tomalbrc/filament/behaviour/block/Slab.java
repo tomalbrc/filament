@@ -35,6 +35,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
 import java.util.Optional;
@@ -110,7 +111,7 @@ public class Slab implements BlockBehaviour<Slab.Config>, SimpleWaterloggedBlock
     }
 
     @Override
-    public boolean placeLiquid(LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState, FluidState fluidState) {
+    public boolean placeLiquid(@NonNull LevelAccessor levelAccessor, @NonNull BlockPos blockPos, BlockState blockState, @NonNull FluidState fluidState) {
         if (blockState.getValue(BlockStateProperties.SLAB_TYPE) != SlabType.DOUBLE) {
             return SimpleWaterloggedBlock.super.placeLiquid(levelAccessor, blockPos, blockState, fluidState);
         }
@@ -118,7 +119,7 @@ public class Slab implements BlockBehaviour<Slab.Config>, SimpleWaterloggedBlock
     }
 
     @Override
-    public boolean canPlaceLiquid(@Nullable LivingEntity livingEntity, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
+    public boolean canPlaceLiquid(@Nullable LivingEntity livingEntity, @NonNull BlockGetter blockGetter, @NonNull BlockPos blockPos, BlockState blockState, @NonNull Fluid fluid) {
         if (blockState.getValue(BlockStateProperties.SLAB_TYPE) != SlabType.DOUBLE) {
             return SimpleWaterloggedBlock.super.canPlaceLiquid(livingEntity, blockGetter, blockPos, blockState, fluid);
         }
@@ -156,9 +157,9 @@ public class Slab implements BlockBehaviour<Slab.Config>, SimpleWaterloggedBlock
 
             BlockState requestedState;
             if (parsed.blockState().getValue(SlabBlock.TYPE) == SlabType.TOP) {
-                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.TOP_SLAB, blockModel, data.virtual());
+                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.STAB_TOP, blockModel, data.virtual());
             } else if (parsed.blockState().getValue(SlabBlock.TYPE) == SlabType.BOTTOM) {
-                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.BOTTOM_SLAB, blockModel, data.virtual());
+                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.SLAB_BOTTOM, blockModel, data.virtual());
             } else {
                 requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.FULL_BLOCK, blockModel, data.virtual());
             }
@@ -169,7 +170,7 @@ public class Slab implements BlockBehaviour<Slab.Config>, SimpleWaterloggedBlock
         for (Map.Entry<BlockState, BlockData.BlockStateMeta> entry : map.entrySet()) {
             var blockState = entry.getValue().blockState();
             if (blockState.hasProperty(SlabBlock.WATERLOGGED) && !blockState.getValue(SlabBlock.WATERLOGGED) && blockState.hasProperty(SlabBlock.TYPE) && blockState.getValue(SlabBlock.TYPE) != SlabType.DOUBLE) {
-                var res = FilamentBlockResourceUtils.requestBlock(blockState.getValue(SlabBlock.TYPE) == SlabType.TOP ? BlockModelType.TOP_SLAB_WATERLOGGED : BlockModelType.BOTTOM_SLAB_WATERLOGGED, entry.getValue().polymerBlockModel(), data.virtual());
+                var res = FilamentBlockResourceUtils.requestBlock(blockState.getValue(SlabBlock.TYPE) == SlabType.TOP ? BlockModelType.SLAB_TOP_WATERLOGGED : BlockModelType.SLAB_BOTTOM_WATERLOGGED, entry.getValue().polymerBlockModel(), data.virtual());
                 map.put(entry.getKey().setValue(SlabBlock.WATERLOGGED, true), BlockData.BlockStateMeta.of(res, entry.getValue().polymerBlockModel()));
             }
         }

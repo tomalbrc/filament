@@ -21,7 +21,6 @@ import j2html.tags.Tag;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.Identifier;
@@ -316,7 +315,6 @@ public class SchemaFormBuilder {
         var regItem = BuiltInRegistries.ITEM.get(asset.data.id());
         if (regItem.isPresent()) {
             var holder = regItem.get();
-            Component component = holder.value().getDefaultInstance().getDisplayName();
             List<DomContent> elements = new ArrayList<>();
 
             Component s = holder.value().getDefaultInstance().getDisplayName();

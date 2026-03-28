@@ -4,6 +4,7 @@ import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.util.BlockUtil;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.fabricmc.fabric.api.registry.VillagerInteractionRegistries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -16,17 +17,18 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.FarmlandBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import org.jetbrains.annotations.NotNull;
-import xyz.nucleoid.packettweaker.PacketContext;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Objects;
 
 // todo: ravager interaction, bee interaction, villager interaction!
 public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
+    // ok this needs to be redone
     public static final IntegerProperty[] AGES = {
             IntegerProperty.create("age", 0,1),
             IntegerProperty.create("age", 0,2),
@@ -56,7 +58,7 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
         BlockBehaviour.super.init(item, block, behaviourHolder);
 
         if (config.villagerInteraction) {
-            VillagerInteractionRegistries.registerCollectable(item);
+            VillagerInteractionRegistries.registerGatherableItem(item);
         }
     }
 
@@ -119,7 +121,7 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
     }
 
     protected int getBonemealAgeIncrease(Level level) {
-        return Mth.nextInt(level.random, 2, 5);
+        return Mth.nextInt(level.getRandom(), 2, 5);
     }
 
     protected float getGrowthSpeed(Block block, BlockGetter blockGetter, BlockPos blockPos) {
@@ -132,7 +134,7 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
                 BlockState blockState = blockGetter.getBlockState(blockPos2.offset(i, 0, j));
                 if (blockState.is(config.bonusBlock)) {
                     localBonus = 1.f;
-                    if (blockState.hasProperty(FarmBlock.MOISTURE) && blockState.getValue(FarmBlock.MOISTURE) > 0) {
+                    if (blockState.hasProperty(FarmlandBlock.MOISTURE) && blockState.getValue(FarmlandBlock.MOISTURE) > 0) {
                         localBonus = 3.f;
                     }
                 }
@@ -172,18 +174,18 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
+    public boolean isValidBonemealTarget(@NonNull LevelReader levelReader, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
         return this.getAge(blockState) < config.maxAge-1;
     }
 
     @Override
-    public boolean isBonemealSuccess(Level level, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
+    public boolean isBonemealSuccess(@NonNull Level level, @NonNull RandomSource randomSource, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
         return true;
     }
 
     @Override
-    public void performBonemeal(ServerLevel serverLevel, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
-        if (blockState.getBlock().isFilamentBlock() && !(blockState.getBlock().asFilamentBlock().getPolymerBlockState(blockState, PacketContext.create()).getBlock() instanceof BonemealableBlock)) {
+    public void performBonemeal(@NonNull ServerLevel serverLevel, @NonNull RandomSource randomSource, @NonNull BlockPos blockPos, BlockState blockState) {
+        if (blockState.getBlock().isFilamentBlock() && !(blockState.getBlock().asFilamentBlock().getPolymerBlockState(blockState, PacketContext.get()).getBlock() instanceof BonemealableBlock)) {
             BlockUtil.handleBoneMealEffects(serverLevel, blockPos);
         }
 
@@ -197,6 +199,7 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
         public int bonusRadius = 1;
         public Block bonusBlock = Blocks.FARMLAND;
 
+        //@deprecated Add items to the {@linkplain net.minecraft.tags.ItemTags#VILLAGER_PICKS_UP {@code minecraft:villager_picks_up} item tag} instead.
         public boolean villagerInteraction = true;
         public boolean beeInteraction = true;
     }

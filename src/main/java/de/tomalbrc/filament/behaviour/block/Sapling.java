@@ -6,10 +6,11 @@ import de.tomalbrc.filament.data.AbstractBlockData;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.BlockUtil;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
@@ -24,7 +25,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.nucleoid.packettweaker.PacketContext;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
 import java.util.Optional;
@@ -106,20 +107,20 @@ public class Sapling implements BlockBehaviour<Sapling.Config>, BonemealableBloc
     }
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
+    public boolean isValidBonemealTarget(@NonNull LevelReader levelReader, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
         return true;
     }
 
     @Override
-    public boolean isBonemealSuccess(Level level, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
-        if (level instanceof ServerLevel serverLevel && blockState.getBlock().isFilamentBlock() && !(blockState.getBlock().asFilamentBlock().getPolymerBlockState(blockState, PacketContext.create()).getBlock() instanceof BonemealableBlock)) {
+    public boolean isBonemealSuccess(@NonNull Level level, @NonNull RandomSource randomSource, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
+        if (level instanceof ServerLevel serverLevel && blockState.getBlock().isFilamentBlock() && !(blockState.getBlock().asFilamentBlock().getPolymerBlockState(blockState, PacketContext.get()).getBlock() instanceof BonemealableBlock)) {
             BlockUtil.handleBoneMealEffects(serverLevel, blockPos);
         }
-        return level.random.nextFloat() < config.bonemealGrowthChance;
+        return level.getRandom().nextFloat() < config.bonemealGrowthChance;
     }
 
     @Override
-    public void performBonemeal(ServerLevel serverLevel, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
+    public void performBonemeal(@NonNull ServerLevel serverLevel, @NonNull RandomSource randomSource, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
         this.grow(serverLevel, blockPos, blockState, randomSource);
     }
 

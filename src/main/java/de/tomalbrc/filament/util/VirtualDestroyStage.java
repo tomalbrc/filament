@@ -8,6 +8,7 @@ import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
@@ -37,6 +38,40 @@ public class VirtualDestroyStage extends ElementHolder {
                 ((VirtualDestroyStage.ServerGamePacketListenerExtF) ((ServerPlayer) player).connection).filament$getVirtualDestroyStage().setState(-1);
             }
         });
+
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            for (int i = 0; i < DESTROY_STAGE_MODELS.length; i++) {
+                ItemStack stack = Items.STICK.getDefaultInstance();
+                stack.set(DataComponents.ITEM_MODEL, Identifier.fromNamespaceAndPath(Constants.MOD_ID, "special/destroy_stage_" + i));
+                DESTROY_STAGE_MODELS[i] = stack;
+            }
+        });
+
+        var model =  """
+                {
+                  "parent": "minecraft:block/cube_all",
+                  "textures": {
+                    "all": "minecraft:block/destroy_stage_|ID|"
+                  }
+                }
+                """;
+
+        var itemModel =  """
+                {
+                  "model": {
+                    "type": "minecraft:model",
+                    "model": "filament:item/special/destroy_stage_|ID|"
+                  }
+                }
+                """;
+
+        PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(x -> {
+            for (var i = 0; i < DESTROY_STAGE_MODELS.length; i++) {
+                x.addData("assets/filament/models/item/special/destroy_stage_" + i + ".json", model.replace("|ID|", "" + i).getBytes(StandardCharsets.UTF_8));
+                x.addData("assets/filament/items/special/destroy_stage_" + i + ".json", itemModel.replace("|ID|", "" + i).getBytes(StandardCharsets.UTF_8));
+            }
+        });
+
         VirtualDestroyStage.destroy(null);
     }
 
@@ -115,39 +150,6 @@ public class VirtualDestroyStage extends ElementHolder {
         if (player != null && !player.hasDisconnected()) {
             ((ServerGamePacketListenerExtF) player.connection).filament$getVirtualDestroyStage().destroy();
         }
-    }
-
-    static {
-        for (int i = 0; i < DESTROY_STAGE_MODELS.length; i++) {
-            ItemStack stack = Items.STICK.getDefaultInstance();
-            stack.set(DataComponents.ITEM_MODEL, Identifier.fromNamespaceAndPath(Constants.MOD_ID, "special/destroy_stage_" + i));
-            DESTROY_STAGE_MODELS[i] = stack;
-        }
-
-        var model =  """
-                {
-                  "parent": "minecraft:block/cube_all",
-                  "textures": {
-                    "all": "minecraft:block/destroy_stage_|ID|"
-                  }
-                }
-                """;
-
-        var itemModel =  """
-                {
-                  "model": {
-                    "type": "minecraft:model",
-                    "model": "filament:item/special/destroy_stage_|ID|"
-                  }
-                }
-                """;
-
-        PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(x -> {
-            for (var i = 0; i < DESTROY_STAGE_MODELS.length; i++) {
-                x.addData("assets/filament/models/item/special/destroy_stage_" + i + ".json", model.replace("|ID|", "" + i).getBytes(StandardCharsets.UTF_8));
-                x.addData("assets/filament/items/special/destroy_stage_" + i + ".json", itemModel.replace("|ID|", "" + i).getBytes(StandardCharsets.UTF_8));
-            }
-        });
     }
 
     public interface Marker {}

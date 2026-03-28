@@ -31,7 +31,7 @@ public abstract class LevelChunkAsyncMixin extends ChunkAccess {
     }
 
 
-    @Inject(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z", ordinal = 0))
+    @Inject(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Ljava/lang/Object;)Z", ordinal = 0))
     private void filament$removeOldAsyncTicker(BlockPos blockPos, BlockState blockState, int i, CallbackInfoReturnable<BlockState> cir) {
         var x = AsyncBlockTicker.getBlock(blockPos);
         if (x != null) {
@@ -52,7 +52,7 @@ public abstract class LevelChunkAsyncMixin extends ChunkAccess {
     }
 
     @Inject(method = "<init>(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/ChunkPos;Lnet/minecraft/world/level/chunk/UpgradeData;Lnet/minecraft/world/ticks/LevelChunkTicks;Lnet/minecraft/world/ticks/LevelChunkTicks;J[Lnet/minecraft/world/level/chunk/LevelChunkSection;Lnet/minecraft/world/level/chunk/LevelChunk$PostLoadProcessor;Lnet/minecraft/world/level/levelgen/blending/BlendingData;)V", at = @At("TAIL"))
-    private void filament$loadAsyncTicker(Level level, ChunkPos chunkPos, UpgradeData upgradeData, LevelChunkTicks levelChunkTicks, LevelChunkTicks levelChunkTicks2, long l, LevelChunkSection[] levelChunkSections, LevelChunk.PostLoadProcessor postLoadProcessor, BlendingData blendingData, CallbackInfo ci) {
+    private void filament$loadAsyncTicker(Level level, ChunkPos pos, UpgradeData upgradeData, LevelChunkTicks<?> blockTicks, LevelChunkTicks<?> fluidTicks, long inhabitedTime, LevelChunkSection[] levelChunkSections, LevelChunk.PostLoadProcessor postLoad, BlendingData blendingData, CallbackInfo ci) {
         if (level instanceof ServerLevel serverLevel) {
             var sections = this.getSections();
             for (int i = 0; i < sections.length; i++) {
@@ -67,7 +67,7 @@ public abstract class LevelChunkAsyncMixin extends ChunkAccess {
                                     state = container.get(x, y, z);
                                     if (state.getBlock().isFilamentBlock() && state.getBlock().asFilamentBlock().hasData()) {
                                         if (filament$isAsyncTickingBlock(state.getBlock().asFilamentBlock())) {
-                                            var blockPos = chunkPos.getBlockAt(x, this.getSectionYFromSectionIndex(i) * 16 + y, z);
+                                            var blockPos = pos.getBlockAt(x, this.getSectionYFromSectionIndex(i) * 16 + y, z);
                                             AsyncBlockTicker.add(blockPos, state.getBlock().asFilamentBlock(), serverLevel);
                                         }
                                     }

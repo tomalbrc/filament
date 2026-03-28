@@ -1,5 +1,4 @@
-accessWidener   v2  named
-accessible class net/minecraft/resources/RegistryDataLoader$Loader
+classTweaker v1 official
 accessible class net/minecraft/world/entity/animal/bee/Bee$BeeGrowCropGoal
 accessible class net/minecraft/server/level/ServerPlayer$RespawnPosAngle
 
@@ -12,3 +11,6 @@ accessible method net/minecraft/server/packs/FilePackResources$SharedZipFileAcce
 extendable method net/minecraft/world/inventory/ChestMenu addChestGrid (Lnet/minecraft/world/Container;II)V
 
 accessible method net/minecraft/world/entity/Mob isSunBurnTick ()Z
+
+transitive-inject-interface net/minecraft/world/level/block/Block   de/tomalbrc/filament/injection/FilamentBlockExtension
+transitive-inject-interface net/minecraft/world/item/Item   de/tomalbrc/filament/injection/FilamentItemExtension

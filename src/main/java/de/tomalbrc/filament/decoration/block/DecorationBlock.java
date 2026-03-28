@@ -10,6 +10,7 @@ import eu.pb4.common.protection.api.CommonProtection;
 import eu.pb4.polymer.core.api.block.PolymerBlock;
 import eu.pb4.polymer.virtualentity.api.BlockWithElementHolder;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
@@ -28,7 +29,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-import xyz.nucleoid.packettweaker.PacketContext;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -93,8 +94,8 @@ public abstract class DecorationBlock extends SimpleBlock implements PolymerBloc
     }
 
     @Override
-    public void onExplosionHit(BlockState blockState, ServerLevel level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
-        if (explosion.getDirectSourceEntity() instanceof Player player && !CommonProtection.canExplodeBlock(level, blockPos, explosion, player.getGameProfile(), player))
+    public void onExplosionHit(@NonNull BlockState blockState, @NonNull ServerLevel level, @NonNull BlockPos blockPos, Explosion explosion, @NonNull BiConsumer<ItemStack, BlockPos> biConsumer) {
+        if (explosion.getDirectSourceEntity() instanceof Player player && !CommonProtection.canExplodeBlock(level, blockPos, explosion, player.nameAndId(), player))
             return;
 
         if ((explosion.getBlockInteraction() == Explosion.BlockInteraction.DESTROY || explosion.getBlockInteraction() == Explosion.BlockInteraction.DESTROY_WITH_DECAY) && !blockState.isAir()) {
@@ -105,7 +106,7 @@ public abstract class DecorationBlock extends SimpleBlock implements PolymerBloc
 
     @Override
     @NotNull
-    public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+    public BlockState playerWillDestroy(@NonNull Level level, @NonNull BlockPos blockPos, @NonNull BlockState blockState, @NonNull Player player) {
         BlockState returnVal = super.playerWillDestroy(level, blockPos, blockState, player);
         this.removeDecoration(level, blockPos, player);
         return returnVal;
@@ -130,7 +131,7 @@ public abstract class DecorationBlock extends SimpleBlock implements PolymerBloc
 
     @Override
     @NotNull
-    public VoxelShape getCollisionShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
+    public VoxelShape getCollisionShape(@NonNull BlockState blockState, @NonNull BlockGetter blockGetter, @NonNull BlockPos blockPos, @NonNull CollisionContext collisionContext) {
         if (!getDecorationData().hasBlocks()) {
             return Shapes.empty();
         } else {

@@ -1,7 +1,8 @@
 package de.tomalbrc.filament.decoration.util;
 
 import eu.pb4.polymer.core.api.entity.PolymerEntity;
-import eu.pb4.polymer.virtualentity.api.tracker.EntityTrackedData;
+import eu.pb4.polymer.virtualentity.api.data.EntityData;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,7 +16,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import xyz.nucleoid.packettweaker.PacketContext;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 
@@ -28,14 +29,14 @@ public class SeatEntity extends Entity implements PolymerEntity {
     @Override
     public void modifyRawTrackedData(List<SynchedEntityData.DataValue<?>> data, ServerPlayer player, boolean initial) {
         data.add(SynchedEntityData.DataValue.create(ArmorStand.DATA_CLIENT_FLAGS, (byte)(ArmorStand.CLIENT_FLAG_MARKER | ArmorStand.CLIENT_FLAG_SMALL)));
-        data.add(SynchedEntityData.DataValue.create(EntityTrackedData.FLAGS, (byte)0));
-        data.add(SynchedEntityData.DataValue.create(EntityTrackedData.SILENT, true));
-        data.add(SynchedEntityData.DataValue.create(EntityTrackedData.NO_GRAVITY, true));
-        data.add(SynchedEntityData.DataValue.create(EntityTrackedData.FLAGS, (byte) (1 << EntityTrackedData.INVISIBLE_FLAG_INDEX)));
+        data.add(SynchedEntityData.DataValue.create(EntityData.FLAGS, (byte)0));
+        data.add(SynchedEntityData.DataValue.create(EntityData.SILENT, true));
+        data.add(SynchedEntityData.DataValue.create(EntityData.NO_GRAVITY, true));
+        data.add(SynchedEntityData.DataValue.create(EntityData.FLAGS, (byte) (1 << EntityData.INVISIBLE_FLAG_INDEX)));
     }
 
     @Override
-    protected void removePassenger(Entity passenger) {
+    protected void removePassenger(@NonNull Entity passenger) {
         super.removePassenger(passenger);
     }
 
@@ -48,7 +49,7 @@ public class SeatEntity extends Entity implements PolymerEntity {
     }
 
     @Override
-    public boolean hurtServer(ServerLevel serverLevel, DamageSource damageSource, float f) {
+    public boolean hurtServer(@NonNull ServerLevel serverLevel, @NonNull DamageSource damageSource, float f) {
         return false;
     }
 
@@ -57,20 +58,19 @@ public class SeatEntity extends Entity implements PolymerEntity {
         return EntityType.ARMOR_STAND;
     }
 
-
     @Override
     @NotNull
-    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+    public Vec3 getDismountLocationForPassenger(@NonNull LivingEntity passenger) {
         return Vec3.atBottomCenterOf(this.getOnPos());
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+    protected void defineSynchedData(SynchedEntityData.@NonNull Builder builder) {
     }
 
     @Override
-    public void readAdditionalSaveData(ValueInput input) {}
+    public void readAdditionalSaveData(@NonNull ValueInput input) {}
 
     @Override
-    public void addAdditionalSaveData(ValueOutput output) {}
+    public void addAdditionalSaveData(@NonNull ValueOutput output) {}
 }

@@ -42,7 +42,7 @@ public class LeafDecay implements BlockBehaviour<LeafDecay.Config> {
     }
 
     @Override
-    public int getLightBlock(BlockState state) {
+    public int getLightDampening(BlockState state) {
         return 1;
     }
 

@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
 
     @Override
     @NotNull
-    public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+    public BlockState playerWillDestroy(@NonNull Level level, @NonNull BlockPos blockPos, @NonNull BlockState blockState, @NonNull Player player) {
         BlockState returnVal = super.playerWillDestroy(level, blockPos, blockState, player);
         if (!player.hasInfiniteMaterials()) this.playerDestroy(level, player, blockPos, blockState, null, player.getMainHandItem());
         return returnVal;
@@ -61,7 +62,7 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
 
     @Override
     @NotNull
-    public List<ItemStack> getDrops(BlockState blockState, LootParams.Builder builder) {
+    public List<ItemStack> getDrops(@NonNull BlockState blockState, LootParams.@NonNull Builder builder) {
         if (this.getDecorationData().properties().drops) {
             List<ItemStack> list = ObjectArrayList.of(BuiltInRegistries.ITEM.getValue(this.decorationId).getDefaultInstance());
             list.addAll(super.getDrops(blockState, builder));
@@ -72,7 +73,7 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
     }
 
     @Override
-    protected void spawnDestroyParticles(Level level, Player player, BlockPos blockPos, BlockState blockState) {
+    protected void spawnDestroyParticles(@NonNull Level level, @NonNull Player player, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
         if (level.isClientSide()) return;
 
         BlockUtil.playBreakSound(level, blockPos, blockState);

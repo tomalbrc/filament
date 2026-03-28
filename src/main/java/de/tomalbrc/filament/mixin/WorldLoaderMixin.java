@@ -1,9 +1,11 @@
 package de.tomalbrc.filament.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import com.mojang.datafixers.util.Pair;
 import de.tomalbrc.filament.registry.BiomeModifications;
 import de.tomalbrc.filament.util.Util;
 import net.minecraft.core.LayeredRegistryAccess;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.RegistryLayer;
 import net.minecraft.server.WorldLoader;
 import net.minecraft.server.packs.resources.CloseableResourceManager;
@@ -12,18 +14,19 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.List;
+import java.util.concurrent.CompletionStage;
 import java.util.concurrent.Executor;
 
 @Mixin(WorldLoader.class)
 public class WorldLoaderMixin {
-    @Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/RegistryLayer;createRegistryAccess()Lnet/minecraft/core/LayeredRegistryAccess;", shift = At.Shift.BEFORE))
-    private static void filament$loadEarly(WorldLoader.InitConfig initConfig, WorldLoader.WorldDataSupplier worldDataSupplier, WorldLoader.ResultFactory resultFactory, Executor executor, Executor executor2, CallbackInfoReturnable<CompletableFuture> cir, @Local CloseableResourceManager closeableResourceManager) {
-        Util.loadDatapackContents(closeableResourceManager);
+    @Inject(method = "lambda$load$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/RegistryLayer;createRegistryAccess()Lnet/minecraft/core/LayeredRegistryAccess;", shift = At.Shift.BEFORE))
+    private static void filament$loadEarly(Executor backgroundExecutor, WorldLoader.WorldDataSupplier<?> worldDataSupplier, WorldLoader.InitConfig config, Executor mainThreadExecutor, WorldLoader.ResultFactory<?,?> resultFactory, Pair<?,?> packsAndResourceManager, CallbackInfoReturnable<CompletionStage<?>> cir, @Local(name = "resources") CloseableResourceManager resources) {
+        Util.loadDatapackContents(resources);
     }
 
-    @Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/ReloadableServerResources;loadResources(Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/core/LayeredRegistryAccess;Ljava/util/List;Lnet/minecraft/world/flag/FeatureFlagSet;Lnet/minecraft/commands/Commands$CommandSelection;Lnet/minecraft/server/permissions/PermissionSet;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"))
-    private static <D, R> void filament$almostDone(WorldLoader.InitConfig initConfig, WorldLoader.WorldDataSupplier<D> worldDataSupplier, WorldLoader.ResultFactory<D, R> resultFactory, Executor executor, Executor executor2, CallbackInfoReturnable<CompletableFuture<R>> cir, @Local(ordinal = 1) LayeredRegistryAccess<RegistryLayer> layeredRegistryAccess) {
-        BiomeModifications.addAll(layeredRegistryAccess);
+    @Inject(method = "lambda$load$2", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/ReloadableServerResources;loadResources(Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/core/LayeredRegistryAccess;Ljava/util/List;Lnet/minecraft/world/flag/FeatureFlagSet;Lnet/minecraft/commands/Commands$CommandSelection;Lnet/minecraft/server/permissions/PermissionSet;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"))
+    private static void filament$almostDone(Pair<?,?> packsAndResourceManager, List<?> dimensionContextRegistries, WorldLoader.WorldDataSupplier<?> worldDataSupplier, CloseableResourceManager resources, LayeredRegistryAccess<?> initialLayers, RegistryAccess.Frozen loadedWorldgenRegistries, List<?> staticLayerTags, WorldLoader.InitConfig config, Executor backgroundExecutor, Executor mainThreadExecutor, WorldLoader.ResultFactory<?,?> resultFactory, RegistryAccess.Frozen initialWorldgenDimensions, CallbackInfoReturnable<CompletionStage<?>> cir, @Local(name = "resourcesLoadContext") LayeredRegistryAccess<RegistryLayer> resourcesLoadContext) {
+        BiomeModifications.addAll(resourcesLoadContext);
     }
 }

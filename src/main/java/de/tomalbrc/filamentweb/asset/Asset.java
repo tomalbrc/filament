@@ -10,11 +10,6 @@ import de.tomalbrc.filament.registry.BlockRegistry;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.registry.ItemRegistry;
 import de.tomalbrc.filament.util.Json;
-import de.tomalbrc.filament.util.mixin.RegistryUnfreezer;
-import eu.pb4.polymer.core.impl.interfaces.PolymerIdMapper;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.material.Fluid;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

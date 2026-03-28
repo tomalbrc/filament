@@ -2,7 +2,7 @@ package de.tomalbrc.filament.mixin.behaviour.shears;
 
 import de.tomalbrc.filament.util.mixin.ItemPredicateCustomCheck;
 import net.minecraft.advancements.criterion.ItemPredicate;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemInstance;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,10 +13,10 @@ import java.util.function.Predicate;
 
 @Mixin(ItemPredicate.Builder.class)
 public class ItemPredicateBuilderMixin implements ItemPredicateCustomCheck {
-    @Unique Predicate<ItemStack> filament$customCheck;
+    @Unique Predicate<ItemInstance> filament$customCheck;
 
     @Override
-    public void setCustomCheck(Predicate<ItemStack> itemStackPredicate) {
+    public void setCustomCheck(Predicate<ItemInstance> itemStackPredicate) {
         filament$customCheck = itemStackPredicate;
     }
 

@@ -135,7 +135,7 @@ public class Trap implements ItemBehaviour<Trap.Config> {
         }
         if (this.config.tags != null) {
             for (Identifier tag : this.config.tags) {
-                if (mob.getType().is(TagKey.create(Registries.ENTITY_TYPE, tag))) {
+                if (mob.getType().builtInRegistryHolder().is(TagKey.create(Registries.ENTITY_TYPE, tag))) {
                     return true;
                 }
             }

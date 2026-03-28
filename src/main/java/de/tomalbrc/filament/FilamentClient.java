@@ -18,7 +18,7 @@ public class FilamentClient implements ClientModInitializer {
     public void onInitializeClient() {
         ServerPlayConnectionEvents.INIT.register((serverGamePacketListener, server) -> {
             if (!server.isDedicatedServer() && (!ItemRegistry.ITEMS_TAGS.isEmpty() || !BlockRegistry.BLOCKS_TAGS.isEmpty() || DecorationRegistry.REGISTERED_DECORATIONS > 0)) {
-                PolymerResourcePackMod.generateAndCall(server, true, message -> {}, () -> {
+                PolymerResourcePackMod.generateAndCall(server, true, message -> {}, result -> {
                     var outputPath = PolymerResourcePackUtils.getMainPath();
                     var altPath = outputPath.resolveSibling(outputPath.getFileName().toString() + "_server.zip");
                     if (altPath.toFile().exists()) {

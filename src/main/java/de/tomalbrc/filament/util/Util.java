@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mojang.serialization.JsonOps;
+import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.gui.PaginatedContainerGui;
 import de.tomalbrc.filament.gui.VirtualChestMenu;
@@ -11,6 +12,7 @@ import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.util.mixin.RegistryUnfreezer;
 import eu.pb4.polymer.core.api.item.PolymerItemUtils;
 import eu.pb4.polymer.core.impl.interfaces.PolymerIdMapper;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -35,7 +37,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 import java.util.Objects;
@@ -119,7 +120,7 @@ public class Util {
     }
 
     public static ItemStack filamentItemStack(ItemStack itemStack, TooltipFlag tooltipType, PacketContext packetContext, FilamentItem filamentItem) {
-        ItemStack stack = PolymerItemUtils.createItemStack(itemStack, tooltipType, packetContext);
+        ItemStack stack = PolymerItemUtils.createItemStack(itemStack, tooltipType, packetContext, Filament.SERVER.registryAccess());
 
         Identifier dataComponentModel = null;
         if (filamentItem.getData() != null && filamentItem.getData().components().has(ITEM_MODEL)) {
@@ -133,7 +134,8 @@ public class Util {
         }
         if (dataComponentModel != null) stack.set(ITEM_MODEL, dataComponentModel);
 
-        filamentItem.getDelegate().modifyPolymerItemStack(filamentItem.getModelMap(), itemStack, stack, tooltipType, packetContext.getRegistryWrapperLookup(), packetContext.getPlayer());
+        var fuckFabric = packetContext.get(PacketContext.GAME_PROFILE);
+        filamentItem.getDelegate().modifyPolymerItemStack(filamentItem.getModelMap(), itemStack, stack, tooltipType, Filament.SERVER.registryAccess(), fuckFabric == null ? null : Filament.SERVER.getPlayerList().getPlayer(fuckFabric.id()));
 
         return stack;
     }

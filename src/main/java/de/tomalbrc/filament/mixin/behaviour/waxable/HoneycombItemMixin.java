@@ -31,7 +31,7 @@ public class HoneycombItemMixin {
         }
     }
 
-    @Inject(method = "method_34719", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;levelEvent(Lnet/minecraft/world/entity/Entity;ILnet/minecraft/core/BlockPos;I)V", ordinal = 0))
+    @Inject(method = "lambda$useOn$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;levelEvent(Lnet/minecraft/world/entity/Entity;ILnet/minecraft/core/BlockPos;I)V", ordinal = 0))
     private static void filament$broadcastToPlayer(UseOnContext useOnContext, BlockPos blockPos, Level level, BlockState blockState, BlockState blockState2, CallbackInfoReturnable<InteractionResult> cir, @Local Player player) {
         if (!level.isClientSide() && WaxableRegistry.getPrevious(blockState2.getBlock()) != null) {
             ((ServerPlayer)player).connection.send(new ClientboundLevelEventPacket(LevelEvent.PARTICLES_AND_SOUND_WAX_ON, blockPos, 0, false));

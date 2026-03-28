@@ -41,7 +41,8 @@ public class ItemAssetGenerator {
                                     new CustomModelDataStringProperty(0),
                                     list
                             ),
-                            Optional.of(defaultModel)
+                            Optional.of(defaultModel),
+                            Optional.empty()
                     ), ItemAsset.Properties.DEFAULT).toBytes()
             );
         } else {

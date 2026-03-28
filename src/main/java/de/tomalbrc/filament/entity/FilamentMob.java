@@ -4,6 +4,7 @@ import de.tomalbrc.filament.api.behaviour.EntityBehaviour;
 import de.tomalbrc.filament.data.EntityData;
 import de.tomalbrc.filament.registry.EntityRegistry;
 import eu.pb4.polymer.core.api.entity.PolymerEntity;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -26,7 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.nucleoid.packettweaker.PacketContext;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 
@@ -88,13 +89,13 @@ public class FilamentMob extends Animal implements PolymerEntity {
     }
 
     @Override
-    public float getWalkTargetValue(BlockPos blockPos, LevelReader levelReader) {
+    public float getWalkTargetValue(@NonNull BlockPos blockPos, @NonNull LevelReader levelReader) {
         if (data.properties().category == MobCategory.MONSTER) return -levelReader.getPathfindingCostFromLightLevels(blockPos);
         return super.getWalkTargetValue(blockPos, levelReader);
     }
 
     @Override
-    public @Nullable AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
+    public @Nullable AgeableMob getBreedOffspring(@NonNull ServerLevel serverLevel, @NonNull AgeableMob ageableMob) {
         var id = data.properties().offspring;
         return (AgeableMob) BuiltInRegistries.ENTITY_TYPE.getValue(id).create(serverLevel, EntitySpawnReason.BREEDING);
     }
@@ -130,7 +131,7 @@ public class FilamentMob extends Animal implements PolymerEntity {
     }
 
     @Override
-    public void customServerAiStep(ServerLevel serverLevel) {
+    public void customServerAiStep(@NonNull ServerLevel serverLevel) {
         super.customServerAiStep(serverLevel);
 
         if (this.forcedAgeTimer > 0) {
@@ -148,7 +149,7 @@ public class FilamentMob extends Animal implements PolymerEntity {
     }
 
     @Override
-    public boolean doHurtTarget(ServerLevel serverLevel, Entity entity) {
+    public boolean doHurtTarget(ServerLevel serverLevel, @NonNull Entity entity) {
         serverLevel.broadcastEntityEvent(this, (byte)4);
 
         return super.doHurtTarget(serverLevel, entity);
@@ -171,7 +172,7 @@ public class FilamentMob extends Animal implements PolymerEntity {
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource damageSource) {
+    protected SoundEvent getHurtSound(@NonNull DamageSource damageSource) {
         if (data.properties().sounds != null && data.properties().sounds.hurt() != null)
             return SoundEvent.createVariableRangeEvent(data.properties().sounds.hurt());
         return super.getHurtSound(damageSource);
@@ -205,7 +206,7 @@ public class FilamentMob extends Animal implements PolymerEntity {
     }
 
     @Override
-    public boolean isFood(ItemStack itemStack) {
+    public boolean isFood(@NonNull ItemStack itemStack) {
         var food = data.properties().food;
         if (food != null) {
             for (Identifier Identifier : food) {
@@ -241,15 +242,8 @@ public class FilamentMob extends Animal implements PolymerEntity {
 
     @Override
     public void modifyRawEntityAttributeData(List<ClientboundUpdateAttributesPacket.AttributeSnapshot> data, ServerPlayer player, boolean initial) {
-
         data.add(new ClientboundUpdateAttributesPacket.AttributeSnapshot(Attributes.MAX_HEALTH, 1.0, List.of()));
     }
-
-    //@Override
-    //public void modifyRawTrackedData(List<SynchedEntityData.DataValue<?>> data, ServerPlayer player, boolean initial) {
-        //BuiltInRegistries.ENTITY_TYPE.getValue(this.data.entityType());
-    //}
-
 
     @Override
     public boolean canBeLeashed() {
@@ -262,7 +256,7 @@ public class FilamentMob extends Animal implements PolymerEntity {
     }
 
     @Override
-    public boolean canMate(Animal animal) {
+    public boolean canMate(@NonNull Animal animal) {
         if (animal == this) {
             return false;
         } else if (animal.getType() != this.getType()) {

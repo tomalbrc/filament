@@ -49,13 +49,11 @@ import org.jspecify.annotations.NonNull;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -235,19 +233,19 @@ public class Json {
         @SuppressWarnings({"rawtypes", "unchecked"})
         public JsonElement serialize(BlockState src, Type typeOfSrc, JsonSerializationContext context) {
             StringBuilder builder = new StringBuilder();
-            builder.append(BuiltInRegistries.BLOCK.getKey(src.getBlock()).toString());
-            if (!src.getValues().isEmpty()) {
+            builder.append(BuiltInRegistries.BLOCK.getKey(src.getBlock()));
+            if (src.getValues().findAny().isPresent()) {
                 builder.append('[');
                 boolean first = true;
-                for (Map.Entry<Property<?>, Comparable<?>> entry : src.getValues().entrySet()) {
+                for (var val : src.getValues().toList()) {
                     if (!first) {
                         builder.append(',');
                     }
                     first = false;
-                    Property property = entry.getKey();
+                    Property property = val.property();
                     builder.append(property.getName())
                             .append('=')
-                            .append(property.getName(entry.getValue()));
+                            .append(property.getName(val.value()));
                 }
                 builder.append(']');
             }

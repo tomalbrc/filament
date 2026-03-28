@@ -40,7 +40,7 @@ public class GrassSpread implements BlockBehaviour<GrassSpread.Config>, SimpleWa
 
     @Override
     public void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
-        if (config.canDecay && !SpreadingSnowyDirtBlockAccessor.invokeCanBeGrass(blockState, serverLevel, blockPos)) {
+        if (config.canDecay && !SpreadingSnowyDirtBlockAccessor.invokeCanStayAlive(blockState, serverLevel, blockPos)) {
             serverLevel.setBlockAndUpdate(blockPos, config.decayBlockState);
         } else {
             if (config.requiredBrightness.isInRange(serverLevel.getMaxLocalRawBrightness(blockPos.above()))) {
@@ -58,6 +58,7 @@ public class GrassSpread implements BlockBehaviour<GrassSpread.Config>, SimpleWa
                         canReplace |= blockState2.is(block);
                         if (canReplace) break;
                     }
+
                     if (!canReplace && config.propagatesToBlocks != null && !config.propagatesToBlockTags.isEmpty()) {
                         for (Identifier tag : config.propagatesToBlockTags) {
                             canReplace |= blockState2.is(TagKey.create(Registries.BLOCK, tag));

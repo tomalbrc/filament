@@ -42,7 +42,7 @@ public class Mace implements ItemBehaviour<Mace.Config> {
             livingEntity2.setDeltaMovement(livingEntity2.getDeltaMovement().with(Direction.Axis.Y, 0.01F));
             if (livingEntity2 instanceof ServerPlayer serverPlayer) {
                 serverPlayer.currentImpulseImpactPos = this.calculateImpactPosition(serverPlayer);
-                serverPlayer.setIgnoreFallDamageFromCurrentImpulse(true);
+                serverPlayer.setIgnoreFallDamageFromCurrentImpulse(true, serverPlayer.position());
                 serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
             }
 

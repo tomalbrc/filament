@@ -41,6 +41,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
 
@@ -164,7 +165,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
     public InteractionResult decorationInteract(ServerPlayer player, InteractionHand interactionHand, Vec3 location) {
         var adventureCheck = (FilamentConfig.getInstance().preventAdventureModeDecorationInteraction && !this.getDecorationData().properties().allowAdventureMode) && player.gameMode.getGameModeForPlayer() == GameType.ADVENTURE;
-        if (adventureCheck || !CommonProtection.canInteractBlock(player.level(), BlockPos.containing(location), player.getGameProfile(), player))
+        if (adventureCheck || !CommonProtection.canInteractBlock(player.level(), BlockPos.containing(location), player.nameAndId(), player))
             return InteractionResult.FAIL;
 
         if (!this.isMain()) {
@@ -287,7 +288,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     }
 
     @Override
-    protected void applyImplicitComponents(DataComponentGetter dataComponentGetter) {
+    protected void applyImplicitComponents(@NonNull DataComponentGetter dataComponentGetter) {
         super.applyImplicitComponents(dataComponentGetter);
 
         setupBehaviour(getDecorationData());
@@ -300,7 +301,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     }
 
     @Override
-    protected void collectImplicitComponents(DataComponentMap.Builder builder) {
+    protected void collectImplicitComponents(DataComponentMap.@NonNull Builder builder) {
         super.collectImplicitComponents(builder);
 
         for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : this.behaviours) {
@@ -311,7 +312,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     }
 
     @Override
-    public void removeComponentsFromTag(ValueOutput valueOutput) {
+    public void removeComponentsFromTag(@NonNull ValueOutput valueOutput) {
         super.removeComponentsFromTag(valueOutput);
 
         for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : this.behaviours) {

@@ -42,7 +42,7 @@ public class AsyncBlockTicker {
 
         for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : tickData.block.getBehaviours()) {
             if (behaviour.getValue() instanceof AsyncTickingBlockBehaviour blockBehaviour) {
-                blockBehaviour.tickAsync(state, tickData.serverLevel, tickData.blockPos, tickData.serverLevel.random);
+                blockBehaviour.tickAsync(state, tickData.serverLevel, tickData.blockPos, tickData.serverLevel.getRandom());
             }
         }
     }

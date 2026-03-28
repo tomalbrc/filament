@@ -18,7 +18,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FilamentContainer extends SimpleContainer implements RandomizableContainer {
@@ -32,10 +34,15 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
     private Runnable closeCallback;
     private Runnable openCallback;
 
+    @FunctionalInterface
+    public interface SimpleContainerListener {
+        void onChange(Container container);
+    }
+    private final List<SimpleContainerListener> listeners = new ArrayList<>();
+
     public FilamentContainer(DecorationBlockEntity blockEntity, int size, boolean purge) {
         super(size);
 
-        this.addListener(x -> blockEntity.setChanged());
         this.blockEntity = blockEntity;
         this.purge = purge;
     }
@@ -46,18 +53,18 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
     }
 
     @Override
-    public boolean stillValid(Player player) {
-        return this.valid && !blockEntity.isRemoved();
+    public boolean stillValid(@NonNull Player player) {
+        return this.valid && (blockEntity == null || !blockEntity.isRemoved());
     }
 
     @Override
-    public boolean canTakeItem(Container target, int slot, ItemStack stack) {
+    public boolean canTakeItem(@NonNull Container target, int slot, @NonNull ItemStack stack) {
         return this.valid;
     }
 
     @Override
-    public boolean canPlaceItem(int slot, ItemStack stack) {
-        return this.valid && !blockEntity.isRemoved() && stack.getCount() <= getMaxStackSize(slot) - getItem(slot).getCount();
+    public boolean canPlaceItem(int slot, @NonNull ItemStack stack) {
+        return this.valid && (blockEntity == null || !blockEntity.isRemoved()) && stack.getCount() <= getMaxStackSize(slot) - getItem(slot).getCount();
     }
 
     public int getMaxStackSize(int slot) {
@@ -90,7 +97,7 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
     }
 
     @Override
-    public void stopOpen(ContainerUser containerUser) {
+    public void stopOpen(@NonNull ContainerUser containerUser) {
         super.stopOpen(containerUser);
 
         this.menus.remove(containerUser);
@@ -136,7 +143,7 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
     }
 
     @Override
-    public void setItem(int n, ItemStack itemStack) {
+    public void setItem(int n, @NonNull ItemStack itemStack) {
         this.unpackLootTable(null);
         super.setItem(n, itemStack);
     }
@@ -193,5 +200,21 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
     public static boolean isPickUpContainer(Container container) {
         ContainerLike containerLike;
         return container instanceof FilamentContainer filamentContainer && (containerLike = DecorationData.getFirstContainer(filamentContainer.getBlockEntity())) != null && containerLike.canPickUp();
+    }
+
+    @Override
+    public void setChanged() {
+        super.setChanged();
+        for (SimpleContainerListener listener : listeners) {
+            listener.onChange(this);
+        }
+    }
+
+    public void addListener(SimpleContainerListener o) {
+        listeners.add(o);
+    }
+
+    public void removeListener(SimpleContainerListener o) {
+        listeners.remove(o);
     }
 }

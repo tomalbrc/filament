@@ -13,7 +13,9 @@ import de.tomalbrc.filament.util.BlockUtil;
 import de.tomalbrc.filament.util.Json;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -34,7 +36,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.nucleoid.packettweaker.PacketContext;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
 import java.util.function.Consumer;
@@ -54,7 +56,7 @@ public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentI
     }
 
     @Override
-    public @NotNull Component getName(ItemStack itemStack) {
+    public @NotNull Component getName(@NonNull ItemStack itemStack) {
         var dataName = this.data.displayName();
         return dataName != null ? dataName : data.components().getOrDefault(DataComponents.ITEM_NAME, super.getName(itemStack));
     }
@@ -70,7 +72,7 @@ public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentI
     }
 
     @Override
-    protected boolean placeBlock(BlockPlaceContext context, BlockState state) {
+    protected boolean placeBlock(@NonNull BlockPlaceContext context, @NonNull BlockState state) {
         if (!super.placeBlock(context, state)) {
             return false;
         }
@@ -107,38 +109,38 @@ public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentI
     }
 
     @Override
-    public void onUseTick(Level level, LivingEntity livingEntity, ItemStack itemStack, int i) {
+    public void onUseTick(@NonNull Level level, @NonNull LivingEntity livingEntity, @NonNull ItemStack itemStack, int i) {
         this.delegate.onUseTick(level, livingEntity, itemStack, i);
     }
 
     @Override
-    public boolean releaseUsing(ItemStack itemStack, Level level, LivingEntity livingEntity, int useDuration) {
+    public boolean releaseUsing(@NonNull ItemStack itemStack, @NonNull Level level, @NonNull LivingEntity livingEntity, int useDuration) {
         return this.delegate.releaseUsing(itemStack, level, livingEntity, useDuration, () -> super.releaseUsing(itemStack, level, livingEntity, useDuration));
     }
 
     @Override
-    public boolean useOnRelease(ItemStack itemStack) {
+    public boolean useOnRelease(@NonNull ItemStack itemStack) {
         return this.delegate.useOnRelease(itemStack, () -> super.useOnRelease(itemStack));
     }
 
     @Override
-    public int getUseDuration(ItemStack itemStack, LivingEntity livingEntity) {
+    public int getUseDuration(@NonNull ItemStack itemStack, @NonNull LivingEntity livingEntity) {
         return this.delegate.getUseDuration(itemStack, livingEntity, () -> super.getUseDuration(itemStack, livingEntity));
     }
 
     @Override
     @NotNull
-    public ItemUseAnimation getUseAnimation(ItemStack itemStack) {
+    public ItemUseAnimation getUseAnimation(@NonNull ItemStack itemStack) {
         return this.delegate.getUseAnimation(itemStack, () -> super.getUseAnimation(itemStack));
     }
 
     @Override
-    public void postHurtEnemy(ItemStack itemStack, LivingEntity livingEntity, LivingEntity livingEntity2) {
+    public void postHurtEnemy(@NonNull ItemStack itemStack, @NonNull LivingEntity livingEntity, @NonNull LivingEntity livingEntity2) {
         this.delegate.postHurtEnemy(itemStack, livingEntity, livingEntity2);
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, TooltipDisplay tooltipDisplay, Consumer<Component> consumer, TooltipFlag tooltipFlag) {
+    public void appendHoverText(@NonNull ItemStack itemStack, @NonNull TooltipContext tooltipContext, @NonNull TooltipDisplay tooltipDisplay, @NonNull Consumer<Component> consumer, @NonNull TooltipFlag tooltipFlag) {
         this.delegate.appendHoverText(itemStack, tooltipContext, tooltipDisplay, consumer, tooltipFlag);
         this.data.properties().appendHoverText(consumer);
         super.appendHoverText(itemStack, tooltipContext, tooltipDisplay, consumer, tooltipFlag);
@@ -150,19 +152,19 @@ public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentI
     }
 
     @Override
-    public final ItemStack getPolymerItemStack(ItemStack itemStack, TooltipFlag tooltipType, PacketContext packetContext) {
+    public final ItemStack getPolymerItemStack(ItemStack itemStack, TooltipFlag tooltipType, PacketContext packetContext, HolderLookup.Provider provider) {
         return Util.filamentItemStack(itemStack, tooltipType, packetContext, this);
     }
 
     @Override
     @NotNull
-    public InteractionResult use(Level level, Player user, InteractionHand hand) {
+    public InteractionResult use(@NonNull Level level, @NonNull Player user, @NonNull InteractionHand hand) {
         return this.delegate.use(this, level, user, hand, () -> super.use(level, user, hand));
     }
 
     @Override
     @NotNull
-    public InteractionResult useOn(UseOnContext useOnContext) {
+    public InteractionResult useOn(@NonNull UseOnContext useOnContext) {
         return this.delegate.useOn(useOnContext, () -> {
             var res = super.useOn(useOnContext);
             if (res.consumesAction()) {
@@ -174,19 +176,19 @@ public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentI
     }
 
     @Override
-    public boolean mineBlock(ItemStack itemStack, Level level, BlockState blockState, BlockPos blockPos, LivingEntity livingEntity) {
+    public boolean mineBlock(@NonNull ItemStack itemStack, @NonNull Level level, @NonNull BlockState blockState, @NonNull BlockPos blockPos, @NonNull LivingEntity livingEntity) {
         return this.delegate.mineBlock(itemStack, level, blockState, blockPos, livingEntity, () -> super.mineBlock(itemStack, level, blockState, blockPos, livingEntity));
     }
 
     /// Entity Damaging behaviours
     @Override
-    public float getAttackDamageBonus(Entity entity, float f, DamageSource damageSource) {
+    public float getAttackDamageBonus(@NonNull Entity entity, float f, @NonNull DamageSource damageSource) {
         return this.delegate.getAttackDamageBonus(entity, f, damageSource, () -> super.getAttackDamageBonus(entity, f, damageSource));
     }
 
     @Override
     @Nullable
-    public DamageSource getItemDamageSource(LivingEntity livingEntity) {
+    public DamageSource getItemDamageSource(@NonNull LivingEntity livingEntity) {
         return this.delegate.getDamageSource(livingEntity, () -> super.getItemDamageSource(livingEntity));
     }
 }

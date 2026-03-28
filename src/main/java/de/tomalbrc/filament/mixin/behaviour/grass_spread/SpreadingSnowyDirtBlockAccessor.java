@@ -2,15 +2,15 @@ package de.tomalbrc.filament.mixin.behaviour.grass_spread;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.SpreadingSnowyDirtBlock;
+import net.minecraft.world.level.block.SpreadingSnowyBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(SpreadingSnowyDirtBlock.class)
+@Mixin(SpreadingSnowyBlock.class)
 public interface SpreadingSnowyDirtBlockAccessor {
     @Invoker
-    static boolean invokeCanBeGrass(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
+    static boolean invokeCanStayAlive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
         throw new UnsupportedOperationException();
     }
 

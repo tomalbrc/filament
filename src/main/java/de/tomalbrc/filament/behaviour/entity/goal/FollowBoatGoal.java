@@ -2,6 +2,8 @@ package de.tomalbrc.filament.behaviour.entity.goal;
 
 import de.tomalbrc.filament.api.behaviour.EntityBehaviour;
 import de.tomalbrc.filament.entity.FilamentMob;
+import net.minecraft.world.entity.animal.nautilus.AbstractNautilus;
+import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -18,7 +20,9 @@ public class FollowBoatGoal implements EntityBehaviour<FollowBoatGoal.Config> {
     public void registerGoals(FilamentMob mob) {
         EntityBehaviour.super.registerGoals(mob);
 
-        mob.getGoalSelector().addGoal(config.priority, new net.minecraft.world.entity.ai.goal.FollowBoatGoal(mob));
+        // TODO: 26.1 change
+        mob.getGoalSelector().addGoal(config.priority, new net.minecraft.world.entity.ai.goal.FollowPlayerRiddenEntityGoal(mob, AbstractBoat.class));
+        mob.getGoalSelector().addGoal(config.priority, new net.minecraft.world.entity.ai.goal.FollowPlayerRiddenEntityGoal(mob, AbstractNautilus.class));
     }
 
     @Override

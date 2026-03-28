@@ -10,7 +10,6 @@ import de.tomalbrc.filament.util.Json;
 import de.tomalbrc.filamentweb.asset.Asset;
 import de.tomalbrc.filamentweb.asset.AssetStore;
 import eu.pb4.polymer.autohost.impl.AutoHost;
-import eu.pb4.polymer.common.impl.CommonPacketListenerImplExt;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.polymer.resourcepack.impl.PolymerResourcePackMod;
 import jakarta.servlet.http.HttpServlet;
@@ -48,7 +47,7 @@ public class ActionServlet extends HttpServlet {
                 case "/rebuild" -> {
                     PolymerResourcePackMod.generateAndCall(Filament.SERVER, false, (x) -> {
                         Filament.LOGGER.info(x.getString());
-                    }, () -> {
+                    }, result -> {
                         // todo: on finish
                     });
                     noContent(resp);
@@ -56,7 +55,7 @@ public class ActionServlet extends HttpServlet {
                 case "/reload" -> {
                     var provider = AutoHost.provider;
                     for (var player : Filament.SERVER.getPlayerList().getPlayers()) {
-                        for (var x : provider.getProperties(((CommonPacketListenerImplExt) player.connection).polymerCommon$getConnection())) {
+                        for (var x : provider.getProperties(player.connection.getPacketContext())) {
                             player.connection.send(new ClientboundResourcePackPushPacket(
                                     x.id(),
                                     x.url(),

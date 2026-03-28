@@ -9,6 +9,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,8 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Mob.class)
 public class MobMixin {
     @Inject(at= @At("HEAD"), method = "interact", cancellable = true)
-    public void filament$trapItemInteract(Player player, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResult> cir) {
-        ItemStack itemStack = player.getItemInHand(interactionHand);
+    public void filament$trapItemInteract(Player player, InteractionHand hand, Vec3 location, CallbackInfoReturnable<InteractionResult> cir) {
+        ItemStack itemStack = player.getItemInHand(hand);
 
         Mob mob = Mob.class.cast(this);
         if (itemStack.getItem().isFilamentItem() && itemStack.getItem().getBehaviours().has(Behaviours.TRAP) && !player.getCooldowns().isOnCooldown(itemStack)) {
@@ -36,7 +37,7 @@ public class MobMixin {
                 mob.discard();
             }
 
-            itemStack.getItem().use(player.level(), player, interactionHand);
+            itemStack.getItem().use(player.level(), player, hand);
 
             cir.setReturnValue(InteractionResult.CONSUME);
             cir.cancel();

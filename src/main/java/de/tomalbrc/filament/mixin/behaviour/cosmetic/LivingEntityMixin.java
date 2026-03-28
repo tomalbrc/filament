@@ -150,7 +150,7 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
 
         VirtualEntityUtils.addVirtualPassenger(livingEntity, holder.getEntityIds().toIntArray());
 
-        var packet = VirtualEntityUtils.createRidePacket(livingEntity.getId(), ((EntityExt)livingEntity).polymerVE$getVirtualRidden());
+        var packet = VirtualEntityUtils.createClientboundSetPassengersPacket(livingEntity.getId(), ((EntityExt)livingEntity).polymerVE$getVirtualRidden());
         if (livingEntity instanceof ServerPlayer serverPlayer)
             serverPlayer.connection.send(packet);
 

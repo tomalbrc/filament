@@ -15,10 +15,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CatSitOnBlockGoal.class)
 public class CatSitOnBlockGoalMixin {
-    @Inject(method = "isValidTarget", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z", ordinal = 0), cancellable = true)
-    private void filament$chest(LevelReader levelReader, BlockPos blockPos, CallbackInfoReturnable<Boolean> cir, @Local BlockState blockState) {
+    @Inject(method = "isValidTarget", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Ljava/lang/Object;)Z", ordinal = 0), cancellable = true)
+    private void filament$chest(LevelReader level, BlockPos pos, CallbackInfoReturnable<Boolean> cir, @Local(name = "blockState") BlockState blockState) {
         if (blockState.getBlock() instanceof DecorationBlock decorationBlock && decorationBlock.has(Behaviours.ANIMATED_CHEST)) {
-            var decorationBlockEntity = levelReader.getBlockEntity(blockPos);
+            var decorationBlockEntity = level.getBlockEntity(pos);
             if (decorationBlockEntity != null) {
                 var ac = ((DecorationBlockEntity) decorationBlockEntity).getOrThrow(Behaviours.ANIMATED_CHEST);
                 if (!ac.container.hasViewers()) {

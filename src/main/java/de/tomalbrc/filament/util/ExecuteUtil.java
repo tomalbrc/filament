@@ -4,7 +4,6 @@ import de.tomalbrc.filament.Filament;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.permissions.PermissionLevel;
 import net.minecraft.server.permissions.PermissionSet;
 import net.minecraft.world.phys.Vec3;
 

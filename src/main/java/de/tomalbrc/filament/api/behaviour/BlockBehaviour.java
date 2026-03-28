@@ -366,7 +366,7 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
     default void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity, InsideBlockEffectApplier insideBlockEffectApplier) {
     }
 
-    default int getLightBlock(BlockState state) {
+    default int getLightDampening(BlockState state) {
         return -1;
     }
 

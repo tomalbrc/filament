@@ -34,6 +34,7 @@ import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 public class Tnt implements BlockBehaviour<Tnt.Config> {
     private final Config config;
@@ -52,7 +53,7 @@ public class Tnt implements BlockBehaviour<Tnt.Config> {
     public void init(Item item, Block block, BehaviourHolder behaviourHolder) {
         DispenserBlock.registerBehavior(block, new DefaultDispenseItemBehavior(){
             @Override
-            protected @NotNull ItemStack execute(BlockSource blockSource, ItemStack itemStack) {
+            protected @NotNull ItemStack execute(@NonNull BlockSource blockSource, @NonNull ItemStack itemStack) {
                 ServerLevel serverLevel = blockSource.level();
                 BlockPos blockPos = blockSource.pos().relative(blockSource.state().getValue(DispenserBlock.FACING));
                 explode(serverLevel, blockPos, null, block.defaultBlockState());
@@ -93,7 +94,7 @@ public class Tnt implements BlockBehaviour<Tnt.Config> {
     public void wasExploded(ServerLevel serverLevel, BlockPos blockPos, Explosion explosion) {
         var bs = serverLevel.getBlockState(blockPos);
         var i = config.fuseTime.getValue(bs);
-        explode(serverLevel, blockPos, null, serverLevel.getBlockState(blockPos), serverLevel.random.nextInt(i / 4) + i / 8);
+        explode(serverLevel, blockPos, null, serverLevel.getBlockState(blockPos), serverLevel.getRandom().nextInt(i / 4) + i / 8);
     }
 
     @Override

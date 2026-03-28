@@ -36,7 +36,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
@@ -97,7 +96,7 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
 
             var empty = sd.isEmpty();
 
-            if (config.dyeable && !empty && itemStack.getItem() instanceof DyeItem dyeItem && apply(player.level(), decorationBlockEntity, e, dyeItem.getDyeColor(), sd.glow)) {
+            if (config.dyeable && !empty && itemStack.get(DataComponents.DYE) != null && apply(player.level(), decorationBlockEntity, e, itemStack.get(DataComponents.DYE), sd.glow)) {
                 if (!itemStack.isDamageableItem())
                     itemStack.consume(1, player);
                 else itemStack.hurtAndBreak(1, player, hand);
@@ -122,13 +121,13 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
                     editingPlayer = player.getUUID();
                     var signGui = new SignGui(player) {
                         @Override
-                        public void onClose() {
+                        public void onPlayerClose(boolean s) {
                             for (int i = 0; i < e.lines; i++) {
                                 sd.text[i] = getLine(i);
                             }
                             changed(decorationBlockEntity, e);
                             editingPlayer = null;
-                            super.onClose();
+                            super.onPlayerClose(s);
                         }
                     };
 

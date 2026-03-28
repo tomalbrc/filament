@@ -70,11 +70,5 @@
     "polymer-sound-patcher": "*",
     "bil": ">=${bil_version}"
   },
-  "accessWidener": "filament.accesswidener",
-  "custom": {
-    "loom:injected_interfaces": {
-      "net/minecraft/class_1792": ["de/tomalbrc/filament/injection/FilamentItemExtension"],
-      "net/minecraft/class_2248": ["de/tomalbrc/filament/injection/FilamentBlockExtension"]
-    }
-  }
+  "accessWidener": "filament.accesswidener"
 }

@@ -12,10 +12,10 @@ import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
 import de.tomalbrc.filament.util.FilamentContainer;
 import de.tomalbrc.filament.util.TextUtil;
 import de.tomalbrc.filament.util.Util;
+import eu.pb4.polymer.virtualentity.api.data.DisplayEntityData;
 import eu.pb4.polymer.virtualentity.api.elements.BlockDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
-import eu.pb4.polymer.virtualentity.api.tracker.DisplayTrackedData;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
@@ -24,8 +24,8 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -228,9 +228,9 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
             decorationBlockEntity.getOrCreateHolder().addElement(newElement);
         } else {
             if (element instanceof BlockDisplayElement blockDisplayElement && itemStack.getItem() instanceof BlockItem blockItem) {
-                blockDisplayElement.getDataTracker().set(DisplayTrackedData.Block.BLOCK_STATE, blockItem.getBlock().defaultBlockState(), true);
+                blockDisplayElement.getSyncedData().set(DisplayEntityData.Block.BLOCK_STATE, blockItem.getBlock().defaultBlockState(), true);
             } else if (element instanceof ItemDisplayElement itemDisplayElement) {
-                itemDisplayElement.getDataTracker().set(DisplayTrackedData.Item.ITEM, itemStack.copy(), true);
+                itemDisplayElement.getSyncedData().set(DisplayEntityData.Item.ITEM, itemStack.copy(), true);
             }
 
             this.showcases.put(showcase, element);

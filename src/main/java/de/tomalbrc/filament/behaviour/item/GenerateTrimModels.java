@@ -90,8 +90,8 @@ public class GenerateTrimModels implements ItemBehaviour<GenerateTrimModels.Conf
                 modelAsset.parent(itemResource.parent());
 
                 var layer0 = itemResource.textures().get("default");
-                modelAsset.texture("layer0", layer0.get("layer0").toString());
-                modelAsset.texture("layer1", layer1.toString());
+                modelAsset.texture("layer0", layer0.get("layer0"));
+                modelAsset.texture("layer1", layer1);
 
                 var model = Identifier.fromNamespaceAndPath(data.id().getNamespace(), name);
                 var models = itemResource.getModels();

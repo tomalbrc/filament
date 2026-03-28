@@ -7,7 +7,6 @@ import net.minecraft.resources.Identifier;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Map;
 
 public class BlockResource implements ResourceProvider {

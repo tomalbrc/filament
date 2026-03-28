@@ -8,9 +8,10 @@ import eu.pb4.polymer.core.api.entity.PolymerEntity;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.VirtualEntityUtils;
 import eu.pb4.polymer.virtualentity.api.attachment.EntityAttachment;
+import eu.pb4.polymer.virtualentity.api.data.EntityData;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
-import eu.pb4.polymer.virtualentity.api.tracker.EntityTrackedData;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
@@ -38,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import xyz.nucleoid.packettweaker.PacketContext;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -123,7 +124,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
 
     @Nullable
     @Override
-    protected EntityHitResult findHitEntity(Vec3 currentPosition, Vec3 nextPosition) {
+    protected EntityHitResult findHitEntity(@NonNull Vec3 currentPosition, @NonNull Vec3 nextPosition) {
         return this.dealtDamage ? null : super.findHitEntity(currentPosition, nextPosition);
     }
 
@@ -134,9 +135,9 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
 
     @Override
     public void modifyRawTrackedData(List<SynchedEntityData.DataValue<?>> data, ServerPlayer player, boolean initial) {
-        data.add(SynchedEntityData.DataValue.create(EntityTrackedData.FLAGS, (byte) (1 << EntityTrackedData.INVISIBLE_FLAG_INDEX)));
-        data.add(SynchedEntityData.DataValue.create(EntityTrackedData.NO_GRAVITY, true));
-        data.add(SynchedEntityData.DataValue.create(EntityTrackedData.SILENT, true));
+        data.add(SynchedEntityData.DataValue.create(EntityData.FLAGS, (byte) (1 << EntityData.INVISIBLE_FLAG_INDEX)));
+        data.add(SynchedEntityData.DataValue.create(EntityData.NO_GRAVITY, true));
+        data.add(SynchedEntityData.DataValue.create(EntityData.SILENT, true));
         data.add(SynchedEntityData.DataValue.create(ArmorStand.DATA_CLIENT_FLAGS, (byte) (ArmorStand.CLIENT_FLAG_SMALL | ArmorStand.CLIENT_FLAG_MARKER)));
     }
 
@@ -152,7 +153,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     }
 
     @Override
-    protected void onHit(HitResult result) {
+    protected void onHit(@NonNull HitResult result) {
         super.onHit(result);
 
         if (config.dropAsItem && !level().isClientSide()) {
@@ -187,14 +188,14 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     }
 
     @Override
-    public void playerTouch(Player player) {
+    public void playerTouch(@NonNull Player player) {
         if (this.noPhysics || this.ownedBy(player) || this.getOwner() == null) {
             super.playerTouch(player);
         }
     }
 
     @Override
-    public void readAdditionalSaveData(ValueInput input) {
+    public void readAdditionalSaveData(@NonNull ValueInput input) {
         super.readAdditionalSaveData(input);
 
         this.base = input.read("Item", ItemStack.CODEC).orElse(ItemStack.EMPTY);
@@ -210,7 +211,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     }
 
     @Override
-    public void addAdditionalSaveData(ValueOutput output) {
+    public void addAdditionalSaveData(@NonNull ValueOutput output) {
         super.addAdditionalSaveData(output);
 
         if (this.projectileStack != null && !this.projectileStack.isEmpty()) output.store("Item", ItemStack.CODEC, this.projectileStack);
@@ -220,7 +221,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
     }
 
     @Override
-    protected boolean tryPickup(Player player) {
+    protected boolean tryPickup(@NonNull Player player) {
         return config != null && config.canPickUp && super.tryPickup(player);
     }
 }

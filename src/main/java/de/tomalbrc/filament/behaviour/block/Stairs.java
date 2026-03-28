@@ -24,7 +24,9 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Half;
@@ -35,6 +37,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
 import java.util.Optional;
@@ -136,12 +139,12 @@ public class Stairs implements BlockBehaviour<Stairs.Config>, SimpleWaterloggedB
   }
 
   @Override
-  public boolean placeLiquid(LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState, FluidState fluidState) {
+  public boolean placeLiquid(@NonNull LevelAccessor levelAccessor, @NonNull BlockPos blockPos, @NonNull BlockState blockState, @NonNull FluidState fluidState) {
     return SimpleWaterloggedBlock.super.placeLiquid(levelAccessor, blockPos, blockState, fluidState);
   }
 
   @Override
-  public boolean canPlaceLiquid(@Nullable LivingEntity livingEntity, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
+  public boolean canPlaceLiquid(@Nullable LivingEntity livingEntity, @NonNull BlockGetter blockGetter, @NonNull BlockPos blockPos, @NonNull BlockState blockState, @NonNull Fluid fluid) {
     return SimpleWaterloggedBlock.super.canPlaceLiquid(livingEntity, blockGetter, blockPos, blockState, fluid);
   }
 

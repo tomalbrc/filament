@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.14-SNAPSHOT'
+    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT'
     id 'com.gradleup.shadow' version '9.3.1'
     id 'maven-publish'
 }
@@ -26,37 +26,34 @@ repositories {
     maven { url 'https://maven.parchmentmc.org' }
     maven { url = 'https://api.modrinth.com/maven' }
     maven { url 'https://maven.blamejared.com' }
+    mavenLocal()
 }
 
 dependencies {
-    // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings(loom.layered {
-        officialMojangMappings()
-    })
-    modImplementation ("net.fabricmc:fabric-loader:${project.loader_version}")
-    modImplementation ("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
+    implementation ("net.fabricmc:fabric-loader:${project.loader_version}")
+    implementation ("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 
     // Polymer
-    modImplementation ("eu.pb4:polymer-core:${project.polymer_version}")
-    modImplementation ("eu.pb4:polymer-blocks:${project.polymer_version}")
-    modImplementation ("eu.pb4:polymer-resource-pack:${project.polymer_version}")
-    modImplementation ("eu.pb4:polymer-resource-pack-extras:${project.polymer_version}")
-    modImplementation ("eu.pb4:polymer-virtual-entity:${project.polymer_version}")
-    modImplementation ("eu.pb4:polymer-networking:${project.polymer_version}")
-    modImplementation ("eu.pb4:polymer-autohost:${project.polymer_version}")
-    modImplementation ("eu.pb4:polymer-sound-patcher:${project.polymer_version}")
-    modImplementation include("eu.pb4:sgui:${project.sgui_version}")
-    modImplementation include('me.lucko:fabric-permissions-api:0.6.1')
+    implementation ("eu.pb4:polymer-core:${project.polymer_version}")
+    implementation ("eu.pb4:polymer-blocks:${project.polymer_version}")
+    implementation ("eu.pb4:polymer-resource-pack:${project.polymer_version}")
+    implementation ("eu.pb4:polymer-resource-pack-extras:${project.polymer_version}")
+    implementation ("eu.pb4:polymer-virtual-entity:${project.polymer_version}")
+    implementation ("eu.pb4:polymer-networking:${project.polymer_version}")
+    implementation ("eu.pb4:polymer-autohost:${project.polymer_version}")
+    implementation ("eu.pb4:polymer-sound-patcher:${project.polymer_version}")
+    implementation include("eu.pb4:sgui:${project.sgui_version}")
+    implementation include('me.lucko:fabric-permissions-api:0.7.0')
 
     // BIL
-    modImplementation include("de.tomalbrc:blockbench-import-library:${project.bil_version}")
+    implementation include("de.tomalbrc:blockbench-import-library:${project.bil_version}")
 
     // Text format
-    modImplementation include("eu.pb4:placeholder-api:${project.papi_version}")
-    modImplementation include("net.kyori:adventure-platform-fabric:${project.adventure_platform_version}")
-    implementation include("net.kyori:adventure-text-minimessage:${project.adventure_api_version}")
-    implementation("net.kyori:adventure-api:${project.adventure_api_version}")
+    implementation include("eu.pb4:placeholder-api:${project.papi_version}")
+    //implementation include("net.kyori:adventure-platform-fabric:${project.adventure_platform_version}")
+    //implementation include("net.kyori:adventure-text-minimessage:${project.adventure_api_version}")
+    //implementation("net.kyori:adventure-api:${project.adventure_api_version}")
 
     shade('org.yaml:snakeyaml:2.4')
 
@@ -67,12 +64,12 @@ dependencies {
     shade 'org.json:json:20231013'
 
     // claim compat
-    modImplementation include("eu.pb4:common-protection-api:1.0.0")
+    implementation include("eu.pb4:common-protection-api:2.0.0")
 }
 
-remapJar {
+jar {
     dependsOn shadowJar
-    inputFile.set(shadowJar.archiveFile)
+//    inputFile.set(shadowJar.archiveFile)
 }
 
 shadowJar {
@@ -116,7 +113,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release.set(21)
+    it.options.release.set(25)
 }
 
 java {

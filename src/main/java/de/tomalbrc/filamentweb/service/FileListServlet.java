@@ -1,12 +1,12 @@
 package de.tomalbrc.filamentweb.service;
 
-import de.tomalbrc.filamentweb.util.WebPaths;
 import de.tomalbrc.filamentweb.asset.Asset;
 import de.tomalbrc.filamentweb.asset.AssetStore;
+import de.tomalbrc.filamentweb.util.WebPaths;
+import j2html.tags.DomContent;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import j2html.tags.DomContent;
 
 import java.io.IOException;
 import java.io.PrintWriter;

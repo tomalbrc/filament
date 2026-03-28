@@ -30,6 +30,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.Consumer;
 
@@ -47,7 +48,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, TooltipDisplay tooltipDisplay, Consumer<Component> consumer, TooltipFlag tooltipFlag) {
+    public void appendHoverText(@NonNull ItemStack itemStack, @NonNull TooltipContext tooltipContext, @NonNull TooltipDisplay tooltipDisplay, @NonNull Consumer<Component> consumer, @NonNull TooltipFlag tooltipFlag) {
         if (this.decorationData.vanillaItem().components().has(DataComponents.DYED_COLOR) || this.decorationData.components().has(DataComponents.DYED_COLOR)) {
             consumer.accept(Component.literal("§9Dyeable"));
         }
@@ -57,7 +58,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
 
     @Override
     @NotNull
-    public InteractionResult useOn(UseOnContext useOnContext) {
+    public InteractionResult useOn(@NonNull UseOnContext useOnContext) {
         if (decorationData == null) {
             Filament.LOGGER.warn("Can't use decoration Item: Missing decoration data!");
             return InteractionResult.FAIL;

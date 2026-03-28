@@ -1,11 +1,11 @@
 package de.tomalbrc.filamentweb.service;
 
 import com.google.gson.*;
-import de.tomalbrc.filamentweb.util.JsonPathUtil;
 import de.tomalbrc.filamentweb.SchemaFormBuilder;
-import de.tomalbrc.filamentweb.util.SchemaUtil;
 import de.tomalbrc.filamentweb.asset.Asset;
 import de.tomalbrc.filamentweb.asset.AssetStore;
+import de.tomalbrc.filamentweb.util.JsonPathUtil;
+import de.tomalbrc.filamentweb.util.SchemaUtil;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

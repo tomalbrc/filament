@@ -18,6 +18,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.context.UseOnContext;
@@ -95,6 +96,10 @@ public class Shears implements ItemBehaviour<Shears.Config> {
 
     public static boolean is(ItemStack itemStack) {
         return itemStack.getItem().isFilamentItem() && itemStack.getItem().has(Behaviours.SHEARS);
+    }
+
+    public static boolean is(ItemInstance itemStack) {
+        return itemStack.typeHolder().value().isFilamentItem() && itemStack.typeHolder().value().has(Behaviours.SHEARS);
     }
 
     public static class Config {

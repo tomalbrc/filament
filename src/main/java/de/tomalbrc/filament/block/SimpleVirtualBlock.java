@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
 
@@ -92,7 +93,7 @@ public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementH
             var polymerBlockModel = meta.polymerBlockModel();
             this.displayElement.setLeftRotation(new Quaternionf().rotateX(polymerBlockModel.x() * Mth.DEG_TO_RAD).rotateY((-polymerBlockModel.y()+180) * Mth.DEG_TO_RAD));
             if (update) {
-                this.displayElement.getDataTracker().setDirty(ItemDisplayAccessor.getDATA_ITEM_STACK_ID(), true);
+                this.displayElement.getSyncedData().setDirty(ItemDisplayAccessor.getDATA_ITEM_STACK_ID(), true);
                 this.displayElement.tick();
             }
         }
@@ -109,7 +110,7 @@ public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementH
     }
 
     @Override
-    protected void spawnDestroyParticles(Level level, Player player, BlockPos blockPos, BlockState blockState) {
+    protected void spawnDestroyParticles(@NonNull Level level, @NonNull Player player, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
         if (blockData.properties().showBreakParticles()) {
             var attachment = BlockBoundAttachment.get(player.level(), blockPos);
             if (attachment != null && player.level() instanceof ServerLevel serverLevel) {

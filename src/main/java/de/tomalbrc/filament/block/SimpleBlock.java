@@ -9,6 +9,7 @@ import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import eu.pb4.common.protection.api.CommonProtection;
 import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.impl.content.registry.FireBlockHooks;
 import net.minecraft.core.BlockPos;
@@ -44,7 +45,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.nucleoid.packettweaker.PacketContext;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
 import java.util.Optional;
@@ -153,7 +154,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     @NotNull
-    public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+    public BlockState playerWillDestroy(@NonNull Level level, @NonNull BlockPos blockPos, @NonNull BlockState blockState, @NonNull Player player) {
         if (this.getBehaviours() != null)
             this.forEach(x -> x.playerWillDestroy(level, blockPos, blockState, player));
 
@@ -161,19 +162,19 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, LivingEntity livingEntity, ItemStack itemStack) {
+    public void setPlacedBy(@NonNull Level level, @NonNull BlockPos blockPos, @NonNull BlockState blockState, LivingEntity livingEntity, @NonNull ItemStack itemStack) {
         if (this.getBehaviours() != null)
             this.forEach(x -> x.setPlacedBy(level, blockPos, blockState, livingEntity, itemStack));
     }
 
     @Override
-    public void affectNeighborsAfterRemoval(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, boolean bl) {
+    public void affectNeighborsAfterRemoval(@NonNull BlockState blockState, @NonNull ServerLevel serverLevel, @NonNull BlockPos blockPos, boolean bl) {
         if (this.getBehaviours() != null)
             this.forEach(x -> x.affectNeighborsAfterRemoval(blockState, serverLevel, blockPos, bl));
     }
 
     @Override
-    protected long getSeed(BlockState blockState, BlockPos blockPos) {
+    protected long getSeed(@NonNull BlockState blockState, @NonNull BlockPos blockPos) {
         if (this.getBehaviours() != null)
             for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
                 if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
@@ -187,20 +188,20 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public void onLand(Level level, BlockPos blockPos, BlockState blockState, BlockState blockState2, FallingBlockEntity fallingBlockEntity) {
+    public void onLand(@NonNull Level level, @NonNull BlockPos blockPos, @NonNull BlockState blockState, @NonNull BlockState blockState2, @NonNull FallingBlockEntity fallingBlockEntity) {
         if (this.getBehaviours() != null)
             this.forEach(x -> x.onLand(level, blockPos, blockState, blockState2, fallingBlockEntity));
     }
 
     @Override
-    public void onBrokenAfterFall(Level level, BlockPos blockPos, FallingBlockEntity fallingBlockEntity) {
+    public void onBrokenAfterFall(@NonNull Level level, @NonNull BlockPos blockPos, @NonNull FallingBlockEntity fallingBlockEntity) {
         if (this.getBehaviours() != null)
             this.forEach(x -> x.onBrokenAfterFall(level, blockPos, fallingBlockEntity));
     }
 
     @Override
     @NotNull
-    public DamageSource getFallDamageSource(Entity entity) {
+    public DamageSource getFallDamageSource(@NonNull Entity entity) {
         if (this.getBehaviours() != null)
             for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
                 if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
@@ -214,13 +215,13 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.@NonNull Builder<Block, BlockState> builder) {
         if (this.getBehaviours() != null)
             this.forEach(x -> x.createBlockStateDefinition(builder));
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {
+    public BlockState getStateForPlacement(@NonNull BlockPlaceContext blockPlaceContext) {
         BlockState def = super.getStateForPlacement(blockPlaceContext);
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
@@ -232,15 +233,15 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, Orientation orientation, boolean bl) {
+    public void neighborChanged(@NonNull BlockState blockState, @NonNull Level level, @NonNull BlockPos blockPos, @NonNull Block block, Orientation orientation, boolean bl) {
         if (this.getBehaviours() != null)
             this.forEach(x -> x.neighborChanged(blockState, level, blockPos, block, orientation, bl));
         super.neighborChanged(blockState, level, blockPos, block, orientation, bl);
     }
 
     @Override
-    public void onExplosionHit(BlockState blockState, ServerLevel level, BlockPos blockPos, Explosion explosion, BiConsumer<ItemStack, BlockPos> biConsumer) {
-        if (explosion.getDirectSourceEntity() instanceof Player player && !CommonProtection.canExplodeBlock(level, blockPos, explosion, player.getGameProfile(), player))
+    public void onExplosionHit(@NonNull BlockState blockState, @NonNull ServerLevel level, @NonNull BlockPos blockPos, Explosion explosion, @NonNull BiConsumer<ItemStack, BlockPos> biConsumer) {
+        if (explosion.getDirectSourceEntity() instanceof Player player && !CommonProtection.canExplodeBlock(level, blockPos, explosion, player.nameAndId(), player))
             return;
 
         if (this.getBehaviours() != null)
@@ -266,13 +267,13 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public void wasExploded(ServerLevel serverLevel, BlockPos blockPos, Explosion explosion) {
+    public void wasExploded(@NonNull ServerLevel serverLevel, @NonNull BlockPos blockPos, @NonNull Explosion explosion) {
         if (this.getBehaviours() != null)
             this.forEach(x -> x.wasExploded(serverLevel, blockPos, explosion));
     }
 
     @Override
-    public boolean dropFromExplosion(Explosion explosion) {
+    public boolean dropFromExplosion(@NonNull Explosion explosion) {
         if (this.getBehaviours() != null)
             for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
                 if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
@@ -287,7 +288,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     @NotNull
-    public BlockState rotate(BlockState blockState, Rotation rotation) {
+    public BlockState rotate(@NonNull BlockState blockState, @NonNull Rotation rotation) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.rotate(blockState, rotation);
@@ -300,7 +301,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     @NotNull
-    public BlockState mirror(BlockState blockState, Mirror mirror) {
+    public BlockState mirror(@NonNull BlockState blockState, @NonNull Mirror mirror) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.mirror(blockState, mirror);
@@ -312,7 +313,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public boolean isSignalSource(BlockState blockState) {
+    public boolean isSignalSource(@NonNull BlockState blockState) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.isSignalSource(blockState);
@@ -324,7 +325,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public int getDirectSignal(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, Direction direction) {
+    public int getDirectSignal(@NonNull BlockState blockState, @NonNull BlockGetter blockGetter, @NonNull BlockPos blockPos, @NonNull Direction direction) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.getDirectSignal(blockState, blockGetter, blockPos, direction);
@@ -336,7 +337,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public int getSignal(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, Direction direction) {
+    public int getSignal(@NonNull BlockState blockState, @NonNull BlockGetter blockGetter, @NonNull BlockPos blockPos, @NonNull Direction direction) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.getSignal(blockState, blockGetter, blockPos, direction);
@@ -348,7 +349,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    protected boolean useShapeForLightOcclusion(BlockState blockState) {
+    protected boolean useShapeForLightOcclusion(@NonNull BlockState blockState) {
         if (this.getBehaviours() != null)
             for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
                 if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
@@ -361,7 +362,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    protected boolean canBeReplaced(BlockState blockState, BlockPlaceContext blockPlaceContext) {
+    protected boolean canBeReplaced(@NonNull BlockState blockState, @NonNull BlockPlaceContext blockPlaceContext) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.canBeReplaced(blockState, blockPlaceContext);
@@ -373,13 +374,13 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    protected boolean canBeReplaced(BlockState blockState, Fluid fluid) {
+    protected boolean canBeReplaced(BlockState blockState, @NonNull Fluid fluid) {
         return blockState.canBeReplaced() || !blockData.properties().solid();
     }
 
     @Override
     @NotNull
-    protected FluidState getFluidState(BlockState blockState) {
+    protected FluidState getFluidState(@NonNull BlockState blockState) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.getFluidState(blockState);
@@ -391,7 +392,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public boolean placeLiquid(LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState, FluidState fluidState) {
+    public boolean placeLiquid(@NonNull LevelAccessor levelAccessor, @NonNull BlockPos blockPos, @NonNull BlockState blockState, @NonNull FluidState fluidState) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof SimpleWaterloggedBlock waterloggedBlock) {
                 var res = waterloggedBlock.placeLiquid(levelAccessor, blockPos, blockState, fluidState);
@@ -410,7 +411,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public boolean canPlaceLiquid(@Nullable LivingEntity livingEntity, BlockGetter blockGetter, BlockPos blockPos, BlockState blockState, Fluid fluid) {
+    public boolean canPlaceLiquid(@Nullable LivingEntity livingEntity, @NonNull BlockGetter blockGetter, @NonNull BlockPos blockPos, @NonNull BlockState blockState, @NonNull Fluid fluid) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof SimpleWaterloggedBlock waterloggedBlock) {
                 return waterloggedBlock.canPlaceLiquid(livingEntity, blockGetter, blockPos, blockState, fluid);
@@ -421,7 +422,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     @NotNull
-    protected BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
+    protected BlockState updateShape(@NonNull BlockState blockState, @NonNull LevelReader levelReader, @NonNull ScheduledTickAccess scheduledTickAccess, @NonNull BlockPos blockPos, @NonNull Direction direction, @NonNull BlockPos blockPos2, @NonNull BlockState blockState2, @NonNull RandomSource randomSource) {
         var bs = super.updateShape(blockState, levelReader, scheduledTickAccess, blockPos, direction, blockPos2, blockState2, randomSource);
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
@@ -432,7 +433,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    protected boolean isPathfindable(BlockState blockState, PathComputationType pathComputationType) {
+    protected boolean isPathfindable(@NonNull BlockState blockState, @NonNull PathComputationType pathComputationType) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.isPathfindable(blockState, pathComputationType);
@@ -444,20 +445,20 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    protected void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl) {
+    protected void onPlace(@NonNull BlockState blockState, @NonNull Level level, @NonNull BlockPos blockPos, @NonNull BlockState blockState2, boolean bl) {
         super.onPlace(blockState, level, blockPos, blockState2, bl);
         this.forEach(x -> x.onPlace(blockState, level, blockPos, blockState2, bl));
     }
 
     @Override
-    protected void spawnAfterBreak(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, boolean bl) {
+    protected void spawnAfterBreak(@NonNull BlockState blockState, @NonNull ServerLevel serverLevel, @NonNull BlockPos blockPos, @NonNull ItemStack itemStack, boolean bl) {
         this.forEach(x -> x.spawnAfterBreak(blockState, serverLevel, blockPos, itemStack, bl));
         super.spawnAfterBreak(blockState, serverLevel, blockPos, itemStack, bl);
     }
 
     @Override
     @NotNull
-    public ItemStack getCloneItemStack(LevelReader levelReader, BlockPos blockPos, BlockState blockState, boolean includeData) {
+    public ItemStack getCloneItemStack(@NonNull LevelReader levelReader, @NonNull BlockPos blockPos, @NonNull BlockState blockState, boolean includeData) {
         ItemStack stack = super.getCloneItemStack(levelReader, blockPos, blockState, includeData);
 
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
@@ -473,7 +474,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
+    public boolean canSurvive(@NonNull BlockState blockState, @NonNull LevelReader levelReader, @NonNull BlockPos blockPos) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.canSurvive(blockState, levelReader, blockPos);
@@ -485,7 +486,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
+    public void tick(@NonNull BlockState blockState, @NonNull ServerLevel serverLevel, @NonNull BlockPos blockPos, @NonNull RandomSource randomSource) {
         super.tick(blockState, serverLevel, blockPos, randomSource);
         this.forEach(x -> x.tick(blockState, serverLevel, blockPos, randomSource));
     }
@@ -493,7 +494,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     // random ticking
 
     @Override
-    protected boolean isRandomlyTicking(BlockState blockState) {
+    protected boolean isRandomlyTicking(@NonNull BlockState blockState) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.isRandomlyTicking(blockState);
@@ -505,7 +506,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    protected void randomTick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
+    protected void randomTick(@NonNull BlockState blockState, @NonNull ServerLevel serverLevel, @NonNull BlockPos blockPos, @NonNull RandomSource randomSource) {
         if (this.getBehaviours() != null)
             this.forEach(x -> x.randomTick(blockState, serverLevel, blockPos, randomSource));
     }
@@ -513,7 +514,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     // bonemealable impl
 
     @Override
-    public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState) {
+    public boolean isValidBonemealTarget(@NonNull LevelReader levelReader, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
                 var res = bonemealableBlock.isValidBonemealTarget(levelReader, blockPos, blockState);
@@ -525,7 +526,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public boolean isBonemealSuccess(Level level, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
+    public boolean isBonemealSuccess(@NonNull Level level, @NonNull RandomSource randomSource, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
                 var res = bonemealableBlock.isBonemealSuccess(level, randomSource, blockPos, blockState);
@@ -537,7 +538,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public void performBonemeal(ServerLevel serverLevel, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
+    public void performBonemeal(@NonNull ServerLevel serverLevel, @NonNull RandomSource randomSource, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
                 bonemealableBlock.performBonemeal(serverLevel, randomSource, blockPos, blockState);
@@ -563,7 +564,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     @NotNull
-    public InteractionResult useWithoutItem(BlockState blockState, Level level, BlockPos blockPos, Player player, BlockHitResult blockHitResult) {
+    public InteractionResult useWithoutItem(@NonNull BlockState blockState, @NonNull Level level, @NonNull BlockPos blockPos, @NonNull Player player, @NonNull BlockHitResult blockHitResult) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.useWithoutItem(blockState, level, blockPos, player, blockHitResult);
@@ -576,7 +577,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     @NotNull
-    public InteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+    public InteractionResult useItemOn(@NonNull ItemStack itemStack, @NonNull BlockState blockState, @NonNull Level level, @NonNull BlockPos blockPos, @NonNull Player player, @NonNull InteractionHand interactionHand, @NonNull BlockHitResult blockHitResult) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.useItemOn(itemStack, blockState, level, blockPos, player, interactionHand, blockHitResult);
@@ -588,13 +589,13 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    protected void attack(BlockState blockState, Level level, BlockPos blockPos, Player player) {
+    protected void attack(@NonNull BlockState blockState, @NonNull Level level, @NonNull BlockPos blockPos, @NonNull Player player) {
         if (this.getBehaviours() != null)
             this.forEach(x -> x.attack(blockState, level, blockPos, player));
     }
 
     @Override
-    public void onProjectileHit(Level level, BlockState blockState, BlockHitResult blockHitResult, Projectile projectile) {
+    public void onProjectileHit(@NonNull Level level, @NonNull BlockState blockState, @NonNull BlockHitResult blockHitResult, @NonNull Projectile projectile) {
         if (this.getBehaviours() != null)
             this.forEach(x -> x.onProjectileHit(level, blockState, blockHitResult, projectile));
     }
@@ -602,7 +603,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     // --- oxidization
 
     @Override
-    public void changeOverTime(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
+    public void changeOverTime(@NonNull BlockState blockState, @NonNull ServerLevel serverLevel, @NonNull BlockPos blockPos, @NonNull RandomSource randomSource) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof WeatheringCopper weatheringCopper) {
                 weatheringCopper.changeOverTime(blockState, serverLevel, blockPos, randomSource);
@@ -623,7 +624,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
 
     @Override
     @NotNull
-    public Optional<BlockState> getNextState(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
+    public Optional<BlockState> getNextState(@NonNull BlockState blockState, @NonNull ServerLevel serverLevel, @NonNull BlockPos blockPos, @NonNull RandomSource randomSource) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof WeatheringCopper weatheringCopper) {
                 return weatheringCopper.getNextState(blockState, serverLevel, blockPos, randomSource);
@@ -633,7 +634,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public boolean hasAnalogOutputSignal(BlockState blockState) {
+    public boolean hasAnalogOutputSignal(@NonNull BlockState blockState) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.hasAnalogOutputSignal(blockState);
@@ -646,7 +647,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos, Direction direction) {
+    public int getAnalogOutputSignal(@NonNull BlockState blockState, @NonNull Level level, @NonNull BlockPos blockPos, @NonNull Direction direction) {
         int max = super.getAnalogOutputSignal(blockState, level, blockPos, direction);
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
@@ -660,7 +661,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity, InsideBlockEffectApplier insideBlockEffectApplier, boolean bl) {
+    public void entityInside(@NonNull BlockState blockState, @NonNull Level level, @NonNull BlockPos blockPos, @NonNull Entity entity, @NonNull InsideBlockEffectApplier insideBlockEffectApplier, boolean bl) {
         if (this.getBehaviours() != null) {
             this.getBehaviours().forEach(behaviourTypeBehaviourEntry -> {
                 if (behaviourTypeBehaviourEntry.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviourWithEntity)
@@ -670,28 +671,28 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public FlammableBlockRegistry.Entry fabric_getVanillaEntry(BlockState blockState) {
+    public FlammableBlockRegistry.@NonNull Entry fabric_getVanillaEntry(@NonNull BlockState blockState) {
         return new FlammableBlockRegistry.Entry(0, 0);
     }
 
     @Override
-    protected int getLightBlock(BlockState state) {
+    protected int getLightDampening(@NonNull BlockState state) {
         if (this.getBehaviours() != null) {
             for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
                 if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
-                    var res = blockBehaviour.getLightBlock(state);
+                    var res = blockBehaviour.getLightDampening(state);
                     if (res != -1)
                         return res;
                 }
             }
         }
 
-        return super.getLightBlock(state);
+        return super.getLightDampening(state);
     }
 
     @Override
     @NotNull
-    protected VoxelShape getBlockSupportShape(BlockState state, BlockGetter level, BlockPos pos) {
+    protected VoxelShape getBlockSupportShape(@NonNull BlockState state, @NonNull BlockGetter level, @NonNull BlockPos pos) {
         if (this.getBehaviours() != null) {
             for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
                 if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
@@ -706,7 +707,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public void updateEntityMovementAfterFallOn(BlockGetter blockGetter, Entity entity) {
+    public void updateEntityMovementAfterFallOn(@NonNull BlockGetter blockGetter, @NonNull Entity entity) {
         boolean ranCustomImpl = false;
         if (this.getBehaviours() != null) {
             for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
@@ -722,7 +723,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public void fallOn(Level level, BlockState blockState, BlockPos blockPos, Entity entity, double d) {
+    public void fallOn(@NonNull Level level, @NonNull BlockState blockState, @NonNull BlockPos blockPos, @NonNull Entity entity, double d) {
         boolean ranCustomImpl = false;
         if (this.getBehaviours() != null) {
             for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
@@ -738,13 +739,13 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public void stepOn(Level level, BlockPos blockPos, BlockState blockState, Entity entity) {
+    public void stepOn(@NonNull Level level, @NonNull BlockPos blockPos, @NonNull BlockState blockState, @NonNull Entity entity) {
         if (this.getBehaviours() != null)
             this.forEach(x -> x.stepOn(level, blockPos, blockState, entity));
     }
 
     @Override
-    protected void spawnDestroyParticles(Level level, Player player, BlockPos blockPos, BlockState blockState) {
+    protected void spawnDestroyParticles(@NonNull Level level, @NonNull Player player, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
         if (blockData.properties().showBreakParticles()) {
             super.spawnDestroyParticles(level, player, blockPos, blockState);
         }

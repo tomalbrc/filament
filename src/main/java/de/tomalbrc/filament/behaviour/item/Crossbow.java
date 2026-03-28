@@ -26,9 +26,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
@@ -114,7 +114,7 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
     private boolean tryLoadProjectiles(Player shooter, ItemStack weapon) {
         List<ItemStack> list = ProjectileWeaponItemInvoker.invokeDraw(weapon, this.getProjectile(shooter), shooter);
         if (!list.isEmpty()) {
-            weapon.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(list));
+            weapon.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.ofNonEmpty(list));
             return true;
         } else {
             return false;
@@ -184,7 +184,7 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
         if (level instanceof ServerLevel serverLevel) {
             ChargedProjectiles chargedProjectiles = itemStack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
             if (chargedProjectiles != null && !chargedProjectiles.isEmpty()) {
-                this.shoot(serverLevel, livingEntity, interactionHand, itemStack, chargedProjectiles.getItems(), f, g, livingEntity instanceof Player, livingEntity2);
+                this.shoot(serverLevel, livingEntity, interactionHand, itemStack, chargedProjectiles.itemCopies(), f, g, livingEntity instanceof Player, livingEntity2);
                 if (livingEntity instanceof ServerPlayer serverPlayer) {
                     CriteriaTriggers.SHOT_CROSSBOW.trigger(serverPlayer, itemStack);
                     serverPlayer.awardStat(Stats.ITEM_USED.get(itemStack.getItem()));

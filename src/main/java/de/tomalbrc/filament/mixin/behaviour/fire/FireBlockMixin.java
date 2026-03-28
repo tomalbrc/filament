@@ -25,7 +25,7 @@ public abstract class FireBlockMixin {
     private void filament$onFirePlace(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState2, boolean bl, CallbackInfo ci) {
         Fire f;
         if (blockState.getBlock().isFilamentBlock() && (f = blockState.getBlock().get(Behaviours.FIRE)) != null && f.getConfig().tick) {
-            level.scheduleTick(blockPos, blockState.getBlock(), invokeGetFireTickDelay(level.random));
+            level.scheduleTick(blockPos, blockState.getBlock(), invokeGetFireTickDelay(level.getRandom()));
             ci.cancel();
         }
     }
@@ -34,7 +34,7 @@ public abstract class FireBlockMixin {
     private void filament$onTick(BlockState blockState, ServerLevel level, BlockPos blockPos, RandomSource randomSource, CallbackInfo ci) {
         Fire f;
         if (blockState.getBlock().isFilamentBlock() && (f = blockState.getBlock().get(Behaviours.FIRE)) != null && f.getConfig().tick) {
-            level.scheduleTick(blockPos, blockState.getBlock(), invokeGetFireTickDelay(level.random));
+            level.scheduleTick(blockPos, blockState.getBlock(), invokeGetFireTickDelay(level.getRandom()));
         }
     }
 }

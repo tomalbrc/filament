@@ -3,6 +3,7 @@ package de.tomalbrc.filament.registry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.tomalbrc.filament.util.Constants;
+import de.tomalbrc.filament.util.FilamentContainer;
 import de.tomalbrc.filament.util.TextUtil;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.other.PolymerComponent;
@@ -18,7 +19,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -54,7 +54,7 @@ public class FilamentComponents {
             ItemContainerContents container = itemStack.get(DataComponents.CONTAINER);
             if (container != null) {
                 final int selectedSlot = player.getInventory().getSelectedSlot();
-                SimpleContainer container1 = new SimpleContainer(size);
+                FilamentContainer container1 = new FilamentContainer(null, size, false);
                 container.copyInto(container1.items);
                 container1.addListener(x -> itemStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(container1.items)));
 

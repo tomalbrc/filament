@@ -8,12 +8,14 @@ import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
 import de.tomalbrc.filament.decoration.util.DecorationItemDisplayElement;
 import de.tomalbrc.filament.decoration.util.ItemFrameElement;
+import eu.pb4.polymer.common.impl.CommonImplPacketKeys;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.fabricmc.fabric.impl.networking.context.PacketContextImpl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -29,6 +31,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,7 +44,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.*;
 import org.joml.Math;
-import xyz.nucleoid.packettweaker.PacketContext;
 
 import java.util.List;
 import java.util.Optional;
@@ -95,7 +97,7 @@ public class DecorationUtil {
 
         element.setInteractionHandler(new VirtualElement.InteractionHandler() {
             @Override
-            public void interactAt(ServerPlayer player, InteractionHand hand, Vec3 pos) {
+            public void interact(ServerPlayer player, InteractionHand hand, Vec3 pos, boolean secondaryAction) {
                 ServerLevel serverLevel = player.level();
                 BlockPos blockPos = BlockPos.containing(element.getHolder().getAttachment().getPos());
                 InteractionResult result = InteractionResult.PASS;
@@ -214,7 +216,7 @@ public class DecorationUtil {
                         double xOffset = deltaX * dx + minX;
                         double yOffset = deltaY * dy + minY;
                         double zOffset = deltaZ * dz + minZ;
-                        packets.add(new ClientboundLevelParticlesPacket(new ItemParticleOption(ParticleTypes.ITEM, stack), true, false, blockPos.getX() + xOffset, blockPos.getY() + yOffset, blockPos.getZ() + zOffset, (float)deltaX - 0.5f, (float)deltaY - 0.5f, (float)deltaZ - 0.5f, 0.25f, 0));
+                        packets.add(new ClientboundLevelParticlesPacket(new ItemParticleOption(ParticleTypes.ITEM, ItemStackTemplate.fromNonEmptyStack(stack)), true, false, blockPos.getX() + xOffset, blockPos.getY() + yOffset, blockPos.getZ() + zOffset, (float)deltaX - 0.5f, (float)deltaY - 0.5f, (float)deltaZ - 0.5f, 0.25f, 0));
                     }
                 }
             }
@@ -263,7 +265,9 @@ public class DecorationUtil {
         if (!(itemStack.getItem() instanceof PolymerItem)) {
             return itemStack.copyWithCount(1);
         } else {
-            return ((PolymerItem)itemStack.getItem()).getPolymerItemStack(itemStack, TooltipFlag.NORMAL, PacketContext.create(Filament.REGISTRY_ACCESS.compositeAccess()));
+            var fuglyFabric = new PacketContextImpl(null);
+            fuglyFabric.set(CommonImplPacketKeys.HOLDER_LOOKUP, Filament.SERVER.registryAccess());
+            return ((PolymerItem)itemStack.getItem()).getPolymerItemStack(itemStack, TooltipFlag.NORMAL, fuglyFabric, Filament.REGISTRY_ACCESS.compositeAccess());
         }
     }
 

@@ -3,7 +3,7 @@ package de.tomalbrc.filament.gui;
 import de.tomalbrc.filament.util.FilamentConfig;
 import de.tomalbrc.filament.util.FilamentContainer;
 import de.tomalbrc.filament.util.Util;
-import eu.pb4.sgui.api.GuiHelpers;
+import eu.pb4.sgui.api.SguiUtils;
 import eu.pb4.sgui.api.elements.GuiElementBuilder;
 import eu.pb4.sgui.api.gui.SimpleGui;
 import net.minecraft.ChatFormatting;
@@ -43,11 +43,11 @@ public class PaginatedContainerGui extends SimpleGui {
     private void populateButtons() {
         int pages = Math.max(0, (this.container.getContainerSize() - 1) / slotsPerPage());
         for (int i = 0; i < getWidth(); i++) {
-            this.setSlot(GuiHelpers.posToIndex(i, getHeight() - 1, getHeight(), getWidth()), empty.build());
+            this.setSlot(SguiUtils.posToIndex(i, getHeight() - 1, getHeight(), getWidth()), empty.build());
         }
 
         // prev
-        int prevIdx = GuiHelpers.posToIndex(3, getHeight() - 1, getHeight(), getWidth());
+        int prevIdx = SguiUtils.posToIndex(3, getHeight() - 1, getHeight(), getWidth());
         if (currentPage > 0) this.setSlot(
                 prevIdx,
                 GuiElementBuilder.from(Items.PAPER.getDefaultInstance())
@@ -64,7 +64,7 @@ public class PaginatedContainerGui extends SimpleGui {
         );
 
         // next
-        int nextIdx = GuiHelpers.posToIndex(getWidth()-4, getHeight() - 1, getHeight(), getWidth());
+        int nextIdx = SguiUtils.posToIndex(getWidth()-4, getHeight() - 1, getHeight(), getWidth());
         if (currentPage < pages) this.setSlot(
                 nextIdx,
                 GuiElementBuilder.from(Items.PAPER.getDefaultInstance())
@@ -111,7 +111,7 @@ public class PaginatedContainerGui extends SimpleGui {
 
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
-                int slotInGui = GuiHelpers.posToIndex(x, y, h, w);
+                int slotInGui = SguiUtils.posToIndex(x, y, h, w);
 
                 int slotInContainer;
                 if (singleRowMode) {
@@ -122,7 +122,7 @@ public class PaginatedContainerGui extends SimpleGui {
                 }
 
                 if (slotInContainer >= 0 && slotInContainer < containerSize) {
-                    this.setSlotRedirect(slotInGui, createSlot(container, slotInContainer));
+                    this.setSlot(slotInGui, createSlot(container, slotInContainer));
                 } else {
                     this.setSlot(slotInGui, empty.build());
                 }
@@ -133,7 +133,7 @@ public class PaginatedContainerGui extends SimpleGui {
     }
 
     public void setScreenHandler(VirtualChestMenu virtualChestMenu) {
-        screenHandler = virtualChestMenu;
+        wrappedMenu = virtualChestMenu;
     }
 
     public Container getContainer() {

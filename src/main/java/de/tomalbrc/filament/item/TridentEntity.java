@@ -6,10 +6,11 @@ import eu.pb4.polymer.core.api.entity.PolymerEntity;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.VirtualEntityUtils;
 import eu.pb4.polymer.virtualentity.api.attachment.EntityAttachment;
+import eu.pb4.polymer.virtualentity.api.data.EntityData;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
-import eu.pb4.polymer.virtualentity.api.tracker.EntityTrackedData;
 import eu.pb4.polymer.virtualentity.mixin.accessors.DisplayAccessor;
 import eu.pb4.polymer.virtualentity.mixin.accessors.ItemDisplayAccessor;
+import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -28,7 +29,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import xyz.nucleoid.packettweaker.PacketContext;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -54,7 +55,7 @@ public class TridentEntity extends ThrownTrident implements PolymerEntity {
 
 
     @Override
-    public void setPickupItemStack(ItemStack stack) {
+    public void setPickupItemStack(@NonNull ItemStack stack) {
         super.setPickupItemStack(stack);
     }
 
@@ -98,7 +99,7 @@ public class TridentEntity extends ThrownTrident implements PolymerEntity {
 
     @Override
     public void modifyRawTrackedData(List<SynchedEntityData.DataValue<?>> data, ServerPlayer player, boolean initial) {
-        data.add(SynchedEntityData.DataValue.create(EntityTrackedData.FLAGS, (byte) (1 << EntityTrackedData.INVISIBLE_FLAG_INDEX)));
+        data.add(SynchedEntityData.DataValue.create(EntityData.FLAGS, (byte) (1 << EntityData.INVISIBLE_FLAG_INDEX)));
         data.add(SynchedEntityData.DataValue.create(ItemDisplayAccessor.getDATA_ITEM_STACK_ID(), getPickupItem()));
         data.add(SynchedEntityData.DataValue.create(DisplayAccessor.getDATA_POS_ROT_INTERPOLATION_DURATION_ID(), 2));
         data.add(SynchedEntityData.DataValue.create(DisplayAccessor.getDATA_LEFT_ROTATION_ID(), new Quaternionf().rotateZ(Mth.HALF_PI).rotateX(-Mth.HALF_PI).rotateY(Mth.PI).normalize()));
@@ -123,14 +124,14 @@ public class TridentEntity extends ThrownTrident implements PolymerEntity {
     }
 
     @Override
-    public void readAdditionalSaveData(ValueInput input) {
+    public void readAdditionalSaveData(@NonNull ValueInput input) {
         super.readAdditionalSaveData(input);
         super.setXRot(input.getFloatOr("TridentXRot", 0));
         super.setYRot(input.getFloatOr("TridentYRot", 0));
     }
 
     @Override
-    public void addAdditionalSaveData(ValueOutput output) {
+    public void addAdditionalSaveData(@NonNull ValueOutput output) {
         super.addAdditionalSaveData(output);
         output.putFloat("TridentXRot", getXRot());
         output.putFloat("TridentYRot", getYRot());

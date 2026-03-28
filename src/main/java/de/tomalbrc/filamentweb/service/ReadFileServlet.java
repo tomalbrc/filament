@@ -1,12 +1,15 @@
 package de.tomalbrc.filamentweb.service;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import de.tomalbrc.filament.Filament;
-import de.tomalbrc.filamentweb.util.JsonPathUtil;
 import de.tomalbrc.filamentweb.SchemaFormBuilder;
-import de.tomalbrc.filamentweb.util.SchemaUtil;
 import de.tomalbrc.filamentweb.asset.Asset;
 import de.tomalbrc.filamentweb.asset.AssetStore;
+import de.tomalbrc.filamentweb.util.JsonPathUtil;
+import de.tomalbrc.filamentweb.util.SchemaUtil;
 import j2html.tags.ContainerTag;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;

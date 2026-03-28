@@ -107,8 +107,8 @@ public class AssetStore {
                 for (BlockState state : possibleStates) {
                     var filteredState = filamentBlock.behaviourModifiedBlockState(state, state);
 
-                    for (Map.Entry<Property<?>, Comparable<?>> entry : filteredState.getValues().entrySet()) {
-                        propertyValues.computeIfAbsent(entry.getKey(), k -> new HashSet<>()).add(entry.getValue());
+                    for (var entry : filteredState.getValues().toList()) {
+                        propertyValues.computeIfAbsent(entry.property(), k -> new HashSet<>()).add(entry.value());
                     }
                 }
 
@@ -129,11 +129,11 @@ public class AssetStore {
                     boolean addedAnyNoWaterlogged = false;
                     boolean hasWaterlogged = false;
 
-                    for (Map.Entry<Property<?>, Comparable<?>> entry : filteredState.getValues().entrySet()) {
-                        Property<?> prop = entry.getKey();
+                    for (var entry : filteredState.getValues().toList()) {
+                        Property<?> prop = entry.property();
 
                         if (varyingProperties.contains(prop)) {
-                            String keyValue = getName(prop, entry.getValue());
+                            String keyValue = entry.valueName();
 
                             n.append(keyValue).append(",");
                             addedAny = true;
@@ -425,18 +425,6 @@ public class AssetStore {
         }
     }
 
-    private static String serializeBlockState(BlockState state) {
-        if (state.getValues().isEmpty()) return "default";
-        StringBuilder sb = new StringBuilder();
-        boolean first = true;
-        for (Map.Entry<Property<?>, Comparable<?>> entry : state.getValues().entrySet()) {
-            if (!first) sb.append(',');
-            first = false;
-            sb.append(entry.getKey().getName()).append('=').append(getName(entry.getKey(), entry.getValue()));
-        }
-        return sb.toString();
-    }
-
     private static String toSnakeCase(String input) {
         if (input == null || input.isEmpty()) return input;
         StringBuilder result = new StringBuilder();
@@ -448,11 +436,6 @@ public class AssetStore {
             } else result.append(c);
         }
         return result.toString();
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T extends Comparable<T>> String getName(Property<T> prop, Comparable<?> val) {
-        return prop.getName() + "=" + prop.getName((T) val);
     }
 
     private static void addRegistryEnum(ObjectNode node, Registry<?> reg) {
