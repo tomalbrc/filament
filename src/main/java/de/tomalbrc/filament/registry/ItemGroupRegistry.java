@@ -6,6 +6,7 @@ import de.tomalbrc.filament.data.ItemGroupData;
 import de.tomalbrc.filament.util.Constants;
 import de.tomalbrc.filament.util.FilamentSynchronousResourceReloadListener;
 import de.tomalbrc.filament.util.Json;
+import eu.pb4.polymer.core.api.item.PolymerCreativeModeTabUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -43,20 +44,18 @@ public class ItemGroupRegistry {
         TAB_GROUPS.put(data.id(), group);
         TAB_GROUP_ITEMS.putIfAbsent(data.id(), new ObjectArrayList<>());
 
-        // TODO: 26.1 ?
-        //if (!PolymerItemGroupUtils.contains(data.id()) && !TAB_GROUP_ITEMS.get(data.id()).isEmpty()) {
-        //    PolymerItemGroupUtils.registerPolymerItemGroup(data.id(), group);
-        //}
+        if (!PolymerCreativeModeTabUtils.contains(data.id()) && !TAB_GROUP_ITEMS.get(data.id()).isEmpty()) {
+            PolymerCreativeModeTabUtils.registerPolymerCreativeModeTab(data.id(), group);
+        }
     }
 
     public static void addItem(Identifier identifier, Item item) {
         TAB_GROUP_ITEMS.putIfAbsent(identifier, new ObjectArrayList<>());
         TAB_GROUP_ITEMS.get(identifier).add(item);
 
-        // TODO: 26.1 ?
-        //if (!PolymerItemGroupUtils.contains(identifier) && TAB_GROUPS.containsKey(identifier)) {
-        //    PolymerItemGroupUtils.registerPolymerItemGroup(identifier, TAB_GROUPS.get(identifier));
-        //}
+        if (!PolymerCreativeModeTabUtils.contains(identifier) && TAB_GROUPS.containsKey(identifier)) {
+            PolymerCreativeModeTabUtils.registerPolymerCreativeModeTab(identifier, TAB_GROUPS.get(identifier));
+        }
     }
 
     public static class ItemGroupDataReloadListener implements FilamentSynchronousResourceReloadListener {
