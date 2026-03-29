@@ -62,7 +62,7 @@ public class AssetStore {
             asset.schema = getSchema(asset.data, asset.type);
         }
 
-        if (assetsByPath.containsKey(asset.path))
+        if (asset.path == null || assetsByPath.containsKey(asset.path))
             return;
 
         assetsByUuid.put(asset.uuid, asset);

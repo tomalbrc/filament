@@ -260,6 +260,12 @@ public class Json {
             for (BlockModelType type : BlockModelType.values()) {
                 String newName = type.name();
 
+                var s = "SCULK_SENSOR_";
+                if (newName.startsWith(s)) {
+                    var sensorBlock = newName.replace(s, "");
+                    LOOKUP.put(("SCULK_SENSOR_BLOCK_" + sensorBlock).toLowerCase(), type);
+                }
+
                 LOOKUP.put(newName.toLowerCase(), type);
                 LOOKUP.put((newName + "_BLOCK").toLowerCase(), type);
 
