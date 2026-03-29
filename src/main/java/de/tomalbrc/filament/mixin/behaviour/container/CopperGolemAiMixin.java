@@ -15,15 +15,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CopperGolemAi.class)
 public class CopperGolemAiMixin {
-    @Inject(method = "method_72486", at = @At("RETURN"), cancellable = true)
-    private static void filament$customContainerSupportWooden(BlockState blockState, CallbackInfoReturnable<Boolean> cir) {
-        if (!cir.getReturnValue() && blockState.getBlock() instanceof DecorationBlock decorationBlock && DecorationData.getFirstContainer(decorationBlock) != null)
-            cir.setReturnValue(blockState.is(ConventionalBlockTags.WOODEN_CHESTS));
+    @Inject(method = "lambda$static$1", at = @At("RETURN"), cancellable = true)
+    private static void filament$customContainerSupportWooden(BlockState block, CallbackInfoReturnable<Boolean> cir) {
+        if (!cir.getReturnValue() && block.getBlock() instanceof DecorationBlock decorationBlock && DecorationData.getFirstContainer(decorationBlock) != null)
+            cir.setReturnValue(block.is(ConventionalBlockTags.WOODEN_CHESTS));
     }
 
-    @Inject(method = "method_72482", at = @At("RETURN"), cancellable = true)
-    private static void filament$shouldQueue(TransportItemsBetweenContainers.TransportItemTarget target, CallbackInfoReturnable<Boolean> cir) {
-        if (target.blockEntity() instanceof DecorationBlockEntity decorationBlockEntity) {
+    @Inject(method = "lambda$shouldQueueForTarget$0", at = @At("RETURN"), cancellable = true)
+    private static void filament$shouldQueue(TransportItemsBetweenContainers.TransportItemTarget transportTarget, CallbackInfoReturnable<Boolean> cir) {
+        if (transportTarget.blockEntity() instanceof DecorationBlockEntity decorationBlockEntity) {
             var containerLike = DecorationData.getFirstContainer(decorationBlockEntity.getMainBlockEntity());
             Container container;
             if (containerLike != null && (container = containerLike.container()) != null) {
