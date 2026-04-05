@@ -90,15 +90,6 @@ public class BlockRegistry {
         }
 
         Item.Properties itemProperties = data.properties().toItemProperties();
-        if (data.properties().copyComponents == Boolean.TRUE) {
-            for (TypedDataComponent component : data.vanillaItem().components()) {
-                itemProperties.component(component.type(), component.value());
-            }
-        }
-
-        for (TypedDataComponent component : data.components()) {
-            itemProperties.component(component.type(), component.value());
-        }
 
         SimpleBlockItem item = ItemRegistry.registerItem(ItemRegistry.key(data.id()), (newProps) -> new SimpleBlockItem(newProps, customBlock, data), itemProperties, data.group() != null ? data.group() : Constants.BLOCK_GROUP_ID, data.itemTags());
         postRegistration(item, customBlock, data);

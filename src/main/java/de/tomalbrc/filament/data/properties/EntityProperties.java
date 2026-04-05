@@ -10,7 +10,7 @@ import java.util.Set;
 public class EntityProperties {
     public @Nullable List<Float> size;
     public @Nullable MobCategory category;
-    public @Nullable Sounds sounds;
+    public Sounds sounds = new Sounds(null, null, null, null, null, null);
     public @Nullable Set<Identifier> food;
     public @Nullable Identifier offspring;
     public int ambientSoundInterval = 80;

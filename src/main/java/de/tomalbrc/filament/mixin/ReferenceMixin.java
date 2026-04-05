@@ -32,7 +32,7 @@ public abstract class ReferenceMixin<T> implements Holder<T> {
                 var newSet = new ReferenceArraySet<TagKey<T>>();
                 set.forEach((tagKey,holders) -> {
                     for (Holder<?> holder : holders) {
-                        if (holder == x) {
+                        if (holder.value() == x) {
                             newSet.add(tagKey);
                         }
                     }

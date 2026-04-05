@@ -6,12 +6,15 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
 import de.tomalbrc.filament.data.ItemData;
+import de.tomalbrc.filament.injection.DataComponentCopying;
 import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.util.*;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -66,18 +69,25 @@ public class ItemRegistry {
 
         Item.Properties properties = data.properties().toItemProperties();
 
-        if (data.properties().copyComponents == Boolean.TRUE) {
-            for (TypedDataComponent component : data.vanillaItem().components()) {
-                properties.component(component.type(), component.value());
-            }
-        }
-
-        for (TypedDataComponent component : data.components()) {
-            properties.component(component.type(), component.value());
-        }
-
         var item = ItemRegistry.registerItem(key(data.id()), (newProps) -> new SimpleItem(newProps, data, data.vanillaItem()), properties, data.group() != null ? data.group() : Constants.ITEM_GROUP_ID, data.itemTags());
         postRegistration(item, data);
+
+        ((DataComponentCopying)BuiltInRegistries.DATA_COMPONENT_INITIALIZERS).filament$registerToCopy(new DataComponentCopying.CustomInitializerEntry(item.builtInRegistryHolder().key(), data.vanillaItem().builtInRegistryHolder().key(), (vanillaInitializer, target, provider)-> {
+            if (vanillaInitializer != null && data.properties().copyComponents == Boolean.TRUE) {
+                var tempBuilder = DataComponentMap.builder();
+                vanillaInitializer.run(tempBuilder, provider);
+                var built = tempBuilder.build();
+                for (TypedDataComponent component : built) {
+                    if (!target.contains(component.type()) || DataComponents.COMMON_ITEM_COMPONENTS.has(component.type())) {
+                        target.set(component.type(), component.value());
+                    }
+                }
+            }
+
+            for (TypedDataComponent component : data.components()) {
+                target.set(component.type(), component.value());
+            }
+        }));
 
         if (data.properties().copyTags == Boolean.TRUE) {
             COPY_TAGS.put(item, data.vanillaItem());

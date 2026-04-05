@@ -90,14 +90,6 @@ public class DecorationRegistry {
         decorationBlocks.put(data.id(), block);
 
         Item.Properties properties = data.properties().toItemProperties();
-        if (data.properties().copyComponents == Boolean.TRUE) {
-            for (TypedDataComponent component : data.vanillaItem().components()) {
-                properties.component(component.type(), component.value());
-            }
-        }
-        for (TypedDataComponent component : data.components()) {
-            properties.component(component.type(), component.value());
-        }
 
         if (data.isContainer()) {
             properties.component(DataComponents.CONTAINER, ItemContainerContents.EMPTY);

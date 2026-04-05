@@ -77,6 +77,7 @@
     "behaviour.trap.MobMixin",
     "behaviour.trident.ThrownTridentAccessor",
     "behaviour.waxable.HoneycombItemMixin",
+    "component.DataComponentInitializersMixin",
     "component.backpack.BaseContainerBlockEntityMixin",
     "component.backpack.ServerGamePacketListenerImplMixin",
     "component.backpack.ShulkerBoxSlotMixin",

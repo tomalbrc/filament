@@ -3,6 +3,7 @@ accessible class net/minecraft/world/entity/animal/bee/Bee$BeeGrowCropGoal
 accessible class net/minecraft/server/level/ServerPlayer$RespawnPosAngle
 
 accessible class net/minecraft/core/MappedRegistry$TagSet
+accessible class net/minecraft/core/component/DataComponentInitializers$InitializerEntry
 
 accessible field net/minecraft/server/packs/FilePackResources zipFileAccess Lnet/minecraft/server/packs/FilePackResources$SharedZipFileAccess;
 accessible method net/minecraft/server/packs/FilePackResources addPrefix (Ljava/lang/String;)Ljava/lang/String;
