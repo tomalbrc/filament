@@ -57,7 +57,6 @@ You can map the `blockModelType` field of block configs to blockstates, this all
 
 In some cases, for example when using the `waterloggable` behaviour, you might want to specify the waterlogged state for your custom block.
 
-~~~admonish example
 <!-- langtabs-start -->
 ```yml
 id: mynamespace:half_slab
@@ -107,5 +106,3 @@ properties:
 }
 ```
 <!-- langtabs-end -->
-
-~~~

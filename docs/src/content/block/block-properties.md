@@ -3,7 +3,7 @@
 Block properties share the same properties as [items](../item/item-properties.md)
 
 All properties (excluding the shared item and decoration properties):
-~~~admonish example
+
 <!-- langtabs-start -->
 ```yml
 properties:
@@ -48,8 +48,6 @@ properties:
 ```
 <!-- langtabs-end -->
 
-~~~
-
 ### `blockBase`:
 
 Specifies the base block used for sounds and the block color on maps.
@@ -82,12 +80,11 @@ Defaults to `0`
 
 Boolean (true/false) indicating whether the block can conduct redstone signals.
 
-~~~admonish tip
-This property can be mapped to a block-state.
-~~~
+> [!TIP]
+> This property can be mapped to a block-state.
 
 The value of this property can be mapped to a blockstate like this:
-~~~admonish example
+
 <!-- langtabs-start -->
 ```yml
 properties:
@@ -109,21 +106,17 @@ properties:
 ```
 <!-- langtabs-end -->
 
-~~~
-
 Defaults to `true`
 
 ### `lightEmission`:
 
 Light level this block emits.
 
-~~~admonish tip
-This property can be mapped to a block-state.
-~~~
+> [!TIP]
+> This property can be mapped to a block-state.
 
 The value of this property can be mapped to a blockstate like this:
 
-~~~admonish example
 <!-- langtabs-start -->
 ```yml
 properties:
@@ -145,7 +138,6 @@ properties:
 ```
 <!-- langtabs-end -->
 
-~~~
 
 Defaults to `0`
 
@@ -199,7 +191,6 @@ All sounds, including step sounds, will be played serverside! Even for some vani
 
 This might affect performance a bit, for this reason there is a config option in `config/filament.json` called "sound_module" to enable/disable the server-side block sounds.
 
-~~~ admonish example
 <!-- langtabs-start -->
 ```yml
 properties:
@@ -229,5 +220,3 @@ properties:
 }
 ```
 <!-- langtabs-end -->
-
-~~~

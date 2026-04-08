@@ -2,7 +2,8 @@
 
 Decoration properties share the same properties as [items](../item/item-properties.md) and a few of [blocks](../block/block-properties.md), like `solid` and `pushReaction`
 
-~~~admonish example "Example of properties"
+Example of properties:
+
 <!-- langtabs-start -->
 ```yml
 properties:
@@ -37,8 +38,6 @@ properties:
 ```
 <!-- langtabs-end -->
 
-~~~
-
 ---
 
 ### `allowAdventureMode`:
@@ -49,10 +48,9 @@ Allows adventure mode players to interact with the decoration. Defaults to `fals
 
 ### `rotate`:
 
-~~~admonish warning
-This is deprecated!
-Use the `horizontal_facing` behaviour to make a decoration rotate in the 4 cardinal directions
-~~~
+> [!WARNING]
+> This is deprecated!
+> Use the `horizontal_facing` behaviour to make a decoration rotate in the 4 cardinal directions
 
 Boolean (true/false) indicating whether the decoration can rotate (90° intervals)
 
@@ -62,10 +60,9 @@ Defaults to `false`
 
 ### `rotateSmooth`:
 
-~~~admonish warning
-This is deprecated!
-Use the `rotating` block behaviour!
-~~~
+> [!WARNING]
+> This is deprecated!
+> Use the `rotating` block behaviour!
 
 Boolean (true/false) indicating whether the decoration can rotate in 45° intervals
 
@@ -78,7 +75,7 @@ Defaults to `false`
 A set of options for placement options. Possible keys: "floor", "wall", "ceiling".
 
 You can specify different models for the different placements in the itemResource field.
-~~~admonish example
+
 <!-- langtabs-start -->
 ```yml
 id: mynamespace:small_gold_coin_piles
@@ -127,7 +124,6 @@ behaviour:
 ```
 <!-- langtabs-end -->
 
-~~~
 
 Default values:
 <!-- langtabs-start -->
@@ -161,10 +157,9 @@ Defaults to `false`
 
 ### `waterloggable`:
 
-~~~admonish warning
-This is deprecated!
-Use the `waterloggable` block behaviour!
-~~~
+> [!WARNING]
+> This is deprecated!
+> Use the `waterloggable` block behaviour!
 
 Boolean (true/false) indicating whether the decoration blocks can be waterlogged.
 

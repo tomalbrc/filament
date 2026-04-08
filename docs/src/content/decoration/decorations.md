@@ -14,7 +14,6 @@ You can also set components to the configurations using the `components` field.
 
 ## Contents
 
-~~~admonish example
 <!-- langtabs-start -->
 ```yml
 id: mynamespace:quartz_pedestal
@@ -68,7 +67,6 @@ blocks:
 ```
 <!-- langtabs-end -->
 
-~~~
 
 The file contents are very similar to that of blocks, except for additional behaviours exclusive to decorations.
 
@@ -76,7 +74,6 @@ Decorations support most of the block behaviours.
 
 You can specify different models for decorations when placed on walls, ceiling (underside of blocks) or on the floor.
 
-~~~admonish example
 <!-- langtabs-start -->
 ```yml
 id: mynamespace:small_gold_coin_piles
@@ -126,8 +123,6 @@ behaviour:
 }
 ```
 <!-- langtabs-end -->
-
-~~~
 
 This will result in a decoration with different models in the Inventory, when placed on the floor, when placed on a wall and when placed on ceilings.
 

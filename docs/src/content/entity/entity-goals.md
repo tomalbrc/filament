@@ -7,7 +7,6 @@ Filament currently only supports the goal system.
 
 All AI goals have a priority, lower priority = higher chance for the goal to run.
 
-~~~admonish example
 ```json
 [
   {
@@ -20,7 +19,6 @@ All AI goals have a priority, lower priority = higher chance for the goal to run
   }
 ]
 ```
-~~~
 
 # Goal Types
 
@@ -30,9 +28,9 @@ All AI goals have a priority, lower priority = higher chance for the goal to run
 
 Entity stays afloat in water.
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order. Lower runs earlier.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+>`priority`: Determines execution order. Lower runs earlier.
 
 ---
 
@@ -40,13 +38,13 @@ Entity stays afloat in water.
 
 Makes the entity look at nearby entities of a specific type.
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-- `target`: The entity type to look at (e.g. `"minecraft:player"`).
-- `look_distance`: Max distance within which the target is visible.
-- `probability`: Chance per tick to start looking. From `0.0` to `1.0`.
-- `only_horizontal`: If `true`, the entity only rotates horizontally.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
+> - `target`: The entity type to look at (e.g. `"minecraft:player"`).
+> - `look_distance`: Max distance within which the target is visible.
+> - `probability`: Chance per tick to start looking. From `0.0` to `1.0`.
+> - `only_horizontal`: If `true`, the entity only rotates horizontally.
 
 ---
 
@@ -54,11 +52,11 @@ Makes the entity look at nearby entities of a specific type.
 
 Makes the entity perform melee attacks on its target.
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-- `speed_modifier`: Movement speed multiplier.
-- `following_target_even_if_not_seen`: If `true`, the entity keeps following even if it loses sight.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+>- `priority`: Determines execution order.
+>- `speed_modifier`: Movement speed multiplier.
+>- `following_target_even_if_not_seen`: If `true`, the entity keeps following even if it loses sight.
 
 ---
 
@@ -66,13 +64,13 @@ Makes the entity perform melee attacks on its target.
 
 Allows the entity to navigate through villages.
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-- `speed_modifier`: Movement speed multiplier.
-- `only_at_night`: If `true`, goal activates only at night.
-- `distance_to_poi`: Max distance to a point of interest.
-- `can_deal_with_doors`: If `true`, allows door interaction.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
+> - `speed_modifier`: Movement speed multiplier.
+> - `only_at_night`: If `true`, goal activates only at night.
+> - `distance_to_poi`: Max distance to a point of interest.
+> - `can_deal_with_doors`: If `true`, allows door interaction.
 
 ---
 
@@ -80,9 +78,9 @@ Allows the entity to navigate through villages.
 
 Entity randomly looks around occasionally.
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
 
 ---
 
@@ -90,12 +88,12 @@ Entity randomly looks around occasionally.
 
 Allows the entity to remove blocks of a certain type.
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-- `block`: The block to be removed (as blockstate identifier).
-- `speed_modifier`: Movement speed multiplier.
-- `vertical_search_range`: How far vertically the entity looks for blocks to remove.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
+> - `block`: The block to be removed (as blockstate identifier).
+> - `speed_modifier`: Movement speed multiplier.
+> - `vertical_search_range`: How far vertically the entity looks for blocks to remove.
 
 ---
 
@@ -103,11 +101,11 @@ Allows the entity to remove blocks of a certain type.
 
 Like `random_stroll`, but avoids walking into water.
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-- `speed_modifier`: Movement speed multiplier.
-- `probability`: Chance per tick to begin strolling.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
+> - `speed_modifier`: Movement speed multiplier.
+> - `probability`: Chance per tick to begin strolling.
 
 ---
 
@@ -115,9 +113,9 @@ Like `random_stroll`, but avoids walking into water.
 
 Triggers when hostile mobs threaten a village.
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
 
 ---
 
@@ -125,11 +123,11 @@ Triggers when hostile mobs threaten a village.
 
 Targets and attacks entities that have hurt this entity.
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-- `ignore_from`: List of entity types that are ignored even if they cause damage.
-- `alert_others`: List of entities to alert when this entity is attacked.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
+> - `ignore_from`: List of entity types that are ignored even if they cause damage.
+> - `alert_others`: List of entities to alert when this entity is attacked.
 
 ---
 
@@ -137,15 +135,15 @@ Targets and attacks entities that have hurt this entity.
 
 Targets the nearest valid entity.
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-- `target`: Entity type to target (e.g., `"minecraft:player"`).
-- `random_interval`: Delay between reevaluations.
-- `must_see`: If `true`, entity must see the target.
-- `must_reach`: If `true`, entity must be able to reach the target.
-- `ignore_baby`: Ignores baby versions of the entity type.
-- `ignore_in_water`: Ignores targets in water.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
+> - `target`: Entity type to target (e.g., `"minecraft:player"`).
+> - `random_interval`: Delay between reevaluations.
+> - `must_see`: If `true`, entity must see the target.
+> - `must_reach`: If `true`, entity must be able to reach the target.
+> - `ignore_baby`: Ignores baby versions of the entity type.
+> - `ignore_in_water`: Ignores targets in water.
 
 ---
 
@@ -153,11 +151,11 @@ Targets the nearest valid entity.
 
 Allows the entity to break doors under certain difficulties.
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-- `door_break_time`: Time in ticks to break the door. Default: `240`.
-- `valid_difficulties`: List of difficulty levels where breaking is allowed (e.g. `["hard", "normal"]`).
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
+> - `door_break_time`: Time in ticks to break the door. Default: `240`.
+> - `valid_difficulties`: List of difficulty levels where breaking is allowed (e.g. `["hard", "normal"]`).
 
 ---
 
@@ -165,10 +163,10 @@ Allows the entity to break doors under certain difficulties.
 
 Enables breeding behavior with compatible entities.
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-- `speed_modifier`: Movement speed multiplier. Default: `1.0`.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
+> - `speed_modifier`: Movement speed multiplier. Default: `1.0`.
 
 ---
 
@@ -176,9 +174,9 @@ Enables breeding behavior with compatible entities.
 
 Allows the entity to consume a specific type of block, like sheep do
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
 
 ---
 
@@ -186,10 +184,10 @@ Allows the entity to consume a specific type of block, like sheep do
 
 Causes the entity to flee from sunlight.
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-- `speed_modifier`: Movement speed multiplier. Default: `1.0`.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
+> - `speed_modifier`: Movement speed multiplier. Default: `1.0`.
 
 ---
 
@@ -197,9 +195,9 @@ Causes the entity to flee from sunlight.
 
 Makes the entity follow a boat
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
 
 ---
 
@@ -207,12 +205,12 @@ Makes the entity follow a boat
 
 Enables following another mob
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-- `speed_modifier`: Movement speed multiplier. Default: `1.0`.
-- `stop_distance`: Max distance to stop following.
-- `area_size`: (needs docs)
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
+> - `speed_modifier`: Movement speed multiplier. Default: `1.0`.
+> - `stop_distance`: Max distance to stop following.
+> - `area_size`: (needs docs)
 
 ---
 
@@ -220,10 +218,10 @@ Enables following another mob
 
 Baby entity follow adult versions of itself.
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-- `speed_modifier`: Movement speed multiplier. Default: `1.0`.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
+> - `speed_modifier`: Movement speed multiplier. Default: `1.0`.
 
 ---
 
@@ -231,11 +229,11 @@ Baby entity follow adult versions of itself.
 
 Moves the entity towards its targeted entity
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-- `speed_modifier`: Movement speed multiplier. Default: `1.0`.
-- `within`: Distance threshold for stopping.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
+> - `speed_modifier`: Movement speed multiplier. Default: `1.0`.
+> - `within`: Distance threshold for stopping.
 
 ---
 
@@ -243,10 +241,10 @@ Moves the entity towards its targeted entity
 
 Allows the entity to open and optionally close doors.
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-- `close_door`: If `true`, entity will close the door after opening. Default: `true`.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
+> - `close_door`: If `true`, entity will close the door after opening. Default: `true`.
 
 ---
 
@@ -254,11 +252,11 @@ Allows the entity to open and optionally close doors.
 
 Entity panics and runs when damaged.
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-- `speed_modifier`: Movement speed multiplier. Default: `1.0`.
-- `damage_type`: Trigger type for panic (e.g. `"minecraft:panic_causes"`).
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
+> - `speed_modifier`: Movement speed multiplier. Default: `1.0`.
+> - `damage_type`: Trigger type for panic (e.g. `"minecraft:panic_causes"`).
 
 ---
 
@@ -266,12 +264,12 @@ Entity panics and runs when damaged.
 
 Entity strolls randomly.
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-- `speed_modifier`: Movement speed multiplier. Default: `1.0`.
-- `interval`: Delay between strolls. Default: `240` ticks.
-- `check_no_action_time`: If `true`, strolling depends on idle time.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
+> - `speed_modifier`: Movement speed multiplier. Default: `1.0`.
+> - `interval`: Delay between strolls. Default: `240` ticks.
+> - `check_no_action_time`: If `true`, strolling depends on idle time.
 
 ---
 
@@ -279,11 +277,11 @@ Entity strolls randomly.
 
 Entity swims randomly in water.
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-- `speed_modifier`: Movement speed multiplier. Default: `1.0`.
-- `interval`: Delay between swim actions. Default: `240` ticks.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
+> - `speed_modifier`: Movement speed multiplier. Default: `1.0`.
+> - `interval`: Delay between swim actions. Default: `240` ticks.
 
 ---
 
@@ -291,10 +289,10 @@ Entity swims randomly in water.
 
 Strolls through villages.
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-- `interval`: Delay between strolls. Default: `100` ticks.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
+> - `interval`: Delay between strolls. Default: `100` ticks.
 
 ---
 
@@ -302,13 +300,13 @@ Strolls through villages.
 
 Entity is lured by certain items or item tags.
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-- `speed_modifier`: Movement speed multiplier. Default: `1.0`.
-- `can_scare`: If `true`, entity may flee when startled.
-- `items`: Specific items that tempt the entity (e.g., `["minecraft:carrot"]`).
-- `item_tags`: Tags that group valid tempting items.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.
+> - `speed_modifier`: Movement speed multiplier. Default: `1.0`.
+> - `can_scare`: If `true`, entity may flee when startled.
+> - `items`: Specific items that tempt the entity (e.g., `["minecraft:carrot"]`).
+> - `item_tags`: Tags that group valid tempting items.
 
 ---
 
@@ -316,6 +314,6 @@ Entity is lured by certain items or item tags.
 
 Entity tries to find a nearby water source.
 
-~~~admonish info "Configurable Fields"
-- `priority`: Determines execution order.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `priority`: Determines execution order.

@@ -13,7 +13,6 @@ MyDatapack/data/<namespace>/filament/item/myitem.json
 
 Here is a basic example of an item configuration:
 
-~~~admonish example
 <!-- langtabs-start -->
 ```yaml
 id: mynamespace:clown_horn
@@ -59,8 +58,6 @@ components:
 ```
 <!-- langtabs-end -->
 
-~~~
-
 Item configurations have two required fields: `id` and `vanillaItem`.
 
 ---
@@ -92,19 +89,19 @@ This overwrites the itemResource field.
 
 Specifies the resource(s) for the item model. Depending on the item's behaviour(s), it may use additional keys/fields in `itemResource`.
 
-~~~admonish info "Configurable Fields"
-  - `models`: An object containing model definitions.
-    - `default`: The default model for the item.
-    - Additional keys may be required depending on the item's behaviour (e.g., `trapped` for a trap behaviour or `pulling_0`, `pulling_1`, `pulling_2` for bows).
-  - `parent`: Parent of the item model if generated from textures
-  - `textures`: An object containing texture definitions.
-    - `default`: The textures for the default model of the item.
-      - `layer0`: 
-    - Additional keys may be required depending on the item's behaviour.
-~~~
+> [!IMPORTANT]
+> Configurable Fields
+>  - `models`: An object containing model definitions.
+>    - `default`: The default model for the item.
+>    - Additional keys may be required depending on the item's behaviour (e.g., `trapped` for a trap behaviour or `pulling_0`, `pulling_1`, `pulling_2` for bows).
+>  - `parent`: Parent of the item model if generated from textures
+>  - `textures`: An object containing texture definitions.
+>    - `default`: The textures for the default model of the item.
+>      - `layer0`: 
+>    - Additional keys may be required depending on the items behaviour.
 
 Example for automatic model generation based on textures:
-~~~admonish example
+
 <!-- langtabs-start -->
 ```yaml
 item_resource:
@@ -131,7 +128,6 @@ item_resource:
 ```
 <!-- langtabs-end -->
 
-~~~
 
 This automatically creates:
 - The item asset in `assets/<namespace>/items/<item-id>`

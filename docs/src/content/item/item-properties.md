@@ -4,7 +4,7 @@ Item properties are shared between all content types: Items, blocks and decorati
 All properties are optional.
 
 Example with all properties set:
-~~~admonish example
+
 <!-- langtabs-start -->
 ```yml
 id: mynamespace:clown_horn
@@ -37,7 +37,6 @@ properties:
 ```
 <!-- langtabs-end -->
 
-~~~
 
 ### `durability`:
 
@@ -55,11 +54,9 @@ Defaults to `64`
 
 List of strings to use as item lore. Supports PlaceholderAPI's simple text formatting.
 
-~~~admonish example
 Example: `<c:red>MyLore</c>`
 
 Example: `<lang:'mymod.lore.mylore'>`
-~~~
 
 ### `fireResistant`:
 

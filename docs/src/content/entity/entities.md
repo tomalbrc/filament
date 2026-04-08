@@ -2,11 +2,10 @@
 
 Filament allows you to add simple entities with custom attributes, custom blockbench model with animations and some AI goals from the vanilla game.
 
-~~~admonish info
-The entity module is experimental and fields will change in between versions!
-
-You can disable the module in filaments config if you run into issues.
-~~~
+> [!INFO]
+>The entity module is experimental and fields will change in between versions!
+>
+>You can disable the module in filaments config if you run into issues.
 
 ## File Location
 
@@ -18,7 +17,7 @@ MyDatapack/data/<namespace>/filament/entity/myentity.json
 ## Example
 
 Here is a basic example for a zombie-like entity with an Iron Golem model:
-~~~admonish example
+
 ```json
 {
   "id": "mynamespace:unfriendly_golem",
@@ -156,12 +155,10 @@ Here is a basic example for a zombie-like entity with an Iron Golem model:
   }
 }
 ```
-~~~
 
 # Movement & Pathfinding
 
 The `movement` field / object allows to set different navigation and move types as well pathfind malus values:
-~~~admonish example
 ```json
 {
   "id": "mynamespace:unfriendly_golem",
@@ -188,7 +185,6 @@ The `movement` field / object allows to set different navigation and move types 
   }
 }
 ```
-~~~
 
 ## Movement-types: 
 ### `default`
@@ -245,6 +241,5 @@ The field `spawn` controls where or how your entity spawned in the world.
 - found_in_nether: Entity will only spawn in the nether if set to true
 - found_in_end: Entity will only spawn in the end if set to true
 
-~~~admonish info
-The category of the entity can change its spawn behaviour. "monster" entities will only spawn in dark places/at night!  
-~~~
+> [!INFO]
+> The category of the entity can change its spawn behavior. "monster" entities will only spawn in dark places/at night!  

@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Behaviours - Filament Documentation (1.3.x)</title>
+        <title>Behaviours - Filament Documentation (1.4.x)</title>
 
 
         <!-- Custom HTML head -->
@@ -12,26 +12,24 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="../../favicon.svg">
-        <link rel="shortcut icon" href="../../favicon.png">
-        <link rel="stylesheet" href="../../css/variables.css">
-        <link rel="stylesheet" href="../../css/general.css">
-        <link rel="stylesheet" href="../../css/chrome.css">
-        <link rel="stylesheet" href="../../css/print.css" media="print">
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../../fonts/fonts.css">
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="../.././mdbook-admonish.css">
         <link rel="stylesheet" href="../.././custom.css">
-        <link rel="stylesheet" href="../../langtabs.css">
+        <link rel="stylesheet" href="../../langtabs-0bb573a3.css">
 
 
         <!-- Provide site root and default themes to javascript -->
@@ -39,10 +37,10 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex.js";
+            window.path_to_searchindex_js = "../../searchindex-f4aeff57.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc.js"></script>
+        <script src="../../toc-b9331ace.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -56,7 +54,7 @@
             </div>
         </div>
     </div>
-    <div id="body-container">
+    <div id="mdbook-body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
@@ -85,12 +83,12 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -105,91 +103,86 @@
             }
         </script>
 
-        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
             </noscript>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="page-wrapper" class="page-wrapper">
+        <div id="mdbook-page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
-                            <i class="fa fa-bars"></i>
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
                         </label>
-                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
-                            <i class="fa fa-paint-brush"></i>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
                         </button>
-                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
-                            <i class="fa fa-search"></i>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
                         </button>
                     </div>
 
-                    <h1 class="menu-title">Filament Documentation (1.3.x)</h1>
+                    <h1 class="menu-title">Filament Documentation (1.4.x)</h1>
 
                     <div class="right-buttons">
                         <a href="../../print.html" title="Print this book" aria-label="Print this book">
-                            <i id="print-button" class="fa fa-print"></i>
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="search-wrapper" class="hidden">
-                    <form id="searchbar-outer" class="searchbar-outer">
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
                         <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
                             <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
                             </div>
                         </div>
                     </form>
-                    <div id="searchresults-outer" class="searchresults-outer hidden">
-                        <div id="searchresults-header" class="searchresults-header"></div>
-                        <ul id="searchresults">
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="content" class="content">
+                <div id="mdbook-content" class="content">
                     <main>
                         <h1 id="item-behaviours"><a class="header" href="#item-behaviours">Item Behaviours</a></h1>
 <p>Item behaviours define specific functionalities associated with items, blocks, and decorations.</p>
 <p>All behaviours are optional, and some are mutually exclusive (e.g., trap, shoot, and instrument).</p>
-<details id="admonition-example-with-some-behaviours-set" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-with-some-behaviours-set-title">
-<summary class="admonition-title">
-<div id="admonition-example-with-some-behaviours-set-title">
-<p>Example with some behaviours set</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-example-with-some-behaviours-set"></a>
-</summary>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+<p>Example with some behaviours set:</p>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">id: mynamespace:multi_example
 vanillaItem: minecraft:paper
@@ -231,6 +224,7 @@ behaviour:
     sound: minecraft:block.anvil.place
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "id": "mynamespace:multi_example",
@@ -278,60 +272,44 @@ behaviour:
   }
 }
 </code></pre>
-</div></div></div>
 </div>
-</details>
-<hr />
+</div>
+</div>
+
+<hr>
 <h2 id="generate_trim_models-behaviour"><a class="header" href="#generate_trim_models-behaviour"><code>generate_trim_models</code> behaviour</a></h2>
 <img class="right" src="../../img/armor.png" alt="armor">
 <p>Enables automatic generation of the different item models with the trim overlay.</p>
-<div id="admonition-configurable-fields" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>type_prefix</code>: Allows to specify a custom trim overlay texture. See the vanilla texture atlas files for the different paletted permutations and <code>assets/minecraft/textures/trims/items/</code> for a list of textures available. For armors: This prefix will replace the default armor slot texture path like this: <code>assets/minecraft/textures/trims/items/&lt;prefix&gt;_trim_&lt;material&gt;</code>. For non-armors it will insert the prefix as the full path. If not specified it will automatically chose correct prefix for the slot the item can be equipped in.</li>
 <li><code>custom_materials</code>: List of identifiers for custom trim materials. Empty by default</li>
 <li><code>materials</code>: List of vanilla trim materials. Default values include all vanilla trim materials: <code>["minecraft:quartz", "minecraft:iron", "minecraft:netherite", "minecraft:redstone", ...]</code></li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="compostable-behaviour"><a class="header" href="#compostable-behaviour"><code>compostable</code> behaviour</a></h2>
 <img class="right" src="../../img/compostable.png" alt="compostable">
 <p>Makes the item usable in composters.</p>
-<div id="admonition-configurable-fields-1" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-1-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-1-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-1"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>chance</code>: Chance of raising the composter level by 1 between 0 and 100</li>
 <li><code>villagerInteraction</code>: Allows farmer villagers to compost the item. Defaults to <code>true</code></li>
 </ul>
-</div>
-</div>
+</blockquote>
 <br>
-<hr />
+<hr>
 <h2 id="cosmetic-behaviour"><a class="header" href="#cosmetic-behaviour"><code>cosmetic</code> behaviour</a></h2>
 <img class="right" src="../../img/cosmetic.png" alt="cosmetic">
 <p>Defines cosmetic behaviours for decorations, supporting animated Blockbench models for chestplates and simple item models.</p>
 <p>Cosmetics are worn on the player using item display entities (except for the head slot)</p>
-<div id="admonition-configurable-fields-2" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-2-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-2-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-2"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>slot</code>: The equipment slot for the cosmetic (head or chest).</li>
 <li><code>model</code>: Optional, the resource location of the animated blockbench or animated-java model for the cosmetic.</li>
@@ -340,17 +318,11 @@ behaviour:
 <li><code>translation</code>: Translation of the chest cosmetic. Defaults to <code>[0, 0, 0]</code>.</li>
 <li><code>rotation</code>: Rotation of the chest cosmetic in euler angles. Defaults to <code>[0, 0, 0]</code>.</li>
 </ul>
-</div>
-</div>
-<div id="admonition-backpack" class="admonition admonish-example" role="note" aria-labelledby="admonition-backpack-title">
-<div class="admonition-title">
-<div id="admonition-backpack-title">
-<p>Backpack</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-backpack"></a>
-</div>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+</blockquote>
+<p>Backpack:</p>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">cosmetic:
   slot: chest
@@ -360,6 +332,7 @@ behaviour:
   translation: [0.0, 0.5, 0.0]
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "cosmetic": {
@@ -371,20 +344,16 @@ behaviour:
   }
 }
 </code></pre>
-</div></div></div>
 </div>
 </div>
-<hr />
+</div>
+
+<hr>
 <h2 id="item_interact_execute-behaviour"><a class="header" href="#item_interact_execute-behaviour"><code>item_interact_execute</code> behaviour</a></h2>
 <p>Executes a command on item use with the player as source, located at the player, with elevated permissions.</p>
-<div id="admonition-configurable-fields-3" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-3-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-3-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-3"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>consumes</code>: Flag whether the item is consumed after running the command(s). Defaults to <code>false</code></li>
 <li><code>damages</code>: Flag whether the item is damaged after running the command(s). Defaults to <code>false</code></li>
@@ -393,227 +362,156 @@ behaviour:
 <li><code>sound</code>: Optional sound effect to play during execution. Empty by default</li>
 <li><code>console</code>: Run as server/console instead of as player</li>
 </ul>
-</div>
-</div>
+</blockquote>
 <br>
-<hr />
+<hr>
 <h2 id="item_attack_execute-behaviour"><a class="header" href="#item_attack_execute-behaviour"><code>item_attack_execute</code> behaviour</a></h2>
 <p>Executes a command when an entity is attacked with the item or when swinging at air, located at the player, with elevated permissions.</p>
-<div id="admonition-configurable-fields-4" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-4-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-4-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-4"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>consumes</code>: Flag whether the item is consumed after running the command(s). Defaults to <code>false</code></li>
 <li><code>command</code>: The command string to execute. Empty by default</li>
 <li><code>commands</code>: List of commands to execute. Empty by default</li>
 <li><code>sound</code>: Optional sound effect to play during execution. Empty by default</li>
-<li><code>onEntityAttack</code>: true/false flag whether to execute only when an entity was attacked. Otherwise the command will also be executed when the item is "swung" by the player. Default to <code>true</code></li>
+<li><code>onEntityAttack</code>: true/false flag whether to execute only when an entity was attacked. Otherwise the command will also be executed when the item is “swung” by the player. Default to <code>true</code></li>
 <li><code>console</code>: Run as server/console instead of as player</li>
 </ul>
-</div>
-</div>
+</blockquote>
 <br>
-<hr />
+<hr>
 <h2 id="villager_food-behaviour"><a class="header" href="#villager_food-behaviour"><code>villager_food</code> behaviour</a></h2>
 <img class="right" src="../../img/villager_food.png" alt="villager_food">
 <p>Makes the item edible for villagers (for villager breeding).</p>
-<div id="admonition-configurable-fields-5" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-5-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-5-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-5"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
-<li><code>value</code>: The amount of "breeding power" the item has (1 = normal food item, 4 = bread). Defaults to <code>1</code></li>
+<li><code>value</code>: The amount of “breeding power” the item has (1 = normal food item, 4 = bread). Defaults to <code>1</code></li>
 </ul>
-</div>
-</div>
+</blockquote>
 <br>
-<br>
-<hr />
+<hr>
 <h2 id="fuel-behaviour"><a class="header" href="#fuel-behaviour"><code>fuel</code> behaviour</a></h2>
 <p>Defines fuel behaviour for items, specifying their value used in furnaces and similar item-burning blocks.</p>
-<div id="admonition-configurable-fields-6" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-6-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-6-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-6"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>value</code>: The value associated with the fuel, determining burn duration. Defaults to <code>10</code></li>
 </ul>
-</div>
-</div>
+</blockquote>
 <br>
-<hr />
+<hr>
 <h2 id="hoe-behaviour"><a class="header" href="#hoe-behaviour"><code>hoe</code> behaviour</a></h2>
 <p>Gives the item the ability to till farmland, like vanilla hoes do, using 1 durability.</p>
-<div id="admonition-configurable-fields-7" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-7-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-7-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-7"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>sound</code>: Sound to play. Default to the vanilla hoe tilling sound <code>minecraft:item.hoe.till</code></li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="shovel-behaviour"><a class="header" href="#shovel-behaviour"><code>shovel</code> behaviour</a></h2>
 <p>Gives the item the ability to change blocks to path blocks, like vanilla shovels do, using 1 durability.</p>
-<div id="admonition-configurable-fields-8" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-8-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-8-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-8"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>sound</code>: Sound to play. Default to the vanilla shovel sound</li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="shears-behaviour"><a class="header" href="#shears-behaviour"><code>shears</code> behaviour</a></h2>
 <p>Gives the item the ability to shears blocks &amp; plants, like vanilla shears do, using 1 durability.</p>
-<div id="admonition-configurable-fields-9" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-9-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-9-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-9"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>sound</code>: Sound to play. Default to the vanilla plant shearing sound</li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="instrument-behaviour"><a class="header" href="#instrument-behaviour"><code>instrument</code> behaviour</a></h2>
 <img class="right" src="../../img/instrument.png" alt="instrument">
 <p>Defines instrument behaviour for items, similar to goat horns.</p>
-<div id="admonition-configurable-fields-10" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-10-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-10-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-10"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>sound</code>: The sound associated with the instrument. Empty by default</li>
 <li><code>range</code>: The range of the instrument. Defaults to <code>0</code></li>
 <li><code>useDuration</code>: Delay in ticks for using the instrument. Defaults to <code>0</code></li>
 </ul>
-</div>
-</div>
+</blockquote>
 <br>
 <br>
-<hr />
+<hr>
 <h2 id="stripper-behaviour"><a class="header" href="#stripper-behaviour"><code>stripper</code> behaviour</a></h2>
 <p>Gives the item the ability to strip Logs/scrape copper blocks, like an axe. Uses 1 durability.</p>
-<h3 id="fields"><a class="header" href="#fields">Fields:</a></h3>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>sound</code>: Sound to play. Default to the vanilla axe strip sound</li>
 </ul>
-<hr />
+</blockquote>
+<hr>
 <h2 id="trap-behaviour"><a class="header" href="#trap-behaviour"><code>trap</code> behaviour</a></h2>
 <img class="right" src="../../img/trap.png" alt="trap">
 <p>Defines trap behaviour for items capable of trapping specific entity types.</p>
-<div id="admonition-configurable-fields-11" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-11-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-11-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-11"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>types</code>: List of allowed entity types to trap. Example: <code>["minecraft:silverfish", "minecraft:spider"]</code></li>
 <li><code>requiredEffects</code>: List of required effects for the trap. Example: <code>["minecraft:weakness"]</code></li>
 <li><code>chance</code>: Chance of the trap triggering (<code>0</code>-<code>100</code>). Defaults to <code>50</code></li>
 <li><code>useDuration</code>: Use cooldown for the trap item. Defaults to <code>0</code></li>
 </ul>
-</div>
-</div>
+</blockquote>
 <br>
 <br>
-<hr />
+<hr>
 <h2 id="banner_pattern-behaviour"><a class="header" href="#banner_pattern-behaviour"><code>banner_pattern</code> behaviour</a></h2>
 <img class="right" src="../../img/banner_pattern.gif" alt="banner pattern">
 <p>Allows you to assign a banner pattern to an item for use in Looms.</p>
 <p>See the <code>mynamespace:bannertestitem</code> item config in the example datapack in the GitHub repo.</p>
-<div id="admonition-configurable-fields-12" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-12-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-12-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-12"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>id</code>: The id of your banner_pattern in your datapack. Empty by default</li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="bow-behaviour"><a class="header" href="#bow-behaviour"><code>bow</code> behaviour</a></h2>
 <img class="right" src="../../img/bow.png" alt="bow">
 <p>Vanilla-like bow behaviour. Lets you specify which item can be shot, but anything that is not an arrow or firework rocket will render as normal arrow.
 Allows to specify a power multiplier for shooting power. Supports firework rockets.</p>
-<div id="admonition-warning" class="admonition admonish-warning" role="note" aria-labelledby="admonition-warning-title">
-<div class="admonition-title">
-<div id="admonition-warning-title">
-<p>Warning</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-warning"></a>
-</div>
-<div>
-<p>Make sure to use <code>minecraft:bow</code> as <code>vanillaItem</code> in order for the item model overrides to work properly!</p>
-</div>
-</div>
-<div id="admonition-configurable-fields-13" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-13-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-13-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-13"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-warning">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Warning</p>
+<p>Make sure to use <code>minecraft:bow</code> as <code>vanillaItem</code> in order for the item model overrides to work properly on MC versions below 1.21.4</p>
+</blockquote>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>powerMultiplier</code>: The power multiplier. Defaults to <code>3</code></li>
 <li><code>supportedProjectiles</code>: List of supported items in the inventory for use with the bow. Defaults to <code>["minecraft:arrow", "minecraft:spectral_arrow"]</code></li>
 <li><code>supportedHeldProjectiles</code>: List of supported items for use when in main/offhand. Defaults to <code>["minecraft:arrow", "minecraft:spectral_arrow", "minecraft:firework_rocket"]</code></li>
 <li><code>shootSound</code>: The sound when shooting a projectile. Default to <code>minecraft:entity.arrow.shoot</code></li>
 </ul>
-</div>
-</div>
+</blockquote>
 <br>
 This behaviour can automatically generate the item model predicate overrides for bows (item assets in `items` in 1.21.4 or later).
 <p>In order to automatically generate an item model for bows, you have to provide models for <code>default</code>, <code>pulling_0</code>, <code>pulling_1</code> and <code>pulling_2</code> in the <code>itemResource</code> field:</p>
-<div id="admonition-example" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-title">
-<div class="admonition-title">
-<div id="admonition-example-title">
-<p>Example</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-example"></a>
-</div>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+<p>Example:</p>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">itemResource:
   models:
@@ -623,6 +521,7 @@ This behaviour can automatically generate the item model predicate overrides for
     pulling_2: minecraft:custom/bow/custombow_pulling_2
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "itemResource":  {
@@ -635,37 +534,26 @@ This behaviour can automatically generate the item model predicate overrides for
   }
 }
 </code></pre>
-</div></div></div>
 </div>
 </div>
+</div>
+
 <p>Alternatively, you can use the <code>itemModel</code> field to provide your own item asset model</p>
-<hr />
+<hr>
 <h2 id="crossbow-behaviour"><a class="header" href="#crossbow-behaviour"><code>crossbow</code> behaviour</a></h2>
 <img class="right" src="../../img/crossbow.png" alt="crossbow">
 <p>Vanilla-like crossbow behaviour. Lets you specify which item can be shot, but anything that is not an arrow or firework rocket will render as normal arrow.
 Allows to specify a power multiplier for shooting power.</p>
-<div id="admonition-warning-1" class="admonition admonish-warning" role="note" aria-labelledby="admonition-warning-1-title">
-<div class="admonition-title">
-<div id="admonition-warning-1-title">
-<p>Warning</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-warning-1"></a>
-</div>
-<div>
-<p><strong>Make sure to use <code>minecraft:crossbow</code> as <code>vanillaItem</code> in order for the item model overrides to work properly!</strong></p>
-</div>
-</div>
+<blockquote class="blockquote-tag blockquote-tag-warning">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Warning</p>
+<p><strong>Make sure to use <code>minecraft:crossbow</code> as <code>vanillaItem</code> in order for the item model overrides to work properly for MC versions below 1.21.4!</strong></p>
+</blockquote>
 <p>This behaviour can automatically generate the item model predicate overrides for crossbows (item assets in <code>items</code> in 1.21.4 or later).</p>
 <p>In order to automatically generate an item model for crossbows, you have to provide models for <code>default</code>, <code>pulling_0</code>, <code>pulling_1</code>, <code>pulling_2</code>, <code>arrow</code> and <code>rocket</code> in the <code>itemResource</code> field:</p>
-<div id="admonition-example-1" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-1-title">
-<div class="admonition-title">
-<div id="admonition-example-1-title">
-<p>Example</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-example-1"></a>
-</div>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json5-1"><i class="langtabs-icon devicon-devicon-plain"></i>json5</button></div><div class="langtabs-content">
+<p>Example:</p>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json5-1"><i class="langtabs-icon devicon-devicon-plain"></i>json5</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">itemResource:
   models:
@@ -679,6 +567,7 @@ Allows to specify a power multiplier for shooting power.</p>
     rocket: minecraft:custom/crossbow/crossy1_rocket
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json5-1">
 <pre><code class="language-json5">{
   "itemResource": {
@@ -693,18 +582,14 @@ Allows to specify a power multiplier for shooting power.</p>
   }
 }
 </code></pre>
-</div></div></div>
 </div>
 </div>
+</div>
+
 <p>Alternatively, you can use the <code>itemModel</code> field to provide your own item asset model.</p>
-<div id="admonition-configurable-fields-14" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-14-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-14-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-14"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>powerMultiplier</code>: The power multiplier. Defaults to <code>1</code></li>
 <li><code>supportedProjectiles</code>: List of supported items in the inventory for use with the crossbow. Defaults to <code>["minecraft:arrow", "minecraft:spectral_arrow"]</code></li>
@@ -714,21 +599,15 @@ Allows to specify a power multiplier for shooting power.</p>
 <li><code>loadingMiddleSound</code>: Projectile loading middle sound. Default to <code>minecraft:item.crossbow.loading_middle</code></li>
 <li><code>loadingEndSound</code>: Projectile loading end sound. Default to <code>minecraft:item.crossbow.loading_end</code></li>
 </ul>
-</div>
-</div>
+</blockquote>
 <br>
 <br>
-<hr />
+<hr>
 <h2 id="shoot-behaviour"><a class="header" href="#shoot-behaviour"><code>shoot</code> behaviour</a></h2>
 <p>Defines behaviour for items capable of shooting custom projectiles or being shot themselves.</p>
-<div id="admonition-configurable-fields-15" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-15-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-15-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-15"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>consumes</code>: Indicates whether the shooting action consumes the item. Defaults to <code>false</code></li>
 <li><code>damages</code>: Indicates whether the item gets damaged when using. Defaults to <code>false</code></li>
@@ -752,22 +631,16 @@ Allows to specify a power multiplier for shooting power.</p>
 <li><code>translation</code>: Translation offset for the projectile. Defaults to <code>[0, 0, 0]</code></li>
 <li><code>scale</code>: Scale for the projectile model. Defaults to <code>[0.6, 0.6, 0.6]</code></li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="shield-behaviour"><a class="header" href="#shield-behaviour"><code>shield</code> behaviour</a></h2>
 <p>Makes the item usable as shield.</p>
 <p>This behaviour can automatically generate the item model predicate overrides for shields (item assets in <code>items</code> in 1.21.4 or later).</p>
 <p>In order to automatically generate an item model for shields, you have to provide models for <code>default</code> and <code>blocking</code> in the <code>itemResource</code> field:</p>
-<div id="admonition-example-2" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-2-title">
-<div class="admonition-title">
-<div id="admonition-example-2-title">
-<p>Example</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-example-2"></a>
-</div>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+<p>Example:</p>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">itemResource:
   models:
@@ -775,6 +648,7 @@ Allows to specify a power multiplier for shooting power.</p>
     blocking: minecraft:custom/shield/shield1_blocking
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "itemResource": {
@@ -785,24 +659,20 @@ Allows to specify a power multiplier for shooting power.</p>
   }
 }
 </code></pre>
-</div></div></div>
 </div>
 </div>
+</div>
+
 <p>Alternatively, you can use the <code>itemModel</code> field to provide your own item asset model</p>
-<hr />
+<hr>
 <h2 id="fishing_rod-behaviour"><a class="header" href="#fishing_rod-behaviour"><code>fishing_rod</code> behaviour</a></h2>
 <p>Makes the item behave like a fishing rod!</p>
 <p>This behaviour can automatically generate the item model predicate overrides for fishing rods (item assets in <code>items</code> in 1.21.4 or later).</p>
 <p>In order to automatically generate an item model for fishing rods, you have to provide models for <code>default</code> and <code>cast</code> in the <code>itemResource</code> field:</p>
-<div id="admonition-example-3" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-3-title">
-<div class="admonition-title">
-<div id="admonition-example-3-title">
-<p>Example</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-example-3"></a>
-</div>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+<p>Example:</p>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">itemResource:
   models:
@@ -810,6 +680,7 @@ Allows to specify a power multiplier for shooting power.</p>
     cast: minecraft:custom/rod/fire_rod_cast
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "itemResource": {
@@ -820,35 +691,24 @@ Allows to specify a power multiplier for shooting power.</p>
   }
 }
 </code></pre>
-</div></div></div>
 </div>
 </div>
+</div>
+
 <p>Alternatively, you can use the <code>itemModel</code> field to provide your own item asset model</p>
-<hr />
+<hr>
 <h2 id="trident-behaviour"><a class="header" href="#trident-behaviour"><code>trident</code> behaviour</a></h2>
-<div id="admonition-warning-2" class="admonition admonish-warning" role="note" aria-labelledby="admonition-warning-2-title">
-<div class="admonition-title">
-<div id="admonition-warning-2-title">
-<p>Warning</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-warning-2"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-warning">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M6.457 1.047c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0 1 14.082 15H1.918a1.75 1.75 0 0 1-1.543-2.575Zm1.763.707a.25.25 0 0 0-.44 0L1.698 13.132a.25.25 0 0 0 .22.368h12.164a.25.25 0 0 0 .22-.368Zm.53 3.996v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Warning</p>
 <p>This behaviour is experimental and only supported in minecraft 1.21.4 or later</p>
-</div>
-</div>
+</blockquote>
 <p>Makes the item behave like a trident!</p>
 <p>This behaviour can automatically generate the item model predicate overrides for tridents.</p>
 <p>In order to automatically generate an item model for tridents, you will have to provide models for <code>default</code> and <code>throwing</code> in the <code>itemResource</code> field:</p>
-<div id="admonition-example-4" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-4-title">
-<div class="admonition-title">
-<div id="admonition-example-4-title">
-<p>Example</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-example-4"></a>
-</div>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+<p>Example:</p>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">itemResource:
   models:
@@ -856,6 +716,7 @@ Allows to specify a power multiplier for shooting power.</p>
     throwing: minecraft:custom/trident/nether_trident_throwing
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "itemResource": {
@@ -866,41 +727,32 @@ Allows to specify a power multiplier for shooting power.</p>
   }
 }
 </code></pre>
-</div></div></div>
 </div>
 </div>
+</div>
+
 <p>Alternatively, you can use the <code>itemModel</code> field to provide your own item asset model</p>
-<hr />
+<hr>
 <h2 id="mace-behaviour"><a class="header" href="#mace-behaviour"><code>mace</code> behaviour</a></h2>
 <p>Makes the item behave like a mace!</p>
-<div id="admonition-configurable-fields-16" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-16-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-16-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-16"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
-<li><code>damageMultiplier</code>: Damage multiplier when "smashing" an entity. Defaults to <code>1.0</code></li>
+<li><code>damageMultiplier</code>: Damage multiplier when “smashing” an entity. Defaults to <code>1.0</code></li>
 </ul>
-</div>
-</div>
-<div id="admonition-example-5" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-5-title">
-<div class="admonition-title">
-<div id="admonition-example-5-title">
-<p>Example</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-example-5"></a>
-</div>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+</blockquote>
+<p>Example:</p>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">behaviour:
   mace:
     damageMultiplier: 1.0
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "behaviour": {
@@ -910,40 +762,31 @@ Allows to specify a power multiplier for shooting power.</p>
   }
 }
 </code></pre>
-</div></div></div>
 </div>
 </div>
-<hr />
+</div>
+
+<hr>
 <h2 id="wax-behaviour"><a class="header" href="#wax-behaviour"><code>wax</code> behaviour</a></h2>
 <p>Allows to wax blocks using this item, similar to honeycomb with copper.</p>
-<div id="admonition-configurable-fields-17" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-17-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-17-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-17"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>reduceDurability</code>: Flag whether the items durability should be decreased instead of the item being consumed. Defaults to <code>false</code></li>
 </ul>
-</div>
-</div>
-<div id="admonition-example-6" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-6-title">
-<div class="admonition-title">
-<div id="admonition-example-6-title">
-<p>Example</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-example-6"></a>
-</div>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+</blockquote>
+<p>Example:</p>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">behaviour:
   wax:
     reduceDurability: false
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "behaviour": {
@@ -953,58 +796,38 @@ Allows to specify a power multiplier for shooting power.</p>
   }
 }
 </code></pre>
-</div></div></div>
 </div>
 </div>
-<hr />
+</div>
+
+<hr>
 <h2 id="snowball-behaviour"><a class="header" href="#snowball-behaviour"><code>snowball</code> behaviour</a></h2>
 <p>Makes the item itself throwable like a snoball.</p>
-<div id="admonition-configurable-fields-18" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-18-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-18-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-18"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
-<li>
-<p><code>inaccuracy</code>: Inaccuracy when throwing. Defaults to <code>1.0</code></p>
-</li>
-<li>
-<p><code>power</code>: Initial projectile power. Defaults to <code>1.5</code></p>
-</li>
-<li>
-<p><code>dispenserSupport</code>: Defaults to <code>false</code></p>
-</li>
-<li>
-<p><code>hitCommand</code>: Commands to run when the projectile hits anything</p>
-</li>
-<li>
-<p><code>hitCommands</code>: List of commands to run when the projectile hits anything</p>
-</li>
-<li>
-<p><code>entityHitCommand</code>: Commands to run when the projectile hits an entity. <code>%target%</code> gets replaced with the UUID of the hit entity</p>
-</li>
-<li>
-<p><code>entityHitCommands</code>: List of commands to run when the projectile hits an entity. <code>%target%</code> gets replaced with the UUID of the hit entity</p>
-</li>
-<li>
-<p><code>executeAtHit</code>: Whether to execute the commands at the hit position. Defaults to <code>true</code></p>
-</li>
+<li><code>inaccuracy</code>: Inaccuracy when throwing. Defaults to <code>1.0</code></li>
+<li><code>power</code>: Initial projectile power. Defaults to <code>1.5</code></li>
+<li><code>dispenserSupport</code>: Defaults to <code>false</code></li>
+<li><code>hitCommand</code>: Commands to run when the projectile hits anything</li>
+<li><code>hitCommands</code>: List of commands to run when the projectile hits anything</li>
+<li><code>entityHitCommand</code>: Commands to run when the projectile hits an entity. <code>%target%</code> gets replaced with the UUID of the hit entity</li>
+<li><code>entityHitCommands</code>: List of commands to run when the projectile hits an entity. <code>%target%</code> gets replaced with the UUID of the hit entity</li>
+<li><code>executeAtHit</code>: Whether to execute the commands at the hit position. Defaults to <code>true</code></li>
 </ul>
-</div>
-</div>
+</blockquote>
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../../content/item/item-properties.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
                             <a rel="next prefetch" href="../../content/item/item-examples.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
                         <div style="clear: both"></div>
@@ -1014,16 +837,21 @@ Allows to specify a power multiplier for shooting power.</p>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../../content/item/item-properties.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <i class="fa fa-angle-left"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
                     <a rel="next prefetch" href="../../content/item/item-examples.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
 
         </div>
 
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
 
 
@@ -1032,16 +860,16 @@ Allows to specify a power multiplier for shooting power.</p>
         </script>
 
 
-        <script src="../../elasticlunr.min.js"></script>
-        <script src="../../mark.min.js"></script>
-        <script src="../../searcher.js"></script>
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-c2a407aa.js"></script>
 
-        <script src="../../clipboard.min.js"></script>
-        <script src="../../highlight.js"></script>
-        <script src="../../book.js"></script>
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../../langtabs.js"></script>
+        <script src="../../langtabs-72ded3cb.js"></script>
 
 
 

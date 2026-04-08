@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Behaviours - Filament Documentation (1.3.x)</title>
+        <title>Behaviours - Filament Documentation (1.4.x)</title>
 
 
         <!-- Custom HTML head -->
@@ -12,26 +12,24 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="../../favicon.svg">
-        <link rel="shortcut icon" href="../../favicon.png">
-        <link rel="stylesheet" href="../../css/variables.css">
-        <link rel="stylesheet" href="../../css/general.css">
-        <link rel="stylesheet" href="../../css/chrome.css">
-        <link rel="stylesheet" href="../../css/print.css" media="print">
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="../../fonts/fonts.css">
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="../.././mdbook-admonish.css">
         <link rel="stylesheet" href="../.././custom.css">
-        <link rel="stylesheet" href="../../langtabs.css">
+        <link rel="stylesheet" href="../../langtabs-0bb573a3.css">
 
 
         <!-- Provide site root and default themes to javascript -->
@@ -39,10 +37,10 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex.js";
+            window.path_to_searchindex_js = "../../searchindex-f4aeff57.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc.js"></script>
+        <script src="../../toc-b9331ace.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -56,7 +54,7 @@
             </div>
         </div>
     </div>
-    <div id="body-container">
+    <div id="mdbook-body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
@@ -85,12 +83,12 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
             let sidebar = null;
-            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
@@ -105,93 +103,87 @@
             }
         </script>
 
-        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
             </noscript>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="page-wrapper" class="page-wrapper">
+        <div id="mdbook-page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
-                            <i class="fa fa-bars"></i>
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
                         </label>
-                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
-                            <i class="fa fa-paint-brush"></i>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
                         </button>
-                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
-                            <i class="fa fa-search"></i>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
                         </button>
                     </div>
 
-                    <h1 class="menu-title">Filament Documentation (1.3.x)</h1>
+                    <h1 class="menu-title">Filament Documentation (1.4.x)</h1>
 
                     <div class="right-buttons">
                         <a href="../../print.html" title="Print this book" aria-label="Print this book">
-                            <i id="print-button" class="fa fa-print"></i>
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="search-wrapper" class="hidden">
-                    <form id="searchbar-outer" class="searchbar-outer">
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
                         <div class="search-wrapper">
-                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
                             <div class="spinner-wrapper">
-                                <i class="fa fa-spinner fa-spin"></i>
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
                             </div>
                         </div>
                     </form>
-                    <div id="searchresults-outer" class="searchresults-outer hidden">
-                        <div id="searchresults-header" class="searchresults-header"></div>
-                        <ul id="searchresults">
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="content" class="content">
+                <div id="mdbook-content" class="content">
                     <main>
                         <h1 id="block-behaviours"><a class="header" href="#block-behaviours">Block Behaviours</a></h1>
 <p>Block behaviours can be customized to add unique properties to blocks. All behaviours are optional and can be applied to both, blocks and decorations.</p>
-<p>Blocks also work with most item-behaviours to give the blocks' item special features.</p>
+<p>Blocks also work with most item-behaviours to give the blocks’ item special features.</p>
 <p>Some block behaviours provide blockstate properties you will have to provide models for, like <code>axis</code>, <code>repeater</code>, <code>crop</code>, <code>directional</code>, etc.</p>
 <p>Example of a blockResource entry for the <code>repeater</code> behaviour (can be found as relay block in the example datapack):</p>
-<details id="admonition-example" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-title">
-<summary class="admonition-title">
-<div id="admonition-example-title">
-<p>Example</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-example"></a>
-</summary>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">blockResource:
   models:
@@ -209,6 +201,7 @@
     facing=west,powered=true: minecraft:custom/block/arcanery/relay/relay_west_on
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "blockResource": {
@@ -229,9 +222,14 @@
   }
 }
 </code></pre>
-</div></div></div>
+</div>
+</div>
+</div>
+
 <p>You can also provide rotations for the block model like so:</p>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">blockResource:
   models:
@@ -261,6 +259,7 @@
       y: 270
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "blockResource": {
@@ -277,18 +276,14 @@
   }
 }
 </code></pre>
-</div></div></div>
 </div>
-</details>
-<details id="admonition-example-of-a-block-with-behaviours-set" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-of-a-block-with-behaviours-set-title">
-<summary class="admonition-title">
-<div id="admonition-example-of-a-block-with-behaviours-set-title">
-<p>Example of a block with behaviours set</p>
 </div>
-<a class="admonition-anchor-link" href="#admonition-example-of-a-block-with-behaviours-set"></a>
-</summary>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+</div>
+
+<p>Example of a block with behaviours set:</p>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">id: mynamespace:myblock
 blockResource:
@@ -339,6 +334,7 @@ behaviour:
     replacement: minecraft:stone
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "id": "mynamespace:myblock",
@@ -383,70 +379,47 @@ behaviour:
   }
 }
 </code></pre>
-</div></div></div>
 </div>
-</details>
+</div>
+</div>
+
 <p>This creates a block + item that can be worn and when worn shows an animated blockbench model on the player. The item is also a food and can be used as fuel source in furnaces.</p>
 <p>The block acts as a redstone powersource of level 15 and a repeater/relay and is strippable (turns to stone when stripped with an axe or an item with the <code>stripper</code> item behaviour)</p>
-<p>While possible, you probably don't want to combine <code>powersource</code> with <code>repeater</code> for actual blocks/items for obvious reasons.</p>
-<hr />
+<p>While possible, you probably don’t want to combine <code>powersource</code> with <code>repeater</code> for actual blocks/items for obvious reasons.</p>
+<hr>
 <h1 id="behaviours"><a class="header" href="#behaviours">Behaviours</a></h1>
 <h2 id="axis-behaviour"><a class="header" href="#axis-behaviour"><code>axis</code> behaviour</a></h2>
 <p>Gives the block an <code>axis</code> property/block-state similar to wooden logs/pillars and handles placement.</p>
-<div id="admonition-block-state-properties-to-provide-models-for" class="admonition admonish-info" role="note" aria-labelledby="admonition-block-state-properties-to-provide-models-for-title">
-<div class="admonition-title">
-<div id="admonition-block-state-properties-to-provide-models-for-title">
-<p>Block-State-Properties to provide models for</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-block-state-properties-to-provide-models-for"></a>
-</div>
-<div>
+<blockquote>
+<p>[!INFO]
+Block-State-Properties to provide models for:</p>
 <ul>
 <li><code>axis</code>: x, y, z</li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="connectable-behaviour"><a class="header" href="#connectable-behaviour"><code>connectable</code> behaviour</a></h2>
 <p>This behaviour allows the block to connect to other blocks, similar to stairs, but requiring a block on both sides of a corner to be present in order to the corner shape.
 Optionally without the corner states.</p>
-<div id="admonition-block-state-properties-to-provide-models-for-1" class="admonition admonish-info" role="note" aria-labelledby="admonition-block-state-properties-to-provide-models-for-1-title">
-<div class="admonition-title">
-<div id="admonition-block-state-properties-to-provide-models-for-1-title">
-<p>Block-State-Properties to provide models for</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-block-state-properties-to-provide-models-for-1"></a>
-</div>
-<div>
+<blockquote>
+<p>[!INFO]
+Block-State-Properties to provide models for:</p>
 <ul>
 <li><code>shape</code>: <code>middle</code>, <code>single</code>, <code>left</code>, <code>right</code>, <code>inner_left</code>, <code>inner_right</code>, <code>outer_left</code>, <code>outer_right</code></li>
 <li><code>facing</code>: <code>north</code>, <code>east</code>, <code>south</code>, <code>west</code></li>
 </ul>
-</div>
-</div>
-<div id="admonition-configurable-fields" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields"></a>
-</div>
-<div>
+</blockquote>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>corners</code>: Flag whether to allow corners</li>
 </ul>
-</div>
-</div>
+</blockquote>
 <p>This behaviour is best used with decorations, as you will only have to define 6 models:</p>
-<div id="admonition-example-1" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-1-title">
-<div class="admonition-title">
-<div id="admonition-example-1-title">
-<p>Example</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-example-1"></a>
-</div>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">itemResource:
   models:
@@ -459,6 +432,7 @@ Optionally without the corner states.</p>
     single: minecraft:custom/furniture/benches/single_connectable
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "itemResource": {
@@ -474,73 +448,50 @@ Optionally without the corner states.</p>
   }
 }
 </code></pre>
-</div></div></div>
 </div>
 </div>
-<hr />
+</div>
+
+<hr>
 <h2 id="count-behaviour"><a class="header" href="#count-behaviour"><code>count</code> behaviour</a></h2>
 <p>Gives the block a <code>count</code> property/block-state.</p>
-<p>Works similar to turtle eggs or candles, allows you to place "multiple blocks/items" into one block.</p>
-<div id="admonition-block-state-properties-to-provide-models-for-2" class="admonition admonish-info" role="note" aria-labelledby="admonition-block-state-properties-to-provide-models-for-2-title">
-<div class="admonition-title">
-<div id="admonition-block-state-properties-to-provide-models-for-2-title">
-<p>Block-State-Properties to provide models for</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-block-state-properties-to-provide-models-for-2"></a>
-</div>
-<div>
+<p>Works similar to turtle eggs or candles, allows you to place “multiple blocks/items” into one block.</p>
+<blockquote>
+<p>[!INFO]
+Block-State-Properties to provide models for:</p>
 <ul>
-<li><code>count</code>: 1...max</li>
+<li><code>count</code>: 1…max</li>
 </ul>
-</div>
-</div>
-<div id="admonition-configurable-fields-1" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-1-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-1-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-1"></a>
-</div>
-<div>
+</blockquote>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>max</code>: Max count</li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="facing-behaviour"><a class="header" href="#facing-behaviour"><code>facing</code> behaviour</a></h2>
 <p>Gives the block a <code>facing</code> property/block-state similar to wooden logs/pillars and handles placement.</p>
-<div id="admonition-block-state-properties-to-provide-models-for-3" class="admonition admonish-info" role="note" aria-labelledby="admonition-block-state-properties-to-provide-models-for-3-title">
-<div class="admonition-title">
-<div id="admonition-block-state-properties-to-provide-models-for-3-title">
-<p>Block-State-Properties to provide models for</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-block-state-properties-to-provide-models-for-3"></a>
-</div>
-<div>
+<blockquote>
+<p>[!INFO]
+Block-State-Properties to provide models for:</p>
 <ul>
 <li><code>facing</code>: north, east, south, west, up, down</li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="horizontal_facing-behaviour"><a class="header" href="#horizontal_facing-behaviour"><code>horizontal_facing</code> behaviour</a></h2>
 <p>Gives the block a <code>facing</code> property/block-state similar to furnaces and handles placement.
 Does not support up and down facing directions.</p>
-<div id="admonition-block-state-properties-to-provide-models-for-4" class="admonition admonish-info" role="note" aria-labelledby="admonition-block-state-properties-to-provide-models-for-4-title">
-<div class="admonition-title">
-<div id="admonition-block-state-properties-to-provide-models-for-4-title">
-<p>Block-State-Properties to provide models for</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-block-state-properties-to-provide-models-for-4"></a>
-</div>
-<div>
+<blockquote>
+<p>[!INFO]
+Block-State-Properties to provide models for:</p>
 <ul>
 <li><code>facing</code>: north, east, south, west</li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="crop-behaviour"><a class="header" href="#crop-behaviour"><code>crop</code> behaviour</a></h2>
 <p>Makes the block behave like a crop, bonemeable, growing, minimum light requirement, etc.
 Also gives a growth bonus similar to vanilla crops, which check for farmland blocks in a 3x3 area centered below the crop block.
@@ -550,27 +501,16 @@ The bonus block and radius can be configured.</p>
 <p>In order for the farmland to not turn into dirt when placing the crop on top of it, make sure the <code>solid</code> property is set to <code>false</code></p>
 <p>For bee pollination, use the block tag <code>bee_growables</code>.</p>
 <p>You can make farmer villagers able to plant the seeds using the item tag <code>villager_plantable_seeds</code>. Villagers will only work on crops that are on top of farmland blocks (vanilla limitation).</p>
-<div id="admonition-block-state-properties-to-provide-models-for-5" class="admonition admonish-info" role="note" aria-labelledby="admonition-block-state-properties-to-provide-models-for-5-title">
-<div class="admonition-title">
-<div id="admonition-block-state-properties-to-provide-models-for-5-title">
-<p>Block-State-Properties to provide models for</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-block-state-properties-to-provide-models-for-5"></a>
-</div>
-<div>
+<blockquote>
+<p>[!INFO]
+Block-State-Properties to provide models for:</p>
 <ul>
-<li><code>age</code>: 0...maxAge-1</li>
+<li><code>age</code>: 0…maxAge-1</li>
 </ul>
-</div>
-</div>
-<div id="admonition-configurable-fields-2" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-2-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-2-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-2"></a>
-</div>
-<div>
+</blockquote>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>maxAge</code>: maximum age steps of this block (from 0 to maxAge-1). Defaults to 4.</li>
 <li><code>minLightLevel</code>: Minimum light level this crop needs to survive. Defaults to 8.</li>
@@ -579,45 +519,26 @@ The bonus block and radius can be configured.</p>
 <li><code>villagerInteraction</code>: Allows farmer villagers to break and plant the custom crop. Defaults to <code>true</code>.</li>
 <li><code>beeInteraction</code>: Allows bees to pollinate the crop to increase its age. Defaults to <code>true</code>.</li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="sapling-behaviour"><a class="header" href="#sapling-behaviour"><code>sapling</code> behaviour</a></h2>
 <p>Makes your block behave like vanilla saplings, growing based on random ticks and bonemealable.</p>
 <p>All identifiers for the configured_placements are optional, they will only get used when configured.</p>
 <p>You add your own configured placement for trees using vanilla datapack mechanics.</p>
-<div id="admonition-tip" class="admonition admonish-tip" role="note" aria-labelledby="admonition-tip-title">
-<div class="admonition-title">
-<div id="admonition-tip-title">
-<p>Tip</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-tip"></a>
-</div>
-<div>
-<h4 id="checkout-the-example-datapack-for-the-test_tree-block"><a class="header" href="#checkout-the-example-datapack-for-the-test_tree-block">Checkout the example datapack for the test_tree block!</a></h4>
-</div>
-</div>
-<div id="admonition-block-state-properties-to-provide-models-for-6" class="admonition admonish-info" role="note" aria-labelledby="admonition-block-state-properties-to-provide-models-for-6-title">
-<div class="admonition-title">
-<div id="admonition-block-state-properties-to-provide-models-for-6-title">
-<p>Block-State-Properties to provide models for</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-block-state-properties-to-provide-models-for-6"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-tip">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p>
+<p>Checkout the example datapack for the test_tree block!</p>
+</blockquote>
+<blockquote>
+<p>[!INFO]
+Block-State-Properties to provide models for:</p>
 <ul>
 <li><code>stage</code>: 0 to 1. You can provide a single model to use for both states, use <code>default</code> as key in that case.</li>
 </ul>
-</div>
-</div>
-<div id="admonition-configurable-fields-3" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-3-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-3-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-3"></a>
-</div>
-<div>
+</blockquote>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>tree</code>: Identifier for a configured_placement (add via datapack or use vanilla ones)</li>
 <li><code>minLightLevel</code>: Defaults to <code>9</code></li>
@@ -631,22 +552,16 @@ The bonus block and radius can be configured.</p>
 <li><code>flowers</code>: Identifier for a configured_placement. Used when there is a flower neaby.</li>
 <li><code>secondaryFlowers</code>: Identifier for a configured_placement. Alternative to <code>flowers</code> based on <code>secondaryChance</code></li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="can_survive-behaviour"><a class="header" href="#can_survive-behaviour"><code>can_survive</code> behaviour</a></h2>
 <p>Checks for the block below with one of the configured block tags or blocks list.
 The block will break off, similar to flowers or crops, when the block below them is not supported.</p>
 <p>The behaviour will automatically check for and apply any <code>facing</code> or <code>axis</code> block-state properties.</p>
 <p>Useful for bushes/plants/crops/flowers and more</p>
-<div id="admonition-configurable-fields-4" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-4-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-4-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-4"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>blocks</code>: List of blocks this block can survive on.
 <ul>
@@ -659,44 +574,25 @@ The block will break off, similar to flowers or crops, when the block below them
 </ul>
 </li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="powersource-behaviour"><a class="header" href="#powersource-behaviour"><code>powersource</code> behaviour</a></h2>
 <p>Defines the block as a redstone power source.</p>
-<div id="admonition-configurable-fields-5" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-5-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-5-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-5"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>value</code>: The redstone power value the block emits (can be mapped to a block-state, see below). Defaults to 15</li>
 </ul>
-</div>
-</div>
-<div id="admonition-tip-1" class="admonition admonish-tip" role="note" aria-labelledby="admonition-tip-1-title">
-<div class="admonition-title">
-<div id="admonition-tip-1-title">
-<p>Tip</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-tip-1"></a>
-</div>
-<div>
+</blockquote>
+<blockquote class="blockquote-tag blockquote-tag-tip">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p>
 <p>The fields of this behaviour can be mapped to a block-state.</p>
-</div>
-</div>
-<div id="admonition-example-2" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-2-title">
-<div class="admonition-title">
-<div id="admonition-example-2-title">
-<p>Example</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-example-2"></a>
-</div>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+</blockquote>
+<p>Example:</p>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">behaviour:
   powersource:
@@ -705,6 +601,7 @@ The block will break off, similar to flowers or crops, when the block below them
       age=1: 15
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "behaviour": {
@@ -717,24 +614,21 @@ The block will break off, similar to flowers or crops, when the block below them
   }
 }
 </code></pre>
-</div></div></div>
 </div>
 </div>
-<div id="admonition-example-with-constant-value" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-with-constant-value-title">
-<div class="admonition-title">
-<div id="admonition-example-with-constant-value-title">
-<p>Example with constant value</p>
 </div>
-<a class="admonition-anchor-link" href="#admonition-example-with-constant-value"></a>
-</div>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+
+<p>Example with constant value:</p>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">behaviour:
   powersource:
     value: 5
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "behaviour": {
@@ -744,80 +638,52 @@ The block will break off, similar to flowers or crops, when the block below them
   }
 }
 </code></pre>
-</div></div></div>
 </div>
 </div>
-<hr />
+</div>
+
+<hr>
 <h2 id="repeater-behaviour"><a class="header" href="#repeater-behaviour"><code>repeater</code> behaviour</a></h2>
 <p>Defines the block as a redstone repeater with configurable delay and loss.</p>
-<div id="admonition-configurable-fields-6" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-6-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-6-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-6"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>delay</code>: Delay in ticks. Defaults to 0</li>
 <li><code>loss</code>: Power loss during transfer. Defaults to 0</li>
 </ul>
-</div>
-</div>
-<div id="admonition-block-state-properties-to-provide-models-for-7" class="admonition admonish-info" role="note" aria-labelledby="admonition-block-state-properties-to-provide-models-for-7-title">
-<div class="admonition-title">
-<div id="admonition-block-state-properties-to-provide-models-for-7-title">
-<p>Block-State-Properties to provide models for</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-block-state-properties-to-provide-models-for-7"></a>
-</div>
-<div>
+</blockquote>
+<blockquote>
+<p>[!INFO]
+Block-State-Properties to provide models for:</p>
 <ul>
 <li><code>powered</code>: true, false</li>
 <li><code>facing</code>: north, east, south, west, up, down</li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="powerlevel-behaviour"><a class="header" href="#powerlevel-behaviour"><code>powerlevel</code> behaviour</a></h2>
 <p>Supplies a <code>powerlevel</code> blockstate and changes to it depending on the input redstone signal.</p>
-<div id="admonition-configurable-fields-7" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-7-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-7-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-7"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>max</code>: Maximum powerlevel this block can display</li>
 </ul>
-</div>
-</div>
-<div id="admonition-block-state-properties-to-provide-models-for-8" class="admonition admonish-info" role="note" aria-labelledby="admonition-block-state-properties-to-provide-models-for-8-title">
-<div class="admonition-title">
-<div id="admonition-block-state-properties-to-provide-models-for-8-title">
-<p>Block-State-Properties to provide models for</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-block-state-properties-to-provide-models-for-8"></a>
-</div>
-<div>
+</blockquote>
+<blockquote>
+<p>[!INFO]
+Block-State-Properties to provide models for:</p>
 <ul>
-<li><code>powerlevel</code>: 0...max-1</li>
+<li><code>powerlevel</code>: 0…max-1</li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="strippable-behaviour"><a class="header" href="#strippable-behaviour"><code>strippable</code> behaviour</a></h2>
 <p>Defines the block as strippable, replacing it with another block when interacted with an axe.</p>
-<div id="admonition-configurable-fields-8" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-8-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-8-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-8"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>replacement</code>: The identifier of the block to replace the current block with. Example: <code>minecraft:stone</code></li>
 <li><code>lootTable</code>: Identifier for a loot table to use when the block is stripped. Example: <code>minecraft:bell</code></li>
@@ -825,150 +691,95 @@ The block will break off, similar to flowers or crops, when the block below them
 <li><code>scrapeWax</code>: Flag whether to show wax scrape particles. Defaults to <code>false</code></li>
 <li><code>sound</code>: Custom sound id to play. Defaults to <code>minecraft:item.axe.strip</code></li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="slab-behaviour"><a class="header" href="#slab-behaviour"><code>slab</code> behaviour</a></h2>
 <p>Defines the block as slab, top, bottom, double, with placements, waterloggable.</p>
-<div id="admonition-block-state-properties-to-provide-models-for-9" class="admonition admonish-info" role="note" aria-labelledby="admonition-block-state-properties-to-provide-models-for-9-title">
-<div class="admonition-title">
-<div id="admonition-block-state-properties-to-provide-models-for-9-title">
-<p>Block-State-Properties to provide models for</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-block-state-properties-to-provide-models-for-9"></a>
-</div>
-<div>
+<blockquote>
+<p>[!INFO]
+Block-State-Properties to provide models for:</p>
 <ul>
 <li><code>type</code>: top, bottom, double</li>
 <li><code>waterlogged</code>: true, false</li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="trapdoor-behaviour"><a class="header" href="#trapdoor-behaviour"><code>trapdoor</code> behaviour</a></h2>
 <p>Trapdoor like block.</p>
-<div id="admonition-block-state-properties-to-provide-models-for-10" class="admonition admonish-info" role="note" aria-labelledby="admonition-block-state-properties-to-provide-models-for-10-title">
-<div class="admonition-title">
-<div id="admonition-block-state-properties-to-provide-models-for-10-title">
-<p>Block-State-Properties to provide models for</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-block-state-properties-to-provide-models-for-10"></a>
-</div>
-<div>
+<blockquote>
+<p>[!INFO]
+Block-State-Properties to provide models for:</p>
 <ul>
 <li><code>facing</code>: north, south, east, west, up, down</li>
 <li><code>half</code>: top, bottom</li>
 <li><code>open</code>: true, false</li>
 <li><code>waterlogged</code>: true, false</li>
 </ul>
-</div>
-</div>
-<div id="admonition-configurable-fields-9" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-9-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-9-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-9"></a>
-</div>
-<div>
+</blockquote>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>canOpenByWindCharge</code>: Whether the trapdoor can be opened by a wind charge. Defaults to <code>true</code></li>
 <li><code>canOpenByHand</code>: Whether the trapdoor can be opened by hand. Defaults to <code>true</code></li>
 <li><code>openSound</code>: Open sound. Defaults to wooden trapdoor open sound.</li>
 <li><code>closeSound</code> = Close sound. Defaults to wooden trapdoor close sound.</li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="door-behaviour"><a class="header" href="#door-behaviour"><code>door</code> behaviour</a></h2>
-<p>Door-like "block" that is 2 blocks high.
+<p>Door-like “block” that is 2 blocks high.
 Comes with all door block state properties (hinge, open, powered, etc.)</p>
-<div id="admonition-block-state-properties-to-provide-models-for-11" class="admonition admonish-info" role="note" aria-labelledby="admonition-block-state-properties-to-provide-models-for-11-title">
-<div class="admonition-title">
-<div id="admonition-block-state-properties-to-provide-models-for-11-title">
-<p>Block-State-Properties to provide models for</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-block-state-properties-to-provide-models-for-11"></a>
-</div>
-<div>
+<blockquote>
+<p>[!INFO]
+Block-State-Properties to provide models for:</p>
 <ul>
 <li><code>facing</code>: north, south, east, west, up, down</li>
 <li><code>half</code>: lower, upper</li>
 <li><code>open</code>: true, false</li>
 <li><code>hinge</code>: left, right</li>
 </ul>
-</div>
-</div>
-<div id="admonition-configurable-fields-10" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-10-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-10-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-10"></a>
-</div>
-<div>
+</blockquote>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>canOpenByWindCharge</code>: Whether the door can be opened by a wind charge. Defaults to <code>true</code></li>
 <li><code>canOpenByHand</code>: Whether the door can be opened by hand. Defaults to <code>true</code></li>
 <li><code>openSound</code>: Open sound. Defaults to wooden door open sound.</li>
 <li><code>closeSound</code> = Close sound. Defaults to wooden door close sound.</li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="waterloggable-behaviour"><a class="header" href="#waterloggable-behaviour"><code>waterloggable</code> behaviour</a></h2>
 <p>Simple waterloggable block with a <code>waterlogged</code> property.</p>
 <p>There is an alias called <code>simple_waterloggable</code> for backwards compatibility with older filament data packs</p>
-<div id="admonition-optional-block-state-properties-to-provide-models-for" class="admonition admonish-info" role="note" aria-labelledby="admonition-optional-block-state-properties-to-provide-models-for-title">
-<div class="admonition-title">
-<div id="admonition-optional-block-state-properties-to-provide-models-for-title">
-<p>Optional Block-State-Properties to provide models for</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-optional-block-state-properties-to-provide-models-for"></a>
-</div>
-<div>
+<blockquote>
+<p>[!INFO]
+Block-State-Properties to provide models for (optional):</p>
 <ul>
 <li><code>waterlogged</code>: true, false</li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="drop_xp-behaviour"><a class="header" href="#drop_xp-behaviour"><code>drop_xp</code> behaviour</a></h2>
 <p>Makes the block drop xp when being mined without the silk-touch enchantment.</p>
-<div id="admonition-configurable-fields-11" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-11-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-11-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-11"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>min</code>: Minimum amount of XP to drop</li>
 <li><code>max</code>: Maximum amount of XP to drop</li>
 </ul>
-</div>
-</div>
-<div id="admonition-tip-2" class="admonition admonish-tip" role="note" aria-labelledby="admonition-tip-2-title">
-<div class="admonition-title">
-<div id="admonition-tip-2-title">
-<p>Tip</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-tip-2"></a>
-</div>
-<div>
+</blockquote>
+<blockquote class="blockquote-tag blockquote-tag-tip">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p>
 <p>The values of the <code>min</code> and <code>max</code> fields can be mapped to block-states.</p>
-</div>
-</div>
-<div id="admonition-example-3" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-3-title">
-<div class="admonition-title">
-<div id="admonition-example-3-title">
-<p>Example</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-example-3"></a>
-</div>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+</blockquote>
+<p>Example:</p>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">behaviour:
   drop_xp:
@@ -982,6 +793,7 @@ Comes with all door block state properties (hinge, open, powered, etc.)</p>
       age=2: 6
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "behaviour": {
@@ -1000,24 +812,21 @@ Comes with all door block state properties (hinge, open, powered, etc.)</p>
   }
 }
 </code></pre>
-</div></div></div>
+</div>
+</div>
+</div>
+
 <p>Using behaviour for crops, you could make a crop that drops xp when fully aged</p>
-</div>
-</div>
-<div id="admonition-example-with-constant-values" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-with-constant-values-title">
-<div class="admonition-title">
-<div id="admonition-example-with-constant-values-title">
-<p>Example with constant values</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-example-with-constant-values"></a>
-</div>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+<p>Example with constant values:</p>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">behaviour:
   drop_xp: 6
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "behaviour": {
@@ -1025,102 +834,74 @@ Comes with all door block state properties (hinge, open, powered, etc.)</p>
   }
 }
 </code></pre>
-</div></div></div>
+</div>
+</div>
+</div>
+
 <p>This will drop 6 xp for any block-state</p>
-</div>
-</div>
-<hr />
+<hr>
 <h2 id="block_interact_execute-behaviour"><a class="header" href="#block_interact_execute-behaviour"><code>block_interact_execute</code> behaviour</a></h2>
 <p>Executes a command on block interaction from console, as player (@s).</p>
-<div id="admonition-configurable-fields-12" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-12-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-12-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-12"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>consumes</code>: Flag whether the block should be broken after running the command(s). Defaults to <code>false</code></li>
 <li><code>dropBlock</code>: Flag whether the block should drop items when broken. Defaults to <code>false</code></li>
 <li><code>command</code>: The command string to execute. Empty by default</li>
 <li><code>commands</code>: List of commands to execute. Empty by default</li>
-<li><code>atBlock</code>: false/true flag whether the command should be run at the blocks' position</li>
+<li><code>atBlock</code>: false/true flag whether the command should be run at the blocks’ position</li>
 <li><code>sound</code>: Optional sound effect to play during execution. Empty by default</li>
 <li><code>console</code>: Run as server/console instead of as player</li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="block_attack_execute-behaviour"><a class="header" href="#block_attack_execute-behaviour"><code>block_attack_execute</code> behaviour</a></h2>
-<p>Executes a command when the block is "attacked", from console, as player (@s).</p>
-<div id="admonition-configurable-fields-13" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-13-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-13-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-13"></a>
-</div>
-<div>
+<p>Executes a command when the block is “attacked”, from console, as player (@s).</p>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>consumes</code>: Flag whether the block should be broken after running the command(s). Defaults to <code>false</code></li>
 <li><code>dropBlock</code>: Flag whether the block should drop items when broken. Defaults to <code>false</code></li>
 <li><code>command</code>: The command string to execute. Empty by default</li>
 <li><code>commands</code>: List of commands to execute. Empty by default</li>
-<li><code>atBlock</code>: false/true flag whether the command should be run at the blocks' position</li>
+<li><code>atBlock</code>: false/true flag whether the command should be run at the blocks’ position</li>
 <li><code>sound</code>: Optional sound effect to play during execution. Empty by default</li>
 <li><code>console</code>: Run as server/console instead of as player</li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="oxidizable-behaviour"><a class="header" href="#oxidizable-behaviour"><code>oxidizable</code> behaviour</a></h2>
-<p>Defines the block as oxidizing block, similar to the vanilla copper blocks, randomly replacing it with another block when it "ages". Can be reverted/scraped by axes and resets with lightning bolts like vanilla copper blocks.</p>
-<div id="admonition-configurable-fields-14" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-14-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-14-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-14"></a>
-</div>
-<div>
+<p>Defines the block as oxidizing block, similar to the vanilla copper blocks, randomly replacing it with another block when it “ages”. Can be reverted/scraped by axes and resets with lightning bolts like vanilla copper blocks.</p>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
-<li><code>replacement</code>: The identifier of the block to replace the current block with (e.g., "minecraft:stone").</li>
+<li><code>replacement</code>: The identifier of the block to replace the current block with (e.g., “minecraft:stone”).</li>
 <li><code>weatherState</code>: The current weathering state of this block. Can be <code>unaffected</code>, <code>exposed</code>, <code>weathered</code>, <code>oxidized</code>. Defaults to <code>unaffected</code>. A <code>weatherState</code> of <code>oxidized</code> will not oxidize any further.</li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="budding-behaviour"><a class="header" href="#budding-behaviour"><code>budding</code> behaviour</a></h2>
 <p>With this behaviour the blocks grows other blocks, similar to budding amethyst blocks.
 The sides, blocks and chance can be configured.</p>
 <p>If the blocks in <code>grows</code> have directional/facing block state properties, they direction of the side the block is growing from will be set.</p>
-<div id="admonition-configurable-fields-15" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-15-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-15-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-15"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>chance</code>: Chance of the block to grow another block or move a block to the next growth stage in percent, from 0 to 100. Defaults to 20</li>
 <li><code>sides</code>: List of sides blocks can grow out. Can be <code>north</code>, <code>south</code>, <code>east</code>, <code>west</code>, <code>up</code> or <code>down</code>. Defaults to all directions</li>
-<li><code>grows</code>: List of id's of blocks for the growth stages. Example: <code>["minecraft:chain", "minecraft:end_rod"]</code></li>
+<li><code>grows</code>: List of id’s of blocks for the growth stages. Example: <code>["minecraft:chain", "minecraft:end_rod"]</code></li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="grass_spread-behaviour"><a class="header" href="#grass_spread-behaviour"><code>grass_spread</code> behaviour</a></h2>
 <p>Allows the block to spread like mycelium or grass blocks do, based on random ticks.</p>
-<div id="admonition-configurable-fields-16" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-16-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-16-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-16"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>spreadDimensions</code>: Dimensions for the spread position. Not centered around the block. Use <code>spreadOffset</code> to center it. Defaults to <code>["0..3", "0..5", "0..3]</code></li>
 <li><code>spreadOffset</code>: Offset for the spread position. Defaults to <code>[-1, -3, -1]</code></li>
@@ -1131,30 +912,17 @@ The sides, blocks and chance can be configured.</p>
 <li><code>propagatesToBlocks</code>: List of List of blocks this block can spread to. Defaults to <code>["minecraft:dirt"]</code></li>
 <li><code>propagatesToBlockTags</code>: List of block tags this block can spread to. Empty by default</li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="falling_block-behaviour"><a class="header" href="#falling_block-behaviour"><code>falling_block</code> behaviour</a></h2>
 <p>Makes the block a gravity affected/falling block like sand or anvils.</p>
-<div id="admonition-tip-3" class="admonition admonish-tip" role="note" aria-labelledby="admonition-tip-3-title">
-<div class="admonition-title">
-<div id="admonition-tip-3-title">
-<p>Tip</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-tip-3"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-tip">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p>
 <p>All fields of this behaviour can be mapped to a block-state.</p>
-</div>
-</div>
-<div id="admonition-configurable-fields-17" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-17-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-17-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-17"></a>
-</div>
-<div>
+</blockquote>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>delayAfterPlace</code>: Delay in ticks before the block falls. Defaults to <code>2</code></li>
 <li><code>heavy</code>: To cause anvil-like damage. Defaults to <code>false</code></li>
@@ -1166,21 +934,15 @@ The sides, blocks and chance can be configured.</p>
 <li><code>landSound</code>: Sound played when the block lands</li>
 <li><code>breakSound</code>: Sound played when the block breaks</li>
 <li><code>canBeDamaged</code>: Flag whether the block should be placed as the block in <code>damagedBlock</code></li>
-<li><code>damagedBlock</code>: New block to use when the falling block 'breaks'. Will copy applicable block state properties</li>
+<li><code>damagedBlock</code>: New block to use when the falling block ‘breaks’. Will copy applicable block state properties</li>
 <li><code>baseBreakChance</code>: Chance for the block to break into the block in <code>damagedBlock</code> on its own</li>
 <li><code>breakChancePerDistance</code>: Chance increase per block fallen for the block to break into the block in <code>damagedBlock</code></li>
 </ul>
-</div>
-</div>
-<div id="admonition-example-4" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-4-title">
-<div class="admonition-title">
-<div id="admonition-example-4-title">
-<p>Example</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-example-4"></a>
-</div>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json5-1"><i class="langtabs-icon devicon-devicon-plain"></i>json5</button></div><div class="langtabs-content">
+</blockquote>
+<p>Example:</p>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json5-1"><i class="langtabs-icon devicon-devicon-plain"></i>json5</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">falling_block:
   delayAfterPlace: 2 # delay in ticks before the block falls
@@ -1198,6 +960,7 @@ The sides, blocks and chance can be configured.</p>
 
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json5-1">
 <pre><code class="language-json5">{
   "falling_block": {
@@ -1216,186 +979,121 @@ The sides, blocks and chance can be configured.</p>
   }
 }
 </code></pre>
-</div></div></div>
 </div>
 </div>
-<hr />
+</div>
+
+<hr>
 <h2 id="tnt-behaviour"><a class="header" href="#tnt-behaviour"><code>tnt</code> behaviour</a></h2>
 <p>With this behaviour the block can be lit with flint and steel or redstone to spawn a TNT entity with the blockstate of this block.</p>
-<div id="admonition-tip-4" class="admonition admonish-tip" role="note" aria-labelledby="admonition-tip-4-title">
-<div class="admonition-title">
-<div id="admonition-tip-4-title">
-<p>Tip</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-tip-4"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-tip">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p>
 <p>All fields of this behaviour can be mapped to a block-state.</p>
-</div>
-</div>
-<div id="admonition-configurable-fields-18" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-18-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-18-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-18"></a>
-</div>
-<div>
+</blockquote>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li>unstable: Flag whether the block explodes when a player tries to break it. Defaults to <code>false</code></li>
 <li>explosionPower: Explosion power. Defaults to <code>4.0</code></li>
 <li>fuseTime: Fuse time (delay until the tnt entity explodes). Defaults to <code>80</code></li>
 <li>primeSound: Sound to play when the block is primed. Defaults to <code>minecraft:entity.tnt.primed</code></li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h1 id="block-behaviours-with-block-entity"><a class="header" href="#block-behaviours-with-block-entity">Block behaviours with block entity</a></h1>
 <p>The following block-behaviours require a block entity. They can not be pushed, so make sure the pushReaction in your block properties is set to <code>destroy</code>, <code>block</code> or <code>ignore</code>.</p>
-<hr />
+<hr>
 <h2 id="furnace-behaviour"><a class="header" href="#furnace-behaviour"><code>furnace</code> behaviour</a></h2>
 <p>Furnace behaviour with menu.</p>
-<div id="admonition-tip-5" class="admonition admonish-tip" role="note" aria-labelledby="admonition-tip-5-title">
-<div class="admonition-title">
-<div id="admonition-tip-5-title">
-<p>Tip</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-tip-5"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-tip">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p>
 <p>Combine this with the <code>horizontal_facing</code> behaviour for a vanilla-like furnace block!
 Checkout the example datapack to see how to configure it.</p>
-</div>
-</div>
-<div id="admonition-block-state-properties-to-provide-models-for-12" class="admonition admonish-info" role="note" aria-labelledby="admonition-block-state-properties-to-provide-models-for-12-title">
-<div class="admonition-title">
-<div id="admonition-block-state-properties-to-provide-models-for-12-title">
-<p>Block-State-Properties to provide models for</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-block-state-properties-to-provide-models-for-12"></a>
-</div>
-<div>
+</blockquote>
+<blockquote>
+<p>[!INFO]
+Block-State-Properties to provide models for:</p>
 <ul>
 <li><code>lit</code>: true, false</li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="hopper-behaviour"><a class="header" href="#hopper-behaviour"><code>hopper</code> behaviour</a></h2>
 <p>Hopper behaviour with menu.</p>
-<div id="admonition-block-state-properties-to-provide-models-for-13" class="admonition admonish-info" role="note" aria-labelledby="admonition-block-state-properties-to-provide-models-for-13-title">
-<div class="admonition-title">
-<div id="admonition-block-state-properties-to-provide-models-for-13-title">
-<p>Block-State-Properties to provide models for</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-block-state-properties-to-provide-models-for-13"></a>
-</div>
-<div>
+<blockquote>
+<p>[!INFO]
+Block-State-Properties to provide models for:</p>
 <ul>
 <li><code>facing</code>: <code>north</code>, <code>south</code>, <code>east</code>, <code>west</code>, <code>down</code></li>
 <li><code>enabled</code>: <code>true</code>, <code>false</code></li>
 </ul>
-</div>
-</div>
-<div id="admonition-configurable-fields-19" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-19-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-19-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-19"></a>
-</div>
-<div>
+</blockquote>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>filterItems</code>: List of items and/or item tags. Defaults is empty. Example: <code>["minecraft:diamond", "#minecraft:dirt"]</code> would allow for diamonds and all items with the <code>minecraft:dirt</code> item-tag.</li>
 <li><code>pickupItemEntities</code>: Flag whether item entities should be picked up. Defaults to <code>true</code></li>
 <li><code>takeFromContainer</code>: Flag whether items from the container above should be taken. Defaults to <code>true</code></li>
 <li><code>cooldownTime</code> Cooldown time before transfering a new item. Defaults to <code>8</code></li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="flammable-behaviour"><a class="header" href="#flammable-behaviour"><code>flammable</code> behaviour</a></h2>
 <p>Makes the block flammable.</p>
-<div id="admonition-configurable-fields-20" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-20-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-20-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-20"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>burn</code>: Burn. Defaults to <code>5</code></li>
 <li><code>spread</code> Fire spread chance. Defaults to <code>20</code></li>
 </ul>
-</div>
-</div>
+</blockquote>
 <h2 id="leaf_decay-behaviour"><a class="header" href="#leaf_decay-behaviour"><code>leaf_decay</code> behaviour</a></h2>
-<p>Makes the block decay like leaf blocks when no log is attached to it and wasn't placed by a player.
+<p>Makes the block decay like leaf blocks when no log is attached to it and wasn’t placed by a player.
 Adds <code>distance</code> and <code>persistent</code> block state properties to the block.</p>
-<div id="admonition-configurable-fields-21" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-21-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-21-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-21"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>blockTag</code>: Block tag for blocks that prevent leaf decay. Defaults to <code>minecraft:logs</code></li>
 <li><code>decayChance</code> Chance to decay in each random tick. Can be between 0 and 1. Defaults to <code>1</code></li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="lamp-behaviour"><a class="header" href="#lamp-behaviour"><code>lamp</code> behaviour</a></h2>
 <p>Allows you to create lamps that either switch on/off or cycle through a list of light levels on player interaction.</p>
-<div id="admonition-block-state-properties-to-provide-models-for-optional" class="admonition admonish-info" role="note" aria-labelledby="admonition-block-state-properties-to-provide-models-for-optional-title">
-<div class="admonition-title">
-<div id="admonition-block-state-properties-to-provide-models-for-optional-title">
-<p>Block-State-Properties to provide models for (optional)</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-block-state-properties-to-provide-models-for-optional"></a>
-</div>
-<div>
+<blockquote>
+<p>[!INFO]
+Block-State-Properties to provide models for (optional):</p>
 <ul>
 <li><code>level</code>: 0 to 15 (optional, only when <code>models</code> is set to <code>true</code>)</li>
 </ul>
-</div>
-</div>
-<div id="admonition-configurable-fields-22" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-22-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-22-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-22"></a>
-</div>
-<div>
+</blockquote>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
-<li><code>on</code>: Light level to use for the 'on' state. From <code>0</code>-<code>15</code></li>
-<li><code>off</code>: Light level to use for the 'off' state. From <code>0</code>-<code>15</code></li>
+<li><code>on</code>: Light level to use for the ‘on’ state. From <code>0</code>-<code>15</code></li>
+<li><code>off</code>: Light level to use for the ‘off’ state. From <code>0</code>-<code>15</code></li>
 <li><code>cycle</code>: List of light levels to cycle through. Overwrites the <code>on</code> and <code>off</code> values. Example: <code>[0,7,15]</code></li>
 <li><code>defaultValue</code>: Default light level when placed. From <code>0</code>-<code>15</code></li>
 <li><code>models</code>: Flag whether to use block state models. Ignored by decorations. <code>true</code>/<code>false</code>. Defaults to <code>false</code></li>
 <li><code>sound</code>: Sound to play when interacted with succesfully. Can be based on block-state. Empty by default</li>
 </ul>
-</div>
-</div>
-<div id="admonition-simple-on--off-lamp" class="admonition admonish-example" role="note" aria-labelledby="admonition-simple-on--off-lamp-title">
-<div class="admonition-title">
-<div id="admonition-simple-on--off-lamp-title">
-<p>Simple on / off lamp</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-simple-on--off-lamp"></a>
-</div>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+</blockquote>
+<p>Simple on / off lamp:</p>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">lamp:
   on: 15
   off: 0
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "lamp": {
@@ -1404,23 +1102,20 @@ Adds <code>distance</code> and <code>persistent</code> block state properties to
   }
 }
 </code></pre>
-</div></div></div>
 </div>
 </div>
-<div id="admonition-cycling-lamp" class="admonition admonish-example" role="note" aria-labelledby="admonition-cycling-lamp-title">
-<div class="admonition-title">
-<div id="admonition-cycling-lamp-title">
-<p>Cycling lamp</p>
 </div>
-<a class="admonition-anchor-link" href="#admonition-cycling-lamp"></a>
-</div>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+
+<p>Cycling lamp:</p>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">lamp:
   cycle: [0, 2, 4, 6, 8, 10, 12, 14]
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "lamp": {
@@ -1428,68 +1123,45 @@ Adds <code>distance</code> and <code>persistent</code> block state properties to
   }
 }
 </code></pre>
-</div></div></div>
 </div>
 </div>
-<hr />
+</div>
+
+<hr>
 <h2 id="waxable-behaviour"><a class="header" href="#waxable-behaviour"><code>waxable</code> behaviour</a></h2>
-<p>Allows the block to be 'waxed' using honeycomb or with filament items that have the "wax" behaviour.</p>
-<div id="admonition-configurable-fields-23" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-23-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-23-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-23"></a>
-</div>
-<div>
+<p>Allows the block to be ‘waxed’ using honeycomb or with filament items that have the “wax” behaviour.</p>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>replacement</code>: The identifier of the block to replace the current block with. Example: <code>minecraft:waxed_copper_block</code></li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="place_on_water-behaviour"><a class="header" href="#place_on_water-behaviour"><code>place_on_water</code> behaviour</a></h2>
 <p>Allows the block to be placed on water.
 Use this behaviour together with the <code>can_survive</code> behaviour to recreate lily-pads!</p>
 <p>No fields to configure.</p>
-<hr />
+<hr>
 <h2 id="bouncy-behaviour"><a class="header" href="#bouncy-behaviour"><code>bouncy</code> behaviour</a></h2>
 <p>Allows to make the block bouncy, similar to slime but extra bounciness when the player presses space on landing.</p>
-<div id="admonition-configurable-fields-24" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-24-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-24-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-24"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>bounciness</code>: This value gets multiplied by the entities y-velocity when landing on the block and the player presses space</li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="particle_emitter-behaviour"><a class="header" href="#particle_emitter-behaviour"><code>particle_emitter</code> behaviour</a></h2>
 <p>Adds particle emitters to the block.</p>
-<div id="admonition-tip-6" class="admonition admonish-tip" role="note" aria-labelledby="admonition-tip-6-title">
-<div class="admonition-title">
-<div id="admonition-tip-6-title">
-<p>Tip</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-tip-6"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-tip">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p>
 <p>Most field values can be mapped to block-states and ranges (like <code>0..1</code>) are supported for numeric values.</p>
-</div>
-</div>
-<div id="admonition-configurable-fields-25" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-25-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-25-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-25"></a>
-</div>
-<div>
+</blockquote>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>enabled</code>: Boolean or state-mapped boolean controlling whether the emitter is active.</li>
 <li><code>elements</code>: Array of emitter elements. Each element supports:
@@ -1505,17 +1177,10 @@ Use this behaviour together with the <code>can_survive</code> behaviour to recre
 </ul>
 </li>
 </ul>
-</div>
-</div>
-<div id="admonition-example-5" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-5-title">
-<div class="admonition-title">
-<div id="admonition-example-5-title">
-<p>Example</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-example-5"></a>
-</div>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+</blockquote>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">particle_emitter:
   enabled:
@@ -1533,6 +1198,7 @@ Use this behaviour together with the <code>can_survive</code> behaviour to recre
       force: false
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "particle_emitter": {
@@ -1557,23 +1223,19 @@ Use this behaviour together with the <code>can_survive</code> behaviour to recre
   }
 }
 </code></pre>
-</div></div></div>
 </div>
 </div>
+</div>
+
 <p>The <code>offset</code>, <code>count</code>, <code>delta</code> and <code>speed</code> can have ranged values like <code>"0..1"</code> - this will pick a random number between 0 and 1.</p>
 <p>Some particle types have additional options like <code>color</code>.</p>
-<hr />
+<hr>
 <h2 id="status_effect_emitter-behaviour"><a class="header" href="#status_effect_emitter-behaviour"><code>status_effect_emitter</code> behaviour</a></h2>
 <p>Adds status effect emitters to the block.</p>
 <p>Allows for ranged values and enabling based on block-state.</p>
-<div id="admonition-configurable-fields-26" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-26-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-26-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-26"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>enabled</code>: Boolean or state-mapped boolean controlling whether the emitter is active.</li>
 <li><code>elements</code>: List of effect elements. Each element supports:
@@ -1592,17 +1254,11 @@ Use this behaviour together with the <code>can_survive</code> behaviour to recre
 </ul>
 </li>
 </ul>
-</div>
-</div>
-<div id="admonition-example-6" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-6-title">
-<div class="admonition-title">
-<div id="admonition-example-6-title">
-<p>Example</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-example-6"></a>
-</div>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+</blockquote>
+<p>Example:</p>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">status_effect_emitter:
   enabled:
@@ -1622,6 +1278,7 @@ Use this behaviour together with the <code>can_survive</code> behaviour to recre
       showIcon: true
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "status_effect_emitter": {
@@ -1647,20 +1304,16 @@ Use this behaviour together with the <code>can_survive</code> behaviour to recre
   }
 }
 </code></pre>
-</div></div></div>
 </div>
 </div>
-<hr />
+</div>
+
+<hr>
 <h2 id="area_execute-behaviour"><a class="header" href="#area_execute-behaviour"><code>area_execute</code> behaviour</a></h2>
 <p>Executes commands when a players enter/leaves or stays in an area. Optionally based on luckperms permission.</p>
-<div id="admonition-configurable-fields-27" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-27-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-27-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-27"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>radius</code>: Cube-shaped radius in blocks to check for players. Defaults to <code>16</code></li>
 <li><code>enabled</code>: Boolean or state-mapped flag to enable all commands. Defaults to <code>true</code></li>
@@ -1673,17 +1326,11 @@ Use this behaviour together with the <code>can_survive</code> behaviour to recre
 <li><code>console</code>: If <code>true</code>, commands are executed as the server console instead of the player. Defaults to <code>false</code></li>
 <li><code>permission</code>: Optional permission node to check (requires luckperms) - only players with the permission are considered</li>
 </ul>
-</div>
-</div>
-<div id="admonition-example-7" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-7-title">
-<div class="admonition-title">
-<div id="admonition-example-7-title">
-<p>Example</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-example-7"></a>
-</div>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+</blockquote>
+<p>Example:</p>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">area_execute:
   radius: 16
@@ -1700,6 +1347,7 @@ Use this behaviour together with the <code>can_survive</code> behaviour to recre
   permission: "mything.area.affected" # optional, luckperms based
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "area_execute": {
@@ -1715,64 +1363,41 @@ Use this behaviour together with the <code>can_survive</code> behaviour to recre
   }
 }
 </code></pre>
-</div></div></div>
 </div>
 </div>
-<hr />
+</div>
+
+<hr>
 <h2 id="ignite_entity-behaviour"><a class="header" href="#ignite_entity-behaviour"><code>ignite_entity</code> behaviour</a></h2>
 <p>Sets an entity on fire when it is inside the block</p>
-<div id="admonition-configurable-fields-28" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-28-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-28-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-28"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>fireDamage</code>: Damage. Defaults to <code>1</code></li>
 </ul>
-</div>
-</div>
-<hr />
+</blockquote>
+<hr>
 <h2 id="lever-behaviour"><a class="header" href="#lever-behaviour"><code>lever</code> behaviour</a></h2>
 <p>Defines the block as an interactive lever that can emit redstone power and play sounds when toggled.</p>
-<div id="admonition-configurable-fields-29" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-29-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-29-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-29"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>powerlevel</code>: The redstone power level the lever emits when activated (can be mapped to a block-state). Defaults to <code>15</code></li>
 <li><code>sound</code>: The sound played when the lever is toggled. Defaults to <code>minecraft:block.lever.click</code></li>
 <li><code>volume</code>: The volume of the toggle sound. Defaults to <code>0.3</code></li>
 <li><code>pitch</code>: The pitch of the toggle sound. Empty by default</li>
 </ul>
-</div>
-</div>
-<div id="admonition-tip-7" class="admonition admonish-tip" role="note" aria-labelledby="admonition-tip-7-title">
-<div class="admonition-title">
-<div id="admonition-tip-7-title">
-<p>Tip</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-tip-7"></a>
-</div>
-<div>
+</blockquote>
+<blockquote class="blockquote-tag blockquote-tag-tip">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p>
 <p>All fields in this behaviour can be mapped to block-states.</p>
-</div>
-</div>
-<div id="admonition-example-8" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-8-title">
-<div class="admonition-title">
-<div id="admonition-example-8-title">
-<p>Example</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-example-8"></a>
-</div>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+</blockquote>
+<p>Example:</p>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">behaviour:
   lever:
@@ -1783,6 +1408,7 @@ Use this behaviour together with the <code>can_survive</code> behaviour to recre
       powered=false: 0.3
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "behaviour": {
@@ -1797,20 +1423,16 @@ Use this behaviour together with the <code>can_survive</code> behaviour to recre
   }
 }
 </code></pre>
-</div></div></div>
 </div>
 </div>
-<hr />
+</div>
+
+<hr>
 <h2 id="button-behaviour"><a class="header" href="#button-behaviour"><code>button</code> behaviour</a></h2>
 <p>Defines the block as an interactive button that can emit redstone power for a limited duration when pressed.</p>
-<div id="admonition-configurable-fields-30" class="admonition admonish-info" role="note" aria-labelledby="admonition-configurable-fields-30-title">
-<div class="admonition-title">
-<div id="admonition-configurable-fields-30-title">
-<p>Configurable Fields</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-configurable-fields-30"></a>
-</div>
-<div>
+<blockquote class="blockquote-tag blockquote-tag-important">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p>
+<p>Configurable Fields:</p>
 <ul>
 <li><code>powerlevel</code>: The redstone power level the button emits when activated (can be mapped to a block-state). Defaults to <code>15</code></li>
 <li><code>ticksToStayPressed</code>: Duration in ticks that the button remains pressed before resetting. Defaults to <code>100</code></li>
@@ -1818,28 +1440,15 @@ Use this behaviour together with the <code>can_survive</code> behaviour to recre
 <li><code>clickOnSound</code>: Sound played when the button is pressed. Defaults to <code>minecraft:block.wooden_button.click_on</code></li>
 <li><code>clickOffSound</code>: Sound played when the button is released. Defaults to <code>minecraft:block.wooden_button.click_off</code></li>
 </ul>
-</div>
-</div>
-<div id="admonition-tip-8" class="admonition admonish-tip" role="note" aria-labelledby="admonition-tip-8-title">
-<div class="admonition-title">
-<div id="admonition-tip-8-title">
-<p>Tip</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-tip-8"></a>
-</div>
-<div>
+</blockquote>
+<blockquote class="blockquote-tag blockquote-tag-tip">
+<p class="blockquote-tag-title"><svg viewbox="0 0 16 16" width="18" height="18"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p>
 <p>All fields except <code>clickOnSound</code> and <code>clickOffSound</code> can be mapped to block-states.</p>
-</div>
-</div>
-<div id="admonition-example-9" class="admonition admonish-example" role="note" aria-labelledby="admonition-example-9-title">
-<div class="admonition-title">
-<div id="admonition-example-9-title">
-<p>Example</p>
-</div>
-<a class="admonition-anchor-link" href="#admonition-example-9"></a>
-</div>
-<div>
-<div class="langtabs"><div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div><div class="langtabs-content">
+</blockquote>
+<p>Example:</p>
+<div class="langtabs">
+<div class="langtabs-header"><button class="langtabs-tab active" data-lang="yaml-0"><i class="langtabs-icon devicon-devicon-plain"></i>YAML</button><button class="langtabs-tab" data-lang="json-1"><i class="langtabs-icon devicon-javascript-plain"></i>JSON</button></div>
+<div class="langtabs-content">
 <div class="langtabs-code active" data-lang="yaml-0">
 <pre><code class="language-yml">behaviour:
   button:
@@ -1854,6 +1463,7 @@ Use this behaviour together with the <code>can_survive</code> behaviour to recre
       material=wood: true
 </code></pre>
 </div>
+
 <div class="langtabs-code" data-lang="json-1">
 <pre><code class="language-json">{
   "behaviour": {
@@ -1874,20 +1484,21 @@ Use this behaviour together with the <code>can_survive</code> behaviour to recre
   }
 }
 </code></pre>
-</div></div></div>
 </div>
 </div>
+</div>
+
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
                             <a rel="prev" href="../../content/block/block-properties.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                                <i class="fa fa-angle-left"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
                             <a rel="next prefetch" href="../../content/block/block-examples.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
                         <div style="clear: both"></div>
@@ -1897,16 +1508,21 @@ Use this behaviour together with the <code>can_survive</code> behaviour to recre
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
                     <a rel="prev" href="../../content/block/block-properties.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
-                        <i class="fa fa-angle-left"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
                     <a rel="next prefetch" href="../../content/block/block-examples.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
 
         </div>
 
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
 
 
@@ -1915,16 +1531,16 @@ Use this behaviour together with the <code>can_survive</code> behaviour to recre
         </script>
 
 
-        <script src="../../elasticlunr.min.js"></script>
-        <script src="../../mark.min.js"></script>
-        <script src="../../searcher.js"></script>
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-c2a407aa.js"></script>
 
-        <script src="../../clipboard.min.js"></script>
-        <script src="../../highlight.js"></script>
-        <script src="../../book.js"></script>
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../../langtabs.js"></script>
+        <script src="../../langtabs-72ded3cb.js"></script>
 
 
 

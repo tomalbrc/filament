@@ -8,7 +8,6 @@ Some block behaviours provide blockstate properties you will have to provide mod
 
 Example of a blockResource entry for the `repeater` behaviour (can be found as relay block in the example datapack):
 
-~~~admonish example collapsible=true
 <!-- langtabs-start -->
 ```yml
 blockResource:
@@ -98,9 +97,9 @@ blockResource:
 ```
 <!-- langtabs-end -->
 
-~~~
 
-~~~admonish example title="Example of a block with behaviours set", collapsible=true
+Example of a block with behaviours set:
+
 <!-- langtabs-start -->
 ```yml
 id: mynamespace:myblock
@@ -198,8 +197,6 @@ behaviour:
 ```
 <!-- langtabs-end -->
 
-~~~
-
 This creates a block + item that can be worn and when worn shows an animated blockbench model on the player. The item is also a food and can be used as fuel source in furnaces.
 
 The block acts as a redstone powersource of level 15 and a repeater/relay and is strippable (turns to stone when stripped with an axe or an item with the `stripper` item behaviour)
@@ -214,9 +211,9 @@ While possible, you probably don't want to combine `powersource` with `repeater`
 
 Gives the block an `axis` property/block-state similar to wooden logs/pillars and handles placement.
 
-~~~admonish info "Block-State-Properties to provide models for"
-- `axis`: x, y, z
-~~~
+> [!INFO]
+> Block-State-Properties to provide models for:
+> - `axis`: x, y, z
 
 ---
 
@@ -225,17 +222,19 @@ Gives the block an `axis` property/block-state similar to wooden logs/pillars an
 This behaviour allows the block to connect to other blocks, similar to stairs, but requiring a block on both sides of a corner to be present in order to the corner shape.
 Optionally without the corner states.
 
-~~~admonish info "Block-State-Properties to provide models for"
-- `shape`: `middle`, `single`, `left`, `right`, `inner_left`, `inner_right`, `outer_left`, `outer_right`
-- `facing`: `north`, `east`, `south`, `west`
-~~~
+> [!INFO]
+> Block-State-Properties to provide models for:
+> - `shape`: `middle`, `single`, `left`, `right`, `inner_left`, `inner_right`, `outer_left`, `outer_right`
+> - `facing`: `north`, `east`, `south`, `west`
 
-~~~admonish info "Configurable Fields"
-- `corners`: Flag whether to allow corners
-~~~
+
+> [!IMPORTANT]
+> Configurable Fields:
+> - `corners`: Flag whether to allow corners
+
 
 This behaviour is best used with decorations, as you will only have to define 6 models:
-~~~admonish example
+
 <!-- langtabs-start -->
 ```yml
 itemResource:
@@ -266,8 +265,6 @@ itemResource:
 ```
 <!-- langtabs-end -->
 
-~~~
-
 ---
 
 ## `count` behaviour
@@ -276,13 +273,14 @@ Gives the block a `count` property/block-state.
 
 Works similar to turtle eggs or candles, allows you to place "multiple blocks/items" into one block.
 
-~~~admonish info "Block-State-Properties to provide models for"
-- `count`: 1...max
-~~~
+> [!INFO]
+> Block-State-Properties to provide models for:
+> - `count`: 1...max
 
-~~~admonish info "Configurable Fields"
-- `max`: Max count
-~~~
+
+> [!IMPORTANT]
+> Configurable Fields:
+> - `max`: Max count
 
 ---
 
@@ -290,9 +288,9 @@ Works similar to turtle eggs or candles, allows you to place "multiple blocks/it
 
 Gives the block a `facing` property/block-state similar to wooden logs/pillars and handles placement.
 
-~~~admonish info "Block-State-Properties to provide models for"
-  - `facing`: north, east, south, west, up, down
-~~~
+> [!INFO]
+> Block-State-Properties to provide models for:
+> - `facing`: north, east, south, west, up, down
 
 ---
 
@@ -301,9 +299,9 @@ Gives the block a `facing` property/block-state similar to wooden logs/pillars a
 Gives the block a `facing` property/block-state similar to furnaces and handles placement.
 Does not support up and down facing directions.
 
-~~~admonish info "Block-State-Properties to provide models for"
-- `facing`: north, east, south, west
-~~~
+> [!INFO]
+> Block-State-Properties to provide models for:
+> - `facing`: north, east, south, west
 
 ---
 
@@ -323,18 +321,19 @@ For bee pollination, use the block tag `bee_growables`.
 
 You can make farmer villagers able to plant the seeds using the item tag `villager_plantable_seeds`. Villagers will only work on crops that are on top of farmland blocks (vanilla limitation).
 
-~~~admonish info "Block-State-Properties to provide models for"
-- `age`: 0...maxAge-1
-~~~
+> [!INFO]
+> Block-State-Properties to provide models for:
+> - `age`: 0...maxAge-1
 
-~~~admonish info "Configurable Fields"
-- `maxAge`: maximum age steps of this block (from 0 to maxAge-1). Defaults to 4.
-- `minLightLevel`: Minimum light level this crop needs to survive. Defaults to 8.
-- `bonusRadius`: Radius to check for bonus blocks for. Defaults to 1.
-- `bonusBlock`: Bonus block to check for. More bonus blocks means faster growth. Defaults to `minecraft:farmland`.
-- `villagerInteraction`: Allows farmer villagers to break and plant the custom crop. Defaults to `true`.
-- `beeInteraction`: Allows bees to pollinate the crop to increase its age. Defaults to `true`.
-~~~
+
+> [!IMPORTANT]
+> Configurable Fields:
+> - `maxAge`: maximum age steps of this block (from 0 to maxAge-1). Defaults to 4.
+> - `minLightLevel`: Minimum light level this crop needs to survive. Defaults to 8.
+> - `bonusRadius`: Radius to check for bonus blocks for. Defaults to 1.
+> - `bonusBlock`: Bonus block to check for. More bonus blocks means faster growth. Defaults to `minecraft:farmland`.
+> - `villagerInteraction`: Allows farmer villagers to break and plant the custom crop. Defaults to `true`.
+> - `beeInteraction`: Allows bees to pollinate the crop to increase its age. Defaults to `true`.
 
 ---
 
@@ -346,27 +345,26 @@ All identifiers for the configured_placements are optional, they will only get u
 
 You add your own configured placement for trees using vanilla datapack mechanics.
 
-~~~admonish tip
-#### Checkout the example datapack for the test_tree block!
-~~~
+> [!TIP]
+> Checkout the example datapack for the test_tree block!
 
-~~~admonish info "Block-State-Properties to provide models for"
-- `stage`: 0 to 1. You can provide a single model to use for both states, use `default` as key in that case.
-~~~
+> [!INFO]
+> Block-State-Properties to provide models for:
+> - `stage`: 0 to 1. You can provide a single model to use for both states, use `default` as key in that case.
 
-~~~admonish info "Configurable Fields"
-- `tree`: Identifier for a configured_placement (add via datapack or use vanilla ones)
-- `minLightLevel`: Defaults to `9`
-- `secondaryChance`: Chance between 0 and 1 for `secondaryMegaTree` or `secondaryFlowers` placement to be used. Defaults to `0`
-- `randomTickGrowthChance`: Defaults to `0.15`
-- `bonemealGrowthChance`: Defaults to `0.45`
-- `megaTree`: Identifier for a configured_placement. Will get used for 2x2 sapling placements
-- `secondaryMegaTree`: Identifier for a configured_placement. Alternative to `megaTree` based on `secondaryChance`
-- `tree`: Identifier for a configured_placement. Normal tree without flower
-- `secondaryTree`: Identifier for a configured_placement. Alternative to `tree` based on `secondaryChance`
-- `flowers`: Identifier for a configured_placement. Used when there is a flower neaby.
-- `secondaryFlowers`: Identifier for a configured_placement. Alternative to `flowers` based on `secondaryChance`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `tree`: Identifier for a configured_placement (add via datapack or use vanilla ones)
+> - `minLightLevel`: Defaults to `9`
+> - `secondaryChance`: Chance between 0 and 1 for `secondaryMegaTree` or `secondaryFlowers` placement to be used. Defaults to `0`
+> - `randomTickGrowthChance`: Defaults to `0.15`
+> - `bonemealGrowthChance`: Defaults to `0.45`
+> - `megaTree`: Identifier for a configured_placement. Will get used for 2x2 sapling placements
+> - `secondaryMegaTree`: Identifier for a configured_placement. Alternative to `megaTree` based on `secondaryChance`
+> - `tree`: Identifier for a configured_placement. Normal tree without flower
+> - `secondaryTree`: Identifier for a configured_placement. Alternative to `tree` based on `secondaryChance`
+> - `flowers`: Identifier for a configured_placement. Used when there is a flower neaby.
+> - `secondaryFlowers`: Identifier for a configured_placement. Alternative to `flowers` based on `secondaryChance`
 
 ---
 
@@ -379,12 +377,12 @@ The behaviour will automatically check for and apply any `facing` or `axis` bloc
 
 Useful for bushes/plants/crops/flowers and more
 
-~~~admonish info "Configurable Fields"
-  - `blocks`: List of blocks this block can survive on. 
-    - Example: `blocks: ["minecraft:stone", "minecraft:sand"]`
-  - `tags`: List of block-tags this block can survive on. 
-    - Example: `tags: ["minecraft:dirt", "minecraft:sculk_replaceable"]`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `blocks`: List of blocks this block can survive on. 
+>   - Example: `blocks: ["minecraft:stone", "minecraft:sand"]`
+> - `tags`: List of block-tags this block can survive on. 
+>   - Example: `tags: ["minecraft:dirt", "minecraft:sculk_replaceable"]`
 
 ---
 
@@ -392,15 +390,16 @@ Useful for bushes/plants/crops/flowers and more
 
 Defines the block as a redstone power source.
 
-~~~admonish info "Configurable Fields"
-- `value`: The redstone power value the block emits (can be mapped to a block-state, see below). Defaults to 15
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `value`: The redstone power value the block emits (can be mapped to a block-state, see below). Defaults to 15
 
-~~~admonish tip
-The fields of this behaviour can be mapped to a block-state.
-~~~
 
-~~~admonish example
+> [!TIP]
+> The fields of this behaviour can be mapped to a block-state.
+
+Example: 
+
 <!-- langtabs-start -->
 ```yml
 behaviour:
@@ -424,9 +423,9 @@ behaviour:
 ```
 <!-- langtabs-end -->
 
-~~~
 
-~~~admonish example "Example with constant value"
+Example with constant value:
+
 <!-- langtabs-start -->
 ```yml
 behaviour:
@@ -445,23 +444,22 @@ behaviour:
 ```
 <!-- langtabs-end -->
 
-~~~
-
 ---
 
 ## `repeater` behaviour
 
 Defines the block as a redstone repeater with configurable delay and loss.
 
-~~~admonish info "Configurable Fields"
-- `delay`: Delay in ticks. Defaults to 0
-- `loss`: Power loss during transfer. Defaults to 0
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `delay`: Delay in ticks. Defaults to 0
+> - `loss`: Power loss during transfer. Defaults to 0
 
-~~~admonish info "Block-State-Properties to provide models for"
-- `powered`: true, false
-- `facing`: north, east, south, west, up, down
-~~~
+> [!INFO]
+> Block-State-Properties to provide models for:
+> - `powered`: true, false
+> - `facing`: north, east, south, west, up, down
+
 
 ---
 
@@ -469,13 +467,14 @@ Defines the block as a redstone repeater with configurable delay and loss.
 
 Supplies a `powerlevel` blockstate and changes to it depending on the input redstone signal.
 
-~~~admonish info "Configurable Fields"
-- `max`: Maximum powerlevel this block can display
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `max`: Maximum powerlevel this block can display
 
-~~~admonish info "Block-State-Properties to provide models for"
-- `powerlevel`: 0...max-1
-~~~
+
+> [!INFO]
+> Block-State-Properties to provide models for:
+> - `powerlevel`: 0...max-1
 
 ---
 
@@ -483,13 +482,13 @@ Supplies a `powerlevel` blockstate and changes to it depending on the input reds
 
 Defines the block as strippable, replacing it with another block when interacted with an axe.
 
-~~~admonish info "Configurable Fields"
-- `replacement`: The identifier of the block to replace the current block with. Example: `minecraft:stone`
-- `lootTable`: Identifier for a loot table to use when the block is stripped. Example: `minecraft:bell`
-- `scrape`: Flag whether to show copper scrape particles. Defaults to `false`
-- `scrapeWax`: Flag whether to show wax scrape particles. Defaults to `false`
-- `sound`: Custom sound id to play. Defaults to `minecraft:item.axe.strip`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `replacement`: The identifier of the block to replace the current block with. Example: `minecraft:stone`
+> - `lootTable`: Identifier for a loot table to use when the block is stripped. Example: `minecraft:bell`
+> - `scrape`: Flag whether to show copper scrape particles. Defaults to `false`
+> - `scrapeWax`: Flag whether to show wax scrape particles. Defaults to `false`
+> - `sound`: Custom sound id to play. Defaults to `minecraft:item.axe.strip`
 
 ---
 
@@ -497,10 +496,10 @@ Defines the block as strippable, replacing it with another block when interacted
 
 Defines the block as slab, top, bottom, double, with placements, waterloggable.
 
-~~~admonish info "Block-State-Properties to provide models for"
-- `type`: top, bottom, double
-- `waterlogged`: true, false
-~~~
+> [!INFO]
+> Block-State-Properties to provide models for:
+> - `type`: top, bottom, double
+> - `waterlogged`: true, false
 
 ---
 
@@ -508,19 +507,20 @@ Defines the block as slab, top, bottom, double, with placements, waterloggable.
 
 Trapdoor like block.
 
-~~~admonish info "Block-State-Properties to provide models for"
-- `facing`: north, south, east, west, up, down
-- `half`: top, bottom
-- `open`: true, false
-- `waterlogged`: true, false
-~~~
+> [!INFO]
+> Block-State-Properties to provide models for:
+> - `facing`: north, south, east, west, up, down
+> - `half`: top, bottom
+> - `open`: true, false
+> - `waterlogged`: true, false
 
-~~~admonish info "Configurable Fields"
-- `canOpenByWindCharge`: Whether the trapdoor can be opened by a wind charge. Defaults to `true`
-- `canOpenByHand`: Whether the trapdoor can be opened by hand. Defaults to `true`
-- `openSound`: Open sound. Defaults to wooden trapdoor open sound.
-- `closeSound` = Close sound. Defaults to wooden trapdoor close sound.
-~~~
+
+> [!IMPORTANT]
+> Configurable Fields:
+> - `canOpenByWindCharge`: Whether the trapdoor can be opened by a wind charge. Defaults to `true`
+> - `canOpenByHand`: Whether the trapdoor can be opened by hand. Defaults to `true`
+> - `openSound`: Open sound. Defaults to wooden trapdoor open sound.
+> - `closeSound` = Close sound. Defaults to wooden trapdoor close sound.
 
 ---
 
@@ -529,19 +529,20 @@ Trapdoor like block.
 Door-like "block" that is 2 blocks high.
 Comes with all door block state properties (hinge, open, powered, etc.)
 
-~~~admonish info "Block-State-Properties to provide models for"
-- `facing`: north, south, east, west, up, down
-- `half`: lower, upper
-- `open`: true, false
-- `hinge`: left, right
-~~~
+> [!INFO]
+> Block-State-Properties to provide models for:
+> - `facing`: north, south, east, west, up, down
+> - `half`: lower, upper
+> - `open`: true, false
+> - `hinge`: left, right
 
-~~~admonish info "Configurable Fields"
-- `canOpenByWindCharge`: Whether the door can be opened by a wind charge. Defaults to `true`
-- `canOpenByHand`: Whether the door can be opened by hand. Defaults to `true`
-- `openSound`: Open sound. Defaults to wooden door open sound.
-- `closeSound` = Close sound. Defaults to wooden door close sound.
-~~~
+
+> [!IMPORTANT]
+> Configurable Fields:
+> - `canOpenByWindCharge`: Whether the door can be opened by a wind charge. Defaults to `true`
+> - `canOpenByHand`: Whether the door can be opened by hand. Defaults to `true`
+> - `openSound`: Open sound. Defaults to wooden door open sound.
+> - `closeSound` = Close sound. Defaults to wooden door close sound.
 
 ---
 
@@ -552,9 +553,10 @@ Simple waterloggable block with a `waterlogged` property.
 There is an alias called `simple_waterloggable` for backwards compatibility with older filament data packs
 
 
-~~~admonish info "Optional Block-State-Properties to provide models for"
-- `waterlogged`: true, false
-~~~
+> [!INFO]
+> Block-State-Properties to provide models for (optional):
+> - `waterlogged`: true, false
+
 
 ---
 
@@ -562,16 +564,17 @@ There is an alias called `simple_waterloggable` for backwards compatibility with
 
 Makes the block drop xp when being mined without the silk-touch enchantment.
 
-~~~admonish info "Configurable Fields"
-- `min`: Minimum amount of XP to drop
-- `max`: Maximum amount of XP to drop
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `min`: Minimum amount of XP to drop
+> - `max`: Maximum amount of XP to drop
 
-~~~admonish tip
-The values of the `min` and `max` fields can be mapped to block-states.
-~~~
+> [!TIP]
+> The values of the `min` and `max` fields can be mapped to block-states.
 
-~~~admonish example
+
+Example:
+
 <!-- langtabs-start -->
 ```yml
 behaviour:
@@ -607,9 +610,9 @@ behaviour:
 <!-- langtabs-end -->
 
 Using behaviour for crops, you could make a crop that drops xp when fully aged 
-~~~
 
-~~~admonish example "Example with constant values"
+Example with constant values:
+
 <!-- langtabs-start -->
 ```yml
 behaviour:
@@ -626,7 +629,6 @@ behaviour:
 <!-- langtabs-end -->
 
 This will drop 6 xp for any block-state
-~~~
 
 ---
 
@@ -634,15 +636,15 @@ This will drop 6 xp for any block-state
 
 Executes a command on block interaction from console, as player (@s).
 
-~~~admonish info "Configurable Fields"
-- `consumes`: Flag whether the block should be broken after running the command(s). Defaults to `false`
-- `dropBlock`: Flag whether the block should drop items when broken. Defaults to `false`
-- `command`: The command string to execute. Empty by default
-- `commands`: List of commands to execute. Empty by default
-- `atBlock`: false/true flag whether the command should be run at the blocks' position
-- `sound`: Optional sound effect to play during execution. Empty by default
-- `console`: Run as server/console instead of as player
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `consumes`: Flag whether the block should be broken after running the command(s). Defaults to `false`
+> - `dropBlock`: Flag whether the block should drop items when broken. Defaults to `false`
+> - `command`: The command string to execute. Empty by default
+> - `commands`: List of commands to execute. Empty by default
+> - `atBlock`: false/true flag whether the command should be run at the blocks' position
+> - `sound`: Optional sound effect to play during execution. Empty by default
+> - `console`: Run as server/console instead of as player
 
 ---
 
@@ -650,15 +652,15 @@ Executes a command on block interaction from console, as player (@s).
 
 Executes a command when the block is "attacked", from console, as player (@s).
 
-~~~admonish info "Configurable Fields"
-- `consumes`: Flag whether the block should be broken after running the command(s). Defaults to `false`
-- `dropBlock`: Flag whether the block should drop items when broken. Defaults to `false`
-- `command`: The command string to execute. Empty by default
-- `commands`: List of commands to execute. Empty by default
-- `atBlock`: false/true flag whether the command should be run at the blocks' position
-- `sound`: Optional sound effect to play during execution. Empty by default
-- `console`: Run as server/console instead of as player
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `consumes`: Flag whether the block should be broken after running the command(s). Defaults to `false`
+> - `dropBlock`: Flag whether the block should drop items when broken. Defaults to `false`
+> - `command`: The command string to execute. Empty by default
+> - `commands`: List of commands to execute. Empty by default
+> - `atBlock`: false/true flag whether the command should be run at the blocks' position
+> - `sound`: Optional sound effect to play during execution. Empty by default
+> - `console`: Run as server/console instead of as player
 
 ---
 
@@ -666,10 +668,10 @@ Executes a command when the block is "attacked", from console, as player (@s).
 
 Defines the block as oxidizing block, similar to the vanilla copper blocks, randomly replacing it with another block when it "ages". Can be reverted/scraped by axes and resets with lightning bolts like vanilla copper blocks.
 
-~~~admonish info "Configurable Fields"
-  - `replacement`: The identifier of the block to replace the current block with (e.g., "minecraft:stone").
-  - `weatherState`: The current weathering state of this block. Can be `unaffected`, `exposed`, `weathered`, `oxidized`. Defaults to `unaffected`. A `weatherState` of `oxidized` will not oxidize any further.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `replacement`: The identifier of the block to replace the current block with (e.g., "minecraft:stone").
+> - `weatherState`: The current weathering state of this block. Can be `unaffected`, `exposed`, `weathered`, `oxidized`. Defaults to `unaffected`. A `weatherState` of `oxidized` will not oxidize any further.
 
 ---
 
@@ -680,11 +682,11 @@ The sides, blocks and chance can be configured.
 
 If the blocks in `grows` have directional/facing block state properties, they direction of the side the block is growing from will be set.
 
-~~~admonish info "Configurable Fields"
-- `chance`: Chance of the block to grow another block or move a block to the next growth stage in percent, from 0 to 100. Defaults to 20
-- `sides`: List of sides blocks can grow out. Can be `north`, `south`, `east`, `west`, `up` or `down`. Defaults to all directions
-- `grows`: List of id's of blocks for the growth stages. Example: `["minecraft:chain", "minecraft:end_rod"]`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `chance`: Chance of the block to grow another block or move a block to the next growth stage in percent, from 0 to 100. Defaults to 20
+> - `sides`: List of sides blocks can grow out. Can be `north`, `south`, `east`, `west`, `up` or `down`. Defaults to all directions
+> - `grows`: List of id's of blocks for the growth stages. Example: `["minecraft:chain", "minecraft:end_rod"]`
 
 ---
 
@@ -692,16 +694,16 @@ If the blocks in `grows` have directional/facing block state properties, they di
 
 Allows the block to spread like mycelium or grass blocks do, based on random ticks.
 
-~~~admonish info "Configurable Fields"
-- `spreadDimensions`: Dimensions for the spread position. Not centered around the block. Use `spreadOffset` to center it. Defaults to `["0..3", "0..5", "0..3]`
-- `spreadOffset`: Offset for the spread position. Defaults to `[-1, -3, -1]`
-- `attemptsPerTick`: Attempts to spread, per tick. Defaults to `4`
-- `requiredBrightness`: Range of brightness required for the block to spread. Defaults to `"9..15"`
-- `canDecay`: Flag wether the block decays, similar to grass with solid blocks on top. Defaults to `true`
-- `decayBlockState`: Block-state the block decays into
-- `propagatesToBlocks`: List of List of blocks this block can spread to. Defaults to `["minecraft:dirt"]`
-- `propagatesToBlockTags`: List of block tags this block can spread to. Empty by default
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `spreadDimensions`: Dimensions for the spread position. Not centered around the block. Use `spreadOffset` to center it. Defaults to `["0..3", "0..5", "0..3]`
+> - `spreadOffset`: Offset for the spread position. Defaults to `[-1, -3, -1]`
+> - `attemptsPerTick`: Attempts to spread, per tick. Defaults to `4`
+> - `requiredBrightness`: Range of brightness required for the block to spread. Defaults to `"9..15"`
+> - `canDecay`: Flag wether the block decays, similar to grass with solid blocks on top. Defaults to `true`
+> - `decayBlockState`: Block-state the block decays into
+> - `propagatesToBlocks`: List of List of blocks this block can spread to. Defaults to `["minecraft:dirt"]`
+> - `propagatesToBlockTags`: List of block tags this block can spread to. Empty by default
 
 ---
 
@@ -709,27 +711,27 @@ Allows the block to spread like mycelium or grass blocks do, based on random tic
 
 Makes the block a gravity affected/falling block like sand or anvils.
 
-~~~admonish tip
-All fields of this behaviour can be mapped to a block-state.
-~~~
+> [!TIP]
+> All fields of this behaviour can be mapped to a block-state.
 
-~~~admonish info "Configurable Fields"
-- `delayAfterPlace`: Delay in ticks before the block falls. Defaults to `2`
-- `heavy`: To cause anvil-like damage. Defaults to `false`
-- `damagePerDistance`: Accumulated damage per block fallen
-- `maxDamage`: Maximum damage a falling block can deal
-- `disableDrops`: Prevent the block from being placed when it falls. This behaves like the `CancelDrop` NBT data for falling block entities. Defaults to `false`
-- `dropItem`: Flag whether the block should drop as item when it breaks. This behaves like the `DropItems` NBT data for falling block entities. Defaults to `true`
-- `silent`: Flag whether sounds are played when the block falls or breaks
-- `landSound`: Sound played when the block lands
-- `breakSound`: Sound played when the block breaks
-- `canBeDamaged`: Flag whether the block should be placed as the block in `damagedBlock`
-- `damagedBlock`: New block to use when the falling block 'breaks'. Will copy applicable block state properties
-- `baseBreakChance`: Chance for the block to break into the block in `damagedBlock` on its own
-- `breakChancePerDistance`: Chance increase per block fallen for the block to break into the block in `damagedBlock`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `delayAfterPlace`: Delay in ticks before the block falls. Defaults to `2`
+> - `heavy`: To cause anvil-like damage. Defaults to `false`
+> - `damagePerDistance`: Accumulated damage per block fallen
+> - `maxDamage`: Maximum damage a falling block can deal
+> - `disableDrops`: Prevent the block from being placed when it falls. This behaves like the `CancelDrop` NBT data for falling block entities. Defaults to `false`
+> - `dropItem`: Flag whether the block should drop as item when it breaks. This behaves like the `DropItems` NBT data for falling block entities. Defaults to `true`
+> - `silent`: Flag whether sounds are played when the block falls or breaks
+> - `landSound`: Sound played when the block lands
+> - `breakSound`: Sound played when the block breaks
+> - `canBeDamaged`: Flag whether the block should be placed as the block in `damagedBlock`
+> - `damagedBlock`: New block to use when the falling block 'breaks'. Will copy applicable block state properties
+> - `baseBreakChance`: Chance for the block to break into the block in `damagedBlock` on its own
+> - `breakChancePerDistance`: Chance increase per block fallen for the block to break into the block in `damagedBlock`
 
-~~~admonish example
+Example: 
+
 <!-- langtabs-start -->
 ```yml
 falling_block:
@@ -768,24 +770,22 @@ falling_block:
 ```
 <!-- langtabs-end -->
 
-~~~
-
 ---
 
 ## `tnt` behaviour
 
 With this behaviour the block can be lit with flint and steel or redstone to spawn a TNT entity with the blockstate of this block.
 
-~~~admonish tip
-All fields of this behaviour can be mapped to a block-state.
-~~~
+> [!TIP]
+> All fields of this behaviour can be mapped to a block-state.
 
-~~~admonish info "Configurable Fields"
-- unstable: Flag whether the block explodes when a player tries to break it. Defaults to `false`
-- explosionPower: Explosion power. Defaults to `4.0`
-- fuseTime: Fuse time (delay until the tnt entity explodes). Defaults to `80`
-- primeSound: Sound to play when the block is primed. Defaults to `minecraft:entity.tnt.primed`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - unstable: Flag whether the block explodes when a player tries to break it. Defaults to `false`
+> - explosionPower: Explosion power. Defaults to `4.0`
+> - fuseTime: Fuse time (delay until the tnt entity explodes). Defaults to `80`
+> - primeSound: Sound to play when the block is primed. Defaults to `minecraft:entity.tnt.primed`
+
 
 ---
 
@@ -798,14 +798,13 @@ The following block-behaviours require a block entity. They can not be pushed, s
 
 Furnace behaviour with menu.
 
-~~~admonish tip
-Combine this with the `horizontal_facing` behaviour for a vanilla-like furnace block!
-Checkout the example datapack to see how to configure it.
-~~~
+> [!TIP]
+> Combine this with the `horizontal_facing` behaviour for a vanilla-like furnace block!
+> Checkout the example datapack to see how to configure it.
 
-~~~admonish info "Block-State-Properties to provide models for"
-- `lit`: true, false
-~~~
+> [!INFO]
+> Block-State-Properties to provide models for:
+> - `lit`: true, false
 
 ---
 
@@ -813,17 +812,18 @@ Checkout the example datapack to see how to configure it.
 
 Hopper behaviour with menu.
 
-~~~admonish info "Block-State-Properties to provide models for"
-- `facing`: `north`, `south`, `east`, `west`, `down`
-- `enabled`: `true`, `false`
-~~~
+> [!INFO]
+> Block-State-Properties to provide models for:
+> - `facing`: `north`, `south`, `east`, `west`, `down`
+> - `enabled`: `true`, `false`
 
-~~~admonish info "Configurable Fields"
-- `filterItems`: List of items and/or item tags. Defaults is empty. Example: `["minecraft:diamond", "#minecraft:dirt"]` would allow for diamonds and all items with the `minecraft:dirt` item-tag.
-- `pickupItemEntities`: Flag whether item entities should be picked up. Defaults to `true`
-- `takeFromContainer`: Flag whether items from the container above should be taken. Defaults to `true`
-- `cooldownTime` Cooldown time before transfering a new item. Defaults to `8`
-~~~
+
+> [!IMPORTANT]
+> Configurable Fields:
+> - `filterItems`: List of items and/or item tags. Defaults is empty. Example: `["minecraft:diamond", "#minecraft:dirt"]` would allow for diamonds and all items with the `minecraft:dirt` item-tag.
+> - `pickupItemEntities`: Flag whether item entities should be picked up. Defaults to `true`
+> - `takeFromContainer`: Flag whether items from the container above should be taken. Defaults to `true`
+> - `cooldownTime` Cooldown time before transfering a new item. Defaults to `8`
 
 ---
 
@@ -831,20 +831,20 @@ Hopper behaviour with menu.
 
 Makes the block flammable.
 
-~~~admonish info "Configurable Fields"
-- `burn`: Burn. Defaults to `5`
-- `spread` Fire spread chance. Defaults to `20`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `burn`: Burn. Defaults to `5`
+> - `spread` Fire spread chance. Defaults to `20`
 
 ## `leaf_decay` behaviour
 
 Makes the block decay like leaf blocks when no log is attached to it and wasn't placed by a player.
 Adds `distance` and `persistent` block state properties to the block.
 
-~~~admonish info "Configurable Fields"
-- `blockTag`: Block tag for blocks that prevent leaf decay. Defaults to `minecraft:logs`
-- `decayChance` Chance to decay in each random tick. Can be between 0 and 1. Defaults to `1`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `blockTag`: Block tag for blocks that prevent leaf decay. Defaults to `minecraft:logs`
+> - `decayChance` Chance to decay in each random tick. Can be between 0 and 1. Defaults to `1`
 
 ---
 
@@ -852,20 +852,22 @@ Adds `distance` and `persistent` block state properties to the block.
 
 Allows you to create lamps that either switch on/off or cycle through a list of light levels on player interaction.
 
-~~~admonish info "Block-State-Properties to provide models for (optional)"
-- `level`: 0 to 15 (optional, only when `models` is set to `true`)
-~~~
+> [!INFO]
+> Block-State-Properties to provide models for (optional):
+> - `level`: 0 to 15 (optional, only when `models` is set to `true`)
 
-~~~admonish info "Configurable Fields"
-- `on`: Light level to use for the 'on' state. From `0`-`15`
-- `off`: Light level to use for the 'off' state. From `0`-`15`
-- `cycle`: List of light levels to cycle through. Overwrites the `on` and `off` values. Example: `[0,7,15]`
-- `defaultValue`: Default light level when placed. From `0`-`15`
-- `models`: Flag whether to use block state models. Ignored by decorations. `true`/`false`. Defaults to `false`
-- `sound`: Sound to play when interacted with succesfully. Can be based on block-state. Empty by default
-~~~
 
-~~~admonish example "Simple on / off lamp"
+> [!IMPORTANT]
+> Configurable Fields:
+> - `on`: Light level to use for the 'on' state. From `0`-`15`
+> - `off`: Light level to use for the 'off' state. From `0`-`15`
+> - `cycle`: List of light levels to cycle through. Overwrites the `on` and `off` values. Example: `[0,7,15]`
+> - `defaultValue`: Default light level when placed. From `0`-`15`
+> - `models`: Flag whether to use block state models. Ignored by decorations. `true`/`false`. Defaults to `false`
+> - `sound`: Sound to play when interacted with succesfully. Can be based on block-state. Empty by default
+
+Simple on / off lamp:
+
 <!-- langtabs-start -->
 ```yml
 lamp:
@@ -883,9 +885,9 @@ lamp:
 ```
 <!-- langtabs-end -->
 
-~~~
 
-~~~admonish example "Cycling lamp"
+Cycling lamp:
+
 <!-- langtabs-start -->
 ```yml
 lamp:
@@ -901,17 +903,15 @@ lamp:
 ```
 <!-- langtabs-end -->
 
-~~~
-
 ---
 
 ## `waxable` behaviour
 
 Allows the block to be 'waxed' using honeycomb or with filament items that have the "wax" behaviour.
 
-~~~admonish info "Configurable Fields"
-- `replacement`: The identifier of the block to replace the current block with. Example: `minecraft:waxed_copper_block`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `replacement`: The identifier of the block to replace the current block with. Example: `minecraft:waxed_copper_block`
 
 ---
 
@@ -929,9 +929,9 @@ No fields to configure.
 
 Allows to make the block bouncy, similar to slime but extra bounciness when the player presses space on landing.
 
-~~~admonish info "Configurable Fields"
-- `bounciness`: This value gets multiplied by the entities y-velocity when landing on the block and the player presses space
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `bounciness`: This value gets multiplied by the entities y-velocity when landing on the block and the player presses space
 
 ---
 
@@ -939,24 +939,23 @@ Allows to make the block bouncy, similar to slime but extra bounciness when the 
 
 Adds particle emitters to the block.
 
-~~~admonish tip
-Most field values can be mapped to block-states and ranges (like `0..1`) are supported for numeric values.
-~~~
+> [!TIP]
+> Most field values can be mapped to block-states and ranges (like `0..1`) are supported for numeric values.
 
-~~~admonish info "Configurable Fields"
-- `enabled`: Boolean or state-mapped boolean controlling whether the emitter is active.
-- `elements`: Array of emitter elements. Each element supports:
-  - `enabled`: `true`/`false`
-  - `particle`: Particle descriptor or identifier (some particle types accept extra options like `color`)
-  - `interval`: Interval in ticks between emissions
-  - `offset`: Offset from block center. Each axis can be a number or range like `"0..0.5"`
-  - `count`: Number of particles to spawn (can be a single number or a ranged string like `"1..5"`)
-  - `delta`: Delta/spread for particle positions
-  - `speed`: Particle speed (can be ranged)
-  - `force`: Boolean whether to force particle spawning
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `enabled`: Boolean or state-mapped boolean controlling whether the emitter is active.
+> - `elements`: Array of emitter elements. Each element supports:
+>   - `enabled`: `true`/`false`
+>   - `particle`: Particle descriptor or identifier (some particle types accept extra options like `color`)
+>   - `interval`: Interval in ticks between emissions
+>   - `offset`: Offset from block center. Each axis can be a number or range like `"0..0.5"`
+>   - `count`: Number of particles to spawn (can be a single number or a ranged string like `"1..5"`)
+>   - `delta`: Delta/spread for particle positions
+>   - `speed`: Particle speed (can be ranged)
+>   - `force`: Boolean whether to force particle spawning
 
-~~~admonish example
+
 <!-- langtabs-start -->
 ```yml
 particle_emitter:
@@ -1000,7 +999,6 @@ particle_emitter:
 }
 ```
 <!-- langtabs-end -->
-~~~
 
 The `offset`, `count`, `delta` and `speed` can have ranged values like `"0..1"` - this will pick a random number between 0 and 1.
 
@@ -1014,23 +1012,24 @@ Adds status effect emitters to the block.
 
 Allows for ranged values and enabling based on block-state.
 
-~~~admonish info "Configurable Fields"
-- `enabled`: Boolean or state-mapped boolean controlling whether the emitter is active.
-- `elements`: List of effect elements. Each element supports:
-  - `enabled`: `true`/`false`
-  - `interval`: Interval in ticks
-  - `onlyPlayer`: If `true`, only players are affected
-  - `ignoreHeight`: If `true`, vertical distance is ignored when applying the effect (similar to beacons)
-  - `radius`: Cube-shaped radius in blocks to search for entities
-  - `effect`: Identifier or name of the status effect (e.g. `speed`)
-  - `duration`: Duration of the effect in ticks
-  - `amplifier`: Effect amplifier (integer)
-  - `ambient`: Ambient flag for the effect
-  - `visible`: Whether particles are shown
-  - `showIcon`: Whether the status effect icon is shown
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `enabled`: Boolean or state-mapped boolean controlling whether the emitter is active.
+> - `elements`: List of effect elements. Each element supports:
+>   - `enabled`: `true`/`false`
+>   - `interval`: Interval in ticks
+>   - `onlyPlayer`: If `true`, only players are affected
+>   - `ignoreHeight`: If `true`, vertical distance is ignored when applying the effect (similar to beacons)
+>   - `radius`: Cube-shaped radius in blocks to search for entities
+>   - `effect`: Identifier or name of the status effect (e.g. `speed`)
+>   - `duration`: Duration of the effect in ticks
+>   - `amplifier`: Effect amplifier (integer)
+>   - `ambient`: Ambient flag for the effect
+>   - `visible`: Whether particles are shown
+>   - `showIcon`: Whether the status effect icon is shown
 
-~~~admonish example
+Example:
+
 <!-- langtabs-start -->
 ```yml
 status_effect_emitter:
@@ -1077,7 +1076,6 @@ status_effect_emitter:
 }
 ```
 <!-- langtabs-end -->
-~~~
 
 ---
 
@@ -1085,20 +1083,21 @@ status_effect_emitter:
 
 Executes commands when a players enter/leaves or stays in an area. Optionally based on luckperms permission.
 
-~~~admonish info "Configurable Fields"
-- `radius`: Cube-shaped radius in blocks to check for players. Defaults to `16`
-- `enabled`: Boolean or state-mapped flag to enable all commands. Defaults to `true`
-- `interval`: Interval in ticks between checks. Defaults to `40`
-- `repeatCommand` / `repeatCommands`: Command(s) to run each interval for players inside the area
-- `enterCommand` / `enterCommands`: Command(s) to run when a player first enters the area
-- `exitCommand` / `exitCommands`: Command(s) to run when a player leaves the area
-- `atBlock`: If `true`, commands are executed at the block position (useful for selectors). Defaults to `false`
-- `ignoreHeight`: If `true`, height is ignored when forming the area (uses world height). Defaults to `false`
-- `console`: If `true`, commands are executed as the server console instead of the player. Defaults to `false`
-- `permission`: Optional permission node to check (requires luckperms) - only players with the permission are considered
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `radius`: Cube-shaped radius in blocks to check for players. Defaults to `16`
+> - `enabled`: Boolean or state-mapped flag to enable all commands. Defaults to `true`
+> - `interval`: Interval in ticks between checks. Defaults to `40`
+> - `repeatCommand` / `repeatCommands`: Command(s) to run each interval for players inside the area
+> - `enterCommand` / `enterCommands`: Command(s) to run when a player first enters the area
+> - `exitCommand` / `exitCommands`: Command(s) to run when a player leaves the area
+> - `atBlock`: If `true`, commands are executed at the block position (useful for selectors). Defaults to `false`
+> - `ignoreHeight`: If `true`, height is ignored when forming the area (uses world height). Defaults to `false`
+> - `console`: If `true`, commands are executed as the server console instead of the player. Defaults to `false`
+> - `permission`: Optional permission node to check (requires luckperms) - only players with the permission are considered
 
-~~~admonish example
+Example:
+
 <!-- langtabs-start -->
 ```yml
 area_execute:
@@ -1132,7 +1131,6 @@ area_execute:
 }
 ```
 <!-- langtabs-end -->
-~~~
 
 ---
 
@@ -1140,9 +1138,9 @@ area_execute:
 
 Sets an entity on fire when it is inside the block
 
-~~~admonish info "Configurable Fields"
-- `fireDamage`: Damage. Defaults to `1`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `fireDamage`: Damage. Defaults to `1`
 
 ---
 
@@ -1150,18 +1148,19 @@ Sets an entity on fire when it is inside the block
 
 Defines the block as an interactive lever that can emit redstone power and play sounds when toggled.
 
-~~~admonish info "Configurable Fields"
-- `powerlevel`: The redstone power level the lever emits when activated (can be mapped to a block-state). Defaults to `15`
-- `sound`: The sound played when the lever is toggled. Defaults to `minecraft:block.lever.click`
-- `volume`: The volume of the toggle sound. Defaults to `0.3`
-- `pitch`: The pitch of the toggle sound. Empty by default
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `powerlevel`: The redstone power level the lever emits when activated (can be mapped to a block-state). Defaults to `15`
+> - `sound`: The sound played when the lever is toggled. Defaults to `minecraft:block.lever.click`
+> - `volume`: The volume of the toggle sound. Defaults to `0.3`
+> - `pitch`: The pitch of the toggle sound. Empty by default
 
-~~~admonish tip
-All fields in this behaviour can be mapped to block-states.
-~~~
+> [!TIP]
+> All fields in this behaviour can be mapped to block-states.
 
-~~~admonish example
+
+Example:
+
 <!-- langtabs-start -->
 ```yml
 behaviour:
@@ -1188,7 +1187,6 @@ behaviour:
 }
 ```
 <!-- langtabs-end -->
-~~~
 
 ---
 
@@ -1196,19 +1194,19 @@ behaviour:
 
 Defines the block as an interactive button that can emit redstone power for a limited duration when pressed.
 
-~~~admonish info "Configurable Fields"
-- `powerlevel`: The redstone power level the button emits when activated (can be mapped to a block-state). Defaults to `15`
-- `ticksToStayPressed`: Duration in ticks that the button remains pressed before resetting. Defaults to `100`
-- `canBeActivatedByArrows`: Whether the button can be triggered by arrows or other projectiles. Defaults to `true`
-- `clickOnSound`: Sound played when the button is pressed. Defaults to `minecraft:block.wooden_button.click_on`
-- `clickOffSound`: Sound played when the button is released. Defaults to `minecraft:block.wooden_button.click_off`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `powerlevel`: The redstone power level the button emits when activated (can be mapped to a block-state). Defaults to `15`
+> - `ticksToStayPressed`: Duration in ticks that the button remains pressed before resetting. Defaults to `100`
+> - `canBeActivatedByArrows`: Whether the button can be triggered by arrows or other projectiles. Defaults to `true`
+> - `clickOnSound`: Sound played when the button is pressed. Defaults to `minecraft:block.wooden_button.click_on`
+> - `clickOffSound`: Sound played when the button is released. Defaults to `minecraft:block.wooden_button.click_off`
 
-~~~admonish tip
-All fields except `clickOnSound` and `clickOffSound` can be mapped to block-states.
-~~~
+> [!TIP]
+> All fields except `clickOnSound` and `clickOffSound` can be mapped to block-states.
 
-~~~admonish example
+Example:
+
 <!-- langtabs-start -->
 ```yml
 behaviour:
@@ -1245,4 +1243,4 @@ behaviour:
 }
 ```
 <!-- langtabs-end -->
-~~~
+

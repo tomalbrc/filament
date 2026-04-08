@@ -1,8 +1,8 @@
 # Decoration Examples
 
-~~~admonish tip
-All fields support either camelCase or snake_case!
-~~~
+> [!TIP]
+> All fields support either camelCase or snake_case!
+
 
 ### Animated chest with solid 1x1 solid collision:
 <!-- langtabs-start -->

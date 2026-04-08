@@ -4,7 +4,8 @@ Item behaviours define specific functionalities associated with items, blocks, a
 
 All behaviours are optional, and some are mutually exclusive (e.g., trap, shoot, and instrument).
 
-~~~admonish example title="Example with some behaviours set" collapsible=true
+Example with some behaviours set:
+
 <!-- langtabs-start -->
 ```yml
 id: mynamespace:multi_example
@@ -96,8 +97,6 @@ behaviour:
 ```
 <!-- langtabs-end -->
 
-~~~
-
 ---
 
 ## `generate_trim_models` behaviour
@@ -105,11 +104,11 @@ behaviour:
 
 Enables automatic generation of the different item models with the trim overlay.
 
-~~~admonish info "Configurable Fields"
-- `type_prefix`: Allows to specify a custom trim overlay texture. See the vanilla texture atlas files for the different paletted permutations and `assets/minecraft/textures/trims/items/` for a list of textures available. For armors: This prefix will replace the default armor slot texture path like this: `assets/minecraft/textures/trims/items/<prefix>_trim_<material>`. For non-armors it will insert the prefix as the full path. If not specified it will automatically chose correct prefix for the slot the item can be equipped in. 
-- `custom_materials`: List of identifiers for custom trim materials. Empty by default
-- `materials`: List of vanilla trim materials. Default values include all vanilla trim materials: `["minecraft:quartz", "minecraft:iron", "minecraft:netherite", "minecraft:redstone", ...]`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `type_prefix`: Allows to specify a custom trim overlay texture. See the vanilla texture atlas files for the different paletted permutations and `assets/minecraft/textures/trims/items/` for a list of textures available. For armors: This prefix will replace the default armor slot texture path like this: `assets/minecraft/textures/trims/items/<prefix>_trim_<material>`. For non-armors it will insert the prefix as the full path. If not specified it will automatically chose correct prefix for the slot the item can be equipped in. 
+> - `custom_materials`: List of identifiers for custom trim materials. Empty by default
+> - `materials`: List of vanilla trim materials. Default values include all vanilla trim materials: `["minecraft:quartz", "minecraft:iron", "minecraft:netherite", "minecraft:redstone", ...]`
 
 ---
 
@@ -118,10 +117,10 @@ Enables automatic generation of the different item models with the trim overlay.
 
 Makes the item usable in composters.
 
-~~~admonish info "Configurable Fields"
-- `chance`: Chance of raising the composter level by 1 between 0 and 100
-- `villagerInteraction`: Allows farmer villagers to compost the item. Defaults to `true`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `chance`: Chance of raising the composter level by 1 between 0 and 100
+> - `villagerInteraction`: Allows farmer villagers to compost the item. Defaults to `true`
 
 <br>
 
@@ -134,16 +133,17 @@ Defines cosmetic behaviours for decorations, supporting animated Blockbench mode
 
 Cosmetics are worn on the player using item display entities (except for the head slot)
 
-~~~admonish info "Configurable Fields"
-- `slot`: The equipment slot for the cosmetic (head or chest).
-- `model`: Optional, the resource location of the animated blockbench or animated-java model for the cosmetic.
-- `autoplay`: Optional, the name of the animation to autoplay, which should be loopable.
-- `scale`: Scale of the chest cosmetic. Defaults to `[1, 1, 1]`
-- `translation`: Translation of the chest cosmetic. Defaults to `[0, 0, 0]`.
-- `rotation`: Rotation of the chest cosmetic in euler angles. Defaults to `[0, 0, 0]`.
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `slot`: The equipment slot for the cosmetic (head or chest).
+> - `model`: Optional, the resource location of the animated blockbench or animated-java model for the cosmetic.
+> - `autoplay`: Optional, the name of the animation to autoplay, which should be loopable.
+> - `scale`: Scale of the chest cosmetic. Defaults to `[1, 1, 1]`
+> - `translation`: Translation of the chest cosmetic. Defaults to `[0, 0, 0]`.
+> - `rotation`: Rotation of the chest cosmetic in euler angles. Defaults to `[0, 0, 0]`.
 
-~~~admonish example "Backpack"
+Backpack:
+
 <!-- langtabs-start -->
 ```yml
 cosmetic:
@@ -167,22 +167,20 @@ cosmetic:
 ```
 <!-- langtabs-end -->
 
-~~~
-
 ---
 
 ## `item_interact_execute` behaviour
 
 Executes a command on item use with the player as source, located at the player, with elevated permissions.
 
-~~~admonish info "Configurable Fields"
-- `consumes`: Flag whether the item is consumed after running the command(s). Defaults to `false`
-- `damages`: Flag whether the item is damaged after running the command(s). Defaults to `false`
-- `command`: The command string to execute. Empty by default
-- `commands`: List of commands to execute. Empty by default
-- `sound`: Optional sound effect to play during execution. Empty by default
-- `console`: Run as server/console instead of as player
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `consumes`: Flag whether the item is consumed after running the command(s). Defaults to `false`
+> - `damages`: Flag whether the item is damaged after running the command(s). Defaults to `false`
+> - `command`: The command string to execute. Empty by default
+> - `commands`: List of commands to execute. Empty by default
+> - `sound`: Optional sound effect to play during execution. Empty by default
+> - `console`: Run as server/console instead of as player
 
 <br>
 
@@ -192,14 +190,14 @@ Executes a command on item use with the player as source, located at the player,
 
 Executes a command when an entity is attacked with the item or when swinging at air, located at the player, with elevated permissions.
 
-~~~admonish info "Configurable Fields"
-- `consumes`: Flag whether the item is consumed after running the command(s). Defaults to `false`
-- `command`: The command string to execute. Empty by default
-- `commands`: List of commands to execute. Empty by default
-- `sound`: Optional sound effect to play during execution. Empty by default
-- `onEntityAttack`: true/false flag whether to execute only when an entity was attacked. Otherwise the command will also be executed when the item is "swung" by the player. Default to `true`
-- `console`: Run as server/console instead of as player
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `consumes`: Flag whether the item is consumed after running the command(s). Defaults to `false`
+> - `command`: The command string to execute. Empty by default
+> - `commands`: List of commands to execute. Empty by default
+> - `sound`: Optional sound effect to play during execution. Empty by default
+> - `onEntityAttack`: true/false flag whether to execute only when an entity was attacked. Otherwise the command will also be executed when the item is "swung" by the player. Default to `true`
+> - `console`: Run as server/console instead of as player
 
 <br>
 
@@ -210,11 +208,10 @@ Executes a command when an entity is attacked with the item or when swinging at 
 
 Makes the item edible for villagers (for villager breeding).
 
-~~~admonish info "Configurable Fields"
-  - `value`: The amount of "breeding power" the item has (1 = normal food item, 4 = bread). Defaults to `1`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `value`: The amount of "breeding power" the item has (1 = normal food item, 4 = bread). Defaults to `1`
 
-<br>
 <br>
 
 ---
@@ -223,9 +220,9 @@ Makes the item edible for villagers (for villager breeding).
 
 Defines fuel behaviour for items, specifying their value used in furnaces and similar item-burning blocks.
 
-~~~admonish info "Configurable Fields"
-- `value`: The value associated with the fuel, determining burn duration. Defaults to `10`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `value`: The value associated with the fuel, determining burn duration. Defaults to `10`
 
 <br>
 
@@ -235,9 +232,9 @@ Defines fuel behaviour for items, specifying their value used in furnaces and si
 
 Gives the item the ability to till farmland, like vanilla hoes do, using 1 durability.
 
-~~~admonish info "Configurable Fields"
-- `sound`: Sound to play. Default to the vanilla hoe tilling sound `minecraft:item.hoe.till`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `sound`: Sound to play. Default to the vanilla hoe tilling sound `minecraft:item.hoe.till`
 
 ---
 
@@ -245,9 +242,9 @@ Gives the item the ability to till farmland, like vanilla hoes do, using 1 durab
 
 Gives the item the ability to change blocks to path blocks, like vanilla shovels do, using 1 durability.
 
-~~~admonish info "Configurable Fields"
-- `sound`: Sound to play. Default to the vanilla shovel sound
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `sound`: Sound to play. Default to the vanilla shovel sound
 
 ---
 
@@ -255,9 +252,9 @@ Gives the item the ability to change blocks to path blocks, like vanilla shovels
 
 Gives the item the ability to shears blocks & plants, like vanilla shears do, using 1 durability.
 
-~~~admonish info "Configurable Fields"
-- `sound`: Sound to play. Default to the vanilla plant shearing sound
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `sound`: Sound to play. Default to the vanilla plant shearing sound
 
 ---
 
@@ -266,11 +263,11 @@ Gives the item the ability to shears blocks & plants, like vanilla shears do, us
 
 Defines instrument behaviour for items, similar to goat horns.
 
-~~~admonish info "Configurable Fields"
-- `sound`: The sound associated with the instrument. Empty by default
-- `range`: The range of the instrument. Defaults to `0`
-- `useDuration`: Delay in ticks for using the instrument. Defaults to `0`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `sound`: The sound associated with the instrument. Empty by default
+> - `range`: The range of the instrument. Defaults to `0`
+> - `useDuration`: Delay in ticks for using the instrument. Defaults to `0`
 
 <br>
 <br>
@@ -282,8 +279,9 @@ Defines instrument behaviour for items, similar to goat horns.
 Gives the item the ability to strip Logs/scrape copper blocks, like an axe. Uses 1 durability.
 
 
-### Fields:
-- `sound`: Sound to play. Default to the vanilla axe strip sound
+> [!IMPORTANT]
+> Configurable Fields:
+> - `sound`: Sound to play. Default to the vanilla axe strip sound
 
 ---
 
@@ -292,12 +290,12 @@ Gives the item the ability to strip Logs/scrape copper blocks, like an axe. Uses
 
 Defines trap behaviour for items capable of trapping specific entity types.
 
-~~~admonish info "Configurable Fields"
-- `types`: List of allowed entity types to trap. Example: `["minecraft:silverfish", "minecraft:spider"]`
-- `requiredEffects`: List of required effects for the trap. Example: `["minecraft:weakness"]`
-- `chance`: Chance of the trap triggering (`0`-`100`). Defaults to `50`
-- `useDuration`: Use cooldown for the trap item. Defaults to `0`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `types`: List of allowed entity types to trap. Example: `["minecraft:silverfish", "minecraft:spider"]`
+> - `requiredEffects`: List of required effects for the trap. Example: `["minecraft:weakness"]`
+> - `chance`: Chance of the trap triggering (`0`-`100`). Defaults to `50`
+> - `useDuration`: Use cooldown for the trap item. Defaults to `0`
 
 <br>
 <br>
@@ -311,10 +309,9 @@ Allows you to assign a banner pattern to an item for use in Looms.
 
 See the `mynamespace:bannertestitem` item config in the example datapack in the GitHub repo.
 
-~~~admonish info "Configurable Fields"
-- `id`: The id of your banner_pattern in your datapack. Empty by default
-~~~
-
+> [!IMPORTANT]
+> Configurable Fields:
+> - `id`: The id of your banner_pattern in your datapack. Empty by default
 
 ---
 
@@ -324,22 +321,23 @@ See the `mynamespace:bannertestitem` item config in the example datapack in the 
 Vanilla-like bow behaviour. Lets you specify which item can be shot, but anything that is not an arrow or firework rocket will render as normal arrow.
 Allows to specify a power multiplier for shooting power. Supports firework rockets.
 
-~~~admonish warning
-Make sure to use `minecraft:bow` as `vanillaItem` in order for the item model overrides to work properly!
-~~~
+> [!WARNING]
+> Make sure to use `minecraft:bow` as `vanillaItem` in order for the item model overrides to work properly on MC versions below 1.21.4
 
-~~~admonish info "Configurable Fields"
-- `powerMultiplier`: The power multiplier. Defaults to `3`
-- `supportedProjectiles`: List of supported items in the inventory for use with the bow. Defaults to `["minecraft:arrow", "minecraft:spectral_arrow"]`
-- `supportedHeldProjectiles`: List of supported items for use when in main/offhand. Defaults to `["minecraft:arrow", "minecraft:spectral_arrow", "minecraft:firework_rocket"]`
-- `shootSound`: The sound when shooting a projectile. Default to `minecraft:entity.arrow.shoot`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `powerMultiplier`: The power multiplier. Defaults to `3`
+> - `supportedProjectiles`: List of supported items in the inventory for use with the bow. Defaults to `["minecraft:arrow", "minecraft:spectral_arrow"]`
+> - `supportedHeldProjectiles`: List of supported items for use when in main/offhand. Defaults to `["minecraft:arrow", "minecraft:spectral_arrow", "minecraft:firework_rocket"]`
+> - `shootSound`: The sound when shooting a projectile. Default to `minecraft:entity.arrow.shoot`
 
 <br>
 This behaviour can automatically generate the item model predicate overrides for bows (item assets in `items` in 1.21.4 or later).
 
 In order to automatically generate an item model for bows, you have to provide models for `default`, `pulling_0`, `pulling_1` and `pulling_2` in the `itemResource` field:
-~~~admonish example
+
+Example:
+
 <!-- langtabs-start -->
 ```yml
 itemResource:
@@ -364,8 +362,6 @@ itemResource:
 ```
 <!-- langtabs-end -->
 
-~~~
-
 Alternatively, you can use the `itemModel` field to provide your own item asset model
 
 ---
@@ -376,14 +372,15 @@ Alternatively, you can use the `itemModel` field to provide your own item asset 
 Vanilla-like crossbow behaviour. Lets you specify which item can be shot, but anything that is not an arrow or firework rocket will render as normal arrow.
 Allows to specify a power multiplier for shooting power.
 
-~~~admonish warning
-**Make sure to use `minecraft:crossbow` as `vanillaItem` in order for the item model overrides to work properly!**
-~~~
+> [!WARNING]
+> **Make sure to use `minecraft:crossbow` as `vanillaItem` in order for the item model overrides to work properly for MC versions below 1.21.4!**
 
 This behaviour can automatically generate the item model predicate overrides for crossbows (item assets in `items` in 1.21.4 or later).
 
 In order to automatically generate an item model for crossbows, you have to provide models for `default`, `pulling_0`, `pulling_1`, `pulling_2`, `arrow` and `rocket` in the `itemResource` field:
-~~~admonish example
+
+Example:
+
 <!-- langtabs-start -->
 ```yml
 itemResource:
@@ -414,19 +411,17 @@ itemResource:
 ```
 <!-- langtabs-end -->
 
-~~~
-
 Alternatively, you can use the `itemModel` field to provide your own item asset model.
 
-~~~admonish info "Configurable Fields"
-- `powerMultiplier`: The power multiplier. Defaults to `1`
-- `supportedProjectiles`: List of supported items in the inventory for use with the crossbow. Defaults to `["minecraft:arrow", "minecraft:spectral_arrow"]`
-- `supportedHeldProjectiles`: List of supported items for use when in main/offhand. Defaults to `["minecraft:arrow", "minecraft:spectral_arrow", "minecraft:firework_rocket"]`
-- `shootSound`: The sound when shooting a projectile. Default to `minecraft:item.crossbow.shoot`
-- `loadingStartSound`: Projectile loading start sound. Default to `minecraft:item.crossbow.loading_start`
-- `loadingMiddleSound`: Projectile loading middle sound. Default to `minecraft:item.crossbow.loading_middle`
-- `loadingEndSound`: Projectile loading end sound. Default to `minecraft:item.crossbow.loading_end`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `powerMultiplier`: The power multiplier. Defaults to `1`
+> - `supportedProjectiles`: List of supported items in the inventory for use with the crossbow. Defaults to `["minecraft:arrow", "minecraft:spectral_arrow"]`
+> - `supportedHeldProjectiles`: List of supported items for use when in main/offhand. Defaults to `["minecraft:arrow", "minecraft:spectral_arrow", "minecraft:firework_rocket"]`
+> - `shootSound`: The sound when shooting a projectile. Default to `minecraft:item.crossbow.shoot`
+> - `loadingStartSound`: Projectile loading start sound. Default to `minecraft:item.crossbow.loading_start`
+> - `loadingMiddleSound`: Projectile loading middle sound. Default to `minecraft:item.crossbow.loading_middle`
+> - `loadingEndSound`: Projectile loading end sound. Default to `minecraft:item.crossbow.loading_end`
 
 <br>
 <br>
@@ -437,29 +432,29 @@ Alternatively, you can use the `itemModel` field to provide your own item asset 
 
 Defines behaviour for items capable of shooting custom projectiles or being shot themselves.
 
-~~~admonish info "Configurable Fields"
-- `consumes`: Indicates whether the shooting action consumes the item. Defaults to `false`
-- `damages`: Indicates whether the item gets damaged when using. Defaults to `false`
-- `baseDamage`: The base damage of the projectile. Defaults to `2.0`
-- `speed`: The speed at which the projectile is fired. Defaults to `1.0`
-- `cooldown`: Number of ticks between shots. Defaults to `8`
-- `projectile`: The identifier for the projectile item. Empty by default
-- `pickupItem`: Identifier for the item that can be picked up after the projectile lands. Empty by default
-- `dispenserSupport`: Whether this item can be fired from a dispenser. Defaults to `false`
-- `canPickUp`: Whether the projectile can be picked up by players. Defaults to `false`
-- `dropAsItem`: Whether the projectile should drop as an item when it hits. Defaults to `true`
-- `sound`: Sound effect to play when shooting. Defaults to `minecraft:item.trident.throw`
-- `volume`: Volume of the shooting sound. Defaults to `1.0`
-- `pitch`: Pitch of the shooting sound. Defaults to `1.0`
-- `hitSound`: Sound to play when the projectile hits an entity. Defaults to `minecraft:item.trident.hit`
-- `hitVolume`: Volume of the hit sound. Defaults to `1.0`
-- `hitPitch`: Pitch of the hit sound. Defaults to `1.0`
-- `hitGroundSound`: Sound to play when the projectile hits the ground. Defaults to `minecraft:item.trident.hit_ground`
-- `display`: The display context of the item model (e.g. `none`, `fixed`, etc). Defaults to `none`
-- `rotation`: Rotation of the projectile, expressed as a quaternion. Defaults to `[0, 90, 0]` (Y-axis 90°)
-- `translation`: Translation offset for the projectile. Defaults to `[0, 0, 0]`
-- `scale`: Scale for the projectile model. Defaults to `[0.6, 0.6, 0.6]`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `consumes`: Indicates whether the shooting action consumes the item. Defaults to `false`
+> - `damages`: Indicates whether the item gets damaged when using. Defaults to `false`
+> - `baseDamage`: The base damage of the projectile. Defaults to `2.0`
+> - `speed`: The speed at which the projectile is fired. Defaults to `1.0`
+> - `cooldown`: Number of ticks between shots. Defaults to `8`
+> - `projectile`: The identifier for the projectile item. Empty by default
+> - `pickupItem`: Identifier for the item that can be picked up after the projectile lands. Empty by default
+> - `dispenserSupport`: Whether this item can be fired from a dispenser. Defaults to `false`
+> - `canPickUp`: Whether the projectile can be picked up by players. Defaults to `false`
+> - `dropAsItem`: Whether the projectile should drop as an item when it hits. Defaults to `true`
+> - `sound`: Sound effect to play when shooting. Defaults to `minecraft:item.trident.throw`
+> - `volume`: Volume of the shooting sound. Defaults to `1.0`
+> - `pitch`: Pitch of the shooting sound. Defaults to `1.0`
+> - `hitSound`: Sound to play when the projectile hits an entity. Defaults to `minecraft:item.trident.hit`
+> - `hitVolume`: Volume of the hit sound. Defaults to `1.0`
+> - `hitPitch`: Pitch of the hit sound. Defaults to `1.0`
+> - `hitGroundSound`: Sound to play when the projectile hits the ground. Defaults to `minecraft:item.trident.hit_ground`
+> - `display`: The display context of the item model (e.g. `none`, `fixed`, etc). Defaults to `none`
+> - `rotation`: Rotation of the projectile, expressed as a quaternion. Defaults to `[0, 90, 0]` (Y-axis 90°)
+> - `translation`: Translation offset for the projectile. Defaults to `[0, 0, 0]`
+> - `scale`: Scale for the projectile model. Defaults to `[0.6, 0.6, 0.6]`
 
 ---
 
@@ -470,7 +465,9 @@ Makes the item usable as shield.
 This behaviour can automatically generate the item model predicate overrides for shields (item assets in `items` in 1.21.4 or later).
 
 In order to automatically generate an item model for shields, you have to provide models for `default` and `blocking` in the `itemResource` field:
-~~~admonish example
+
+Example:
+
 <!-- langtabs-start -->
 ```yml
 itemResource:
@@ -491,8 +488,6 @@ itemResource:
 ```
 <!-- langtabs-end -->
 
-~~~
-
 Alternatively, you can use the `itemModel` field to provide your own item asset model
 
 ---
@@ -504,7 +499,9 @@ Makes the item behave like a fishing rod!
 This behaviour can automatically generate the item model predicate overrides for fishing rods (item assets in `items` in 1.21.4 or later).
 
 In order to automatically generate an item model for fishing rods, you have to provide models for `default` and `cast` in the `itemResource` field:
-~~~admonish example
+
+Example:
+
 <!-- langtabs-start -->
 ```yml
 itemResource:
@@ -525,24 +522,23 @@ itemResource:
 ```
 <!-- langtabs-end -->
 
-~~~
-
 Alternatively, you can use the `itemModel` field to provide your own item asset model
 
 ---
 
 ## `trident` behaviour
 
-~~~admonish warning
-This behaviour is experimental and only supported in minecraft 1.21.4 or later
-~~~
+> [!WARNING]
+> This behaviour is experimental and only supported in minecraft 1.21.4 or later
 
 Makes the item behave like a trident!
 
 This behaviour can automatically generate the item model predicate overrides for tridents.
 
 In order to automatically generate an item model for tridents, you will have to provide models for `default` and `throwing` in the `itemResource` field:
-~~~admonish example
+
+Example:
+
 <!-- langtabs-start -->
 ```yml
 itemResource:
@@ -563,8 +559,6 @@ itemResource:
 ```
 <!-- langtabs-end -->
 
-~~~
-
 Alternatively, you can use the `itemModel` field to provide your own item asset model
 
 ---
@@ -573,11 +567,12 @@ Alternatively, you can use the `itemModel` field to provide your own item asset 
 
 Makes the item behave like a mace!
 
-~~~admonish info "Configurable Fields"
-- `damageMultiplier`: Damage multiplier when "smashing" an entity. Defaults to `1.0`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `damageMultiplier`: Damage multiplier when "smashing" an entity. Defaults to `1.0`
 
-~~~admonish example
+Example:
+
 <!-- langtabs-start -->
 ```yml
 behaviour:
@@ -596,19 +591,18 @@ behaviour:
 ```
 <!-- langtabs-end -->
 
-~~~
-
 ---
 
 ## `wax` behaviour
 
 Allows to wax blocks using this item, similar to honeycomb with copper.
 
-~~~admonish info "Configurable Fields"
-- `reduceDurability`: Flag whether the items durability should be decreased instead of the item being consumed. Defaults to `false`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `reduceDurability`: Flag whether the items durability should be decreased instead of the item being consumed. Defaults to `false`
 
-~~~admonish example
+Example:
+
 <!-- langtabs-start -->
 ```yml
 behaviour:
@@ -627,25 +621,19 @@ behaviour:
 ```
 <!-- langtabs-end -->
 
-~~~
-
 ---
 
 ## `snowball` behaviour
 
 Makes the item itself throwable like a snoball.
 
-~~~admonish info "Configurable Fields"
-- `inaccuracy`: Inaccuracy when throwing. Defaults to `1.0`
-- `power`: Initial projectile power. Defaults to `1.5`
-
-- `dispenserSupport`: Defaults to `false`
-
-- `hitCommand`: Commands to run when the projectile hits anything
-- `hitCommands`: List of commands to run when the projectile hits anything
-
-- `entityHitCommand`: Commands to run when the projectile hits an entity. `%target%` gets replaced with the UUID of the hit entity
-- `entityHitCommands`: List of commands to run when the projectile hits an entity. `%target%` gets replaced with the UUID of the hit entity
-
-- `executeAtHit`: Whether to execute the commands at the hit position. Defaults to `true`
-~~~
+> [!IMPORTANT]
+> Configurable Fields:
+> - `inaccuracy`: Inaccuracy when throwing. Defaults to `1.0`
+> - `power`: Initial projectile power. Defaults to `1.5`
+> - `dispenserSupport`: Defaults to `false`
+> - `hitCommand`: Commands to run when the projectile hits anything
+> - `hitCommands`: List of commands to run when the projectile hits anything
+> - `entityHitCommand`: Commands to run when the projectile hits an entity. `%target%` gets replaced with the UUID of the hit entity
+> - `entityHitCommands`: List of commands to run when the projectile hits an entity. `%target%` gets replaced with the UUID of the hit entity
+> - `executeAtHit`: Whether to execute the commands at the hit position. Defaults to `true`

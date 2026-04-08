@@ -4,11 +4,12 @@ See the datapack in the GitHub repository for more examples!
 
 https://github.com/tomalbrc/filament/tree/main/example_datapack
 
-~~~admonish tip
-All fields support either camelCase or snake_case!
-~~~
+> [!TIP]
+> All fields support either camelCase or snake_case!
 
-~~~admonish example "Clown horn intrument"
+
+Clown horn intrument:
+
 <!-- langtabs-start -->
 ```yaml
 id: mynamespace:clown_horn
@@ -48,9 +49,8 @@ behaviour:
 ```
 <!-- langtabs-end -->
 
-~~~
+Allay trap:
 
-~~~admonish example "Allay trap"
 <!-- langtabs-start -->
 ```yaml
 id: mynamespace:allay_bottle
@@ -94,9 +94,8 @@ behaviour:
 ```
 <!-- langtabs-end -->
 
-~~~
+Example Hat (can be put into inventory/swapped like normal helmets:
 
-~~~admonish example "Hat (can be put into inventory/swapped like normal helmets)"
 <!-- langtabs-start -->
 ```yaml
 id: mynamespace:magic_hat
@@ -137,5 +136,3 @@ components:
 }
 ```
 <!-- langtabs-end -->
-
-~~~

@@ -6,7 +6,7 @@ Those are accessible using `/polymer creative` or, when polymer is installed cli
 This can be done by adding an `item-groups.json`/`item-groups.yml` file in the root of the `filament` directory of your datapack.
 
 Here is an example of an `item-groups.json`/`item-groups.yml`:
-~~~admonish example
+
 <!-- langtabs-start -->
 ```json
 [
@@ -32,8 +32,6 @@ Here is an example of an `item-groups.json`/`item-groups.yml`:
 ```
 <!-- langtabs-end -->
 
-~~~
-
 ## Fields
 
 ### `id`
@@ -55,20 +53,18 @@ The name displayed for the item group - supports Placeholder API's basic text fo
 The translation key looks like this: `mynamespace.itemGroup.mygroup` for an `id` of `mynamespace:mygroup`.
 
 So an `en_us.json` for a resource-pack might look like this:
-~~~admonish example
+
 ```json
 {
   "mynamespace.itemGroup.mygroup": "My Group"
 }
 ```
-~~~
 
 or for german (`de_de.json`):
 
-~~~admonish example
+
 ```json
 {
   "mynamespace.itemGroup.mygroup": "Meine Gruppe"
 }
 ```
-~~~

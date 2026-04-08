@@ -17,7 +17,7 @@ For World-Gen: Filament supports biome_modifications in datapacks, similar to fo
 ## Contents
 
 Blocks like candles or turtle eggs, with mutiple blocks in 1:
-~~~admonish example
+
 <!-- langtabs-start -->
 ```yml
 id: mynamespace:pebbles
@@ -76,7 +76,6 @@ components:
 ```
 <!-- langtabs-end -->
 
-~~~
 
 The fields `id`, `blockResource`, and `blockModelType` are required to be set.
 
@@ -87,9 +86,8 @@ The fields `id`, `blockResource`, and `blockModelType` are required to be set.
 ## `id` (required): 
 Identifier of the block and its item.
 
-~~~admonish example
-Example: `mynamespace:myblock`
-~~~
+> [!TIP]
+> Example: `mynamespace:myblock`
 
 ---
 
@@ -107,7 +105,7 @@ An object that allows you to provide different block models for each block-state
 The keys work similar to the vanilla blockstate files in resourcepacks, you specify the model to use based on the block-state.
 
 An example for the `count` block-behaviour:
-~~~admonish example
+
 <!-- langtabs-start -->
 ```yml
 blockResource:
@@ -132,10 +130,9 @@ blockResource:
 ```
 <!-- langtabs-end -->
 
-~~~
 
 Block models can be automatically generated from textures, like this:
-~~~admonish example
+
 <!-- langtabs-start -->
 ```yml
 id: mynamespace:black_concrete_bricks
@@ -168,8 +165,6 @@ blockModelType: full_block
 ```
 <!-- langtabs-end -->
 
-~~~
-
 ---
 
 ## `itemModel`
@@ -185,7 +180,6 @@ An object that allows you to provide different item-models which may be required
 
 The `trapped` behaviour for example requires a model for the `trapped` key.
 
-~~~admonish example
 <!-- langtabs-start -->
 ```yml
 itemResource:
@@ -204,12 +198,11 @@ itemResource:
 ```
 <!-- langtabs-end -->
 
-~~~
 
 The item model can also be auto-generated based on textures.
 
 Example for automatic model generation based on textures:
-~~~admonish example
+
 <!-- langtabs-start -->
 ```yml
 item_resource:
@@ -233,17 +226,14 @@ item_resource:
 ```
 <!-- langtabs-end -->
 
-~~~
-
 ---
 
 ## `blockModelType` (required in most cases):
 
 The block model to use/retexture. See [Block Model Types](block-model-types.md) for a list of options.
 
-~~~admonish warning
-For some block behaviours like `slab` it may be required to leave this field empty!
-~~~
+> [!WARNING]
+> For some block behaviours like `slab` it may be required to leave this field empty!
 
 ---
 
@@ -275,7 +265,6 @@ Defines the item-group for this blocks' item. See [Item Groups](../general/item-
 
 An object with minecraft components used for the item.
 
-~~~admonish example
 <!-- langtabs-start -->
 ```yml
 components:
@@ -313,4 +302,3 @@ components:
 ```
 <!-- langtabs-end -->
 
-~~~
