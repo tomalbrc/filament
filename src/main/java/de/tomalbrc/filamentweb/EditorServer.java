@@ -9,8 +9,10 @@ import de.tomalbrc.filamentweb.asset.AssetStore;
 import de.tomalbrc.filamentweb.service.*;
 import de.tomalbrc.filamentweb.util.Mc2Glb;
 import eu.pb4.polymer.resourcepack.api.AssetPaths;
+import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
 import jakarta.servlet.DispatcherType;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.resources.Identifier;
 import org.eclipse.jetty.ee10.servlet.ResourceServlet;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
@@ -26,9 +28,8 @@ import java.util.EnumSet;
 import java.util.function.Function;
 
 public class EditorServer implements Runnable {
-    private static boolean didStart = false;
     private static ResourcePackBuilder RP_BUILDER;
-
+    private static EditorServer INSTANCE;
     public static Mc2Glb CONVERTER;
 
     private final Server server;
@@ -92,12 +93,14 @@ public class EditorServer implements Runnable {
         server.join();
     }
 
+    public void stop() throws Exception {
+        server.stop();
+    }
+
     public static void runServer() {
-        if (didStart || RP_BUILDER == null || Filament.SERVER == null) {
+        if (INSTANCE != null || RP_BUILDER == null || Filament.SERVER == null) {
             return;
         }
-
-        didStart = true;
 
         try {
             // todo: handle non-existing files.
@@ -122,6 +125,7 @@ public class EditorServer implements Runnable {
             var thread = new Thread(server, "Filament-Editor-Server");
             thread.start();
             Filament.LOGGER.info("Started Filament Editor server!");
+            INSTANCE = server;
         } catch (Exception e) {
             Filament.LOGGER.error("Failed to start editor server", e);
         }
@@ -138,6 +142,19 @@ public class EditorServer implements Runnable {
     }
 
     public static void init() {
+        PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(EditorServer::init);
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            if (EditorServer.resourcePackBuilder() != null)
+                EditorServer.runServer();
+        });
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
+            if (INSTANCE != null) {
+                try {
+                    INSTANCE.stop();
+                } catch (Exception e) {}
+            }
+        });
+
         FilamentRegistrationEvents.ITEM.register((data, item) -> {
             AssetStore.registerAssetFromPath(data, ItemData.class, item);
         });

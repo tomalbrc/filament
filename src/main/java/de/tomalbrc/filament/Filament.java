@@ -72,11 +72,6 @@ public class Filament implements ModInitializer {
 
         if (FilamentEditorConfig.getInstance().enabled) {
             EditorServer.init();
-            PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(EditorServer::init);
-            ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-                if (EditorServer.resourcePackBuilder() != null)
-                    EditorServer.runServer();
-            });
         }
 
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
