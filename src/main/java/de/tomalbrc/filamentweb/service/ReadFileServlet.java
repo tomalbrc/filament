@@ -9,6 +9,7 @@ import de.tomalbrc.filamentweb.SchemaFormBuilder;
 import de.tomalbrc.filamentweb.asset.Asset;
 import de.tomalbrc.filamentweb.asset.AssetStore;
 import de.tomalbrc.filamentweb.util.JsonPathUtil;
+import de.tomalbrc.filamentweb.util.Mc2Glb;
 import de.tomalbrc.filamentweb.util.SchemaUtil;
 import j2html.tags.ContainerTag;
 import jakarta.servlet.http.HttpServlet;
@@ -93,8 +94,7 @@ public class ReadFileServlet extends HttpServlet {
 
             try {
                 JsonElement built = buildJsonFromParams(paramMap);
-                Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
-                contentToSave = gson.toJson(built);
+                contentToSave = Mc2Glb.gson.toJson(built);
             } catch (Exception e) {
                 Filament.LOGGER.warn("Failed to reconstruct JSON from parameters for {}", name, e);
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

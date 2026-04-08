@@ -165,7 +165,7 @@ public class SchemaFormBuilder {
                 .withType("button")
                 .withClass("btn btn-sm btn-link text-danger text-decoration-none fw-bold ms-1")
                 .withStyle("background: #149;")
-                .attr("hx-post", WebPaths.fragment(FragmentServlet.Operation.REMOVE_OBJECT_ENTRY.toString(), uuid, path))
+                .attr("hx-post", WebPaths.fragment(FragmentServlet.Operation.REMOVE_OBJECT.toString(), uuid, path))
                 .attr("hx-target", "#" + targetId)
                 .attr("hx-swap", "outerHTML");
     }
@@ -193,7 +193,7 @@ public class SchemaFormBuilder {
         return div().withClass("input-group input-group-sm mb-1").with(
                 input().withType("text").withClass("form-control").withId(safe).withName("newKey").withValue(currentKey).withPlaceholder("Rename key..."),
                 button("Rename").withType("button").withClass("btn btn-outline-secondary")
-                        .attr("hx-post", WebPaths.fragment(FragmentServlet.Operation.RENAME_OBJECT_ENTRY.toString(), uuid, objectPath, currentKey))
+                        .attr("hx-post", WebPaths.fragment(FragmentServlet.Operation.RENAME_OBJECT.toString(), uuid, objectPath, currentKey))
                         .attr("hx-include", "#" + safe)
                         .attr("hx-target", "#" + fieldsContainerId(uuid, objectPath))
                         .attr("hx-swap", "outerHTML")
@@ -288,9 +288,13 @@ public class SchemaFormBuilder {
             choice.with(opt);
         }
 
-        choice.attr("hx-post", WebPaths.fragment(FragmentServlet.Operation.UPDATE_COMPOSED_CHOICE.toString(), uuid, path));
-        choice.attr("hx-target", "#" + containerId);
-        choice.attr("hx-swap", "outerHTML").attr("hx-trigger", "change");
+        choice
+                .attr("hx-post", WebPaths.fragment(FragmentServlet.Operation.UPDATE_CHOICE.toString(), uuid, path))
+                .attr("hx-target", "#" + containerId)
+                .attr("hx-swap", "outerHTML")
+                .attr("hx-trigger", "change")
+                .attr("hx-include", "this")
+                .attr("hx-vals", "js:{choice: event.target.value}");
 
         Tag<?> branchEditor = renderSchemaValue(uuid, path, branches.get(selected), value, rootSchema, safeId("field", uuid, path));
 
@@ -467,7 +471,7 @@ public class SchemaFormBuilder {
             container.with(div().withClass("input-group input-group-sm mt-3").with(
                     select().withClass("form-select").withId(pickerId).with(option("Add property...").withValue(""), each(missingOptional, p -> option(p).withValue(p))),
                     button("Add").withType("button").withClass("btn btn-primary")
-                            .attr("hx-post", WebPaths.fragment(FragmentServlet.Operation.ADD_OBJECT_ENTRY.toString(), uuid, prefix))
+                            .attr("hx-post", WebPaths.fragment(FragmentServlet.Operation.ADD_OBJECT.toString(), uuid, prefix))
                             .attr("hx-vals", "js:{key: document.getElementById('" + pickerId + "').value}")
                             .attr("hx-target", "#" + fieldsContainerId(uuid, prefix)).attr("hx-swap", "outerHTML")
             ));
@@ -505,7 +509,7 @@ public class SchemaFormBuilder {
                     input().withType("text").withClass("form-control").withId(customKeyId).withPlaceholder("New key name..."),
                     typeSelect,
                     button("Add Entry").withType("button").withClass("btn btn-primary")
-                            .attr("hx-post", WebPaths.fragment(FragmentServlet.Operation.ADD_OBJECT_ENTRY.toString(), uuid, prefix))
+                            .attr("hx-post", WebPaths.fragment(FragmentServlet.Operation.ADD_OBJECT.toString(), uuid, prefix))
                             .attr("hx-vals", "js:{key: document.getElementById('" + customKeyId + "').value, type: document.getElementById('" + typeSelectId + "').value}")
                             .attr("hx-target", "#" + fieldsContainerId(uuid, prefix))
                             .attr("hx-swap", "outerHTML")
@@ -545,7 +549,7 @@ public class SchemaFormBuilder {
                         .withValue(currentKey)
                         .withPlaceholder("Rename key..."),
                 button("Rename").withType("button").withClass("btn btn-outline-secondary")
-                        .attr("hx-post", WebPaths.fragment(FragmentServlet.Operation.RENAME_OBJECT_ENTRY.toString(), uuid, objectPath, currentKey))
+                        .attr("hx-post", WebPaths.fragment(FragmentServlet.Operation.RENAME_OBJECT.toString(), uuid, objectPath, currentKey))
                         .attr("hx-include", "#" + safe)
                         .attr("hx-target", "#" + fieldsContainerId(uuid, objectPath))
                         .attr("hx-swap", "outerHTML")
@@ -622,7 +626,8 @@ public class SchemaFormBuilder {
             }
 
             String modelId = previewId + "-" + i++;
-            String label = entry.type() == null ? "" : entry.type();
+            String label = entry.path() == null ? "" : entry.path();
+            String label1 = entry.containerPath() == null ? "" : entry.containerPath();
             String label2 = entry.id() == null ? "" : entry.id();
             String src = "data:model/gltf-binary;base64," + Base64.getEncoder().encodeToString(modelBytes);
 
@@ -631,10 +636,13 @@ public class SchemaFormBuilder {
                     .withStyle("min-width: 150px; flex: 1 1 100px;")
                     .with(
                             div()
-                                    .withClass("text-muted small mb-2 text-truncate")
+                                    .withClass("text-muted small mb-2 text-wrap")
                                     .withText(label),
                             div()
-                                    .withClass("text-muted small mb-2 text-truncate")
+                                    .withClass("text-muted small mb-2 text-wrap")
+                                    .withText(label1),
+                            div()
+                                    .withClass("text-muted small mb-2 text-wrap")
                                     .withText(label2)
                     )
                     .with(
@@ -661,7 +669,7 @@ public class SchemaFormBuilder {
         return wrapper;
     }
 
-    record Model(String type, String id, String assetPath, byte[] data) {
+    record Model(String path, String containerPath, String id, String assetPath, byte[] data) {
 
     }
 
@@ -687,22 +695,21 @@ public class SchemaFormBuilder {
 
             }
 
-            String type = "Item via JSON";
+            String type = "item_resource";
             if (asset.data instanceof ItemData id) {
                 res = id.itemResource();
             }
             else if (asset.data instanceof BlockData bd) {
                 res = bd.blockResource() != null ? bd.blockResource() : bd.itemResource();
-                type = "Block via JSON";
+                type = "item_resource/block_resource";
             }
             else if (asset.data instanceof DecorationData dd) {
                 res = dd.itemResource();
-                type = "Decoration via JSON";
             }
 
             if (res != null && !res.getModels().isEmpty()) {
                 for (Map.Entry<String, Identifier> entry : res.getModels().entrySet()) {
-                    models.add(new Model(type, entry.getKey(), AssetPaths.model(entry.getValue()), EditorServer.CONVERTER.toGlb(entry.getValue())));
+                    models.add(new Model(type, null, entry.getKey(), AssetPaths.model(entry.getValue()), EditorServer.CONVERTER.toGlb(entry.getValue())));
                 }
             }
 
@@ -714,7 +721,7 @@ public class SchemaFormBuilder {
                     );
 
                     if (el.isJsonObject()) {
-                        collectModels(el, "", models);
+                        collectModels(itemModel, el, "", models);
                     }
                 }
             }
@@ -724,7 +731,7 @@ public class SchemaFormBuilder {
         return models;
     }
 
-    private static void collectModels(JsonElement el, String path, List<Model> models) {
+    private static void collectModels(Identifier itemModel, JsonElement el, String path, List<Model> models) {
         if (el == null || el.isJsonNull()) return;
 
         if (el.isJsonObject()) {
@@ -739,17 +746,17 @@ public class SchemaFormBuilder {
                     try {
                         Identifier id = Identifier.tryParse(value.getAsString());
                         if (id != null && !id.getPath().isBlank())
-                            models.add(new Model("Model(s) in items/", newPath, AssetPaths.model(id) + ".json", EditorServer.CONVERTER.toGlb(id)));
+                            models.add(new Model(id.toString(), AssetPaths.itemAsset(itemModel), newPath, AssetPaths.model(id) + ".json", EditorServer.CONVERTER.toGlb(id)));
                     } catch (Exception ignored) {}
                 }
 
-                collectModels(value, newPath, models);
+                collectModels(itemModel, value, newPath, models);
             }
         }
         else if (el.isJsonArray()) {
             int i = 0;
             for (JsonElement child : el.getAsJsonArray()) {
-                collectModels(child, path + "[" + i++ + "]", models);
+                collectModels(itemModel, child, path + "[" + i++ + "]", models);
             }
         }
     }

@@ -25,14 +25,20 @@ public class Asset {
     public Data<?> data;
     public Type type;
 
+    public JsonElement raw;
     public JsonElement schema;
 
     public JsonElement readJson() {
-        return Json.GSON.toJsonTree(data);
+        if (this.raw == null) {
+            raw = Json.GSON.toJsonTree(data);
+        }
+
+        return raw;
     }
 
     public void apply(JsonElement json) {
-        this.data = Json.GSON.fromJson(json, data.getClass());
+        this.raw = json;
+        var data = Json.GSON.fromJson(json, this.data.getClass());
         this.schema = AssetStore.getSchema(data, type);
     }
 

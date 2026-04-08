@@ -25,81 +25,38 @@ public final class SchemaUtil {
     }
 
     public static JsonObject resolveRef(JsonObject node, JsonObject rootSchema) {
-        if (node == null) return null;
-        if (!node.has("$ref")) return node;
-        try {
-            JsonElement refEl = node.get("$ref");
-            if (refEl == null || !refEl.isJsonPrimitive()) return node;
-            String ref = refEl.getAsString();
-            if (ref == null) return node;
-            if (ref.startsWith("#/") && rootSchema != null) {
-                String pointer = ref.substring(2);
-                String[] parts = pointer.split("/");
-                JsonElement cur = rootSchema;
-                for (String rawPart : parts) {
-                    String part = rawPart.replace("~1", "/").replace("~0", "~");
-                    if (cur == null || !cur.isJsonObject()) return node;
-                    JsonObject curObj = cur.getAsJsonObject();
-                    if (curObj.has(part)) {
-                        cur = curObj.get(part);
-                        continue;
-                    }
+        if (node == null || !node.has("$ref") || rootSchema == null) return node;
 
-                    if (curObj.has("$defs") && curObj.get("$defs").isJsonObject() && curObj.getAsJsonObject("$defs").has(part)) {
-                        cur = curObj.getAsJsonObject("$defs").get(part);
-                        continue;
-                    }
-                    if (curObj.has("definitions") && curObj.get("definitions").isJsonObject() && curObj.getAsJsonObject("definitions").has(part)) {
-                        cur = curObj.getAsJsonObject("definitions").get(part);
-                        continue;
-                    }
-                    return node;
-                }
-                if (cur != null && cur.isJsonObject()) return cur.getAsJsonObject();
+        String ref = node.get("$ref").getAsString();
+        if (!ref.startsWith("#/")) return node;
+
+        String[] parts = ref.substring(2).split("/");
+        JsonElement current = rootSchema;
+
+        for (String part : parts) {
+            String key = part.replace("~1", "/").replace("~0", "~");
+            if (current instanceof JsonObject obj) {
+                if (obj.has(key)) current = obj.get(key);
+                else if (obj.has("$defs") && obj.getAsJsonObject("$defs").has(key)) current = obj.getAsJsonObject("$defs").get(key);
+                else if (obj.has("definitions") && obj.getAsJsonObject("definitions").has(key)) current = obj.getAsJsonObject("definitions").get(key);
+                else return node;
+            } else {
+                return node;
             }
-        } catch (Exception ignored) {}
-        return node;
+        }
+        return current.isJsonObject() ? current.getAsJsonObject() : node;
     }
 
-    public static JsonObject findSchemaAtPath(JsonObject rootSchema, String path) {
-        if (rootSchema == null) return null;
-        if (path == null || path.isEmpty()) return resolveRef(rootSchema, rootSchema);
-
-        JsonObject node = rootSchema;
-        List<String> tokens = tokenizePath(path);
-
-        for (String t : tokens) {
-            if (t == null || t.isEmpty()) continue;
-            node = resolveRef(node, rootSchema);
-
-            if (node.has("properties") && node.get("properties").isJsonObject() && node.getAsJsonObject("properties").has(t)) {
-                JsonElement el = node.getAsJsonObject("properties").get(t);
-                if (el != null && el.isJsonObject()) {
-                    node = el.getAsJsonObject();
-                    continue;
-                }
-            }
-
-            if (node.has("additionalProperties") && node.get("additionalProperties").isJsonObject()) {
-                node = node.getAsJsonObject("additionalProperties");
-                continue;
-            }
-
-            if (node.has("type") && node.get("type").isJsonPrimitive() && "array".equals(node.get("type").getAsString())) {
-                if (node.has("items") && node.get("items").isJsonObject()) {
-                    node = node.getAsJsonObject("items");
-                    continue;
-                }
-            }
-
-            if (node.has("$defs") && node.get("$defs").isJsonObject() && node.getAsJsonObject("$defs").has(t)) {
-                JsonElement el = node.getAsJsonObject("$defs").get(t);
-                if (el != null && el.isJsonObject()) { node = el.getAsJsonObject(); continue; }
-            }
-
-            return null;
+    public static List<String> schemaTypes(JsonObject schema) {
+        if (schema == null || !schema.has("type")) return Collections.emptyList();
+        JsonElement typeEl = schema.get("type");
+        if (typeEl.isJsonPrimitive()) return List.of(typeEl.getAsString());
+        if (typeEl.isJsonArray()) {
+            List<String> types = new ArrayList<>();
+            typeEl.getAsJsonArray().forEach(e -> { if(e.isJsonPrimitive()) types.add(e.getAsString()); });
+            return types;
         }
-        return resolveRef(node, rootSchema);
+        return Collections.emptyList();
     }
 
     public static JsonElement createDefaultForSchema(JsonObject schemaNode, JsonObject rootSchema) {
@@ -282,21 +239,6 @@ public final class SchemaUtil {
         return null;
     }
 
-    public static List<String> schemaTypes(JsonObject schema) {
-        if (schema == null || !schema.has("type")) return List.of();
-        JsonElement typeEl = schema.get("type");
-        if (typeEl.isJsonPrimitive()) return List.of(typeEl.getAsString());
-        if (typeEl.isJsonArray()) {
-            List<String> types = new ArrayList<>();
-            for (JsonElement e : typeEl.getAsJsonArray()) {
-                if (e.isJsonPrimitive()) types.add(e.getAsString());
-            }
-            return types;
-        }
-        return List.of();
-    }
-
-
     public static String schemaDisplayName(JsonObject schema, String path, String fallback) {
         if (schema != null && schema.has("title")) {
             return schema.get("title").getAsString();
@@ -331,9 +273,8 @@ public final class SchemaUtil {
 
     public static JsonObject normalizeSchema(JsonObject schema, JsonObject rootSchema) {
         if (schema == null) return new JsonObject();
-        JsonObject resolved = resolveSchema(schema, rootSchema);
-        if (resolved.has("allOf"))
-            return mergeAllOf(resolved, rootSchema);
+        JsonObject resolved = resolveRef(schema, rootSchema);
+        if (resolved.has("allOf")) return mergeAllOf(resolved, rootSchema);
 
         return resolved;
     }
@@ -466,36 +407,89 @@ public final class SchemaUtil {
 
     public static boolean matchesSchema(JsonElement value, JsonObject schema, JsonObject rootSchema) {
         if (schema == null) return true;
+        if (value == null || value.isJsonNull()) {
+            List<String> types = schemaTypes(schema);
+            return types.contains("null") || (types.isEmpty() && !schema.has("type"));
+        }
+
         schema = normalizeSchema(schema, rootSchema);
 
         if (schema.has("const")) {
-            JsonElement c = schema.get("const");
-            return Objects.equals(gson.toJson(c), gson.toJson(value));
+            return schema.get("const").equals(value);
         }
-
         if (schema.has("enum") && schema.get("enum").isJsonArray()) {
+            boolean found = false;
             for (JsonElement e : schema.getAsJsonArray("enum")) {
-                if (Objects.equals(gson.toJson(e), gson.toJson(value))) return true;
+                if (e.equals(value)) {
+                    found = true;
+                    break;
+                }
             }
-            return false;
+            if (!found) return false;
         }
 
         List<String> types = schemaTypes(schema);
         if (!types.isEmpty()) {
+            boolean typeMatches = false;
             for (String type : types) {
-                if ("null".equals(type) && (value == null || value.isJsonNull())) return true;
-                if ("boolean".equals(type) && value != null && value.isJsonPrimitive() && value.getAsJsonPrimitive().isBoolean()) return true;
-                if (("number".equals(type) || "integer".equals(type)) && value != null && value.isJsonPrimitive() && value.getAsJsonPrimitive().isNumber()) return true;
-                if ("string".equals(type) && value != null && value.isJsonPrimitive() && value.getAsJsonPrimitive().isString()) return true;
-                if ("object".equals(type) && value != null && value.isJsonObject()) return true;
-                if ("array".equals(type) && value != null && value.isJsonArray()) return true;
+                if (checkBaseType(value, type)) {
+                    typeMatches = true;
+                    break;
+                }
             }
-            return false;
+            if (!typeMatches) return false;
         }
 
-        if (schema.has("properties") || schema.has("additionalProperties")) return value != null && value.isJsonObject();
-        if (schema.has("items")) return value != null && value.isJsonArray();
+        if (value.isJsonObject()) {
+            return validateObject(value.getAsJsonObject(), schema, rootSchema);
+        } else if (value.isJsonArray()) {
+            return validateArray(value.getAsJsonArray(), schema, rootSchema);
+        }
 
+        return true;
+    }
+
+    private static boolean checkBaseType(JsonElement value, String type) {
+        return switch (type) {
+            case "string" -> value.isJsonPrimitive() && value.getAsJsonPrimitive().isString();
+            case "number", "integer" -> value.isJsonPrimitive() && value.getAsJsonPrimitive().isNumber();
+            case "boolean" -> value.isJsonPrimitive() && value.getAsJsonPrimitive().isBoolean();
+            case "object" -> value.isJsonObject();
+            case "array" -> value.isJsonArray();
+            case "null" -> value.isJsonNull();
+            default -> true;
+        };
+    }
+
+    private static boolean validateObject(JsonObject obj, JsonObject schema, JsonObject rootSchema) {
+        // Check Required fields
+        if (schema.has("required") && schema.get("required").isJsonArray()) {
+            for (JsonElement req : schema.getAsJsonArray("required")) {
+                if (!obj.has(req.getAsString())) return false;
+            }
+        }
+
+        // Check Properties
+        if (schema.has("properties") && schema.get("properties").isJsonObject()) {
+            JsonObject props = schema.getAsJsonObject("properties");
+            for (Map.Entry<String, JsonElement> entry : props.entrySet()) {
+                if (obj.has(entry.getKey())) {
+                    if (!matchesSchema(obj.get(entry.getKey()), entry.getValue().getAsJsonObject(), rootSchema)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private static boolean validateArray(JsonArray array, JsonObject schema, JsonObject rootSchema) {
+        if (schema.has("items") && schema.get("items").isJsonObject()) {
+            JsonObject itemSchema = schema.getAsJsonObject("items");
+            for (JsonElement item : array) {
+                if (!matchesSchema(item, itemSchema, rootSchema)) return false;
+            }
+        }
         return true;
     }
 
@@ -504,15 +498,5 @@ public final class SchemaUtil {
             if (matchesSchema(value, branches.get(i), rootSchema)) return i;
         }
         return 0;
-    }
-
-    public static JsonObject chooseMatchingBranch(JsonObject schema, JsonElement value, JsonObject rootSchema) {
-        if (schema == null) return new JsonObject();
-        JsonObject normalized = normalizeSchema(schema, rootSchema);
-        if (normalized.has("allOf")) return mergeAllOf(normalized, rootSchema);
-        List<JsonObject> branches = extractBranches(normalized, rootSchema);
-        if (branches.size() <= 1) return normalized;
-        int idx = pickBranchIndex(value, branches, rootSchema);
-        return normalizeSchema(branches.get(idx), rootSchema);
     }
 }

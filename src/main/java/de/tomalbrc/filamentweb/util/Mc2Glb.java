@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public record Mc2Glb(Function<Identifier, InputStream> modelProvider, Function<Identifier, InputStream> textureProvider) {
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     private static final float SCALE_FACTOR = 16f;
 

@@ -26,6 +26,7 @@ import java.util.EnumSet;
 import java.util.function.Function;
 
 public class EditorServer implements Runnable {
+    private static boolean didStart = false;
     private static ResourcePackBuilder RP_BUILDER;
 
     public static Mc2Glb CONVERTER;
@@ -92,9 +93,11 @@ public class EditorServer implements Runnable {
     }
 
     public static void runServer() {
-        if (CONVERTER != null) { // TODO: better check if already running lol
+        if (didStart || RP_BUILDER == null || Filament.SERVER == null) {
             return;
         }
+
+        didStart = true;
 
         try {
             // todo: handle non-existing files.
@@ -144,9 +147,11 @@ public class EditorServer implements Runnable {
         FilamentRegistrationEvents.DECORATION.register((data, item, block) -> {
             AssetStore.registerAssetFromPath(data, DecorationData.class, item);
         });
+        // TODO: Entity support!
     }
 
     public static void init(ResourcePackBuilder builder) {
         RP_BUILDER = builder;
+        EditorServer.runServer();
     }
 }

@@ -19,11 +19,11 @@ import java.util.*;
 public class FragmentServlet extends HttpServlet {
     public enum Operation {
         UPDATE_FIELD("updateField"),
-        UPDATE_COMPOSED_CHOICE("updateComposedChoice"),
+        UPDATE_CHOICE("updateChoice"),
         ADD_ARRAY("addArray"),
-        RENAME_OBJECT_ENTRY("renameObjectEntry"),
-        ADD_OBJECT_ENTRY("addObjectEntry"),
-        REMOVE_OBJECT_ENTRY("removeObjectEntry");
+        RENAME_OBJECT("renameObject"),
+        ADD_OBJECT("addObject"),
+        REMOVE_OBJECT("removeObject");
 
         final String op;
         static final Map<String, Operation> map = new HashMap<>();
@@ -58,6 +58,7 @@ public class FragmentServlet extends HttpServlet {
         String path = req.getParameter("path");
         String key = req.getParameter("key");
         String value = req.getParameter("value");
+        String choice = req.getParameter("value");
 
         if (uuid == null || op == null || path == null) {
             resp.setStatus(400);
@@ -99,7 +100,7 @@ public class FragmentServlet extends HttpServlet {
                 return;
             }
 
-            case UPDATE_COMPOSED_CHOICE: {
+            case UPDATE_CHOICE: {
                 JsonObject nodeSchema = effectiveSchemaAtPath(schemaRoot, documentJson, path);
                 List<JsonObject> branches = SchemaUtil.extractBranches(nodeSchema, schemaRoot);
 
@@ -109,7 +110,7 @@ public class FragmentServlet extends HttpServlet {
                     return;
                 }
 
-                int selectedIndex = parseSafeInt(extractSelectedChoice(req), 0);
+                int selectedIndex = parseSafeInt(req.getParameter("choice"), 0);
                 if (selectedIndex < 0 || selectedIndex >= branches.size()) {
                     selectedIndex = 0;
                 }
@@ -148,9 +149,9 @@ public class FragmentServlet extends HttpServlet {
                 return;
             }
 
-            case RENAME_OBJECT_ENTRY:
-            case ADD_OBJECT_ENTRY:
-            case REMOVE_OBJECT_ENTRY: {
+            case RENAME_OBJECT:
+            case ADD_OBJECT:
+            case REMOVE_OBJECT: {
                 JsonElement el = JsonPathUtil.getElementAtPath(documentJson, path);
 
                 if (el == null || el.isJsonNull()) {
@@ -163,7 +164,7 @@ public class FragmentServlet extends HttpServlet {
                     JsonObject obj = el.getAsJsonObject();
                     JsonObject objectSchema = effectiveSchemaAtPath(schemaRoot, documentJson, path);
 
-                    if (op == Operation.ADD_OBJECT_ENTRY) {
+                    if (op == Operation.ADD_OBJECT) {
                         String newKey = req.getParameter("key");
                         if (newKey == null || newKey.isBlank()) {
                             newKey = "newKey";
@@ -180,7 +181,7 @@ public class FragmentServlet extends HttpServlet {
                             asset.apply(documentJson);
                         }
 
-                    } else if (op == Operation.REMOVE_OBJECT_ENTRY) {
+                    } else if (op == Operation.REMOVE_OBJECT) {
                         if (key != null) {
                             obj.remove(key);
                             asset.apply(documentJson);
@@ -200,7 +201,7 @@ public class FragmentServlet extends HttpServlet {
                 } else if (el.isJsonArray()) {
                     JsonArray arr = el.getAsJsonArray();
 
-                    if (op == Operation.REMOVE_OBJECT_ENTRY && key != null) {
+                    if (op == Operation.REMOVE_OBJECT && key != null) {
                         try {
                             int idx = Integer.parseInt(key);
                             if (idx >= 0 && idx < arr.size()) {
@@ -243,13 +244,6 @@ public class FragmentServlet extends HttpServlet {
             }
         }
         return fallback;
-    }
-
-    private static String extractSelectedChoice(HttpServletRequest req) {
-        String direct = req.getParameter("choice");
-        if (direct != null)
-            return direct;
-        return "0";
     }
 
     private static JsonObject schemaForObjectKey(JsonObject objectSchema, JsonObject rootSchema, String key) {
