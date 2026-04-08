@@ -16,20 +16,21 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.control.JumpControl;
-import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.pathfinder.PathType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
 import java.util.List;
+import java.util.Map;
 
 public class FilamentMob extends Animal implements PolymerEntity {
     EntityData data;
@@ -44,12 +45,22 @@ public class FilamentMob extends Animal implements PolymerEntity {
         this.setInvulnerable(data.properties().invulnerable);
         this.noPhysics = data.properties().noPhysics;
 
-        //this.setPathfindingMalus(PathType.BLOCKED);
+        var movement = data.movement();
+        if (movement.movementType != null)
+            this.moveControl = movement.movementType.getControl(this);
 
-        this.moveControl = new MoveControl(this);
-        this.jumpControl = new JumpControl(this);
+        if (movement.jumpType != null)
+            this.jumpControl = movement.jumpType.getControl(this);
+
+        for (Map.Entry<PathType, Float> entry : movement.pathfindingMalus.entrySet()) {
+            this.setPathfindingMalus(entry.getKey(), entry.getValue());
+        }
     }
 
+    @Override
+    protected @NonNull PathNavigation createNavigation(@NonNull Level level) {
+        return this.data.movement().navigationType.get(this, level);
+    }
 
     public EntityData getData() {
         return EntityRegistry.getData(BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
@@ -265,4 +276,6 @@ public class FilamentMob extends Animal implements PolymerEntity {
             return this.isInLove() && animal.isInLove();
         }
     }
+
+
 }

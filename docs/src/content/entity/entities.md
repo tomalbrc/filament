@@ -158,6 +158,64 @@ Here is a basic example for a zombie-like entity with an Iron Golem model:
 ```
 ~~~
 
+# Movement & Pathfinding
+
+The `movement` field / object allows to set different navigation and move types as well pathfind malus values:
+~~~admonish example
+```json
+{
+  "id": "mynamespace:unfriendly_golem",
+  "entity_tags": [
+    "can_breathe_under_water"
+  ],
+  "entity_type": "iron_golem",
+  "translations": {
+    "en_us": "Unfriendly Golem"
+  },
+  "movement": {
+    "movement_type": {
+      "type": "default"
+    },
+    "jump_type": {
+      "type": "default"
+    },
+    "navigation_type": {
+      "type": "ground"
+    },
+    "pathfinding_malus": {
+      "minecraft:stone": 10
+    }
+  }
+}
+```
+~~~
+
+## Movement-types: 
+### `default`
+
+### `smooth_swimming`
+Fields:
+- `maxTurnX`: number
+- `maxTurnY`: number
+- `waterSpeedMod`: number
+- `outsideWaterSpeedMod`: number
+- `applyGravity`: boolean (true/false)
+  
+### `flying`:
+Fields:
+- `maxTurn`: number
+- `hoversInPlace`: boolean (true/false)
+
+## Jump-types:
+### `default`
+
+## Navigation-Types:
+### `ground`
+### `water_bound`
+### `wall_climber`
+### `flying`
+### `amphibious`
+
 ## Model & Animations
 
 The model and animations are controlled using the `animation` field:

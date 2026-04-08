@@ -11,6 +11,7 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.BehaviourList;
 import de.tomalbrc.filament.behaviour.decoration.Showcase;
+import de.tomalbrc.filament.data.EntityData;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import de.tomalbrc.filament.data.properties.RangedValue;
 import de.tomalbrc.filament.data.properties.RangedVector3f;
@@ -89,6 +90,11 @@ public class Json {
             .registerTypeHierarchyAdapter(BlockStateMappedProperty.class, new BlockStateMappedPropertyDeserializer<>())
             .registerTypeHierarchyAdapter(PolymerBlockModel.class, new PolymerBlockModelDeserializer())
             .registerTypeHierarchyAdapter(BlockResource.TextureBlockModel.class, new TextureBlockModelDeserializer())
+
+            .registerTypeAdapterFactory(EntityData.MovementType.ADAPTER_FACTORY)
+            .registerTypeAdapterFactory(EntityData.JumpType.ADAPTER_FACTORY)
+            .registerTypeAdapterFactory(EntityData.NavigationType.ADAPTER_FACTORY)
+
             // special case to support old format
             // TODO: allow behaviours to specify codec/deserializer
             .registerTypeHierarchyAdapter(Showcase.Config.class, new Showcase.Config.ConfigDeserializer())
@@ -116,7 +122,8 @@ public class Json {
         var json = JsonParser.parseReader(new InputStreamReader(inputStream));
         InputStream stream;
         if (json.isJsonObject()) {
-            Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
+            Type mapType = new TypeToken<Map<String, Object>>() {
+            }.getType();
             Map<String, Object> document = gson.fromJson(json, mapType);
             if (document != null) {
                 document = Json.camelToSnakeCase(document);
@@ -402,7 +409,8 @@ public class Json {
                 JsonObject object = json.getAsJsonObject();
 
                 Map<String, Identifier> map;
-                Type mapType = new TypeToken<Map<String, Identifier>>() {}.getType();
+                Type mapType = new TypeToken<Map<String, Identifier>>() {
+                }.getType();
                 if (object.has("textures")) {
                     map = context.deserialize(object.get("textures").getAsJsonObject(), mapType);
                 } else {
