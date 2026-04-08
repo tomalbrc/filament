@@ -94,6 +94,13 @@ public interface FilamentSynchronousResourceReloadListener extends SimpleSynchro
 
     static boolean loadAsTemplate(InputStream input) {
         JsonElement element = JsonParser.parseReader(new InputStreamReader(input));
+
+        try {
+            input.reset();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         if (element != null && element.isJsonObject()) {
             try {
                 if (element.getAsJsonObject().has("is_template") && element.getAsJsonObject().getAsJsonPrimitive("is_template").getAsBoolean()) {
