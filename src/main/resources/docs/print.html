@@ -38,10 +38,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f4aeff57.js";
+            window.path_to_searchindex_js = "searchindex-0afbead1.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-b9331ace.js"></script>
+        <script src="toc-88d6ff33.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -391,7 +391,7 @@ Items, Blocks or Decorations.</p>
 <h2 id="decorations"><a class="header" href="#decorations">Decorations:</a></h2>
 <p>Blocks that rotate by 45° with multi-block, waterlogging support, seats, showcases and more!
 For everything that a normal block would not suffice for.</p>
-<p><a href="#decorations-1">More info…</a></p>
+<p><a href="#decorations-2">More info…</a></p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="configuration"><a class="header" href="#configuration">Configuration</a></h1>
 <p>The configuration file resides in <code>config/filament.json</code></p>
@@ -559,6 +559,241 @@ components:
 <li><code>&lt;item_id&gt;</code>: For the path of an item id. For <code>mynamespace:christmas_tree</code> this would result in <code>christmas_tree</code></li>
 <li><code>&lt;item_id_capitalized&gt;</code>: Title-Case version the item-id’s path. For <code>mynamespace:christmas_tree</code> this would result in <code>Chistmas Tree</code></li>
 <li><code>&lt;item_namespace&gt;</code>: Namespace of the item-id. For <code>mynamespace:christmas_tree</code> this would result in <code>mynamespace</code></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="web-editor"><a class="header" href="#web-editor">Web Editor</a></h1>
+<p>The <strong>Filament Web Editor</strong> lets you view and manage your custom content in. It provides a live overview of all registered assets with 3D previews</p>
+<hr>
+<h2 id="setup"><a class="header" href="#setup">Setup</a></h2>
+<h3 id="configuration-1"><a class="header" href="#configuration-1">Configuration</a></h3>
+<p>To enable the editor, check the configuration file located at <code>config/filament-editor.json</code>.</p>
+<ul>
+<li><strong>Enabled:</strong> Set <code>"enabled": true</code></li>
+<li><strong>Networking:</strong> By default, the editor binds to port <code>25599</code> on address <code>0.0.0.0</code>. This means it listens on all available network interfaces on the host machine.</li>
+<li><strong>External Access:</strong> Set the <code>external_address</code> (e.g., <code>http://your-server-ip:25599</code>) for remote access. By default, this is set to <code>http://127.0.0.1:25599</code>.</li>
+</ul>
+<h3 id="accessing-the-editor"><a class="header" href="#accessing-the-editor">Accessing the Editor</a></h3>
+<p>To access the web interface, run the following command in-game:</p>
+<blockquote>
+<p><code>/filament editor</code></p>
+</blockquote>
+<p>This command generates a unique session with a key for your Player UUID (or none if run from console):</p>
+<ol>
+<li><strong>The Login URL:</strong> A link to the editor interface with a session id.</li>
+<li><strong>The Login Key:</strong> A one-time 5-digit numeric key used to authenticate the browser session.</li>
+</ol>
+<hr>
+<p>Changes made in the editor can be saved by clicking “Write to File” to apply the current file directly to the datapack.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="text-formatting"><a class="header" href="#text-formatting">Text Formatting</a></h1>
+<p>Filament comes with its own MiniMessage-style text-formatter.</p>
+<h2 id="basics"><a class="header" href="#basics">Basics</a></h2>
+<p>Write tags in angle brackets:</p>
+<pre><code class="language-text">&lt;green&gt;Hello&lt;/green&gt;
+&lt;bold&gt;Important&lt;/bold&gt;
+</code></pre>
+<p>Tags are case-insensitive, so these all work the same:</p>
+<pre><code class="language-text">&lt;green&gt;
+&lt;GREEN&gt;
+&lt;Green&gt;
+</code></pre>
+<p>Most tags can be closed with an end tag like <code>&lt;/bold&gt;</code>. If you forget to close tags, the parser will close them automatically at the end of the input.</p>
+<h2 id="escaping"><a class="header" href="#escaping">Escaping</a></h2>
+<p>Use backslashes to print special characters literally when needed:</p>
+<pre><code class="language-text">\&lt;    prints &lt;
+\&gt;    prints &gt;
+\\    prints \
+</code></pre>
+<p>Quoted tag arguments can use either single or double quotes.</p>
+<h2 id="supported-tags"><a class="header" href="#supported-tags">Supported tags</a></h2>
+<h3 id="color"><a class="header" href="#color">Color</a></h3>
+<p>Set the text color using either named colors or hex colors.</p>
+<p>Examples:</p>
+<pre><code class="language-text">&lt;green&gt;Green text&lt;/green&gt;
+&lt;c:green&gt;Green text&lt;/c&gt;
+&lt;#55ff55&gt;Green text&lt;/#55ff55&gt;
+&lt;color:#ff0000&gt;Red text&lt;/color&gt;
+&lt;#324&gt;Short hex (becomes #332244)&lt;/#324&gt;
+&lt;color #ff0000&gt;Space as separator&lt;/color&gt;
+</code></pre>
+<p>Supported named colors are the usual Minecraft color names such as:</p>
+<pre><code class="language-text">black
+dark_blue
+dark_green
+dark_aqua
+dark_red
+dark_purple
+gold
+gray / grey
+dark_gray / dark_grey
+blue
+green
+aqua
+red
+light_purple
+yellow
+white
+</code></pre>
+<p>Hex colors support <code>#RRGGBB</code>, <code>0xRRGGBB</code>, and short <code>#RGB</code>.</p>
+<h3 id="decorations-1"><a class="header" href="#decorations-1">Decorations</a></h3>
+<p>These styles can be turned on and off:</p>
+<pre><code class="language-text">&lt;bold&gt;bold&lt;/bold&gt;
+&lt;italic&gt;italic&lt;/italic&gt;
+&lt;underlined&gt;underlined&lt;/underlined&gt;
+&lt;strikethrough&gt;struck&lt;/strikethrough&gt;
+&lt;obfuscated&gt;random glyphs&lt;/obfuscated&gt;
+</code></pre>
+<p>Short aliases are supported for most tags:</p>
+<pre><code class="language-text">&lt;b&gt;bold&lt;/b&gt;
+&lt;i&gt;italic&lt;/i&gt; or &lt;em&gt;italic&lt;/em&gt;
+&lt;u&gt;underlined&lt;/u&gt; or &lt;underline&gt;underlined&lt;/underline&gt;
+&lt;st&gt;struck&lt;/st&gt; or &lt;strike&gt;struck&lt;/strike&gt;
+&lt;obf&gt;random glyphs&lt;/obf&gt; or &lt;magic&gt;random glyphs&lt;/magic&gt;
+</code></pre>
+<p>You can also negate them with <code>!</code>. This is useful for turning off a style within a nested tag:</p>
+<pre><code class="language-text">&lt;bold&gt;This is bold &lt;!bold&gt;this is not&lt;/!bold&gt;&lt;/bold&gt;
+</code></pre>
+<h3 id="keybind"><a class="header" href="#keybind">Keybind</a></h3>
+<p>Insert a keybind:</p>
+<pre><code class="language-text">Press &lt;key:key.jump&gt; to jump!
+</code></pre>
+<h3 id="translatable"><a class="header" href="#translatable">Translatable</a></h3>
+<p>Insert translatable text (with optional arguments):</p>
+<pre><code class="language-text">&lt;lang:block.minecraft.diamond_block&gt;
+&lt;lang:commands.give.success.single:'1':'&lt;red&gt;Stone'&gt;
+</code></pre>
+<h3 id="selector"><a class="header" href="#selector">Selector</a></h3>
+<p>Insert an entity selector (runs as console at 0,0,0):</p>
+<pre><code class="language-text">&lt;selector:@r&gt;
+</code></pre>
+<h3 id="score"><a class="header" href="#score">Score</a></h3>
+<p>Display a scoreboard value (placeholder not supported):</p>
+<pre><code class="language-text">Your score is &lt;score:PlayerName:ObjectiveName&gt;
+</code></pre>
+<h3 id="reset"><a class="header" href="#reset">Reset</a></h3>
+<p><code>&lt;reset&gt;</code> clears the active formatting.</p>
+<p>Example:</p>
+<pre><code class="language-text">&lt;green&gt;Green &lt;bold&gt;bold&lt;/bold&gt; &lt;reset&gt;plain again
+</code></pre>
+<h3 id="new-line"><a class="header" href="#new-line">New line</a></h3>
+<p>Insert a new line with either:</p>
+<pre><code class="language-text">&lt;newline&gt;
+&lt;br&gt;
+</code></pre>
+<h3 id="font"><a class="header" href="#font">Font</a></h3>
+<p>Change the font used for the text:</p>
+<pre><code class="language-text">&lt;font:minecraft:uniform&gt;Uniform font&lt;/font&gt;
+&lt;font:mynamespace:myfont&gt;Custom font&lt;/font&gt;
+&lt;font mynamespace:myfont&gt;Custom font 2&lt;/font&gt;
+</code></pre>
+<h3 id="insertion"><a class="header" href="#insertion">Insertion</a></h3>
+<p>Add insertion text:</p>
+<pre><code class="language-text">&lt;insertion:some text&gt;Shown text&lt;/insertion&gt;
+</code></pre>
+<h3 id="shadow-color"><a class="header" href="#shadow-color">Shadow color</a></h3>
+<p>Set the shadow color for the styled text:</p>
+<pre><code class="language-text">&lt;shadow&gt;Uses the current text color as the shadow&lt;/shadow&gt;
+&lt;shadow:#000000&gt;Black shadow&lt;/shadow&gt;
+&lt;shadow:#ff0000:0.5&gt;Red shadow with 50% alpha&lt;/shadow&gt;
+&lt;shadow:off&gt;No shadow&lt;/shadow&gt;
+
+&lt;shadow #000000&gt;Black shadow&lt;/shadow&gt;
+</code></pre>
+<p>The <code>0.5</code> part is optional alpha. If omitted, the formatter uses a default shadow alpha.</p>
+<h3 id="gradient"><a class="header" href="#gradient">Gradient</a></h3>
+<p>Create a gradient across the text inside the tag:</p>
+<pre><code class="language-text">&lt;gradient:#ff0000:#00ff00&gt;Red to green&lt;/gradient&gt;
+&lt;gradient:#ff0000:#00ff00:#0000ff&gt;Three-color gradient&lt;/gradient&gt;
+&lt;gradient #ff0000 #00ff00 #0000ff&gt;Three-color gradient&lt;/gradient&gt;
+</code></pre>
+<p>A trailing number can be used as a phase offset:</p>
+<pre><code class="language-text">&lt;gradient:#ff0000:#00ff00:0.25&gt;Shifted gradient&lt;/gradient&gt;
+</code></pre>
+<h3 id="transition"><a class="header" href="#transition">Transition</a></h3>
+<p>Transition gives the whole enclosed text a single blended color sampled from the listed colors:</p>
+<pre><code class="language-text">&lt;transition:#ff0000:#00ff00&gt;Transition text&lt;/transition&gt;
+&lt;transition:#ff0000:#00ff00:0.5&gt;Shifted transition&lt;/transition&gt;
+</code></pre>
+<h3 id="rainbow"><a class="header" href="#rainbow">Rainbow</a></h3>
+<p>Rainbow colors the text with a rainbow sweep:</p>
+<pre><code class="language-text">&lt;rainbow&gt;Rainbow text&lt;/rainbow&gt;
+&lt;rainbow:0.25&gt;Phase shifted rainbow&lt;/rainbow&gt;
+&lt;rainbow:!0.25&gt;Reverse rainbow&lt;/rainbow&gt;
+</code></pre>
+<h3 id="click"><a class="header" href="#click">Click</a></h3>
+<p>Clickable text is supported through <code>&lt;click:...&gt;</code>.</p>
+<p>Supported actions:</p>
+<pre><code class="language-text">&lt;click:open_url:https://example.com&gt;Open link&lt;/click&gt;
+&lt;click:url:https://example.com&gt;Alias for open_url&lt;/click&gt;
+&lt;click:run_command:/say hello&gt;Run command&lt;/click&gt;
+&lt;click:cmd:/say hello&gt;Alias for run_command&lt;/click&gt;
+&lt;click:suggest_command:/msg Steve hello&gt;Suggest command&lt;/click&gt;
+&lt;click:change_page:2&gt;Change page&lt;/click&gt;
+&lt;click:copy_to_clipboard:Hello&gt;Copy text&lt;/click&gt;
+&lt;click:copy:Hello&gt;Alias for copy_to_clipboard&lt;/click&gt;
+</code></pre>
+<h3 id="hover"><a class="header" href="#hover">Hover</a></h3>
+<p>Hover text is supported through <code>&lt;hover:...&gt;</code>.</p>
+<h4 id="show-text"><a class="header" href="#show-text">Show text</a></h4>
+<p>This shows formatted text on hover:</p>
+<pre><code class="language-text">&lt;hover:show_text:&lt;yellow&gt;Hello there&gt;&gt;Hover me&lt;/hover&gt;
+</code></pre>
+<p>Hover text can use the same formatting tags again:</p>
+<pre><code class="language-text">&lt;hover:show_text:&lt;green&gt;&lt;bold&gt;Nested formatting&lt;/bold&gt;&lt;/green&gt;&gt;Hover me&lt;/hover&gt;
+</code></pre>
+<h4 id="show-item"><a class="header" href="#show-item">Show item</a></h4>
+<p>This shows an item tooltip on hover:</p>
+<pre><code class="language-text">&lt;hover:show_item:minecraft:stone&gt;Stone&lt;/hover&gt;
+&lt;hover:show_item:minecraft:stone:64&gt;Stack of stone&lt;/hover&gt;
+</code></pre>
+<h4 id="show-entity"><a class="header" href="#show-entity">Show entity</a></h4>
+<p>This shows an entity tooltip on hover:</p>
+<pre><code class="language-text">&lt;hover:show_entity:minecraft:zombie:123e4567-e89b-12d3-a456-426614174000:Zombie&gt;Hover me&lt;/hover&gt;
+</code></pre>
+<h3 id="sprite"><a class="header" href="#sprite">Sprite</a></h3>
+<p>Insert a custom sprite font character</p>
+<pre><code class="language-text">&lt;sprite:atlas:minecraft:block/diamond_block&gt;
+&lt;sprite:player:Steve&gt;
+</code></pre>
+<h2 id="closing-tags"><a class="header" href="#closing-tags">Closing tags</a></h2>
+<p>Most tags should be closed in the normal way:</p>
+<pre><code class="language-text">&lt;green&gt;Hello&lt;/green&gt;
+&lt;bold&gt;Important&lt;/bold&gt;
+&lt;hover:show_text:'&lt;yellow&gt;Tip'&gt;Hover me&lt;/hover&gt;
+</code></pre>
+<h2 id="nesting"><a class="header" href="#nesting">Nesting</a></h2>
+<p>Tags can be nested:</p>
+<pre><code class="language-text">&lt;green&gt;Hello &lt;bold&gt;world&lt;/bold&gt;&lt;/green&gt;
+</code></pre>
+<p>Formatting is applied from the outside in.</p>
+<h2 id="plain-text-behavior"><a class="header" href="#plain-text-behavior">Plain text behavior</a></h2>
+<p>If the formatter does not recognize a tag, it leaves it as normal text.</p>
+<p>Example:</p>
+<pre><code class="language-text">&lt;not_a_tag&gt;This is printed literally
+</code></pre>
+<h2 id="examples"><a class="header" href="#examples">Examples</a></h2>
+<h3 id="fancy-message"><a class="header" href="#fancy-message">Fancy message</a></h3>
+<pre><code class="language-text">&lt;gradient:#ff5555:#55ffff&gt;&lt;bold&gt;Welcome&lt;/bold&gt;&lt;/gradient&gt;
+&lt;hover:show_text:'&lt;gray&gt;Click to join the website'&gt;&lt;click:url:https://example.com&gt;Visit our site&lt;/click&gt;&lt;/hover&gt;
+</code></pre>
+<h3 id="translatable-with-color"><a class="header" href="#translatable-with-color">Translatable with color</a></h3>
+<pre><code class="language-text">You found a &lt;green&gt;&lt;lang:block.minecraft.diamond_block&gt;&lt;/green&gt;!
+</code></pre>
+<h2 id="summary-of-supported-tags"><a class="header" href="#summary-of-supported-tags">Summary of supported tags</a></h2>
+<ul>
+<li>Colors: <code>&lt;green&gt;</code>, <code>&lt;c:green&gt;</code>, <code>&lt;#55ff55&gt;</code>, <code>&lt;#RGB&gt;</code></li>
+<li>Decorations: <code>&lt;bold&gt;</code>, <code>&lt;italic&gt;</code>, <code>&lt;underlined&gt;</code>, <code>&lt;strikethrough&gt;</code>, <code>&lt;obfuscated&gt;</code>, <code>&lt;!style&gt;</code></li>
+<li>Components: <code>&lt;key:...&gt;</code>, <code>&lt;lang:...&gt;</code>, <code>&lt;selector:...&gt;</code>, <code>&lt;score:...&gt;</code>, <code>&lt;sprite:...&gt;</code></li>
+<li>Reset: <code>&lt;reset&gt;</code></li>
+<li>New line: <code>&lt;newline&gt;</code>, <code>&lt;br&gt;</code></li>
+<li>Font: <code>&lt;font:...&gt;</code></li>
+<li>Insertion: <code>&lt;insertion:...&gt;</code></li>
+<li>Shadow: <code>&lt;shadow&gt;</code>, <code>&lt;shadow:#rrggbb&gt;</code>, <code>&lt;shadow:#rrggbb:alpha&gt;</code>, <code>&lt;shadow:off&gt;</code></li>
+<li>Gradient: <code>&lt;gradient:...&gt;</code></li>
+<li>Transition: <code>&lt;transition:...&gt;</code></li>
+<li>Rainbow: <code>&lt;rainbow&gt;</code></li>
+<li>Click: <code>&lt;click:...&gt;</code> (actions: <code>open_url</code>, <code>run_command</code>, <code>suggest_command</code>, <code>change_page</code>, <code>copy_to_clipboard</code>)</li>
+<li>Hover: <code>&lt;hover:...&gt;</code> (actions: <code>show_text</code>, <code>show_item</code>, <code>show_entity</code>)</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="third-party-compatibility"><a class="header" href="#third-party-compatibility">Third party compatibility</a></h1>
@@ -1447,7 +1682,7 @@ Allows to specify a power multiplier for shooting power.</p>
 </ul>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="examples"><a class="header" href="#examples">Examples</a></h1>
+<h1 id="examples-1"><a class="header" href="#examples-1">Examples</a></h1>
 <p>See the datapack in the GitHub repository for more examples!</p>
 <p>https://github.com/tomalbrc/filament/tree/main/example_datapack</p>
 <blockquote class="blockquote-tag blockquote-tag-tip">
@@ -3513,7 +3748,7 @@ Use this behaviour together with the <code>can_survive</code> behaviour to recre
 <p>All fields support either camelCase or snake_case!</p>
 </blockquote>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="decorations-1"><a class="header" href="#decorations-1">Decorations</a></h1>
+<h1 id="decorations-2"><a class="header" href="#decorations-2">Decorations</a></h1>
 <p>The misode based generator for decorations can be found <a href="https://misode.tomalbrc.de/filament/decoration">here!</a></p>
 <h2 id="file-1"><a class="header" href="#file-1">File</a></h2>
 <p>Decoration configuration files are to be placed in <code>MyDatapack/data/&lt;namespace&gt;/filament/decoration/my_decoration.json</code>.</p>
