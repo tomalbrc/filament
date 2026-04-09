@@ -9,6 +9,8 @@
   - [Item Groups](content/general/item-groups.md)
   - [Components](content/general/components.md)
   - [Templates](content/general/templates.md)
+  - [Web Editor](content/general/web-editor.md)
+  - [Text Formatting](content/general/text-formatting.md)
   - [Oraxen / ItemsAdder compatibility](content/general/third-party-compat.md)
 - [Items](content/item/items.md)
   - [Properties](content/item/item-properties.md)
