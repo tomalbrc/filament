@@ -75,10 +75,11 @@ public class ActionServlet extends HttpServlet {
                     }
 
                     var asset = AssetStore.getAsset(UUID.fromString(uuidValue));
-                    if (asset != null) {
-                        asset.writeFile();
+                    if (asset != null && asset.writeFile()) {
+                        resp.getWriter().write(span(asset.isDirty() ? "Unsaved Changes!":"").withId("unsaved-changes").attr("hx-swap-oob", "true").attr("hx-swap-oob", "innerHTML").render());
+                    } else {
+                        noContent(resp);
                     }
-                    noContent(resp);
                 }
                 case "/reregister" -> {
                     String uuidValue = req.getParameter("uuid");
@@ -89,7 +90,6 @@ public class ActionServlet extends HttpServlet {
 
                     var asset = AssetStore.getAsset(UUID.fromString(uuidValue));
                     if (asset != null) {
-                        asset.writeFile();
                         asset.runtimeRegister();
                     }
                     noContent(resp);

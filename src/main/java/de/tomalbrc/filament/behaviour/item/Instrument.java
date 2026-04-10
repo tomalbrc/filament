@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.behaviour.item;
 
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -47,6 +48,7 @@ public class Instrument implements ItemBehaviour<Instrument.Config> {
     }
 
     public static class Config {
+        @RegistryRef("sound_event")
         public Identifier sound = null;
 
         public int range = 0;

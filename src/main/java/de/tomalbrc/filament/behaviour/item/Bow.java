@@ -6,6 +6,7 @@ import de.tomalbrc.filament.behaviour.ItemPredicateModelProvider;
 import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.generator.ItemAssetGenerator;
 import de.tomalbrc.filament.mixin.accessor.ProjectileWeaponItemInvoker;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -201,6 +202,7 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
         public List<Identifier> supportedProjectiles = ImmutableList.of(Identifier.withDefaultNamespace("arrow"), Identifier.withDefaultNamespace("spectral_arrow"));
         public List<Identifier> supportedHeldProjectiles = ImmutableList.of(Identifier.withDefaultNamespace("arrow"), Identifier.withDefaultNamespace("spectral_arrow"), Identifier.withDefaultNamespace("firework_rocket"));
 
+        @RegistryRef("sound_event")
         public Identifier shootSound = SoundEvents.ARROW_SHOOT.location();
     }
 }

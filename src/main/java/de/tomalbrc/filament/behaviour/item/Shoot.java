@@ -4,6 +4,7 @@ import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.item.BaseProjectileEntity;
 import de.tomalbrc.filament.registry.EntityRegistry;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
@@ -129,8 +130,9 @@ public class Shoot implements ItemBehaviour<Shoot.Config> {
         /**
          * The identifier for the projectile item
          */
+        @RegistryRef("item")
         public Identifier projectile;
-
+        @RegistryRef("item")
         public Identifier pickupItem;
 
         public boolean dispenserSupport = false;
@@ -140,14 +142,19 @@ public class Shoot implements ItemBehaviour<Shoot.Config> {
         /**
          * Sound effect to play when shooting
          */
+        @RegistryRef("sound_event")
         public Identifier sound = SoundEvents.TRIDENT_THROW.value().location();
+
         public float volume = 1.f;
         public float pitch = 1.f;
 
+        @RegistryRef("sound_event")
         public Identifier hitSound = SoundEvents.TRIDENT_HIT.location();
+
         public float hitVolume = 1.f;
         public float hitPitch = 1.f;
 
+        @RegistryRef("sound_event")
         public Identifier hitGroundSound = SoundEvents.TRIDENT_HIT_GROUND.location();
 
         /**

@@ -2,6 +2,7 @@ package de.tomalbrc.filament.behaviour.item;
 
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.mixin.accessor.ShovelItemAccessor;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
@@ -75,6 +76,7 @@ public class Shovel implements ItemBehaviour<Shovel.Config> {
     }
 
     public static class Config {
+        @RegistryRef("sound_event")
         public Identifier sound = SoundEvents.SHOVEL_FLATTEN.location();
     }
 }

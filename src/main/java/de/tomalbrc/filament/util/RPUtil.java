@@ -103,7 +103,7 @@ public class RPUtil {
                     });
                 }
 
-                blockResource.addModel(entry.getKey(), PolymerBlockModel.of(model, entry.getValue().x(), entry.getValue().y(), entry.getValue().uvLock(), entry.getValue().weight()));
+                blockResource.addModel(entry.getKey(), PolymerBlockModel.of(model, entry.getValue().x(), entry.getValue().y(), entry.getValue().uvlock(), entry.getValue().weight()));
                 index++;
             }
         }

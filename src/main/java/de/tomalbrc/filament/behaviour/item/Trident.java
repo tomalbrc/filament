@@ -5,6 +5,7 @@ import de.tomalbrc.filament.behaviour.ItemPredicateModelProvider;
 import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.generator.ItemAssetGenerator;
 import de.tomalbrc.filament.item.TridentEntity;
+import de.tomalbrc.filament.util.RPUtil;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;

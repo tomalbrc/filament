@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.METHOD})
+@Target({ElementType.FIELD, ElementType.TYPE_PARAMETER})
 public @interface RegistryRef {
     /**
      * reg. id
@@ -17,4 +17,6 @@ public @interface RegistryRef {
     boolean tags() default false;
 
     boolean tagsOnly() default false;
+
+    boolean withHash() default false;
 }

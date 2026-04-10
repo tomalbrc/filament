@@ -6,6 +6,7 @@ import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.data.resource.ResourceProvider;
+import de.tomalbrc.filament.util.annotation.AssetRef;
 import de.tomalbrc.filament.util.annotation.Description;
 import de.tomalbrc.filament.util.annotation.RegistryRef;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -43,6 +44,7 @@ public abstract class Data<PropertyType extends ItemProperties> {
     protected @Nullable ItemResource itemResource;
 
     @Description("1.21.4+ item_model in items/")
+    @AssetRef(AssetRef.Type.ITEM_ASSET)
     protected final @Nullable Identifier itemModel;
 
     @Description("Behaviours")

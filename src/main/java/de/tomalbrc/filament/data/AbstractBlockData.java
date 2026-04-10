@@ -8,6 +8,7 @@ import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.data.resource.BlockResource;
 import de.tomalbrc.filament.data.resource.ItemResource;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockResourceUtils;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
@@ -15,6 +16,7 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.stats.ServerStatsCounter;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +27,7 @@ import java.util.Set;
 
 @SuppressWarnings("unused")
 public abstract class AbstractBlockData<BlockPropertyLike extends BlockProperties> extends Data<BlockPropertyLike> {
+    @RegistryRef(value = "block", tagsOnly = true)
     private final @Nullable Set<Identifier> blockTags;
     private final @Nullable BlockResource blockResource;
 
@@ -94,12 +97,14 @@ public abstract class AbstractBlockData<BlockPropertyLike extends BlockPropertie
         return blockModelType;
     }
 
-    protected static BlockState blockState(String str) {
+    protected static @Nullable BlockState blockState(String str) {
         BlockStateParser.BlockResult parsed;
         try {
             parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK, str, false);
         } catch (CommandSyntaxException e) {
-            throw new JsonParseException("Invalid BlockState value: " + str);
+            Filament.LOGGER.error("Invalid BlockState value: " + str, e);
+
+            return null;
         }
         return parsed.blockState();
     }

@@ -5,6 +5,7 @@ import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import de.tomalbrc.filament.data.properties.RangedValue;
 import de.tomalbrc.filament.data.properties.RangedVector3f;
 import de.tomalbrc.filament.mixin.behaviour.grass_spread.SpreadingSnowyDirtBlockAccessor;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -81,7 +82,9 @@ public class GrassSpread implements BlockBehaviour<GrassSpread.Config>, SimpleWa
         public RangedValue requiredBrightness = new RangedValue(9, 15);
         public boolean canDecay = true;
         public BlockState decayBlockState = Blocks.DIRT.defaultBlockState();
+        @RegistryRef(value = "block")
         public List<Block> propagatesToBlocks = List.of(Blocks.DIRT);
+        @RegistryRef(value = "block", tagsOnly = true)
         public List<Identifier> propagatesToBlockTags = List.of();
     }
 }

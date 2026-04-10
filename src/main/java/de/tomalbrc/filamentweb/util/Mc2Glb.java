@@ -1,6 +1,7 @@
 package de.tomalbrc.filamentweb.util;
 
 import com.google.gson.*;
+import de.tomalbrc.filament.Filament;
 import net.minecraft.resources.Identifier;
 
 import javax.imageio.ImageIO;
@@ -134,7 +135,7 @@ public record Mc2Glb(Function<Identifier, InputStream> modelProvider, Function<I
             try (InputStream is = textureProvider.apply(Identifier.parse(texPath))) {
                 if (is != null) imgData = is.readAllBytes();
             } catch (Exception ignored) {
-
+                Filament.LOGGER.error("GLB Converter: Error reading {}", texPath);
             }
 
             if (imgData == null) continue;
@@ -156,6 +157,7 @@ public record Mc2Glb(Function<Identifier, InputStream> modelProvider, Function<I
                     }
                 }
             } catch (Exception ignored) {
+                Filament.LOGGER.error("GLB Converter: Error reading pixels of {}", texPath);
             }
 
             if (opaque == null) continue;
@@ -571,6 +573,7 @@ public record Mc2Glb(Function<Identifier, InputStream> modelProvider, Function<I
                     return new int[]{image.getWidth(), image.getHeight()};
                 }
             } catch (IOException ignored) {
+                Filament.LOGGER.error("GLB Converter: Error reading image data!");
             }
         }
         return new int[]{DEFAULT_TEX_SIZE, DEFAULT_TEX_SIZE};

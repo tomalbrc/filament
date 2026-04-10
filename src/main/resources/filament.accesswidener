@@ -3,6 +3,7 @@ accessible class net/minecraft/world/entity/animal/bee/Bee$BeeGrowCropGoal
 accessible class net/minecraft/server/level/ServerPlayer$RespawnPosAngle
 
 accessible class net/minecraft/core/MappedRegistry$TagSet
+accessible method net/minecraft/core/MappedRegistry refreshTagsInHolders ()V
 accessible class net/minecraft/core/component/DataComponentInitializers$InitializerEntry
 
 accessible field net/minecraft/server/packs/FilePackResources zipFileAccess Lnet/minecraft/server/packs/FilePackResources$SharedZipFileAccess;
@@ -12,6 +13,7 @@ accessible method net/minecraft/server/packs/FilePackResources$SharedZipFileAcce
 extendable method net/minecraft/world/inventory/ChestMenu addChestGrid (Lnet/minecraft/world/Container;II)V
 
 accessible method net/minecraft/world/entity/Mob isSunBurnTick ()Z
+
 
 transitive-inject-interface net/minecraft/world/level/block/Block   de/tomalbrc/filament/injection/FilamentBlockExtension
 transitive-inject-interface net/minecraft/world/item/Item   de/tomalbrc/filament/injection/FilamentItemExtension

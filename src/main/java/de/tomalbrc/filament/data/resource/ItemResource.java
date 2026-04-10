@@ -1,14 +1,21 @@
 package de.tomalbrc.filament.data.resource;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import de.tomalbrc.filament.util.annotation.AssetRef;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import net.minecraft.resources.Identifier;
 
+import java.lang.reflect.Type;
 import java.util.Map;
 
 public class ItemResource implements ResourceProvider {
-    private Map<String, Identifier> models = new Object2ObjectArrayMap<>();
+    private Map<String, @AssetRef(AssetRef.Type.MODEL) Identifier> models = new Object2ObjectArrayMap<>();
+
     private Identifier parent;
-    private Map<String, Map<String, Identifier>> textures;
+    private Map<String, Map<String, @AssetRef(AssetRef.Type.TEXTURE) Identifier>> textures;
 
     public ItemResource() {}
 
@@ -29,11 +36,27 @@ public class ItemResource implements ResourceProvider {
     }
 
     public boolean couldGenerate() {
-        return (models == null || models.isEmpty()) && textures != null;
+        return parent != null && textures != null;
     }
 
     @Override
     public Map<String, Identifier> getModels() {
         return this.models;
+    }
+
+    public static class Serializer implements JsonSerializer<ItemResource> {
+        @Override
+        public JsonElement serialize(ItemResource src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject json = new JsonObject();
+
+            if (src.parent() != null && !src.parent().getPath().isEmpty() && src.textures() != null && !src.textures().isEmpty()) {
+                json.addProperty("parent", src.parent().toString());
+                json.add("textures", context.serialize(src.textures()));
+            } else if (src.getModels() != null && !src.getModels().isEmpty()) {
+                json.add("models", context.serialize(src.getModels()));
+            }
+
+            return json;
+        }
     }
 }

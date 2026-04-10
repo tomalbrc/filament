@@ -16,6 +16,7 @@ import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import de.tomalbrc.filament.data.properties.RangedValue;
 import de.tomalbrc.filament.data.properties.RangedVector3f;
 import de.tomalbrc.filament.data.resource.BlockResource;
+import de.tomalbrc.filament.data.resource.ItemResource;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -35,8 +36,12 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.SwingAnimationType;
+import net.minecraft.world.item.component.FireworkExplosion;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
@@ -74,6 +79,10 @@ public class Json {
             .registerTypeHierarchyAdapter(DataComponentMap.class, new DataComponentsDeserializer())
             .registerTypeHierarchyAdapter(Display.BillboardConstraints.class, new SimpleCodecDeserializer<>(Display.BillboardConstraints.CODEC))
             .registerTypeHierarchyAdapter(EquipmentSlot.class, new SimpleCodecDeserializer<>(EquipmentSlot.CODEC))
+            .registerTypeHierarchyAdapter(SwingAnimationType.class, new SimpleCodecDeserializer<>(SwingAnimationType.CODEC))
+            .registerTypeHierarchyAdapter(AttributeModifier.Operation.class, new SimpleCodecDeserializer<>(AttributeModifier.Operation.CODEC))
+            .registerTypeHierarchyAdapter(FireworkExplosion.Shape.class, new SimpleCodecDeserializer<>(FireworkExplosion.Shape.CODEC))
+            .registerTypeHierarchyAdapter(DyeColor.class, new SimpleCodecDeserializer<>(DyeColor.CODEC))
             .registerTypeHierarchyAdapter(BlockModelType.class, new BlockModelTypeDeserializer())
             .registerTypeHierarchyAdapter(Difficulty.class, new SimpleCodecDeserializer<>(Difficulty.CODEC))
             .registerTypeHierarchyAdapter(MobCategory.class, new SimpleCodecDeserializer<>(MobCategory.CODEC))
@@ -90,6 +99,8 @@ public class Json {
             .registerTypeHierarchyAdapter(BlockStateMappedProperty.class, new BlockStateMappedPropertyDeserializer<>())
             .registerTypeHierarchyAdapter(PolymerBlockModel.class, new PolymerBlockModelDeserializer())
             .registerTypeHierarchyAdapter(BlockResource.TextureBlockModel.class, new TextureBlockModelDeserializer())
+            .registerTypeHierarchyAdapter(BlockResource.class, new BlockResource.Serializer())
+            .registerTypeHierarchyAdapter(ItemResource.class, new ItemResource.Serializer())
 
             .registerTypeAdapterFactory(EntityData.MovementType.ADAPTER_FACTORY)
             .registerTypeAdapterFactory(EntityData.JumpType.ADAPTER_FACTORY)
@@ -194,6 +205,7 @@ public class Json {
                     }
                 }
             } catch (Exception ignored) {
+                Filament.LOGGER.error("Could not write BlockStateMappedProperty to JSON, using empty! {}", src);
             }
             return new JsonObject();
         }
@@ -230,7 +242,7 @@ public class Json {
             try {
                 parsed = BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK, name, false);
             } catch (CommandSyntaxException e) {
-                throw new JsonParseException("Invalid BlockState value: " + name);
+                throw new JsonParseException("Invalid BlockState value: " + name, e);
             }
 
             return parsed.blockState();
@@ -375,8 +387,8 @@ public class Json {
                 Identifier model = Identifier.parse(object.get("model").getAsString());
                 int x = object.has("x") ? object.get("x").getAsInt() : 0;
                 int y = object.has("y") ? object.get("y").getAsInt() : 0;
-                boolean uvLock = object.has("uvLock") && object.get("uvLock").getAsBoolean();
-                int weight = object.has("weight") ? object.get("weight").getAsInt() : 1;
+                boolean uvLock = object.has("uvlock") && object.get("uvlock").getAsBoolean();
+                int weight = object.has("weight") ? Math.max(object.get("weight").getAsInt(), 1) : 1;
                 return PolymerBlockModel.of(model, x, y, uvLock, weight);
             }
 
@@ -390,8 +402,8 @@ public class Json {
                 object.addProperty("model", src.model().toString());
                 if (src.x() != 0) object.addProperty("x", src.x());
                 if (src.y() != 0) object.addProperty("y", src.y());
-                if (src.uvLock()) object.addProperty("uvLock", true);
-                if (src.weight() != 1) object.addProperty("weight", src.weight());
+                if (src.uvLock()) object.addProperty("uvlock", true);
+                if (src.weight() > 0) object.addProperty("weight", src.weight());
 
                 if (object.size() == 1)
                     return new JsonPrimitive(object.get("model").getAsString());
@@ -409,8 +421,8 @@ public class Json {
                 JsonObject object = json.getAsJsonObject();
 
                 Map<String, Identifier> map;
-                Type mapType = new TypeToken<Map<String, Identifier>>() {
-                }.getType();
+                Type mapType = new TypeToken<Map<String, Identifier>>() {}.getType();
+
                 if (object.has("textures")) {
                     map = context.deserialize(object.get("textures").getAsJsonObject(), mapType);
                 } else {
@@ -419,7 +431,7 @@ public class Json {
 
                 int x = object.has("x") ? object.get("x").getAsInt() : 0;
                 int y = object.has("y") ? object.get("y").getAsInt() : 0;
-                boolean uvLock = object.has("uvLock") && object.get("uvLock").getAsBoolean();
+                boolean uvLock = object.has("uvlock") && object.get("uvlock").getAsBoolean();
                 int weight = object.has("weight") ? object.get("weight").getAsInt() : 1;
                 return new BlockResource.TextureBlockModel(map, x, y, uvLock, weight);
             }
@@ -434,7 +446,7 @@ public class Json {
                 object.add("textures", context.serialize(src.textures()));
                 if (src.x() != 0) object.addProperty("x", src.x());
                 if (src.y() != 0) object.addProperty("y", src.y());
-                if (src.uvLock()) object.addProperty("uvLock", true);
+                if (src.uvlock()) object.addProperty("uvlock", true);
                 if (src.weight() != 1) object.addProperty("weight", src.weight());
             } catch (Exception ignored) {
             }

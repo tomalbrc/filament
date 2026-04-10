@@ -11,10 +11,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import static j2html.TagCreator.span;
 
 public class FragmentServlet extends HttpServlet {
     public enum Operation {
@@ -58,7 +61,6 @@ public class FragmentServlet extends HttpServlet {
         String path = req.getParameter("path");
         String key = req.getParameter("key");
         String value = req.getParameter("value");
-        String choice = req.getParameter("value");
 
         if (uuid == null || op == null || path == null) {
             resp.setStatus(400);
@@ -83,25 +85,26 @@ public class FragmentServlet extends HttpServlet {
                 ? asset.getSchema().getAsJsonObject()
                 : new JsonObject();
 
-        JsonElement documentJson = asset.readJson();
+        JsonElement documentJson = asset.getJson();
 
         switch (op) {
             case UPDATE_FIELD: {
-                JsonObject fieldSchema = effectiveSchemaAtPath(schemaRoot, documentJson, path);
+                JsonObject fieldSchema = SchemaUtil.effectiveSchemaAtPath(schemaRoot, documentJson, path);
                 JsonElement currentValue = JsonPathUtil.getElementAtPath(documentJson, path);
                 String submittedRaw = extractSubmittedRawValue(req, path, value);
                 JsonElement submitted = submittedRaw == null ? JsonNull.INSTANCE : new JsonPrimitive(submittedRaw);
-                JsonElement coerced = coerceSubmittedValue(submitted, fieldSchema, currentValue);
+                JsonElement coerced = SchemaUtil.coerceSubmittedValue(submitted, fieldSchema, currentValue);
 
                 JsonPathUtil.setValueAtPath(documentJson, path, coerced);
                 asset.apply(documentJson);
 
                 resp.getWriter().write(SchemaFormBuilder.renderJsonPreviewFragment(uuid, documentJson, true).render());
+                resp.getWriter().write(span(asset.isDirty() ? "Unsaved Changes!":"").withId("unsaved-changes").attr("hx-swap-oob", "true").attr("hx-swap-oob", "innerHTML").render());
                 return;
             }
 
             case UPDATE_CHOICE: {
-                JsonObject nodeSchema = effectiveSchemaAtPath(schemaRoot, documentJson, path);
+                JsonObject nodeSchema = SchemaUtil.effectiveSchemaAtPath(schemaRoot, documentJson, path);
                 List<JsonObject> branches = SchemaUtil.extractBranches(nodeSchema, schemaRoot);
 
                 if (branches.isEmpty()) {
@@ -110,7 +113,7 @@ public class FragmentServlet extends HttpServlet {
                     return;
                 }
 
-                int selectedIndex = parseSafeInt(req.getParameter("choice"), 0);
+                int selectedIndex = SchemaUtil.parseSafeInt(req.getParameter("choice"), 0);
                 if (selectedIndex < 0 || selectedIndex >= branches.size()) {
                     selectedIndex = 0;
                 }
@@ -122,6 +125,8 @@ public class FragmentServlet extends HttpServlet {
 
                 resp.getWriter().write(SchemaFormBuilder.renderComposedFieldFragment(uuid, path, nodeSchema, replacement, schemaRoot).render());
                 resp.getWriter().write(SchemaFormBuilder.renderJsonPreviewFragment(uuid, documentJson, true).render());
+                resp.getWriter().write(span(asset.isDirty() ? "Unsaved Changes!":"").withId("unsaved-changes").attr("hx-swap-oob", "true").attr("hx-swap-oob", "innerHTML").render());
+
                 return;
             }
 
@@ -135,7 +140,7 @@ public class FragmentServlet extends HttpServlet {
 
                 JsonArray arr = target.getAsJsonArray();
 
-                JsonObject arrSchema = effectiveSchemaAtPath(schemaRoot, documentJson, path);
+                JsonObject arrSchema = SchemaUtil.effectiveSchemaAtPath(schemaRoot, documentJson, path);
                 JsonObject itemsSchema = arrSchema.has("items") && arrSchema.get("items").isJsonObject()
                         ? SchemaUtil.resolveRef(arrSchema.getAsJsonObject("items"), schemaRoot)
                         : new JsonObject();
@@ -144,8 +149,10 @@ public class FragmentServlet extends HttpServlet {
                 arr.add(newItem);
                 asset.apply(documentJson);
 
-                resp.getWriter().write(SchemaFormBuilder.renderArrayContainer(uuid, path, itemsSchema, arr, schemaRoot).render());
+                resp.getWriter().write(SchemaFormBuilder.renderArrayContainer(uuid, path, arrSchema, itemsSchema, arr, schemaRoot).render());
                 resp.getWriter().write(SchemaFormBuilder.renderJsonPreviewFragment(uuid, documentJson, true).render());
+                resp.getWriter().write(span(asset.isDirty() ? "Unsaved Changes!":"").withId("unsaved-changes").attr("hx-swap-oob", "true").attr("hx-swap-oob", "innerHTML").render());
+
                 return;
             }
 
@@ -162,21 +169,23 @@ public class FragmentServlet extends HttpServlet {
 
                 if (el.isJsonObject()) {
                     JsonObject obj = el.getAsJsonObject();
-                    JsonObject objectSchema = effectiveSchemaAtPath(schemaRoot, documentJson, path);
+                    JsonObject objectSchema = SchemaUtil.effectiveSchemaAtPath(schemaRoot, documentJson, path);
 
                     if (op == Operation.ADD_OBJECT) {
                         String newKey = req.getParameter("key");
                         if (newKey == null || newKey.isBlank()) {
-                            newKey = "newKey";
+                            newKey = "new_key";
                         }
                         newKey = newKey.trim();
 
                         if (!obj.has(newKey)) {
                             JsonObject propertySchema = schemaForObjectKey(objectSchema, schemaRoot, newKey);
-                            JsonElement newVal = SchemaUtil.createDefaultForSchema(propertySchema, schemaRoot);
+                            JsonElement newVal;
 
                             // TODO: only create required fields for the "newVal" default value!
                             if ("components".equals(newKey) || "behaviour".equals(newKey)) newVal = new JsonObject();
+                            else newVal = SchemaUtil.createDefaultForSchema(propertySchema, schemaRoot);
+
                             obj.add(newKey, newVal);
                             asset.apply(documentJson);
                         }
@@ -209,15 +218,16 @@ public class FragmentServlet extends HttpServlet {
                                 asset.apply(documentJson);
                             }
                         } catch (NumberFormatException ignored) {
+
                         }
                     }
 
-                    JsonObject arrSchema = effectiveSchemaAtPath(schemaRoot, documentJson, path);
+                    JsonObject arrSchema = SchemaUtil.effectiveSchemaAtPath(schemaRoot, documentJson, path);
                     JsonObject itemsSchema = arrSchema.has("items") && arrSchema.get("items").isJsonObject()
                             ? SchemaUtil.resolveRef(arrSchema.getAsJsonObject("items"), schemaRoot)
                             : new JsonObject();
 
-                    resp.getWriter().write(SchemaFormBuilder.renderArrayContainer(uuid, path, itemsSchema, arr, schemaRoot).render());
+                    resp.getWriter().write(SchemaFormBuilder.renderArrayContainer(uuid, path, arrSchema, itemsSchema, arr, schemaRoot).render());
                 } else {
                     resp.setStatus(400);
                     resp.getWriter().write("Unsupported target type");
@@ -225,6 +235,7 @@ public class FragmentServlet extends HttpServlet {
                 }
 
                 resp.getWriter().write(SchemaFormBuilder.renderJsonPreviewFragment(uuid, documentJson, true).render());
+                resp.getWriter().write(span(asset.isDirty() ? "Unsaved Changes!":"").withId("unsaved-changes").attr("hx-swap-oob", "true").attr("hx-swap-oob", "innerHTML").render());
                 return;
             }
 
@@ -247,277 +258,7 @@ public class FragmentServlet extends HttpServlet {
     }
 
     private static JsonObject schemaForObjectKey(JsonObject objectSchema, JsonObject rootSchema, String key) {
-        JsonObject resolved = objectSchema != null ? objectSchema : new JsonObject();
-
-        if (resolved.has("properties") && resolved.get("properties").isJsonObject()) {
-            JsonObject props = resolved.getAsJsonObject("properties");
-            if (props.has(key) && props.get(key).isJsonObject()) {
-                return SchemaUtil.resolveRef(props.getAsJsonObject(key), rootSchema);
-            }
-        }
-
-        if (resolved.has("additionalProperties")) {
-            JsonElement additional = resolved.get("additionalProperties");
-            if (additional.isJsonObject()) {
-                return SchemaUtil.resolveRef(additional.getAsJsonObject(), rootSchema);
-            }
-            if (additional.isJsonPrimitive() && additional.getAsJsonPrimitive().isBoolean() && additional.getAsBoolean()) {
-                return new JsonObject();
-            }
-        }
-
-        return new JsonObject();
-    }
-
-    private static JsonElement coerceSubmittedValue(JsonElement submitted, JsonObject schema, JsonElement currentValue) {
-        if (submitted == null || submitted.isJsonNull()) {
-            return JsonNull.INSTANCE;
-        }
-
-        if (schema == null) {
-            schema = new JsonObject();
-        }
-
-        String type = null;
-        if (schema.has("type")) {
-            JsonElement t = schema.get("type");
-            if (t.isJsonPrimitive()) {
-                type = t.getAsString();
-            }
-        } else if (currentValue != null && !currentValue.isJsonNull()) {
-            type = inferType(currentValue);
-        }
-
-        if (schema.has("enum") && schema.get("enum").isJsonArray()) {
-            JsonElement coercedEnumValue = coerceByType(submitted, type, currentValue);
-            for (JsonElement allowed : schema.getAsJsonArray("enum")) {
-                if (allowed == null) continue;
-                if (allowed.equals(coercedEnumValue)) {
-                    return coercedEnumValue;
-                }
-                if (allowed.isJsonPrimitive() && coercedEnumValue.isJsonPrimitive()) {
-                    String a = allowed.getAsJsonPrimitive().isString() ? allowed.getAsString() : allowed.toString();
-                    String b = coercedEnumValue.getAsJsonPrimitive().isString() ? coercedEnumValue.getAsString() : coercedEnumValue.toString();
-                    if (a.equals(b)) {
-                        return coercedEnumValue;
-                    }
-                }
-            }
-            return coercedEnumValue;
-        }
-
-        return coerceByType(submitted, type, currentValue);
-    }
-
-    private static JsonElement coerceByType(JsonElement submitted, String type, JsonElement currentValue) {
-        if (submitted == null || submitted.isJsonNull()) {
-            return JsonNull.INSTANCE;
-        }
-
-        if (submitted.isJsonObject() || submitted.isJsonArray()) {
-            return submitted.deepCopy();
-        }
-
-        String raw;
-        if (submitted.isJsonPrimitive()) {
-            JsonPrimitive p = submitted.getAsJsonPrimitive();
-            if (p.isBoolean()) {
-                raw = Boolean.toString(p.getAsBoolean());
-            } else if (p.isNumber()) {
-                raw = p.getAsNumber().toString();
-            } else {
-                raw = p.getAsString();
-            }
-        } else {
-            raw = submitted.toString();
-        }
-
-        if (raw == null) {
-            return JsonNull.INSTANCE;
-        }
-
-        raw = raw.trim();
-
-        if (raw.isEmpty()) {
-            if ("string".equals(type)) {
-                return new JsonPrimitive("");
-            }
-            return JsonNull.INSTANCE;
-        }
-
-        switch (type != null ? type : "") {
-            case "boolean":
-                return new JsonPrimitive(parseBoolean(raw));
-            case "integer":
-                return new JsonPrimitive(parseInteger(raw));
-            case "number":
-                return new JsonPrimitive(parseNumber(raw));
-            case "string", "object", "array":
-                return new JsonPrimitive(raw);
-            default:
-                if (currentValue != null && !currentValue.isJsonNull()) {
-                    String inferred = inferType(currentValue);
-                    switch (inferred) {
-                        case "boolean" -> {
-                            return new JsonPrimitive(parseBoolean(raw));
-                        }
-                        case "integer" -> {
-                            return new JsonPrimitive(parseInteger(raw));
-                        }
-                        case "number" -> {
-                            return new JsonPrimitive(parseNumber(raw));
-                        }
-                        case "string" -> {
-                            return new JsonPrimitive(raw);
-                        }
-                    }
-                }
-
-                if ("true".equalsIgnoreCase(raw) || "false".equalsIgnoreCase(raw)) {
-                    return new JsonPrimitive(Boolean.parseBoolean(raw));
-                }
-
-                // todo: remove this nonsense.
-                try {
-                    if (raw.matches("[-+]?\\d+")) {
-                        return new JsonPrimitive(parseInteger(raw));
-                    }
-                    if (raw.matches("[-+]?((\\d*\\.\\d+)|(\\d+\\.\\d*))(?:[eE][-+]?\\d+)?") || raw.matches("[-+]?\\d+[eE][-+]?\\d+")) {
-                        return new JsonPrimitive(parseNumber(raw));
-                    }
-                } catch (Exception ignored) {
-                }
-
-                return new JsonPrimitive(raw);
-        }
-    }
-
-    private static String inferType(JsonElement value) {
-        if (value == null || value.isJsonNull()) return "string";
-        if (value.isJsonObject()) return "object";
-        if (value.isJsonArray()) return "array";
-        if (!value.isJsonPrimitive()) return "string";
-
-        JsonPrimitive p = value.getAsJsonPrimitive();
-        if (p.isBoolean()) return "boolean";
-        if (p.isNumber()) {
-            String s = p.getAsNumber().toString();
-            return (s.contains(".") || s.contains("e") || s.contains("E")) ? "number" : "integer";
-        }
-        return "string";
-    }
-
-    private static boolean parseBoolean(String raw) {
-        String v = raw.trim().toLowerCase(Locale.ROOT);
-        return v.equals("true") || v.equals("1") || v.equals("yes") || v.equals("on");
-    }
-
-    private static Number parseInteger(String raw) {
-        String v = raw.trim();
-        try {
-            return Long.parseLong(v);
-        } catch (NumberFormatException ex) {
-            return new BigInteger(v);
-        }
-    }
-
-    private static Number parseNumber(String raw) {
-        String v = raw.trim();
-        try {
-            return Double.parseDouble(v);
-        } catch (NumberFormatException ex) {
-            return new BigDecimal(v);
-        }
-    }
-
-
-
-    private static int parseSafeInt(String raw, int fallback) {
-        try {
-            return Integer.parseInt(raw);
-        } catch (Exception e) {
-            return fallback;
-        }
-    }
-
-    private static JsonObject effectiveSchemaAtPath(JsonObject rootSchema, JsonElement documentJson, String path) {
-        JsonObject root = rootSchema != null ? rootSchema : new JsonObject();
-        if (path == null || path.isBlank()) {
-            return SchemaUtil.normalizeSchema(root, rootSchema);
-        }
-
-        List<String> segments = JsonPathUtil.parsePath(path);
-        JsonObject currentSchema = SchemaUtil.normalizeSchema(SchemaUtil.resolveRef(root, rootSchema), rootSchema);
-        JsonElement currentValue = documentJson;
-
-        for (String segment : segments) {
-            currentSchema = SchemaUtil.normalizeSchema(currentSchema, rootSchema);
-            //currentSchema = SchemaUtil.chooseMatchingBranch(currentSchema, currentValue, rootSchema);
-
-            if (currentSchema.has("properties") && currentSchema.get("properties").isJsonObject()) {
-                JsonObject props = currentSchema.getAsJsonObject("properties");
-                if (props.has(segment) && props.get(segment).isJsonObject()) {
-                    currentSchema = SchemaUtil.normalizeSchema(SchemaUtil.resolveRef(props.getAsJsonObject(segment), rootSchema), rootSchema);
-                    currentValue = childValue(currentValue, segment);
-                    continue;
-                }
-            }
-
-            if (currentSchema.has("additionalProperties")) {
-                JsonElement additional = currentSchema.get("additionalProperties");
-                if (additional.isJsonObject()) {
-                    currentSchema = SchemaUtil.normalizeSchema(SchemaUtil.resolveRef(additional.getAsJsonObject(), rootSchema), rootSchema);
-                } else {
-                    currentSchema = new JsonObject();
-                }
-                currentValue = childValue(currentValue, segment);
-                continue;
-            }
-
-            if (currentSchema.has("items") && JsonPathUtil.isInteger(segment)) {
-                JsonElement items = currentSchema.get("items");
-                if (items != null && items.isJsonObject()) {
-                    currentSchema = SchemaUtil.normalizeSchema(SchemaUtil.resolveRef(items.getAsJsonObject(), rootSchema), rootSchema);
-                } else {
-                    currentSchema = new JsonObject();
-                }
-                currentValue = childIndexValue(currentValue, parseSafeInt(segment, 0));
-                continue;
-            }
-
-            currentValue = childValue(currentValue, segment);
-        }
-
-        currentSchema = SchemaUtil.normalizeSchema(currentSchema, rootSchema);
-        // todo
-        //currentSchema = SchemaUtil.chooseMatchingBranch(currentSchema, currentValue, rootSchema);
-        return currentSchema == null ? new JsonObject() : currentSchema;
-    }
-
-    private static JsonElement childValue(JsonElement currentValue, String segment) {
-        if (currentValue == null || currentValue.isJsonNull()) {
-            return JsonNull.INSTANCE;
-        }
-        if (currentValue.isJsonObject()) {
-            JsonObject obj = currentValue.getAsJsonObject();
-            return obj.has(segment) ? obj.get(segment) : JsonNull.INSTANCE;
-        }
-        if (currentValue.isJsonArray() && JsonPathUtil.isInteger(segment)) {
-            JsonArray arr = currentValue.getAsJsonArray();
-            int idx = parseSafeInt(segment, -1);
-            return idx >= 0 && idx < arr.size() ? arr.get(idx) : JsonNull.INSTANCE;
-        }
-        return JsonNull.INSTANCE;
-    }
-
-    private static JsonElement childIndexValue(JsonElement currentValue, int index) {
-        if (currentValue == null || currentValue.isJsonNull()) {
-            return JsonNull.INSTANCE;
-        }
-        if (currentValue.isJsonArray()) {
-            JsonArray arr = currentValue.getAsJsonArray();
-            return index >= 0 && index < arr.size() ? arr.get(index) : JsonNull.INSTANCE;
-        }
-        return JsonNull.INSTANCE;
+        JsonObject resolved = SchemaUtil.resolveObjectMemberSchema(objectSchema, key, rootSchema);
+        return resolved != null ? resolved : new JsonObject();
     }
 }

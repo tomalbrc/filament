@@ -2,6 +2,7 @@ package de.tomalbrc.filament.mixin;
 
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.util.Util;
+import eu.pb4.polymer.core.api.item.PolymerCreativeModeTabUtils;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.LayeredRegistryAccess;
 import net.minecraft.core.Registry;
@@ -25,6 +26,6 @@ public class ReloadableServerResourcesMixin {
     private static void filament$loadResources(ResourceManager resourceManager, LayeredRegistryAccess<RegistryLayer> layeredRegistryAccess, List<Registry.PendingTags<?>> list, FeatureFlagSet featureFlagSet, Commands.CommandSelection commandSelection, PermissionSet permissionSet, Executor executor, Executor executor2, CallbackInfoReturnable<CompletableFuture<ReloadableServerResources>> cir) {
         Filament.REGISTRY_ACCESS = layeredRegistryAccess;
         Util.loadDatapackContents(resourceManager);
-        //PolymerItemGroupUtils.invalidateItemGroupCache();
+        PolymerCreativeModeTabUtils.invalidateCache();
     }
 }

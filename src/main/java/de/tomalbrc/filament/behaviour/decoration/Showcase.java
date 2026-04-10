@@ -12,6 +12,7 @@ import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
 import de.tomalbrc.filament.util.FilamentContainer;
 import de.tomalbrc.filament.util.TextUtil;
 import de.tomalbrc.filament.util.Util;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import eu.pb4.polymer.virtualentity.api.data.DisplayEntityData;
 import eu.pb4.polymer.virtualentity.api.elements.BlockDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.DisplayElement;
@@ -439,8 +440,10 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
          */
         public List<Identifier> filterTags;
 
+        @RegistryRef("sound_event")
         public Identifier addItemSound = SoundEvents.ITEM_FRAME_ADD_ITEM.location();
 
+        @RegistryRef("sound_event")
         public Identifier removeItemSound = SoundEvents.ITEM_FRAME_REMOVE_ITEM.location();
 
         public int maxStackSize = 1;

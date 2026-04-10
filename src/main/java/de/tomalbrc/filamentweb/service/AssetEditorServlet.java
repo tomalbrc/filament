@@ -36,14 +36,50 @@ public class AssetEditorServlet extends HttpServlet {
                                 script().withSrc("https://unpkg.com/hyperscript.org@0.9.14"),
                                 script().withType("module").withSrc("https://ajax.googleapis.com/ajax/libs/model-viewer/4.2.0/model-viewer.min.js"),
 
-                                link().withRel("stylesheet").withHref("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"),
+                                link().withRel("stylesheet").withHref("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/tokyo-night-dark.min.css"),
                                 script().withSrc("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"),
                                 script().withSrc("https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/json.min.js"),
 
                                 link().withRel("stylesheet").withHref("https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"),
                                 script().withSrc("https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"),
 
-                                link().withRel("stylesheet").withHref("https://cdnjs.cloudflare.com/ajax/libs/hint.css/3.0.0/hint.min.css")
+                                link().withRel("stylesheet").withHref("https://cdnjs.cloudflare.com/ajax/libs/hint.css/3.0.0/hint.min.css"),
+
+                                // todo: sep. css
+                                style("""
+                                        [data-bs-theme="dark"] {
+                                            --bs-body-bg: #1a1b26;
+                                            --bs-body-color: #a9b1d6;
+                                            --bs-tertiary-bg: #24283b;
+                                            --bs-secondary-bg: #292e42;
+                                            --bs-border-color: #414868;
+                                            --bs-primary: #7aa2f7;
+                                            --bs-primary-rgb: 122, 162, 247;
+                                            --bs-success: #9ece6a;
+                                            --bs-info: #7dcfff;
+                                            --bs-warning: #e0af68;
+                                            --bs-danger: #f7768e;
+                                            --bs-link-color: #7aa2f7;
+                                            --bs-link-hover-color: #89b4fa;
+                                        }
+                                        
+                                        .form-control, .form-select { background-color: #1a1b26; border-color: #414868; color: #c0caf5; }
+                                        .form-control:focus, .form-select:focus { border-color: #7aa2f7; box-shadow: 0 0 0 0.25rem rgba(122, 162, 247, 0.25); background-color: #1a1b26; color: #c0caf5; }
+                                        ::-webkit-scrollbar { width: 8px; height: 8px; }
+                                        ::-webkit-scrollbar-track { background: #1a1b26; }
+                                        ::-webkit-scrollbar-thumb { background: #414868; border-radius: 4px; }
+                                        ::-webkit-scrollbar-thumb:hover { background: #7aa2f7; }
+                                        
+                                        .nested-wrap { border-left: 2px solid #292e42; transition: border-color 0.2s; margin-left: 2px; }
+                                        .nested-wrap:hover { border-left-color: #7aa2f7; }
+                                        .array-section { border-left: 3px solid #e0af68 !important; }
+                                        .composed-container { border-left: 3px solid #7dcfff !important; }
+                                        .object-section, .composed-section { border-left: 3px solid #bb9af7 !important; }
+                                        
+                                        .btn-remove { color: #f7768e !important; opacity: 0.7; transition: opacity 0.2s; }
+                                        .btn-remove:hover { opacity: 1; text-shadow: 0 0 8px rgba(247, 118, 142, 0.4); border: 1px solid #f7768e; }
+                                        .navbar-brand { font-weight: 600; }
+                                        """) // nested-wrap is unused rn
                         ),
                         body().withClass("d-flex flex-column vh-100").attr("data-bs-theme", "dark").with(
                                 input()
@@ -52,7 +88,7 @@ public class AssetEditorServlet extends HttpServlet {
                                         .withValue("")
                                         .attr("hx-swap-oob", "true"),
 
-                                nav().withClass("navbar navbar-expand bg-body-tertiary border-bottom sticky-top").with(
+                                nav().withClass("navbar navbar-expand bg-body-tertiary border-bottom sticky-top shadow-sm").with(
                                         div().withClass("container-fluid d-flex justify-content-between align-items-center").with(
                                                 span("Filament Editor").withClass("navbar-brand mb-0 h1"),
 
@@ -76,7 +112,7 @@ public class AssetEditorServlet extends HttpServlet {
 
                                                         ),
 
-                                                        div().withClass("btn-group px-5").attr("role", "group").attr("aria-label", "Resource Pack Actions").with(
+                                                        div().withClass("btn-group px-5").attr("role", "group").with(
                                                                 button("Rebuild RP")
                                                                         .withClass("btn btn-sm btn-outline-info hint--bottom")
                                                                         .attr("hx-get", "/action/rebuild")
@@ -104,7 +140,7 @@ public class AssetEditorServlet extends HttpServlet {
                                                         div().withId("sidebar")
                                                                 .withClass("col-2 border-end p-0 vh-100 d-flex flex-column")
                                                                 .with(
-                                                                        div().withClass("bg-body p-2 border-bottom shadow-sm").withStyle("height: 55px;").with(
+                                                                        div().withClass("bg-body-secondary p-1 border-bottom shadow-sm").withStyle("height: 55px;").with(
                                                                                 input().withType("text")
                                                                                         .withId("file-search")
                                                                                         .withClass("form-control")
@@ -151,19 +187,19 @@ public class AssetEditorServlet extends HttpServlet {
         return div().withId("console-wrapper")
                 .attr("hx-ext", "ws")
                 .attr("ws-connect", "/ws/log")
-                .withClass("position-fixed bottom-0 end-0 m-3 shadow-lg border rounded bg-body-tertiary")
-                .withStyle("z-index: 9999; width: 400px;")
+                .withClass("position-fixed bottom-0 end-0 m-3 shadow-lg border rounded bg-body-secondary")
+                .withStyle("z-index: 9999; width: 50%;")
                 .with(
-                        div().withClass("d-flex justify-content-between align-items-center p-2 border-bottom bg-dark text-white rounded-top")
+                        div().withClass("d-flex justify-content-between align-items-center p-2 border-bottom bg-tertiary-bg text-white rounded-top")
                                 .with(
-                                        div("Console").withClass("small text-secondary fw-bold").with(
+                                        div("Console").withClass("small fw-bold").with(
                                                 span().withId("status-dot")
-                                                        .withClass("d-inline-block rounded-circle ms-2")
-                                                        .withStyle("width: 10px; height: 10px; background-color: orange;")
+                                                        .withClass("d-inline-block rounded-circle ms-2 shadow-sm")
+                                                        .withStyle("width: 10px; height: 10px; background-color: #e0af68;")
                                                         .attr("_", """
-                                                                      on htmx:wsOpen from #console-wrapper set my.style.backgroundColor to 'green'
-                                                                      on htmx:wsClose from #console-wrapper set my.style.backgroundColor to 'red'
-                                                                      on htmx:wsError from #console-wrapper set my.style.backgroundColor to 'red'
+                                                                      on htmx:wsOpen from #console-wrapper set my.style.backgroundColor to '#9ece6a'
+                                                                      on htmx:wsClose from #console-wrapper set my.style.backgroundColor to '#f7768e'
+                                                                      on htmx:wsError from #console-wrapper set my.style.backgroundColor to '#f7768e'
                                                                 """)
                                         ),
 
@@ -175,7 +211,7 @@ public class AssetEditorServlet extends HttpServlet {
 
                                                 button("—")
                                                         .withId("console-toggle-btn")
-                                                        .withClass("btn btn-sm btn-light py-0 px-2")
+                                                        .withClass("btn btn-sm btn-outline-secondary py-0 px-2")
                                                         .attr("_", """
                                                                 on click
                                                                     toggle .d-none on #console-body
@@ -184,7 +220,7 @@ public class AssetEditorServlet extends HttpServlet {
                                                                         set #console-wrapper's style.width to '200px'
                                                                     else
                                                                         set my.innerText to '—'
-                                                                        set #console-wrapper's style.width to '400px'
+                                                                        set #console-wrapper's style.width to '50%'
                                                                     end
                                                                 """)
                                         )
@@ -192,9 +228,9 @@ public class AssetEditorServlet extends HttpServlet {
 
                         div().withId("console-body").withClass("p-0").with(
                                 pre().withId("console-log")
-                                        .withClass("mb-0 p-2 bg-dark small")
-                                        .withStyle("height: 250px; overflow-y: auto; font-family: monospace; white-space: pre-wrap;")
-                                        .attr("_", "on htmx:wsAfterMessage scroll me to bottom")
+                                        .withClass("mb-0 p-2 bg-body small")
+                                        .withStyle("height: 250px; overflow-y: auto; font-family: monospace; white-space: pre-wrap; color: #a9b1d6;")
+                                        .attr("_", "on htmx:wsAfterMessage from document set my.scrollTop to my.scrollHeight")
                         )
                 );
     }

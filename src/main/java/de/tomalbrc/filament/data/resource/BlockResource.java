@@ -1,10 +1,16 @@
 package de.tomalbrc.filament.data.resource;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import de.tomalbrc.filament.util.annotation.AssetRef;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.Identifier;
 
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
@@ -35,7 +41,7 @@ public class BlockResource implements ResourceProvider {
     }
 
     public boolean couldGenerate() {
-        return (models == null || models.isEmpty()) && textures != null;
+        return parent != null && textures != null;
     }
 
     @Override
@@ -68,5 +74,21 @@ public class BlockResource implements ResourceProvider {
         this.models.put(key, blockModel);
     }
 
-    public record TextureBlockModel(Map<String, Identifier> textures, int x, int y, boolean uvLock, int weight) {}
+    public record TextureBlockModel(Map<String, @AssetRef(AssetRef.Type.TEXTURE) Identifier> textures, int x, int y, boolean uvlock, int weight) {}
+
+    public static class Serializer implements JsonSerializer<BlockResource> {
+        @Override
+        public JsonElement serialize(BlockResource src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonObject json = new JsonObject();
+
+            if (src.parent() != null && !src.parent().getPath().isEmpty() && src.textures() != null && !src.textures().isEmpty()) {
+                json.addProperty("parent", src.parent().toString());
+                json.add("textures", context.serialize(src.textures()));
+            } else if (src.getModels() != null && !src.getModels().isEmpty()) {
+                json.add("models", context.serialize(src.getModels()));
+            }
+
+            return json;
+        }
+    }
 }

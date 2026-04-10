@@ -7,6 +7,7 @@ import de.tomalbrc.filament.data.AbstractBlockData;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.util.FilamentBlockResourceUtils;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
@@ -231,7 +232,11 @@ public class Trapdoor implements BlockBehaviour<Trapdoor.Config>, SimpleWaterlog
     public static class Config {
         public boolean canOpenByWindCharge = true;
         public boolean canOpenByHand = true;
+
+        @RegistryRef("sound_event")
         public Identifier openSound = SoundEvents.WOODEN_TRAPDOOR_OPEN.location();
+
+        @RegistryRef("sound_event")
         public Identifier closeSound = SoundEvents.WOODEN_TRAPDOOR_CLOSE.location();
     }
 }

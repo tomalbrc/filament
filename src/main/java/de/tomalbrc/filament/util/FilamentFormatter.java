@@ -160,9 +160,7 @@ public final class FilamentFormatter {
         appendStyleOpen(parent, style, out);
 
         if (component.getContents() instanceof PlainTextContents.LiteralContents(String text)) {
-            out.append(escape(text));
-        } else {
-            out.append(component.getString());
+            out.append(text);
         }
 
         for (Component sibling : component.getSiblings()) {
@@ -567,15 +565,21 @@ public final class FilamentFormatter {
     }
 
     private static List<Segment> applyGradient(List<Segment> input, List<TextColor> colors, double phase) {
-        int total = countCP(input);
+        int total = countCodePoints(input);
         if (total == 0) return input;
+
         int[] map = new int[total];
-        for (int i = 0; i < total; i++) map[i] = sample(colors, wrap((i / (double) Math.max(1, total - 1)) + phase));
+
+        for (int i = 0; i < total; i++) {
+            double t = total == 1 ? 0.0 : i / (double) (total - 1);
+            map[i] = sample(colors, Math.clamp(t + phase, 0.0, 1.0));
+        }
+
         return recolor(input, map);
     }
 
     private static List<Segment> applyTransition(List<Segment> input, List<TextColor> colors, double phase) {
-        int total = countCP(input);
+        int total = countCodePoints(input);
         if (total == 0) return input;
         int color = sample(colors, wrap(phase));
         int[] map = new int[total];
@@ -584,13 +588,18 @@ public final class FilamentFormatter {
     }
 
     private static List<Segment> applyRainbow(List<Segment> input, double phase, boolean rev) {
-        int total = countCP(input);
+        int total = countCodePoints(input);
         if (total == 0) return input;
+
         int[] map = new int[total];
+        double offset = wrap(phase);
+
         for (int i = 0; i < total; i++) {
-            double t = rev ? 1.0 - (i / (double) Math.max(1, total - 1)) : (i / (double) Math.max(1, total - 1));
-            map[i] = java.awt.Color.HSBtoRGB((float) wrap(t + phase), 1.0f, 1.0f) & 0xFFFFFF;
+            double t = total == 1 ? 0.0 : i / (double) total;
+            if (rev) t = 1.0 - t;
+            map[i] = java.awt.Color.HSBtoRGB((float) wrap(t + offset), 1.0f, 1.0f) & 0xFFFFFF;
         }
+
         return recolor(input, map);
     }
 
@@ -625,7 +634,7 @@ public final class FilamentFormatter {
         return (r << 16) | (g << 8) | b;
     }
 
-    private static int countCP(List<Segment> segs) {
+    private static int countCodePoints(List<Segment> segs) {
         int count = 0;
         for (Segment s : segs) {
             if (s.component.getContents() instanceof PlainTextContents.LiteralContents(String text))

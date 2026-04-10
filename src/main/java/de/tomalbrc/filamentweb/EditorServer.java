@@ -5,6 +5,7 @@ import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.ItemData;
+import de.tomalbrc.filament.util.annotation.AssetRef;
 import de.tomalbrc.filamentweb.asset.AssetStore;
 import de.tomalbrc.filamentweb.service.*;
 import de.tomalbrc.filamentweb.util.Mc2Glb;
@@ -15,9 +16,7 @@ import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
 import jakarta.servlet.DispatcherType;
 import jakarta.websocket.server.ServerEndpointConfig;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.MinecraftServer;
 import org.eclipse.jetty.ee10.servlet.ResourceServlet;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee10.servlet.ServletHolder;
@@ -29,7 +28,8 @@ import org.eclipse.jetty.util.resource.ResourceFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.EnumSet;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -51,6 +51,8 @@ public class EditorServer implements Runnable {
     public static ResourcePackBuilder resourcePackBuilder() {
         return RP_BUILDER;
     }
+
+    public static Map<AssetRef.Type, Set<String>> RP_ASSETS = new ConcurrentHashMap<>();
 
     public EditorServer() throws Exception {
         server = new Server();
@@ -86,9 +88,12 @@ public class EditorServer implements Runnable {
 
         handler.addFilter(AuthFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
 
-        JakartaWebSocketServletContainerInitializer.configure(handler, (servletContext, container) -> {
+        JakartaWebSocketServletContainerInitializer.configure(handler, (_, container) -> {
             container.addEndpoint(
-                    ServerEndpointConfig.Builder.create(LogEndpoint.class, "/ws/log").build()
+                    ServerEndpointConfig.Builder
+                            .create(LogEndpoint.class, "/ws/log")
+                            .configurator(new LogEndpoint.Configurator())
+                            .build()
             );
         });
 
@@ -125,11 +130,16 @@ public class EditorServer implements Runnable {
         try {
             // todo: handle non-existing files.
             Function<Identifier, InputStream> modelProvider = identifier -> {
-                var data = resourcePackBuilder().getDataOrSource(AssetPaths.model(identifier) + ".json");
+                var path = AssetPaths.model(identifier) + ".json";
+                var data = resourcePackBuilder().getDataOrSource(path);
+                if (data == null) Filament.LOGGER.warn("Resourcepack model at {} does not exist!", path);
                 return data == null ? null : new ByteArrayInputStream(data);
             };
             Function<Identifier, InputStream> textureProvider = identifier -> {
-                var data = resourcePackBuilder().getDataOrSource(AssetPaths.texture(identifier) + ".png");
+                var path = AssetPaths.texture(identifier) + ".png";
+                var data = resourcePackBuilder().getDataOrSource(path);
+                if (data == null) Filament.LOGGER.warn("Resourcepack texture at {} does not exist!", path);
+
                 return data == null ? null : new ByteArrayInputStream(data);
             };
 
@@ -164,6 +174,8 @@ public class EditorServer implements Runnable {
     }
 
     public static void init() {
+
+
         PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(EditorServer::init);
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             WebLogAppender.install();
@@ -191,18 +203,44 @@ public class EditorServer implements Runnable {
         });
 
         FilamentRegistrationEvents.ITEM.register((data, item) -> {
-            AssetStore.registerAssetFromPath(data, ItemData.class, item);
+            AssetStore.registerAssetFromPath(data, ItemData.class);
         });
         FilamentRegistrationEvents.BLOCK.register((data, item, block) -> {
-            AssetStore.registerAssetFromPath(data, BlockData.class, block);
+            AssetStore.registerAssetFromPath(data, BlockData.class);
         });
         FilamentRegistrationEvents.DECORATION.register((data, item, block) -> {
-            AssetStore.registerAssetFromPath(data, DecorationData.class, item);
+            AssetStore.registerAssetFromPath(data, DecorationData.class);
         });
         // TODO: Entity support!
     }
 
     public static void init(ResourcePackBuilder builder) {
+        builder.addResourceConverter((x, data) -> {
+            var parts = x.split("/");
+
+            // assets/<namespace>/<type>/
+            if (parts.length > 3 && "assets".equals(parts[0])) {
+                String namespace = parts[1];
+                String subpath = String.join("/", Arrays.copyOfRange(parts, 2, parts.length));
+
+                for (AssetRef.Type type : AssetRef.Type.values()) {
+                    if (subpath.startsWith(type.prefix()) && subpath.endsWith(type.suffix())) {
+                        String stripped = subpath.substring(type.prefix().length());
+
+                        int dot = stripped.lastIndexOf('.');
+                        if (dot != -1) {
+                            stripped = stripped.substring(0, dot);
+                        }
+
+                        String identifier = namespace + ":" + stripped;
+                        RP_ASSETS.computeIfAbsent(type, k -> new HashSet<>()).add(identifier);
+                    }
+                }
+            }
+
+            return data;
+        });
+
         RP_BUILDER = builder;
         EditorServer.runServer();
     }

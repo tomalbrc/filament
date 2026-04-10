@@ -149,7 +149,7 @@ public class LoginServlet extends HttpServlet {
                                         "  background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), " +
                                         "                    url('data:image/png;base64," + base64 + "');" +
                                         "  background-repeat: repeat;" +
-                                        "  background-size: 64px 64px;" +
+                                        "  background-size: 128px 128px;" +
                                         "  image-rendering: pixelated;" +
                                         "  height: 100vh; margin: 0;" +
                                         "}" +

@@ -2,6 +2,7 @@ package de.tomalbrc.filament.behaviour.block;
 
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
@@ -146,7 +147,11 @@ public class Button implements BlockBehaviour<Button.Config> {
         public BlockStateMappedProperty<Integer> powerlevel = BlockStateMappedProperty.of(15);
         public BlockStateMappedProperty<Integer> ticksToStayPressed = BlockStateMappedProperty.of(100);
         public BlockStateMappedProperty<Boolean> canBeActivatedByArrows = BlockStateMappedProperty.of(true);
-        public Identifier clickOnSound = SoundEvents.WOODEN_BUTTON_CLICK_ON.location();
-        public Identifier clickOffSound = SoundEvents.WOODEN_BUTTON_CLICK_OFF.location();
+
+        public @RegistryRef("sound_event")
+        Identifier clickOnSound = SoundEvents.WOODEN_BUTTON_CLICK_ON.location();
+
+        public @RegistryRef("sound_event")
+        Identifier clickOffSound = SoundEvents.WOODEN_BUTTON_CLICK_OFF.location();
     }
 }

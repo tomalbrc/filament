@@ -8,6 +8,7 @@ import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.generator.ItemAssetGenerator;
 import de.tomalbrc.filament.mixin.accessor.CrossbowItemInvoker;
 import de.tomalbrc.filament.mixin.accessor.ProjectileWeaponItemInvoker;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.HolderLookup;
@@ -336,10 +337,16 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
         public List<Identifier> supportedProjectiles = ImmutableList.of(Identifier.withDefaultNamespace("arrow"), Identifier.withDefaultNamespace("spectral_arrow"), Identifier.withDefaultNamespace("firework_rocket"));
         public List<Identifier> supportedHeldProjectiles = ImmutableList.of(Identifier.withDefaultNamespace("arrow"), Identifier.withDefaultNamespace("spectral_arrow"), Identifier.withDefaultNamespace("firework_rocket"));
 
+        @RegistryRef("sound_event")
         public Identifier shootSound = SoundEvents.CROSSBOW_SHOOT.location();
 
+        @RegistryRef("sound_event")
         public Identifier loadingStartSound = SoundEvents.CROSSBOW_LOADING_START.value().location();
+
+        @RegistryRef("sound_event")
         public Identifier loadingMiddleSound = SoundEvents.CROSSBOW_LOADING_MIDDLE.value().location();
+
+        @RegistryRef("sound_event")
         public Identifier loadingEndSound = SoundEvents.CROSSBOW_LOADING_END.value().location();
     }
 }

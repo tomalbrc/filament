@@ -2,6 +2,7 @@ package de.tomalbrc.filament.behaviour.item;
 
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.util.ExecuteUtil;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
@@ -79,6 +80,7 @@ public class ExecuteInteractItem implements ItemBehaviour<ExecuteInteractItem.Co
         public String command;
         public List<String> commands;
 
+        @RegistryRef("sound_event")
         public Identifier sound;
         public boolean console = false;
     }

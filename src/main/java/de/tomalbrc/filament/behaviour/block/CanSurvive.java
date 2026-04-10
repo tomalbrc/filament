@@ -2,6 +2,7 @@ package de.tomalbrc.filament.behaviour.block;
 
 import com.google.common.collect.ImmutableList;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -103,7 +104,9 @@ public class CanSurvive implements BlockBehaviour<CanSurvive.Config> {
     }
 
     public static class Config {
+        @RegistryRef("block")
         public List<Identifier> blocks;
+        @RegistryRef(value = "block", tagsOnly = true)
         public List<Identifier> tags;
     }
 }

@@ -24,6 +24,7 @@ import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.fabricmc.fabric.api.networking.v1.context.PacketContextProvider;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;

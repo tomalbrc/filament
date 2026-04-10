@@ -3,6 +3,7 @@ package de.tomalbrc.filament.behaviour.item;
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.mixin.behaviour.strippable.AxeItemAccessor;
 import de.tomalbrc.filament.registry.StrippableRegistry;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
@@ -92,6 +93,7 @@ public class Stripper implements ItemBehaviour<Stripper.Config> {
     }
 
     public static class Config {
+        @RegistryRef("sound_event")
         public Identifier sound = SoundEvents.AXE_STRIP.location();
     }
 }

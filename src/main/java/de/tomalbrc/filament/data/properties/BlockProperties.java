@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.data.properties;
 
 import com.google.gson.annotations.SerializedName;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -148,11 +149,11 @@ public class BlockProperties extends ItemProperties {
     public record Sounds(
             float volume,
             float pitch,
-            @SerializedName("break") Identifier breakSound,
-            @SerializedName("step") Identifier stepSound,
-            @SerializedName("place") Identifier placeSound,
-            @SerializedName("hit") Identifier hitSound,
-            @SerializedName("fall") Identifier fallSound
+            @RegistryRef("sound_event") @SerializedName("break") Identifier breakSound,
+            @RegistryRef("sound_event") @SerializedName("step") Identifier stepSound,
+            @RegistryRef("sound_event") @SerializedName("place") Identifier placeSound,
+            @RegistryRef("sound_event") @SerializedName("hit") Identifier hitSound,
+            @RegistryRef("sound_event") @SerializedName("fall") Identifier fallSound
     ) {
         SoundType asSoundType() {
             return new SoundType(

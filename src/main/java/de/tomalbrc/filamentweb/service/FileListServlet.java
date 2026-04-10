@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -28,9 +27,9 @@ public class FileListServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        res.setContentType("text/html");
-        res.setCharacterEncoding("UTF-8");
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("text/html");
+        resp.setCharacterEncoding("UTF-8");
 
         String search = req.getParameter("search");
         if (search != null && !search.isBlank()) {
@@ -83,10 +82,8 @@ public class FileListServlet extends HttpServlet {
             readOnlyDom.add(renderReadOnlyRow(asset));
         }
 
-        PrintWriter out = res.getWriter();
-
-        out.println(
-                div().withClass("w-100 overflow-hidden")
+        resp.getWriter().write(
+                div().withClass("w-100 overflow-hidden").withStyle("margin-bottom: 55px;")
                         .with(
                                 style(".folder-toggle[aria-expanded=\"false\"] .chevron { transform: rotate(-90deg); }\n" +
                                         ".chevron { display: inline-block; transition: transform 0.2s ease; }"),

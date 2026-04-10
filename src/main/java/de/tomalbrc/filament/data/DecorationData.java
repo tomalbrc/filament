@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.data;
 
+import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.behaviour.Behaviour;
 import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.api.behaviour.ContainerLike;
@@ -147,6 +148,10 @@ public final class DecorationData extends AbstractBlockData<DecorationProperties
                     val.put(customState, BlockData.BlockStateMeta.of(null, entry.getValue()));
                 } else {
                     BlockState state = blockState(String.format("%s[%s]", id, entry.getKey()));
+                    if (state == null) {
+                        Filament.LOGGER.error("Invalid block state model key for {}, your block may not work correctly! Check your block_resource entries", id);
+                        continue;
+                    }
 
                     if (state.hasProperty(BlockStateProperties.WATERLOGGED) && !entry.getKey().contains(BlockStateProperties.WATERLOGGED.getName() + "=")) {
                         val.put(state.setValue(BlockStateProperties.WATERLOGGED, !state.getValue(BlockStateProperties.WATERLOGGED)), BlockData.BlockStateMeta.of(null, entry.getValue()));

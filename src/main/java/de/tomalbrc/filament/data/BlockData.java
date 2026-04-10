@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.data;
 
+import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
@@ -73,6 +74,11 @@ public class BlockData extends AbstractBlockData<BlockProperties> {
                     val.put(BuiltInRegistries.BLOCK.getValue(id).defaultBlockState(), BlockStateMeta.of(type == null ? Blocks.BEDROCK.defaultBlockState() : requestedState, entry.getValue()));
                 } else {
                     BlockState state = blockState(String.format("%s[%s]", id, entry.getKey()));
+                    if (state == null) {
+                        Filament.LOGGER.error("Invalid block state model key for {}, your block may not work correctly! Check your block_resource entries", id);
+                        continue;
+                    }
+
                     BlockModelType type;
                     type = safeBlockModelType(this.blockModelType.getOrDefault(state, BlockModelType.FULL_BLOCK));
 
