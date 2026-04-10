@@ -4,6 +4,7 @@ import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.util.BlockUtil;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.fabricmc.fabric.api.registry.VillagerInteractionRegistries;
 import net.minecraft.core.BlockPos;
@@ -197,6 +198,7 @@ public class Crop implements BlockBehaviour<Crop.Config>, BonemealableBlock {
         public int minLightLevel = 8;
 
         public int bonusRadius = 1;
+        @RegistryRef("block")
         public Block bonusBlock = Blocks.FARMLAND;
 
         //@deprecated Add items to the {@linkplain net.minecraft.tags.ItemTags#VILLAGER_PICKS_UP {@code minecraft:villager_picks_up} item tag} instead.

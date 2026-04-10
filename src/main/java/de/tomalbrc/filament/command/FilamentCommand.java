@@ -45,6 +45,7 @@ public class FilamentCommand {
         rootNode.then(ServerItemCommand.register());
         rootNode.then(ClientItemCommand.register());
         rootNode.then(BlockModelTypesCommand.register());
+        rootNode.then(ParseCommand.register());
 
         dispatcher.register(rootNode);
     }

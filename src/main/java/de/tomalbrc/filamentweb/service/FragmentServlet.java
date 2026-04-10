@@ -79,8 +79,8 @@ public class FragmentServlet extends HttpServlet {
             return;
         }
 
-        JsonObject schemaRoot = asset.schema != null && asset.schema.isJsonObject()
-                ? asset.schema.getAsJsonObject()
+        JsonObject schemaRoot = asset.getSchema() != null && asset.getSchema().isJsonObject()
+                ? asset.getSchema().getAsJsonObject()
                 : new JsonObject();
 
         JsonElement documentJson = asset.readJson();

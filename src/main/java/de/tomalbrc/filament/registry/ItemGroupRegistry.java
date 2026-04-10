@@ -15,6 +15,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import org.jspecify.annotations.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,17 +61,17 @@ public class ItemGroupRegistry {
 
     public static class ItemGroupDataReloadListener implements FilamentSynchronousResourceReloadListener {
         @Override
-        public Identifier getFabricId() {
+        public @NonNull Identifier getFabricId() {
             return Identifier.fromNamespaceAndPath(Constants.MOD_ID, "item_groups");
         }
 
         @Override
-        public void onResourceManagerReload(ResourceManager resourceManager) {
+        public void onResourceManagerReload(@NonNull ResourceManager resourceManager) {
             load(Constants.MOD_ID, "item-groups", resourceManager, (id, inputStream) -> {
                 try {
                     ItemGroupRegistry.register(inputStream);
                 } catch (Exception e) {
-                    Filament.LOGGER.error("Failed to load item group config \"{}\".", id);
+                    Filament.LOGGER.error("Failed to load item group config \"{}\".", id, e);
                 }
             });
         }

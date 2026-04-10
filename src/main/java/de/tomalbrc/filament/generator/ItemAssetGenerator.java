@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.data.resource.ResourceProvider;
 import de.tomalbrc.filament.util.Json;
@@ -32,6 +33,11 @@ import java.util.Optional;
 public class ItemAssetGenerator {
     public static void createDefault(ResourcePackBuilder builder, Identifier id, ResourceProvider resourceProvider, boolean tint) {
         var def = resourceProvider.getModels().get("default");
+        if (def == null && !resourceProvider.getModels().values().iterator().hasNext()) {
+            Filament.LOGGER.error("Could not generate item model definition for {}", id);
+            return;
+        }
+
         var defaultModel = new BasicItemModel(def == null ? resourceProvider.getModels().values().iterator().next() : def, !tint ? List.of() : List.of(new DyeTintSource(0xFFFFFF)));
         if (resourceProvider.getModels().size() > 1) {
             var list = getCases(resourceProvider, tint);

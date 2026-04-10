@@ -156,7 +156,7 @@ public class FileListServlet extends HttpServlet {
                 .attr("hx-swap", "innerHTML")
                 .attr("title", "Open " + id)
                 .with(
-                        div("📄 " + name).withClass("fw-medium text-truncate"),
+                        div(asset.icon() + name).withClass("fw-medium text-truncate"),
                         div(id).withClass("text-muted text-truncate").attr("style", "font-size: 0.7rem;"),
                         pathText.isEmpty() ? text("") : div(pathText).withClass("text-muted text-truncate").attr("style", "font-size: 0.4rem;")
                 );

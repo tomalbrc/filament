@@ -3,10 +3,12 @@ package de.tomalbrc.filament.behaviour.item;
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.ShearsDispenseItemBehavior;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -103,6 +105,7 @@ public class Shears implements ItemBehaviour<Shears.Config> {
     }
 
     public static class Config {
+        @RegistryRef("sound_event")
         public Identifier sound = SoundEvents.GROWING_PLANT_CROP.location();
     }
 }

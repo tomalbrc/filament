@@ -6,6 +6,7 @@ import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.decoration.AnimatedChest;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.OxidizableRegistry;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
@@ -73,6 +74,7 @@ public class Oxidizable implements BlockBehaviour<Oxidizable.Config>, Weathering
         /**
          * Replacement block
          */
+        @RegistryRef("block")
         public Identifier replacement;
 
         /**

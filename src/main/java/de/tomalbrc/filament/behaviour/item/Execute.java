@@ -3,6 +3,7 @@ package de.tomalbrc.filament.behaviour.item;
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.util.ExecuteUtil;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -129,7 +130,9 @@ public class Execute implements ItemBehaviour<Execute.Config>, BlockBehaviour<Ex
 
         public boolean dropBlock = false;
 
+        @RegistryRef("sound_event")
         public Identifier sound;
+
         public boolean console = false;
     }
 }

@@ -15,6 +15,7 @@ import de.tomalbrc.filament.data.AbstractBlockData;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.mixin.accessor.FireBlockInvoker;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import eu.pb4.polymer.blocks.impl.BlockExtBlockMapper;
 import eu.pb4.polymer.blocks.impl.DefaultModelData;
 import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
@@ -116,7 +117,11 @@ public class Fire implements BlockBehaviour<Fire.Config> {
         public boolean tick = true;
         public boolean lightPortal = true;
         public float damage = 1.f;
+
+        @RegistryRef(value = "item")
         public List<Identifier> blocks;
+
+        @RegistryRef(value = "block", tagsOnly = true)
         public List<Identifier> blockTags;
     }
 

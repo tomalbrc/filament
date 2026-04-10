@@ -3,6 +3,7 @@ package de.tomalbrc.filamentweb.asset;
 import com.fasterxml.classmate.ResolvedType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.victools.jsonschema.generator.*;
@@ -19,12 +20,14 @@ import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import de.tomalbrc.filament.data.resource.BlockResource;
 import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.util.annotation.Description;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import de.tomalbrc.filamentweb.util.PojoComponents;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -58,10 +61,6 @@ public class AssetStore {
     static Map<Path, Asset> assetsByPath = new ConcurrentHashMap<>();
 
     public static void registerAsset(Asset asset) {
-        if (asset.schema == null) {
-            asset.schema = getSchema(asset.data, asset.type);
-        }
-
         if (asset.path == null || assetsByPath.containsKey(asset.path))
             return;
 
@@ -83,7 +82,6 @@ public class AssetStore {
         asset.data = data;
         asset.path = data.filepath;
         asset.type = clazz;
-        asset.schema = getSchema(instance, asset.type);
         AssetStore.registerAsset(asset);
     }
 
@@ -268,6 +266,7 @@ public class AssetStore {
                 return inlineObject(context, node -> {
                     ObjectNode props = node.putObject("properties");
                     ObjectMapper mapper = new ObjectMapper();
+                    mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
 
                     for (DataComponentType<?> compType : BuiltInRegistries.DATA_COMPONENT_TYPE) {
                         var id = BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(compType);
@@ -285,7 +284,7 @@ public class AssetStore {
                                 propertyNode.put("type", "array");
                                 propertyNode.set("default", mapper.createArrayNode());
 
-                                ObjectNode itemsRef = context.createDefinitionReference(itemType);
+                                ObjectNode itemsRef = context.createDefinition(itemType);
 
                                 try {
                                     Object itemDefault = getDefaultInstance(itemType.getErasedType());
@@ -297,7 +296,7 @@ public class AssetStore {
                                 propertyNode.set("items", itemsRef);
 
                             } else {
-                                ObjectNode ref = context.createDefinitionReference(resolved);
+                                ObjectNode ref = context.createDefinition(resolved);
                                 if (ref.isObject()) {
                                     propertyNode.setAll(ref);
                                 } else {
@@ -313,7 +312,6 @@ public class AssetStore {
                             }
 
                         } else {
-                            // Fallback for missing/unregistered components
                             ObjectNode fallback = props.putObject(id.toString());
                             fallback.put("type", "object");
                             fallback.put("additionalProperties", true);
@@ -365,25 +363,86 @@ public class AssetStore {
             return null;
         });
 
+        Set<String> requestedRegistries = new HashSet<>();
+
         configBuilder.forFields().withInstanceAttributeOverride((node, fieldScope, context) -> {
             String fieldName = fieldScope.getDeclaredName();
-            Class<?> type = fieldScope.getType().getErasedType();
+            ResolvedType fieldType = fieldScope.getType();
 
-            if ("vanillaItem".equals(fieldName) || type == Item.class) {
-                addRegistryEnum(node, BuiltInRegistries.ITEM);
-            } else if (type == Block.class) {
-                addRegistryEnum(node, BuiltInRegistries.BLOCK);
-            } else if (type == BlockState.class) {
-                //ArrayNode arr = node.putArray("enum");
-                //for (Block block : BuiltInRegistries.BLOCK) {
-                //    for (BlockState state : block.getStateDefinition().getPossibleStates()) {
-                //        arr.add(serializeBlockState(state));
-                //    }
-                //}
-                node.put("type", "string");
+            boolean isCollection = fieldType.isInstanceOf(Collection.class) || fieldType.isArray();
+            boolean isMap = fieldType.isInstanceOf(Map.class);
+
+            RegistryRef registryRef = fieldScope.getAnnotationConsideringFieldAndGetter(RegistryRef.class);
+
+            if (registryRef != null) {
+                String defKey = registryRef.value().replace(":", "_") +
+                        (registryRef.tagsOnly() ? "_tags_only" : (registryRef.tags() ? "_tags" : ""));
+                requestedRegistries.add(defKey);
+                String refPath = "#/$defs/" + defKey;
+
+                node.removeAll();
+
+                if (isCollection) {
+                    node.put("type", "array");
+                    node.putObject("items").put("$ref", refPath);
+                } else if (isMap) {
+                    node.put("type", "object");
+                    node.putObject("additionalProperties").put("$ref", refPath);
+                } else {
+                    node.put("$ref", refPath);
+                }
+            } else {
+                ResolvedType targetType = fieldType;
+                if (fieldType.isInstanceOf(Collection.class)) {
+                    List<ResolvedType> typeParams = fieldType.typeParametersFor(Collection.class);
+                    if (!typeParams.isEmpty()) targetType = typeParams.getFirst();
+                } else if (fieldType.isArray()) {
+                    targetType = fieldType.getArrayElementType();
+                } else if (isMap) {
+                    List<ResolvedType> typeParams = fieldType.typeParametersFor(Map.class);
+                    if (typeParams.size() >= 2) targetType = typeParams.get(1);
+                }
+
+                Class<?> targetClass = targetType != null ? targetType.getErasedType() : Object.class;
+                String reqReg = null;
+
+                if ("vanillaItem".equals(fieldName) || targetClass == Item.class) {
+                    reqReg = "item";
+                } else if (targetClass == Block.class) {
+                    reqReg = "block";
+                }
+
+                if (reqReg != null) {
+                    requestedRegistries.add(reqReg);
+                    String refPath = "#/$defs/" + reqReg;
+
+                    node.removeAll();
+                    if (isCollection) {
+                        node.put("type", "array");
+                        node.putObject("items").put("$ref", refPath);
+                    } else if (isMap) {
+                        node.put("type", "object");
+                        node.putObject("additionalProperties").put("$ref", refPath);
+                    } else {
+                        node.put("$ref", refPath);
+                    }
+                } else if (targetClass == BlockState.class) {
+                    node.removeAll();
+                    if (isCollection) {
+                        node.put("type", "array");
+                        node.putObject("items").put("type", "string");
+                    } else if (isMap) {
+                        node.put("type", "object");
+                        node.putObject("additionalProperties").put("type", "string");
+                    } else {
+                        node.put("type", "string");
+                    }
+                }
             }
 
             if (fieldName.equals("models") && !localRequiredItems.isEmpty()) {
+                node.removeAll();
+                node.put("type", "object");
                 ObjectNode props = node.putObject("properties");
                 for (String modelId : localRequiredItems) {
                     props.putObject(modelId).put("type", "string");
@@ -400,7 +459,70 @@ public class AssetStore {
         SchemaGeneratorConfig config = configBuilder.build();
         SchemaGenerator generator = new SchemaGenerator(config);
 
-        return JsonParser.parseString(generator.generateSchema(assetType).toString());
+        ObjectNode rootSchema = generator.generateSchema(assetType);
+
+        // Post-process to dynamically inject collected registry $defs
+        if (!requestedRegistries.isEmpty()) {
+            ObjectNode defs = (ObjectNode) rootSchema.get("$defs");
+            if (defs == null) {
+                defs = rootSchema.putObject("$defs");
+            }
+            for (String req : requestedRegistries) {
+                if (!defs.has(req)) {
+                    ObjectNode regNode = defs.putObject(req);
+                    boolean tagsOnly = req.endsWith("_tags_only");
+                    boolean tags = req.endsWith("_tags") || tagsOnly;
+
+                    String regName = req;
+                    if (tagsOnly) {
+                        regName = req.substring(0, req.length() - 10);
+                    } else if (tags) {
+                        regName = req.substring(0, req.length() - 5);
+                    }
+
+                    populateRegistryDefinition(regNode, regName, tags, tagsOnly);
+                }
+            }
+        }
+
+        return JsonParser.parseString(rootSchema.toString());
+    }
+
+    private static void populateRegistryDefinition(ObjectNode node, String registryName, boolean includeTags, boolean tagsOnly) {
+        Registry<?> reg = null;
+
+        switch (registryName.toLowerCase()) {
+            case "item", "minecraft:item" -> reg = BuiltInRegistries.ITEM;
+            case "block", "minecraft:block" -> reg = BuiltInRegistries.BLOCK;
+            case "sound_event", "minecraft:sound_event" -> reg = BuiltInRegistries.SOUND_EVENT;
+            case "entity_type", "minecraft:entity_type" -> reg = BuiltInRegistries.ENTITY_TYPE;
+            case "particle_type", "minecraft:particle_type" -> reg = BuiltInRegistries.PARTICLE_TYPE;
+            default -> {
+                Identifier id = registryName.contains(":") ? Identifier.tryParse(registryName) : Identifier.withDefaultNamespace(registryName);
+                if (id != null && BuiltInRegistries.REGISTRY.containsKey(id)) {
+                    var val = BuiltInRegistries.REGISTRY.get(id);
+                    if (val.isPresent()) {
+                        reg = val.get().value();
+                    }
+                }
+            }
+        }
+
+        if (reg != null) {
+            ArrayNode arr = node.putArray("enum");
+
+            if (!tagsOnly) {
+                reg.keySet().forEach(id -> arr.add(id.toString()));
+            }
+
+            if (includeTags || tagsOnly) {
+                reg.listTagIds().forEach(tagKey -> arr.add("#" + tagKey.location().toString()));
+            }
+            node.put("type", "string");
+        } else {
+            node.put("type", "string");
+            node.put("description", "Unknown registry reference: " + registryName);
+        }
     }
 
     private static Object getDefaultInstance(Class<?> clazz) throws Exception {
@@ -436,12 +558,6 @@ public class AssetStore {
             } else result.append(c);
         }
         return result.toString();
-    }
-
-    private static void addRegistryEnum(ObjectNode node, Registry<?> reg) {
-        ArrayNode arr = node.putArray("enum");
-        reg.keySet().forEach(id -> arr.add(id.toString()));
-        node.put("type", "string");
     }
 
     private static final Set<Class<?>> STRING_TYPES = Set.of(Identifier.class, BlockState.class, Block.class, Item.class, ItemStack.class, Component.class);

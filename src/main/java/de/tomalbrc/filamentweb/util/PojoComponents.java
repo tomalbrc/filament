@@ -1,15 +1,24 @@
 package de.tomalbrc.filamentweb.util;
 
 import com.google.common.reflect.TypeToken;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemUseAnimation;
+import net.minecraft.world.item.SwingAnimationType;
+import net.minecraft.world.item.component.DamageResistant;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.level.block.entity.BannerPattern;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.*;
 
 public class PojoComponents {
-    // TODO: add to schema gen
     public static final class ContainerEntry {
         public ItemStack item = new ItemStack();
         public int slot = 0;
@@ -18,6 +27,7 @@ public class PojoComponents {
     }
 
     public static final class ItemStack {
+        @RegistryRef("item")
         public String id = "minecraft:paper";
         public int count = 1;
         public DataComponentMap components = DataComponentMap.builder().build();
@@ -25,25 +35,26 @@ public class PojoComponents {
         public ItemStack() {}
     }
 
-    public record ConsumeEffect(Identifier id, int duration, int amplifier, boolean ambient, boolean showParticles) {}
+    public record ConsumeEffect(@RegistryRef("mob_effect") Identifier id, int duration, int amplifier, boolean ambient, boolean showParticles) {}
 
-    public record AttributeModifier(Identifier attribute, double amount, String operation, String slot) {}
+    public record AttributeModifier(Identifier id, @RegistryRef("attribute") String type, double amount, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation operation, EquipmentSlot slot) {}
 
     public record FireworkExplosion(
-            String shape,
+            net.minecraft.world.item.component.FireworkExplosion.Shape shape,
             List<Integer> colors,
             List<Integer> fadeColors,
             boolean trail,
             boolean twinkle
     ) {
         public FireworkExplosion() {
-            this("small_ball", new ArrayList<>(), new ArrayList<>(), false, false);
+            this(net.minecraft.world.item.component.FireworkExplosion.Shape.SMALL_BALL, new ArrayList<>(), new ArrayList<>(), false, false);
         }
     }
 
     public record MapDecoration(String type, int x, int z, boolean tracked) {}
 
     public static final class ToolRule {
+        @RegistryRef(value = "block", tags = true)
         private final Identifier block = Identifier.parse("minecraft:stone");
         private final float speed= 1;
         private final boolean correctForDrops = true;
@@ -70,7 +81,7 @@ public class PojoComponents {
 
     public record FireResistantComponent() {}
 
-    public record DeathProtectionComponent(List<ConsumeEffect> effects) {
+    public record DeathProtectionComponent(List<ConsumeEffect> deathEffects) {
         public DeathProtectionComponent() { this(new ArrayList<>()); }
     }
 
@@ -115,7 +126,7 @@ public class PojoComponents {
         public MinimumAttackChargeComponent() { this(0.0f); }
     }
 
-    public record DamageTypeComponent(Identifier type) {
+    public record DamageTypeComponent(@RegistryRef("damage_type") Identifier type) {
         public DamageTypeComponent() { this(Identifier.parse("minecraft:spear")); }
     }
 
@@ -127,49 +138,42 @@ public class PojoComponents {
             KineticCondition damageConditions,
             float forwardMovement,
             float damageMultiplier,
-            Optional<Identifier> sound,
-            Optional<Identifier> hitSound
+
+            @RegistryRef("sound_event")
+            @Nullable Identifier sound,
+
+            @RegistryRef("sound_event")
+            @Nullable Identifier hitSound
     ) {
         public KineticWeaponComponent() {
-            this(10, 0, new KineticCondition(), new KineticCondition(), new KineticCondition(), 0.0f, 1.0f, Optional.empty(), Optional.empty());
+            this(10, 0, new KineticCondition(), new KineticCondition(), new KineticCondition(), 0.0f, 1.0f, null, null);
         }
     }
 
     public record PiercingWeaponComponent(
             boolean dealsKnockback,
             boolean dismounts,
-            Optional<Identifier> sound,
-            Optional<Identifier> hitSound
+            @Nullable @RegistryRef("sound_event") Identifier sound,
+            @Nullable @RegistryRef("sound_event") Identifier hitSound
     ) {
-        public PiercingWeaponComponent() { this(true, false, Optional.empty(), Optional.empty()); }
+        public PiercingWeaponComponent() { this(true, false, null, null); }
     }
 
-    public record SwingAnimationComponent(String type, int duration) {
-        public SwingAnimationComponent() { this("whack", 6); }
+    public record SwingAnimationComponent(SwingAnimationType type, int duration) {
+        public SwingAnimationComponent() { this(SwingAnimationType.WHACK, 6); }
     }
 
     public record EquippableComponent(
-            String slot,
-            Identifier equipSound,
+            EquipmentSlot slot,
+            @RegistryRef("sound_event") Identifier equipSound,
             Identifier model,
-            Optional<Identifier> cameraOverlay,
+            @Nullable Identifier cameraOverlay,
             boolean dispensable,
-            boolean damageOnHurt
+            boolean damageOnHurt,
+            boolean swappable
     ) {
         public EquippableComponent() {
-            this("chest", Identifier.parse("minecraft:item.armor.equip_generic"), Identifier.parse("minecraft:stick"), Optional.empty(), true, true);
-        }
-    }
-
-    public record ConsumableComponent(
-            float consumeSeconds,
-            String animation,
-            Identifier sound,
-            boolean hasConsumeParticles,
-            List<Identifier> onConsumeEffects
-    ) {
-        public ConsumableComponent() {
-            this(1.6f, "eat", Identifier.parse("minecraft:entity.generic.eat"), true, new ArrayList<>());
+            this(EquipmentSlot.HEAD, Identifier.parse("minecraft:item.armor.equip_generic"), Identifier.parse("minecraft:stick"), null, true, true, true);
         }
     }
 
@@ -177,8 +181,20 @@ public class PojoComponents {
         public JukeboxPlayableComponent() { this(Identifier.parse("minecraft:precipice"), true); }
     }
 
-    public record FoodComponent(int nutrition, float saturation, boolean canAlwaysEat) {
+    public record FoodComponent(int nutrition, float saturationModifier, boolean canAlwaysEat) {
         public FoodComponent() { this(0, 0.0f, false); }
+    }
+
+    public record ConsumableComponent(
+            float consumeSeconds,
+            ItemUseAnimation animation,
+            @RegistryRef("sound_event") Identifier sound,
+            boolean hasConsumeParticles,
+            List<Map<String, Object>> onConsumeEffects
+    ) {
+        public ConsumableComponent() {
+            this(1.6f, ItemUseAnimation.EAT, Identifier.parse("minecraft:entity.generic.eat"), true, new ArrayList<>());
+        }
     }
 
     public record DamageComponent(int damage) {
@@ -213,11 +229,7 @@ public class PojoComponents {
         public StoredEnchantmentsComponent() { this(new LinkedHashMap<>()); }
     }
 
-    public record AttributeModifiersComponent(List<AttributeModifier> modifiers) {
-        public AttributeModifiersComponent() { this(new ArrayList<>()); }
-    }
-
-    public record DamageResistantComponent(List<Identifier> types) {
+    public record DamageResistantComponent(@RegistryRef(value = "damage_type", tagsOnly = true) List<Identifier> types) {
         public DamageResistantComponent() { this(new ArrayList<>()); }
     }
 
@@ -225,8 +237,8 @@ public class PojoComponents {
         public BlocksAttacksComponent() { this(new ArrayList<>()); }
     }
 
-    public record BannerPatternsComponent(List<Map<String, Object>> patterns) {
-        public BannerPatternsComponent() { this(new ArrayList<>()); }
+    public record BannerPatternsComponent(Identifier assetId, String translationKey) {
+        public BannerPatternsComponent() { this(null, null); }
     }
 
     public record BaseColorComponent(String color) {
@@ -245,7 +257,7 @@ public class PojoComponents {
         public BlockStateComponent() { this(new LinkedHashMap<>()); }
     }
 
-    public record BreakSoundComponent(Identifier sound) {
+    public record BreakSoundComponent(@RegistryRef("sound_event") Identifier sound) {
         public BreakSoundComponent() { this(Identifier.parse("minecraft:block.stone.break")); }
     }
 
@@ -269,7 +281,7 @@ public class PojoComponents {
         public ChargedProjectilesComponent() { this(new ArrayList<>()); }
     }
 
-    public record ContainerLootComponent(Identifier lootTable, long seed) {
+    public record ContainerLootComponent(@RegistryRef("loot_table") Identifier lootTable, long seed) {
         public ContainerLootComponent() { this(Identifier.parse("minecraft:empty"), 0L); }
     }
 
@@ -281,8 +293,8 @@ public class PojoComponents {
         public CustomModelDataComponent() { this(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()); }
     }
 
-    public record CustomNameComponent(String jsonText) {
-        public CustomNameComponent() { this(""); }
+    public record CustomNameComponent(Object jsonText) {
+        public CustomNameComponent() { this(null); }
     }
 
     public record DyeComponent(DyeColor color) {
@@ -298,14 +310,14 @@ public class PojoComponents {
     }
 
     public record FireworkExplosionComponent(
-            String shape,
+            net.minecraft.world.item.component.FireworkExplosion.Shape shape,
             List<Integer> colors,
             List<Integer> fadeColors,
             boolean trail,
             boolean twinkle
     ) {
         public FireworkExplosionComponent() {
-            this("small_ball", new ArrayList<>(), new ArrayList<>(), false, false);
+            this(net.minecraft.world.item.component.FireworkExplosion.Shape.SMALL_BALL, new ArrayList<>(), new ArrayList<>(), false, false);
         }
     }
 
@@ -319,7 +331,7 @@ public class PojoComponents {
         public WeaponComponent() { this(0.0f, 0.0f); }
     }
 
-    public record InstrumentComponent(Identifier instrument) {
+    public record InstrumentComponent(@RegistryRef("instrument") Identifier instrument) {
         public InstrumentComponent() { this(Identifier.parse("minecraft:ponder_goat_horn")); }
     }
 
@@ -331,10 +343,6 @@ public class PojoComponents {
 
     public record LoreComponent(List<String> lines) {
         public LoreComponent() { this(new ArrayList<>()); }
-    }
-
-    public record LockComponent(String key) {
-        public LockComponent() { this(""); }
     }
 
     public record LodestoneTrackerComponent(Optional<Identifier> targetDimension, Optional<String> targetPosition, boolean tracked) {
@@ -402,7 +410,9 @@ public class PojoComponents {
     }
 
     public static final class ToolComponent {
-        private List<ToolRule> rules = new ArrayList<>();
+        public List<ToolRule> rules = new ArrayList<>();
+        public float defaultMiningSpeed = 1.0f;
+        public int damagePerBlock = 1;
     }
 
     public static final class TrimComponent {
@@ -438,6 +448,7 @@ public class PojoComponents {
         REGISTERED_COMPONENTS.put("minecraft:intangible_projectile", IntangibleProjectileComponent.class);
 
         REGISTERED_COMPONENTS.put("minecraft:consumable", ConsumableComponent.class);
+        REGISTERED_COMPONENTS.put("minecraft:jukebox_playable", JukeboxPlayableComponent.class);
         REGISTERED_COMPONENTS.put("minecraft:food", FoodComponent.class);
         REGISTERED_COMPONENTS.put("minecraft:damage", DamageComponent.class);
         REGISTERED_COMPONENTS.put("minecraft:max_damage", MaxDamageComponent.class);
@@ -447,8 +458,9 @@ public class PojoComponents {
         REGISTERED_COMPONENTS.put("minecraft:enchantable", EnchantableComponent.class);
         REGISTERED_COMPONENTS.put("minecraft:enchantments", EnchantmentsComponent.class);
         REGISTERED_COMPONENTS.put("minecraft:stored_enchantments", StoredEnchantmentsComponent.class);
-        REGISTERED_COMPONENTS.put("minecraft:attribute_modifiers", AttributeModifiersComponent.class);
+        REGISTERED_COMPONENTS.put("minecraft:attribute_modifiers", new TypeToken<List<AttributeModifier>>(){}.getType());
         REGISTERED_COMPONENTS.put("minecraft:damage_resistant", DamageResistantComponent.class);
+
         REGISTERED_COMPONENTS.put("minecraft:blocks_attacks", BlocksAttacksComponent.class);
         REGISTERED_COMPONENTS.put("minecraft:repairable", RepairableComponent.class);
         REGISTERED_COMPONENTS.put("minecraft:death_protection", DeathProtectionComponent.class);
@@ -498,7 +510,7 @@ public class PojoComponents {
         REGISTERED_COMPONENTS.put("minecraft:writable_book_content", WritableBookContentComponent.class);
         REGISTERED_COMPONENTS.put("minecraft:written_book_content", WrittenBookContentComponent.class);
 
-        REGISTERED_COMPONENTS.put("minecraft:base_color", BaseColorComponent.class);
+        REGISTERED_COMPONENTS.put("minecraft:base_color", DyeColor.class);
         REGISTERED_COMPONENTS.put("minecraft:bees", BeesComponent.class);
         REGISTERED_COMPONENTS.put("minecraft:banner_patterns", BannerPatternsComponent.class);
         REGISTERED_COMPONENTS.put("minecraft:pot_decorations", PotDecorationsComponent.class);
@@ -512,7 +524,6 @@ public class PojoComponents {
         REGISTERED_COMPONENTS.put("minecraft:provides_banner_patterns", ProvidesBannerPatternsComponent.class);
         REGISTERED_COMPONENTS.put("minecraft:provides_trim_material", ProvidesTrimMaterialComponent.class);
         REGISTERED_COMPONENTS.put("minecraft:recipes", RecipesComponent.class);
-        REGISTERED_COMPONENTS.put("minecraft:lock", LockComponent.class);
         REGISTERED_COMPONENTS.put("minecraft:suspicious_stew_effects", SuspiciousStewEffectsComponent.class);
         REGISTERED_COMPONENTS.put("minecraft:trim", TrimComponent.class);
     }

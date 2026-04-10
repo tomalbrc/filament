@@ -1,6 +1,7 @@
 package de.tomalbrc.filamentweb.service;
 
 import de.tomalbrc.filamentweb.util.WebPaths;
+import j2html.tags.Tag;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,6 +32,7 @@ public class AssetEditorServlet extends HttpServlet {
                                 link().withRel("stylesheet").withHref("https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"),
                                 script().withSrc("https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"),
                                 script().withSrc("https://unpkg.com/htmx.org@1.9.12"),
+                                script().withSrc("https://unpkg.com/htmx.org@1.9.12/dist/ext/ws.js"),
                                 script().withSrc("https://unpkg.com/hyperscript.org@0.9.14"),
                                 script().withType("module").withSrc("https://ajax.googleapis.com/ajax/libs/model-viewer/4.2.0/model-viewer.min.js"),
 
@@ -41,10 +43,7 @@ public class AssetEditorServlet extends HttpServlet {
                                 link().withRel("stylesheet").withHref("https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"),
                                 script().withSrc("https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"),
 
-                                link().withRel("stylesheet").withHref("https://cdnjs.cloudflare.com/ajax/libs/hint.css/3.0.0/hint.min.css"),
-                                style("""
-                                        .editor-container { overflow: scroll; }
-                                        }""")
+                                link().withRel("stylesheet").withHref("https://cdnjs.cloudflare.com/ajax/libs/hint.css/3.0.0/hint.min.css")
                         ),
                         body().withClass("d-flex flex-column vh-100").attr("data-bs-theme", "dark").with(
                                 input()
@@ -53,11 +52,11 @@ public class AssetEditorServlet extends HttpServlet {
                                         .withValue("")
                                         .attr("hx-swap-oob", "true"),
 
-                                nav().withClass("navbar bg-body-tertiary border-bottom").with(
+                                nav().withClass("navbar navbar-expand bg-body-tertiary border-bottom sticky-top").with(
                                         div().withClass("container-fluid d-flex justify-content-between align-items-center").with(
                                                 span("Filament Editor").withClass("navbar-brand mb-0 h1"),
 
-                                                div().withClass("d-flex gap-3 align-items-center").with(
+                                                div().withClass("d-flex align-items-center gap-2").with(
 
                                                         div().withClass("d-flex gap-2").with(
                                                                 button("New")
@@ -75,27 +74,9 @@ public class AssetEditorServlet extends HttpServlet {
                                                                         .attr("rel", "noopener noreferrer")
                                                                         .attr("aria-label", "Open the offline docs in a new tab")
 
-                                                                ),
-
-                                                        div().withClass("btn-group").attr("role", "group").attr("aria-label", "File Actions").with(
-                                                                button("Write to file")
-                                                                        .withId("save-btn")
-                                                                        .withClass("btn btn-sm btn-outline-primary hint--bottom")
-                                                                        .attr("hx-get", "/action/save")
-                                                                        .attr("hx-include", "#current-file-uuid")
-                                                                        .attr("hx-swap", "none")
-                                                                        .attr("aria-label", "Write the opened config to file"),
-
-                                                                button("Reload behaviours")
-                                                                        .withId("reregister-btn")
-                                                                        .withClass("btn btn-sm btn-outline-primary hint--bottom")
-                                                                        .attr("hx-get", "/action/reregister")
-                                                                        .attr("hx-include", "#current-file-uuid")
-                                                                        .attr("hx-swap", "none")
-                                                                        .attr("aria-label", "Reloads behaviours. Everything else requires a server restart!")
                                                         ),
 
-                                                        div().withClass("btn-group").attr("role", "group").attr("aria-label", "Resource Pack Actions").with(
+                                                        div().withClass("btn-group px-5").attr("role", "group").attr("aria-label", "Resource Pack Actions").with(
                                                                 button("Rebuild RP")
                                                                         .withClass("btn btn-sm btn-outline-info hint--bottom")
                                                                         .attr("hx-get", "/action/rebuild")
@@ -107,7 +88,7 @@ public class AssetEditorServlet extends HttpServlet {
                                                                         .attr("hx-get", "/action/reload")
                                                                         .attr("hx-swap", "none")
                                                                         .attr("aria-label", "Reload the resourcepack for all players")
-                                                                ),
+                                                        ),
 
                                                         button("Logout")
                                                                 .withClass("btn btn-sm btn-outline-danger")
@@ -116,32 +97,36 @@ public class AssetEditorServlet extends HttpServlet {
                                                 )
                                         )
                                 ),
-                                div().withClass("container-fluid flex-grow-1 overflow-hidden").with(
-                                        div().withClass("row h-100").with(
+                                renderConsole(),
+                                div().withClass("container-fluid p-0 overflow-hidden").with(
+                                        div().withClass("container-fluid vh-100 d-flex flex-column").with(
+                                                div().withClass("row flex-grow-1").with(
+                                                        div().withId("sidebar")
+                                                                .withClass("col-2 border-end p-0 vh-100 d-flex flex-column")
+                                                                .with(
+                                                                        div().withClass("bg-body p-2 border-bottom shadow-sm").withStyle("height: 55px;").with(
+                                                                                input().withType("text")
+                                                                                        .withId("file-search")
+                                                                                        .withClass("form-control")
+                                                                                        .withPlaceholder("Search...")
+                                                                                        .withName("search")
+                                                                                        .attr("hx-get", WebPaths.files())
+                                                                                        .attr("hx-target", "#files-list")
+                                                                                        .attr("hx-trigger", "keyup changed delay:100ms")
+                                                                        ),
 
-                                                div().withId("sidebar").withClass("col-2 border-end overflow-auto p-0 h-100").with(
-                                                        div().withClass("sticky-top bg-body p-2 border-bottom").with(
-                                                                input().withType("text")
-                                                                        .withId("file-search")
-                                                                        .withName("search")
-                                                                        .withClass("form-control")
-                                                                        .withPlaceholder("Search...")
-                                                                        .attr("hx-get", WebPaths.files())
-                                                                        .attr("hx-target", "#files-list")
-                                                                        .attr("hx-trigger", "keyup changed delay:100ms")
-                                                        )
-                                                ).with(
-                                                        div().withClass("p-0").with(
-                                                                table().withClass("table table-hover").with(
-                                                                        tbody().withId("files-list")
-                                                                                .attr("hx-get", WebPaths.files())
-                                                                                .attr("hx-trigger", "load")
-                                                                )
-                                                        )
-                                                ),
+                                                                        div().withClass("overflow-auto flex-grow-1").with(
+                                                                                table().withClass("table table-hover mb-0").with(
+                                                                                        tbody().withId("files-list")
+                                                                                                .attr("hx-get", WebPaths.files())
+                                                                                                .attr("hx-trigger", "load")
+                                                                                )
+                                                                        )
+                                                                ),
 
-                                                div().withId("main-panel").withClass("col-10 px-2 overflow-auto h-100").with(
-                                                        div().withId("editor-pane")
+                                                        div().withId("main-panel").withClass("col-10 g-0 h-100 overflow-auto").with(
+                                                                div().withId("editor-pane")
+                                                        )
                                                 )
                                         )
                                 ),
@@ -160,5 +145,57 @@ public class AssetEditorServlet extends HttpServlet {
                         )
                 )
         );
+    }
+
+    Tag<?> renderConsole() {
+        return div().withId("console-wrapper")
+                .attr("hx-ext", "ws")
+                .attr("ws-connect", "/ws/log")
+                .withClass("position-fixed bottom-0 end-0 m-3 shadow-lg border rounded bg-body-tertiary")
+                .withStyle("z-index: 9999; width: 400px;")
+                .with(
+                        div().withClass("d-flex justify-content-between align-items-center p-2 border-bottom bg-dark text-white rounded-top")
+                                .with(
+                                        div("Console").withClass("small text-secondary fw-bold").with(
+                                                span().withId("status-dot")
+                                                        .withClass("d-inline-block rounded-circle ms-2")
+                                                        .withStyle("width: 10px; height: 10px; background-color: orange;")
+                                                        .attr("_", """
+                                                                      on htmx:wsOpen from #console-wrapper set my.style.backgroundColor to 'green'
+                                                                      on htmx:wsClose from #console-wrapper set my.style.backgroundColor to 'red'
+                                                                      on htmx:wsError from #console-wrapper set my.style.backgroundColor to 'red'
+                                                                """)
+                                        ),
+
+                                        div().withClass("d-flex gap-1").with(
+                                                button("Clear")
+                                                        .withClass("btn btn-sm btn-outline-danger py-0 px-2")
+                                                        .withStyle("font-size: 0.7rem;")
+                                                        .attr("_", "on click put '' into #console-log"),
+
+                                                button("—")
+                                                        .withId("console-toggle-btn")
+                                                        .withClass("btn btn-sm btn-light py-0 px-2")
+                                                        .attr("_", """
+                                                                on click
+                                                                    toggle .d-none on #console-body
+                                                                    if #console-body matches .d-none
+                                                                        set my.innerText to '▢'
+                                                                        set #console-wrapper's style.width to '200px'
+                                                                    else
+                                                                        set my.innerText to '—'
+                                                                        set #console-wrapper's style.width to '400px'
+                                                                    end
+                                                                """)
+                                        )
+                                ),
+
+                        div().withId("console-body").withClass("p-0").with(
+                                pre().withId("console-log")
+                                        .withClass("mb-0 p-2 bg-dark small")
+                                        .withStyle("height: 250px; overflow-y: auto; font-family: monospace; white-space: pre-wrap;")
+                                        .attr("_", "on htmx:wsAfterMessage scroll me to bottom")
+                        )
+                );
     }
 }

@@ -489,7 +489,7 @@ public class Json {
 
         @Override
         public JsonElement serialize(Component src, Type typeOfSrc, JsonSerializationContext context) {
-            return new JsonPrimitive(src.getString());
+            return new JsonPrimitive(FilamentFormatter.toString(src));
         }
     }
 

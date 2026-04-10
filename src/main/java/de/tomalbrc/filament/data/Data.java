@@ -7,9 +7,11 @@ import de.tomalbrc.filament.data.properties.ItemProperties;
 import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.data.resource.ResourceProvider;
 import de.tomalbrc.filament.util.annotation.Description;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
@@ -28,6 +30,7 @@ public abstract class Data<PropertyType extends ItemProperties> {
     protected final @NotNull Identifier id;
 
     @Description("Vanilla item to send to clients")
+    @RegistryRef("item")
     protected final @Nullable Item vanillaItem;
 
     @Description("Localized item name, will get written to the resource-pack")
@@ -53,6 +56,7 @@ public abstract class Data<PropertyType extends ItemProperties> {
     protected final @Nullable Identifier group;
 
     @Description("Item tags for the item. Specify without #")
+    @RegistryRef(value = "item", tagsOnly = true)
     protected final @Nullable Set<Identifier> itemTags;
 
     protected @Nullable PropertyType properties;

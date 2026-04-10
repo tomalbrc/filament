@@ -8,15 +8,20 @@ import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filamentweb.asset.AssetStore;
 import de.tomalbrc.filamentweb.service.*;
 import de.tomalbrc.filamentweb.util.Mc2Glb;
+import de.tomalbrc.filamentweb.util.WebLogAppender;
 import eu.pb4.polymer.resourcepack.api.AssetPaths;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
 import jakarta.servlet.DispatcherType;
+import jakarta.websocket.server.ServerEndpointConfig;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.MinecraftServer;
 import org.eclipse.jetty.ee10.servlet.ResourceServlet;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee10.servlet.ServletHolder;
+import org.eclipse.jetty.ee10.websocket.jakarta.server.config.JakartaWebSocketServletContainerInitializer;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
@@ -25,9 +30,18 @@ import org.eclipse.jetty.util.resource.ResourceFactory;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.EnumSet;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 public class EditorServer implements Runnable {
+    private static final ScheduledExecutorService EXECUTOR = Executors.newSingleThreadScheduledExecutor(r -> {
+        Thread t = new Thread(r, "Filament-Web-Scheduler");
+        t.setDaemon(true);
+        return t;
+    });
+
     private static ResourcePackBuilder RP_BUILDER;
     private static EditorServer INSTANCE;
     public static Mc2Glb CONVERTER;
@@ -71,6 +85,12 @@ public class EditorServer implements Runnable {
         handler.addServlet(new ServletHolder(new AssetEditorServlet()), "/");
 
         handler.addFilter(AuthFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
+
+        JakartaWebSocketServletContainerInitializer.configure(handler, (servletContext, container) -> {
+            container.addEndpoint(
+                    ServerEndpointConfig.Builder.create(LogEndpoint.class, "/ws/log").build()
+            );
+        });
 
         contextHandlerCollection.addHandler(handler);
     }
@@ -117,12 +137,14 @@ public class EditorServer implements Runnable {
             AssetStore.DEFAULT_MODEL = CONVERTER.toGlb(Identifier.withDefaultNamespace("block/stone"));
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            Filament.LOGGER.error("Could not start editor server!", e);
+            return;
         }
 
         try {
             EditorServer server = new EditorServer();
             var thread = new Thread(server, "Filament-Editor-Server");
+            thread.setDaemon(true);
             thread.start();
             Filament.LOGGER.info("Started Filament Editor server!");
             INSTANCE = server;
@@ -144,15 +166,28 @@ public class EditorServer implements Runnable {
     public static void init() {
         PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(EditorServer::init);
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            WebLogAppender.install();
             if (EditorServer.resourcePackBuilder() != null)
                 EditorServer.runServer();
         });
+
+        EXECUTOR.scheduleAtFixedRate(
+                () -> LogEndpoint.broadcast("ping"),
+                10,
+                5,
+                TimeUnit.SECONDS
+        );
+
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
             if (INSTANCE != null) {
                 try {
                     INSTANCE.stop();
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                    Filament.LOGGER.error("Error shutting down web server", e);
+                }
             }
+
+            EXECUTOR.shutdown();
         });
 
         FilamentRegistrationEvents.ITEM.register((data, item) -> {

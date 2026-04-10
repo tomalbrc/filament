@@ -2,6 +2,7 @@ package de.tomalbrc.filament.behaviour.entity.goal;
 
 import de.tomalbrc.filament.api.behaviour.EntityBehaviour;
 import de.tomalbrc.filament.entity.FilamentMob;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -51,7 +52,11 @@ public class TemptGoal implements EntityBehaviour<TemptGoal.Config> {
         int priority;
         float speedModifier = 1.f;
         boolean canScare;
+
+        @RegistryRef("item")
         Set<Identifier> items;
+
+        @RegistryRef(value = "item", tagsOnly = true)
         Set<Identifier> itemTags;
     }
 }

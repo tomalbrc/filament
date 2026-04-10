@@ -148,6 +148,148 @@ public final class FilamentFormatter {
         return new Parser(input).parse();
     }
 
+    public static String toString(Component component) {
+        StringBuilder out = new StringBuilder();
+        if (component != null) serialize(component, Style.EMPTY, out);
+        return out.toString();
+    }
+
+    private static void serialize(Component component, Style parent, StringBuilder out) {
+        Style style = component.getStyle();
+
+        appendStyleOpen(parent, style, out);
+
+        if (component.getContents() instanceof PlainTextContents.LiteralContents(String text)) {
+            out.append(escape(text));
+        } else {
+            out.append(component.getString());
+        }
+
+        for (Component sibling : component.getSiblings()) {
+            serialize(sibling, style, out);
+        }
+
+        appendStyleClose(parent, style, out);
+    }
+
+    private static void appendStyleOpen(Style parent, Style style, StringBuilder out) {
+        if (!Objects.equals(parent.getColor(), style.getColor()) && style.getColor() != null) {
+            out.append("<#").append(String.format("%06X", style.getColor().getValue())).append(">");
+        }
+
+        if (style.isBold() && !parent.isBold()) out.append("<bold>");
+        if (style.isItalic() && !parent.isItalic()) out.append("<italic>");
+        if (style.isUnderlined() && !parent.isUnderlined()) out.append("<underlined>");
+        if (style.isStrikethrough() && !parent.isStrikethrough()) out.append("<strikethrough>");
+        if (style.isObfuscated() && !parent.isObfuscated()) out.append("<obfuscated>");
+
+        if (!Objects.equals(parent.getShadowColor(), style.getShadowColor()) && style.getShadowColor() != null) {
+            int argb = style.getShadowColor();
+            int rgb = argb & 0xFFFFFF;
+            double alpha = ((argb >> 24) & 0xFF) / 255.0;
+            out.append("<shadow:#")
+                    .append(String.format("%06X", rgb))
+                    .append(" ")
+                    .append(alpha)
+                    .append(">");
+        }
+
+        if (!Objects.equals(parent.getClickEvent(), style.getClickEvent()) && style.getClickEvent() != null) {
+            ClickEvent click = style.getClickEvent();
+
+            String action;
+            String value;
+
+            switch (click) {
+                case ClickEvent.OpenUrl open -> {
+                    action = "open_url";
+                    value = open.uri().toString();
+                }
+                case ClickEvent.RunCommand run -> {
+                    action = "run_command";
+                    value = run.command();
+                }
+                case ClickEvent.SuggestCommand suggest -> {
+                    action = "suggest_command";
+                    value = suggest.command();
+                }
+                case ClickEvent.CopyToClipboard copy -> {
+                    action = "copy_to_clipboard";
+                    value = copy.value();
+                }
+                case ClickEvent.ChangePage page -> {
+                    action = "change_page";
+                    value = Integer.toString(page.page());
+                }
+                default -> {
+                    action = click.getClass().getSimpleName().toLowerCase(Locale.ROOT);
+                    value = "";
+                }
+            }
+
+            out.append("<click:")
+                    .append(action)
+                    .append(" ")
+                    .append(escape(value))
+                    .append(">");
+        }
+
+        if (!Objects.equals(parent.getHoverEvent(), style.getHoverEvent()) && style.getHoverEvent() != null) {
+            HoverEvent hover = style.getHoverEvent();
+
+            if (hover instanceof HoverEvent.ShowText(Component value)) {
+                out.append("<hover:show_text ")
+                        .append(escape(toString(value)))
+                        .append(">");
+            }
+
+            if (hover instanceof HoverEvent.ShowItem(ItemStackTemplate item)) {
+                Identifier id = BuiltInRegistries.ITEM.getKey(item.item().value());
+                out.append("<hover:show_item ")
+                        .append(id)
+                        .append(" ")
+                        .append(item.count())
+                        .append(">");
+            }
+        }
+
+        if (!Objects.equals(parent.getInsertion(), style.getInsertion()) && style.getInsertion() != null) {
+            out.append("<insertion:")
+                    .append(escape(style.getInsertion()))
+                    .append(">");
+        }
+    }
+
+    private static void appendStyleClose(Style parent, Style style, StringBuilder out) {
+        if (!Objects.equals(parent.getInsertion(), style.getInsertion()) && style.getInsertion() != null)
+            out.append("</insertion>");
+
+        if (!Objects.equals(parent.getHoverEvent(), style.getHoverEvent()) && style.getHoverEvent() != null)
+            out.append("</hover>");
+
+        if (!Objects.equals(parent.getClickEvent(), style.getClickEvent()) && style.getClickEvent() != null)
+            out.append("</click>");
+
+        if (!Objects.equals(parent.getShadowColor(), style.getShadowColor()) && style.getShadowColor() != null)
+            out.append("</shadow>");
+
+        if (style.isObfuscated() && !parent.isObfuscated()) out.append("</obfuscated>");
+        if (style.isStrikethrough() && !parent.isStrikethrough()) out.append("</strikethrough>");
+        if (style.isUnderlined() && !parent.isUnderlined()) out.append("</underlined>");
+        if (style.isItalic() && !parent.isItalic()) out.append("</italic>");
+        if (style.isBold() && !parent.isBold()) out.append("</bold>");
+
+        if (!Objects.equals(parent.getColor(), style.getColor()) && style.getColor() != null)
+            out.append("</color>");
+    }
+
+    private static String escape(String input) {
+        return input
+                .replace("\\", "\\\\")
+                .replace("<", "\\<")
+                .replace(">", "\\>");
+    }
+
     private static final class Parser implements Context {
         private final String input;
         private final Deque<Frame> stack = new ArrayDeque<>();

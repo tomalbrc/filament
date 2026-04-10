@@ -1,6 +1,6 @@
 # Web Editor
 
-The **Filament Web Editor** lets you view and manage your custom content in. It provides a live overview of all registered assets with 3D previews
+The **Filament Web Editor** lets you view and manage your custom content in. It provides an overview of all registered assets with 3D previews
 
 ---
 

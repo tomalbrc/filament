@@ -33,7 +33,7 @@ import java.util.*;
 import static j2html.TagCreator.*;
 
 public class SchemaFormBuilder {
-    private static final String LABEL_STYLE = "width: 25%; text-overflow: ellipsis; white-space: nowrap;";
+    private static final String LABEL_STYLE = "flex: 0 0 25%; min-width: 0; max-width: 25%; text-overflow: ellipsis; white-space: nowrap;";
 
     private static String safeId(String prefix, String uuid, String path) {
         String raw = prefix + "-" + uuid + "-" + (path == null ? "" : path);
@@ -156,7 +156,7 @@ public class SchemaFormBuilder {
         return resolved;
     }
 
-    private static String description(JsonObject schema) { // TODO: move to utils
+    private static String description(JsonObject schema) {
         return (schema != null && schema.has("description")) ? schema.get("description").getAsString() : null;
     }
 
@@ -167,7 +167,8 @@ public class SchemaFormBuilder {
                 .withStyle("background: #149;")
                 .attr("hx-post", WebPaths.fragment(FragmentServlet.Operation.REMOVE_OBJECT.toString(), uuid, path))
                 .attr("hx-target", "#" + targetId)
-                .attr("hx-swap", "outerHTML");
+                .attr("hx-swap", "outerHTML")
+                .attr("hx-vals", "{\"key\": \"" + key + "\"}");
     }
 
     private static ContainerTag<?> renderCollapsibleSection(String title, String tooltip, String collapseId, Tag<?> content) {
@@ -321,7 +322,7 @@ public class SchemaFormBuilder {
             var holder = regItem.get();
             List<DomContent> elements = new ArrayList<>();
 
-            Component s = holder.value().getDefaultInstance().getDisplayName();
+            Component s = holder.value().getDefaultInstance().getItemName();
             s.visit((style,string) -> {
                 if (string.isEmpty()) {
                     return Optional.empty(); // Skip empty segments to keep the HTML clean
@@ -369,28 +370,46 @@ public class SchemaFormBuilder {
             displayName = div().withClass("mc-component").with(elements).render();
         }
 
-        JsonElement contentJson = JsonParser.parseString(Json.GSON.toJson(asset.data));
+        JsonElement contentJson = asset.readJson();
 
-        var paneFormContainer = div().withClass("editor-container p-2").withId("pane-" + uuid);
+        var paneFormContainer = div()
+                .withClass("p-0 vh-100 d-flex flex-column overflow-hidden")
+                .withId("pane-" + uuid)
+                .with(
+                        nav().withId("file-navbar").withClass("navbar bg-body-tertiary border-bottom").withStyle("height: 55px;").with(
+                                div().withClass("container-fluid d-flex align-items-center").with(
+                                        span(rawHtml(displayName)).withClass("navbar-brand mb-0 h1 me-auto"),
+                                        div().withClass("d-flex flex-grow-1 justify-content-center").with(
+                                                div().withClass("btn-group").attr("role", "group").with(
+                                                        button("Write to file").withClass("btn btn-sm btn-outline-primary"),
+                                                        button("Reload behaviours").withClass("btn btn-sm btn-outline-primary")
+                                                )
+                                        ),
+                                        div().withClass("flex-grow-1")
+                                )
+                        )
+                );
 
-        if (asset.schema != null && asset.schema.isJsonObject()) {
-            JsonObject schemaObj = asset.schema.getAsJsonObject();
+        if (asset.getSchema() != null && asset.getSchema().isJsonObject()) {
+            JsonObject schemaObj = asset.getSchema().getAsJsonObject();
             var jsonPreviewSection = renderJsonPreviewFragment(uuid, contentJson, false);
 
             Tag<?> modelSection = renderModelViewerFragment(uuid, false);
 
-            paneFormContainer.with(form().withClass("json-editor-form").with(
-                    input().withType("hidden").withName("name").withValue(uuid),
-                    div().withClass("row md-0").with(
-                            div().withClass("col-md-4 px-2").with(
-                                    h5(rawHtml(displayName)).withClass("mb-3 text-truncate border-bottom pb-2"),
-                                    modelSection,
-                                    jsonPreviewSection
-                            ),
-                            div().withClass("col-md-8").with(renderObjectFieldsContainer(uuid, "", schemaObj, contentJson, schemaObj))
-                    ),
-                    div().withId("save-status-" + uuid)
-            ));
+            paneFormContainer.with(
+                    div().withClass("flex-grow-1 overflow-auto p-2").with(
+                            form().withClass("json-editor-form").with(
+                                    input().withType("hidden").withName("name").withValue(uuid),
+                                    div().withClass("row g-0").with(
+                                            div().withClass("col-md-4 g-0").with(modelSection, jsonPreviewSection),
+                                            div().withClass("col-md-8 g-0 px-1").with(
+                                                    renderObjectFieldsContainer(uuid, "", schemaObj, contentJson, schemaObj)
+                                            )
+                                    ),
+                                    div().withId("save-status-" + uuid)
+                            )
+                    )
+            );
         }
         return paneFormContainer;
     }
@@ -592,7 +611,7 @@ public class SchemaFormBuilder {
 
     public static ContainerTag<?> renderJsonPreviewFragment(String uuid, JsonElement documentJson, boolean oob) {
         var t = pre().withId("json-preview-" + uuid).withClass("theme-atom-one-dark").with(
-                code(documentJson != null ? SchemaUtil.gson.toJson(documentJson) : "Error! No Document!").withClass("language-json text-muted")
+                code(documentJson != null ? SchemaUtil.gson.toJson(documentJson) : "Error! No Document!").withClass("language-json text-muted").attr("style", "font-size: 0.7rem;")
         );
 
         if (oob) return t.attr("hx-swap-oob", true);

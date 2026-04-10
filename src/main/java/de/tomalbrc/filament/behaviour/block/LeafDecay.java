@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.behaviour.block;
 
 import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -134,6 +135,7 @@ public class LeafDecay implements BlockBehaviour<LeafDecay.Config> {
     }
 
     public static class Config {
+        @RegistryRef(value = "block", tagsOnly = true)
         Identifier blockTag;
         float decayChance = 1.f;
 

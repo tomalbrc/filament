@@ -9,6 +9,7 @@ import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.mixin.accessor.DoublePlantBlockInvoker;
 import de.tomalbrc.filament.util.FilamentBlockResourceUtils;
+import de.tomalbrc.filament.util.annotation.RegistryRef;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
@@ -304,7 +305,7 @@ public class Door implements BlockBehaviour<Door.Config> {
     public static class Config {
         public boolean canOpenByWindCharge = true;
         public boolean canOpenByHand = true;
-        public Identifier openSound = SoundEvents.WOODEN_DOOR_OPEN.location();
-        public Identifier closeSound = SoundEvents.WOODEN_DOOR_CLOSE.location();
+        @RegistryRef("sound_event") public Identifier openSound = SoundEvents.WOODEN_DOOR_OPEN.location();
+        @RegistryRef("sound_event") public Identifier closeSound = SoundEvents.WOODEN_DOOR_CLOSE.location();
     }
 }

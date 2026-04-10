@@ -25,8 +25,17 @@ public class Asset {
     public Data<?> data;
     public Type type;
 
-    public JsonElement raw;
-    public JsonElement schema;
+    private JsonElement raw;
+
+    protected JsonElement schema;
+
+    public JsonElement getSchema() {
+        if (schema == null) {
+            schema = AssetStore.getSchema(data, type);
+        }
+
+        return schema;
+    }
 
     public JsonElement readJson() {
         if (this.raw == null) {
@@ -38,8 +47,12 @@ public class Asset {
 
     public void apply(JsonElement json) {
         this.raw = json;
-        var data = Json.GSON.fromJson(json, this.data.getClass());
-        this.schema = AssetStore.getSchema(data, type);
+        try {
+            data = Json.GSON.fromJson(json, this.data.getClass());
+            this.schema = AssetStore.getSchema(data, type);
+        } catch (Exception e) {
+            Filament.LOGGER.error("Could not apply changes to {}! ", data.id(), e);
+        }
     }
 
     public boolean writeFile() {
@@ -67,7 +80,16 @@ public class Asset {
                 DecorationRegistry.register(path, new ByteArrayInputStream(Json.GSON.toJson(data).getBytes(StandardCharsets.UTF_8)));
             }
         } catch (Exception e) {
-            Filament.LOGGER.error("Could not register data", e);
+            Filament.LOGGER.error("Could not re-register data for {}", data.id(), e);
         }
+    }
+
+    public String icon() {
+        if (type == BlockData.class) {
+            return "🧱";
+        } else if (type == DecorationData.class) {
+            return "🖼";
+        }
+        return "📦";
     }
 }
