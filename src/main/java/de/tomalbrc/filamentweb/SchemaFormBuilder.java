@@ -130,57 +130,44 @@ public class SchemaFormBuilder {
         // todo: sep script
         return script(rawHtml("""
                 (function () {
-                  const STORAGE_PREFIX = 'schema-form-collapse:';
+                  const PRE = 'schema-form-collapse:';
                 
-                  function collapseKey(el) {
-                    return el.getAttribute('data-schema-collapse-key');
-                  }
+                  document.addEventListener('hide.bs.collapse', (e) => {
+                    if (e.target && e.target.hasAttribute('data-schema-collapse-key')) {
+                      sessionStorage.setItem(PRE + e.target.id, '0');
+                    }
+                  });
                 
-                  function findToggle(el) {
-                    const target = '#' + el.id;
-                    return Array.from(document.querySelectorAll('[data-bs-target]')).find((btn) => btn.getAttribute('data-bs-target') === target);
-                  }
+                  document.addEventListener('show.bs.collapse', (e) => {
+                    if (e.target && e.target.hasAttribute('data-schema-collapse-key')) {
+                      sessionStorage.setItem(PRE + e.target.id, '1');
+                    }
+                  });
                 
-                  function bind(root) {
-                    const scope = root || document;
-                    scope.querySelectorAll('[data-schema-collapse-key]').forEach((el) => {
-                      if (el.dataset.schemaCollapseBound === '1') {
-                        return;
-                      }
-                      el.dataset.schemaCollapseBound = '1';
-                      el.addEventListener('shown.bs.collapse', () => {
-                        sessionStorage.setItem(STORAGE_PREFIX + collapseKey(el), '1');
-                      });
-                      el.addEventListener('hidden.bs.collapse', () => {
-                        sessionStorage.setItem(STORAGE_PREFIX + collapseKey(el), '0');
-                      });
-                    });
-                  }
+                  function applyState(node) {
+                    if (!node || !node.querySelectorAll) return;
                 
-                  function apply(root) {
-                    const scope = root || document;
-                    scope.querySelectorAll('[data-schema-collapse-key]').forEach((el) => {
-                      const stored = sessionStorage.getItem(STORAGE_PREFIX + collapseKey(el));
-                      const expanded = stored === null ? true : stored === '1';
-                      el.classList.add('collapse');
-                      el.classList.toggle('show', expanded);
-                      const toggle = findToggle(el);
-                      if (toggle) {
-                        toggle.classList.toggle('collapsed', !expanded);
-                        toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+                    const nodes = (node.hasAttribute && node.hasAttribute('data-schema-collapse-key')) 
+                        ? [node] 
+                        : Array.from(node.querySelectorAll('[data-schema-collapse-key]'));
+                    
+                    nodes.forEach(el => {
+                      const state = sessionStorage.getItem(PRE + el.id);
+                      if (!state) return;
+                      
+                      const show = state === '1';
+                      el.classList.toggle('show', show);
+                      
+                      const btn = document.querySelector(`[data-bs-target="#${el.id}"]`);
+                      if (btn) {
+                        btn.classList.toggle('collapsed', !show);
+                        btn.setAttribute('aria-expanded', show ? 'true' : 'false');
                       }
                     });
                   }
                 
-                  document.addEventListener('DOMContentLoaded', () => {
-                    bind(document);
-                    apply(document);
-                  });
-                
-                  document.addEventListener('htmx:afterSwap', () => {
-                    bind(document);
-                    apply(document);
-                  });
+                  document.addEventListener('DOMContentLoaded', () => applyState(document));
+                  document.addEventListener('htmx:load', (e) => applyState(e.detail.elt));
                 })();
                 """));
     }
@@ -555,7 +542,7 @@ public class SchemaFormBuilder {
                                                                 .attr("hx-get", "/action/reregister")
                                                                 .attr("hx-include", "#current-file-uuid")
                                                                 .attr("hx-swap", "none")
-                                                                .attr("aria-label", "This might crash the server, if you have this item in your inventory!")
+                                                                .attr("aria-label", "This will crash the server if there is a player online! Best to use in a local/test/dev environment! But required for some changes to apply!")
                                                 )
                                         ),
 

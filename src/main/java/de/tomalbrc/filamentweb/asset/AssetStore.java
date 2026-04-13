@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.victools.jsonschema.generator.*;
-import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import de.tomalbrc.filament.Filament;
@@ -63,6 +62,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
+// All of this schema gen is extremely cursed ngl
 public class AssetStore {
     public static byte[] DEFAULT_MODEL;
 
@@ -373,40 +373,24 @@ public class AssetStore {
         A ann = type.getAnnotation(annotationClass);
         if (ann != null) return ann;
 
-        // --- parameterized types (List<X>) ---
-        if (type instanceof AnnotatedParameterizedType apt) {
-            AnnotatedType[] args = apt.getAnnotatedActualTypeArguments();
-            for (AnnotatedType arg : args) {
-                A found = findTypeUseAnnotationRecursively(arg, annotationClass);
-                if (found != null) return found;
+        switch (type) {
+            case AnnotatedParameterizedType apt -> {
+                AnnotatedType[] args = apt.getAnnotatedActualTypeArguments();
+                for (AnnotatedType arg : args) {
+                    A found = findTypeUseAnnotationRecursively(arg, annotationClass);
+                    if (found != null) return found;
+                }
             }
-        }
-
-        // --- arrays (T[] or List<T>[] style nesting) ---
-        else if (type instanceof AnnotatedArrayType aat) {
-            return findTypeUseAnnotationRecursively(
-                    aat.getAnnotatedGenericComponentType(),
-                    annotationClass
-            );
-        }
-
-        // --- wildcards (? extends / ? super) ---
-        else if (type instanceof AnnotatedWildcardType awt) {
-            for (AnnotatedType upper : awt.getAnnotatedUpperBounds()) {
-                A found = findTypeUseAnnotationRecursively(upper, annotationClass);
-                if (found != null) return found;
+            case AnnotatedArrayType aat -> {
+                return findTypeUseAnnotationRecursively(aat.getAnnotatedGenericComponentType(), annotationClass);
             }
-            for (AnnotatedType lower : awt.getAnnotatedLowerBounds()) {
-                A found = findTypeUseAnnotationRecursively(lower, annotationClass);
-                if (found != null) return found;
+            case AnnotatedTypeVariable atv -> {
+                for (AnnotatedType bound : atv.getAnnotatedBounds()) {
+                    A found = findTypeUseAnnotationRecursively(bound, annotationClass);
+                    if (found != null) return found;
+                }
             }
-        }
-
-        // --- type variables (T, E, etc.) ---
-        else if (type instanceof AnnotatedTypeVariable atv) {
-            for (AnnotatedType bound : atv.getAnnotatedBounds()) {
-                A found = findTypeUseAnnotationRecursively(bound, annotationClass);
-                if (found != null) return found;
+            default -> {
             }
         }
 
@@ -843,15 +827,5 @@ public class AssetStore {
         ArrayNode a = n.putArray("anyOf");
         for (ObjectNode x : s) a.add(x);
         return new CustomDefinition(n, CustomDefinition.DefinitionType.INLINE, CustomDefinition.AttributeInclusion.YES);
-    }
-
-    private static ObjectNode stringSchema(SchemaGenerationContext context) {
-        return context.getGeneratorConfig().createObjectNode().put("type", "string");
-    }
-
-    private static ObjectNode objectSchema(SchemaGenerationContext context, Consumer<ObjectNode> c) {
-        ObjectNode n = context.getGeneratorConfig().createObjectNode().put("type", "object");
-        c.accept(n);
-        return n;
     }
 }
