@@ -108,6 +108,9 @@ public class Asset {
     }
 
     private void remove(Registry reg, Identifier identifier) {
+        if (!reg.containsKey(identifier))
+            return;
+
         var block = reg.getValue(identifier);
         var key = reg.getResourceKey(block);
         if (key.isPresent()) ((RegistryUnfreezer) reg).filament$hackyRemove(block, (ResourceKey) key.get());

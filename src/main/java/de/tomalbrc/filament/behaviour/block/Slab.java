@@ -157,7 +157,7 @@ public class Slab implements BlockBehaviour<Slab.Config>, SimpleWaterloggedBlock
 
             BlockState requestedState;
             if (parsed.blockState().getValue(SlabBlock.TYPE) == SlabType.TOP) {
-                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.STAB_TOP, blockModel, data.virtual());
+                requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.SLAB_TOP, blockModel, data.virtual());
             } else if (parsed.blockState().getValue(SlabBlock.TYPE) == SlabType.BOTTOM) {
                 requestedState = FilamentBlockResourceUtils.requestBlock(BlockModelType.SLAB_BOTTOM, blockModel, data.virtual());
             } else {

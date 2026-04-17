@@ -301,8 +301,6 @@ public class Json {
             manualMap("TRANSPARENT_BLOCK_WATERLOGGED", "LEAVES_WATERLOGGED");
             manualMap("BIOME_TRANSPARENT_BLOCK", "BIOME_COLORED_LEAVES");
             manualMap("BIOME_TRANSPARENT_BLOCK_WATERLOGGED", "BIOME_COLORED_LEAVES_WATERLOGGED");
-
-            manualMap("TOP_SLAB", "STAB_TOP");
             manualMap("TOP_SLAB_WATERLOGGED", "SLAB_TOP_WATERLOGGED");
         }
 
