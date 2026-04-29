@@ -126,7 +126,7 @@ public class HurtByTargetGoal implements EntityBehaviour<HurtByTargetGoal.Config
                     }
 
                     mob = iterator.next();
-                    if (this.mob != mob && mob.getTarget() == null && (!(this.mob instanceof TamableAnimal) || ((TamableAnimal)this.mob).getOwner() == ((TamableAnimal)mob).getOwner()) && !mob.isAlliedTo(this.mob.getLastHurtByMob())) {
+                    if (this.mob != mob && mob.getTarget() == null && (!(this.mob instanceof TamableAnimal tamableAnimal) || tamableAnimal.getOwner() == ((TamableAnimal)mob).getOwner()) && !mob.isAlliedTo(this.mob.getLastHurtByMob())) {
                         if (this.toIgnoreAlert == null) {
                             break;
                         }

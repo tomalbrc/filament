@@ -46,21 +46,15 @@ public class BlockResource implements ResourceProvider {
 
     @Override
     public Map<String, Identifier> getModels() {
-        if (this.models == null || this.models.isEmpty()) return Collections.emptyMap();
+        var map = new Object2ObjectOpenHashMap<String, Identifier>();
+        if (this.models == null) {
+            this.models = new Object2ObjectArrayMap<>();
+            return map;
+        }
 
-        var map = new Object2ObjectOpenHashMap<String, Identifier>(this.models.size());
-
-        for (var entry : this.models.entrySet()) {
-            String rawKey = entry.getKey();
-            String processedKey = rawKey;
-
-            if (rawKey.indexOf(',') != -1) {
-                String[] parts = rawKey.split(",");
-                Arrays.sort(parts);
-                processedKey = String.join(",", parts);
-            }
-
-            map.put(processedKey, entry.getValue().model());
+        for (Map.Entry<String, PolymerBlockModel> entry : models.entrySet()) {
+            var model = entry.getValue().model();
+            map.put(entry.getKey(), model);
         }
         return map;
     }
