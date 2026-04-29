@@ -52,7 +52,7 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
             }
 
             if (this.config.animation != null && !config.animation.isEmpty() && decorationBlockEntity.getOrCreateHolder() != null) {
-                decorationBlockEntity.getOrCreateHolder().playAnimation(config.animatePerPlayer ? player : null, config.animation, 0, commandsPost() == null ? null : (serverPlayer -> {
+                decorationBlockEntity.getOrCreateHolder().playAnimation(config.animatePerPlayer ? player : null, config.animation, 0, serverPlayer -> {
                     var cmdsPost = commandsPost();
                     if (cmdsPost != null) {
                         if (getConfig().console) {
@@ -66,7 +66,7 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
                     if (config.animationPost != null) {
                         decorationBlockEntity.getOrCreateHolder().playAnimation(config.animatePerPlayer ? player : null, config.animationPost);
                     }
-                }));
+                });
             }
 
             var cmds = commands();
