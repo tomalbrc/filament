@@ -5,6 +5,7 @@ import de.tomalbrc.filament.api.behaviour.BehaviourType;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.util.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -16,6 +17,7 @@ import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
@@ -35,6 +37,13 @@ public class ComplexDecorationBlock extends DecorationBlock implements EntityBlo
 
         if (stateMap != null && cmdMap != null) {
             var val = stateMap.get(behaviourModifiedBlockState(blockState, blockState));
+            if (val == null && blockState.hasProperty(BlockUtil.ROTATION)) {
+                val = stateMap.get(behaviourModifiedBlockState(blockState, blockState).setValue(BlockUtil.ROTATION, 0));
+            }
+            if (val == null && blockState.hasProperty(BlockUtil.ROTATION) && blockState.hasProperty(BlockStateProperties.WATERLOGGED)) {
+                val = stateMap.get(behaviourModifiedBlockState(blockState, blockState).setValue(BlockUtil.ROTATION, 0).setValue(BlockStateProperties.WATERLOGGED, false));
+            }
+
             if (val != null && cmdMap.containsKey(val)) {
                 item.set(DataComponents.ITEM_MODEL, data.id().withPrefix("block/"));
                 item.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(), List.of(), List.of(cmdMap.get(val)), List.of()));

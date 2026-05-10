@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.decoration.block;
 
+import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.holder.DecorationHolder;
 import de.tomalbrc.filament.util.BlockUtil;
@@ -18,6 +19,7 @@ import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootParams;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -50,7 +52,15 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
         var item = BuiltInRegistries.ITEM.getValue(this.data.id()).getDefaultInstance();
 
         if (stateMap != null && cmdMap != null) {
-            var val = stateMap.get(behaviourModifiedBlockState(blockState, blockState));
+            BlockData.BlockStateMeta val = stateMap.get(behaviourModifiedBlockState(blockState, blockState));
+            if (val == null && blockState.hasProperty(BlockUtil.ROTATION)) {
+                val = stateMap.get(behaviourModifiedBlockState(blockState, blockState).setValue(BlockUtil.ROTATION, 0));
+            }
+
+            if (val == null && blockState.hasProperty(BlockUtil.ROTATION) && blockState.hasProperty(BlockStateProperties.WATERLOGGED)) {
+                val = stateMap.get(behaviourModifiedBlockState(blockState, blockState).setValue(BlockUtil.ROTATION, 0).setValue(BlockStateProperties.WATERLOGGED, false));
+            }
+
             if (val != null && cmdMap.containsKey(val)) {
                 item.set(DataComponents.ITEM_MODEL, data.id().withPrefix("block/"));
                 item.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(), List.of(), List.of(cmdMap.get(val)), List.of()));
