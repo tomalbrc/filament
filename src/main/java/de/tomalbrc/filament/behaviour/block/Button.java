@@ -17,6 +17,7 @@ import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -25,6 +26,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.redstone.ExperimentalRedstoneUtils;
 import net.minecraft.world.level.redstone.Orientation;
@@ -141,6 +143,21 @@ public class Button implements BlockBehaviour<Button.Config> {
 
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(ButtonBlock.FACING, ButtonBlock.POWERED, ButtonBlock.FACE);
+    }
+
+    @Override
+    public BlockState modifyDefaultState(BlockState blockState) {
+        return blockState.setValue(ButtonBlock.FACING, Direction.NORTH).setValue(ButtonBlock.POWERED, false).setValue(ButtonBlock.FACE, AttachFace.WALL);
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockState blockState, BlockPlaceContext context) {
+        for (Direction direction : context.getNearestLookingDirections()) {
+            BlockState state = direction.getAxis() == Direction.Axis.Y ? blockState.getBlock().defaultBlockState().setValue(ButtonBlock.FACE, direction == Direction.UP ? AttachFace.CEILING : AttachFace.FLOOR).setValue(ButtonBlock.FACING, context.getHorizontalDirection()) : blockState.getBlock().defaultBlockState().setValue(ButtonBlock.FACE, AttachFace.WALL).setValue(ButtonBlock.FACING, direction.getOpposite());
+            if (!state.canSurvive(context.getLevel(), context.getClickedPos())) continue;
+            return state;
+        }
+        return null;
     }
 
     public static class Config {
