@@ -3,13 +3,9 @@ package de.tomalbrc.filament.generator;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import de.tomalbrc.filament.Filament;
-import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.data.resource.ResourceProvider;
-import de.tomalbrc.filament.util.Json;
 import eu.pb4.polymer.resourcepack.api.AssetPaths;
-import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.ItemAsset;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.model.*;
@@ -194,26 +190,5 @@ public class ItemAssetGenerator {
         root.add("model", model);
         String jsonOutput = gson.toJson(root);
         builder.addData(AssetPaths.itemAsset(id), jsonOutput.getBytes(StandardCharsets.UTF_8));
-    }
-
-    public static void createItemModels(Identifier id, ItemResource itemResource) {
-        if (itemResource.couldGenerate()) {
-            for (Map.Entry<String, Map<String, Identifier>> entry : itemResource.textures().entrySet()) {
-                final var modelId = id.withPrefix("item/").withSuffix("_" + entry.getKey());
-                PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(builder -> {
-                    JsonObject object = new JsonObject();
-                    object.add("parent", new JsonPrimitive(itemResource.parent().getNamespace().equals(Identifier.DEFAULT_NAMESPACE) ? itemResource.parent().getPath() : itemResource.parent().toString()));
-
-                    JsonObject textures = new JsonObject();
-                    for (Map.Entry<String, Identifier> texturesMapEntry : entry.getValue().entrySet()) {
-                        textures.add(texturesMapEntry.getKey(), new JsonPrimitive(texturesMapEntry.getValue().getNamespace().equals(Identifier.DEFAULT_NAMESPACE) ? texturesMapEntry.getValue().getPath() : texturesMapEntry.getValue().toString()));
-                    }
-                    object.add("textures", textures);
-
-                    builder.addData("assets/" + modelId.getNamespace() + "/models/" + modelId.getPath() + ".json", Json.GSON.toJson(object).getBytes(StandardCharsets.UTF_8));
-                });
-                itemResource.getModels().put(entry.getKey(), modelId);
-            }
-        }
     }
 }

@@ -4,6 +4,7 @@ import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.behaviour.ItemPredicateModelProvider;
 import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.generator.ItemAssetGenerator;
+import de.tomalbrc.filament.util.RPUtil;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -52,12 +53,12 @@ public class Shield implements ItemBehaviour<Shield.Config>, ItemPredicateModelP
 
     @Override
     public void generate(Data<?> data) {
-        PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder ->
-                ItemAssetGenerator.createShield(
-                        resourcePackBuilder, data.id(),
-                        Objects.requireNonNull(data.itemResource())
-                )
-        );
+        RPUtil.addExtraGenerator(data.id(), resourcePackBuilder -> {
+            ItemAssetGenerator.createShield(
+                    resourcePackBuilder, data.id(),
+                    Objects.requireNonNull(data.itemResource())
+            );
+        });
     }
 
     @Override

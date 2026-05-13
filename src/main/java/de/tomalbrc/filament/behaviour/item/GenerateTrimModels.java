@@ -4,8 +4,8 @@ import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.behaviour.ItemPredicateModelProvider;
 import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.generator.ItemAssetGenerator;
+import de.tomalbrc.filament.util.RPUtil;
 import eu.pb4.polymer.resourcepack.api.AssetPaths;
-import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.polymer.resourcepack.extras.api.format.model.ModelAsset;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import net.minecraft.core.component.DataComponents;
@@ -70,7 +70,7 @@ public class GenerateTrimModels implements ItemBehaviour<GenerateTrimModels.Conf
 
         var itemResource = data.itemResource();
         if (armorType != null && itemResource != null) {
-            ItemAssetGenerator.createItemModels(data.id(), itemResource);
+            RPUtil.generateItemModels(data.id(), itemResource);
 
             final Object2ObjectArrayMap<Identifier, byte[]> map = new Object2ObjectArrayMap<>();
             var list = new ArrayList<Identifier>();
@@ -101,9 +101,8 @@ public class GenerateTrimModels implements ItemBehaviour<GenerateTrimModels.Conf
                 map.put(model, modelAsset.build().toBytes());
             }
 
-            PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder -> {
+            RPUtil.addExtraGenerator(data.id(), resourcePackBuilder -> {
                 map.forEach((model, modelAsset) -> resourcePackBuilder.addData(AssetPaths.itemModel(model), modelAsset));
-
                 ItemAssetGenerator.createTrimModels(
                         resourcePackBuilder, data.id(),
                         Objects.requireNonNull(data.itemResource()),

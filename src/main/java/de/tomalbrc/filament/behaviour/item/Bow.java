@@ -6,6 +6,7 @@ import de.tomalbrc.filament.behaviour.ItemPredicateModelProvider;
 import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.generator.ItemAssetGenerator;
 import de.tomalbrc.filament.mixin.accessor.ProjectileWeaponItemInvoker;
+import de.tomalbrc.filament.util.RPUtil;
 import de.tomalbrc.filament.util.annotation.RegistryRef;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.minecraft.core.component.DataComponents;
@@ -160,13 +161,13 @@ public class Bow implements ItemBehaviour<Bow.Config>, ItemPredicateModelProvide
 
     @Override
     public void generate(Data<?> data) {
-        PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(resourcePackBuilder ->
-                ItemAssetGenerator.createBow(
-                        resourcePackBuilder, data.id(),
-                        Objects.requireNonNull(data.itemResource()),
-                        data.components().has(DataComponents.DYED_COLOR) || data.vanillaItem().components().has(DataComponents.DYED_COLOR)
-                )
-        );
+        RPUtil.addExtraGenerator(data.id(), resourcePackBuilder -> {
+            ItemAssetGenerator.createBow(
+                    resourcePackBuilder, data.id(),
+                    Objects.requireNonNull(data.itemResource()),
+                    data.components().has(DataComponents.DYED_COLOR) || data.vanillaItem().components().has(DataComponents.DYED_COLOR)
+            );
+        });
     }
 
     @Override

@@ -70,6 +70,8 @@ public class Filament implements ModInitializer {
         Fire.addRemap();
         PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(Fire::init);
 
+        PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(RPUtil::addExtraAssets);
+
         if (FilamentEditorConfig.getInstance().enabled) {
             EditorServer.init();
         }

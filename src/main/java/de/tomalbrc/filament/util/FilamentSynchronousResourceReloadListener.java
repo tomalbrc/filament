@@ -106,6 +106,8 @@ public interface FilamentSynchronousResourceReloadListener extends SimpleSynchro
                 if (element.getAsJsonObject().has("is_template") && element.getAsJsonObject().getAsJsonPrimitive("is_template").getAsBoolean()) {
                     Templates.add(input);
                     return true;
+                } else {
+                    Templates.add(input);
                 }
             } catch (Exception ignored) {}
         }

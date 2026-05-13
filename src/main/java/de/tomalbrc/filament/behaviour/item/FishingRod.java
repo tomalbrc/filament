@@ -4,6 +4,7 @@ import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.behaviour.ItemPredicateModelProvider;
 import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.generator.ItemAssetGenerator;
+import de.tomalbrc.filament.util.RPUtil;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
@@ -66,13 +67,13 @@ public class FishingRod implements ItemBehaviour<FishingRod.Config>, ItemPredica
 
     @Override
     public void generate(Data<?> data) {
-        PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(resourcePackBuilder ->
-                ItemAssetGenerator.createFishingRod(
-                        resourcePackBuilder, data.id(),
-                        Objects.requireNonNull(data.itemResource()),
-                        data.components().has(DataComponents.DYED_COLOR) || data.vanillaItem().components().has(DataComponents.DYED_COLOR)
-                )
-        );
+        RPUtil.addExtraGenerator(data.id(), resourcePackBuilder -> {
+            ItemAssetGenerator.createFishingRod(
+                    resourcePackBuilder, data.id(),
+                    Objects.requireNonNull(data.itemResource()),
+                    data.components().has(DataComponents.DYED_COLOR) || data.vanillaItem().components().has(DataComponents.DYED_COLOR)
+            );
+        });
     }
 
     @Override
