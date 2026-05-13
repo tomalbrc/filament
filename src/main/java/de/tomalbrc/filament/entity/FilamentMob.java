@@ -37,8 +37,8 @@ public class FilamentMob extends Animal implements PolymerEntity {
 
     @SuppressWarnings("unchecked")
     public FilamentMob(EntityType<? extends Entity> entityType, Level level) {
+        this.data = EntityRegistry.getData(BuiltInRegistries.ENTITY_TYPE.getKey(entityType));
         super((EntityType<? extends Animal>) entityType, level);
-        this.data = getData();
         this.xpReward = data.properties().xpReward;
         registerGoals();
 
@@ -63,7 +63,7 @@ public class FilamentMob extends Animal implements PolymerEntity {
     }
 
     public EntityData getData() {
-        return EntityRegistry.getData(BuiltInRegistries.ENTITY_TYPE.getKey(this.getType()));
+        return data;
     }
 
     @Override
@@ -89,7 +89,7 @@ public class FilamentMob extends Animal implements PolymerEntity {
 
     @Override
     public EntityType<?> getPolymerEntityType(PacketContext packetContext) {
-        return BuiltInRegistries.ENTITY_TYPE.getValue(getData().entityType());
+        return BuiltInRegistries.ENTITY_TYPE.getValue(data.entityType());
     }
 
     protected void updateNoActionTime() {
