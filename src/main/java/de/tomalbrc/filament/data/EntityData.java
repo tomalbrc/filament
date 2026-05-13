@@ -59,7 +59,7 @@ public class EntityData {
             @Nullable Set<Identifier> entityTags,
             @Nullable Map<Identifier, Double> attributes,
             @Nullable SpawnInfo spawn,
-            @NonNull Movement movement
+            Movement movement
     ) {
         this.id = id;
         this.translations = translations;
@@ -71,7 +71,7 @@ public class EntityData {
         this.entityTags = entityTags;
         this.attributes = attributes;
         this.spawn = spawn;
-        this.movement = movement;
+        this.movement = movement == null ? new Movement() : movement;
     }
 
     public @NotNull Identifier id() {
@@ -123,6 +123,9 @@ public class EntityData {
     }
 
     public @NonNull Movement movement() {
+        if (this.movement == null)
+            this.movement = new Movement();
+
         return movement;
     }
 

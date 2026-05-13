@@ -37,7 +37,7 @@ public class FilamentMob extends Animal implements PolymerEntity {
 
     @SuppressWarnings("unchecked")
     public FilamentMob(EntityType<? extends Entity> entityType, Level level) {
-        this.data = EntityRegistry.getData(BuiltInRegistries.ENTITY_TYPE.getKey(entityType));
+        this.data = EntityRegistry.getData(entityType.builtInRegistryHolder().key().identifier());
         super((EntityType<? extends Animal>) entityType, level);
         this.xpReward = data.properties().xpReward;
         registerGoals();
