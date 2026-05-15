@@ -2,8 +2,9 @@ package de.tomalbrc.filamentweb.service;
 
 import com.google.gson.*;
 import de.tomalbrc.filamentweb.SchemaFormBuilder;
-import de.tomalbrc.filamentweb.asset.Asset;
-import de.tomalbrc.filamentweb.asset.AssetStore;
+import de.tomalbrc.filamentweb.asset.DataResource;
+import de.tomalbrc.filamentweb.asset.Resource;
+import de.tomalbrc.filamentweb.asset.ResourceStore;
 import de.tomalbrc.filamentweb.util.JsonPathUtil;
 import de.tomalbrc.filamentweb.util.SchemaUtil;
 import jakarta.servlet.http.HttpServlet;
@@ -68,24 +69,24 @@ public class FragmentServlet extends HttpServlet {
             return;
         }
 
-        Asset asset;
+        Resource<?> resource;
         try {
-            asset = AssetStore.getAsset(UUID.fromString(uuid));
+            resource = ResourceStore.getResource(UUID.fromString(uuid));
         } catch (Exception e) {
-            asset = null;
+            resource = null;
         }
 
-        if (asset == null) {
+        if (!(resource instanceof DataResource dataResource)) {
             resp.setStatus(404);
             resp.getWriter().write("Asset not found");
             return;
         }
 
-        JsonObject schemaRoot = asset.getSchema() != null && asset.getSchema().isJsonObject()
-                ? asset.getSchema().getAsJsonObject()
+        JsonObject schemaRoot = dataResource.getSchema() != null && dataResource.getSchema().isJsonObject()
+                ? dataResource.getSchema().getAsJsonObject()
                 : new JsonObject();
 
-        JsonElement documentJson = asset.getJson();
+        JsonElement documentJson = dataResource.getJson();
 
         switch (op) {
             case UPDATE_FIELD: {
@@ -96,10 +97,10 @@ public class FragmentServlet extends HttpServlet {
                 JsonElement coerced = SchemaUtil.coerceSubmittedValue(submitted, fieldSchema, currentValue);
 
                 JsonPathUtil.setValueAtPath(documentJson, path, coerced);
-                asset.apply(documentJson);
+                dataResource.apply(documentJson);
 
                 resp.getWriter().write(SchemaFormBuilder.renderJsonPreviewFragment(uuid, documentJson, true).render());
-                resp.getWriter().write(span(asset.isDirty() ? "Unsaved Changes!":"").withId("unsaved-changes").attr("hx-swap-oob", "true").attr("hx-swap-oob", "innerHTML").render());
+                resp.getWriter().write(span(dataResource.isDirty() ? "Unsaved Changes!":"").withId("unsaved-changes").attr("hx-swap-oob", "true").attr("hx-swap-oob", "innerHTML").render());
                 return;
             }
 
@@ -121,11 +122,11 @@ public class FragmentServlet extends HttpServlet {
                 JsonObject selectedBranch = branches.get(selectedIndex);
                 JsonElement replacement = SchemaUtil.createDefaultForSchema(selectedBranch, schemaRoot);
                 JsonPathUtil.setValueAtPath(documentJson, path, replacement);
-                asset.apply(documentJson);
+                dataResource.apply(documentJson);
 
                 resp.getWriter().write(SchemaFormBuilder.renderComposedFieldFragment(uuid, path, nodeSchema, replacement, schemaRoot).render());
                 resp.getWriter().write(SchemaFormBuilder.renderJsonPreviewFragment(uuid, documentJson, true).render());
-                resp.getWriter().write(span(asset.isDirty() ? "Unsaved Changes!":"").withId("unsaved-changes").attr("hx-swap-oob", "true").attr("hx-swap-oob", "innerHTML").render());
+                resp.getWriter().write(span(dataResource.isDirty() ? "Unsaved Changes!":"").withId("unsaved-changes").attr("hx-swap-oob", "true").attr("hx-swap-oob", "innerHTML").render());
 
                 return;
             }
@@ -147,11 +148,11 @@ public class FragmentServlet extends HttpServlet {
 
                 JsonElement newItem = SchemaUtil.createDefaultForSchema(itemsSchema, schemaRoot);
                 arr.add(newItem);
-                asset.apply(documentJson);
+                dataResource.apply(documentJson);
 
                 resp.getWriter().write(SchemaFormBuilder.renderArrayContainer(uuid, path, arrSchema, itemsSchema, arr, schemaRoot).render());
                 resp.getWriter().write(SchemaFormBuilder.renderJsonPreviewFragment(uuid, documentJson, true).render());
-                resp.getWriter().write(span(asset.isDirty() ? "Unsaved Changes!":"").withId("unsaved-changes").attr("hx-swap-oob", "true").attr("hx-swap-oob", "innerHTML").render());
+                resp.getWriter().write(span(dataResource.isDirty() ? "Unsaved Changes!":"").withId("unsaved-changes").attr("hx-swap-oob", "true").attr("hx-swap-oob", "innerHTML").render());
 
                 return;
             }
@@ -187,13 +188,13 @@ public class FragmentServlet extends HttpServlet {
                             else newVal = SchemaUtil.createDefaultForSchema(propertySchema, schemaRoot);
 
                             obj.add(newKey, newVal);
-                            asset.apply(documentJson);
+                            dataResource.apply(documentJson);
                         }
 
                     } else if (op == Operation.REMOVE_OBJECT) {
                         if (key != null) {
                             obj.remove(key);
-                            asset.apply(documentJson);
+                            dataResource.apply(documentJson);
                         }
                     } else {
                         String newKey = req.getParameter("newKey");
@@ -202,7 +203,7 @@ public class FragmentServlet extends HttpServlet {
                         if (key != null && newKey != null && !newKey.isBlank() && !key.equals(newKey) && obj.has(key) && !obj.has(newKey)) {
                             JsonElement moved = obj.remove(key);
                             obj.add(newKey, moved);
-                            asset.apply(documentJson);
+                            dataResource.apply(documentJson);
                         }
                     }
 
@@ -215,7 +216,7 @@ public class FragmentServlet extends HttpServlet {
                             int idx = Integer.parseInt(key);
                             if (idx >= 0 && idx < arr.size()) {
                                 arr.remove(idx);
-                                asset.apply(documentJson);
+                                dataResource.apply(documentJson);
                             }
                         } catch (NumberFormatException ignored) {
 
@@ -235,7 +236,7 @@ public class FragmentServlet extends HttpServlet {
                 }
 
                 resp.getWriter().write(SchemaFormBuilder.renderJsonPreviewFragment(uuid, documentJson, true).render());
-                resp.getWriter().write(span(asset.isDirty() ? "Unsaved Changes!":"").withId("unsaved-changes").attr("hx-swap-oob", "true").attr("hx-swap-oob", "innerHTML").render());
+                resp.getWriter().write(span(dataResource.isDirty() ? "Unsaved Changes!":"").withId("unsaved-changes").attr("hx-swap-oob", "true").attr("hx-swap-oob", "innerHTML").render());
                 return;
             }
 

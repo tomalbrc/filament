@@ -1,7 +1,8 @@
 package de.tomalbrc.filamentweb.service;
 
-import de.tomalbrc.filamentweb.asset.Asset;
-import de.tomalbrc.filamentweb.asset.AssetStore;
+import de.tomalbrc.filamentweb.asset.DataResource;
+import de.tomalbrc.filamentweb.asset.Resource;
+import de.tomalbrc.filamentweb.asset.ResourceStore;
 import de.tomalbrc.filamentweb.util.WebPaths;
 import j2html.tags.DomContent;
 import jakarta.servlet.http.HttpServlet;
@@ -19,7 +20,7 @@ public class FileListServlet extends HttpServlet {
     private static class Node {
         final String name;
         final Map<String, Node> children = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-        final List<Asset> files = new ArrayList<>();
+        final List<Resource<?>> files = new ArrayList<>();
 
         Node(String name) {
             this.name = name;
@@ -38,24 +39,26 @@ public class FileListServlet extends HttpServlet {
             search = null;
         }
 
-        List<Asset> treeAssets = new ArrayList<>();
-        List<Asset> readOnlyAssets = new ArrayList<>();
+        List<DataResource> treeDataResources = new ArrayList<>();
+        List<DataResource> readOnlyDataResources = new ArrayList<>();
         List<Path> folderPaths = new ArrayList<>();
 
-        for (Asset asset : AssetStore.getAssetsByUuid().values()) {
+        for (Resource<?> resource : ResourceStore.byUuid().values()) {
+            if (!(resource instanceof DataResource dataResource)) return;
+
             try {
-                String idText = asset.data.id().toString().toLowerCase(Locale.ROOT);
-                String pathText = asset.path == null ? "" : asset.path.toString().toLowerCase(Locale.ROOT);
+                String idText = dataResource.id().toString().toLowerCase(Locale.ROOT);
+                String pathText = dataResource.path() == null ? "" : dataResource.path().toString().toLowerCase(Locale.ROOT);
 
                 if (search != null && !idText.contains(search) && !pathText.contains(search)) {
                     continue;
                 }
 
-                if (asset.path == null) {
-                    readOnlyAssets.add(asset);
+                if (dataResource.isReadOnly()) {
+                    readOnlyDataResources.add(dataResource);
                 } else {
-                    Path normalized = asset.path.normalize();
-                    treeAssets.add(asset);
+                    Path normalized = dataResource.path().normalize();
+                    treeDataResources.add(dataResource);
                     Path parent = normalized.getParent();
                     if (parent != null) {
                         folderPaths.add(parent);
@@ -68,18 +71,18 @@ public class FileListServlet extends HttpServlet {
         Path sharedPrefix = commonPrefix(folderPaths);
 
         Node root = new Node("");
-        for (Asset asset : treeAssets) {
-            Path normalized = asset.path.normalize();
+        for (DataResource dataResource : treeDataResources) {
+            Path normalized = dataResource.path().normalize();
             Path parent = normalized.getParent();
             Path relParent = stripPrefix(parent, sharedPrefix);
-            insert(root, relParent, asset);
+            insert(root, relParent, dataResource);
         }
 
         DomContent treeContainer = renderTreeRows(root, 0);
 
         List<DomContent> readOnlyDom = new ArrayList<>();
-        for (Asset asset : readOnlyAssets) {
-            readOnlyDom.add(renderReadOnlyRow(asset));
+        for (DataResource dataResource : readOnlyDataResources) {
+            readOnlyDom.add(renderReadOnlyRow(dataResource));
         }
 
         resp.getWriter().write(
@@ -93,7 +96,7 @@ public class FileListServlet extends HttpServlet {
         );
     }
 
-    private static void insert(Node root, Path parentPath, Asset asset) {
+    private static void insert(Node root, Path parentPath, DataResource dataResource) {
         Node cur = root;
 
         if (parentPath != null) {
@@ -104,7 +107,7 @@ public class FileListServlet extends HttpServlet {
             }
         }
 
-        cur.files.add(asset);
+        cur.files.add(dataResource);
     }
 
     private static DomContent renderTreeRows(Node node, int depth) {
@@ -114,9 +117,9 @@ public class FileListServlet extends HttpServlet {
             children.add(renderTreeRows(child, depth + 1));
         }
 
-        node.files.sort(Comparator.comparing(a -> a.data.id().toString(), String.CASE_INSENSITIVE_ORDER));
-        for (Asset asset : node.files) {
-            children.add(renderFileRow(asset, depth));
+        node.files.sort(Comparator.comparing(a -> a.id().toString(), String.CASE_INSENSITIVE_ORDER));
+        for (Resource<?> dataResource : node.files) {
+            children.add(renderFileRow(dataResource, depth));
         }
 
         if (depth == 0) {
@@ -140,32 +143,32 @@ public class FileListServlet extends HttpServlet {
         }
     }
 
-    private static DomContent renderFileRow(Asset asset, int depth) {
-        String name = displayName(asset);
-        String id = asset.data.id().toString();
-        String pathText = asset.path == null ? "" : asset.path.toString();
+    private static DomContent renderFileRow(Resource<?> dataResource, int depth) {
+        String name = dataResource.displayName();
+        String id = dataResource.id().toString();
+        String pathText = dataResource.path() == null ? "" : dataResource.path().toString();
 
         return a()
                 .withClass("list-group-item list-group-item-action border-0 py-1 pe-2 rounded-0")
                 .attr("style", "cursor:pointer; padding-left:" + (depth * 5 + 12) + "px;")
-                .attr("hx-get", WebPaths.file(asset.uuid.toString()))
+                .attr("hx-get", WebPaths.file(dataResource.getId().toString()))
                 .attr("hx-target", "#editor-pane")
                 .attr("hx-swap", "innerHTML")
                 .attr("title", "Open " + id)
                 .with(
-                        div(asset.icon() + name).withClass("fw-medium text-truncate"),
+                        div(dataResource.icon() + name).withClass("fw-medium text-truncate"),
                         div(id).withClass("text-muted text-truncate").attr("style", "font-size: 0.7rem;"),
                         pathText.isEmpty() ? text("") : div(pathText).withClass("text-muted text-truncate").attr("style", "font-size: 0.4rem;")
                 );
     }
 
-    private static DomContent renderReadOnlyRow(Asset asset) {
-        String id = asset.data.id().toString();
+    private static DomContent renderReadOnlyRow(DataResource dataResource) {
+        String id = dataResource.data.id().toString();
 
         return a()
                 .withClass("list-group-item list-group-item-action border-0 py-1 px-2 rounded-0")
                 .attr("style", "cursor:pointer;")
-                .attr("hx-get", WebPaths.file(asset.uuid.toString()))
+                .attr("hx-get", WebPaths.file(dataResource.getId().toString()))
                 .attr("hx-target", "#editor-pane")
                 .attr("hx-swap", "innerHTML")
                 .attr("title", "Open " + id)
@@ -176,14 +179,6 @@ public class FileListServlet extends HttpServlet {
                         ),
                         div(id).withClass("text-muted text-truncate").attr("style", "font-size: 0.7rem;")
                 );
-    }
-
-    private static String displayName(Asset asset) {
-        if (asset.path == null) {
-            return asset.data.id().toString();
-        }
-        Path fileName = asset.path.getFileName();
-        return fileName == null ? asset.path.toString() : fileName.toString();
     }
 
     private static Path stripPrefix(Path path, Path prefix) {

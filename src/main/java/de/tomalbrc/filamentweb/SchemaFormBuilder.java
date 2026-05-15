@@ -9,8 +9,9 @@ import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.data.resource.ResourceProvider;
-import de.tomalbrc.filamentweb.asset.Asset;
-import de.tomalbrc.filamentweb.asset.AssetStore;
+import de.tomalbrc.filamentweb.asset.DataResource;
+import de.tomalbrc.filamentweb.asset.Resource;
+import de.tomalbrc.filamentweb.asset.ResourceStore;
 import de.tomalbrc.filamentweb.service.FragmentServlet;
 import de.tomalbrc.filamentweb.util.SchemaUtil;
 import de.tomalbrc.filamentweb.util.WebPaths;
@@ -456,19 +457,19 @@ public class SchemaFormBuilder {
     }
 
     public static ContainerTag<?> renderPane(String uuid) {
-        Asset asset = AssetStore.getAsset(UUID.fromString(uuid));
-        if (asset == null) {
+        Resource resource = ResourceStore.getResource(UUID.fromString(uuid));
+        if (resource == null || !(resource instanceof DataResource dataResource)) {
             Filament.LOGGER.error("Could not find asset with id {}", uuid);
             throw new IllegalArgumentException();
         }
 
-        String displayName = asset.data.id().toString();
-        var regItem = BuiltInRegistries.ITEM.get(asset.data.id());
+        String displayName = dataResource.displayName();
+        var regItem = BuiltInRegistries.ITEM.get(dataResource.data.id());
         if (regItem.isPresent()) {
             var holder = regItem.get();
             List<DomContent> elements = new ArrayList<>();
 
-            var name = asset.data.displayName();
+            var name = dataResource.data.displayName();
             Component s = name != null ? name : holder.value().getDefaultInstance().getItemName();
             s.visit((style, string) -> {
                 if (string.isEmpty()) {
@@ -517,7 +518,7 @@ public class SchemaFormBuilder {
             displayName = div().withClass("mc-component").with(elements).render();
         }
 
-        JsonElement contentJson = asset.getJson();
+        JsonElement contentJson = dataResource.getJson();
 
         var paneFormContainer = div()
                 .withClass("p-0 vh-100 d-flex flex-column overflow-hidden")
@@ -546,15 +547,15 @@ public class SchemaFormBuilder {
                                                 )
                                         ),
 
-                                        span(asset.isDirty() ? "Unsaved Changes!" : "")
+                                        span(dataResource.isDirty() ? "Unsaved Changes!" : "")
                                                 .withId("unsaved-changes")
                                                 .withClass("text-warning fw-bold ms-auto")
                                 )
                         )
                 );
 
-        if (asset.getSchema() != null && asset.getSchema().isJsonObject()) {
-            JsonObject schemaObj = asset.getSchema().getAsJsonObject();
+        if (dataResource.getSchema() != null && dataResource.getSchema().isJsonObject()) {
+            JsonObject schemaObj = dataResource.getSchema().getAsJsonObject();
             var jsonPreviewSection = renderJsonPreviewFragment(uuid, contentJson, false);
 
             Tag<?> modelSection = renderModelViewerFragment(uuid, false);
@@ -696,9 +697,10 @@ public class SchemaFormBuilder {
     }
 
     public static ContainerTag<?> renderModelViewerFragment(String uuid, boolean oob) {
-        Asset asset = AssetStore.getAsset(UUID.fromString(uuid));
+        Resource<?> resource = ResourceStore.getResource(UUID.fromString(uuid));
+        if (!(resource instanceof DataResource dataResource)) return div("WIP");
 
-        var models = resolveModel(asset);
+        var models = resolveModel(dataResource);
         String previewId = "model-viewer-" + uuid;
 
         if (models.isEmpty()) {
@@ -870,36 +872,36 @@ public class SchemaFormBuilder {
 
     }
 
-    private static @NotNull List<Model> resolveModel(Asset asset) {
+    private static @NotNull List<Model> resolveModel(DataResource dataResource) {
         List<Model> models = new ArrayList<>();
 
         try {
             ResourceProvider res = null;
-            Identifier itemModel = asset.data.id();
+            Identifier itemModel = dataResource.data.id();
 
-            var item = BuiltInRegistries.ITEM.get(asset.data.id());
+            var item = BuiltInRegistries.ITEM.get(dataResource.data.id());
             if (item.isPresent()) {
-                itemModel = asset.data.components().get(DataComponents.ITEM_MODEL);
+                itemModel = dataResource.data.components().get(DataComponents.ITEM_MODEL);
                 if (itemModel == null) {
-                    itemModel = asset.data.itemModel();
+                    itemModel = dataResource.data.itemModel();
                     if (itemModel == null) {
                         itemModel = item.get().value().getDefaultInstance().get(DataComponents.ITEM_MODEL);
                     }
 
                     var source = itemModel == null ? null : EditorServer.resourcePackBuilder().getDataOrSource(AssetPaths.itemAsset(itemModel));
                     if (source == null)
-                        itemModel = asset.data.vanillaItem().getDefaultInstance().get(DataComponents.ITEM_MODEL);
+                        itemModel = dataResource.data.vanillaItem().getDefaultInstance().get(DataComponents.ITEM_MODEL);
                 }
 
             }
 
             String type = "item_resource";
-            if (asset.data instanceof ItemData id) {
+            if (dataResource.data instanceof ItemData id) {
                 res = id.itemResource();
-            } else if (asset.data instanceof BlockData bd) {
+            } else if (dataResource.data instanceof BlockData bd) {
                 res = bd.blockResource() != null ? bd.blockResource() : bd.itemResource();
                 type = "item_resource/block_resource";
-            } else if (asset.data instanceof DecorationData dd) {
+            } else if (dataResource.data instanceof DecorationData dd) {
                 res = dd.itemResource();
             }
 
@@ -923,7 +925,7 @@ public class SchemaFormBuilder {
             }
 
         } catch (Exception ignored) {
-            Filament.LOGGER.error("Error while collecting models for preview for {}", asset.data.id());
+            Filament.LOGGER.error("Error while collecting models for preview for {}", dataResource.data.id());
         }
 
         return models;

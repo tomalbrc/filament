@@ -6,7 +6,7 @@ import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.util.annotation.AssetRef;
-import de.tomalbrc.filamentweb.asset.AssetStore;
+import de.tomalbrc.filamentweb.asset.ResourceStore;
 import de.tomalbrc.filamentweb.service.*;
 import de.tomalbrc.filamentweb.util.Mc2Glb;
 import de.tomalbrc.filamentweb.util.WebLogAppender;
@@ -144,7 +144,7 @@ public class EditorServer implements Runnable {
             };
 
             CONVERTER = new Mc2Glb(modelProvider, textureProvider);
-            AssetStore.DEFAULT_MODEL = CONVERTER.toGlb(Identifier.withDefaultNamespace("block/stone"));
+            ResourceStore.DEFAULT_MODEL = CONVERTER.toGlb(Identifier.withDefaultNamespace("block/stone"));
 
         } catch (Exception e) {
             Filament.LOGGER.error("Could not start editor server!", e);
@@ -174,8 +174,6 @@ public class EditorServer implements Runnable {
     }
 
     public static void init() {
-
-
         PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(EditorServer::init);
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             WebLogAppender.install();
@@ -203,13 +201,13 @@ public class EditorServer implements Runnable {
         });
 
         FilamentRegistrationEvents.ITEM.register((data, item) -> {
-            AssetStore.registerAssetFromPath(data, ItemData.class);
+            ResourceStore.registerResourceFromPath(data, ItemData.class);
         });
         FilamentRegistrationEvents.BLOCK.register((data, item, block) -> {
-            AssetStore.registerAssetFromPath(data, BlockData.class);
+            ResourceStore.registerResourceFromPath(data, BlockData.class);
         });
         FilamentRegistrationEvents.DECORATION.register((data, item, block) -> {
-            AssetStore.registerAssetFromPath(data, DecorationData.class);
+            ResourceStore.registerResourceFromPath(data, DecorationData.class);
         });
         // TODO: Entity support!
     }

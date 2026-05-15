@@ -21,6 +21,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
+import org.jspecify.annotations.NonNull;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -29,20 +30,27 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 
-public class Asset {
-    public UUID uuid;
-    public Path path;
+public class DataResource implements Resource<JsonElement> {
+    final UUID uuid;
+    final Path path;
+    final Type type;
     public Data<?> data;
-    public Type type;
 
     private JsonElement raw;
     private JsonElement cachedSchema;
 
     boolean dirty = false;
 
+    public DataResource(UUID uuid, Path path, Data<?> data, Type type) {
+        this.uuid = uuid;
+        this.path = path;
+        this.data = data;
+        this.type = type;
+    }
+
     public JsonElement getSchema() {
         if (this.cachedSchema == null) {
-            this.cachedSchema = AssetStore.generateSchema(data, type);
+            this.cachedSchema = ResourceStore.generateSchema(data, type);
         }
         return this.cachedSchema;
     }
@@ -79,6 +87,7 @@ public class Asset {
         setDirty(true);
     }
 
+    @Override
     public void setDirty(boolean dirty) {
         this.dirty = dirty;
         if (dirty) {
@@ -86,6 +95,7 @@ public class Asset {
         }
     }
 
+    @Override
     public boolean isDirty() {
         return dirty;
     }
@@ -105,6 +115,11 @@ public class Asset {
         }
 
         return true;
+    }
+
+    @Override
+    public Identifier id() {
+        return data.id();
     }
 
     private void remove(Registry reg, Identifier identifier) {
@@ -159,12 +174,37 @@ public class Asset {
         }
     }
 
-    public String icon() {
+    @Override
+    public UUID getId() {
+        return uuid;
+    }
+
+    @Override
+    public JsonElement raw() {
+        return raw;
+    }
+
+    @Override
+    public Path path() {
+        return path;
+    }
+
+    public @NonNull String icon() {
         if (type == BlockData.class) {
             return "🧱";
         } else if (type == DecorationData.class) {
             return "🖼";
         }
         return "📦";
+    }
+
+    @Override
+    public String displayName() {
+        return data.id().toString();
+    }
+
+    @Override
+    public boolean isReadOnly() {
+        return path == null;
     }
 }

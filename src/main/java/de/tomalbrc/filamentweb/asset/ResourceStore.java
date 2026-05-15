@@ -63,34 +63,35 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 // All of this schema gen is extremely cursed ngl
-public class AssetStore {
+public class ResourceStore {
     public static byte[] DEFAULT_MODEL;
 
-    static Map<UUID, Asset> assetsByUuid = new ConcurrentHashMap<>();
-    static Map<Path, Asset> assetsByPath = new ConcurrentHashMap<>();
+    static Map<UUID, Resource<?>> assetsByUuid = new ConcurrentHashMap<>();
+    static Map<Path, Resource<?>> assetsByPath = new ConcurrentHashMap<>();
 
-    public static void registerAsset(Asset asset) {
-        if (asset.path == null || assetsByPath.containsKey(asset.path)) return;
+    public static void registerResource(Resource<?> dataResource) {
+        if (dataResource.path() == null || assetsByPath.containsKey(dataResource.path())) return;
 
-        assetsByUuid.put(asset.uuid, asset);
-        assetsByPath.put(asset.path, asset);
+        assetsByUuid.put(dataResource.getId(), dataResource);
+        assetsByPath.put(dataResource.path(), dataResource);
     }
 
-    public static Asset getAsset(UUID uuid) {
+    public static Resource<?> getResource(UUID uuid) {
         return assetsByUuid.get(uuid);
     }
 
-    public static Map<UUID, Asset> getAssetsByUuid() {
+    public static Map<UUID, Resource<?>> byUuid() {
         return assetsByUuid;
     }
 
-    public static void registerAssetFromPath(Data<?> data, Class<?> clazz) {
-        Asset asset = new Asset();
-        asset.uuid = UUID.randomUUID();
-        asset.data = data;
-        asset.path = data.filepath;
-        asset.type = clazz;
-        AssetStore.registerAsset(asset);
+    public static void registerResourceFromPath(Data<?> data, Class<?> clazz) {
+        DataResource dataResource = new DataResource(
+                UUID.randomUUID(),
+                data.filepath,
+                data,
+                clazz
+        );
+        ResourceStore.registerResource(dataResource);
     }
 
     public static JsonElement generateSchema(Object instance, Type assetType) {
@@ -105,7 +106,7 @@ public class AssetStore {
         if (instance instanceof ItemData itemData) {
             itemData.behaviour().forEach((type, config) -> {
                 if (ItemPredicateModelProvider.class.isAssignableFrom(type.type())) {
-                    var ins = (ItemPredicateModelProvider)type.createInstance(config);
+                    var ins = (ItemPredicateModelProvider) type.createInstance(config);
                     localPossibleItemStates.addAll(ins.requiredModels());
                 }
             });
@@ -241,8 +242,7 @@ public class AssetStore {
                 } else {
                     node.put("$ref", refPath);
                 }
-            }
-            else {
+            } else {
                 ResolvedType targetType = fieldType;
                 if (fieldType.isInstanceOf(Collection.class)) {
                     List<ResolvedType> typeParams = fieldType.typeParametersFor(Collection.class);

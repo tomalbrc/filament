@@ -7,8 +7,8 @@ import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.mixin.accessor.PackAccessor;
 import de.tomalbrc.filament.mixin.accessor.PathResourcesSupplierAccessor;
 import de.tomalbrc.filament.util.Json;
-import de.tomalbrc.filamentweb.asset.Asset;
-import de.tomalbrc.filamentweb.asset.AssetStore;
+import de.tomalbrc.filamentweb.asset.DataResource;
+import de.tomalbrc.filamentweb.asset.ResourceStore;
 import eu.pb4.polymer.autohost.impl.AutoHost;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.polymer.resourcepack.impl.PolymerResourcePackMod;
@@ -74,7 +74,7 @@ public class ActionServlet extends HttpServlet {
                         return;
                     }
 
-                    var asset = AssetStore.getAsset(UUID.fromString(uuidValue));
+                    var asset = ResourceStore.getResource(UUID.fromString(uuidValue));
                     if (asset != null && asset.writeFile()) {
                         resp.getWriter().write(span(asset.isDirty() ? "Unsaved Changes!":"").withId("unsaved-changes").attr("hx-swap-oob", "true").attr("hx-swap-oob", "innerHTML").render());
                     } else {
@@ -88,9 +88,9 @@ public class ActionServlet extends HttpServlet {
                         return;
                     }
 
-                    var asset = AssetStore.getAsset(UUID.fromString(uuidValue));
-                    if (asset != null) {
-                        asset.runtimeRegister();
+                    var asset = ResourceStore.getResource(UUID.fromString(uuidValue));
+                    if (asset instanceof DataResource dataResource) {
+                        dataResource.runtimeRegister();
                     }
                     noContent(resp);
                 }
@@ -235,7 +235,7 @@ public class ActionServlet extends HttpServlet {
         }
 
         NewAssetRequest request = new NewAssetRequest(id, filename, type, basePath, namespace);
-        Asset created = createNewAsset(request);
+        DataResource created = createNewAsset(request);
         created.writeFile();
         created.runtimeRegister();
 
@@ -243,13 +243,13 @@ public class ActionServlet extends HttpServlet {
         resp.setContentType("text/html; charset=UTF-8");
 
 
-        String editorPane = ReadFileServlet.renderOob(created.uuid.toString()).render();
+        String editorPane = ReadFileServlet.renderOob(created.getId().toString()).render();
 
         String uuidField = input()
                 .withType("hidden")
                 .withId("current-file-uuid")
                 .withName("uuid")
-                .withValue(created.uuid.toString())
+                .withValue(created.getId().toString())
                 .attr("hx-swap-oob", "true")
                 .render();
 
@@ -257,7 +257,7 @@ public class ActionServlet extends HttpServlet {
         resp.getWriter().write(uuidField);
     }
 
-    private Asset createNewAsset(NewAssetRequest request) {
+    private DataResource createNewAsset(NewAssetRequest request) {
         Type t = switch (request.type()) {
             case "item" -> ItemData.class;
             case "block" -> BlockData.class;
@@ -267,21 +267,20 @@ public class ActionServlet extends HttpServlet {
 
 
         UUID uuid = UUID.randomUUID();
-        var asset = new Asset();
-        asset.uuid = uuid;
-
-        asset.path = Path.of(request.basePath()).resolve("data").resolve(request.namespace).resolve("filament").resolve(request.type).resolve(request.filename);
-        asset.path.getParent().toFile().mkdirs();
-
-        asset.data = Json.GSON.fromJson(String.format("""
+        var asset = new DataResource(
+                uuid,
+                Path.of(request.basePath()).resolve("data").resolve(request.namespace).resolve("filament").resolve(request.type).resolve(request.filename),
+                Json.GSON.fromJson(String.format("""
                 {
                     "id": "%s"
                 }
-                """, request.id()), t);
+                """, request.id()), t),
+                t
+        );
 
-        asset.type = t;
-        AssetStore.registerAsset(asset);
+        asset.path().getParent().toFile().mkdirs();
 
+        ResourceStore.registerResource(asset);
         return asset;
     }
 
