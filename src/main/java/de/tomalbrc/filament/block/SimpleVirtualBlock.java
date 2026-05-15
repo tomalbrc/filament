@@ -91,7 +91,7 @@ public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementH
             ));
 
             var polymerBlockModel = meta.polymerBlockModel();
-            this.displayElement.setLeftRotation(new Quaternionf().rotateX(polymerBlockModel.x() * Mth.DEG_TO_RAD).rotateY((-polymerBlockModel.y()+180) * Mth.DEG_TO_RAD));
+            this.displayElement.setLeftRotation(new Quaternionf().rotateY((180f-polymerBlockModel.y()) * Mth.DEG_TO_RAD).rotateX((polymerBlockModel.x()) * Mth.DEG_TO_RAD));
             if (update) {
                 this.displayElement.getSyncedData().setDirty(ItemDisplayAccessor.getDATA_ITEM_STACK_ID(), true);
                 this.displayElement.tick();
