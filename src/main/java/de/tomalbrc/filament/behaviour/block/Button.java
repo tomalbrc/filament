@@ -18,12 +18,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.AttachFace;
@@ -35,6 +33,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
+
+import static net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock.FACE;
 
 public class Button implements BlockBehaviour<Button.Config> {
     private final Config config;
@@ -142,27 +142,40 @@ public class Button implements BlockBehaviour<Button.Config> {
     }
 
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(ButtonBlock.FACING, ButtonBlock.POWERED, ButtonBlock.FACE);
+        builder.add(ButtonBlock.FACING, ButtonBlock.POWERED, FACE);
     }
 
     @Override
     public BlockState modifyDefaultState(BlockState blockState) {
-        return blockState.setValue(ButtonBlock.FACING, Direction.NORTH).setValue(ButtonBlock.POWERED, false).setValue(ButtonBlock.FACE, AttachFace.WALL);
+        return blockState.setValue(ButtonBlock.FACING, Direction.NORTH).setValue(ButtonBlock.POWERED, false).setValue(FACE, AttachFace.WALL);
     }
 
     @Override
     public BlockState getStateForPlacement(BlockState blockState, BlockPlaceContext context) {
         for (Direction direction : context.getNearestLookingDirections()) {
-            BlockState state = direction.getAxis() == Direction.Axis.Y ? blockState.getBlock().defaultBlockState().setValue(ButtonBlock.FACE, direction == Direction.UP ? AttachFace.CEILING : AttachFace.FLOOR).setValue(ButtonBlock.FACING, context.getHorizontalDirection()) : blockState.getBlock().defaultBlockState().setValue(ButtonBlock.FACE, AttachFace.WALL).setValue(ButtonBlock.FACING, direction.getOpposite());
+            BlockState state = direction.getAxis() == Direction.Axis.Y ? blockState.getBlock().defaultBlockState().setValue(FACE, direction == Direction.UP ? AttachFace.CEILING : AttachFace.FLOOR).setValue(ButtonBlock.FACING, context.getHorizontalDirection()) : blockState.getBlock().defaultBlockState().setValue(FACE, AttachFace.WALL).setValue(ButtonBlock.FACING, direction.getOpposite());
             if (!state.canSurvive(context.getLevel(), context.getClickedPos())) continue;
             return state;
         }
         return null;
     }
 
+    @Override
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        return FaceAttachedHorizontalDirectionalBlock.canAttach(level, pos, getConnectedDirection(state).getOpposite());
+    }
+
+    static Direction getConnectedDirection(BlockState state) {
+        return switch (state.getValue(FACE)) {
+            case CEILING -> Direction.DOWN;
+            case FLOOR -> Direction.UP;
+            default -> state.getValue(ButtonBlock.FACING);
+        };
+    }
+
     public static class Config {
         public BlockStateMappedProperty<Integer> powerlevel = BlockStateMappedProperty.of(15);
-        public BlockStateMappedProperty<Integer> ticksToStayPressed = BlockStateMappedProperty.of(100);
+        public BlockStateMappedProperty<Integer> ticksToStayPressed = BlockStateMappedProperty.of(20);
         public BlockStateMappedProperty<Boolean> canBeActivatedByArrows = BlockStateMappedProperty.of(true);
 
         public @RegistryRef("sound_event")
