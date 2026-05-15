@@ -491,6 +491,19 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
         this.forEach(x -> x.tick(blockState, serverLevel, blockPos, randomSource));
     }
 
+    @Override
+    public boolean isPossibleToRespawnInThis(BlockState state) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
+                var res = blockBehaviour.isPossibleToRespawnInThis(state);
+                if (res)
+                    return true;
+            }
+        }
+
+        return super.isPossibleToRespawnInThis(state);
+    }
+
     // random ticking
 
     @Override

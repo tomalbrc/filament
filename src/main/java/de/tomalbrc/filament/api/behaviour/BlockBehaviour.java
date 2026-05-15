@@ -385,4 +385,8 @@ public interface BlockBehaviour<T> extends Behaviour<T> {
     default void stepOn(Level level, BlockPos blockPos, BlockState blockState, Entity entity) {
         // noop
     }
+
+    default boolean isPossibleToRespawnInThis(BlockState state) {
+        return false;
+    }
 }
