@@ -75,6 +75,7 @@ public class Behaviours {
     public static final BehaviourType<ParticleEmitter, ParticleEmitter.Config> PARTICLE_EMITTER = registerBehaviour("particle_emitter", ParticleEmitter.class);
     public static final BehaviourType<Powerlevel, Powerlevel.Config> POWERLEVEL = registerBehaviour("powerlevel", Powerlevel.class);
     public static final BehaviourType<Powersource, Powersource.Config> POWERSOURCE = registerBehaviour("powersource", Powersource.class);
+    public static final BehaviourType<PressurePlate, PressurePlate.Config> PRESSURE_PLATE = registerBehaviour("pressure_plate", PressurePlate.class);
     public static final BehaviourType<Repeater, Repeater.Config> REPEATER = registerBehaviour("repeater", Repeater.class);
     public static final BehaviourType<Rotating, Rotating.Config> ROTATING = registerBehaviour("rotating", Rotating.class);
     public static final BehaviourType<Sapling, Sapling.Config> SAPLING = registerBehaviour("sapling", Sapling.class);

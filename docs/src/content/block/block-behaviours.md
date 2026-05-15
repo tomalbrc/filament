@@ -1148,6 +1148,13 @@ Sets an entity on fire when it is inside the block
 
 Defines the block as an interactive lever that can emit redstone power and play sounds when toggled.
 
+> [!INFO]
+> Block-State-Properties to provide models for:
+> - `face`: Block-face the lever is attached to: `floor`, `wall`, `ceiling`
+> - `facing`: Horizontal Direction the lever is facing on the attached face: `north`, `south`, `east`, `west`
+> - `powered`: Flag whether the lever is powered: `true`, `false`
+
+
 > [!IMPORTANT]
 > Configurable Fields:
 > - `powerlevel`: The redstone power level the lever emits when activated (can be mapped to a block-state). Defaults to `15`
@@ -1193,6 +1200,13 @@ behaviour:
 ## `button` behaviour
 
 Defines the block as an interactive button that can emit redstone power for a limited duration when pressed.
+With supporting-block check.
+
+> [!INFO]
+> Block-State-Properties to provide models for:
+> - `face`: Block-face the button is attached to: `floor`, `wall`, `ceiling`
+> - `facing`: Horizontal Direction the button is facing on the attached face: `north`, `south`, `east`, `west`
+> - `powered`: Flag whether the button is powered: `true`, `false`
 
 > [!IMPORTANT]
 > Configurable Fields:
@@ -1244,3 +1258,19 @@ behaviour:
 ```
 <!-- langtabs-end -->
 
+---
+
+## `pressure_plate` behaviour
+
+Simple pressure plate with support checks.
+
+> [!INFO]
+> Block-State-Properties to provide models for:
+> - `powered`: Flag whether the pressure plate is powered: `true`, `false`
+
+> [!IMPORTANT]
+> Configurable Fields:
+> - `pressurePlateClickOff`: The sound that is played when the pressure plate turns off. Defaults to `"block.wooden_pressure_plate.click_off`
+> - `pressurePlateClickOn`: The sound that is played when the pressure plate turns on. Defaults to `block.wooden_pressure_plate.click_on`
+> - `sensitivity`: The sensitivity. Can be `mobs` or `everything`. Defaults to `everything`
+> - `pressedTime`: Time in ticks the pressure plate will remain 'pressed'. Defaults to `20`

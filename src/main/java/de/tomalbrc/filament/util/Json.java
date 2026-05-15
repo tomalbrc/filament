@@ -32,6 +32,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -45,6 +46,8 @@ import net.minecraft.world.item.component.FireworkExplosion;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WeatheringCopper;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.NotNull;
@@ -88,6 +91,8 @@ public class Json {
             .registerTypeHierarchyAdapter(MobCategory.class, new SimpleCodecDeserializer<>(MobCategory.CODEC))
             .registerTypeHierarchyAdapter(ItemDisplayContext.class, new SimpleCodecDeserializer<>(ItemDisplayContext.CODEC))
             .registerTypeHierarchyAdapter(PushReaction.class, new LowercaseEnumDeserializer<>(PushReaction.class))
+            .registerTypeHierarchyAdapter(AttachFace.class, new SimpleCodecDeserializer<>(StringRepresentable.fromEnum(AttachFace::values)))
+            .registerTypeHierarchyAdapter(BlockSetType.PressurePlateSensitivity.class, new LowercaseEnumDeserializer<>(BlockSetType.PressurePlateSensitivity.class))
             .registerTypeHierarchyAdapter(WeatheringCopper.WeatherState.class, new SimpleCodecDeserializer<>(WeatheringCopper.WeatherState.CODEC))
             .registerTypeHierarchyAdapter(RangedValue.class, new SimpleCodecDeserializer<>(RangedValue.CODEC))
             .registerTypeHierarchyAdapter(RangedVector3f.class, new SimpleCodecDeserializer<>(RangedVector3f.CODEC))
