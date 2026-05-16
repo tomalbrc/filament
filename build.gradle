@@ -68,12 +68,12 @@ dependencies {
 }
 
 jar {
-    from zipTree(shadowJar.archiveFile)
     dependsOn shadowJar
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 shadowJar {
+    archiveClassifier.set("") // makes it replace the normal jar name
+
     configurations = [project.configurations.shade]
 
     def relocations = [
@@ -95,7 +95,6 @@ shadowJar {
     }
 
     from sourceSets.main.output
-    mergeServiceFiles()
 }
 
 processResources {
