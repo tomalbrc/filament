@@ -78,7 +78,7 @@ public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentI
         }
 
         if (context.getPlayer() instanceof ServerPlayer player) {
-            BlockUtil.handleBlockPlaceEffects(player, context.getHand(), context.getClickedPos(), state.getSoundType());
+            player.swing(context.getHand(), true);
         }
 
         return true;

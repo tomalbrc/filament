@@ -105,7 +105,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
         } else if ((forceReplace || this.canPlaceAt(level, relativeBlockPos, angle)) && itemStack.getItem() instanceof DecorationItem) {
             DecorationItem.place(itemStack, level, blockState, relativeBlockPos, actualDir, direction, useOnContext);
 
-            player.startUsingItem(useOnContext.getHand());
+            player.swing(useOnContext.getHand(), true);
             itemStack.consume(1, player);
 
             SoundEvent placeSound = properties.blockBase().defaultBlockState().getSoundType().getPlaceSound();
