@@ -13,7 +13,7 @@ import de.tomalbrc.filament.entity.FilamentMob;
 import de.tomalbrc.filament.item.BaseProjectileEntity;
 import de.tomalbrc.filament.item.TridentEntity;
 import de.tomalbrc.filament.util.Constants;
-import de.tomalbrc.filament.util.FilamentSynchronousResourceReloadListener;
+import de.tomalbrc.filament.util.resource.FilamentSynchronousResourceReloadListener;
 import de.tomalbrc.filament.util.Json;
 import de.tomalbrc.filament.util.Translations;
 import eu.pb4.polymer.core.api.block.PolymerBlockUtils;
@@ -33,6 +33,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import org.jspecify.annotations.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,7 +67,8 @@ public class EntityRegistry {
         assert size != null;
 
         EntityType.Builder builder;
-        if (data.animation() != null && data.animation().model() != null) {
+        var animation = data.animation();
+        if (animation != null && animation.model() != null) {
             builder = EntityType.Builder.of(data.properties().forceEnemy ? AnimatedFilamentEnemyMob::new : AnimatedFilamentMob::new, data.properties().category).sized(size.getFirst(), size.getLast());
         } else {
             builder = EntityType.Builder.of(data.properties().forceEnemy ? FilamentEnemyMob::new : FilamentMob::new, data.properties().category).sized(size.getFirst(), size.getLast());
@@ -142,12 +144,12 @@ public class EntityRegistry {
 
     public static class EntityDataReloadListener implements FilamentSynchronousResourceReloadListener {
         @Override
-        public Identifier getFabricId() {
+        public @NonNull Identifier getFabricId() {
             return Identifier.fromNamespaceAndPath(Constants.MOD_ID, "entities");
         }
 
         @Override
-        public void onResourceManagerReload(ResourceManager resourceManager) {
+        public void onResourceManagerReload(@NonNull ResourceManager resourceManager) {
             load("filament/entity", null, resourceManager, (id, inputStream) -> {
                 try {
                     EntityRegistry.register(inputStream);

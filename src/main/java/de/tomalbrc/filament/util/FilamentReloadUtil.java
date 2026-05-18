@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.util;
 
+import de.tomalbrc.filament.util.resource.FilamentSynchronousResourceReloadListener;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import java.util.List;

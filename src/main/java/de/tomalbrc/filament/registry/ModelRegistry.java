@@ -6,13 +6,14 @@ import de.tomalbrc.bil.file.loader.AjModelLoader;
 import de.tomalbrc.bil.file.loader.BbModelLoader;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.util.Constants;
-import de.tomalbrc.filament.util.FilamentSynchronousResourceReloadListener;
+import de.tomalbrc.filament.util.resource.FilamentSynchronousResourceReloadListener;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceMap;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.apache.commons.io.FilenameUtils;
+import org.jspecify.annotations.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +32,7 @@ public class ModelRegistry {
 
     public static class AjModelReloadListener implements FilamentSynchronousResourceReloadListener {
         @Override
-        public Identifier getFabricId() {
+        public @NonNull Identifier getFabricId() {
             return Identifier.fromNamespaceAndPath(Constants.MOD_ID, "model");
         }
 
@@ -42,16 +43,20 @@ public class ModelRegistry {
             for (Map.Entry<Identifier, Resource> entry : resources.entrySet()) {
                 try (var inputStream = entry.getValue().open()) {
                     String path = entry.getKey().getPath();
-                    Model model;
-                    if (path.endsWith(".ajmodel")) {
+                    Model model = null;
+                    if (path.endsWith(AJMODEL_SUFFIX)) {
                         model = new AjModelLoader().load(inputStream, FilenameUtils.getBaseName(path));
-                    } else if (path.endsWith(".ajblueprint")) {
+                    } else if (path.endsWith(AJBP_SUFFIX)) {
                         model = new AjBlueprintLoader().load(inputStream, FilenameUtils.getBaseName(path));
-                    } else {
+                    } else if (path.endsWith(BBMODEL_SUFFIX)) {
                         model = new BbModelLoader().load(inputStream, FilenameUtils.getBaseName(path));
+                    } else {
+                        Filament.LOGGER.warn("Non-bbmodel-model file found at {}, ignoring", path);
                     }
 
-                    ajmodels.put(sanitize(entry.getKey()), model);
+                    if (model != null)
+                        ajmodels.put(sanitize(entry.getKey()), model);
+
                 } catch (Exception e) {
                     Filament.LOGGER.error("Failed to load decoration resource \"{}\".", entry.getKey());
                 }
@@ -61,10 +66,10 @@ public class ModelRegistry {
         }
     }
 
-    public static Identifier sanitize(Identifier Identifier) {
-        String path = Identifier.getPath();
+    public static Identifier sanitize(Identifier identifier) {
+        String path = identifier.getPath();
         String customPath = path.substring(path.contains("/") ? path.lastIndexOf('/')+1 : 0, path.lastIndexOf('.'));
-        return Identifier.fromNamespaceAndPath(Identifier.getNamespace(), customPath);
+        return Identifier.fromNamespaceAndPath(identifier.getNamespace(), customPath);
     }
 
     public static void registerAjModel(InputStream inputStream, Identifier Identifier) throws IOException {

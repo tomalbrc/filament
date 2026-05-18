@@ -1,5 +1,6 @@
-package de.tomalbrc.filament.util;
+package de.tomalbrc.filament.util.resource;
 
+import de.tomalbrc.filament.util.Constants;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
 import net.minecraft.resources.Identifier;
@@ -9,6 +10,7 @@ import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraft.server.packs.resources.ResourceManager;
+import org.jspecify.annotations.NonNull;
 
 import java.io.IOException;
 import java.util.Enumeration;
@@ -21,12 +23,12 @@ public class FilamentAssetReloadListener implements FilamentSynchronousResourceR
     Consumer<ResourcePackBuilder> lastConsumer = null;
 
     @Override
-    public Identifier getFabricId() {
+    public @NonNull Identifier getFabricId() {
         return Identifier.fromNamespaceAndPath(Constants.MOD_ID, "assets");
     }
 
     @Override
-    public void onResourceManagerReload(ResourceManager resourceManager) {
+    public void onResourceManagerReload(@NonNull ResourceManager resourceManager) {
         if (lastConsumer == null) {
             Consumer<ResourcePackBuilder> consumer = resourcePackBuilder -> resourceManager.listPacks().forEach(packResources -> {
                 Set<String> clientResources = packResources.getNamespaces(PackType.CLIENT_RESOURCES);

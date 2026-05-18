@@ -4,7 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.ItemGroupData;
 import de.tomalbrc.filament.util.Constants;
-import de.tomalbrc.filament.util.FilamentSynchronousResourceReloadListener;
+import de.tomalbrc.filament.util.resource.FilamentSynchronousResourceReloadListener;
 import de.tomalbrc.filament.util.Json;
 import eu.pb4.polymer.core.api.item.PolymerCreativeModeTabUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
@@ -39,7 +39,7 @@ public class ItemGroupRegistry {
         CreativeModeTab group = new CreativeModeTab.Builder(null, -1)
                 .title(data.literal() == null ? Component.translatable(data.id().getNamespace()+".itemGroup."+data.id().getPath()) : data.literal())
                 .icon(() -> BuiltInRegistries.ITEM.getValue(data.item()).getDefaultInstance())
-                .displayItems((parameters, output) -> TAB_GROUP_ITEMS.get(data.id()).forEach(output::accept))
+                .displayItems((_, output) -> TAB_GROUP_ITEMS.get(data.id()).forEach(output::accept))
                 .build();
 
         TAB_GROUPS.put(data.id(), group);

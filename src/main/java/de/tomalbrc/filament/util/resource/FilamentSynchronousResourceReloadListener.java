@@ -1,10 +1,11 @@
-package de.tomalbrc.filament.util;
+package de.tomalbrc.filament.util.resource;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.mixin.accessor.PathPackResourcesAccessor;
 import de.tomalbrc.filament.registry.Templates;
+import de.tomalbrc.filament.util.Json;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PathPackResources;

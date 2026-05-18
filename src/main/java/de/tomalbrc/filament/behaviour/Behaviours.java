@@ -10,6 +10,7 @@ import de.tomalbrc.filament.behaviour.entity.target.DefendVillageGoal;
 import de.tomalbrc.filament.behaviour.entity.target.HurtByTargetGoal;
 import de.tomalbrc.filament.behaviour.entity.target.NearestAttackableTargetGoal;
 import de.tomalbrc.filament.behaviour.item.*;
+import de.tomalbrc.filament.recipe.WorkstationBehaviour;
 import de.tomalbrc.filament.util.Constants;
 import net.minecraft.resources.Identifier;
 
@@ -83,6 +84,8 @@ public class Behaviours {
     public static final BehaviourType<Waterloggable, Waterloggable.Config> WATERLOGGABLE = registerBehaviour("waterloggable", Waterloggable.class);
     public static final BehaviourType<Slab, Slab.Config> SLAB = registerBehaviour("slab", Slab.class);
     public static final BehaviourType<Stairs, Stairs.Config> STAIRS = registerBehaviour("stairs", Stairs.class);
+
+    public static final BehaviourType<WorkstationBehaviour, WorkstationBehaviour.Config> WORKSTATION = registerBehaviour("workstation", WorkstationBehaviour.class);
 
     public static final BehaviourType<StatusEffectEmitter, StatusEffectEmitter.Config> STATUS_EFFECT_EMITTER = registerBehaviour("status_effect_emitter", StatusEffectEmitter.class);
     public static final BehaviourType<Strippable, Strippable.Config> STRIPPABLE = registerBehaviour("strippable", Strippable.class);

@@ -12,9 +12,9 @@ import de.tomalbrc.filament.data.properties.BlockProperties;
 import de.tomalbrc.filament.datafixer.config.BlockDataFix;
 import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.util.*;
+import de.tomalbrc.filament.util.resource.FilamentSynchronousResourceReloadListener;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -24,6 +24,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,7 +59,6 @@ public class BlockRegistry {
         register(null, inputStream);
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     public static void register(BlockData data) {
         if (BuiltInRegistries.BLOCK.containsKey(data.id())) {
             var block = BuiltInRegistries.BLOCK.getValue(data.id());
@@ -115,7 +115,7 @@ public class BlockRegistry {
     public static <T extends Block> T registerBlock(ResourceKey<Block> resourceKey, Function<BlockBehaviour.Properties, T> function, BlockBehaviour.Properties properties, @Nullable Set<Identifier> blockTags) {
         T block = function.apply(properties.setId(resourceKey));
         if (blockTags != null) for (Identifier tag : blockTags) {
-            var list = BLOCKS_TAGS.computeIfAbsent(tag, x -> new ArrayList<>());
+            var list = BLOCKS_TAGS.computeIfAbsent(tag, _ -> new ArrayList<>());
             list.add(resourceKey.identifier());
         }
         return Registry.register(BuiltInRegistries.BLOCK, resourceKey, block);
@@ -123,12 +123,12 @@ public class BlockRegistry {
 
     public static class BlockDataReloadListener implements FilamentSynchronousResourceReloadListener {
         @Override
-        public Identifier getFabricId() {
+        public @NonNull Identifier getFabricId() {
             return Identifier.fromNamespaceAndPath(Constants.MOD_ID, Constants.MOD_ID);
         }
 
         @Override
-        public void onResourceManagerReload(ResourceManager resourceManager) {
+        public void onResourceManagerReload(@NonNull ResourceManager resourceManager) {
             load("filament/block", null, resourceManager, (id, inputStream) -> {
                 try {
                     BlockRegistry.register(obtainPath(id, resourceManager), inputStream);

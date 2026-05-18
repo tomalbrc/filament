@@ -10,6 +10,7 @@ import de.tomalbrc.filament.injection.DataComponentCopying;
 import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.util.*;
+import de.tomalbrc.filament.util.resource.FilamentSynchronousResourceReloadListener;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.minecraft.core.Registry;
@@ -23,6 +24,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -112,7 +114,7 @@ public class ItemRegistry {
         ItemGroupRegistry.addItem(itemGroup, item);
 
         if (tags != null) for (Identifier tag : tags) {
-            var list = ITEMS_TAGS.computeIfAbsent(tag, x -> new ArrayList<>());
+            var list = ITEMS_TAGS.computeIfAbsent(tag, _ -> new ArrayList<>());
             list.add(identifier.identifier());
         }
 
@@ -121,12 +123,12 @@ public class ItemRegistry {
 
     public static class ItemDataReloadListener implements FilamentSynchronousResourceReloadListener {
         @Override
-        public Identifier getFabricId() {
+        public @NonNull Identifier getFabricId() {
             return Identifier.fromNamespaceAndPath(Constants.MOD_ID, "items");
         }
 
         @Override
-        public void onResourceManagerReload(ResourceManager resourceManager) {
+        public void onResourceManagerReload(@NonNull ResourceManager resourceManager) {
             load("filament/item", null, resourceManager, (id, inputStream) -> {
                 try {
                     ItemRegistry.register(obtainPath(id, resourceManager), inputStream);

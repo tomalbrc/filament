@@ -7,7 +7,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.util.Constants;
-import de.tomalbrc.filament.util.FilamentSynchronousResourceReloadListener;
+import de.tomalbrc.filament.util.resource.FilamentSynchronousResourceReloadListener;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;

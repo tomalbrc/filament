@@ -12,13 +12,12 @@ import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.util.Constants;
-import de.tomalbrc.filament.util.FilamentSynchronousResourceReloadListener;
+import de.tomalbrc.filament.util.resource.FilamentSynchronousResourceReloadListener;
 import de.tomalbrc.filament.util.Json;
 import de.tomalbrc.filament.util.Util;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -32,6 +31,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -69,7 +69,6 @@ public class DecorationRegistry {
         register(null, inputStream);
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     static public void register(DecorationData data) {
         for (Map.Entry<Identifier, DecorationData> entry : decorations.entrySet()) {
             if (entry.getKey().equals(data.id())) {
@@ -112,10 +111,10 @@ public class DecorationRegistry {
             gen = (x) -> {
                 var block = new ComplexDecorationBlock(x.pushReaction(PushReaction.BLOCK), data);
 
-                BlockEntityType<DecorationBlockEntity> DECORATION_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(DecorationBlockEntity::new, block).build();
-                EntityRegistry.registerBlockEntity(EntityRegistry.key(data.id()), DECORATION_BLOCK_ENTITY);
+                BlockEntityType<DecorationBlockEntity> blockEntity = FabricBlockEntityTypeBuilder.create(DecorationBlockEntity::new, block).build();
+                EntityRegistry.registerBlockEntity(EntityRegistry.key(data.id()), blockEntity);
 
-                decorationBlockEntities.put(block, DECORATION_BLOCK_ENTITY);
+                decorationBlockEntities.put(block, blockEntity);
                 REGISTERED_BLOCK_ENTITIES++;
                 REGISTERED_DECORATIONS++;
 
@@ -149,12 +148,12 @@ public class DecorationRegistry {
 
     public static class DecorationDataReloadListener implements FilamentSynchronousResourceReloadListener {
         @Override
-        public Identifier getFabricId() {
+        public @NonNull Identifier getFabricId() {
             return Identifier.fromNamespaceAndPath(Constants.MOD_ID, "decorations");
         }
 
         @Override
-        public void onResourceManagerReload(ResourceManager resourceManager) {
+        public void onResourceManagerReload(@NonNull ResourceManager resourceManager) {
             load("filament/decoration", null, resourceManager, (id, inputStream) -> {
                 try {
                     DecorationRegistry.register(obtainPath(id, resourceManager), inputStream);

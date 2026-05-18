@@ -6,8 +6,12 @@ import de.tomalbrc.filament.behaviour.block.Fire;
 import de.tomalbrc.filament.command.FilamentCommand;
 import de.tomalbrc.filament.data.ItemGroupData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.recipe.Workstations;
 import de.tomalbrc.filament.registry.*;
 import de.tomalbrc.filament.util.*;
+import de.tomalbrc.filament.util.resource.FilamentAssetReloadListener;
+import de.tomalbrc.filament.util.resource.FilamentTemplateReloadListener;
+import de.tomalbrc.filament.util.resource.WorkstationReloadListener;
 import de.tomalbrc.filamentweb.EditorServer;
 import de.tomalbrc.filamentweb.FilamentEditorConfig;
 import eu.pb4.polymer.blocks.api.BlockModelType;
@@ -67,9 +71,9 @@ public class Filament implements ModInitializer {
 
         VirtualDestroyStage.init();
         AsyncBlockTicker.init();
+        Workstations.init();
         Fire.addRemap();
         PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(Fire::init);
-
         PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(RPUtil::addExtraAssets);
 
         if (FilamentEditorConfig.getInstance().enabled) {
@@ -104,6 +108,7 @@ public class Filament implements ModInitializer {
 
         FilamentReloadUtil.registerEarlyReloadListener(new FilamentAssetReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new FilamentTemplateReloadListener());
+        FilamentReloadUtil.registerEarlyReloadListener(new WorkstationReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new ModelRegistry.AjModelReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new ItemRegistry.ItemDataReloadListener());
         FilamentReloadUtil.registerEarlyReloadListener(new BlockRegistry.BlockDataReloadListener());
@@ -116,7 +121,7 @@ public class Filament implements ModInitializer {
             LOGGER.info("Available Polymer block model types:");
             logModelTypes();
 
-            ServerLifecycleEvents.SERVER_STARTED.register(minecraftServer -> {
+            ServerLifecycleEvents.SERVER_STARTED.register(_ -> {
                 LOGGER.info("Available Polymer block model types after server start:");
                 logModelTypes();
             });
