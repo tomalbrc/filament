@@ -102,7 +102,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
 
         if (!this.getBlock().isEnabled(level.enabledFeatures()) || player == null || !this.mayPlace(player, direction, itemStack, relativeBlockPos) || !propertyPlaceCheck) {
             return InteractionResult.FAIL;
-        } else if ((forceReplace || this.canPlaceAt(level, relativeBlockPos, angle)) && itemStack.getItem() instanceof DecorationItem) {
+        } else if ((forceReplace || this.canPlaceAt(level, relativeBlockPos, angle))) {
             DecorationItem.place(itemStack, level, blockState, relativeBlockPos, actualDir, direction, useOnContext);
 
             player.swing(useOnContext.getHand(), true);
@@ -163,9 +163,10 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
                 level.destroyBlock(blockPos2, false);
 
                 var offsetState = block.getStateForPlacement(BlockPlaceContext.at(new BlockPlaceContext(useOnContext), blockPos2, placeDirection));
-                level.setBlockAndUpdate(blockPos2, offsetState);
 
                 if (offsetState != null) {
+                    level.setBlockAndUpdate(blockPos2, offsetState);
+
                     offsetState.getBlock().setPlacedBy(level, blockPos2, offsetState, useOnContext.getPlayer(), itemStack);
                     if (useOnContext.getPlayer() != null) CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) useOnContext.getPlayer(), blockPos, itemStack);
                 }

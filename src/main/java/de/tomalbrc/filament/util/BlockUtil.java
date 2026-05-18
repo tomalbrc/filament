@@ -24,7 +24,7 @@ public class BlockUtil {
     }
 
     public static void handleBlockPlaceEffects(ServerPlayer player, InteractionHand hand, BlockPos pos, SoundType type) {
-        player.swing(hand, true);
+
     }
 
     public static void playBreakSound(Level level, BlockPos blockPos, BlockState blockState) {
