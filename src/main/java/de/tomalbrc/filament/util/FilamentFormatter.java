@@ -34,7 +34,7 @@ public final class FilamentFormatter {
             return color != null ? ctx.applyStyle(s -> s.withColor(color)) : null;
         });
         register("font", (args, ctx) -> {
-            Identifier id = Identifier.tryParse(String.join(" ", args));
+            Identifier id = Identifier.tryParse(String.join(":", args));
             return id != null ? ctx.applyStyle(s -> s.withFont(new FontDescription.Resource(id))) : null;
         });
 
