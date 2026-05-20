@@ -2,12 +2,16 @@ package de.tomalbrc.filament.recipe;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import it.unimi.dsi.fastutil.objects.ReferenceSortedSets;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.List;
@@ -32,13 +36,21 @@ public record StationDef(
                     SlotDef.CODEC.listOf().fieldOf("slots").forGetter(StationDef::slots),
                     Grid.CODEC.optionalFieldOf("grid").forGetter(StationDef::grid),
                     ItemStackTemplate.CODEC.optionalFieldOf("background_item").forGetter(StationDef::backgroundItem),
-                    Codec.unboundedMap(Codec.STRING.xmap(Integer::parseInt, String::valueOf), DecorationDef.CODEC).optionalFieldOf("background_item").forGetter(StationDef::decorations),
+                    Codec.unboundedMap(Codec.STRING.xmap(Integer::parseInt, String::valueOf), DecorationDef.CODEC).optionalFieldOf("decorations").forGetter(StationDef::decorations),
                     Codec.INT.optionalFieldOf("processing_time", 0).forGetter(StationDef::processingTime),
                     Codec.BOOL.optionalFieldOf("persistent", false).forGetter(StationDef::persistent)
             ).apply(instance, StationDef::new)
     );
 
     public ItemStack backgroundItemStack() {
+        if (this.backgroundItem.isEmpty()) {
+            var stack = Items.PAPER.getDefaultInstance();
+            stack.set(DataComponents.ITEM_MODEL, Items.AIR.components().get(DataComponents.ITEM_MODEL));
+            stack.set(DataComponents.MAX_STACK_SIZE, 1);
+            stack.set(DataComponents.TOOLTIP_DISPLAY, new TooltipDisplay(true, ReferenceSortedSets.emptySet()));
+            return stack;
+        }
+
         return backgroundItem.map(ItemStackTemplate::create).orElse(ItemStack.EMPTY);
     }
 
@@ -96,18 +108,19 @@ public record StationDef(
     public record DecorationDef(ItemStackTemplate item, Optional<String> command) {
         public static final Codec<DecorationDef> CODEC = RecordCodecBuilder.create(inst ->
                 inst.group(
-                        ItemStackTemplate.CODEC.fieldOf("name").forGetter(DecorationDef::item),
-                        Codec.STRING.optionalFieldOf("name").forGetter(DecorationDef::command)
+                        ItemStackTemplate.CODEC.fieldOf("item").forGetter(DecorationDef::item),
+                        Codec.STRING.optionalFieldOf("command").forGetter(DecorationDef::command)
                 ).apply(inst, DecorationDef::new)
         );
     }
 
-    public record SlotDef(String name, int slotIndex, SlotRole role, Optional<Integer> row, Optional<Integer> col) {
+    public record SlotDef(String name, int slotIndex, SlotRole role, String group, Optional<Integer> row, Optional<Integer> col) {
         public static final Codec<SlotDef> CODEC = RecordCodecBuilder.create(inst ->
                 inst.group(
                         Codec.STRING.fieldOf("name").forGetter(SlotDef::name),
                         Codec.INT.fieldOf("slot_index").forGetter(SlotDef::slotIndex),
                         SlotRole.CODEC.fieldOf("role").forGetter(SlotDef::role),
+                        Codec.STRING.fieldOf("group").orElse("ingredients").forGetter(SlotDef::group),
                         Codec.INT.optionalFieldOf("row").forGetter(SlotDef::row),
                         Codec.INT.optionalFieldOf("col").forGetter(SlotDef::col)
                 ).apply(inst, SlotDef::new)

@@ -10,6 +10,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -37,6 +38,7 @@ public class StationBlockEntity extends BaseContainerBlockEntity
         implements WorldlyContainer,
         StackedContentsCompatible,
         RecipeCraftingHolder {
+
     private final SimpleContainer inventory;
     private int progress = 0;
     private int burnTime = 0;
@@ -61,10 +63,6 @@ public class StationBlockEntity extends BaseContainerBlockEntity
                 .filter(s -> s.role() == StationDef.SlotRole.FUEL)
                 .map(StationDef.SlotDef::slotIndex)
                 .collect(Collectors.toSet());
-    }
-
-    public ItemStack getPendingOutputForSlot(int slotIndex) {
-        return pendingOutputs.getOrDefault(slotIndex, ItemStack.EMPTY);
     }
 
     public StationDef getDef() {
@@ -187,11 +185,10 @@ public class StationBlockEntity extends BaseContainerBlockEntity
         return currentRecipe.results().values().iterator().next().create();
     }
 
-    public int tryCraftAll(ServerPlayer player) {
-        if (level == null || level.isClientSide()) return 0;
-        if (currentRecipe == null || currentRecipe.processingTime() != 0) return 0;
+    public void tryCraftAll(ServerPlayer player) {
+        if (level == null || level.isClientSide()) return;
+        if (currentRecipe == null || currentRecipe.processingTime() != 0) return;
 
-        int crafted = 0;
         Inventory inv = player.getInventory();
 
         while (true) {
@@ -232,10 +229,8 @@ public class StationBlockEntity extends BaseContainerBlockEntity
                     inventory.setItem(slot, ItemStack.EMPTY);
                 }
             }
-            crafted++;
             setChanged();
         }
-        return crafted;
     }
 
     public void refreshPendingOutput() {
@@ -339,7 +334,7 @@ public class StationBlockEntity extends BaseContainerBlockEntity
         output.putInt("FuelTime", fuelTime);
         if (!currentFuel.isEmpty()) output.store("CurrentFuel", ItemStack.CODEC, currentFuel);
         if (!pendingOutput.isEmpty()) output.store("PendingOutput", ItemStack.CODEC, pendingOutput);
-        if (def.persistent()) inventory.storeAsItemList(output.list("Inventory", ItemStack.CODEC));
+        if (def.persistent()) ContainerHelper.saveAllItems(output, inventory.items);
     }
 
     @Override
@@ -371,7 +366,7 @@ public class StationBlockEntity extends BaseContainerBlockEntity
         input.getInt("FuelTime").ifPresent(x -> fuelTime = x);
         currentFuel = input.read("CurrentFuel", ItemStack.CODEC).orElse(ItemStack.EMPTY);
         pendingOutput = input.read("PendingOutput", ItemStack.CODEC).orElse(ItemStack.EMPTY);
-        if (def.persistent()) inventory.fromItemList(input.listOrEmpty("Inventory", ItemStack.CODEC));
+        if (def.persistent()) ContainerHelper.loadAllItems(input, inventory.items);
     }
 
     public SimpleContainer getInventory() {
