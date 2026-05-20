@@ -31,18 +31,18 @@ repositories {
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    implementation ("net.fabricmc:fabric-loader:${project.loader_version}")
-    implementation ("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
+    implementation("net.fabricmc:fabric-loader:${project.loader_version}")
+    implementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 
     // Polymer
-    implementation ("eu.pb4:polymer-core:${project.polymer_version}")
-    implementation ("eu.pb4:polymer-blocks:${project.polymer_version}")
-    implementation ("eu.pb4:polymer-resource-pack:${project.polymer_version}")
-    implementation ("eu.pb4:polymer-resource-pack-extras:${project.polymer_version}")
-    implementation ("eu.pb4:polymer-virtual-entity:${project.polymer_version}")
-    implementation ("eu.pb4:polymer-networking:${project.polymer_version}")
-    implementation ("eu.pb4:polymer-autohost:${project.polymer_version}")
-    implementation ("eu.pb4:polymer-sound-patcher:${project.polymer_version}")
+    implementation("eu.pb4:polymer-core:${project.polymer_version}")
+    implementation("eu.pb4:polymer-blocks:${project.polymer_version}")
+    implementation("eu.pb4:polymer-resource-pack:${project.polymer_version}")
+    implementation("eu.pb4:polymer-resource-pack-extras:${project.polymer_version}")
+    implementation("eu.pb4:polymer-virtual-entity:${project.polymer_version}")
+    implementation("eu.pb4:polymer-networking:${project.polymer_version}")
+    implementation("eu.pb4:polymer-autohost:${project.polymer_version}")
+    implementation("eu.pb4:polymer-sound-patcher:${project.polymer_version}")
     implementation include("eu.pb4:sgui:${project.sgui_version}")
     implementation include('me.lucko:fabric-permissions-api:0.7.0')
 
@@ -82,10 +82,10 @@ shadowJar {
     configurations = [project.configurations.shade]
 
     def relocations = [
-            "org.eclipse.jetty": "jetty",
+            "org.eclipse.jetty"  : "jetty",
             "com.github.victools": "jsonschema",
-            "com.j2html": "j2html",
-            "org.json": "orgjson"
+            "com.j2html"         : "j2html",
+            "org.json"           : "orgjson"
     ]
 
     relocations.each { prop, target ->

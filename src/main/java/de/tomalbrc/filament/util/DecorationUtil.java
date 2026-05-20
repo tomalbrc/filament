@@ -262,12 +262,12 @@ public class DecorationUtil {
         if (itemStack == null)
             return ItemStack.EMPTY;
 
-        if (!(itemStack.getItem() instanceof PolymerItem)) {
+        if (!(itemStack.getItem() instanceof PolymerItem polymerItem)) {
             return itemStack.copyWithCount(1);
         } else {
             var fuglyFabric = new PacketContextImpl(null);
             fuglyFabric.set(CommonImplPacketKeys.HOLDER_LOOKUP, Filament.SERVER.registryAccess());
-            return ((PolymerItem)itemStack.getItem()).getPolymerItemStack(itemStack, TooltipFlag.NORMAL, fuglyFabric, Filament.REGISTRY_ACCESS.compositeAccess());
+            return polymerItem.getPolymerItemStack(itemStack, TooltipFlag.NORMAL, fuglyFabric, Filament.SERVER.registryAccess());
         }
     }
 

@@ -51,7 +51,7 @@ public class PaginatedContainerGui extends SimpleGui {
         if (currentPage > 0) this.setSlot(
                 prevIdx,
                 GuiElementBuilder.from(Items.PAPER.getDefaultInstance())
-                        .hideDefaultTooltip()
+                        .hideTooltip()
                         .setName(Component.translatable("book.page_button.previous"))
                         .addLoreLine(Component.translatable("book.pageIndicator", Component.literal(String.valueOf(currentPage+1)), Component.literal(String.valueOf(pages+1))).withStyle(ChatFormatting.DARK_GRAY))
                         .model(Util.id("previous_gui"))
@@ -68,7 +68,7 @@ public class PaginatedContainerGui extends SimpleGui {
         if (currentPage < pages) this.setSlot(
                 nextIdx,
                 GuiElementBuilder.from(Items.PAPER.getDefaultInstance())
-                        .hideDefaultTooltip()
+                        .hideTooltip()
                         .setName(Component.translatable("book.page_button.next"))
                         .addLoreLine(Component.translatable("book.pageIndicator", Component.literal(String.valueOf(currentPage+1)), Component.literal(String.valueOf(pages+1))).withStyle(ChatFormatting.DARK_GRAY))
                         .model(Util.id("next_gui"))
