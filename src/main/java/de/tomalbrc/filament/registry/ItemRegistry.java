@@ -2,6 +2,7 @@ package de.tomalbrc.filament.registry;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.mojang.serialization.JsonOps;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
@@ -15,11 +16,13 @@ import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
@@ -88,6 +91,13 @@ public class ItemRegistry {
 
             for (TypedDataComponent component : data.components()) {
                 target.set(component.type(), component.value());
+            }
+
+            var ops = RegistryOps.create(JsonOps.INSTANCE, provider);
+            for (var entry : data.getAdditionalComponents().entrySet()) {
+                DataComponentType<?> type = entry.getKey();
+                var value = entry.getValue();
+                target.set((DataComponentType) type, type.codec().decode(ops, value).getPartialOrThrow().getFirst());
             }
         }));
 

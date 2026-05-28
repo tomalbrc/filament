@@ -5,7 +5,6 @@ import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.injection.FilamentItemExtension;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 
 import java.util.Map;
 
@@ -20,8 +19,6 @@ public interface FilamentItem extends BehaviourHolder, FilamentItemExtension {
         var defaultResource = this.getData().itemResource();
         return resource != null ? resource.getModels() : defaultResource != null ? defaultResource.getModels() : null;
     }
-
-    void verifyComponentsAfterLoad(ItemStack itemStack);
 
     default Item asItem() {
         return (Item) this;

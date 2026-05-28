@@ -1,25 +1,18 @@
 package de.tomalbrc.filament.block;
 
-import com.google.gson.JsonElement;
-import com.mojang.serialization.JsonOps;
-import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.data.AbstractBlockData;
 import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.item.FilamentItemDelegate;
-import de.tomalbrc.filament.util.BlockUtil;
-import de.tomalbrc.filament.util.Json;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -38,7 +31,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
-import java.util.Map;
 import java.util.function.Consumer;
 
 public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentItem, BehaviourHolder {
@@ -88,24 +80,6 @@ public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentI
     @Override
     public BehaviourMap getBehaviours() {
         return this.behaviours;
-    }
-
-    @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public void verifyComponentsAfterLoad(ItemStack itemStack) {
-        if (this.getData() != null) {
-            for (Map.Entry<DataComponentType<?>, JsonElement> entry : this.getData().getAdditionalComponents().entrySet()) {
-                var codec = entry.getKey().codec();
-                assert codec != null;
-
-                RegistryOps.RegistryInfoLookup registryInfoLookup = Json.DataComponentsDeserializer.createContext(Filament.REGISTRY_ACCESS.compositeAccess());
-                var result = codec.decode(RegistryOps.create(JsonOps.INSTANCE, registryInfoLookup), entry.getValue());
-                if (result.hasResultOrPartial()) {
-                    DataComponentType type = entry.getKey();
-                    itemStack.set(type, (Object) result.getOrThrow().getFirst());
-                }
-            }
-        }
     }
 
     @Override

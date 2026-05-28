@@ -1,23 +1,17 @@
 package de.tomalbrc.filament.item;
 
-import com.google.gson.JsonElement;
-import com.mojang.serialization.JsonOps;
-import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
 import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.properties.ItemProperties;
-import de.tomalbrc.filament.util.Json;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -33,7 +27,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
-import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -70,24 +63,6 @@ public class SimpleItem extends Item implements PolymerItem, FilamentItem, Behav
     @Override
     public FilamentItemDelegate getDelegate() {
         return this.delegate;
-    }
-
-    @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public void verifyComponentsAfterLoad(ItemStack itemStack) {
-        if (this.data != null) {
-            for (Map.Entry<DataComponentType<?>, JsonElement> entry : this.data.getAdditionalComponents().entrySet()) {
-                var codec = entry.getKey().codec();
-                assert codec != null;
-
-                RegistryOps.RegistryInfoLookup registryInfoLookup = Json.DataComponentsDeserializer.createContext(Filament.REGISTRY_ACCESS.compositeAccess());
-                var result = codec.decode(RegistryOps.create(JsonOps.INSTANCE, registryInfoLookup), entry.getValue());
-                if (result.hasResultOrPartial()) {
-                    DataComponentType type = entry.getKey();
-                    itemStack.set(type, result.getOrThrow().getFirst());
-                }
-            }
-        }
     }
 
     @Override
