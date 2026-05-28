@@ -2,6 +2,7 @@ package de.tomalbrc.filament.recipe;
 
 import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.MapCodec;
 import de.tomalbrc.filament.util.Constants;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -11,7 +12,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -32,6 +32,12 @@ public class Workstations {
             Identifier.fromNamespaceAndPath(Constants.MOD_ID, "station_recipe"),
             new RecipeType<StationRecipe>() {
             }
+    );
+
+    public static final RecipeSerializer<LegacyDyeRecipe> LEGACY_DYE_SERIALIZER = Registry.register(
+            BuiltInRegistries.RECIPE_SERIALIZER,
+            Identifier.withDefaultNamespace("crafting_special_armordye"),
+            new RecipeSerializer<>(MapCodec.unit(LegacyDyeRecipe::new), null)
     );
 
     public static StationDef get(Identifier stationId) {
