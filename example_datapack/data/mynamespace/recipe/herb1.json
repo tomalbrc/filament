@@ -1,0 +1,26 @@
+{
+  "type": "filament:station_recipe",
+  "station": "mynamespace:herb_mixer",
+  "herbs": [
+    "#minecraft:small_flowers",
+    "#minecraft:small_flowers"
+  ],
+  "liquids": [
+    {
+      "id": "potion",
+      "components": {
+        "minecraft:potion_contents": {
+          "potion": "minecraft:water"
+        }
+      }
+    }
+  ],
+  "output": {
+    "id": "minecraft:potion",
+    "components": {
+      "potion_contents": {
+        "potion": "minecraft:healing"
+      }
+    }
+  }
+}

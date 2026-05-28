@@ -1,0 +1,10 @@
+{
+  "type": "filament:station_recipe",
+  "station": "mynamespace:test_furnace_station_type",
+  "input": "minecraft:raw_iron",
+  "fuel": "#minecraft:coals",
+  "output": {
+    "id": "minecraft:iron_ingot"
+  },
+  "processing_time": 20
+}

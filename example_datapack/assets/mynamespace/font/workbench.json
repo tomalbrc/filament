@@ -1,0 +1,48 @@
+{
+  "providers": [
+    {
+      "type": "bitmap",
+      "file": "mynamespace:font/custom_4x4.png",
+      "ascent": 14,
+      "height": 222,
+      "chars": [
+        "4"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "mynamespace:font/custom_5x5.png",
+      "ascent": 14,
+      "height": 222,
+      "chars": [
+        "5"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "mynamespace:font/custom_6x6.png",
+      "ascent": 14,
+      "height": 222,
+      "chars": [
+        "6"
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "mynamespace:font/custom_3x2.png",
+      "ascent": 14,
+      "height": 222,
+      "chars": [
+        "7"
+      ]
+    },
+    {
+      "type": "space",
+      "advances": {
+        " ": 1,
+        "-": -170,
+        "_": -8
+      }
+    }
+  ]
+}

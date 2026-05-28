@@ -6,13 +6,11 @@ import it.unimi.dsi.fastutil.objects.ReferenceSortedSets;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.TooltipDisplay;
-import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.List;
 import java.util.Locale;
@@ -21,6 +19,7 @@ import java.util.Optional;
 
 public record StationDef(
         Identifier id,
+        String displayName,
         MenuType<?> menuType,
         List<SlotDef> slots,
         Optional<Grid> grid,
@@ -32,6 +31,7 @@ public record StationDef(
     public static final Codec<StationDef> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
                     Identifier.CODEC.fieldOf("id").forGetter(StationDef::id),
+                    Codec.STRING.optionalFieldOf("display_name", "Workstation").forGetter(StationDef::displayName),
                     BuiltInRegistries.MENU.byNameCodec().fieldOf("menu_type").forGetter(StationDef::menuType),
                     SlotDef.CODEC.listOf().fieldOf("slots").forGetter(StationDef::slots),
                     Grid.CODEC.optionalFieldOf("grid").forGetter(StationDef::grid),

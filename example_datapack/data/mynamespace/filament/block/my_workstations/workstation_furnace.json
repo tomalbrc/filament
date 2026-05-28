@@ -1,0 +1,21 @@
+{
+  "id": "mynamespace:workstation_furnace",
+  "translations": {
+    "en_us": "Custom Furnace Workstation"
+  },
+  "blockModelType": "full_block",
+  "blockResource": {
+    "models": {
+      "default": "minecraft:custom/block/arcanery/amethyst_bricks"
+    }
+  },
+  "behaviour": {
+    "drop_xp": {
+      "min": 4,
+      "max": 8
+    },
+    "workstation": {
+      "id": "mynamespace:test_furnace_station_type"
+    }
+  }
+}

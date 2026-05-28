@@ -1,0 +1,17 @@
+{
+  "id": "mynamespace:herb_mixer",
+  "display_name": "<green>Herb Mixer",
+  "menu_type": "minecraft:generic_9x2",
+  "grid": { "rows": 2, "columns": 3 },
+  "slots": [
+    { "name": "herb1", "slot_index": 1, "role": "input", "row": 0, "col": 0, "group": "herbs" },
+    { "name": "herb2", "slot_index": 2, "role": "input", "row": 0, "col": 1, "group": "herbs" },
+    { "name": "herb3", "slot_index": 10, "role": "input", "row": 1, "col": 0, "group": "herbs" },
+    { "name": "herb4", "slot_index": 11, "role": "input", "row": 1, "col": 1, "group": "herbs" },
+    { "name": "liquid1", "slot_index": 4, "role": "input", "row": 0, "col": 2, "group": "liquids" },
+    { "name": "liquid2", "slot_index": 13, "role": "input", "row": 1, "col": 2, "group": "liquids" },
+    { "name": "output", "slot_index": 16, "role": "output" }
+  ],
+  "processing_time": 0,
+  "persistent": false
+}

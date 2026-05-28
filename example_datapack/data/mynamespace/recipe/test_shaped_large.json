@@ -1,0 +1,16 @@
+{
+  "type": "filament:station_recipe",
+  "station": "mynamespace:6x6",
+  "pattern": [
+    "######",
+    "#    #",
+    "#    #",
+    "#    #",
+    "#    #",
+    "######"
+  ],
+  "key": {
+    "#": "minecraft:oak_planks"
+  },
+  "result": { "id": "minecraft:ender_chest", "count": 1 }
+}

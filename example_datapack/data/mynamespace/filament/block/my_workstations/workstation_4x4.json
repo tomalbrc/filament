@@ -1,0 +1,25 @@
+{
+  "id": "mynamespace:workstation_4x4",
+  "translations": {
+    "en_us": "Workstation 4x4"
+  },
+  "blockModelType": "full_block",
+  "blockResource": {
+    "models": {
+      "default": "minecraft:custom/block/arcanery/amethyst_bricks"
+    }
+  },
+  "behaviour": {
+    "drop_xp": {
+      "min": 4,
+      "max": 8
+    },
+    "workstation": {
+      "id": "mynamespace:4x4",
+      "title_prefix": "<font:mynamespace:workbench>_4-</font>"
+    }
+  },
+  "properties": {
+    "blockBase": "minecraft:amethyst_block"
+  }
+}

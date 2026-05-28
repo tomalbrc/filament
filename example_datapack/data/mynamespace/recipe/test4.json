@@ -1,0 +1,9 @@
+{
+  "type": "filament:station_recipe",
+  "station": "mynamespace:4x4",
+  "ingredients": [
+    "minecraft:oak_planks",
+    "minecraft:oak_planks"
+  ],
+  "result": { "id": "minecraft:oak_slab", "count": 4 }
+}

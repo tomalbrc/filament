@@ -7,6 +7,7 @@
   - [Creating content](content/creating-content.md)
   - [Config](content/general/config.md)
   - [Item Groups](content/general/item-groups.md)
+  - [Workstation](content/general/workstation.md)
   - [Components](content/general/components.md)
   - [Templates](content/general/templates.md)
   - [Web Editor](content/general/web-editor.md)

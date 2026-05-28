@@ -1,0 +1,15 @@
+{
+  "type": "filament:station_recipe",
+  "station": "mynamespace:5x5",
+  "pattern": [
+    "###",
+    " # ",
+    " # ",
+    " # ",
+    "###"
+  ],
+  "key": {
+    "#": "minecraft:oak_planks"
+  },
+  "result": { "id": "minecraft:oak_planks", "count": 8 }
+}

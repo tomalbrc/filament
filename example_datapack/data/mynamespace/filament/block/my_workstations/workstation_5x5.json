@@ -1,0 +1,22 @@
+{
+  "id": "mynamespace:workstation_5x5",
+  "translations": {
+    "en_us": "Workstation 5x5"
+  },
+  "blockModelType": "full_block",
+  "blockResource": {
+    "models": {
+      "default": "block/birch_button"
+    }
+  },
+  "behaviour": {
+    "drop_xp": {
+      "min": 4,
+      "max": 8
+    },
+    "workstation": {
+      "id": "mynamespace:5x5",
+      "title_prefix": "<font:mynamespace:workbench>_5-</font>"
+    }
+  }
+}

@@ -79,10 +79,11 @@ tasks.jar {
 }
 
 shadowJar {
+    from sourceSets.main.output
     configurations = [project.configurations.shade]
 
     def relocations = [
-            "org.eclipse.jetty"  : "jetty",
+            //"org.eclipse.jetty"  : "jetty",
             "com.github.victools": "jsonschema",
             "com.j2html"         : "j2html",
             "org.json"           : "orgjson"

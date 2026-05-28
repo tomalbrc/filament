@@ -1,0 +1,22 @@
+{
+  "id": "mynamespace:workstation_herb_mixer",
+  "translations": {
+    "en_us": "Herb Mixer"
+  },
+  "blockModelType": "full_block",
+  "blockResource": {
+    "models": {
+      "default": "block/birch_button"
+    }
+  },
+  "behaviour": {
+    "drop_xp": {
+      "min": 4,
+      "max": 8
+    },
+    "workstation": {
+      "id": "mynamespace:herb_mixer",
+      "title_prefix": "<font:mynamespace:workbench>_7-</font>"
+    }
+  }
+}

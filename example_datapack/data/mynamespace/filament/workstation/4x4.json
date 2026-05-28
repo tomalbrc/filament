@@ -1,0 +1,37 @@
+{
+  "id": "mynamespace:4x4",
+  "menu_type": "minecraft:generic_9x6",
+  "grid": { "rows": 4, "columns": 4 },
+  "slots": [
+    { "name": "input_0", "slot_index": 10, "role": "input", "row": 0, "col": 0 },
+    { "name": "input_1", "slot_index": 11, "role": "input", "row": 0, "col": 1 },
+    { "name": "input_2", "slot_index": 12, "role": "input", "row": 0, "col": 2 },
+    { "name": "input_3", "slot_index": 13, "role": "input", "row": 0, "col": 3 },
+    { "name": "input_4", "slot_index": 19, "role": "input", "row": 1, "col": 0 },
+    { "name": "input_5", "slot_index": 20, "role": "input", "row": 1, "col": 1 },
+    { "name": "input_6", "slot_index": 21, "role": "input", "row": 1, "col": 2 },
+    { "name": "input_7", "slot_index": 22, "role": "input", "row": 1, "col": 3 },
+    { "name": "input_8", "slot_index": 28, "role": "input", "row": 2, "col": 0 },
+    { "name": "input_9", "slot_index": 29, "role": "input", "row": 2, "col": 1 },
+    { "name": "input_10", "slot_index": 30, "role": "input", "row": 2, "col": 2 },
+    { "name": "input_11", "slot_index": 31, "role": "input", "row": 2, "col": 3 },
+    { "name": "input_12", "slot_index": 37, "role": "input", "row": 3, "col": 0 },
+    { "name": "input_13", "slot_index": 38, "role": "input", "row": 3, "col": 1 },
+    { "name": "input_14", "slot_index": 39, "role": "input", "row": 3, "col": 2 },
+    { "name": "input_15", "slot_index": 40, "role": "input", "row": 3, "col": 3 },
+    { "name": "result", "slot_index": 25, "role": "output" }
+  ],
+  "decorations": {
+    "43": {
+      "item": {
+        "id": "paper",
+        "components": {
+          "item_model": "diamond"
+        }
+      },
+      "command": "say hello"
+    }
+  },
+  "processing_time": 0,
+  "persistent": false
+}

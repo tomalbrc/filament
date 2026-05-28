@@ -1,6 +1,7 @@
 package de.tomalbrc.filament.recipe;
 
 import com.mojang.datafixers.util.Either;
+import de.tomalbrc.filament.util.TextUtil;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
@@ -354,7 +355,7 @@ public class StationBlockEntity extends BaseContainerBlockEntity
 
     @Override
     protected @NonNull Component getDefaultName() {
-        return Component.literal("Workstation");
+        return TextUtil.formatText(Workstations.get(stationId).displayName());
     }
 
     @Override

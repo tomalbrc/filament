@@ -2,9 +2,9 @@
 
 Using the cosmetic behaviour (+ equippable component in 1.21.2) you can create wearable cosmetics (animated too!) that rotate with the players body.
 
-For normal hats, the `minecraft:equippable` should be enough.
+For normal hats or armor, the `minecraft:equippable` should be enough.
 
-You can also use the `filament:skin` component to make your cosmetic a skin for other items like helmets.
+You can also use the [`filament:skin`](../content/general/components.md#skin-component-format) component to make your cosmetic a skin for other items like helmets.
 
 
 > [!TIP]

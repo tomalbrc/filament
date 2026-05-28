@@ -1,0 +1,11 @@
+{
+  "id": "mynamespace:test_furnace_station_type",
+  "menu_type": "minecraft:furnace",
+  "slots": [
+    { "name": "input", "slot_index": 0, "role": "input" },
+    { "name": "fuel",   "slot_index": 1, "role": "fuel" },
+    { "name": "output", "slot_index": 2, "role": "output" }
+  ],
+  "processing_time": 200,
+  "persistent": true
+}

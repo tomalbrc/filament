@@ -1,0 +1,46 @@
+{
+  "id": "mynamespace:5x5",
+  "menu_type": "minecraft:generic_9x6",
+  "grid": { "rows": 5, "columns": 5 },
+  "slots": [
+    { "name": "input_0", "slot_index": 1, "role": "input", "row": 0, "col": 0 },
+    { "name": "input_1", "slot_index": 2, "role": "input", "row": 0, "col": 1 },
+    { "name": "input_2", "slot_index": 3, "role": "input", "row": 0, "col": 2 },
+    { "name": "input_3", "slot_index": 4, "role": "input", "row": 0, "col": 3 },
+    { "name": "input_4", "slot_index": 5, "role": "input", "row": 0, "col": 4 },
+    { "name": "input_5", "slot_index": 10, "role": "input", "row": 1, "col": 0 },
+    { "name": "input_6", "slot_index": 11, "role": "input", "row": 1, "col": 1 },
+    { "name": "input_7", "slot_index": 12, "role": "input", "row": 1, "col": 2 },
+    { "name": "input_8", "slot_index": 13, "role": "input", "row": 1, "col": 3 },
+    { "name": "input_9", "slot_index": 14, "role": "input", "row": 1, "col": 4 },
+    { "name": "input_10", "slot_index": 19, "role": "input", "row": 2, "col": 0 },
+    { "name": "input_11", "slot_index": 20, "role": "input", "row": 2, "col": 1 },
+    { "name": "input_12", "slot_index": 21, "role": "input", "row": 2, "col": 2 },
+    { "name": "input_13", "slot_index": 22, "role": "input", "row": 2, "col": 3 },
+    { "name": "input_14", "slot_index": 23, "role": "input", "row": 2, "col": 4 },
+    { "name": "input_15", "slot_index": 28, "role": "input", "row": 3, "col": 0 },
+    { "name": "input_16", "slot_index": 29, "role": "input", "row": 3, "col": 1 },
+    { "name": "input_17", "slot_index": 30, "role": "input", "row": 3, "col": 2 },
+    { "name": "input_18", "slot_index": 31, "role": "input", "row": 3, "col": 3 },
+    { "name": "input_19", "slot_index": 32, "role": "input", "row": 3, "col": 4 },
+    { "name": "input_20", "slot_index": 37, "role": "input", "row": 4, "col": 0 },
+    { "name": "input_21", "slot_index": 38, "role": "input", "row": 4, "col": 1 },
+    { "name": "input_22", "slot_index": 39, "role": "input", "row": 4, "col": 2 },
+    { "name": "input_23", "slot_index": 40, "role": "input", "row": 4, "col": 3 },
+    { "name": "input_24", "slot_index": 41, "role": "input", "row": 4, "col": 4 },
+    { "name": "result", "slot_index": 26, "role": "output" }
+  ],
+  "decorations": {
+    "43": {
+      "item": {
+        "id": "paper",
+        "components": {
+          "item_model": "diamond"
+        }
+      },
+      "command": "say hello"
+    }
+  },
+  "processing_time": 0,
+  "persistent": false
+}

@@ -1,5 +1,6 @@
 {
   "id": "mynamespace:darkoak_chair_with_cushion",
+  "itemTags": ["dyeable"],
   "itemResource": {
     "models": {
       "default": "minecraft:custom/furniture/chairs/darkoak_chair_with_cushion"
