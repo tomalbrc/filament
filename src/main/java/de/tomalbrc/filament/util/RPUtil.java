@@ -18,6 +18,8 @@ import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
@@ -77,10 +79,16 @@ public class RPUtil {
                         resourcePackBuilder,
                         data.id(),
                         finalItemResources,
-                        data.components().has(DataComponents.DYED_COLOR) || data.vanillaItem().components().has(DataComponents.DYED_COLOR)
+                        data.components().has(DataComponents.DYED_COLOR) || data.vanillaItem().components().has(DataComponents.DYED_COLOR) || isDyable(data.vanillaItem())
                 );
             });
         }
+    }
+
+    public static boolean isDyable(Item item) {
+        // 26.1 doesnt have the dyed_color component on items at the time the assets are generated (too early)
+        // so we hardcode the check here to keep compat with existing filament configs
+        return item == Items.LEATHER_HORSE_ARMOR || item == Items.LEATHER_BOOTS || item == Items.LEATHER_CHESTPLATE || item == Items.LEATHER_LEGGINGS || item == Items.LEATHER_HELMET;
     }
 
     // Item assets for virtual blocks that use item displays (NOT DECORATIONS!)
