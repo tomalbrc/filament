@@ -26,7 +26,7 @@ import java.util.Set;
 
 @SuppressWarnings("unused")
 public class BlockData extends AbstractBlockData<BlockProperties> {
-    private final @Nullable BlockStateMappedProperty<BlockModelType> blockModelType;
+    protected @Nullable BlockStateMappedProperty<BlockModelType> blockModelType;
 
     public BlockData(
             @NotNull Identifier id,

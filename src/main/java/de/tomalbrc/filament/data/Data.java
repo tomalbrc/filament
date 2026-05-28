@@ -28,38 +28,38 @@ import java.util.Set;
 
 public abstract class Data<PropertyType extends ItemProperties> {
     @Description("Your custom identifier for this item")
-    protected final @NotNull Identifier id;
+    protected @NotNull Identifier id;
 
     @Description("Vanilla item to send to clients")
     @RegistryRef("item")
-    protected final @Nullable Item vanillaItem;
+    protected @Nullable Item vanillaItem;
 
     @Description("Localized item name, will get written to the resource-pack")
-    protected final @Nullable Map<String, String> translations;
+    protected @Nullable Map<String, String> translations;
 
     @Description("Name of the item, supports formatting")
-    protected final @Nullable Component displayName;
+    protected @Nullable Component displayName;
 
     @Description("Item model / set of item models")
     protected @Nullable ItemResource itemResource;
 
     @Description("1.21.4+ item_model in items/")
     @AssetRef(AssetRef.Type.ITEM_ASSET)
-    protected final @Nullable Identifier itemModel;
+    protected @Nullable Identifier itemModel;
 
     @Description("Behaviours")
     @SerializedName(value = "behaviour", alternate = {"behaviours", "behaviors", "behavior"})
     protected @Nullable BehaviourConfigMap behaviour;
 
     @Description("Item data components")
-    protected final @Nullable DataComponentMap components;
+    protected @Nullable DataComponentMap components;
 
     @Description("Creative tab group for this item")
-    protected final @Nullable Identifier group;
+    protected @Nullable Identifier group;
 
     @Description("Item tags for the item. Specify without #")
     @RegistryRef(value = "item", tagsOnly = true)
-    protected final @Nullable Set<Identifier> itemTags;
+    protected @Nullable Set<Identifier> itemTags;
 
     protected @Nullable PropertyType properties;
 

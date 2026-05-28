@@ -34,12 +34,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-@SuppressWarnings("unused")
-public final class DecorationData extends AbstractBlockData<DecorationProperties> {
-    private final @Nullable List<BlockConfig> blocks;
-    private final @Nullable Vector2f size;
-    private final @Nullable Boolean itemFrame;
-    private final @Nullable BlockStateMappedProperty<BlockState> block;
+public class DecorationData extends AbstractBlockData<DecorationProperties> {
+    protected @Nullable List<BlockConfig> blocks;
+    protected @Nullable Vector2f size;
+    protected @Nullable Boolean itemFrame;
+    protected @Nullable BlockStateMappedProperty<BlockState> block;
 
     public DecorationData(
             @NotNull Identifier id,

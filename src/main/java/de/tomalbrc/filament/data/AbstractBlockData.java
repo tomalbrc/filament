@@ -28,8 +28,8 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public abstract class AbstractBlockData<BlockPropertyLike extends BlockProperties> extends Data<BlockPropertyLike> {
     @RegistryRef(value = "block", tagsOnly = true)
-    private final @Nullable Set<Identifier> blockTags;
-    private final @Nullable BlockResource blockResource;
+    protected @Nullable Set<Identifier> blockTags;
+    protected @Nullable BlockResource blockResource;
 
     public AbstractBlockData(
             @NotNull Identifier id,

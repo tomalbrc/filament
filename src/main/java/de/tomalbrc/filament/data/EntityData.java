@@ -23,7 +23,6 @@ import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
 import net.minecraft.world.entity.ai.navigation.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biomes;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.pathfinder.PathType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,19 +33,19 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 public class EntityData {
-    private final @NotNull Identifier id;
-    private final @Nullable Identifier entityType;
-    private final @Nullable Map<String, String> translations;
-    private final @Nullable AnimationInfo animation;
-    private @Nullable EntityProperties properties;
+    protected @NotNull Identifier id;
+    protected @Nullable Identifier entityType;
+    protected @Nullable Map<String, String> translations;
+    protected @Nullable AnimationInfo animation;
+    protected @Nullable EntityProperties properties;
     @SerializedName(value = "behaviour", alternate = {"behaviours", "behaviors", "behavior"})
-    private @Nullable BehaviourConfigMap behaviour;
-    private final @Nullable BehaviourList goals;
-    private final @Nullable Set<Identifier> entityTags;
-    private final @Nullable Map<Identifier, Double> attributes;
-    private final @Nullable SpawnInfo spawn;
+    protected @Nullable BehaviourConfigMap behaviour;
+    protected @Nullable BehaviourList goals;
+    protected @Nullable Set<Identifier> entityTags;
+    protected @Nullable Map<Identifier, Double> attributes;
+    protected @Nullable SpawnInfo spawn;
 
-    private Movement movement = new Movement();
+    protected Movement movement = new Movement();
 
     protected EntityData(
             @NotNull Identifier id,
