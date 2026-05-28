@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.recipe;
 
+import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.*;
 import net.minecraft.resources.Identifier;
@@ -14,17 +15,18 @@ import java.util.stream.Stream;
 
 public record StationRecipe(
         Identifier stationId,
-        Map<Integer, Ingredient> ingredients,
-
-        Map<Integer, ItemStackTemplate> results, // resolved slot -> result
+        Map<Integer, Either<Ingredient, IngredientCost>> ingredients, // positional / shaped
+        Map<Integer, ItemStackTemplate> results,
         int processingTime,
-        List<Ingredient> shapelessIngredients,// non‑null only for shapeless
-        List<String> pattern, // non‑null only for shaped
-        Map<Character, Ingredient> key // non‑null only for shaped
+        Map<String, List<Either<Ingredient, IngredientCost>>> groupIngredients, // group mapped to ingredient list for shapeless
+        List<String> pattern,
+        Map<String, Either<Ingredient, IngredientCost>> key
 ) implements Recipe<StationRecipeInput> {
 
+    static Codec<Either<Ingredient, IngredientCost>> EITHER_CODEC = Codec.either(Ingredient.CODEC, IngredientCost.CODEC);
+
     public boolean isShapeless() {
-        return shapelessIngredients != null && !shapelessIngredients.isEmpty();
+        return !groupIngredients.isEmpty() && pattern == null;
     }
 
     public boolean isShaped() {
@@ -36,38 +38,12 @@ public record StationRecipe(
         StationDef def = Workstations.get(stationId);
         if (def == null) return false;
 
-        if (isShapeless()) {
-            List<Integer> inputSlots = def.slots().stream()
-                    .filter(s -> s.role() == StationDef.SlotRole.INPUT)
-                    .map(StationDef.SlotDef::slotIndex)
-                    .sorted()
-                    .toList();
-            List<ItemStack> inputStacks = inputSlots.stream()
-                    .map(inv::getItem)
-                    .filter(s -> !s.isEmpty())
-                    .toList();
-
-            if (inputStacks.size() != shapelessIngredients.size()) return false;
-            List<Ingredient> remaining = new ArrayList<>(shapelessIngredients);
-            for (ItemStack stack : inputStacks) {
-                boolean found = false;
-                for (Iterator<Ingredient> it = remaining.iterator(); it.hasNext(); ) {
-                    Ingredient ing = it.next();
-                    if (ing.test(stack)) {
-                        it.remove();
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) return false;
-            }
-            return true;
-        } else if (isShaped()) {
+        if (isShaped()) {
             if (def.grid().isEmpty()) return false;
             int gridRows = def.grid().get().rows();
             int gridCols = def.grid().get().columns();
             int patRows = pattern.size();
-            int patCols = pattern.get(0).length();
+            int patCols = pattern.getFirst().length();
             if (patRows > gridRows || patCols > gridCols) return false;
 
             for (int dy = 0; dy <= gridRows - patRows; dy++) {
@@ -80,7 +56,7 @@ public record StationRecipe(
                         for (int c = 0; c < patCols; c++) {
                             char ch = pattern.get(r).charAt(c);
                             if (ch == ' ') continue;
-                            Ingredient ing = key.get(ch);
+                            var ing = key.get(ch);
                             if (ing == null) {
                                 match = false;
                                 break outer;
@@ -92,7 +68,7 @@ public record StationRecipe(
                             }
                             int slot = slotIdx.get();
                             coveredSlots.add(slot);
-                            if (!ing.test(inv.getItem(slot))) {
+                            if (matches(ing, inv.getItem(slot))) {
                                 match = false;
                                 break outer;
                             }
@@ -113,25 +89,79 @@ public record StationRecipe(
                 }
             }
             return false;
-        } else {
-            for (Map.Entry<Integer, Ingredient> entry : ingredients.entrySet()) {
-                if (!entry.getValue().test(inv.getItem(entry.getKey()))) return false;
+        }
+
+        if (isShapeless()) {
+            Map<String, List<ItemStack>> presentStacks = new HashMap<>();
+            for (StationDef.SlotDef slotDef : def.slots()) {
+                if (slotDef.role() != StationDef.SlotRole.INPUT) continue;
+                String group = slotDef.group() != null ? slotDef.group() : "ingredients";
+                ItemStack stack = inv.getItem(slotDef.slotIndex());
+                if (!stack.isEmpty()) {
+                    presentStacks.computeIfAbsent(group, k -> new ArrayList<>()).add(stack);
+                }
+            }
+
+            for (var entry : groupIngredients.entrySet()) {
+                String group = entry.getKey();
+                var required = entry.getValue();
+                List<ItemStack> present = presentStacks.getOrDefault(group, Collections.emptyList());
+
+                if (present.size() != required.size()) return false;
+
+                List<Either<Ingredient, IngredientCost>> remaining = new ArrayList<>(required);
+                for (ItemStack stack : present) {
+                    boolean found = false;
+                    for (var it = remaining.iterator(); it.hasNext(); ) {
+                        var ing = it.next();
+                        if (StationRecipe.matches(ing, stack)) {
+                            it.remove();
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) return false;
+                }
+            }
+
+            for (StationDef.SlotDef slotDef : def.slots()) {
+                if (slotDef.role() != StationDef.SlotRole.INPUT) continue;
+                String group = slotDef.group() != null ? slotDef.group() : "ingredients";
+                if (!groupIngredients.containsKey(group) && !inv.getItem(slotDef.slotIndex()).isEmpty()) {
+                    return false;
+                }
             }
             return true;
         }
+
+        for (Map.Entry<Integer, Either<Ingredient, IngredientCost>> entry : ingredients.entrySet()) {
+            if (!matches(entry.getValue(), inv.getItem(entry.getKey()))) return false;
+        }
+        return true;
     }
 
-    public Map<Integer, Ingredient> getResolvedIngredients(StationRecipeInput inv, Level level) {
+    public static boolean matches(Either<Ingredient, IngredientCost> inv, ItemStack stack) {
+        if (inv.left().isPresent()) {
+            return inv.left().orElseThrow().test(stack);
+        } else if (inv.right().isPresent()) {
+            var cost = inv.right().orElseThrow();
+            return cost.test(stack);
+        }
+
+        return false;
+    }
+
+    public Map<Integer, Either<Ingredient, IngredientCost>> getResolvedIngredients(StationRecipeInput inv, Level level) {
         if (!isShaped()) return ingredients;
         StationDef def = Workstations.get(stationId);
         if (def == null || def.grid().isEmpty()) return Collections.emptyMap();
         int gridRows = def.grid().get().rows();
         int gridCols = def.grid().get().columns();
         int patRows = pattern.size();
-        int patCols = pattern.get(0).length();
+        int patCols = pattern.getFirst().length();
         for (int dy = 0; dy <= gridRows - patRows; dy++) {
             for (int dx = 0; dx <= gridCols - patCols; dx++) {
-                Map<Integer, Ingredient> map = new HashMap<>();
+                Map<Integer, Either<Ingredient, IngredientCost>> map = new HashMap<>();
                 Set<Integer> coveredSlots = new HashSet<>();
                 boolean ok = true;
                 outer:
@@ -139,7 +169,7 @@ public record StationRecipe(
                     for (int c = 0; c < patCols; c++) {
                         char ch = pattern.get(r).charAt(c);
                         if (ch == ' ') continue;
-                        Ingredient ing = key.get(ch);
+                        var ing = key.get(ch);
                         if (ing == null) {
                             ok = false;
                             break outer;
@@ -151,7 +181,7 @@ public record StationRecipe(
                         }
                         int slot = slotIdx.get();
                         coveredSlots.add(slot);
-                        if (!ing.test(inv.getItem(slot))) {
+                        if (!StationRecipe.matches(ing, inv.getItem(slot))) {
                             ok = false;
                             break outer;
                         }
@@ -221,80 +251,73 @@ public record StationRecipe(
             if (stationValue == null) return DataResult.error(() -> "Missing 'station'");
             DataResult<Identifier> stationResult = Identifier.CODEC.parse(ops, stationValue);
             if (stationResult.error().isPresent()) return DataResult.error(() -> "Invalid station");
-            Identifier stationId = stationResult.result().get();
+            Identifier stationId = stationResult.result().orElseThrow();
 
             int processingTime = 0;
             T ptValue = input.get("processing_time");
             if (ptValue != null) {
                 DataResult<Integer> pt = Codec.INT.parse(ops, ptValue);
                 if (pt.error().isPresent()) return DataResult.error(() -> "Invalid processing_time");
-                processingTime = pt.result().get();
+                processingTime = pt.result().orElseThrow();
             }
 
             StationDef def = Workstations.get(stationId);
             if (def == null) return DataResult.error(() -> "Unknown station: " + stationId);
 
-            Map<String, Ingredient> nameIngredients = new HashMap<>();
-            Map<String, ItemStackTemplate> nameResults = new HashMap<>();
-            List<Ingredient> shapelessList = new ArrayList<>();
             List<String> pattern = null;
-            Map<Character, Ingredient> keyMap = null;
+            Map<String, Either<Ingredient, IngredientCost>> keyMap = null;
+
+            Map<String, Either<Ingredient, IngredientCost>> nameIngredients = new HashMap<>();
+            Map<String, List<Either<Ingredient, IngredientCost>>> groupIngredients = new HashMap<>();
+            Map<String, ItemStackTemplate> nameResults = new HashMap<>();
+
+            Set<String> reservedKeys = new HashSet<>(Arrays.asList(
+                    "type", "station", "processing_time", "pattern", "key"
+            ));
 
             T patternValue = input.get("pattern");
-            T ingredientsArray = input.get("ingredients");
-            Set<String> reservedKeys = new HashSet<>(Arrays.asList("type", "station", "processing_time"));
-
             if (patternValue != null) {
+
                 DataResult<List<String>> patternResult = Codec.STRING.listOf().parse(ops, patternValue);
                 if (patternResult.error().isPresent()) return DataResult.error(() -> "Invalid pattern");
-                pattern = patternResult.result().get();
-                int patRows = pattern.size();
-                int patCols = patRows > 0 ? pattern.get(0).length() : 0;
+                pattern = patternResult.result().orElseThrow();
 
                 if (def.grid().isEmpty()) return DataResult.error(() -> "Station missing grid for shaped recipe");
                 int gridRows = def.grid().get().rows();
                 int gridCols = def.grid().get().columns();
+                int patRows = pattern.size();
+                int patCols = patRows > 0 ? pattern.getFirst().length() : 0;
                 if (patRows > gridRows || patCols > gridCols) {
                     return DataResult.error(() -> "Pattern exceeds station grid dimensions");
                 }
 
                 T keyValue = input.get("key");
                 if (keyValue == null) return DataResult.error(() -> "Missing key for shaped recipe");
-                DataResult<Map<Character, Ingredient>> keyResult = ops.getMap(keyValue).flatMap(keyMap_ -> {
-                    Map<Character, Ingredient> map = new HashMap<>();
+                DataResult<Map<String, Either<Ingredient, IngredientCost>>> keyResult = ops.getMap(keyValue).flatMap(keyMap_ -> {
+                    Map<String, Either<Ingredient, IngredientCost>> map = new HashMap<>();
                     for (Pair<T, T> pair : (Iterable<Pair<T, T>>) () -> keyMap_.entries().iterator()) {
                         T k = pair.getFirst();
                         T v = pair.getSecond();
                         String charStr = ops.getStringValue(k).result().orElse("");
-                        if (charStr.length() != 1) return DataResult.error(() -> "Invalid key character");
-                        char c = charStr.charAt(0);
-                        DataResult<Ingredient> ingResult = Ingredient.CODEC.parse(ops, v);
+                        DataResult<Either<Ingredient, IngredientCost>> ingResult = EITHER_CODEC.parse(ops, v);
                         if (ingResult.error().isPresent())
-                            return DataResult.error(() -> "Invalid ingredient for key '" + c + "'");
-                        map.put(c, ingResult.result().get());
+                            return DataResult.error(() -> "Invalid ingredient for key '" + charStr + "'");
+                        map.put(charStr, ingResult.result().orElseThrow());
                     }
                     return DataResult.success(map);
                 });
                 if (keyResult.error().isPresent()) return DataResult.error(() -> "Invalid key");
-                keyMap = keyResult.result().get();
-                reservedKeys.add("pattern");
-                reservedKeys.add("key");
+                keyMap = keyResult.result().orElseThrow();
             }
-            else if (ingredientsArray != null) {
-                DataResult<List<Ingredient>> ingListResult = Ingredient.CODEC.listOf().parse(ops, ingredientsArray);
-                if (ingListResult.error().isPresent())
-                    return DataResult.error(() -> "Invalid shapeless ingredients array");
-                List<Ingredient> ingList = ingListResult.result().get();
-
-                List<StationDef.SlotDef> inputSlots = def.slots().stream()
-                        .filter(s -> s.role() == StationDef.SlotRole.INPUT)
-                        .sorted(Comparator.comparingInt(StationDef.SlotDef::slotIndex))
-                        .toList();
-                for (int i = 0; i < ingList.size(); i++) {
-                    nameIngredients.put(inputSlots.get(i).name(), ingList.get(i));
+            else {
+                T ingredientsArray = input.get("ingredients");
+                if (ingredientsArray != null) {
+                    DataResult<List<Either<Ingredient, IngredientCost>>> ingListResult = EITHER_CODEC.listOf().parse(ops, ingredientsArray);
+                    if (ingListResult.error().isPresent())
+                        return DataResult.error(() -> "Invalid shapeless ingredients array");
+                    var ingList = ingListResult.result().orElseThrow();
+                    groupIngredients.put("ingredients", ingList);
                 }
-                shapelessList.addAll(ingList);
-                reservedKeys.add("ingredients");
             }
 
             for (Pair<T, T> pair : (Iterable<Pair<T, T>>) () -> input.entries().iterator()) {
@@ -304,33 +327,53 @@ public record StationRecipe(
                 if (reservedKeys.contains(key)) continue;
 
                 Optional<StationDef.SlotRole> roleOpt = def.getSlotRoleByName(key);
-                if (roleOpt.isEmpty()) return DataResult.error(() -> "Unknown slot name: " + key);
+                if (roleOpt.isPresent()) {
 
-                if (roleOpt.get() == StationDef.SlotRole.INPUT || roleOpt.get() == StationDef.SlotRole.FUEL) {
-                    if (!nameIngredients.containsKey(key)) {
-                        DataResult<Ingredient> ingResult = Ingredient.CODEC.parse(ops, valueOps);
+                    if (roleOpt.get() == StationDef.SlotRole.INPUT || roleOpt.get() == StationDef.SlotRole.FUEL) {
+                        if (!nameIngredients.containsKey(key)) {
+                            DataResult<Either<Ingredient, IngredientCost>> ingResult = EITHER_CODEC.parse(ops, valueOps);
+                            if (ingResult.error().isPresent())
+                                return DataResult.error(() -> "Invalid ingredient for slot '" + key + "'");
 
-                        if (ingResult.error().isPresent())
-                            return DataResult.error(() -> "Invalid ingredient for slot '" + key + "'");
+                            nameIngredients.put(key, ingResult.result().orElseThrow());
+                        }
+                    } else if (roleOpt.get() == StationDef.SlotRole.OUTPUT) {
+                        DataResult<ItemStackTemplate> stackResult = ItemStackTemplate.CODEC.parse(ops, valueOps);
+                        if (stackResult.error().isPresent())
+                            return DataResult.error(() -> "Invalid result for slot '" + key + "'");
 
-                        nameIngredients.put(key, ingResult.result().get());
+                        nameResults.put(key, stackResult.result().orElseThrow());
                     }
-                } else if (roleOpt.get() == StationDef.SlotRole.OUTPUT) {
-                    DataResult<ItemStackTemplate> stackResult = ItemStackTemplate.CODEC.parse(ops, valueOps);
+                } else {
 
-                    if (stackResult.error().isPresent())
-                        return DataResult.error(() -> "Invalid result for slot '" + key + "'");
+                    boolean groupExists = def.slots().stream()
+                            .filter(s -> s.role() == StationDef.SlotRole.INPUT)
+                            .map(s -> s.group() != null ? s.group() : "ingredients")
+                            .anyMatch(group -> group.equals(key));
 
-                    nameResults.put(key, stackResult.result().get());
+                    if (groupExists && !groupIngredients.containsKey(key)) {
+                        DataResult<List<Either<Ingredient, IngredientCost>>> ingListResult = EITHER_CODEC.listOf().parse(ops, valueOps);
+                        if (ingListResult.error().isPresent()) {
+                            return DataResult.error(() -> "Invalid ingredient list for group '" + key + "'");
+                        }
+                        groupIngredients.put(key, ingListResult.result().orElseThrow());
+                    }
                 }
             }
 
-            Map<Integer, Ingredient> resolvedIngredients = new HashMap<>();
-            if (patternValue == null) { // not shaped
-                for (var entry : nameIngredients.entrySet()) {
-                    Optional<Integer> idx = def.getSlotIndex(entry.getKey());
-                    if (idx.isEmpty()) return DataResult.error(() -> "No slot index for name: " + entry.getKey());
-                    resolvedIngredients.put(idx.get(), entry.getValue());
+            if (pattern != null) {
+                groupIngredients.clear();
+            }
+
+            Map<Integer, Either<Ingredient, IngredientCost>> resolvedIngredients = new HashMap<>();
+            if (pattern == null) {
+                if (!nameIngredients.isEmpty()) {
+                    // named slots
+                    for (var entry : nameIngredients.entrySet()) {
+                        Optional<Integer> idx = def.getSlotIndex(entry.getKey());
+                        if (idx.isEmpty()) return DataResult.error(() -> "No slot index for name: " + entry.getKey());
+                        resolvedIngredients.put(idx.get(), entry.getValue());
+                    }
                 }
             }
 
@@ -341,8 +384,20 @@ public record StationRecipe(
                 resolvedResults.put(idx.get(), entry.getValue());
             }
 
-            return DataResult.success(new StationRecipe(stationId, resolvedIngredients, resolvedResults,
-                    processingTime, shapelessList, pattern, keyMap));
+            // no results!
+            if (resolvedResults.isEmpty()) {
+                return DataResult.error(() -> "No result(s) defined for recipe");
+            }
+
+            return DataResult.success(new StationRecipe(
+                    stationId,
+                    resolvedIngredients,
+                    resolvedResults,
+                    processingTime,
+                    groupIngredients,
+                    pattern,
+                    keyMap
+            ));
         }
 
         @Override
@@ -351,37 +406,26 @@ public record StationRecipe(
             if (recipe.processingTime > 0) {
                 prefix.add(ops.createString("processing_time"), Codec.INT.encodeStart(ops, recipe.processingTime));
             }
+
             StationDef def = Workstations.get(recipe.stationId);
             if (def != null) {
                 if (recipe.isShaped()) {
                     prefix.add(ops.createString("pattern"), Codec.STRING.listOf().encodeStart(ops, recipe.pattern));
-
-                    Map<String, Ingredient> keyOut = new HashMap<>();
+                    Map<String, Either<Ingredient, IngredientCost>> keyOut = new HashMap<>();
                     recipe.key.forEach((c, ing) -> keyOut.put(String.valueOf(c), ing));
-
-                    prefix.add(ops.createString("key"), Codec.unboundedMap(Codec.STRING, Ingredient.CODEC).encodeStart(ops, keyOut));
+                    prefix.add(ops.createString("key"), Codec.unboundedMap(Codec.STRING, EITHER_CODEC).encodeStart(ops, keyOut));
                 } else if (recipe.isShapeless()) {
-
-                    List<Ingredient> ingList = new ArrayList<>();
-                    List<Integer> inputSlots = def.slots().stream()
-                            .filter(s -> s.role() == StationDef.SlotRole.INPUT)
-                            .map(StationDef.SlotDef::slotIndex)
-                            .sorted()
-                            .toList();
-
-                    for (int slot : inputSlots) {
-                        Ingredient ing = recipe.ingredients.get(slot);
-                        if (ing != null) ingList.add(ing);
+                    if (recipe.groupIngredients.size() == 1 && recipe.groupIngredients.containsKey("ingredients")) {
+                        prefix.add(ops.createString("ingredients"), EITHER_CODEC.listOf().encodeStart(ops, recipe.groupIngredients.get("ingredients")));
+                    } else {
+                        for (var entry : recipe.groupIngredients.entrySet()) {
+                            prefix.add(ops.createString(entry.getKey()), EITHER_CODEC.listOf().encodeStart(ops, entry.getValue()));
+                        }
                     }
-
-                    if (!ingList.isEmpty()) {
-                        prefix.add(ops.createString("ingredients"), Ingredient.CODEC.listOf().encodeStart(ops, ingList));
-                    }
-                } else {
-                    // positional
+                } else if (!recipe.ingredients.isEmpty()) {
                     for (var entry : recipe.ingredients.entrySet()) {
                         Optional<String> name = def.getSlotName(entry.getKey());
-                        name.ifPresent(s -> prefix.add(ops.createString(s), Ingredient.CODEC.encodeStart(ops, entry.getValue())));
+                        name.ifPresent(s -> prefix.add(ops.createString(s), EITHER_CODEC.encodeStart(ops, entry.getValue())));
                     }
                 }
 

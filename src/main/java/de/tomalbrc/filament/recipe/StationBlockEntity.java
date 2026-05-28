@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.recipe;
 
+import com.mojang.datafixers.util.Either;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
@@ -279,8 +280,10 @@ public class StationBlockEntity extends BaseContainerBlockEntity
         }
 
         if (recipe.isShapeless()) {
-            // shapeless
-            List<Ingredient> remaining = new ArrayList<>(recipe.shapelessIngredients());
+            Map<String, List<Either<Ingredient, IngredientCost>>> remainingPerGroup = new HashMap<>();
+            recipe.groupIngredients().forEach((group, ingList) ->
+                    remainingPerGroup.put(group, new ArrayList<>(ingList))
+            );
 
             for (Integer slot : def.slots().stream()
                     .filter(s -> s.role() == StationDef.SlotRole.INPUT)
@@ -289,22 +292,30 @@ public class StationBlockEntity extends BaseContainerBlockEntity
                     .toList()) {
                 ItemStack stack = inventory.getItem(slot);
                 if (stack.isEmpty()) continue;
-                for (Iterator<Ingredient> it = remaining.iterator(); it.hasNext(); ) {
-                    Ingredient ing = it.next();
-                    if (ing.test(stack)) {
-                        stack.shrink(1);
+
+                String group = def.slots().stream()
+                        .filter(s -> s.slotIndex() == slot && s.role() == StationDef.SlotRole.INPUT)
+                        .findFirst().filter(s -> s.group() != null).map(StationDef.SlotDef::group)
+                        .orElse("ingredients");
+
+                var remaining = remainingPerGroup.get(group);
+                if (remaining == null) continue;
+
+                for (var it = remaining.iterator(); it.hasNext(); ) {
+                    var ing = it.next();
+                    if (recipe.matches(ing, stack)) {
+                        stack.shrink(itemCount(ing));
                         it.remove();
                         break;
                     }
                 }
-                if (remaining.isEmpty()) break;
             }
         } else if (recipe.isShaped()) {
-            Map<Integer, Ingredient> consumptionMap = recipe.getResolvedIngredients(input, level);
+            var consumptionMap = recipe.getResolvedIngredients(input, level);
             for (int slot : consumptionMap.keySet()) {
                 Optional<StationDef.SlotRole> role = def.getSlotRole(slot);
                 if (role.isPresent() && role.get() == StationDef.SlotRole.INPUT) {
-                    inventory.getItem(slot).shrink(1);
+                    inventory.getItem(slot).shrink(itemCount(consumptionMap.get(slot)));
                 }
             }
         } else {
@@ -313,7 +324,7 @@ public class StationBlockEntity extends BaseContainerBlockEntity
                 int slot = entry.getKey();
                 Optional<StationDef.SlotRole> role = def.getSlotRole(slot);
                 if (role.isPresent() && role.get() == StationDef.SlotRole.INPUT) {
-                    inventory.getItem(slot).shrink(1);
+                    inventory.getItem(slot).shrink(itemCount(entry.getValue()));
                 }
             }
         }
@@ -324,6 +335,10 @@ public class StationBlockEntity extends BaseContainerBlockEntity
         if (recipe.processingTime() == 0) {
             refreshPendingOutput();
         }
+    }
+
+    static int itemCount(Either<Ingredient, IngredientCost> input) {
+        return input.left().isPresent() ? 1 : input.right().orElseThrow().count();
     }
 
     @Override
