@@ -105,6 +105,7 @@ public class BlockRegistry {
         // has to run before `postRegister` since it may add block models from textures
         RPUtil.create(item, data);
 
+        // requests block state models based on block models / state props
         customBlock.postRegister();
     }
 

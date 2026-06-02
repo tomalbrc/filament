@@ -70,14 +70,17 @@ public class DecorationRegistry {
     }
 
     static public void register(DecorationData data) {
+        // this is for /reload to at least reload behaviours of already added stuff
         for (Map.Entry<Identifier, DecorationData> entry : decorations.entrySet()) {
             if (entry.getKey().equals(data.id())) {
-                var block = BuiltInRegistries.BLOCK.getValue(data.id());
-                if (block.isFilamentBlock() && block.asItem().isFilamentItem()) {
+                var blockOpt = BuiltInRegistries.BLOCK.getOptional(data.id());
+                if (blockOpt.isPresent() && blockOpt.get().isFilamentBlock()) {
+                    var block = blockOpt.get();
                     block.asItem().asFilamentItem().initBehaviours(data.behaviour());
                     block.asFilamentBlock().initBehaviours(data.behaviour());
                     BlockRegistry.postRegistration(block.asItem().asFilamentItem(), block.asFilamentBlock(), data);
                 }
+
                 return;
             }
         }
