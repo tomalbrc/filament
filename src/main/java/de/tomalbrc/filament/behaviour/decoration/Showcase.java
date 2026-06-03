@@ -177,8 +177,9 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     public void destroy(DecorationBlockEntity decorationBlockEntity, boolean dropItem) {
         container.setValid(false);
 
-        if (!config.canPickup) {
-            Containers.dropContents(decorationBlockEntity.getLevel(), decorationBlockEntity.getBlockPos(), container);
+        var level = decorationBlockEntity.getLevel();
+        if (!config.canPickup && level != null) {
+            Containers.dropContents(level, decorationBlockEntity.getBlockPos(), container);
         }
     }
 
@@ -259,12 +260,12 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
         switch (showcase.type) {
             case item -> element = this.element(showcase, itemStack);
             case block -> {
-                if (itemStack.getItem().asItem() instanceof BlockItem blockItem && !(blockItem instanceof DecorationItem)) {
+                if (itemStack.getItem() instanceof BlockItem blockItem && !(blockItem instanceof DecorationItem)) {
                     element = this.element(blockItem);
                 }
             }
             case dynamic -> {
-                if (itemStack.getItem().asItem() instanceof BlockItem blockItem && !(blockItem instanceof DecorationItem)) {
+                if (itemStack.getItem() instanceof BlockItem blockItem && !(blockItem instanceof DecorationItem)) {
                     element = this.element(blockItem);
                 } else {
                     element = this.element(showcase, itemStack);
@@ -276,7 +277,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
             transform(decorationBlockEntity, element, showcase);
             this.showcases.put(showcase, element);
         } else {
-            Filament.LOGGER.error("In valid showcase type for {}", itemStack.getItem().getDescriptionId());
+            Filament.LOGGER.error("Invalid showcase type for {}", itemStack.getItem().getDescriptionId());
         }
 
         return element;
