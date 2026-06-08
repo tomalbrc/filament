@@ -7,6 +7,7 @@ import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.data.AbstractBlockData;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
+import de.tomalbrc.filament.util.Constants;
 import eu.pb4.common.protection.api.CommonProtection;
 import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
 import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
@@ -130,7 +131,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
             state = behaviourModifiedBlockState(blockState, state);
         }
 
-        return this.stateMap != null && this.stateMap.get(state) != null ? this.stateMap.get(state).blockState() : Blocks.BEDROCK.defaultBlockState();
+        return this.stateMap != null && this.stateMap.get(state) != null ? this.stateMap.get(state).blockState() : Constants.ERROR_BLOCK_STATE;
     }
 
     public BlockState behaviourModifiedBlockState(BlockState original, BlockState blockState) {
@@ -492,7 +493,7 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public boolean isPossibleToRespawnInThis(BlockState state) {
+    public boolean isPossibleToRespawnInThis(@NonNull BlockState state) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
                 var res = blockBehaviour.isPossibleToRespawnInThis(state);
