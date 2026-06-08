@@ -18,6 +18,8 @@ public class Templates {
             JsonObject object = element.getAsJsonObject();
             TEMPLATES.put(Identifier.parse(object.getAsJsonPrimitive("id").getAsString()), object);
         }
+
+        inputStream.reset();
     }
 
     public static JsonElement handlePlaceholder(JsonElement element, Identifier id) {
