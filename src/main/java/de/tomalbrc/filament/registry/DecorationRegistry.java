@@ -5,16 +5,15 @@ import com.google.gson.JsonParser;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.data.DecorationData;
-import de.tomalbrc.filament.datafixer.config.DecorationDataFix;
 import de.tomalbrc.filament.decoration.DecorationItem;
 import de.tomalbrc.filament.decoration.block.ComplexDecorationBlock;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.SimpleDecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.util.Constants;
-import de.tomalbrc.filament.util.resource.FilamentSynchronousResourceReloadListener;
 import de.tomalbrc.filament.util.Json;
 import de.tomalbrc.filament.util.Util;
+import de.tomalbrc.filament.util.resource.FilamentSynchronousResourceReloadListener;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.component.DataComponents;
@@ -22,8 +21,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -51,10 +48,8 @@ public class DecorationRegistry {
         JsonElement element = JsonParser.parseReader(new InputStreamReader(inputStream));
 
         try {
-            DecorationData data = Json.GSON.fromJson(element, DecorationData.class);
+            DecorationData data = Json.fromJsonWithDataFixer(element, DecorationData.class);
             data.filepath = filepath;
-            // backwards compatibility
-            DecorationDataFix.fixup(element, data);
             Util.handleComponentsCustom(element, data);
 
             register(data);
@@ -95,10 +90,6 @@ public class DecorationRegistry {
 
         if (data.isContainer()) {
             properties.component(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
-        }
-
-        if (data.vanillaItem() == Items.LEATHER_HORSE_ARMOR || data.vanillaItem() == Items.FIREWORK_STAR) {
-            properties.component(DataComponents.DYED_COLOR, new DyedItemColor(0xdaad6d));
         }
 
         var item = ItemRegistry.registerItem(ItemRegistry.key(data.id()), (newProps) -> new DecorationItem(block, data, newProps), properties, data.group() != null ? data.group() : Constants.DECORATION_GROUP_ID, data.itemTags());

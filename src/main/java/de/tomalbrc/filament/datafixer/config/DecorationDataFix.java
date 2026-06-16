@@ -8,20 +8,19 @@ import de.tomalbrc.filament.behaviour.block.Rotating;
 import de.tomalbrc.filament.behaviour.block.Waterloggable;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.resource.ItemResource;
+import de.tomalbrc.filament.util.JsonFixer;
 import net.minecraft.resources.Identifier;
 
 import java.util.HashMap;
 
-public class DecorationDataFix {
-    public static void fixup(JsonElement element, DecorationData data) {
-        BlockDataFix.fixup(element, data);
-
+public class DecorationDataFix implements JsonFixer<DecorationData> {
+    @Override
+    public void apply(DecorationData data, JsonElement element) {
         var root = element.getAsJsonObject();
         var props = root.get("properties");
         if (props == null) {
             data.behaviour().put(Behaviours.WATERLOGGABLE, new Waterloggable.Config());
-        }
-        else {
+        } else {
             var waterloggable = props.getAsJsonObject().get("waterloggable");
             if (waterloggable == null || waterloggable.getAsBoolean()) data.behaviour().put(Behaviours.WATERLOGGABLE, new Waterloggable.Config());
 

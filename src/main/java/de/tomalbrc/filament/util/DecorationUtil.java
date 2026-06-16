@@ -8,14 +8,12 @@ import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
 import de.tomalbrc.filament.decoration.util.DecorationItemDisplayElement;
 import de.tomalbrc.filament.decoration.util.ItemFrameElement;
-import eu.pb4.polymer.common.impl.CommonImplPacketKeys;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.fabricmc.fabric.impl.networking.context.PacketContextImpl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -51,7 +49,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class DecorationUtil {
-    public static Int2ObjectOpenHashMap<Supplier<ItemStack>> VIRTUAL_ENTITY_PICK_MAP = new Int2ObjectOpenHashMap<>();
+    public static final Int2ObjectOpenHashMap<Supplier<ItemStack>> VIRTUAL_ENTITY_PICK_MAP = new Int2ObjectOpenHashMap<>();
+    public static final EmptyContextImpl EMPTY_CONTEXT = new EmptyContextImpl();
 
     public static void forEachRotated(List<DecorationData.BlockConfig> blockConfigs, BlockPos originBlockPos, float rotation, Consumer<BlockPos> consumer) {
         if (blockConfigs != null) {
@@ -265,9 +264,7 @@ public class DecorationUtil {
         if (!(itemStack.getItem() instanceof PolymerItem polymerItem)) {
             return itemStack.copyWithCount(1);
         } else {
-            var fuglyFabric = new PacketContextImpl(null);
-            fuglyFabric.set(CommonImplPacketKeys.HOLDER_LOOKUP, Filament.SERVER.registryAccess());
-            return polymerItem.getPolymerItemStack(itemStack, TooltipFlag.NORMAL, fuglyFabric, Filament.SERVER.registryAccess());
+            return polymerItem.getPolymerItemStack(itemStack, TooltipFlag.NORMAL, EMPTY_CONTEXT, Filament.SERVER.registryAccess());
         }
     }
 

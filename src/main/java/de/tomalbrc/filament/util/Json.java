@@ -11,6 +11,7 @@ import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourConfigMap;
 import de.tomalbrc.filament.behaviour.BehaviourList;
 import de.tomalbrc.filament.behaviour.decoration.Showcase;
+import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.data.EntityData;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import de.tomalbrc.filament.data.properties.RangedValue;
@@ -20,6 +21,7 @@ import de.tomalbrc.filament.data.resource.ItemResource;
 import eu.pb4.polymer.blocks.api.BlockModelType;
 import eu.pb4.polymer.blocks.api.PolymerBlockModel;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
@@ -50,6 +52,7 @@ import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.PushReaction;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector2f;
@@ -70,7 +73,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public class Json {
-    public static final Gson GSON = new GsonBuilder()
+    @ApiStatus.Internal
+    public static Gson GSON = new GsonBuilder()
             .setPrettyPrinting()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .registerTypeHierarchyAdapter(BlockState.class, new BlockStateDeserializer())
@@ -115,6 +119,36 @@ public class Json {
             // TODO: allow behaviours to specify codec/deserializer
             .registerTypeHierarchyAdapter(Showcase.Config.class, new Showcase.Config.ConfigDeserializer())
             .create();
+
+    private static final Map<Type, JsonFixer<?>> JSON_FIXER = new Reference2ObjectOpenHashMap<>();
+
+    public static <T extends Data<?>> void registerJsonFixer(Type tClass, JsonFixer<T> fixer) {
+        JSON_FIXER.put(tClass, fixer);
+    }
+
+    public static <T extends Data<?>> T fromJsonWithDataFixer(JsonElement json, Class<T> classOfT) throws JsonSyntaxException {
+        T dec = GSON.fromJson(json, com.google.gson.reflect.TypeToken.get(classOfT));
+        if (dec != null) {
+            for (Map.Entry<Type, JsonFixer<?>> entry : JSON_FIXER.entrySet()) {
+                var type = entry.getKey();
+                if (type.getClass().isAssignableFrom(dec.getClass())) {
+                    JsonFixer<T> fixer = (JsonFixer<T>) entry.getValue();
+                    fixer.apply(dec, json);
+                }
+            }
+        }
+        return dec;
+    }
+
+    public static void registerTypeAdapter(Class<?> baseType, Object typeAdapter) {
+        GSON = GSON.newBuilder()
+                .registerTypeAdapter(baseType, typeAdapter)
+                .create();
+    }
+
+    public static Gson gson() {
+        return GSON;
+    }
 
     public static List<InputStream> yamlToJson(InputStream inputStream) {
         Yaml yaml = new Yaml();

@@ -9,7 +9,6 @@ import de.tomalbrc.filament.block.*;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.data.properties.BlockProperties;
-import de.tomalbrc.filament.datafixer.config.BlockDataFix;
 import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.util.*;
 import de.tomalbrc.filament.util.resource.FilamentSynchronousResourceReloadListener;
@@ -42,9 +41,8 @@ public class BlockRegistry {
     public static void register(Path filepath, InputStream inputStream) throws IOException {
         JsonElement element = JsonParser.parseReader(new InputStreamReader(inputStream));
         try {
-            BlockData data = Json.GSON.fromJson(element, BlockData.class);
+            BlockData data = Json.fromJsonWithDataFixer(element, BlockData.class);
             data.filepath = filepath;
-            BlockDataFix.fixup(element, data);
             Util.handleComponentsCustom(element, data);
 
             register(data);

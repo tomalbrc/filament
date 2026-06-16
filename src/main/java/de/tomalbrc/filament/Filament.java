@@ -4,7 +4,11 @@ import com.mojang.logging.LogUtils;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.block.Fire;
 import de.tomalbrc.filament.command.FilamentCommand;
+import de.tomalbrc.filament.data.AbstractBlockData;
+import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.ItemGroupData;
+import de.tomalbrc.filament.datafixer.config.BlockDataFix;
+import de.tomalbrc.filament.datafixer.config.DecorationDataFix;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.recipe.Workstations;
 import de.tomalbrc.filament.registry.*;
@@ -43,12 +47,6 @@ public class Filament implements ModInitializer {
     public static LayeredRegistryAccess<RegistryLayer> REGISTRY_ACCESS;
     public static MinecraftServer SERVER;
 
-    //public static MinecraftServerAudiences ADVENTURE;
-
-    //public static MinecraftServerAudiences adventure() {
-    //    return ADVENTURE;
-    //}
-
     @Override
     public void onInitialize() {
         if (FilamentConfig.getInstance().addCustomMenuAssets)
@@ -56,6 +54,9 @@ public class Filament implements ModInitializer {
 
         if (FilamentConfig.getInstance().resourcepackRequired)
             PolymerResourcePackUtils.markAsRequired();
+
+        Json.registerJsonFixer(DecorationData.class, new DecorationDataFix());
+        Json.registerJsonFixer(AbstractBlockData.class, new BlockDataFix());
 
         FilamentComponents.register();
         Behaviours.register();

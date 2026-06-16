@@ -89,15 +89,12 @@ public class ItemRegistry {
                 }
             }
 
-            for (TypedDataComponent component : data.components()) {
-                target.set(component.type(), component.value());
-            }
-
             var ops = RegistryOps.create(JsonOps.INSTANCE, provider);
             for (var entry : data.getAdditionalComponents().entrySet()) {
                 DataComponentType<?> type = entry.getKey();
                 var value = entry.getValue();
-                target.set((DataComponentType) type, type.codec().decode(ops, value).getPartialOrThrow().getFirst());
+                var codec = type.codec();
+                if (codec != null) target.set((DataComponentType) type, codec.decode(ops, value).getPartialOrThrow().getFirst());
             }
         }));
 

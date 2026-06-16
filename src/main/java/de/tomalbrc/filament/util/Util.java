@@ -2,8 +2,6 @@ package de.tomalbrc.filament.util;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import com.mojang.serialization.JsonOps;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.gui.PaginatedContainerGui;
@@ -37,7 +35,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.ColorRGBA;
 import net.minecraft.util.SegmentedAnglePrecision;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -53,7 +50,6 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -66,14 +62,6 @@ public class Util {
 
     public static Identifier id(String s) {
         return Identifier.fromNamespaceAndPath(Constants.MOD_ID, s);
-    }
-
-    public static Optional<Integer> validateAndConvertHexColor(String hexColor) {
-        var res = ColorRGBA.CODEC.decode(JsonOps.INSTANCE, new JsonPrimitive(hexColor));
-        if (res.isSuccess()) {
-            return Optional.of(res.getOrThrow().getFirst().rgba());
-        }
-        return Optional.empty();
     }
 
     public static void spawnAtLocation(Level level, Vec3 pos, ItemStack itemStack) {
@@ -118,23 +106,13 @@ public class Util {
     }
 
     public static void handleComponentsCustom(JsonElement element, Data<?> data) {
-        // TODO: just handle all components later?
-
-        List<Identifier> comps = List.of(
-                Objects.requireNonNull(BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(DataComponents.JUKEBOX_PLAYABLE)),
-                Objects.requireNonNull(BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(DataComponents.ENCHANTMENTS)),
-                Objects.requireNonNull(BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(DataComponents.TRIM)),
-                Objects.requireNonNull(BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(DataComponents.INSTRUMENT)),
-                Objects.requireNonNull(BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(DataComponents.PROVIDES_BANNER_PATTERNS)),
-                Objects.requireNonNull(BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(DataComponents.BANNER_PATTERNS))
-        );
-
         if (element.getAsJsonObject().has("components")) {
             JsonObject comp = element.getAsJsonObject().get("components").getAsJsonObject();
             for (String key : comp.keySet()) {
-                comps.stream().filter(x -> x.toString().equals(key) || x.getPath().equals(key)).findAny().ifPresent(compId -> {
-                    data.putAdditional(BuiltInRegistries.DATA_COMPONENT_TYPE.getValue(compId), comp.get(key));
-                });
+                var id = Identifier.tryParse(key);
+                if (id != null) {
+                    data.putAdditional(BuiltInRegistries.DATA_COMPONENT_TYPE.getValue(id), comp.get(key));
+                }
             }
         }
     }
