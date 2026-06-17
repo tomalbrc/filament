@@ -19,7 +19,7 @@ public class EmptyContextImpl implements PacketContext {
 	private final Map<PacketContext.Key<?>, Object> contextMap = new IdentityHashMap<>();
 
     public EmptyContextImpl() {
-        contextMap.put(CommonImplPacketKeys.HOLDER_LOOKUP, Filament.SERVER.registryAccess());
+
 	}
 
     public void setup(RegistryAccess registryAccess) {
@@ -28,6 +28,10 @@ public class EmptyContextImpl implements PacketContext {
 
 	@Override
 	public @Nullable <T> T get(ReadKey<T> key) {
+        if (key == CommonImplPacketKeys.HOLDER_LOOKUP) {
+            return (T) Filament.SERVER.registryAccess();
+        }
+
 		this.lock.readLock().lock();
 
 		try {
