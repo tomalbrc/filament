@@ -21,6 +21,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
@@ -88,7 +89,9 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
 
         BlockUtil.playBreakSound(level, blockPos, blockState);
 
-        if (data.properties().showBreakParticles())
-            DecorationUtil.showBreakParticle((ServerLevel) level, data.properties().useItemParticles ? BuiltInRegistries.ITEM.getValue(this.decorationId).getDefaultInstance() : this.getDecorationData().properties().blockBase().asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+        if (data.properties().showBreakParticles()) {
+            var center = Vec3.atCenterOf(blockPos);
+            DecorationUtil.showBreakParticle((ServerLevel) level, data.properties().useItemParticles ? BuiltInRegistries.ITEM.getValue(this.decorationId).getDefaultInstance() : this.getDecorationData().properties().blockBase().asItem().getDefaultInstance(), (float) center.x(), (float) center.y(), (float) center.z());
+        }
     }
 }

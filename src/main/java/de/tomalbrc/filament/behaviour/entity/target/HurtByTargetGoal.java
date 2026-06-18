@@ -78,7 +78,7 @@ public class HurtByTargetGoal implements EntityBehaviour<HurtByTargetGoal.Config
             int i = this.mob.getLastHurtByMobTimestamp();
             LivingEntity livingEntity = this.mob.getLastHurtByMob();
             if (i != this.timestamp && livingEntity != null) {
-                if (livingEntity.getType() == EntityType.PLAYER && getServerLevel(this.mob).getGameRules().get(GameRules.UNIVERSAL_ANGER)) {
+                if (livingEntity.getType() == EntityTypes.PLAYER && getServerLevel(this.mob).getGameRules().get(GameRules.UNIVERSAL_ANGER)) {
                     return false;
                 } else {
                     for(EntityType<?> type : this.toIgnoreDamage) {

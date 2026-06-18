@@ -1,0 +1,7 @@
+- 26.2 update
+- Updated dependencies for the web editor
+- New fields in block properties:
+  - bounce_restitution
+  - friction
+  - speed_factor
+  - jump_factor

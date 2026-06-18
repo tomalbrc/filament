@@ -190,7 +190,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
             double dist = Double.MAX_VALUE;
             Showcase.ShowcaseMeta nearest = null;
             for (Showcase.ShowcaseMeta showcase : config.elements) {
-                Vec3 q = decorationBlockEntity.getBlockPos().getCenter().add(new Vec3(this.showcaseTranslation(showcase).rotateY((-decorationBlockEntity.getVisualRotationYInDegrees() + 180) * Mth.DEG_TO_RAD)));
+                Vec3 q = Vec3.atCenterOf(decorationBlockEntity.getBlockPos()).add(new Vec3(this.showcaseTranslation(showcase).rotateY((-decorationBlockEntity.getVisualRotationYInDegrees() + 180) * Mth.DEG_TO_RAD)));
                 double distance = q.distanceTo(location);
 
                 if (distance < dist) {

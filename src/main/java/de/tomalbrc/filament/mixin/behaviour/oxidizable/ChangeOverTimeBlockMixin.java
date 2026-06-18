@@ -6,6 +6,7 @@ import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.block.Oxidizable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChangeOverTimeBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,10 +22,10 @@ public interface ChangeOverTimeBlockMixin {
             Oxidizable oxidizable;
             if ((oxidizable = state.getBlock().get(Behaviours.OXIDIZABLE)) != null) {
                 return switch (oxidizable.getConfig().weatherState) {
-                    case UNAFFECTED -> Blocks.COPPER_BLOCK.defaultBlockState();
-                    case EXPOSED -> Blocks.EXPOSED_COPPER.defaultBlockState();
-                    case WEATHERED -> Blocks.WEATHERED_COPPER.defaultBlockState();
-                    case OXIDIZED -> Blocks.OXIDIZED_COPPER.defaultBlockState();
+                    case UNAFFECTED -> Blocks.COPPER_BLOCK.weathering().unaffected().defaultBlockState();
+                    case EXPOSED -> Blocks.COPPER_BLOCK.weathering().exposed().defaultBlockState();
+                    case WEATHERED -> Blocks.COPPER_BLOCK.weathering().weathered().defaultBlockState();
+                    case OXIDIZED -> Blocks.COPPER_BLOCK.weathering().oxidized().defaultBlockState();
                 };
             }
         }

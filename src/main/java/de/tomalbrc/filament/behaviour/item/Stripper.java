@@ -4,7 +4,7 @@ import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.mixin.behaviour.strippable.AxeItemAccessor;
 import de.tomalbrc.filament.registry.StrippableRegistry;
 import de.tomalbrc.filament.util.annotation.RegistryRef;
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;

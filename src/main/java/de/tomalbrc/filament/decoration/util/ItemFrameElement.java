@@ -20,6 +20,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
@@ -49,7 +50,7 @@ public class ItemFrameElement extends GenericEntityElement {
                 BlockPos blockPos = BlockPos.containing(getHolder().getAttachment().getPos());
                 InteractionResult result = InteractionResult.PASS;
                 if (onInteract != null && serverLevel.mayInteract(player, blockPos)) {
-                    result = onInteract.interact(player, hand, blockPos.getBottomCenter().add(pos));
+                    result = onInteract.interact(player, hand, Vec3.atCenterOf(blockPos).add(pos));
                 }
 
                 if (!result.consumesAction()) DecorationUtil.defaultVirtualInteraction(player, hand, blockPos, pos, 1/16f);
@@ -66,7 +67,7 @@ public class ItemFrameElement extends GenericEntityElement {
 
     @Override
     protected EntityType<? extends Entity> getEntityType() {
-        return this.glow ? EntityType.GLOW_ITEM_FRAME : EntityType.ITEM_FRAME;
+        return this.glow ? EntityTypes.GLOW_ITEM_FRAME : EntityTypes.ITEM_FRAME;
     }
 
     @Override
@@ -77,7 +78,7 @@ public class ItemFrameElement extends GenericEntityElement {
 
     @Override
     protected SynchedEntityDataLike createSynchedEntityData() {
-        return new SimpleSynchedEntityData(EntityType.ITEM_FRAME);
+        return new SimpleSynchedEntityData(EntityTypes.ITEM_FRAME);
     }
 
     @Override

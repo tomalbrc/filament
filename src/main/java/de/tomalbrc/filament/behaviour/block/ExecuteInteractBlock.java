@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,7 +55,7 @@ public class ExecuteInteractBlock implements BlockBehaviour<ExecuteInteractBlock
     public void runCommandBlock(ServerPlayer user, BlockPos blockPos) {
         var cmds = commands();
         if (cmds != null) {
-            var pos = config.atBlock ? blockPos.getCenter() : null;
+            var pos = config.atBlock ? Vec3.atCenterOf(blockPos) : null;
             if (getConfig().console) {
                 ExecuteUtil.asConsole(user, pos, cmds.toArray(new String[0]));
             }
@@ -64,7 +65,10 @@ public class ExecuteInteractBlock implements BlockBehaviour<ExecuteInteractBlock
 
             if (this.config.sound != null) {
                 var sound = this.config.sound;
-                user.level().playSound(null, user, BuiltInRegistries.SOUND_EVENT.getValue(sound), SoundSource.NEUTRAL, 1.0F, 1.0F);
+
+                var soundEvent = BuiltInRegistries.SOUND_EVENT.getValue(sound);
+                if (soundEvent != null)
+                    user.level().playSound(null, user, soundEvent, SoundSource.NEUTRAL, 1.0F, 1.0F);
             }
 
             if (this.config.consumes) {

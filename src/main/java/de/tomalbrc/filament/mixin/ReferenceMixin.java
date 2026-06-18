@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.Set;
 
 @Mixin(Holder.Reference.class)
-public abstract class ReferenceMixin<T> implements Holder<T> {
+public abstract class ReferenceMixin<T> {
     @Shadow @Nullable private T value;
 
     @Shadow @Nullable private Set<TagKey<T>> tags;

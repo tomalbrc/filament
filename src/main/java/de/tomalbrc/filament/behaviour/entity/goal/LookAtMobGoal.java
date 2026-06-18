@@ -5,10 +5,7 @@ import de.tomalbrc.filament.entity.FilamentMob;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import org.jetbrains.annotations.NotNull;
@@ -65,7 +62,7 @@ public class LookAtMobGoal implements EntityBehaviour<LookAtMobGoal.Config> {
             this.probability = g;
             this.onlyHorizontal = bl;
             this.setFlags(EnumSet.of(Flag.LOOK));
-            if (entityType == EntityType.PLAYER) {
+            if (entityType == EntityTypes.PLAYER) {
                 Predicate<Entity> predicate = EntitySelector.notRiding(mob);
                 this.lookAtContext = TargetingConditions.forNonCombat().range(f).selector((livingEntity, serverLevel) -> predicate.test(livingEntity));
             } else {
@@ -83,7 +80,7 @@ public class LookAtMobGoal implements EntityBehaviour<LookAtMobGoal.Config> {
                 }
 
                 ServerLevel serverLevel = getServerLevel(this.mob);
-                if (this.lookAtType == EntityType.PLAYER) {
+                if (this.lookAtType == EntityTypes.PLAYER) {
                     this.lookAt = serverLevel.getNearestPlayer(this.lookAtContext, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
                 } else {
                     this.lookAt = serverLevel.getNearestEntity(this.mob.level().getEntitiesOfClass(Mob.class, this.mob.getBoundingBox().inflate(this.lookDistance, 3.0F, this.lookDistance), (livingEntity) -> livingEntity.getType() == lookAtType), this.lookAtContext, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());

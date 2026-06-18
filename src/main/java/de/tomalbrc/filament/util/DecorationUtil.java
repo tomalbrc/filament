@@ -101,7 +101,7 @@ public class DecorationUtil {
                 BlockPos blockPos = BlockPos.containing(element.getHolder().getAttachment().getPos());
                 InteractionResult result = InteractionResult.PASS;
                 if (onInteract != null && serverLevel.mayInteract(player, blockPos)) {
-                    result = onInteract.interact(player, hand, blockPos.getBottomCenter().add(pos));
+                    result = onInteract.interact(player, hand, Vec3.atCenterOf(blockPos).add(pos));
                 }
 
                 if (!result.consumesAction()) DecorationUtil.defaultVirtualInteraction(player, hand, blockPos, pos, element.getHeight());
@@ -224,7 +224,7 @@ public class DecorationUtil {
         if (!packets.isEmpty()) {
             ClientboundBundlePacket bundlePacket = new ClientboundBundlePacket(packets);
             for (ServerPlayer player : level.players()) {
-                if (player.position().distanceTo(blockPos.getCenter()) < 512) {
+                if (player.position().distanceTo(Vec3.atCenterOf(blockPos)) < 512) {
                     player.connection.send(bundlePacket);
                 }
             }
@@ -290,7 +290,7 @@ public class DecorationUtil {
     }
 
     public static void defaultVirtualInteraction(ServerPlayer player, InteractionHand hand, BlockPos blockPos, Vec3 position, float height) {
-        player.connection.handleUseItemOn(new ServerboundUseItemOnPacket(hand, new BlockHitResult(blockPos.getCenter().add(position), Direction.getApproximateNearest(position.multiply(1, 1.f/height * 0.5, 1)), blockPos, false), 0));
+        player.connection.handleUseItemOn(new ServerboundUseItemOnPacket(hand, new BlockHitResult(Vec3.atCenterOf(blockPos).add(position), Direction.getApproximateNearest(position.multiply(1, 1.f/height * 0.5, 1)), blockPos, false), 0));
     }
 
     @FunctionalInterface

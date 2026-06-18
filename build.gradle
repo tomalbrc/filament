@@ -1,6 +1,6 @@
 plugins {
-    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT'
-    id 'com.gradleup.shadow' version '9.3.1'
+    id 'net.fabricmc.fabric-loom' version '1.16-SNAPSHOT'
+    id 'com.gradleup.shadow' version '9.4.2'
     id 'maven-publish'
 }
 
@@ -24,6 +24,7 @@ repositories {
     maven { url 'https://maven.tomalbrc.de' }
     maven { url 'https://maven.nucleoid.xyz' }
     maven { url 'https://maven.blamejared.com' }
+    mavenLocal()
 }
 
 dependencies {
@@ -40,6 +41,9 @@ dependencies {
     implementation("eu.pb4:polymer-networking:${project.polymer_version}")
     implementation("eu.pb4:polymer-autohost:${project.polymer_version}")
     implementation("eu.pb4:polymer-sound-patcher:${project.polymer_version}")
+
+    include("eu.pb4:polymer-bundled:${project.polymer_version}")
+
     implementation include("eu.pb4:sgui:${project.sgui_version}")
     implementation include('me.lucko:fabric-permissions-api:0.7.0')
 
@@ -52,13 +56,15 @@ dependencies {
     //implementation include("net.kyori:adventure-text-minimessage:${project.adventure_api_version}")
     //implementation("net.kyori:adventure-api:${project.adventure_api_version}")
 
-    shade('org.yaml:snakeyaml:2.4')
+    shade('org.yaml:snakeyaml:2.6')
 
-    shade 'org.eclipse.jetty:jetty-server:12.1.6'
-    shade 'org.eclipse.jetty.ee10.websocket:jetty-ee10-websocket-jakarta-server:12.1.6'
-    shade 'com.github.victools:jsonschema-generator:4.35.0'
-    shade 'com.j2html:j2html:1.6.0'
-    shade 'org.json:json:20231013'
+    shade("org.eclipse.jetty:jetty-server:12.1.10")
+    shade("org.eclipse.jetty.ee10.websocket:jetty-ee10-websocket-jakarta-server:12.1.9")
+    shade("com.github.victools:jsonschema-generator:5.0.0")
+    shade("com.j2html:j2html:1.6.0")
+    shade("org.json:json:20251224")
+    shade("tools.jackson.core:jackson-core:3.1.0")
+    shade("tools.jackson.core:jackson-databind:3.1.0")
 
     // claim compat
     implementation include("eu.pb4:common-protection-api:2.0.0")

@@ -19,6 +19,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.arrow.ThrownTrident;
 import net.minecraft.world.item.ItemStack;
@@ -94,7 +95,7 @@ public class TridentEntity extends ThrownTrident implements PolymerEntity {
 
     @Override
     public EntityType<?> getPolymerEntityType(PacketContext packetContext) {
-        return EntityType.ITEM_DISPLAY;
+        return EntityTypes.ITEM_DISPLAY;
     }
 
     @Override

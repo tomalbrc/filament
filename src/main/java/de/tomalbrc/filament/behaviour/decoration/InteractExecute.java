@@ -43,7 +43,7 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
         boolean hasHandItem = !mainHandItem.isEmpty();
         boolean holdsKeyAndIsValid = hasHandItem && key != null && mainHandItem.is(key);
         boolean noKey = key == null;
-        var pos = getConfig().atBlock ? decorationBlockEntity.getBlockPos().getCenter() : null;
+        var pos = getConfig().atBlock ? Vec3.atCenterOf(decorationBlockEntity.getBlockPos()) : null;
         if (holdsKeyAndIsValid || noKey) {
             if (this.config.consumeKey && hasHandItem) {
                 mainHandItem.shrink(1);

@@ -6,6 +6,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
@@ -83,7 +84,7 @@ public class NearestAttackableTargetGoal implements EntityBehaviour<NearestAttac
 
         protected void findTarget() {
             ServerLevel serverLevel = getServerLevel(this.mob);
-            if (this.targetType != EntityType.PLAYER) {
+            if (this.targetType != EntityTypes.PLAYER) {
                 this.target = serverLevel.getNearestEntity(this.mob.level().getEntitiesOfClass(Mob.class, this.getTargetSearchArea(this.getFollowDistance()), (livingEntity) -> livingEntity.getType() == this.targetType), this.getTargetConditions(), this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
             } else {
                 this.target = serverLevel.getNearestPlayer(this.getTargetConditions(), this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());

@@ -10,7 +10,7 @@ import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.util.DecorationUtil;
 import eu.pb4.polymer.core.api.item.PolymerItem;
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;

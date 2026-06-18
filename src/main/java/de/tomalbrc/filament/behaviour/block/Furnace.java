@@ -49,7 +49,7 @@ public class Furnace implements BlockBehaviourWithEntity<Furnace.Config> {
     public <A extends BlockEntity> BlockEntityTicker<A> getTicker(Level level, BlockState blockState1, BlockEntityType<A> blockEntityType) {
         BlockEntityTicker<A> ticker;
         if (level instanceof ServerLevel serverLevel) {
-            ticker = BlockBehaviourWithEntity.createTickerHelper(blockEntityType, BlockEntityType.FURNACE, (levelx, blockPos, blockState, abstractFurnaceBlockEntity) -> AbstractFurnaceBlockEntity.serverTick(serverLevel, blockPos, blockState, abstractFurnaceBlockEntity));
+            ticker = BlockBehaviourWithEntity.createTickerHelper(blockEntityType, BlockEntityTypes.FURNACE, (levelx, blockPos, blockState, abstractFurnaceBlockEntity) -> AbstractFurnaceBlockEntity.serverTick(serverLevel, blockPos, blockState, abstractFurnaceBlockEntity));
         } else {
             ticker = null;
         }
@@ -58,7 +58,7 @@ public class Furnace implements BlockBehaviourWithEntity<Furnace.Config> {
 
     @Override
     public BlockEntityType<?> blockEntityType() {
-        return BlockEntityType.FURNACE;
+        return BlockEntityTypes.FURNACE;
     }
 
     @Override

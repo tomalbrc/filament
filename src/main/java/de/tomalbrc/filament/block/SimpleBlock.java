@@ -44,6 +44,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
@@ -720,19 +721,14 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
         return super.getBlockSupportShape(state, level, pos);
     }
 
-    @Override
+    @ApiStatus.Experimental
     public void updateEntityMovementAfterFallOn(@NonNull BlockGetter blockGetter, @NonNull Entity entity) {
-        boolean ranCustomImpl = false;
         if (this.getBehaviours() != null) {
             for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
                 if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
-                    ranCustomImpl = ranCustomImpl || blockBehaviour.updateEntityMovementAfterFallOn(blockGetter, entity);
+                    blockBehaviour.updateEntityMovementAfterFallOn(blockGetter, entity);
                 }
             }
-        }
-
-        if (!ranCustomImpl) {
-            super.updateEntityMovementAfterFallOn(blockGetter, entity);
         }
     }
 

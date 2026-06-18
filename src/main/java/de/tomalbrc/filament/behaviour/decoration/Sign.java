@@ -12,7 +12,7 @@ import eu.pb4.sgui.api.gui.SignGui;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
@@ -289,7 +289,7 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
             double dist = Double.MAX_VALUE;
             ConfiguredSignElement nearest = null;
             for (var element : config.elements) {
-                Vec3 q = decorationBlockEntity.getBlockPos().getCenter().add(new Vec3(this.getTranslation(element).rotateY((-decorationBlockEntity.getVisualRotationYInDegrees() + 180) * Mth.DEG_TO_RAD)));
+                Vec3 q = Vec3.atCenterOf(decorationBlockEntity.getBlockPos()).add(new Vec3(this.getTranslation(element).rotateY((-decorationBlockEntity.getVisualRotationYInDegrees() + 180) * Mth.DEG_TO_RAD)));
                 double distance = q.distanceTo(location);
 
                 if (distance < dist) {

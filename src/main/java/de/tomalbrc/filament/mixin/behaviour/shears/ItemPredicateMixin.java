@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.mixin.behaviour.shears;
 
 import de.tomalbrc.filament.util.mixin.ItemPredicateCustomCheck;
-import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.predicates.ItemPredicate;
 import net.minecraft.world.item.ItemInstance;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;

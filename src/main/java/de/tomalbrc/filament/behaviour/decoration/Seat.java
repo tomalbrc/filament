@@ -71,7 +71,7 @@ public class Seat implements DecorationBehaviour<Seat.Config> {
             SeatConfigData nearest = null;
 
             for (SeatConfigData seat : seatConfig) {
-                Vec3 q = decorationBlockEntity.getBlockPos().getCenter().add(seatTranslation(decorationBlockEntity, seat));
+                Vec3 q = Vec3.atCenterOf(decorationBlockEntity.getBlockPos()).add(seatTranslation(decorationBlockEntity, seat));
                 double distance = q.distanceTo(location);
 
                 if (!this.hasSeatedPlayer(decorationBlockEntity, seat) && distance < dist) {

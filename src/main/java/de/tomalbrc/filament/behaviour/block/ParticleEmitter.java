@@ -58,7 +58,7 @@ public class ParticleEmitter implements BlockBehaviour<ParticleEmitter.Config>, 
     }
 
     private void emit(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource, ParticleEmitterElement element) {
-        Vec3 pos = blockPos.getCenter();
+        Vec3 pos = Vec3.atCenterOf(blockPos);
         Vector3f offset = element.offset.random(randomSource);
         Vector3f delta = element.delta.random(randomSource);
         serverLevel.sendParticles(

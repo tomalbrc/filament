@@ -33,6 +33,7 @@
     "accessor.PrimedTntAccessor",
     "accessor.ProjectileWeaponItemInvoker",
     "accessor.ShovelItemAccessor",
+    "behaviour.EntityMixin",
     "behaviour.FuelValuesMixin",
     "behaviour.animated_chest.CatSitOnBlockGoalMixin",
     "behaviour.banner.LoomMenu$5Mixin",

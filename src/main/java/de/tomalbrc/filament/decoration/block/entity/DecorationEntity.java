@@ -33,6 +33,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -239,7 +240,7 @@ public class DecorationEntity extends Entity implements PolymerEntity, Behaviour
 
     @Override
     public EntityType<?> getPolymerEntityType(PacketContext context) {
-        return EntityType.BLOCK_DISPLAY;
+        return EntityTypes.BLOCK_DISPLAY;
     }
 
     @Override

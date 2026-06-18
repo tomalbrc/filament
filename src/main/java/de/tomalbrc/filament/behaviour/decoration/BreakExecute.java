@@ -6,6 +6,7 @@ import de.tomalbrc.filament.util.ExecuteUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class BreakExecute implements DecorationBehaviour<BreakExecute.Config> {
         var commands = commands();
         boolean hasCommands = commands != null;
         if (hasCommands && player instanceof ServerPlayer serverPlayer) {
-            var pos = config.atBlock ? blockPos.getCenter() : null;
+            var pos = config.atBlock ? Vec3.atCenterOf(blockPos) : null;
             if (getConfig().console) {
                 ExecuteUtil.asConsole(serverPlayer, pos, commands.toArray(new String[0]));
             }

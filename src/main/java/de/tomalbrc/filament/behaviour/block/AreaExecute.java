@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -62,7 +63,7 @@ public class AreaExecute implements BlockBehaviour<AreaExecute.Config>, AsyncTic
             if (!set.contains(user)) {
                 var cmds = enterCommands();
                 if (cmds != null && (config.permission == null || Permissions.check(user, config.permission))) {
-                    var pos = config.atBlock ? blockPos.getCenter() : null;
+                    var pos = config.atBlock ? Vec3.atCenterOf(blockPos) : null;
                     if (getConfig().console) {
                         ExecuteUtil.asConsole(user, pos, cmds.toArray(new String[0]));
                     } else {
@@ -75,7 +76,7 @@ public class AreaExecute implements BlockBehaviour<AreaExecute.Config>, AsyncTic
 
             var repeat = repeatCommands();
             if (repeat != null && (config.permission == null || Permissions.check(user, config.permission))) {
-                var pos = config.atBlock ? blockPos.getCenter() : null;
+                var pos = config.atBlock ? Vec3.atCenterOf(blockPos) : null;
                 if (getConfig().console) {
                     ExecuteUtil.asConsole(user, pos, repeat.toArray(new String[0]));
                 } else {
@@ -89,7 +90,7 @@ public class AreaExecute implements BlockBehaviour<AreaExecute.Config>, AsyncTic
             if (!playersInArea.contains(user) || user.hasDisconnected() || user.isDeadOrDying()) {
                 var cmds = exitCommands();
                 if (cmds != null && (config.permission == null || Permissions.check(user, config.permission))) {
-                    var pos = config.atBlock ? blockPos.getCenter() : null;
+                    var pos = config.atBlock ? Vec3.atCenterOf(blockPos) : null;
                     if (getConfig().console) {
                         ExecuteUtil.asConsole(user, pos, cmds.toArray(new String[0]));
                     } else {

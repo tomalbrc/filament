@@ -22,6 +22,7 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
@@ -130,7 +131,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
 
     @Override
     public EntityType<?> getPolymerEntityType(PacketContext packetContext) {
-        return EntityType.ARMOR_STAND;
+        return EntityTypes.ARMOR_STAND;
     }
 
     @Override
@@ -170,7 +171,7 @@ public class BaseProjectileEntity extends AbstractArrow implements PolymerEntity
 
             double damage = ((AbstractArrowAccessor)this).getBaseDamage();
             if (target.hurtServer((ServerLevel) level(), damageSource, (float) damage)) {
-                if (target.getType() != EntityType.ENDERMAN && this.getOwner() instanceof LivingEntity livingOwner) {
+                if (target.getType() != EntityTypes.ENDERMAN && this.getOwner() instanceof LivingEntity livingOwner) {
                     EnchantmentHelper.doPostAttackEffectsWithItemSource((ServerLevel) target.level(), livingOwner, damageSource, this.getWeaponItem());
                     this.doPostHurtEffects(target);
                 }

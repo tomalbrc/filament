@@ -130,7 +130,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
             FilamentDecorationHolder holder = this.getOrCreateHolder();
             if (holder != null && holder.getAttachment() == null) {
-                var ignore = new BlockBoundAttachment(holder.asPolymerHolder(), chunk, this.getBlockState(), this.getBlockPos(), this.getBlockPos().getCenter(), holder.isAnimated());
+                var ignore = new BlockBoundAttachment(holder.asPolymerHolder(), chunk, this.getBlockState(), this.getBlockPos(), Vec3.atCenterOf(this.getBlockPos()), holder.isAnimated());
             }
 
             for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviourEntry : this.behaviours) {
@@ -209,8 +209,10 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             if (data.hasBlocks()) {
                 DecorationUtil.forEachRotated(data.blocks(), this.getBlockPos(), this.getVisualRotationYInDegrees(), blockPos -> {
                     if (this.getLevel() != null && DecorationRegistry.isDecoration(this.getLevel().getBlockState(blockPos))) {
-                        if (data.properties().showBreakParticles())
-                            DecorationUtil.showBreakParticle((ServerLevel) this.level, data.properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase().asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+                        if (data.properties().showBreakParticles()) {
+                            var center = Vec3.atCenterOf(blockPos);
+                            DecorationUtil.showBreakParticle((ServerLevel) this.level, data.properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase().asItem().getDefaultInstance(), (float) center.x(), (float) center.y(), (float) center.z());
+                        }
                         this.getLevel().destroyBlock(blockPos, false);
                     }
                 });
@@ -219,8 +221,10 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
                 BlockPos blockPos = this.getBlockPos();
 
-                if (data.properties().showBreakParticles())
-                    DecorationUtil.showBreakParticle((ServerLevel) this.level, this.getDecorationData().properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase().asItem().getDefaultInstance(), (float) blockPos.getCenter().x(), (float) blockPos.getCenter().y(), (float) blockPos.getCenter().z());
+                if (data.properties().showBreakParticles()) {
+                    var center = Vec3.atCenterOf(blockPos);
+                    DecorationUtil.showBreakParticle((ServerLevel) this.level, this.getDecorationData().properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase().asItem().getDefaultInstance(), (float) center.x(), (float) center.y(), (float) center.z());
+                }
 
                 BlockUtil.playBreakSound(this.level, this.getBlockPos(), this.getBlockState());
                 this.level.destroyBlock(this.getBlockPos(), true);
@@ -255,7 +259,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
             if (dropItem) {
                 thisItemStack.applyComponents(this.components());
-                Util.spawnAtLocation(this.getLevel(), this.getBlockPos().getCenter(), thisItemStack.copy());
+                Util.spawnAtLocation(this.getLevel(), Vec3.atCenterOf(this.getBlockPos()), thisItemStack.copy());
             }
         }
 

@@ -31,10 +31,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HopperBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.HopperBlockEntity;
+import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -57,7 +54,7 @@ public class Hopper implements BlockBehaviourWithEntity<Hopper.Config> {
 
     @Override
     public BlockEntityType<?> blockEntityType() {
-        return BlockEntityType.HOPPER;
+        return BlockEntityTypes.HOPPER;
     }
 
     @Override
@@ -74,7 +71,7 @@ public class Hopper implements BlockBehaviourWithEntity<Hopper.Config> {
     @Override
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide() ? null : BlockBehaviourWithEntity.createTickerHelper(blockEntityType, BlockEntityType.HOPPER, Hopper::pushItemsTick);
+        return level.isClientSide() ? null : BlockBehaviourWithEntity.createTickerHelper(blockEntityType, BlockEntityTypes.HOPPER, Hopper::pushItemsTick);
     }
 
     public static void pushItemsTick(Level level, BlockPos blockPos, BlockState blockState, HopperBlockEntity hopperBlockEntity) {

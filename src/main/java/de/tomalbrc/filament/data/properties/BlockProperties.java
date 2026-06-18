@@ -24,6 +24,11 @@ public class BlockProperties extends ItemProperties {
     private Float explosionResistance = null;
     private Float destroyTime = null;
 
+    private Float bounceRestitution;
+    private Float friction;
+    private Float speedFactor;
+    private Float jumpFactor;
+
     private BlockStateMappedProperty<Boolean> isSuffocating = null;
     private BlockStateMappedProperty<Boolean> redstoneConductor = null;
     private BlockStateMappedProperty<Integer> lightEmission = null;
@@ -128,6 +133,11 @@ public class BlockProperties extends ItemProperties {
         if (this.replaceable == Boolean.TRUE) props.replaceable();
         if (this.transparent == Boolean.TRUE) props.noOcclusion();
         if (!this.collision == Boolean.TRUE) props.noCollision();
+
+        if (this.bounceRestitution != null) props.bounceRestitution(this.bounceRestitution);
+        if (this.friction != null) props.friction(this.friction);
+        if (this.speedFactor != null) props.speedFactor(this.speedFactor);
+        if (this.jumpFactor != null) props.jumpFactor(this.jumpFactor);
 
         if (this.lootTable != null)
             props.overrideLootTable(Optional.of(ResourceKey.create(Registries.LOOT_TABLE, this.lootTable)));

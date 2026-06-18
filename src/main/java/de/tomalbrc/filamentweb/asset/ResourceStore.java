@@ -2,10 +2,6 @@ package de.tomalbrc.filamentweb.asset;
 
 import com.fasterxml.classmate.ResolvedType;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.victools.jsonschema.generator.*;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -54,6 +50,11 @@ import org.joml.Quaternionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.jspecify.annotations.NonNull;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
@@ -95,8 +96,9 @@ public class ResourceStore {
     }
 
     public static JsonElement generateSchema(Object instance, Type assetType) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        ObjectMapper objectMapper = JsonMapper.builder()
+                .changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL))
+                .build();
 
         SchemaGeneratorConfigBuilder configBuilder = new SchemaGeneratorConfigBuilder(SchemaVersion.DRAFT_2020_12, OptionPreset.PLAIN_JSON);
         configBuilder.withObjectMapper(objectMapper);
@@ -527,14 +529,18 @@ public class ResourceStore {
     private static @NonNull CustomDefinition getComponentsDefinition(SchemaGenerationContext context) {
         return inlineObject(context, node -> {
             ObjectNode props = node.putObject("properties");
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+            ObjectMapper mapper = JsonMapper.builder()
+                    .propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
+                    .build();
 
             for (DataComponentType<?> compType : BuiltInRegistries.DATA_COMPONENT_TYPE) {
                 var id = BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(compType);
-                if (id == null) continue;
+                if (id == null)
+                    continue;
+
                 Type type = PojoComponents.REGISTERED_COMPONENTS.get(id.toString());
-                if (type == null) continue;
+                if (type == null)
+                    continue;
 
                 ObjectNode propertyNode = props.putObject(id.toString());
                 ResolvedType resolved = context.getTypeContext().resolve(type);

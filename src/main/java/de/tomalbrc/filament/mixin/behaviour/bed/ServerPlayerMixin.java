@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.attribute.BedRule;
 import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,7 +25,7 @@ public class ServerPlayerMixin {
         BlockPos blockPos = respawnConfig.respawnData().pos();
         BlockState blockState = serverLevel.getBlockState(respawnConfig.respawnData().pos());
         if (blockState.getBlock() instanceof DecorationBlock decorationBlock && decorationBlock.getDecorationData().behaviour().has(Behaviours.BED) && ((BedRule)serverLevel.environmentAttributes().getValue(EnvironmentAttributes.BED_RULE, blockPos)).canSetSpawn(serverLevel)) {
-            var v = BedBlock.findStandUpPosition(EntityType.PLAYER, serverLevel, respawnConfig.respawnData().pos(), blockState.getValue(BedBlock.FACING), respawnConfig.respawnData().yaw()).map((vec3) -> ServerPlayer.RespawnPosAngle.of(vec3, respawnConfig.respawnData().pos(), respawnConfig.respawnData().yaw()));
+            var v = BedBlock.findStandUpPosition(EntityTypes.PLAYER, serverLevel, respawnConfig.respawnData().pos(), blockState.getValue(BedBlock.FACING), respawnConfig.respawnData().yaw()).map((vec3) -> ServerPlayer.RespawnPosAngle.of(vec3, respawnConfig.respawnData().pos(), respawnConfig.respawnData().yaw()));
             cir.setReturnValue(v);
         }
     }

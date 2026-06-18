@@ -15,6 +15,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.control.JumpControl;
@@ -78,7 +79,7 @@ public class EntityData {
     }
 
     public @NotNull Identifier entityType() {
-        return entityType == null ? BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.PIG) : entityType;
+        return entityType == null ? BuiltInRegistries.ENTITY_TYPE.getKey(EntityTypes.PIG) : entityType;
     }
 
     public @Nullable Map<String, String> translations() {
