@@ -6,6 +6,7 @@ import com.mojang.serialization.JsonOps;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
+import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.data.ItemData;
 import de.tomalbrc.filament.injection.DataComponentCopying;
 import de.tomalbrc.filament.item.FilamentItem;
@@ -77,6 +78,14 @@ public class ItemRegistry {
         var item = ItemRegistry.registerItem(key(data.id()), (newProps) -> new SimpleItem(newProps, data, data.vanillaItem()), properties, data.group() != null ? data.group() : Constants.ITEM_GROUP_ID, data.itemTags());
         postRegistration(item, data);
 
+        if (data.properties().copyTags == Boolean.TRUE) {
+            COPY_TAGS.put(item, data.vanillaItem());
+        }
+
+        FilamentRegistrationEvents.ITEM.invoker().registered(data, item);
+    }
+
+    public static void componentInit(Data<?> data, Item item) {
         ((DataComponentCopying)BuiltInRegistries.DATA_COMPONENT_INITIALIZERS).filament$registerToCopy(new DataComponentCopying.CustomInitializerEntry(item.builtInRegistryHolder().key(), data.vanillaItem().builtInRegistryHolder().key(), (vanillaInitializer, target, provider)-> {
             if (vanillaInitializer != null && data.properties().copyComponents == Boolean.TRUE) {
                 var tempBuilder = DataComponentMap.builder();
@@ -97,15 +106,11 @@ public class ItemRegistry {
                 if (codec != null) target.set((DataComponentType) type, codec.decode(ops, value).getPartialOrThrow().getFirst());
             }
         }));
-
-        if (data.properties().copyTags == Boolean.TRUE) {
-            COPY_TAGS.put(item, data.vanillaItem());
-        }
-
-        FilamentRegistrationEvents.ITEM.invoker().registered(data, item);
     }
 
     static void postRegistration(FilamentItem item, ItemData data) {
+        componentInit(data, item.asItem());
+
         BehaviourUtil.postInitItem(item.asItem(), item, data.behaviour());
         Translations.add(item.asItem(), null, data);
         RPUtil.create(item, data);
