@@ -128,15 +128,21 @@ public class Json {
 
     public static <T extends Data<?>> T fromJsonWithDataFixer(JsonElement json, Class<T> classOfT) throws JsonSyntaxException {
         T dec = GSON.fromJson(json, com.google.gson.reflect.TypeToken.get(classOfT));
-        if (dec != null) {
-            for (Map.Entry<Type, JsonFixer<?>> entry : JSON_FIXER.entrySet()) {
-                var type = entry.getKey();
-                if (type.getClass().isAssignableFrom(dec.getClass())) {
-                    JsonFixer<T> fixer = (JsonFixer<T>) entry.getValue();
-                    fixer.apply(dec, json);
+        try {
+            if (dec != null) {
+                for (Map.Entry<Type, JsonFixer<?>> entry : JSON_FIXER.entrySet()) {
+                    var type = entry.getKey();
+                    if (type instanceof Class<?> clazz && clazz.isAssignableFrom(classOfT)) {
+                        @SuppressWarnings("unchecked")
+                        JsonFixer<T> fixer = (JsonFixer<T>) entry.getValue();
+                        fixer.apply(dec, json);
+                    }
                 }
             }
+        } catch (Throwable t) {
+            Filament.LOGGER.warn("Error while applying JsonFixer for {}: ", dec.id(), t);
         }
+
         return dec;
     }
 

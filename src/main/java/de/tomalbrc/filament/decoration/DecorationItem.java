@@ -9,6 +9,7 @@ import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.util.DecorationUtil;
+import de.tomalbrc.filament.util.RPUtil;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -49,7 +50,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
 
     @Override
     public void appendHoverText(@NonNull ItemStack itemStack, @NonNull TooltipContext tooltipContext, @NonNull TooltipDisplay tooltipDisplay, @NonNull Consumer<Component> consumer, @NonNull TooltipFlag tooltipFlag) {
-        if (this.decorationData.vanillaItem().components().has(DataComponents.DYED_COLOR) || this.decorationData.components().has(DataComponents.DYED_COLOR)) {
+        if (RPUtil.isDyable(this.decorationData.vanillaItem()) || this.decorationData.components().has(DataComponents.DYED_COLOR)) {
             consumer.accept(Component.literal("§9Dyeable"));
         }
 
