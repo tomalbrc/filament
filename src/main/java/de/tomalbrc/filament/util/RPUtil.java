@@ -88,7 +88,7 @@ public class RPUtil {
     public static boolean isDyable(Item item) {
         // 26.1 doesnt have the dyed_color component on items at the time the assets are generated (too early)
         // so we hardcode the check here to keep compat with existing filament configs
-        return item == Items.LEATHER_HORSE_ARMOR || item == Items.LEATHER_BOOTS || item == Items.LEATHER_CHESTPLATE || item == Items.LEATHER_LEGGINGS || item == Items.LEATHER_HELMET;
+        return item == Items.LEATHER_HORSE_ARMOR || item == Items.LEATHER_BOOTS || item == Items.LEATHER_CHESTPLATE || item == Items.LEATHER_LEGGINGS || item == Items.LEATHER_HELMET || item == Items.FIREWORK_STAR;
     }
 
     // Item assets for virtual blocks that use item displays (NOT DECORATIONS!)
