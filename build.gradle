@@ -2,6 +2,7 @@ plugins {
     id 'net.fabricmc.fabric-loom' version '1.16-SNAPSHOT'
     id 'com.gradleup.shadow' version '9.4.2'
     id 'maven-publish'
+    id 'net.darkhax.curseforgegradle' version '1.3.32'
 }
 
 version = project.mod_version + "+" + project.minecraft_version
@@ -145,4 +146,21 @@ publishing {
     repositories {
         mavenLocal()
     }
+}
+
+
+tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+    apiToken = System.getenv('CURSEFORGE_API_KEY')
+    def projectId = findProperty('curseforge_project_id')
+    def mainFile = upload(projectId, tasks.jar)
+
+    mainFile.displayName = "${project.archives_base_name}-${project.version}"
+    mainFile.changelog = file('CHANGELOG.md').exists() ? file('CHANGELOG.md').text : 'No changelog provided.'
+    mainFile.changelogType = 'markdown'
+    mainFile.releaseType = 'release'
+
+    mainFile.addEnvironment('Server')
+
+    mainFile.addRequirement('fabric-api')
+    mainFile.addRequirement('polymer')
 }
