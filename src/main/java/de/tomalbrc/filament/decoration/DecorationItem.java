@@ -16,6 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -51,7 +52,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
     @Override
     public void appendHoverText(@NonNull ItemStack itemStack, @NonNull TooltipContext tooltipContext, @NonNull TooltipDisplay tooltipDisplay, @NonNull Consumer<Component> consumer, @NonNull TooltipFlag tooltipFlag) {
         if (RPUtil.isDyable(this.decorationData.vanillaItem()) || this.decorationData.components().has(DataComponents.DYED_COLOR)) {
-            consumer.accept(Component.literal("§9Dyeable"));
+            consumer.accept(Component.literal("§9Dyeable").withStyle(Style.EMPTY.withItalic(false)));
         }
 
         super.appendHoverText(itemStack, tooltipContext, tooltipDisplay, consumer, tooltipFlag);
@@ -148,6 +149,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
         place(itemStack, level, blockState, blockPos, direction, direction, useOnContext);
     }
 
+    @SuppressWarnings("deprecation")
     public static void place(ItemStack itemStack, Level level, BlockState blockState, BlockPos blockPos, Direction placeDirection, Direction direction, UseOnContext useOnContext) {
         if (!(itemStack.getItem() instanceof DecorationItem decorationItem)) {
             Filament.LOGGER.error("Tried to place non-decoration item as decoration! Item: {}", itemStack.getItem().builtInRegistryHolder().key().identifier());
