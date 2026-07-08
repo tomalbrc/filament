@@ -19,10 +19,14 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FilamentComponents {
     public static final DataComponentType<ItemStack> SKIN_DATA_COMPONENT = new DataComponentType.Builder<ItemStack>().persistent(ItemStack.CODEC).networkSynchronized(ItemStack.STREAM_CODEC).build();
@@ -58,13 +62,37 @@ public class FilamentComponents {
             ItemContainerContents container = itemStack.get(DataComponents.CONTAINER);
             if (container != null) {
                 final int selectedSlot = player.getInventory().getSelectedSlot();
-                FilamentContainer container1 = new FilamentContainer(null, size, false);
+                MojankContainer container1 = new MojankContainer(size);
                 container.copyInto(container1.items);
                 container1.addListener(x -> itemStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(container1.items)));
 
                 MenuProvider provider = new SimpleMenuProvider((id, inventory, p) -> Util.createMenu(container1, id, player, selectedSlot), Component.empty().append(TextUtil.formatText(this.titlePrefix())).append(itemStack.getOrDefault(DataComponents.CUSTOM_NAME, itemStack.get(DataComponents.ITEM_NAME))));
                 player.openMenu(provider);
             }
+        }
+    }
+
+    static class MojankContainer extends SimpleContainer {
+        private final List<FilamentContainer.SimpleContainerListener> listeners = new ArrayList<>();
+
+        public MojankContainer(int size) {
+            super(size);
+        }
+
+        @Override
+        public void setChanged() {
+            super.setChanged();
+            for (FilamentContainer.SimpleContainerListener listener : listeners) {
+                listener.onChange(this);
+            }
+        }
+
+        public void addListener(FilamentContainer.SimpleContainerListener o) {
+            listeners.add(o);
+        }
+
+        public void removeListener(FilamentContainer.SimpleContainerListener o) {
+            listeners.remove(o);
         }
     }
 }

@@ -120,37 +120,37 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
 
     @Override
     public boolean isEmpty() {
-        this.unpackLootTable(null);
+        if (blockEntity != null) this.unpackLootTable(null);
         return super.isEmpty();
     }
 
     @Override
     public @NotNull ItemStack getItem(int n) {
-        this.unpackLootTable(null);
+        if (blockEntity != null) this.unpackLootTable(null);
         return super.getItem(n);
     }
 
     @Override
     public @NotNull ItemStack removeItem(int n, int n2) {
-        this.unpackLootTable(null);
+        if (blockEntity != null) this.unpackLootTable(null);
         return super.removeItem(n, n2);
     }
 
     @Override
     public @NotNull ItemStack removeItemNoUpdate(int n) {
-        this.unpackLootTable(null);
+        if (blockEntity != null) this.unpackLootTable(null);
         return super.removeItemNoUpdate(n);
     }
 
     @Override
     public void setItem(int n, @NonNull ItemStack itemStack) {
-        this.unpackLootTable(null);
+        if (blockEntity != null) this.unpackLootTable(null);
         super.setItem(n, itemStack);
     }
 
     @Override
     public @NotNull NonNullList<ItemStack> getItems() {
-        this.unpackLootTable(null);
+        if (blockEntity != null) this.unpackLootTable(null);
         return this.items;
     }
 
@@ -199,7 +199,7 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
 
     public static boolean isPickUpContainer(Container container) {
         ContainerLike containerLike;
-        return container instanceof FilamentContainer filamentContainer && (containerLike = DecorationData.getFirstContainer(filamentContainer.getBlockEntity())) != null && containerLike.canPickUp();
+        return container instanceof FilamentContainer filamentContainer && filamentContainer.getBlockEntity() != null && (containerLike = DecorationData.getFirstContainer(filamentContainer.getBlockEntity())) != null && containerLike.canPickUp();
     }
 
     @Override
