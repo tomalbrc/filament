@@ -2,6 +2,10 @@ package de.tomalbrc.filament.api;
 
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.data.AbstractBlockData;
+import de.tomalbrc.filament.data.DecorationData;
+import de.tomalbrc.filament.datafixer.config.BlockDataFix;
+import de.tomalbrc.filament.datafixer.config.DecorationDataFix;
 import de.tomalbrc.filament.registry.BlockRegistry;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.registry.ItemRegistry;
@@ -18,8 +22,13 @@ import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 public class FilamentLoader {
-    public static void loadBlocks(String modid) {
+    static {
         Behaviours.register();
+        Json.registerJsonFixer(DecorationData.class, new DecorationDataFix());
+        Json.registerJsonFixer(AbstractBlockData.class, new BlockDataFix());
+    }
+
+    public static void loadBlocks(String modid) {
         search(modid, f -> {
             try {
                 if (f.endsWith(".yaml") || f.endsWith(".yml")) {
@@ -38,7 +47,6 @@ public class FilamentLoader {
     }
 
     public static void loadItems(String modid) {
-        Behaviours.register();
         search(modid, f -> {
             try {
                 if (f.endsWith(".yaml") || f.endsWith(".yml")) {
@@ -57,7 +65,6 @@ public class FilamentLoader {
     }
 
     public static void loadDecorations(String modid) {
-        Behaviours.register();
         search(modid, f -> {
             try {
                 if (f.endsWith(".yaml") || f.endsWith(".yml")) {
@@ -76,7 +83,6 @@ public class FilamentLoader {
     }
 
     public static void loadModels(String modid, String namespace) {
-        Behaviours.register();
         search(modid, f -> {
             try {
                 if (f.getFileName() != null)
