@@ -178,7 +178,7 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
         }
     }
 
-    @Inject(method = "tick", at = @At("RETURN"))
+    @Inject(method = "tick", at = @At("HEAD"))
     private void rotationTick(CallbackInfo ci) {
         var self = LivingEntity.class.cast(this);
         var isPlayer = (self instanceof Player);
@@ -225,20 +225,15 @@ public abstract class LivingEntityMixin implements CosmeticInterface {
 
     @Unique
     public void filament$turnBody(double bodyRotation, double yaw) {
-        double f = Mth.wrapDegrees(bodyRotation - this.filamentBodyYaw);
-        this.filamentBodyYaw += f * 0.3F;
-        double g = Mth.wrapDegrees(yaw - this.filamentBodyYaw);
-        if (g < -75.) {
-            g = -75.;
-        }
+        double bodyDelta = Mth.wrapDegrees(bodyRotation - this.filamentBodyYaw);
+        this.filamentBodyYaw += bodyDelta;
 
-        if (g >= 75.) {
-            g = 75.;
-        }
+        double headDelta = Mth.wrapDegrees(yaw - this.filamentBodyYaw);
 
-        this.filamentBodyYaw = yaw - g;
-        if (g * g > 2500.) { // > 50°
-            this.filamentBodyYaw += g * 0.25;
+        if (headDelta < -50.0) {
+            this.filamentBodyYaw = yaw + 50.0;
+        } else if (headDelta > 50.0) {
+            this.filamentBodyYaw = yaw - 50.0;
         }
     }
 
