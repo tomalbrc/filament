@@ -89,7 +89,7 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
 
             decorationBlockEntity.setChanged();
 
-            return InteractionResult.CONSUME;
+            return config.consumeInteraction ? InteractionResult.CONSUME : InteractionResult.PASS;
         }
         return InteractionResult.PASS;
     }
@@ -237,5 +237,7 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
         public boolean showCustomName = true;
 
         public boolean angerPiglins = true;
+
+        public boolean consumeInteraction = true;
     }
 }
