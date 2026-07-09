@@ -60,7 +60,7 @@ dependencies {
     shade('org.yaml:snakeyaml:2.6')
 
     shade("org.eclipse.jetty:jetty-server:12.1.10")
-    shade("org.eclipse.jetty.ee10.websocket:jetty-ee10-websocket-jakarta-server:12.1.9")
+    shade("org.eclipse.jetty.ee10.websocket:jetty-ee10-websocket-jakarta-server:12.1.10")
     shade("com.github.victools:jsonschema-generator:5.0.0")
     shade("com.j2html:j2html:1.6.0")
     shade("org.json:json:20251224")
@@ -88,7 +88,7 @@ shadowJar {
 
     def relocations = [
             //"org.eclipse.jetty"  : "jetty",
-            "com.github.victools": "jsonschema",
+            //"com.github.victools": "jsonschema",
             "com.j2html"         : "j2html",
             "org.json"           : "orgjson"
     ]
