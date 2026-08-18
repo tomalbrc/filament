@@ -45,7 +45,7 @@ public class Instrument implements ItemBehaviour<Instrument.Config> {
     }
 
     public static class Config {
-        public ResourceLocation sound = null;
+        public Identifier sound = null;
 
         public int range = 0;
 
@@ -60,7 +60,7 @@ Registering it
 public static final BehaviourType<Instrument, Instrument.Config> INSTRUMENT = registerBehaviour("instrument", Instrument.class);
 
 private static <T extends Behaviour<E>,E> BehaviourType<T, E> registerBehaviour(String name, Class<T> type) {
-    return BehaviourRegistry.registerBehaviour(ResourceLocation.fromNamespaceAndPath(MOD_ID, name), type);
+    return BehaviourRegistry.registerBehaviour(Identifier.fromNamespaceAndPath(MOD_ID, name), type);
 }
 ```
 

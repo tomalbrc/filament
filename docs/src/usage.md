@@ -1,8 +1,8 @@
 # Using filament
 
-Requires [fabric api](https://modrinth.com/mod/fabric-api) and [polymer](https://modrinth.com/mod/polymer) by patbox
+Requires [fabric api](https://curseforge.com/minecraft/mc-mods/fabric-api) and [polymer](https://curseforge.com/minecraft/mc-mods/polymer) by patbox
 
-filament mainly loads additional content using datapacks;
+Filament loads additional content using datapacks;
 
 It also loads any **assets** from the `assets` folder in datapacks, if present.
 
@@ -40,7 +40,7 @@ So a configuration file path for a new block could look like this:
 The files can also be located in subfolders for better organization:
 `MyDatapack/data/<namespace>/filament/block/stone_like/myblock.json`
 
-Filament supports yaml files as of 0.12.0.
+Filament supports yaml and json files.
 You can also decide whether you want to use snake_case or camelCase for all fields. For example, you can use either `vanillaItem` or `vanilla_item` or `itemResource` or `item_resource`
 
 Blockbench and Animated-Java models for decorations are supported using the [blockbench import library](https://github.com/tomalbrc/blockbench-import-library)
@@ -118,4 +118,4 @@ For clients that don't have any mods or polymer installed, the item show up as t
 In 1.21.1, custom model data override predicates will be automatically generated. You can also set the vanilla custom model data components in the `components` field of a config to use your own values.
 This is not necessary in version 1.21.2 and above.
 
-For 1.21.4, the new item model will be automatically generated. You can set the `itemModel` field in the root of an item config to prevent that.
+For 1.21.4 or later, the new item model will be automatically generated. You can set the `itemModel` field in the root of an item config to prevent that.
