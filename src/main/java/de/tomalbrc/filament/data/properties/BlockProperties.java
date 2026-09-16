@@ -40,7 +40,7 @@ public class BlockProperties extends ItemProperties {
 
     private Boolean solid = true;
 
-    private PushReaction pushReaction = PushReaction.NORMAL;
+    private PushReaction pushReaction = PushReaction.PUSH_PULL;
 
     private Identifier lootTable = null;
 
@@ -110,7 +110,7 @@ public class BlockProperties extends ItemProperties {
     }
 
     public boolean showBreakParticles() {
-        return showBreakParticles == null ? false : showBreakParticles;
+        return showBreakParticles != null && showBreakParticles;
     }
 
     public Sounds sounds() {

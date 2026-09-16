@@ -19,6 +19,8 @@ import net.minecraft.world.level.redstone.ExperimentalRedstoneUtils;
 import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.ticks.TickPriority;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Block behaviour for redstone power source
@@ -71,6 +73,11 @@ public class Repeater implements BlockBehaviour<Repeater.Config> {
         } else {
             return blockState.getValue(FACING) == direction ? blockState.getValue(SIGNAL)-this.config.loss : 0;
         }
+    }
+
+    @Override
+    public boolean shouldRedstoneWireConnectTo(@NonNull BlockState state, @NonNull BlockGetter level, @NonNull BlockPos pos, @Nullable Direction direction) {
+        return state.getValue(Repeater.FACING) == direction;
     }
 
     @Override
@@ -127,7 +134,7 @@ public class Repeater implements BlockBehaviour<Repeater.Config> {
         if (isRelay(state)) {
             return state.getValue(SIGNAL);
         } else if (state.is(Blocks.REDSTONE_WIRE)) {
-            return state.getValue(RedStoneWireBlock.POWER);
+            return state.getValue(RedstoneWireBlock.POWER);
         } else if (state.is(Blocks.REDSTONE_WALL_TORCH) && state.getValue(RedstoneTorchBlock.LIT)) {
             return 15;
         }

@@ -2,6 +2,7 @@ package de.tomalbrc.filament.behaviour.entity.goal;
 
 import de.tomalbrc.filament.api.behaviour.EntityBehaviour;
 import de.tomalbrc.filament.entity.FilamentMob;
+import net.minecraft.tags.FluidTags;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -17,8 +18,7 @@ public class TryFindWaterGoal implements EntityBehaviour<TryFindWaterGoal.Config
     @Override
     public void registerGoals(FilamentMob mob) {
         EntityBehaviour.super.registerGoals(mob);
-
-        mob.getGoalSelector().addGoal(config.priority, new net.minecraft.world.entity.ai.goal.TryFindWaterGoal(mob));
+        mob.getGoalSelector().addGoal(config.priority, new net.minecraft.world.entity.ai.goal.TryFindLiquidGoal(mob, FluidTags.WATER));
     }
 
     @Override

@@ -185,7 +185,7 @@ public class Crossbow implements ItemBehaviour<Crossbow.Config>, ItemPredicateMo
         if (level instanceof ServerLevel serverLevel) {
             ChargedProjectiles chargedProjectiles = itemStack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
             if (chargedProjectiles != null && !chargedProjectiles.isEmpty()) {
-                this.shoot(serverLevel, livingEntity, interactionHand, itemStack, chargedProjectiles.itemCopies(), f, g, livingEntity instanceof Player, livingEntity2);
+                this.shoot(serverLevel, livingEntity, interactionHand, itemStack, chargedProjectiles.itemCopies().toList(), f, g, livingEntity instanceof Player, livingEntity2);
                 if (livingEntity instanceof ServerPlayer serverPlayer) {
                     CriteriaTriggers.SHOT_CROSSBOW.trigger(serverPlayer, itemStack);
                     serverPlayer.awardStat(Stats.ITEM_USED.get(itemStack.getItem()));

@@ -9,6 +9,7 @@ import net.minecraft.network.protocol.game.ClientboundContainerSetDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
@@ -135,7 +136,7 @@ public class StationGui extends SimpleGui {
                             player.containerMenu.setCarried(cursor);
                         } else {
                             if (!player.getInventory().add(result)) {
-                                player.drop(result, false);
+                                player.drop(result, false, Prediction.SERVER_ONLY);
                             }
                         }
                         createOutputSlot();
@@ -187,7 +188,7 @@ public class StationGui extends SimpleGui {
                 continue;
             }
 
-            ItemEntity drop = player.drop(itemStack, false);
+            ItemEntity drop = player.drop(itemStack, false, Prediction.SERVER_ONLY);
             if (drop == null)
                 continue;
 

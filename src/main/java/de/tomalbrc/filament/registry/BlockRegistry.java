@@ -96,7 +96,7 @@ public class BlockRegistry {
     }
 
     static void postRegistration(FilamentItem item, SimpleBlock customBlock, Data<?> data) {
-        ItemRegistry.componentInit(data, item.asItem());
+        ComponentUtil.addCopyComponentsEntry(data, item.asItem());
 
         BehaviourUtil.postInitItem(item.asItem(), item, data.behaviour());
         BehaviourUtil.postInitBlock(customBlock, data.behaviour());

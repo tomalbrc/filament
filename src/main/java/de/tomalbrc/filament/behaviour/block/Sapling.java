@@ -13,22 +13,24 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.random.Weighted;
+import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealSource;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.grower.TreeGrower;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 public class Sapling implements BlockBehaviour<Sapling.Config>, BonemealableBlock {
@@ -45,16 +47,57 @@ public class Sapling implements BlockBehaviour<Sapling.Config>, BonemealableBloc
         BlockBehaviour.super.init(item, block, behaviourHolder);
 
         String name = UUID.randomUUID().toString();
+
+        // Build WeightedList objects from the config's Identifier fields.
+        // A null Identifier means an empty WeightedList for that category.
+        WeightedList<ResourceKey<Feature>> trees = buildWeightedList(config.tree, config.secondaryTree, config.secondaryChance);
+        WeightedList<ResourceKey<Feature>> megaTrees = buildWeightedList(config.megaTree, config.secondaryMegaTree, config.secondaryChance);
+        WeightedList<ResourceKey<Feature>> flowerTrees = buildWeightedList(config.flowers, config.secondaryFlowers, config.secondaryChance);
+
         this.treeGrower = new TreeGrower(
                 name,
-                config.secondaryChance,
-                Optional.ofNullable(key(config.megaTree)),
-                Optional.ofNullable(key(config.secondaryMegaTree)),
-                Optional.ofNullable(key(config.tree)),
-                Optional.ofNullable(key(config.secondaryTree)),
-                Optional.ofNullable(key(config.flowers)),
-                Optional.ofNullable(key(config.secondaryFlowers))
+                trees,
+                megaTrees,
+                flowerTrees,
+                key(config.tree)
         );
+    }
+
+    private static WeightedList<ResourceKey<Feature>> buildWeightedList(@Nullable Identifier primary, @Nullable Identifier secondary, float secondaryChance) {
+        ResourceKey<Feature> primaryKey = key(primary);
+        ResourceKey<Feature> secondaryKey = key(secondary);
+
+        if (primaryKey == null && secondaryKey == null) {
+            return WeightedList.of();
+        }
+        if (primaryKey == null) {
+            return WeightedList.of(secondaryKey);
+        }
+        if (secondaryKey == null || secondaryChance <= 0.0f) {
+            return WeightedList.of(primaryKey);
+        }
+
+        int secondaryWeight = Math.max(1, Math.round(secondaryChance * 100.0f));
+        int primaryWeight = 100 - secondaryWeight;
+
+        return WeightedList.of(
+                new Weighted<>(primaryKey, primaryWeight),
+                new Weighted<>(secondaryKey, secondaryWeight)
+        );
+    }
+
+    @Nullable
+    private static ResourceKey<Feature> key(@Nullable Identifier identifier) {
+        if (identifier == null) {
+            return null;
+        }
+        return ResourceKey.create(Registries.FEATURE, identifier);
+    }
+
+    @Override
+    @NotNull
+    public Sapling.Config getConfig() {
+        return this.config;
     }
 
     @Override
@@ -65,20 +108,6 @@ public class Sapling implements BlockBehaviour<Sapling.Config>, BonemealableBloc
             map.put(entry.getKey().cycle(BlockStateProperties.STAGE), entry.getValue());
         }
         return true;
-    }
-
-    @Nullable
-    private ResourceKey<ConfiguredFeature<?, ?>> key(Identifier Identifier) {
-        if (Identifier == null)
-            return null;
-
-        return ResourceKey.create(Registries.CONFIGURED_FEATURE, Identifier);
-    }
-
-    @Override
-    @NotNull
-    public Sapling.Config getConfig() {
-        return this.config;
     }
 
     @Override
@@ -102,25 +131,39 @@ public class Sapling implements BlockBehaviour<Sapling.Config>, BonemealableBloc
         if (blockState.getValue(BlockStateProperties.STAGE) == 0) {
             serverLevel.setBlock(blockPos, blockState.cycle(BlockStateProperties.STAGE), Block.UPDATE_CLIENTS);
         } else {
-            this.treeGrower.growTree(serverLevel, serverLevel.getChunkSource().getGenerator(), blockPos, blockState, randomSource);
+            this.treeGrower.growTree(
+                    serverLevel,
+                    serverLevel.getChunkSource().getGenerator(),
+                    blockPos,
+                    blockState,
+                    randomSource
+            );
         }
     }
 
     @Override
-    public boolean isValidBonemealTarget(@NonNull LevelReader levelReader, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
+    public boolean isValidBonemealTarget(@NonNull LevelReader levelReader, @NonNull BlockPos blockPos, @NonNull BlockState blockState, @NonNull BonemealSource bonemealSource) {
         return true;
     }
 
     @Override
-    public boolean isBonemealSuccess(@NonNull Level level, @NonNull RandomSource randomSource, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
-        if (level instanceof ServerLevel serverLevel && blockState.getBlock().isFilamentBlock() && !(blockState.getBlock().asFilamentBlock().getPolymerBlockState(blockState, PacketContext.get()).getBlock() instanceof BonemealableBlock)) {
+    public boolean isBonemealSuccess(@NonNull Level level, @NonNull RandomSource randomSource,
+                                     @NonNull BlockPos blockPos, @NonNull BlockState blockState,
+                                     @NonNull BonemealSource bonemealSource) {
+        if (level instanceof ServerLevel serverLevel
+                && blockState.getBlock().isFilamentBlock()
+                && !(blockState.getBlock().asFilamentBlock()
+                .getPolymerBlockState(blockState, PacketContext.get())
+                .getBlock() instanceof BonemealableBlock)) {
             BlockUtil.handleBoneMealEffects(serverLevel, blockPos);
         }
         return level.getRandom().nextFloat() < config.bonemealGrowthChance;
     }
 
     @Override
-    public void performBonemeal(@NonNull ServerLevel serverLevel, @NonNull RandomSource randomSource, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
+    public void performBonemeal(@NonNull ServerLevel serverLevel, @NonNull RandomSource randomSource,
+                                @NonNull BlockPos blockPos, @NonNull BlockState blockState,
+                                @NonNull BonemealSource bonemealSource) {
         this.grow(serverLevel, blockPos, blockState, randomSource);
     }
 

@@ -13,6 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomModelData;
@@ -44,7 +45,7 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
     @NotNull
     public BlockState playerWillDestroy(@NonNull Level level, @NonNull BlockPos blockPos, @NonNull BlockState blockState, @NonNull Player player) {
         BlockState returnVal = super.playerWillDestroy(level, blockPos, blockState, player);
-        if (!player.hasInfiniteMaterials()) this.playerDestroy(level, player, blockPos, blockState, null, player.getMainHandItem());
+        if (!player.hasInfiniteMaterials() && level instanceof ServerLevel serverLevel) this.playerDestroy(serverLevel, (ServerPlayer) player, blockPos, blockState, null, player.getMainHandItem());
         return returnVal;
     }
 
@@ -84,7 +85,7 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
     }
 
     @Override
-    protected void spawnDestroyParticles(@NonNull Level level, @NonNull Player player, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
+    public void spawnDestroyParticles(@NonNull Level level, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
         if (level.isClientSide()) return;
 
         BlockUtil.playBreakSound(level, blockPos, blockState);

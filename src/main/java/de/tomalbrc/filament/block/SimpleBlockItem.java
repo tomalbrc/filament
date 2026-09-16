@@ -21,6 +21,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.SwingAnimation;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
@@ -70,7 +71,7 @@ public class SimpleBlockItem extends BlockItem implements PolymerItem, FilamentI
         }
 
         if (context.getPlayer() instanceof ServerPlayer player) {
-            player.swing(context.getHand(), true);
+            player.swing(context.getHand(), SwingAnimation.DEFAULT, true);
         }
 
         return true;

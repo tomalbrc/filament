@@ -20,7 +20,6 @@ import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -42,7 +41,7 @@ public class FilamentMob extends Animal implements PolymerEntity {
         this.xpReward = data.properties().xpReward;
         registerGoals();
 
-        this.setInvulnerable(data.properties().invulnerable);
+        this.setPermanentlyInvulnerable(data.properties().invulnerable);
         this.noPhysics = data.properties().noPhysics;
 
         var movement = data.movement();
@@ -121,10 +120,9 @@ public class FilamentMob extends Animal implements PolymerEntity {
                 ItemStack itemStack = this.getItemBySlot(EquipmentSlot.HEAD);
                 if (!itemStack.isEmpty()) {
                     if (itemStack.isDamageableItem()) {
-                        Item item = itemStack.getItem();
                         itemStack.setDamageValue(itemStack.getDamageValue() + this.random.nextInt(2));
                         if (itemStack.getDamageValue() >= itemStack.getMaxDamage()) {
-                            this.onEquippedItemBroken(item, EquipmentSlot.HEAD);
+                            this.onEquippedItemBroken(itemStack, EquipmentSlot.HEAD);
                             this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
                         }
                     }

@@ -12,7 +12,6 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.equipment.ArmorType;
-import net.minecraft.world.item.equipment.trim.MaterialAssetGroup;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -84,7 +83,7 @@ public class GenerateTrimModels implements ItemBehaviour<GenerateTrimModels.Conf
 
             for (Identifier suffix : list) {
                 var layer1 = Identifier.fromNamespaceAndPath(namespace == null ? suffix.getNamespace() : namespace, String.format("%s%s", armorType, suffix.getPath()));
-                var name = data.id().getPath() + MaterialAssetGroup.SEPARATOR + suffix.getPath();
+                var name = data.id().getPath() + "_" + suffix.getPath();
                 ModelAsset.Builder modelAsset = ModelAsset.builder();
 
                 modelAsset.parent(itemResource.parent());

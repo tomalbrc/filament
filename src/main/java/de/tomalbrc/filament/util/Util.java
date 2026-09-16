@@ -99,9 +99,8 @@ public class Util {
         itemStack.setDamageValue(newDamage);
 
         if (newDamage >= itemStack.getMaxDamage()) {
-            Item item = itemStack.getItem();
             itemStack.shrink(1);
-            livingEntity.onEquippedItemBroken(item, slot);
+            livingEntity.onEquippedItemBroken(itemStack, slot);
         }
     }
 
@@ -286,7 +285,6 @@ public class Util {
             DataComponents.TOOL,
             DataComponents.MAX_STACK_SIZE,
             DataComponents.MAP_ID,
-            DataComponents.MAP_COLOR,
             DataComponents.MAP_DECORATIONS,
             DataComponents.MAP_POST_PROCESSING,
             DataComponents.FOOD,
@@ -332,7 +330,7 @@ public class Util {
             DataComponents.PIERCING_WEAPON,
             DataComponents.ATTACK_RANGE,
             DataComponents.MINIMUM_ATTACK_CHARGE,
-            DataComponents.SWING_ANIMATION,
+            DataComponents.ATTACK_ANIMATION,
             DataComponents.USE_EFFECTS
     };
     private static final ReferenceSet<DataComponentType<?>> FORCE_HIDE_TOOLTIP = ReferenceSet.of(

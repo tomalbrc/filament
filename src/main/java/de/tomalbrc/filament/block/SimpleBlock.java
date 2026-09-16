@@ -351,6 +351,17 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
+    protected boolean shouldRedstoneWireConnectTo(@NonNull BlockState state, @NonNull BlockGetter level, @NonNull BlockPos pos, @Nullable Direction direction) {
+        for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
+            if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> blockBehaviour) {
+                if (blockBehaviour.shouldRedstoneWireConnectTo(state, level, pos, direction))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     protected boolean useShapeForLightOcclusion(@NonNull BlockState blockState) {
         if (this.getBehaviours() != null)
             for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
@@ -529,10 +540,10 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     // bonemealable impl
 
     @Override
-    public boolean isValidBonemealTarget(@NonNull LevelReader levelReader, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
+    public boolean isValidBonemealTarget(@NonNull LevelReader levelReader, @NonNull BlockPos blockPos, @NonNull BlockState blockState, @NonNull BonemealSource bonemealSource) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
-                var res = bonemealableBlock.isValidBonemealTarget(levelReader, blockPos, blockState);
+                var res = bonemealableBlock.isValidBonemealTarget(levelReader, blockPos, blockState, bonemealSource);
                 if (res)
                     return true;
             }
@@ -541,10 +552,10 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public boolean isBonemealSuccess(@NonNull Level level, @NonNull RandomSource randomSource, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
+    public boolean isBonemealSuccess(@NonNull Level level, @NonNull RandomSource randomSource, @NonNull BlockPos blockPos, @NonNull BlockState blockState, @NonNull BonemealSource bonemealSource) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
-                var res = bonemealableBlock.isBonemealSuccess(level, randomSource, blockPos, blockState);
+                var res = bonemealableBlock.isBonemealSuccess(level, randomSource, blockPos, blockState, bonemealSource);
                 if (res)
                     return true;
             }
@@ -553,10 +564,10 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public void performBonemeal(@NonNull ServerLevel serverLevel, @NonNull RandomSource randomSource, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
+    public void performBonemeal(@NonNull ServerLevel serverLevel, @NonNull RandomSource randomSource, @NonNull BlockPos blockPos, @NonNull BlockState blockState, @NonNull BonemealSource bonemealSource) {
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.getBehaviours()) {
             if (behaviour.getValue() instanceof de.tomalbrc.filament.api.behaviour.BlockBehaviour<?> && behaviour.getValue() instanceof BonemealableBlock bonemealableBlock) {
-                bonemealableBlock.performBonemeal(serverLevel, randomSource, blockPos, blockState);
+                bonemealableBlock.performBonemeal(serverLevel, randomSource, blockPos, blockState, bonemealSource);
             }
         }
     }
@@ -755,9 +766,9 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    protected void spawnDestroyParticles(@NonNull Level level, @NonNull Player player, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
+    public void spawnDestroyParticles(@NonNull Level level, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
         if (blockData.properties().showBreakParticles()) {
-            super.spawnDestroyParticles(level, player, blockPos, blockState);
+            super.spawnDestroyParticles(level, blockPos, blockState);
         }
     }
 }

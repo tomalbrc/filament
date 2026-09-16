@@ -7,6 +7,7 @@ import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -52,7 +53,7 @@ public class StationBlockEntity extends BaseContainerBlockEntity
     private final Set<Integer> fuelSlots;
     private ItemStack pendingOutput = ItemStack.EMPTY;
 
-    private final Reference2IntOpenHashMap<ResourceKey<Recipe<?>>> recipesUsed = new Reference2IntOpenHashMap<>();
+    private final Reference2IntOpenHashMap<ResourceKey<Recipe<?>>> recipesUsed = new Reference2IntOpenHashMap<>(); // TODO: uuh
     private final Map<Integer, ItemStack> pendingOutputs = new Int2ObjectOpenHashMap<>();
 
     public StationBlockEntity(BlockPos pos, BlockState state, Identifier stationId) {
@@ -120,7 +121,9 @@ public class StationBlockEntity extends BaseContainerBlockEntity
                 Optional<Integer> fuelSlot = fuelSlots.stream().findFirst();
                 if (fuelSlot.isPresent() && currentRecipe != null) {
                     ItemStack fuelStack = inventory.getItem(fuelSlot.get());
-                    int burnTicks = level.fuelValues().burnDuration(fuelStack);
+                    var fuel = fuelStack.get(DataComponents.COOKING_FUEL);
+
+                    int burnTicks = fuel != null ? fuel.burnTime().get(getLootContext((ServerLevel) level), 0) : 0;
                     if (burnTicks > 0) {
                         fuelTime = burnTicks;
                         burnTime = burnTicks;

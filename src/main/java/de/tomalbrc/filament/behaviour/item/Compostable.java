@@ -2,7 +2,6 @@ package de.tomalbrc.filament.behaviour.item;
 
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
-import net.fabricmc.fabric.api.registry.CompostableRegistry;
 import net.fabricmc.fabric.api.registry.VillagerInteractionRegistries;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +24,6 @@ public class Compostable implements ItemBehaviour<Compostable.CompostableConfig>
 
     @Override
     public void init(Item item, BehaviourHolder behaviourHolder) {
-        CompostableRegistry.INSTANCE.add(item, this.config.chance/100.f);
         if (config.villagerInteraction) VillagerInteractionRegistries.registerCompostable(item);
     }
 

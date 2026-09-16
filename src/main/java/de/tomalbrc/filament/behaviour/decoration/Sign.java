@@ -82,7 +82,8 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
             var itemStack = player.getItemInHand(hand);
             if (config.waxable && !isWaxed && (itemStack.is(Items.HONEYCOMB) || itemStack.getItem().isFilamentItem() && itemStack.getItem().has(Behaviours.WAX))) {
                 CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(player, decorationBlockEntity.getBlockPos(), itemStack);
-                player.level().levelEvent(null, LevelEvent.PARTICLES_AND_SOUND_WAX_ON, decorationBlockEntity.getBlockPos(), 0);
+                player.level().levelEvent(null, LevelEvent.PARTICLES_WAX_ON, decorationBlockEntity.getBlockPos(), 0);
+                player.level().playSound(player, decorationBlockEntity.getBlockPos(), SoundEvents.HONEYCOMB_WAX_ON, SoundSource.BLOCKS, 1.0F, 1.0F);
 
                 if (!itemStack.isDamageableItem())
                     itemStack.consume(1, player);
@@ -177,9 +178,7 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
     }
 
     private static CommandSourceStack createCommandSourceStack(@Nullable Player player, ServerLevel serverLevel, BlockPos blockPos) {
-        String string = player == null ? "Decoration" : player.getName().getString();
-        Component component = player == null ? Component.literal("Decoration") : player.getDisplayName();
-        return new CommandSourceStack(CommandSource.NULL, Vec3.atCenterOf(blockPos), Vec2.ZERO, serverLevel, PermissionSet.ALL_PERMISSIONS, string, component, serverLevel.getServer(), player);
+        return new CommandSourceStack(CommandSource.NULL, Vec3.atCenterOf(blockPos), Vec2.ZERO, serverLevel, PermissionSet.ALL_PERMISSIONS, serverLevel.getServer(), player);
     }
 
     @Override

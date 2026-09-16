@@ -25,6 +25,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.SwingAnimation;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
@@ -107,7 +108,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
         } else if ((forceReplace || this.canPlaceAt(level, relativeBlockPos, angle))) {
             DecorationItem.place(itemStack, level, blockState, relativeBlockPos, actualDir, direction, useOnContext);
 
-            player.swing(useOnContext.getHand(), true);
+            player.swing(useOnContext.getHand(), SwingAnimation.DEFAULT, true);
             itemStack.consume(1, player);
 
             SoundEvent placeSound = properties.blockBase().defaultBlockState().getSoundType().getPlaceSound();
@@ -175,7 +176,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
                 }
 
                 if (decorationData.requiresEntityBlock() && level.getBlockEntity(blockPos2) instanceof DecorationBlockEntity decorationBlockEntity) {
-                    decorationBlockEntity.setMain(new BlockPos(blockPos2).subtract(blockPos));
+                    decorationBlockEntity.setMain(blockPos2.subtract(blockPos));
                     decorationBlockEntity.setDirection(direction);
                     if (decorationBlockEntity.isMain()) updateComponents(decorationBlockEntity, itemStack);
                     decorationBlockEntity.attach(level.getChunkAt(blockPos));

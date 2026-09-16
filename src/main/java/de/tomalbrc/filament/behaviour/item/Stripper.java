@@ -1,11 +1,11 @@
 package de.tomalbrc.filament.behaviour.item;
 
+import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
-import de.tomalbrc.filament.mixin.behaviour.strippable.AxeItemAccessor;
-import de.tomalbrc.filament.registry.StrippableRegistry;
 import de.tomalbrc.filament.util.annotation.RegistryRef;
 import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.BlockTransformer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -15,6 +15,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.BlockTransformers;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -45,7 +46,7 @@ public class Stripper implements ItemBehaviour<Stripper.Config> {
         BlockPos blockPos = useOnContext.getClickedPos();
         Player player = useOnContext.getPlayer();
 
-        BlockState optional = this.getNewBlockState(level, blockPos, level.getBlockState(blockPos));
+        BlockState optional = this.getNewBlockState(useOnContext);
         if (optional == null) {
             return InteractionResult.PASS;
         } else {
@@ -64,25 +65,33 @@ public class Stripper implements ItemBehaviour<Stripper.Config> {
         }
     }
 
-    private BlockState getNewBlockState(Level level, BlockPos blockPos, BlockState blockState) {
-        var replacementBlock = AxeItemAccessor.getSTRIPPABLES().get(blockState.getBlock());
-        if (replacementBlock == null && StrippableRegistry.has(blockState.getBlock())) {
-            replacementBlock = StrippableRegistry.get(blockState.getBlock());
+    private BlockState getNewBlockState(UseOnContext useOnContext) {
+        var t = Filament.REGISTRY_ACCESS.compositeAccess().get(BlockTransformers.AXE).orElseThrow().value().transforms();
+        BlockState replacement = null;
+        var blockPos = useOnContext.getClickedPos();
+        var level = useOnContext.getLevel();
+        var blockState = level.getBlockState(blockPos);
+        for (BlockTransformer.BlockTransformData transformData : t) {
+            var tr = transformData.blockStateProvider().value().getOptionalState(level, level.getRandom(),  blockPos);
+            if (tr != null && !transformData.disallowedFaces().contains(useOnContext.getClickedFace())) {
+                replacement = tr.withPropertiesOf(blockState);
+                break;
+            }
         }
 
-        if (replacementBlock != null) {
+        if (replacement != null) {
             level.playSound(null, blockPos, SoundEvent.createVariableRangeEvent(config.sound), SoundSource.BLOCKS, 1.0F, 1.0F);
-            return replacementBlock.withPropertiesOf(blockState);
+            return replacement;
         } else {
             Optional<BlockState> opt = WeatheringCopper.getPrevious(blockState);
             if (opt.isPresent()) {
-                level.playSound(null, blockPos, SoundEvents.AXE_SCRAPE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.playSound(null, blockPos, SoundEvents.AXE_SCRAPE.value(), SoundSource.BLOCKS, 1.0F, 1.0F);
                 level.levelEvent(null, LevelEvent.PARTICLES_SCRAPE, blockPos, 0);
                 return opt.get();
             } else {
                 opt = Optional.ofNullable(HoneycombItem.WAX_OFF_BY_BLOCK.get().get(blockState.getBlock())).map((block) -> block.withPropertiesOf(blockState));
                 if (opt.isPresent()) {
-                    level.playSound(null, blockPos, SoundEvents.AXE_WAX_OFF, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    level.playSound(null, blockPos, SoundEvents.AXE_WAX_OFF.value(), SoundSource.BLOCKS, 1.0F, 1.0F);
                     level.levelEvent(null, LevelEvent.PARTICLES_WAX_OFF, blockPos, 0);
                     return opt.get();
                 } else {
@@ -94,6 +103,6 @@ public class Stripper implements ItemBehaviour<Stripper.Config> {
 
     public static class Config {
         @RegistryRef("sound_event")
-        public Identifier sound = SoundEvents.AXE_STRIP.location();
+        public Identifier sound = SoundEvents.AXE_STRIP.key().identifier();
     }
 }

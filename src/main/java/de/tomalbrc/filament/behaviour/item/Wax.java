@@ -4,6 +4,8 @@ import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.HoneycombItem;
@@ -47,7 +49,8 @@ public class Wax implements ItemBehaviour<Wax.Config> {
 
             level.setBlock(blockPos, blockStatex,  Block.UPDATE_ALL_IMMEDIATE);
             level.gameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Context.of(player, blockStatex));
-            level.levelEvent(player,  LevelEvent.PARTICLES_AND_SOUND_WAX_ON, blockPos, 0);
+            level.levelEvent(player,  LevelEvent.PARTICLES_WAX_ON, blockPos, 0);
+            level.playSound(player, blockPos, SoundEvents.HONEYCOMB_WAX_ON, SoundSource.BLOCKS, 1.0F, 1.0F);
             return (InteractionResult) InteractionResult.SUCCESS;
         }).orElse(InteractionResult.PASS);
     }

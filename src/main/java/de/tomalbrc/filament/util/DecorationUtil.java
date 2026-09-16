@@ -65,7 +65,7 @@ public class DecorationUtil {
                             Vector3f offset = pos.mul(hMul, 1, hMul);
                             offset.rotateY(Mth.DEG_TO_RAD * (rotation + (FilamentConfig.getInstance().alternativeBlockPlacement ? 0 : 180)));
 
-                            BlockPos blockPos = new BlockPos(originBlockPos).offset(-Math.round(offset.x), Math.round(offset.y), Math.round(offset.z));
+                            BlockPos blockPos = originBlockPos.offset(-Math.round(offset.x), Math.round(offset.y), Math.round(offset.z));
                             consumer.accept(blockPos);
                         }
                     }

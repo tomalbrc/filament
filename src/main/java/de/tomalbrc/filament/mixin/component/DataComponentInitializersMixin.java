@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentInitializers;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceKey;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,13 +21,23 @@ import java.util.Map;
 @Mixin(DataComponentInitializers.class)
 public class DataComponentInitializersMixin implements DataComponentCopying {
     @Shadow @Final private List<DataComponentInitializers.InitializerEntry<?>> initializers;
-    @Unique List<CustomInitializerEntry> filament$copyEntries = new ObjectArrayList<>();
+
+    @Unique List<CopyingEntry> filament$copyEntries = new ObjectArrayList<>();
+    @Unique List<InjectionEntry<?>> filament$injectEntries = new ObjectArrayList<>();
 
     @Inject(method = "runInitializers", at = @At("RETURN"))
     private void filament$copyComponents(HolderLookup.Provider context, CallbackInfoReturnable<Map<ResourceKey<?>, DataComponentMap.Builder>> cir) {
         var map = cir.getReturnValue();
 
-        for (CustomInitializerEntry entry : filament$copyEntries) {
+        for (InjectionEntry<?> entry : filament$injectEntries) {
+            for (DataComponentInitializers.InitializerEntry<?> initializer : initializers) {
+                if (initializer.key().equals(entry.target())) {
+                    initializer.initializer().add((DataComponentType) entry.type(), entry.value());
+                }
+            }
+        }
+
+        for (CopyingEntry entry : filament$copyEntries) {
             boolean foundEntry = false;
             for (DataComponentInitializers.InitializerEntry<?> initializer : initializers) {
                 if (initializer.key().equals(entry.source())) {
@@ -43,7 +54,12 @@ public class DataComponentInitializersMixin implements DataComponentCopying {
     }
 
     @Override
-    public void filament$registerToCopy(CustomInitializerEntry entry) {
+    public void filament$register(CopyingEntry entry) {
         filament$copyEntries.add(entry);
+    }
+
+    @Override
+    public <T> void filament$register(InjectionEntry<T> entry) {
+        filament$injectEntries.add(entry);
     }
 }

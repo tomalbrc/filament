@@ -2,13 +2,10 @@ package de.tomalbrc.filament.registry;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.mojang.serialization.JsonOps;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.behaviour.BehaviourUtil;
-import de.tomalbrc.filament.data.Data;
 import de.tomalbrc.filament.data.ItemData;
-import de.tomalbrc.filament.injection.DataComponentCopying;
 import de.tomalbrc.filament.item.FilamentItem;
 import de.tomalbrc.filament.item.SimpleItem;
 import de.tomalbrc.filament.util.*;
@@ -16,14 +13,9 @@ import de.tomalbrc.filament.util.resource.FilamentSynchronousResourceReloadListe
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2ReferenceOpenHashMap;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
@@ -62,7 +54,6 @@ public class ItemRegistry {
         register(null, inputStream);
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     static public void register(ItemData data) {
         if (BuiltInRegistries.ITEM.containsKey(data.id())) {
             var item = BuiltInRegistries.ITEM.getValue(data.id());
@@ -85,31 +76,8 @@ public class ItemRegistry {
         FilamentRegistrationEvents.ITEM.invoker().registered(data, item);
     }
 
-    public static void componentInit(Data<?> data, Item item) {
-        ((DataComponentCopying)BuiltInRegistries.DATA_COMPONENT_INITIALIZERS).filament$registerToCopy(new DataComponentCopying.CustomInitializerEntry(item.builtInRegistryHolder().key(), data.vanillaItem().builtInRegistryHolder().key(), (vanillaInitializer, target, provider)-> {
-            if (vanillaInitializer != null && data.properties().copyComponents == Boolean.TRUE) {
-                var tempBuilder = DataComponentMap.builder();
-                vanillaInitializer.run(tempBuilder, provider);
-                var built = tempBuilder.build();
-                for (TypedDataComponent component : built) {
-                    if (!target.contains(component.type()) || DataComponents.COMMON_ITEM_COMPONENTS.has(component.type())) {
-                        target.set(component.type(), component.value());
-                    }
-                }
-            }
-
-            var ops = RegistryOps.create(JsonOps.INSTANCE, provider);
-            for (var entry : data.getAdditionalComponents().entrySet()) {
-                DataComponentType<?> type = entry.getKey();
-                var value = entry.getValue();
-                var codec = type.codec();
-                if (codec != null) target.set((DataComponentType) type, codec.decode(ops, value).getPartialOrThrow().getFirst());
-            }
-        }));
-    }
-
     static void postRegistration(FilamentItem item, ItemData data) {
-        componentInit(data, item.asItem());
+        ComponentUtil.addCopyComponentsEntry(data, item.asItem());
 
         BehaviourUtil.postInitItem(item.asItem(), item, data.behaviour());
         Translations.add(item.asItem(), null, data);

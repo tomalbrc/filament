@@ -4,7 +4,6 @@ import de.tomalbrc.filament.util.Constants;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.packs.AbstractPackResources;
 import net.minecraft.server.packs.FilePackResources;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
@@ -32,7 +31,7 @@ public class FilamentAssetReloadListener implements FilamentSynchronousResourceR
         if (lastConsumer == null) {
             Consumer<ResourcePackBuilder> consumer = resourcePackBuilder -> resourceManager.listPacks().forEach(packResources -> {
                 Set<String> clientResources = packResources.getNamespaces(PackType.CLIENT_RESOURCES);
-                if (packResources instanceof AbstractPackResources abstractPackResources) {
+                if (packResources instanceof PackResources abstractPackResources) {
                     boolean isZip = packResources instanceof FilePackResources;
                     for (String namespace : clientResources) {
                         if (isZip) {

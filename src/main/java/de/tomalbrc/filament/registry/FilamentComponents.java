@@ -9,11 +9,11 @@ import de.tomalbrc.filament.util.Util;
 import eu.pb4.polymer.core.api.other.PolymerComponent;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
@@ -30,7 +30,7 @@ import java.util.List;
 
 public class FilamentComponents {
     public static final DataComponentType<ItemStack> SKIN_DATA_COMPONENT = new DataComponentType.Builder<ItemStack>().persistent(ItemStack.CODEC).networkSynchronized(ItemStack.STREAM_CODEC).build();
-    public static final DataComponentType<HolderSet<Item>> SKIN_COMPONENT = new DataComponentType.Builder<HolderSet<Item>>().persistent(RegistryCodecs.homogeneousList(Registries.ITEM)).networkSynchronized(ByteBufCodecs.holderSet(Registries.ITEM)).build();
+    public static final DataComponentType<HolderSet<Item>> SKIN_COMPONENT = new DataComponentType.Builder<HolderSet<Item>>().persistent(RegistryCodecs.holderSet(Registries.ITEM)).networkSynchronized(ByteBufCodecs.holderSet(Registries.ITEM)).build();
 
     public static final DataComponentType<BackpackOptions> BACKPACK = new DataComponentType.Builder<BackpackOptions>().persistent(BackpackOptions.CODEC).build();
 

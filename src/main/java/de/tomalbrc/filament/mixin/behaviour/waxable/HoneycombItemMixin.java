@@ -32,12 +32,14 @@ public class HoneycombItemMixin {
     }
 
     @Inject(method = "lambda$useOn$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;levelEvent(Lnet/minecraft/world/entity/Entity;ILnet/minecraft/core/BlockPos;I)V", ordinal = 0))
-    private static void filament$broadcastToPlayer(UseOnContext useOnContext, BlockPos blockPos, Level level, BlockState blockState, BlockState blockState2, CallbackInfoReturnable<InteractionResult> cir, @Local Player player) {
+    private static void filament$broadcastToPlayer(UseOnContext useOnContext, BlockPos blockPos, Level level, BlockState blockState, BlockState blockState2, CallbackInfoReturnable<InteractionResult> cir, @Local(name = "player") Player player) {
         if (!level.isClientSide() && WaxableRegistry.getPrevious(blockState2.getBlock()) != null) {
-            ((ServerPlayer)player).connection.send(new ClientboundLevelEventPacket(LevelEvent.PARTICLES_AND_SOUND_WAX_ON, blockPos, 0, false));
+            // TODO: 26.3 changed level events to not play sounds any longer, we should check whether sound should be played for all players or only the one interacting with the filament chests
+
+            ((ServerPlayer)player).connection.send(new ClientboundLevelEventPacket(LevelEvent.PARTICLES_WAX_ON, blockPos, 0, false));
 
             if (blockState.hasProperty(ChestBlock.TYPE) && blockState.getValue(ChestBlock.TYPE) != ChestType.SINGLE) {
-                ((ServerPlayer)player).connection.send(new ClientboundLevelEventPacket(LevelEvent.PARTICLES_AND_SOUND_WAX_ON, ChestBlock.getConnectedBlockPos(blockPos, blockState2), 0, false));
+                ((ServerPlayer)player).connection.send(new ClientboundLevelEventPacket(LevelEvent.PARTICLES_WAX_ON, ChestBlock.getConnectedBlockPos(blockPos, blockState2), 0, false));
             }
         }
     }

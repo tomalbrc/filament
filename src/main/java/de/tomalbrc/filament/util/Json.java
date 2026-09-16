@@ -3,7 +3,6 @@ package de.tomalbrc.filament.util;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import de.tomalbrc.bil.json.SimpleCodecDeserializer;
@@ -30,7 +29,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
@@ -57,7 +55,6 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.jspecify.annotations.NonNull;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.ByteArrayInputStream;
@@ -70,7 +67,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public class Json {
     @ApiStatus.Internal
@@ -550,42 +546,35 @@ public class Json {
 
     public static class DataComponentsDeserializer implements JsonDeserializer<DataComponentMap>, JsonSerializer<DataComponentMap> {
         @Override
-        public DataComponentMap deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-            RegistryOps.RegistryInfoLookup registryInfoLookup = createContext(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
-            DataResult<Pair<DataComponentMap, JsonElement>> result = DataComponentMap.CODEC.decode(RegistryOps.create(JsonOps.INSTANCE, registryInfoLookup), jsonElement);
+        public DataComponentMap deserialize(JsonElement jsonElement, Type type,
+                                            JsonDeserializationContext jsonDeserializationContext)
+                throws JsonParseException {
 
-            if (result.resultOrPartial().isEmpty()) {
-                Filament.LOGGER.error("Skipping broken components; could not load: {}", jsonElement.toString());
-                Filament.LOGGER.error("Minecraft error message: {}", result.error().orElseThrow().message());
+            RegistryAccess registryAccess = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
+            RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
+
+            DataResult<DataComponentMap> result =
+                    DataComponentMap.CODEC.parse(ops, jsonElement);
+
+            if (result.result().isEmpty()) {
+                Filament.LOGGER.error("Skipping broken components; could not load: {}", jsonElement);
+                result.error().ifPresent(e ->
+                        Filament.LOGGER.error("Minecraft error message: {}", e.message()));
                 return null;
-            } else if (result.error().isPresent()) {
-                Filament.LOGGER.warn("Could not load some components: {}", jsonElement.toString());
-                Filament.LOGGER.warn("Minecraft error message: {}", result.error().orElseThrow().message());
             }
 
-            return result.resultOrPartial().get().getFirst();
+            result.error().ifPresent(e ->
+                    Filament.LOGGER.warn("Could not load some components: {}", jsonElement));
+
+            return result.result().get();
         }
+
 
         @Override
         public JsonElement serialize(DataComponentMap src, Type typeOfSrc, JsonSerializationContext context) {
-            RegistryOps.RegistryInfoLookup registryInfoLookup = createContext(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
-            return DataComponentMap.CODEC.encodeStart(RegistryOps.create(JsonOps.INSTANCE, registryInfoLookup), src).getOrThrow();
-        }
-
-        public static RegistryOps.RegistryInfoLookup createContext(RegistryAccess registryAccess) {
-            final Map<ResourceKey<? extends Registry<?>>, RegistryOps.RegistryInfo<?>> map = new HashMap<>();
-            registryAccess.registries().forEach((registryEntry) -> map.put(registryEntry.key(), createInfoForContextRegistry(registryEntry.value())));
-            return new RegistryOps.RegistryInfoLookup() {
-                @NotNull
-                @SuppressWarnings("unchecked")
-                public <T> Optional<RegistryOps.RegistryInfo<T>> lookup(@NonNull ResourceKey<? extends Registry<? extends T>> resourceKey) {
-                    return Optional.ofNullable((RegistryOps.RegistryInfo<T>) map.get(resourceKey));
-                }
-            };
-        }
-
-        public static <T> RegistryOps.RegistryInfo<T> createInfoForContextRegistry(Registry<T> registry) {
-            return new RegistryOps.RegistryInfo<>(registry, registry, registry.registryLifecycle());
+            RegistryAccess registryAccess = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
+            RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
+            return DataComponentMap.CODEC.encodeStart(ops, src).getOrThrow();
         }
     }
 }

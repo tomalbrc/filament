@@ -173,7 +173,7 @@ public class PressurePlate implements BlockBehaviour<PressurePlate.Config> {
         }
 
         if (isPressed) {
-            level.scheduleTick(new BlockPos(pos), state.getBlock(), this.config.pressedTime);
+            level.scheduleTick(pos, state.getBlock(), this.config.pressedTime);
         }
     }
 

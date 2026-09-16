@@ -62,7 +62,7 @@ public class Bouncy implements BlockBehaviour<Bouncy.Config> {
 
     private void setVel(Entity entity,Vec3 vel) {
         entity.setDeltaMovement(vel);
-        entity.hurtMarked = true;
+        entity.syncVelocity = true;
         entity.syncPosition = true;
     }
 

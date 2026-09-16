@@ -2,9 +2,7 @@ package de.tomalbrc.filament.mixin.behaviour.strippable;
 
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.block.Strippable;
-import de.tomalbrc.filament.block.SimpleBlock;
 import de.tomalbrc.filament.registry.StrippableRegistry;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.game.ClientboundLevelEventPacket;
 import net.minecraft.resources.ResourceKey;
@@ -12,13 +10,12 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.LevelEvent;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -29,16 +26,24 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Optional;
+@Mixin(Item.class)
+public class ItemMixin {
+    @Inject(method = "useOn", at = @At(value = "HEAD"), cancellable = true)
+    private void filament$onGetStripped(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir) {
+        if (context.getLevel().isClientSide()) return;
 
-@Mixin(AxeItem.class)
-public class AxeItemMixin {
-    @Inject(method = "evaluateNewBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/AxeItem;getStripped(Lnet/minecraft/world/level/block/state/BlockState;)Ljava/util/Optional;"), cancellable = true)
-    private void filament$onGetStripped(Level level, BlockPos blockPos, Player player, BlockState blockState, CallbackInfoReturnable<Optional<BlockState>> cir) {
-        if (StrippableRegistry.has(blockState.getBlock())) {
-            var newState = StrippableRegistry.get(blockState.getBlock()).withPropertiesOf(blockState);
+        var player = context.getPlayer();
+        var level = context.getLevel();
+        var blockState = level.getBlockState(context.getClickedPos());
+        var blockPos = context.getClickedPos();
 
-            Strippable strippable = ((SimpleBlock)blockState.getBlock()).get(Behaviours.STRIPPABLE);
+        var newBlock = StrippableRegistry.get(blockState.getBlock());
+        if (newBlock != null) {
+            var newState = newBlock.withPropertiesOf(blockState);
+            level.setBlockAndUpdate(context.getClickedPos(), newState);
+            // TODO: 26.3 - check if level event should be sent to all players + sound
+
+            Strippable strippable = blockState.getBlock().get(Behaviours.STRIPPABLE);
             level.playSound(player, blockPos, SoundEvent.createVariableRangeEvent(strippable.getConfig().sound), SoundSource.BLOCKS, 1.0F, 1.0F);
             if (strippable.getConfig().scrape) {
                 level.levelEvent(null, LevelEvent.PARTICLES_SCRAPE, blockPos, 0);
@@ -68,7 +73,8 @@ public class AxeItemMixin {
                         .withLuck(player.getLuck())
                         .create(LootContextParamSets.BLOCK), item -> Block.popResource(level, blockPos, item));
             }
-            cir.setReturnValue(Optional.of(newState));
+
+            cir.setReturnValue(InteractionResult.SUCCESS);
         }
     }
 }

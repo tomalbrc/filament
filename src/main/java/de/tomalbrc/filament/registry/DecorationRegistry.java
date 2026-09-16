@@ -109,7 +109,7 @@ public class DecorationRegistry {
         Function<BlockBehaviour.Properties, DecorationBlock> gen;
         if (data.requiresEntityBlock()) {
             gen = (x) -> {
-                var block = new ComplexDecorationBlock(x.pushReaction(PushReaction.BLOCK), data);
+                var block = new ComplexDecorationBlock(x.pushReaction(PushReaction.IMMOVEABLE), data);
 
                 BlockEntityType<DecorationBlockEntity> blockEntity = FabricBlockEntityTypeBuilder.create(DecorationBlockEntity::new, block).build();
                 EntityRegistry.registerBlockEntity(EntityRegistry.key(data.id()), blockEntity);

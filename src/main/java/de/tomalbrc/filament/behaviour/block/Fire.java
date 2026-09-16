@@ -26,9 +26,9 @@ import it.unimi.dsi.fastutil.objects.Reference2ReferenceArrayMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.codec.RegistryCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.level.ServerLevel;
@@ -68,7 +68,7 @@ public class Fire implements BlockBehaviour<Fire.Config> {
 
     public static Block getMaterialFire(BlockState blockState) {
         if (MATERIAL_BLOCKS == null) {
-            var setCodec = RegistryCodecs.homogeneousList(Registries.BLOCK);
+            var setCodec = RegistryCodecs.holderSet(Registries.BLOCK);
 
             var map = new Reference2ReferenceArrayMap<Block, Block>();
             for (Map.Entry<Block, JsonArray> entry : holderData.entrySet()) {

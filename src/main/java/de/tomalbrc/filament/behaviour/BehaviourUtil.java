@@ -5,10 +5,11 @@ import de.tomalbrc.filament.api.behaviour.ItemBehaviour;
 import de.tomalbrc.filament.block.SimpleBlock;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import org.jspecify.annotations.NonNull;
 
 public class BehaviourUtil {
-    public static void postInitItem(Item item, BehaviourHolder behaviourHolder, BehaviourConfigMap configMap) {
-        if (configMap == null || item == null)
+    public static void postInitItem(@NonNull Item item, BehaviourHolder behaviourHolder, BehaviourConfigMap configMap) {
+        if (configMap == null)
             return;
 
         for (var e : behaviourHolder.getBehaviours()) {
