@@ -9,6 +9,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -34,4 +35,7 @@ public interface FireBlockInvoker {
 
     @Invoker
     void invokeCreateBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder);
+
+    @Invoker
+    BlockState invokeGetStateWithAge(final LevelReader level, final BlockPos pos, final int age);
 }

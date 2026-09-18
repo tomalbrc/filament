@@ -1,0 +1,38 @@
+{
+  "id": "mynamespace:purple_fire",
+  "blockResource": {
+    "models": {
+      "floor0": "minecraft:custom/block/fire/purple_floor0",
+      "floor1": "minecraft:custom/block/fire/purple_floor1",
+      "side0": "minecraft:custom/block/fire/purple_side0",
+      "side1": "minecraft:custom/block/fire/purple_side1",
+      "side_alt0": "minecraft:custom/block/fire/purple_side_alt0",
+      "side_alt1": "minecraft:custom/block/fire/purple_side_alt1",
+      "up0": "minecraft:custom/block/fire/purple_up0",
+      "up1": "minecraft:custom/block/fire/purple_up1",
+      "up_alt0": "minecraft:custom/block/fire/purple_up_alt0",
+      "up_alt1": "minecraft:custom/block/fire/purple_up_alt1"
+    }
+  },
+  "itemResource": {
+    "models": {
+      "default": "minecraft:custom/block/fire/purple_floor0"
+    }
+  },
+  "properties": {
+    "blockBase": "minecraft:fire",
+    "lightEmission": 13,
+    "replaceable": true,
+    "transparent": true,
+    "collision": false,
+    "solid": false,
+    "showBreakParticles": false
+  },
+  "behaviour": {
+    "fire": {
+      "blocks": [
+        "minecraft:end_stone"
+      ]
+    }
+  }
+}

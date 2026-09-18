@@ -25,10 +25,6 @@ public class BlockUtil {
         level.sendParticles(ParticleTypes.HAPPY_VILLAGER, center.x(), center.y(), center.z(), 15, 0.25, 0.25, 0.25, 0.15);
     }
 
-    public static void handleBlockPlaceEffects(ServerPlayer player, InteractionHand hand, BlockPos pos, SoundType type) {
-
-    }
-
     public static void playBreakSound(Level level, BlockPos blockPos, BlockState blockState) {
         SoundEvent breakSound = blockState.getSoundType().getBreakSound();
         level.playSound(null, blockPos,  breakSound, SoundSource.BLOCKS, 1.0F, 1.0F);

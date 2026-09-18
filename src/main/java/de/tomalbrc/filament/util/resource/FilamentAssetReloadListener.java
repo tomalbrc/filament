@@ -44,13 +44,15 @@ public class FilamentAssetReloadListener implements FilamentSynchronousResourceR
                             });
                         }
 
-                        abstractPackResources.listResources(PackType.CLIENT_RESOURCES, isZip ? namespace : "", !isZip ? namespace : "", (Identifier,ioSupplier) -> {
-                            try {
-                                resourcePackBuilder.addData("assets/" + Identifier.getPath(), ioSupplier.get().readAllBytes());
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        });
+                        if (!packResources.location().id().equals("vanilla")) {
+                            abstractPackResources.listResources(PackType.CLIENT_RESOURCES, isZip ? namespace : "", !isZip ? namespace : "", (Identifier,ioSupplier) -> {
+                                try {
+                                    resourcePackBuilder.addData("assets/" + Identifier.getPath(), ioSupplier.get().readAllBytes());
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            });
+                        }
                     }
                 }
             });

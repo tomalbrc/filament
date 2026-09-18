@@ -7,6 +7,7 @@ import de.tomalbrc.filament.behaviour.BehaviourMap;
 import de.tomalbrc.filament.data.AbstractBlockData;
 import de.tomalbrc.filament.data.BlockData;
 import de.tomalbrc.filament.data.properties.BlockProperties;
+import de.tomalbrc.filament.util.BlockUtil;
 import de.tomalbrc.filament.util.Constants;
 import eu.pb4.common.protection.api.CommonProtection;
 import eu.pb4.polymer.blocks.api.PolymerTexturedBlock;
@@ -766,9 +767,16 @@ public class SimpleBlock extends Block implements PolymerTexturedBlock, Behaviou
     }
 
     @Override
-    public void spawnDestroyParticles(@NonNull Level level, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
+    public void spawnDestroyByEntityParticles(@NonNull Level level, @Nullable Entity entity, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
+        if (level.isClientSide()) {
+            super.spawnDestroyByEntityParticles(level, entity, blockPos, blockState);
+            return;
+        }
+
+        BlockUtil.playBreakSound(level, blockPos, blockState);
+
         if (blockData.properties().showBreakParticles()) {
-            super.spawnDestroyParticles(level, blockPos, blockState);
+            super.spawnDestroyByEntityParticles(level, entity, blockPos, blockState);
         }
     }
 }

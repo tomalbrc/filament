@@ -19,6 +19,7 @@ import de.tomalbrc.filament.util.annotation.RegistryRef;
 import eu.pb4.polymer.blocks.impl.BlockExtBlockMapper;
 import eu.pb4.polymer.blocks.impl.DefaultModelData;
 import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
+import eu.pb4.polymer.resourcepack.impl.generation.DefaultRPBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectArrayMap;
@@ -145,7 +146,13 @@ public class Fire implements BlockBehaviour<Fire.Config> {
 
     @Override
     public BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
-        return blockState.getBlock().withPropertiesOf(((FireBlockInvoker) FIRE_BLOCK).invokeUpdateShape(blockState, levelReader, scheduledTickAccess, blockPos, direction, blockPos2, blockState2, randomSource));
+        BlockState result = ((FireBlockInvoker) FIRE_BLOCK).invokeUpdateShape(blockState, levelReader, scheduledTickAccess, blockPos, direction, blockPos2, blockState2, randomSource);
+
+        if (result.isAir()) {
+            return result;
+        }
+
+        return blockState.getBlock().withPropertiesOf(result);
     }
 
     @Override
@@ -157,6 +164,8 @@ public class Fire implements BlockBehaviour<Fire.Config> {
     public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
         return ((FireBlockInvoker) FIRE_BLOCK).invokeCanSurvive(blockState, levelReader, blockPos);
     }
+
+
 
     @Override
     public void tick(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, RandomSource randomSource) {
@@ -181,21 +190,20 @@ public class Fire implements BlockBehaviour<Fire.Config> {
     @Override
     public boolean modifyStateMap(Map<BlockState, BlockData.BlockStateMeta> map, AbstractBlockData<? extends BlockProperties> data) {
         var m = data.blockResource().models();
-        var l1 = m.entrySet().stream().map(entry -> entry.getKey().startsWith("up") ? entry.getValue().model() : null).filter(Objects::nonNull).toList();
-        var l2 = m.entrySet().stream().map(entry -> entry.getKey().startsWith("side") ? entry.getValue().model() : null).filter(Objects::nonNull).toList();
+        var l1 = m.entrySet().stream().map(entry -> entry.getKey().startsWith("up")    ? entry.getValue().model() : null).filter(Objects::nonNull).toList();
+        var l2 = m.entrySet().stream().map(entry -> entry.getKey().startsWith("side")  ? entry.getValue().model() : null).filter(Objects::nonNull).toList();
         var l3 = m.entrySet().stream().map(entry -> entry.getKey().startsWith("floor") ? entry.getValue().model() : null).filter(Objects::nonNull).toList();
-        int id = FIRE_MODELS.size();
-        FIRE_MODELS.add(new FireModelEntry(data.id(), FIRE_MODELS.size(), l1, l2, l3));
+        int ageId = FIRE_MODELS.size();
+        FIRE_MODELS.add(new FireModelEntry(data.id(), ageId, l1, l2, l3));
 
         var customBlock = BuiltInRegistries.BLOCK.getValue(data.id());
         for (BlockState possibleState : customBlock.getStateDefinition().getPossibleStates()) {
             if (possibleState.getValue(FireBlock.AGE) == 0)
-                map.put(possibleState, BlockData.BlockStateMeta.of(FIRE_BLOCK.withPropertiesOf(possibleState).setValue(FireBlock.AGE, id), null));
+                map.put(possibleState, BlockData.BlockStateMeta.of(FIRE_BLOCK.withPropertiesOf(possibleState).setValue(FireBlock.AGE, ageId), null));
         }
 
         return true;
     }
-
 
     public static void addRemap() {
         for (BlockState possibleState : Blocks.FIRE.getStateDefinition().getPossibleStates()) {
@@ -288,7 +296,6 @@ public class Fire implements BlockBehaviour<Fire.Config> {
                 List.of(Identifier.withDefaultNamespace("block/fire_floor0"), Identifier.withDefaultNamespace("block/fire_floor1"))
         );
     }
-
 
     public record BlockStateAsset(Optional<Map<String, List<StateModelVariant>>> variants,
                                   Optional<List<StateMultiPartDefinition>> multipart) {

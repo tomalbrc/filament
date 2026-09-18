@@ -5,6 +5,7 @@
   "mixins": [
     "BlockEntityTypeMixin",
     "BucketItemMixin",
+    "DefaultModelDataMixin",
     "LevelChunkAsyncMixin",
     "MappedRegistryMixin",
     "ReferenceMixin",
