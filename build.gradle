@@ -5,6 +5,9 @@ plugins {
     id 'net.darkhax.curseforgegradle' version '1.3.32'
 }
 
+import net.fabricmc.loom.build.nesting.JarNester
+import org.slf4j.LoggerFactory
+
 version = project.mod_version + "+" + project.minecraft_version
 group = project.maven_group
 
@@ -19,6 +22,13 @@ loom {
 configurations {
     shade
     implementation.extendsFrom(shade)
+
+    includeResolvable {
+        canBeConsumed = false
+        canBeResolved = true
+        transitive = false
+        extendsFrom configurations.include
+    }
 }
 
 repositories {
@@ -33,7 +43,6 @@ dependencies {
     implementation("net.fabricmc:fabric-loader:${project.loader_version}")
     implementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 
-    // Polymer
     implementation("eu.pb4:polymer-core:${project.polymer_version}")
     implementation("eu.pb4:polymer-blocks:${project.polymer_version}")
     implementation("eu.pb4:polymer-resource-pack:${project.polymer_version}")
@@ -43,22 +52,15 @@ dependencies {
     implementation("eu.pb4:polymer-autohost:${project.polymer_version}")
     implementation("eu.pb4:polymer-sound-patcher:${project.polymer_version}")
 
-    include("eu.pb4:polymer-bundled:${project.polymer_version}")
-
     implementation include("eu.pb4:sgui:${project.sgui_version}")
     implementation include('me.lucko:fabric-permissions-api:0.7.0')
 
-    // BIL
     implementation include("de.tomalbrc:blockbench-import-library:${project.bil_version}")
 
     // Text format
     implementation include("eu.pb4:placeholder-api:${project.papi_version}")
-    //implementation include("net.kyori:adventure-platform-fabric:${project.adventure_platform_version}")
-    //implementation include("net.kyori:adventure-text-minimessage:${project.adventure_api_version}")
-    //implementation("net.kyori:adventure-api:${project.adventure_api_version}")
 
     shade('org.yaml:snakeyaml:2.6')
-
     shade("org.eclipse.jetty:jetty-server:12.1.10")
     shade("org.eclipse.jetty.ee10.websocket:jetty-ee10-websocket-jakarta-server:12.1.10")
     shade("com.github.victools:jsonschema-generator:5.0.0")
@@ -71,15 +73,21 @@ dependencies {
     implementation include("eu.pb4:common-protection-api:2.0.0")
 }
 
+tasks.named('jar', Jar).configure {
+    archiveClassifier = 'thin'
+}
+
 shadowJar {
-    from sourceSets.main.output
+    dependsOn tasks.named('jar')
+
+    from(zipTree(tasks.named('jar').flatMap { it.archiveFile }))
     configurations = [project.configurations.shade]
+    archiveClassifier = ''          // use the default artifact name
 
     def relocations = [
             "com.j2html" : "j2html",
             "org.json"   : "orgjson"
     ]
-
     relocations.each { prop, target ->
         relocate prop, "de.tomalbrc.filament.libs.${target}"
     }
@@ -90,10 +98,14 @@ shadowJar {
         exclude(dependency('com.google.code.gson:gson:.*'))
         exclude(dependency('org.apache.commons:commons-lang3:.*'))
     }
-}
 
-tasks.jar {
-    dependsOn shadowJar
+    doLast {
+        JarNester.nestJars(
+                project.configurations.includeResolvable.files,
+                shadowJar.archiveFile.get().asFile,
+                LoggerFactory.getLogger("filament-JiJ")
+        )
+    }
 }
 
 processResources {
@@ -125,25 +137,21 @@ jar {
     }
 }
 
-// configure the maven publication
 publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
         }
     }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
         mavenLocal()
     }
 }
 
-
 tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     apiToken = System.getenv('CURSEFORGE_API_KEY')
     def projectId = findProperty('curseforge_project_id')
-    def mainFile = upload(projectId, tasks.jar)
+    def mainFile = upload(projectId, tasks.shadowJar)
 
     mainFile.displayName = "${project.archives_base_name}-${project.version}"
     mainFile.changelog = file('CHANGELOG.md').exists() ? file('CHANGELOG.md').text : 'No changelog provided.'

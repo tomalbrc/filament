@@ -17,6 +17,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomModelData;
@@ -109,7 +110,7 @@ public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementH
     }
 
     @Override
-    public void spawnDestroyParticles(@NonNull Level level, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
+    public void spawnDestroyByEntityParticles(@NonNull Level level, @Nullable Entity entity, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
         if (blockData.properties().showBreakParticles()) {
             var attachment = BlockBoundAttachment.get(level, blockPos);
             if (attachment != null && level instanceof ServerLevel serverLevel) {

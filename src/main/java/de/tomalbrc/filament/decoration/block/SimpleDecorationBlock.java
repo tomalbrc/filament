@@ -14,6 +14,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomModelData;
@@ -85,7 +86,7 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
     }
 
     @Override
-    public void spawnDestroyParticles(@NonNull Level level, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
+    public void spawnDestroyByEntityParticles(@NonNull Level level, @Nullable Entity entity, @NonNull BlockPos blockPos, @NonNull BlockState blockState) {
         if (level.isClientSide()) return;
 
         BlockUtil.playBreakSound(level, blockPos, blockState);
