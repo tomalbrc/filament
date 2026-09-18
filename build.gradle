@@ -71,26 +71,13 @@ dependencies {
     implementation include("eu.pb4:common-protection-api:2.0.0")
 }
 
-tasks.jar {
-    dependsOn shadowJar
-    from(zipTree(shadowJar.archiveFile)) {
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        exclude 'META-INF/*.SF'
-        exclude 'META-INF/*.DSA'
-        exclude 'META-INF/*.RSA'
-        exclude 'META-INF/maven/**'
-    }
-}
-
 shadowJar {
     from sourceSets.main.output
     configurations = [project.configurations.shade]
 
     def relocations = [
-            //"org.eclipse.jetty"  : "jetty",
-            //"com.github.victools": "jsonschema",
-            "com.j2html"         : "j2html",
-            "org.json"           : "orgjson"
+            "com.j2html" : "j2html",
+            "org.json"   : "orgjson"
     ]
 
     relocations.each { prop, target ->
@@ -103,6 +90,10 @@ shadowJar {
         exclude(dependency('com.google.code.gson:gson:.*'))
         exclude(dependency('org.apache.commons:commons-lang3:.*'))
     }
+}
+
+tasks.jar {
+    dependsOn shadowJar
 }
 
 processResources {
