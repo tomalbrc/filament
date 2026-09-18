@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": "minecraft:yellow_concrete"
+  },
+  "result": {
+    "id": "mynamespace:yellow_concrete_bricks",
+    "count": 4
+  }
+}

@@ -90,7 +90,7 @@ public class Json {
             .registerTypeHierarchyAdapter(Difficulty.class, new SimpleCodecDeserializer<>(Difficulty.CODEC))
             .registerTypeHierarchyAdapter(MobCategory.class, new SimpleCodecDeserializer<>(MobCategory.CODEC))
             .registerTypeHierarchyAdapter(ItemDisplayContext.class, new SimpleCodecDeserializer<>(ItemDisplayContext.CODEC))
-            .registerTypeHierarchyAdapter(PushReaction.class, new LowercaseEnumDeserializer<>(PushReaction.class))
+            .registerTypeHierarchyAdapter(PushReaction.class, new PushReactionDeserializer())
             .registerTypeHierarchyAdapter(AttachFace.class, new SimpleCodecDeserializer<>(StringRepresentable.fromEnum(AttachFace::values)))
             .registerTypeHierarchyAdapter(BlockSetType.PressurePlateSensitivity.class, new LowercaseEnumDeserializer<>(BlockSetType.PressurePlateSensitivity.class))
             .registerTypeHierarchyAdapter(WeatheringCopper.WeatherState.class, new SimpleCodecDeserializer<>(WeatheringCopper.WeatherState.CODEC))
@@ -575,6 +575,36 @@ public class Json {
             RegistryAccess registryAccess = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
             RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
             return DataComponentMap.CODEC.encodeStart(ops, src).getOrThrow();
+        }
+    }
+
+    public static class PushReactionDeserializer implements JsonDeserializer<PushReaction>, JsonSerializer<PushReaction> {
+        @Override
+        public PushReaction deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            String value = json.getAsString().toUpperCase();
+            String mapped = switch (value) {
+                case "NORMAL"    -> "PUSH_PULL";
+                case "DESTROY"   -> "POPPED";
+                case "BLOCK"     -> "IMMOVEABLE";
+                case "IGNORE"    -> "IGNORE_ENTITY";
+                case "PUSH_ONLY" -> "PUSH";
+                default          -> value;
+            };
+            try {
+                return PushReaction.valueOf(mapped);
+            } catch (IllegalArgumentException e) {
+                try {
+                    // legacy support
+                    return PushReaction.valueOf(value);
+                } catch (IllegalArgumentException ex) {
+                    throw new JsonParseException("Invalid PushReaction value: " + value, ex);
+                }
+            }
+        }
+
+        @Override
+        public JsonElement serialize(PushReaction src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.name().toLowerCase());
         }
     }
 }

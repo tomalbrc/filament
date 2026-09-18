@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": "minecraft:amethyst_block"
+  },
+  "result": {
+    "id": "mynamespace:amethyst_bricks",
+    "count": 4
+  }
+}

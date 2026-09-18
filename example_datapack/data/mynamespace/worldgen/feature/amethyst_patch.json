@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:netherrack_replace_blobs",
+  "target": "minecraft:stone",
+  "state": "mynamespace:amethyst_bricks",
+  "radius": 10
+}
