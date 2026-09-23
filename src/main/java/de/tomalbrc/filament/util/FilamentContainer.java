@@ -3,6 +3,7 @@ package de.tomalbrc.filament.util;
 import de.tomalbrc.filament.api.behaviour.ContainerLike;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.block.entity.DecorationLike;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -29,7 +30,7 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
     private boolean valid = true;
 
     private final boolean purge;
-    private final DecorationBlockEntity blockEntity;
+    private final DecorationLike decoration;
 
     private Runnable closeCallback;
     private Runnable openCallback;
@@ -40,10 +41,10 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
     }
     private final List<SimpleContainerListener> listeners = new ArrayList<>();
 
-    public FilamentContainer(DecorationBlockEntity blockEntity, int size, boolean purge) {
+    public FilamentContainer(DecorationLike decoration, int size, boolean purge) {
         super(size);
 
-        this.blockEntity = blockEntity;
+        this.decoration = decoration;
         this.purge = purge;
     }
 
@@ -54,7 +55,7 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
 
     @Override
     public boolean stillValid(@NonNull Player player) {
-        return this.valid && (blockEntity == null || !blockEntity.isRemoved());
+        return this.valid && (decoration == null || !decoration.isRemoved());
     }
 
     @Override
@@ -64,7 +65,7 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
 
     @Override
     public boolean canPlaceItem(int slot, @NonNull ItemStack stack) {
-        return this.valid && (blockEntity == null || !blockEntity.isRemoved()) && stack.getCount() <= getMaxStackSize(slot) - getItem(slot).getCount();
+        return this.valid && (decoration == null || !decoration.isRemoved()) && stack.getCount() <= getMaxStackSize(slot) - getItem(slot).getCount();
     }
 
     public int getMaxStackSize(int slot) {
@@ -120,47 +121,52 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
 
     @Override
     public boolean isEmpty() {
-        if (blockEntity != null) this.unpackLootTable(null);
+        if (decoration != null) this.unpackLootTable(null);
         return super.isEmpty();
     }
 
     @Override
     public @NotNull ItemStack getItem(int n) {
-        if (blockEntity != null) this.unpackLootTable(null);
+        if (decoration != null) this.unpackLootTable(null);
         return super.getItem(n);
     }
 
     @Override
     public @NotNull ItemStack removeItem(int n, int n2) {
-        if (blockEntity != null) this.unpackLootTable(null);
+        if (decoration != null) this.unpackLootTable(null);
         return super.removeItem(n, n2);
     }
 
     @Override
     public @NotNull ItemStack removeItemNoUpdate(int n) {
-        if (blockEntity != null) this.unpackLootTable(null);
+        if (decoration != null) this.unpackLootTable(null);
         return super.removeItemNoUpdate(n);
     }
 
     @Override
     public void setItem(int n, @NonNull ItemStack itemStack) {
-        if (blockEntity != null) this.unpackLootTable(null);
+        if (decoration != null) this.unpackLootTable(null);
         super.setItem(n, itemStack);
     }
 
     @Override
     public @NotNull NonNullList<ItemStack> getItems() {
-        if (blockEntity != null) this.unpackLootTable(null);
+        if (decoration != null) this.unpackLootTable(null);
         return this.items;
     }
 
+    public DecorationLike getDecoration() {
+        return decoration;
+    }
+
+    @Nullable
     public DecorationBlockEntity getBlockEntity() {
-        return blockEntity;
+        return decoration instanceof DecorationBlockEntity blockEntity ? blockEntity : null;
     }
 
     @Override
     public @Nullable ResourceKey<LootTable> getLootTable() {
-        var containerLike = DecorationData.getFirstContainer(blockEntity);
+        var containerLike = DecorationData.getFirstContainer(decoration);
         if (containerLike != null)
             return containerLike.getLootTable();
         return null;
@@ -168,13 +174,13 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
 
     @Override
     public void setLootTable(@Nullable ResourceKey<LootTable> resourceKey) {
-        var containerLike = DecorationData.getFirstContainer(blockEntity);
+        var containerLike = DecorationData.getFirstContainer(decoration);
         if (containerLike != null) containerLike.setLootTable(resourceKey);
     }
 
     @Override
     public long getLootTableSeed() {
-        var containerLike = DecorationData.getFirstContainer(blockEntity);
+        var containerLike = DecorationData.getFirstContainer(decoration);
         if (containerLike != null)
             return containerLike.getLootTableSeed();
         return 0;
@@ -182,24 +188,27 @@ public class FilamentContainer extends SimpleContainer implements RandomizableCo
 
     @Override
     public void setLootTableSeed(long l) {
-        var containerLike = DecorationData.getFirstContainer(blockEntity);
+        var containerLike = DecorationData.getFirstContainer(decoration);
         if (containerLike != null)
             containerLike.setLootTableSeed(l);
     }
 
     @Override
     public @NotNull BlockPos getBlockPos() {
-        return blockEntity.getBlockPos();
+        return decoration.getBlockPos();
     }
 
     @Override
     public @Nullable Level getLevel() {
-        return blockEntity.getLevel();
+        return decoration.getLevel();
     }
 
     public static boolean isPickUpContainer(Container container) {
         ContainerLike containerLike;
-        return container instanceof FilamentContainer filamentContainer && filamentContainer.getBlockEntity() != null && (containerLike = DecorationData.getFirstContainer(filamentContainer.getBlockEntity())) != null && containerLike.canPickUp();
+        return container instanceof FilamentContainer filamentContainer
+                && filamentContainer.getDecoration() != null
+                && (containerLike = DecorationData.getFirstContainer(filamentContainer.getDecoration())) != null
+                && containerLike.canPickUp();
     }
 
     @Override

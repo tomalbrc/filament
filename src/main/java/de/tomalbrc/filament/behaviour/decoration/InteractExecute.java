@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.behaviour.decoration;
 
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
-import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.block.entity.DecorationLike;
 import de.tomalbrc.filament.util.ExecuteUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -32,12 +32,12 @@ public class InteractExecute implements DecorationBehaviour<InteractExecute.Conf
     }
 
     @Override
-    public void init(DecorationBlockEntity blockEntity) {
+    public void init(DecorationLike blockEntity) {
         DecorationBehaviour.super.init(blockEntity);
     }
 
     @Override
-    public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
+    public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationLike decorationBlockEntity) {
         Item key = this.config.key == null ? null : BuiltInRegistries.ITEM.getValue(this.config.key);
         ItemStack mainHandItem = player.getItemInHand(InteractionHand.MAIN_HAND);
         boolean hasHandItem = !mainHandItem.isEmpty();

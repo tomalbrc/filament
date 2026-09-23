@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.event.FilamentRegistrationEvents;
 import de.tomalbrc.filament.data.EntityData;
+import de.tomalbrc.filament.decoration.block.entity.DecorationEntity;
 import de.tomalbrc.filament.decoration.util.SeatEntity;
 import de.tomalbrc.filament.entity.AnimatedFilamentEnemyMob;
 import de.tomalbrc.filament.entity.AnimatedFilamentMob;
@@ -52,6 +53,7 @@ public class EntityRegistry {
     public static final EntityType<BaseProjectileEntity> BASE_PROJECTILE = registerEntity("projectile", EntityType.Builder.of(BaseProjectileEntity::new, MobCategory.MISC).sized(0.5f, 0.5f).noSummon());
     public static final EntityType<TridentEntity> FILAMENT_TRIDENT = registerEntity("trident", EntityType.Builder.of(TridentEntity::new, MobCategory.MISC).sized(0.5f, 0.5f).eyeHeight(0.13f).noSummon());
     public static final EntityType<SeatEntity> SEAT_ENTITY =  registerEntity("decoration_seat", EntityType.Builder.of(SeatEntity::new, MobCategory.MISC).noSummon().updateInterval(20).sized(0.5f, 0.1f));
+    public static final EntityType<DecorationEntity> FURNITURE_ENTITY =  registerEntity("decoration", EntityType.Builder.of(DecorationEntity::new, MobCategory.MISC).noSummon().updateInterval(20).sized(0.5f, 0.5f));
 
     public static void register(InputStream inputStream) throws IOException {
         var element = JsonParser.parseReader(new InputStreamReader(inputStream));

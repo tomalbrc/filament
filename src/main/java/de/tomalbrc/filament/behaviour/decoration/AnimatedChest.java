@@ -8,6 +8,7 @@ import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.block.AbstractHorizontalFacing;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.block.entity.DecorationLike;
 import de.tomalbrc.filament.mixin.accessor.ChestBlockInvoker;
 import de.tomalbrc.filament.registry.OxidizableRegistry;
 import de.tomalbrc.filament.registry.StrippableRegistry;
@@ -91,32 +92,34 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     }
 
     @Override
-    public void init(DecorationBlockEntity blockEntity) {
-        DecorationBehaviour.super.init(blockEntity);
+    public void init(DecorationLike decoration) {
+        DecorationBehaviour.super.init(decoration);
 
-        TYPE = (BlockEntityType<DecorationBlockEntity>) blockEntity.getType();
+        if (decoration instanceof DecorationBlockEntity blockEntity) {
+            TYPE = (BlockEntityType<DecorationBlockEntity>) blockEntity.getType();
+        }
 
-        this.container = new FilamentContainer(blockEntity, config.size, config.purge);
+        this.container = new FilamentContainer(decoration, config.size, config.purge);
 
-        var item = blockEntity.getItem();
+        var item = decoration.getItem();
         if (item.has(DataComponents.CONTAINER)) {
-            Objects.requireNonNull(blockEntity.getItem().get(DataComponents.CONTAINER)).copyInto(container.items);
+            Objects.requireNonNull(decoration.getItem().get(DataComponents.CONTAINER)).copyInto(container.items);
         }
 
         if (config.openAnimation != null) {
-            container.setOpenCallback(() -> blockEntity.getOrCreateHolder().playAnimation(config.openAnimation, 2));
+            container.setOpenCallback(() -> decoration.getOrCreateHolder().playAnimation(config.openAnimation, 2));
         }
         if (config.closeAnimation != null) {
-            container.setCloseCallback(() -> blockEntity.getOrCreateHolder().playAnimation(config.closeAnimation, 2));
+            container.setCloseCallback(() -> decoration.getOrCreateHolder().playAnimation(config.closeAnimation, 2));
         }
     }
 
     @Override
-    public void destroy(DecorationBlockEntity decorationBlockEntity, boolean dropItem) {
+    public void destroy(DecorationLike decoration, boolean dropItem) {
         container.setValid(false);
 
         if (!config.canPickup)
-            Containers.dropContents(decorationBlockEntity.getLevel(), decorationBlockEntity.getBlockPos(), container);
+            Containers.dropContents(decoration.getLevel(), decoration.getBlockPos(), container);
     }
 
     @Override
@@ -226,13 +229,13 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     }
 
     @Override
-    public void write(ValueOutput output, DecorationBlockEntity decorationBlockEntity) {
+    public void write(ValueOutput output, DecorationLike decoration) {
         if (!container.trySaveLootTable(output))
             ContainerHelper.saveAllItems(output.child("Container"), this.container.items);
     }
 
     @Override
-    public void read(ValueInput input, DecorationBlockEntity decorationBlockEntity) {
+    public void read(ValueInput input, DecorationLike decoration) {
         if (!container.tryLoadLootTable(input))
             input.child("Container").ifPresent(x -> ContainerHelper.loadAllItems(x, container.items));
     }
@@ -277,7 +280,7 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     }
 
     @Override
-    public void applyImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentGetter dataComponentGetter) {
+    public void applyImplicitComponents(DecorationLike decoration, DataComponentGetter dataComponentGetter) {
         dataComponentGetter.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(this.container.items);
         SeededContainerLoot seededContainerLoot = dataComponentGetter.get(DataComponents.CONTAINER_LOOT);
         if (seededContainerLoot != null) {
@@ -287,7 +290,7 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     }
 
     @Override
-    public void collectImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentMap.Builder builder) {
+    public void collectImplicitComponents(DecorationLike decoration, DataComponentMap.Builder builder) {
         builder.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(this.container.items));
         if (this.lootTable != null) {
             builder.set(DataComponents.CONTAINER_LOOT, new SeededContainerLoot(this.lootTable, this.lootTableSeed));
@@ -295,13 +298,13 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
     }
 
     @Override
-    public void removeComponentsFromTag(DecorationBlockEntity decorationBlockEntity, ValueOutput valueOutput) {
+    public void removeComponentsFromTag(DecorationLike decoration, ValueOutput valueOutput) {
         valueOutput.discard("LootTable");
         valueOutput.discard("LootTableSeed");
     }
 
     @Override
-    public void modifyDrop(DecorationBlockEntity blockEntity, ItemStack itemStack) {
+    public void modifyDrop(DecorationLike decoration, ItemStack itemStack) {
         if (config.canPickup) {
             itemStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(container.getItems()));
         }
@@ -309,12 +312,15 @@ public class AnimatedChest extends AbstractHorizontalFacing<AnimatedChest.Config
 
     @Override
     public Component customName() {
-        return container.getBlockEntity().components().get(DataComponents.CUSTOM_NAME);
+        return container.getDecoration().components().get(DataComponents.CUSTOM_NAME);
     }
 
     @Override
     public @Nullable Container container() {
-        return getContainer(container.getBlockEntity().getBlockState(), container.getBlockEntity().getLevel(), container.getBlockEntity().getBlockPos(), config.ignoreBlock);
+        var decoration = container.getDecoration();
+        if (decoration.getBlockState() == null) return container;
+
+        return getContainer(decoration.getBlockState(), decoration.getLevel(), decoration.getBlockPos(), config.ignoreBlock);
     }
 
     @Override

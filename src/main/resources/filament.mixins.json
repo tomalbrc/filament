@@ -31,6 +31,7 @@
     "accessor.PathPackResourcesAccessor",
     "accessor.PathResourcesSupplierAccessor",
     "accessor.PlayerAccessor",
+    "accessor.PolymerEntityAttachmentAccessor",
     "accessor.PrimedTntAccessor",
     "accessor.ProjectileWeaponItemInvoker",
     "behaviour.EntityMixin",
@@ -84,6 +85,7 @@
     "datafix.ChunkStorageMixin",
     "decoration.FlowingFluidMixin",
     "decoration.LevelChunkMixin",
+    "decoration.ServerGamePacketListenerImplMixin",
     "injection.BlockMixin",
     "injection.ItemMixin"
   ],

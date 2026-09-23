@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.behaviour.decoration;
 
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
-import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.block.entity.DecorationLike;
 import de.tomalbrc.filament.util.ExecuteUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -35,12 +35,12 @@ public class Lock implements DecorationBehaviour<Lock.Config> {
     }
 
     @Override
-    public void init(DecorationBlockEntity blockEntity) {
-        DecorationBehaviour.super.init(blockEntity);
+    public void init(DecorationLike decoration) {
+        DecorationBehaviour.super.init(decoration);
     }
 
     @Override
-    public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
+    public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationLike decoration) {
         if (this.unlocked && !config.repeatable) return InteractionResult.PASS;
 
         Item key = this.config.key == null ? null : BuiltInRegistries.ITEM.getValue(this.config.key);
@@ -53,8 +53,8 @@ public class Lock implements DecorationBehaviour<Lock.Config> {
                 mainHandItem.shrink(1);
             }
 
-            if (this.config.unlockAnimation != null && !config.unlockAnimation.isEmpty() && decorationBlockEntity.getOrCreateHolder() != null) {
-                decorationBlockEntity.getOrCreateHolder().playAnimation(config.unlockAnimation);
+            if (this.config.unlockAnimation != null && !config.unlockAnimation.isEmpty() && decoration.getOrCreateHolder() != null) {
+                decoration.getOrCreateHolder().playAnimation(config.unlockAnimation);
             }
 
             this.unlocked = !noItemNoKey;
@@ -62,7 +62,7 @@ public class Lock implements DecorationBehaviour<Lock.Config> {
             var cmds = commands();
             boolean hasCommand = cmds != null && !cmds.isEmpty();
             if (hasCommand) {
-                var pos = getConfig().atBlock ? Vec3.atCenterOf(decorationBlockEntity.getBlockPos()) : null;
+                var pos = getConfig().atBlock ? Vec3.atCenterOf(decoration.getBlockPos()) : null;
                 if (getConfig().console) {
                     ExecuteUtil.asConsole(player, pos, cmds.toArray(new String[0]));
                 }
@@ -72,7 +72,7 @@ public class Lock implements DecorationBehaviour<Lock.Config> {
             }
 
             if (this.config.discard) {
-                decorationBlockEntity.destroyStructure(false);
+                decoration.destroyStructure(false);
             }
         }
 
@@ -80,12 +80,12 @@ public class Lock implements DecorationBehaviour<Lock.Config> {
     }
 
     @Override
-    public void read(ValueInput input, DecorationBlockEntity blockEntity) {
+    public void read(ValueInput input, DecorationLike decoration) {
         input.child("Lock").ifPresent(lock -> this.unlocked = lock.getBooleanOr("Unlocked", this.unlocked));
     }
 
     @Override
-    public void write(ValueOutput output, DecorationBlockEntity blockEntity) {
+    public void write(ValueOutput output, DecorationLike decoration) {
         ValueOutput lockTag = output.child("Lock");
         lockTag.putBoolean("Unlocked", this.unlocked);
     }

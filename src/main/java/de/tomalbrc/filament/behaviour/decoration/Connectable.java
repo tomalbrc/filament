@@ -4,7 +4,7 @@ import de.tomalbrc.filament.api.behaviour.BlockBehaviour;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.api.behaviour.DecorationRotationProvider;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
-import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.block.entity.DecorationLike;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -50,7 +50,7 @@ public class Connectable implements BlockBehaviour<Connectable.Config>, Decorati
     }
 
     @Override
-    public ItemStack visualItemStack(DecorationBlockEntity decorationBlockEntity, ItemStack itemStack, BlockState blockState) {
+    public ItemStack visualItemStack(DecorationLike decorationBlockEntity, ItemStack itemStack, BlockState blockState) {
         itemStack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(), List.of(), List.of(blockState.getValue(SHAPE).customModelData()), List.of()));
         return itemStack;
     }

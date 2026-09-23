@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.block.entity.DecorationLike;
 import de.tomalbrc.filament.mixin.accessor.PlayerAccessor;
 import de.tomalbrc.filament.util.DecorationUtil;
 import net.minecraft.advancements.triggers.CriteriaTriggers;
@@ -44,8 +45,9 @@ public class Bed implements DecorationBehaviour<Bed.Config> {
     }
 
     @Override
-    public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
-        return this.startSleeping(player, decorationBlockEntity, decorationBlockEntity.getBlockPos());
+    public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationLike decoration) {
+        if (!(decoration instanceof DecorationBlockEntity blockEntity)) return InteractionResult.PASS;
+        return this.startSleeping(player, blockEntity, blockEntity.getBlockPos());
     }
 
     private InteractionResult startSleeping(ServerPlayer player, DecorationBlockEntity decorationBlockEntity, BlockPos blockPos) {

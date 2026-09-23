@@ -1,6 +1,6 @@
 package de.tomalbrc.filament.api.behaviour;
 
-import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.block.entity.DecorationLike;
 import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,24 +20,24 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Defines the behavioral contract for a decoration block
+ * Defines the behavioral contract for decorations
  * <p>
- * Decorations are blocks rendered using item display entities (e.g. benches, showcases, backpacks)
  * This interface provides the hooks needed to customize their placement, interaction, etc
  *
  * @param <T> the type of the configuration object associated with this behaviour
  */
 public interface DecorationBehaviour<T> extends Behaviour<T> {
     /**
-     * Called after a decoration block was placed.
+     * Called after a decoration was placed.
      * <p>
-     * Use this hook to initialize any resources or state that the block entity needs
+     * Use this hook to initialize any resources or state that the decoration needs
      * when placed in the world.
-     * DecorationBehaviours are attached to the BlockEntity. Each BlockEntity owns an instance.
+     * DecorationBehaviours are attached to the decoration. Each decoration owns an instance.
+     * This is different compared to items or blocks, where it is attached to the "global" block/item object.
      *
-     * @param blockEntity the decoration block entity this behaviour is attached to
+     * @param decoration the decoration this behaviour is attached to
      */
-    default void init(DecorationBlockEntity blockEntity) {
+    default void init(DecorationLike decoration) {
     }
 
     /**
@@ -50,10 +50,10 @@ public interface DecorationBehaviour<T> extends Behaviour<T> {
      * Returning {@code null} indicates that the default holder
      * creation logic should be used.
      *
-     * @param blockEntity the decoration block entity this behaviour is attached to
+     * @param decoration the decoration this behaviour is attached to
      * @return a new holder instance, or {@code null} to use the default
      */
-    default FilamentDecorationHolder createHolder(DecorationBlockEntity blockEntity) {
+    default FilamentDecorationHolder createHolder(DecorationLike decoration) {
         return null;
     }
 
@@ -61,10 +61,10 @@ public interface DecorationBehaviour<T> extends Behaviour<T> {
      * Called when a {@link FilamentDecorationHolder} is attached to the
      * world
      *
-     * @param blockEntity the decoration block entity
-     * @param holder      the holder that was attached
+     * @param decoration the decoration
+     * @param holder     the holder that was attached
      */
-    default void onHolderAttach(DecorationBlockEntity blockEntity, FilamentDecorationHolder holder) {
+    default void onHolderAttach(DecorationLike decoration, FilamentDecorationHolder holder) {
     }
 
     /**
@@ -75,40 +75,40 @@ public interface DecorationBehaviour<T> extends Behaviour<T> {
      * Returning {@link InteractionResult#PASS}
      * allows other behaviours or the default logic to handle the interaction.
      *
-     * @param player              the player interacting with the decoration
-     * @param hand                the hand used for the interaction
-     * @param location            the exact point of interaction in world space
-     * @param decorationBlockEntity the decoration block entity being interacted with
+     * @param player     the player interacting with the decoration
+     * @param hand       the hand used for the interaction
+     * @param location   the exact point of interaction in world space
+     * @param decoration the decoration being interacted with
      * @return the result of the interaction
      */
-    default InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
+    default InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationLike decoration) {
         return InteractionResult.PASS;
     }
 
     /**
      * Reads custom data from the decoration's saved storage.
      * <p>
-     * This method is called when the decoration block entity is loaded.
+     * This method is called when the decoration is loaded.
      * Implementations should read any behaviour-specific fields they
-     * previously wrote in {@link #write(ValueOutput, DecorationBlockEntity)}.
+     * previously wrote in {@link #write(ValueOutput, DecorationLike)}.
      *
-     * @param output      the input value to read from
-     * @param blockEntity the decoration block entity
+     * @param output     the input value to read from
+     * @param decoration the decoration
      */
-    default void read(ValueInput output, DecorationBlockEntity blockEntity) {
+    default void read(ValueInput output, DecorationLike decoration) {
     }
 
     /**
      * Writes custom data to the decoration's saved storage.
      * <p>
-     * This method is called when the decoration block entity is saved.
+     * This method is called when the decoration is saved.
      * Implementations should write any behaviour-specific state that needs to
      * persist across world reloads.
      *
-     * @param input       the output value to write to
-     * @param blockEntity the decoration block entity
+     * @param input      the output value to write to
+     * @param decoration the decoration
      */
-    default void write(ValueOutput input, DecorationBlockEntity blockEntity) {
+    default void write(ValueOutput input, DecorationLike decoration) {
     }
 
     /**
@@ -117,10 +117,10 @@ public interface DecorationBehaviour<T> extends Behaviour<T> {
      * Implementations can use this to drop custom items, play effects, or
      * clean up any resources they allocated.
      *
-     * @param decorationBlockEntity the decoration block entity that was destroyed
-     * @param dropItem              whether the decoration should drop its item form
+     * @param decoration the decoration that was destroyed
+     * @param dropItem   whether the decoration should drop its item form
      */
-    default void destroy(DecorationBlockEntity decorationBlockEntity, boolean dropItem) {
+    default void destroy(DecorationLike decoration, boolean dropItem) {
     }
 
     /**
@@ -130,10 +130,10 @@ public interface DecorationBehaviour<T> extends Behaviour<T> {
      * This can be used to add custom components or
      * otherwise alter the drop.
      *
-     * @param decorationBlockEntity the decoration block entity
-     * @param itemStack             the default drop item stack
+     * @param decoration the decoration
+     * @param itemStack  the default drop item stack
      */
-    default void modifyDrop(DecorationBlockEntity decorationBlockEntity, ItemStack itemStack) {
+    default void modifyDrop(DecorationLike decoration, ItemStack itemStack) {
     }
 
     /**
@@ -144,13 +144,13 @@ public interface DecorationBehaviour<T> extends Behaviour<T> {
      * item stack that was used to place it (e.g. based on block state, contents,
      * or other conditions).
      *
-     * @param decorationBlockEntity the decoration block entity
-     * @param adjusted              the current adjusted item stack
-     * @param blockState            the block state of the decoration
+     * @param decoration the decoration
+     * @param adjusted   the current adjusted item stack
+     * @param blockState the block state of the decoration, or {@code null} for entity decorations
      * @return the item stack to use for the client-side visual
      */
     // Allows to change the visual item stack
-    default ItemStack visualItemStack(DecorationBlockEntity decorationBlockEntity, ItemStack adjusted, BlockState blockState) {
+    default ItemStack visualItemStack(DecorationLike decoration, ItemStack adjusted, BlockState blockState) {
         return adjusted;
     }
 
@@ -161,19 +161,21 @@ public interface DecorationBehaviour<T> extends Behaviour<T> {
      * This mirrors the block shape update logic, allowing decorations to react
      * to changes in their surroundings (e.g. a shelf decoration that needs to
      * re-evaluate its shape when a support block is removed).
+     * <p>
+     * Block-only hook. Entity-backed decorations never call it!
      *
-     * @param decorationBlockEntity the decoration block entity
-     * @param blockState            the current block state
-     * @param levelReader           the level reader
-     * @param scheduledTickAccess   access to scheduled ticks
-     * @param blockPos              the position of the decoration
-     * @param direction             the direction of the neighbour that changed
-     * @param blockPos2             the position of the neighbour
-     * @param blockState2           the new block state of the neighbour
-     * @param randomSource          the random source
+     * @param decoration          the decoration
+     * @param blockState          the current block state
+     * @param levelReader         the level reader
+     * @param scheduledTickAccess access to scheduled ticks
+     * @param blockPos            the position of the decoration
+     * @param direction           the direction of the neighbour that changed
+     * @param blockPos2           the position of the neighbour
+     * @param blockState2         the new block state of the neighbour
+     * @param randomSource        the random source
      * @return the updated block state
      */
-    default BlockState updateShape(DecorationBlockEntity decorationBlockEntity, BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
+    default BlockState updateShape(DecorationLike decoration, BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
         return blockState;
     }
 
@@ -182,12 +184,14 @@ public interface DecorationBehaviour<T> extends Behaviour<T> {
      * "pick block" function on this decoration.
      * <p>
      * This allows the decoration to return a custom item instead of the default block item.
+     * <p>
+     * Block-only hook. Entity-backed decorations never call it!
      *
-     * @param stack        the default clone item stack
-     * @param levelReader  the level reader
-     * @param blockPos     the position of the decoration
-     * @param blockState   the block state
-     * @param includeData  whether to include extra data (e.g. block entity NBT)
+     * @param stack       the default clone item stack
+     * @param levelReader the level reader
+     * @param blockPos    the position of the decoration
+     * @param blockState  the block state
+     * @param includeData whether to include extra data (e.g. block entity NBT)
      * @return the clone item stack
      */
     default ItemStack getCloneItemStack(ItemStack stack, LevelReader levelReader, BlockPos blockPos, BlockState blockState, boolean includeData) {
@@ -197,20 +201,20 @@ public interface DecorationBehaviour<T> extends Behaviour<T> {
     /**
      * Applies implicit data components from the item.
      *
-     * @param decorationBlockEntity the decoration block entity
-     * @param dataComponentGetter   the component getter to apply data to
+     * @param decoration          the decoration
+     * @param dataComponentGetter the component getter to apply data to
      */
-    default void applyImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentGetter dataComponentGetter) {}
+    default void applyImplicitComponents(DecorationLike decoration, DataComponentGetter dataComponentGetter) {}
 
     /**
-     * This is the counterpart to {@link #applyImplicitComponents(DecorationBlockEntity, DataComponentGetter)}.
+     * This is the counterpart to {@link #applyImplicitComponents(DecorationLike, DataComponentGetter)}.
      * Implementations should add any components that are implicitly derived from
      * the decoration's state.
      *
-     * @param decorationBlockEntity the decoration block entity
-     * @param builder               the component map builder to add components to
+     * @param decoration the decoration
+     * @param builder    the component map builder to add components to
      */
-    default void collectImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentMap.Builder builder) {}
+    default void collectImplicitComponents(DecorationLike decoration, DataComponentMap.Builder builder) {}
 
     /**
      * Removes components from the decoration's serialized data.
@@ -218,22 +222,22 @@ public interface DecorationBehaviour<T> extends Behaviour<T> {
      * This is used during serialization to strip out components that should not
      * be persisted (e.g. temporary or derived data).
      *
-     * @param decorationBlockEntity the decoration block entity
-     * @param valueOutput           the output value to remove components from
+     * @param decoration  the decoration
+     * @param valueOutput the output value to remove components from
      */
-    default void removeComponentsFromTag(DecorationBlockEntity decorationBlockEntity, ValueOutput valueOutput) {}
+    default void removeComponentsFromTag(DecorationLike decoration, ValueOutput valueOutput) {}
 
     /**
      * Called after the decoration has been broken by a player.
      * <p>
-     * This is distinct from {@link #destroy(DecorationBlockEntity, boolean)},
+     * This is distinct from {@link #destroy(DecorationLike, boolean)},
      * which is called during the destruction process. {@code postBreak} is
-     * called after the block has been fully removed.
+     * called after the decoration has been fully removed.
      *
-     * @param decorationBlockEntity the decoration block entity that was broken
-     * @param blockPos              the position where the decoration was
-     * @param player                the player who broke the decoration
+     * @param decoration the decoration that was broken
+     * @param blockPos   the position where the decoration was
+     * @param player     the player who broke the decoration
      */
-    default void postBreak(DecorationBlockEntity decorationBlockEntity, BlockPos blockPos, Player player) {
+    default void postBreak(DecorationLike decoration, BlockPos blockPos, Player player) {
     }
 }

@@ -4,7 +4,7 @@ import de.tomalbrc.bil.core.model.Model;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
-import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.block.entity.DecorationLike;
 import de.tomalbrc.filament.decoration.holder.AnimatedDecorationHolder;
 import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
 import de.tomalbrc.filament.registry.ModelRegistry;
@@ -29,27 +29,27 @@ public class Animation implements DecorationBehaviour<Animation.Config> {
     }
 
     @Override
-    public FilamentDecorationHolder createHolder(DecorationBlockEntity blockEntity) {
+    public FilamentDecorationHolder createHolder(DecorationLike decoration) {
         Model model = ModelRegistry.getModel(config.model);
         if (model == null) {
             Filament.LOGGER.error("No Animated model named '{}' was found!", config.model);
         } else {
-            return new AnimatedDecorationHolder(blockEntity, model);
+            return new AnimatedDecorationHolder(decoration, model);
         }
 
         return null;
     }
 
     @Override
-    public void onHolderAttach(DecorationBlockEntity blockEntity, FilamentDecorationHolder holder) {
-        holder.setYaw(blockEntity.getVisualRotationYInDegrees());
+    public void onHolderAttach(DecorationLike decoration, FilamentDecorationHolder holder) {
+        holder.setYaw(decoration.getVisualRotationYInDegrees());
     }
 
     @Override
-    public void read(ValueInput output, DecorationBlockEntity blockEntity) {
-        output.getString("Animation").ifPresent(x -> blockEntity.getOrCreateHolder().playAnimation(x));
+    public void read(ValueInput output, DecorationLike decoration) {
+        output.getString("Animation").ifPresent(x -> decoration.getOrCreateHolder().playAnimation(x));
 
-        DecorationBehaviour.super.read(output, blockEntity);
+        DecorationBehaviour.super.read(output, decoration);
     }
 
     public static class Config {
