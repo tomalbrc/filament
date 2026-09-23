@@ -7,7 +7,7 @@ import de.tomalbrc.filament.api.behaviour.ContainerLike;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.decoration.DecorationItem;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
-import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.block.entity.DecorationLike;
 import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
 import de.tomalbrc.filament.util.FilamentContainer;
 import de.tomalbrc.filament.util.TextUtil;
@@ -81,7 +81,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     }
 
     @Override
-    public void init(DecorationBlockEntity blockEntity) {
+    public void init(DecorationLike blockEntity) {
         this.container = new FilamentContainer(blockEntity, config.elements.size(), false) {
             @Override
             public int getMaxStackSize(int slot) {
@@ -98,7 +98,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     }
 
     @Override
-    public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
+    public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationLike decorationBlockEntity) {
         if (!player.isSecondaryUseActive() && decorationBlockEntity.getOrCreateHolder() != null) {
             if (config.useMenu) {
                 Component containerName = customName() != null && showCustomName() ? customName() : TextUtil.formatText(config.name);
@@ -140,7 +140,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     }
 
     @Override
-    public void read(ValueInput input, DecorationBlockEntity blockEntity) {
+    public void read(ValueInput input, DecorationLike blockEntity) {
         if (!container.tryLoadLootTable(input)) {
             var showcaseInput = input.child(SHOWCASE_KEY);
             if (showcaseInput.isPresent() && blockEntity.getOrCreateHolder() != null) {
@@ -159,7 +159,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     }
 
     @Override
-    public void write(ValueOutput output, DecorationBlockEntity blockEntity) {
+    public void write(ValueOutput output, DecorationLike blockEntity) {
         if (!container.trySaveLootTable(output)) {
             if (blockEntity.getOrCreateHolder() != null) {
                 ValueOutput showcaseTag = output.child(SHOWCASE_KEY);
@@ -174,7 +174,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     }
 
     @Override
-    public void destroy(DecorationBlockEntity decorationBlockEntity, boolean dropItem) {
+    public void destroy(DecorationLike decorationBlockEntity, boolean dropItem) {
         container.setValid(false);
 
         var level = decorationBlockEntity.getLevel();
@@ -183,7 +183,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
         }
     }
 
-    public Showcase.ShowcaseMeta getClosestShowcase(DecorationBlockEntity decorationBlockEntity, Vec3 location) {
+    public Showcase.ShowcaseMeta getClosestShowcase(DecorationLike decorationBlockEntity, Vec3 location) {
         if (config.elements.size() == 1) {
             return config.elements.getFirst();
         } else {
@@ -207,7 +207,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
         return new Vector3f(showcase.offset).sub(0, 0.475f, 0).rotateY(Mth.PI);
     }
 
-    public void setShowcaseItemStack(DecorationBlockEntity decorationBlockEntity, Showcase.ShowcaseMeta showcase, ItemStack itemStack) {
+    public void setShowcaseItemStack(DecorationLike decorationBlockEntity, Showcase.ShowcaseMeta showcase, ItemStack itemStack) {
         FilamentDecorationHolder holder = decorationBlockEntity.getOrCreateHolder();
         if (holder == null)
             return;
@@ -254,7 +254,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
         return displayElement;
     }
 
-    private DisplayElement createShowcase(DecorationBlockEntity decorationBlockEntity, Showcase.ShowcaseMeta showcase, ItemStack itemStack) {
+    private DisplayElement createShowcase(DecorationLike decorationBlockEntity, Showcase.ShowcaseMeta showcase, ItemStack itemStack) {
         DisplayElement element = null;
 
         switch (showcase.type) {
@@ -283,7 +283,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
         return element;
     }
 
-    private void transform(DecorationBlockEntity decorationBlockEntity, DisplayElement element, ShowcaseMeta showcase) {
+    private void transform(DecorationLike decorationBlockEntity, DisplayElement element, ShowcaseMeta showcase) {
         if (element != null) {
             element.setScale(showcase.scale);
             element.setLeftRotation(showcase.rotation);
@@ -326,7 +326,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     }
 
     @Override
-    public void modifyDrop(DecorationBlockEntity decorationBlockEntity, ItemStack itemStack) {
+    public void modifyDrop(DecorationLike decorationBlockEntity, ItemStack itemStack) {
         if (config.canPickup) {
             itemStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(container.getItems()));
         }
@@ -338,7 +338,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     }
 
     @Override
-    public void applyImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentGetter dataComponentGetter) {
+    public void applyImplicitComponents(DecorationLike decorationBlockEntity, DataComponentGetter dataComponentGetter) {
         SeededContainerLoot seededContainerLoot = dataComponentGetter.get(DataComponents.CONTAINER_LOOT);
         if (seededContainerLoot != null) {
             this.lootTable = seededContainerLoot.lootTable();
@@ -352,7 +352,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     }
 
     @Override
-    public void collectImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentMap.Builder builder) {
+    public void collectImplicitComponents(DecorationLike decorationBlockEntity, DataComponentMap.Builder builder) {
         builder.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(container.items));
         if (this.lootTable != null) {
             builder.set(DataComponents.CONTAINER_LOOT, new SeededContainerLoot(this.lootTable, this.lootTableSeed));
@@ -385,7 +385,7 @@ public class Showcase implements BlockBehaviour<Showcase.Config>, DecorationBeha
     }
 
     @Override
-    public void removeComponentsFromTag(DecorationBlockEntity decorationBlockEntity, ValueOutput valueOutput) {
+    public void removeComponentsFromTag(DecorationLike decorationBlockEntity, ValueOutput valueOutput) {
         valueOutput.discard("LootTable");
         valueOutput.discard("LootTableSeed");
     }

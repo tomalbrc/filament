@@ -45,7 +45,7 @@ import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
 
-public class DecorationBlockEntity extends AbstractDecorationBlockEntity implements BlockEntityWithElementHolder, BehaviourHolder {
+public class DecorationBlockEntity extends AbstractDecorationBlockEntity implements DecorationLike, BlockEntityWithElementHolder, BehaviourHolder {
     private final BehaviourMap behaviours = new BehaviourMap();
     private Boolean replaceable;
 
@@ -94,6 +94,12 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
             if (entry.getValue() instanceof DecorationBehaviour<?> decorationBehaviour)
                 decorationBehaviour.write(output, this);
         }
+    }
+
+    @Override
+    public Vec3 getDecorationPosition() {
+        // TODO: cache Vec3
+        return Vec3.atCenterOf(this.getBlockPos());
     }
 
     @Override
@@ -150,7 +156,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
     @Override
     public void initBehaviours(BehaviourConfigMap behaviourConfigMap) {
-        BehaviourHolder.super.initBehaviours(behaviourConfigMap);
+        DecorationLike.super.initBehaviours(behaviourConfigMap);
 
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> behaviour : this.behaviours) {
             if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {

@@ -2,7 +2,7 @@ package de.tomalbrc.filament.behaviour.decoration;
 
 import de.tomalbrc.filament.api.behaviour.ContainerLike;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
-import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.block.entity.DecorationLike;
 import de.tomalbrc.filament.util.FilamentContainer;
 import de.tomalbrc.filament.util.TextUtil;
 import de.tomalbrc.filament.util.Util;
@@ -48,36 +48,36 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
     }
 
     @Override
-    public void init(DecorationBlockEntity blockEntity) {
-        this.container = new FilamentContainer(blockEntity, config.size, config.purge);
+    public void init(DecorationLike decoration) {
+        this.container = new FilamentContainer(decoration, config.size, config.purge);
 
-        var item = blockEntity.getItem();
+        var item = decoration.getItem();
         if (item.has(DataComponents.CONTAINER)) {
-            Objects.requireNonNull(blockEntity.getItem().get(DataComponents.CONTAINER)).copyInto(container.items);
+            Objects.requireNonNull(decoration.getItem().get(DataComponents.CONTAINER)).copyInto(container.items);
         }
 
         if (config.openAnimation != null) {
-            container.setOpenCallback(() -> blockEntity.getOrCreateHolder().playAnimation(config.openAnimation, 2));
+            container.setOpenCallback(() -> decoration.getOrCreateHolder().playAnimation(config.openAnimation, 2));
         }
         if (config.closeAnimation != null) {
-            container.setCloseCallback(() -> blockEntity.getOrCreateHolder().playAnimation(config.closeAnimation, 2));
+            container.setCloseCallback(() -> decoration.getOrCreateHolder().playAnimation(config.closeAnimation, 2));
         }
     }
 
     @Override
-    public void write(ValueOutput output, DecorationBlockEntity decorationBlockEntity) {
+    public void write(ValueOutput output, DecorationLike decoration) {
         if (!container.trySaveLootTable(output))
             ContainerHelper.saveAllItems(output.child("Container"), this.container.items);
     }
 
     @Override
-    public void read(ValueInput input, DecorationBlockEntity decorationBlockEntity) {
+    public void read(ValueInput input, DecorationLike decoration) {
         if (!container.tryLoadLootTable(input))
             input.child("Container").ifPresent(x -> ContainerHelper.loadAllItems(x, container.items));
     }
 
     @Override
-    public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
+    public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationLike decoration) {
         if (!player.isSecondaryUseActive()) {
             Component containerName = customName() != null && showCustomName() ? customName() : TextUtil.formatText(config.name);
             if (!config.titlePrefix.isEmpty())
@@ -87,7 +87,7 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
 
             if (config.angerPiglins) PiglinAi.angerNearbyPiglins(player.level(), player, true);
 
-            decorationBlockEntity.setChanged();
+            decoration.setChanged();
 
             return config.consumeInteraction ? InteractionResult.CONSUME : InteractionResult.PASS;
         }
@@ -95,22 +95,22 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
     }
 
     @Override
-    public void destroy(DecorationBlockEntity decorationBlockEntity, boolean dropItem) {
+    public void destroy(DecorationLike decoration, boolean dropItem) {
         container.setValid(false);
         if (!config.canPickup) {
-            Containers.dropContents(decorationBlockEntity.getLevel(), decorationBlockEntity.getBlockPos(), container);
+            Containers.dropContents(decoration.getLevel(), decoration.getBlockPos(), container);
         }
     }
 
     @Override
-    public void modifyDrop(DecorationBlockEntity blockEntity, ItemStack itemStack) {
+    public void modifyDrop(DecorationLike decoration, ItemStack itemStack) {
         if (config.canPickup) {
             itemStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(container.getItems()));
         }
     }
 
     @Override
-    public void applyImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentGetter dataComponentGetter) {
+    public void applyImplicitComponents(DecorationLike decoration, DataComponentGetter dataComponentGetter) {
         dataComponentGetter.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(this.container.items);
 
         SeededContainerLoot seededContainerLoot = dataComponentGetter.get(DataComponents.CONTAINER_LOOT);
@@ -121,7 +121,7 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
     }
 
     @Override
-    public void collectImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentMap.Builder builder) {
+    public void collectImplicitComponents(DecorationLike decoration, DataComponentMap.Builder builder) {
         builder.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(this.container.items));
 
         if (this.lootTable != null) {
@@ -147,7 +147,7 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
 
     @Override
     public Component customName() {
-        return container.getBlockEntity().components().get(DataComponents.CUSTOM_NAME);
+        return container.getDecoration().components().get(DataComponents.CUSTOM_NAME);
     }
 
     @Override
@@ -171,7 +171,7 @@ public class Container implements DecorationBehaviour<Container.Config>, Contain
     }
 
     @Override
-    public void removeComponentsFromTag(DecorationBlockEntity decorationBlockEntity, ValueOutput valueOutput) {
+    public void removeComponentsFromTag(DecorationLike decoration, ValueOutput valueOutput) {
         valueOutput.discard("LootTable");
         valueOutput.discard("LootTableSeed");
     }

@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.behaviour.decoration;
 
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
-import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.block.entity.DecorationLike;
 import de.tomalbrc.filament.util.ExecuteUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,7 +28,7 @@ public class BreakExecute implements DecorationBehaviour<BreakExecute.Config> {
     }
 
     @Override
-    public void postBreak(DecorationBlockEntity decorationBlockEntity, BlockPos blockPos, Player player) {
+    public void postBreak(DecorationLike decorationBlockEntity, BlockPos blockPos, Player player) {
         var commands = commands();
         boolean hasCommands = commands != null;
         if (hasCommands && player instanceof ServerPlayer serverPlayer) {

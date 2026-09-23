@@ -39,6 +39,14 @@ public class Rotating implements BlockBehaviour<Rotating.Config>, DecorationRota
         }
     }
 
+    public float getPlacementYaw(BlockPlaceContext blockPlaceContext, boolean entity) {
+        if (config.smooth) {
+            return entity ? blockPlaceContext.getPlayer().getYRot() : Util.SEGMENTED_ANGLE8.toDegrees(Util.SEGMENTED_ANGLE8.fromDegrees(blockPlaceContext.getRotation()));
+        } else {
+            return Util.SEGMENTED_ANGLE8.toDegrees(Util.SEGMENTED_ANGLE8.fromDirection(blockPlaceContext.getHorizontalDirection()));
+        }
+    }
+
     public BlockState rotate(BlockState state, Rotation rotation) {
         return state.setValue(BlockUtil.ROTATION, rotation.rotate(state.getValue(BlockUtil.ROTATION), 8));
     }

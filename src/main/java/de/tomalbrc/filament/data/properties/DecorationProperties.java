@@ -14,6 +14,7 @@ public class DecorationProperties extends BlockProperties {
     public boolean useItemParticles = true;
     public boolean drops = true;
     public boolean allowAdventureMode = false;
+    public boolean entity = false;
 
     @Override
     public BlockBehaviour.Properties toBlockProperties() {

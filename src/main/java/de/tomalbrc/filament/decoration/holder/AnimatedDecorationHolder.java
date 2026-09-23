@@ -12,6 +12,7 @@ import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.behaviour.decoration.Animation;
 import de.tomalbrc.filament.data.properties.BlockStateMappedProperty;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.block.entity.DecorationLike;
 import de.tomalbrc.filament.decoration.util.ItemFrameElement;
 import de.tomalbrc.filament.util.DecorationUtil;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockAwareAttachment;
@@ -25,17 +26,18 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.function.Consumer;
 
 public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements FilamentDecorationHolder {
-    private final DecorationBlockEntity parent;
+    private final DecorationLike parent;
     private BlockStateMappedProperty<String> variantProperty;
 
-    public AnimatedDecorationHolder(DecorationBlockEntity blockEntity, Model model) {
+    public AnimatedDecorationHolder(DecorationLike decoration, Model model) {
         super(model);
-        this.parent = blockEntity;
+        this.parent = decoration;
 
         if (this.parent.has(Behaviours.ANIMATION)) {
             Animation.Config animation = this.parent.getDecorationData().behaviour().get(Behaviours.ANIMATION);
@@ -44,11 +46,16 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
             this.variantProperty = animation.variant;
         }
 
-        DecorationUtil.setupElements(this, blockEntity.getDecorationData(), blockEntity.getDirection(), blockEntity.getVisualRotationYInDegrees(), parent.getItem(), parent::interact);
+        DecorationUtil.setupElements(this, decoration.getDecorationData(), decoration.getDirection(), decoration.getVisualRotationYInDegrees(), decoration.getItem(), decoration::interact);
     }
 
-    private void updateVariant(BlockState blockState) {
-        if (this.variantProperty != null) {
+    @Nullable
+    private BlockState parentBlockState() {
+        return this.parent instanceof DecorationBlockEntity blockEntity ? blockEntity.getBlockState() : null;
+    }
+
+    private void updateVariant(@Nullable BlockState blockState) {
+        if (this.variantProperty != null && blockState != null) {
             if (blockState.hasProperty(BlockStateProperties.WATERLOGGED)) {
                 blockState = blockState.setValue(BlockStateProperties.WATERLOGGED, false);
             }
@@ -62,11 +69,12 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
 
     @Override
     public boolean canRunEffects(ServerPlayer serverPlayer, Frame frame) {
-        BlockState state = parent.getBlockState();
-
         // TODO: This should be done through decoration behaviours...
-        if (state.hasProperty(BlockStateProperties.CHEST_TYPE)) {
-            return state.getValue(BlockStateProperties.CHEST_TYPE) != ChestType.RIGHT;
+        if (this.parent instanceof DecorationBlockEntity blockEntity) {
+            BlockState state = blockEntity.getBlockState();
+            if (state.hasProperty(BlockStateProperties.CHEST_TYPE)) {
+                return state.getValue(BlockStateProperties.CHEST_TYPE) != ChestType.RIGHT;
+            }
         }
 
         return super.canRunEffects(serverPlayer, frame);
@@ -97,7 +105,7 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
             }
         }
 
-        updateVariant(this.parent.getBlockState());
+        updateVariant(parentBlockState());
     }
 
     public void setAnimationData(@NotNull Animation.Config animationData) {
@@ -118,8 +126,8 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
     public void notifyUpdate(HolderAttachment.UpdateType updateType) {
         super.notifyUpdate(updateType);
 
-        if (updateType == BlockBoundAttachment.BLOCK_STATE_UPDATE && getAttachment() != null) {
-            this.update(((BlockAwareAttachment)this.getAttachment()).getBlockState());
+        if (updateType == BlockBoundAttachment.BLOCK_STATE_UPDATE && getAttachment() instanceof BlockAwareAttachment blockAware) {
+            this.update(blockAware.getBlockState());
         }
     }
 

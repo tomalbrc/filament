@@ -2,14 +2,19 @@ package de.tomalbrc.filament.decoration;
 
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.behaviour.BehaviourHolder;
+import de.tomalbrc.filament.behaviour.Behaviours;
+import de.tomalbrc.filament.behaviour.block.Rotating;
 import de.tomalbrc.filament.block.SimpleBlockItem;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.properties.DecorationProperties;
 import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.block.entity.DecorationEntity;
 import de.tomalbrc.filament.registry.DecorationRegistry;
+import de.tomalbrc.filament.registry.EntityRegistry;
 import de.tomalbrc.filament.util.DecorationUtil;
 import de.tomalbrc.filament.util.RPUtil;
+import eu.pb4.common.protection.api.CommonProtection;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -17,10 +22,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -32,6 +39,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
@@ -69,6 +77,69 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
 
         DecorationProperties properties = decorationData.properties();
 
+        if (properties.entity) {
+            return this.placeEntity(useOnContext, properties);
+        }
+
+        return this.placeBlock(useOnContext, properties);
+    }
+
+    private InteractionResult placeEntity(@NonNull UseOnContext useOnContext, DecorationProperties properties) {
+        Level level = useOnContext.getLevel();
+        Player player = useOnContext.getPlayer();
+        ItemStack itemStack = useOnContext.getItemInHand();
+        Direction clickedFace = useOnContext.getClickedFace();
+
+        if (player == null) return InteractionResult.FAIL;
+        if (!properties.placement.canPlace(clickedFace)) return InteractionResult.FAIL;
+
+        Vec3 hit = useOnContext.getClickLocation();
+        if (clickedFace != null) {
+            hit = hit.add(Vec3.atLowerCornerOf(clickedFace.getUnitVec3i()).scale(0.05));
+        }
+
+        BlockPos checkPos = BlockPos.containing(hit);
+        if (!player.mayUseItemAt(checkPos, clickedFace, itemStack)) return InteractionResult.FAIL;
+        if (player.level().isOutsideBuildHeight(checkPos)) return InteractionResult.FAIL;
+
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
+
+        if (!CommonProtection.canPlaceBlock(level, checkPos, player.nameAndId(), player)) {
+            return InteractionResult.FAIL;
+        }
+
+        DecorationEntity entity = EntityRegistry.FURNITURE_ENTITY.create((ServerLevel) level, EntitySpawnReason.SPAWN_ITEM_USE);
+        if (entity == null) return InteractionResult.FAIL;
+
+        float yaw = this.resolvePlacementYaw(useOnContext);
+
+        entity.initFromItemStack(itemStack, hit, clickedFace == null ? Direction.UP : clickedFace, yaw);
+        level.addFreshEntity(entity);
+
+        player.swing(useOnContext.getHand(), SwingAnimation.DEFAULT, true);
+        itemStack.consume(1, player);
+
+        SoundEvent placeSound = properties.blockBase().defaultBlockState().getSoundType().getPlaceSound();
+        level.playSound(null, checkPos, placeSound, SoundSource.BLOCKS, 1.0F, 1.0F);
+
+        if (player instanceof ServerPlayer serverPlayer) {
+            CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, checkPos, itemStack);
+        }
+
+        return InteractionResult.CONSUME;
+    }
+
+    private float resolvePlacementYaw(UseOnContext useOnContext) {
+        if (this.has(Behaviours.ROTATING)) {
+            Rotating rotating = this.getOrThrow(Behaviours.ROTATING);
+            return rotating.getPlacementYaw(new BlockPlaceContext(useOnContext), this.decorationData.properties().entity);
+        }
+
+        var player = useOnContext.getPlayer();
+        return player != null ? player.getYRot() : 0;
+    }
+
+    private InteractionResult placeBlock(@NonNull UseOnContext useOnContext, DecorationProperties properties) {
         var clickedState = useOnContext.getLevel().getBlockState(useOnContext.getClickedPos());
         var replaceable = clickedState.canBeReplaced();
 

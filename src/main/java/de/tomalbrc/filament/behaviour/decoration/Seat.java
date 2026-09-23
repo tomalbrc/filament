@@ -1,7 +1,7 @@
 package de.tomalbrc.filament.behaviour.decoration;
 
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
-import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.block.entity.DecorationLike;
 import de.tomalbrc.filament.decoration.util.SeatEntity;
 import de.tomalbrc.filament.registry.EntityRegistry;
 import de.tomalbrc.filament.util.FilamentConfig;
@@ -35,7 +35,7 @@ public class Seat implements DecorationBehaviour<Seat.Config> {
     }
 
     @Override
-    public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
+    public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationLike decorationBlockEntity) {
         if (player.getVehicle() == null && !player.isSecondaryUseActive() && decorationBlockEntity.getOrCreateHolder() != null) {
             SeatConfigData seat = this.getClosestSeat(decorationBlockEntity, location);
 
@@ -49,7 +49,7 @@ public class Seat implements DecorationBehaviour<Seat.Config> {
         return InteractionResult.PASS;
     }
 
-    public void seatPlayer(DecorationBlockEntity decorationBlockEntity, SeatConfigData seat, ServerPlayer player) {
+    public void seatPlayer(DecorationLike decorationBlockEntity, SeatConfigData seat, ServerPlayer player) {
         SeatEntity seatEntity = EntityRegistry.SEAT_ENTITY.create(player.level(), EntitySpawnReason.TRIGGERED);
         assert seatEntity != null;
         seatEntity.setPos(this.seatTranslation(decorationBlockEntity, seat).add(decorationBlockEntity.getOrCreateHolder().getPos()));
@@ -58,11 +58,11 @@ public class Seat implements DecorationBehaviour<Seat.Config> {
         seatEntity.setYRot((decorationBlockEntity.getVisualRotationYInDegrees() - seat.direction + (FilamentConfig.getInstance().alternativeBlockPlacement ? 180 : 0)));
     }
 
-    public boolean hasSeatedPlayer(DecorationBlockEntity decorationBlockEntity, SeatConfigData seat) {
+    public boolean hasSeatedPlayer(DecorationLike decorationBlockEntity, SeatConfigData seat) {
         return !Objects.requireNonNull(decorationBlockEntity.getLevel()).getEntitiesOfClass(SeatEntity.class, AABB.ofSize(seatTranslation(decorationBlockEntity, seat).add(decorationBlockEntity.getOrCreateHolder().getPos()), 0.2, 0.2, 0.2), x -> true).isEmpty();
     }
 
-    public SeatConfigData getClosestSeat(DecorationBlockEntity decorationBlockEntity, Vec3 location) {
+    public SeatConfigData getClosestSeat(DecorationLike decorationBlockEntity, Vec3 location) {
         if (seatConfig.size() == 1) {
             return seatConfig.getFirst();
         }
@@ -84,12 +84,12 @@ public class Seat implements DecorationBehaviour<Seat.Config> {
         }
     }
 
-    public Vec3 seatTranslation(DecorationBlockEntity decorationBlockEntity, SeatConfigData seat) {
+    public Vec3 seatTranslation(DecorationLike decorationBlockEntity, SeatConfigData seat) {
         Vec3 v3 = new Vec3(seat.offset).subtract(0, 0.3, 0).yRot((float) Math.toRadians(decorationBlockEntity.getVisualRotationYInDegrees()+(FilamentConfig.getInstance().alternativeBlockPlacement ? 0 : 180)));
         return new Vec3(-v3.x, v3.y, v3.z);
     }
 
-    public SeatEntity getSeatEntity(DecorationBlockEntity decorationBlockEntity, SeatConfigData seat) {
+    public SeatEntity getSeatEntity(DecorationLike decorationBlockEntity, SeatConfigData seat) {
         List<SeatEntity> entities = Objects.requireNonNull(decorationBlockEntity.getLevel()).getEntitiesOfClass(SeatEntity.class, AABB.ofSize(seatTranslation(decorationBlockEntity, seat).add(decorationBlockEntity.getOrCreateHolder().getPos()), 0.2, 0.2, 0.2), x -> true);
         if (!entities.isEmpty())
             return entities.getFirst();
@@ -98,7 +98,7 @@ public class Seat implements DecorationBehaviour<Seat.Config> {
     }
 
     @Override
-    public void destroy(DecorationBlockEntity decorationBlockEntity, boolean dropItem) {
+    public void destroy(DecorationLike decorationBlockEntity, boolean dropItem) {
         for (SeatConfigData seatConfigData : this.seatConfig) {
             var seat = getSeatEntity(decorationBlockEntity, seatConfigData);
             if (seat != null && seat.getFirstPassenger() != null) {

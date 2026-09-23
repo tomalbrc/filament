@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.behaviour.Behaviours;
-import de.tomalbrc.filament.decoration.block.entity.DecorationBlockEntity;
+import de.tomalbrc.filament.decoration.block.entity.DecorationLike;
 import eu.pb4.polymer.virtualentity.api.ElementHolder;
 import eu.pb4.polymer.virtualentity.api.elements.TextDisplayElement;
 import eu.pb4.sgui.api.gui.SignGui;
@@ -74,30 +74,30 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
     }
 
     @Override
-    public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationBlockEntity decorationBlockEntity) {
-        var e = getClosestTextElement(decorationBlockEntity, location);
+    public InteractionResult interact(ServerPlayer player, InteractionHand hand, Vec3 location, DecorationLike decoration) {
+        var e = getClosestTextElement(decoration, location);
         var sd = getSignData(e);
 
         if (config.canEdit) {
             var itemStack = player.getItemInHand(hand);
             if (config.waxable && !isWaxed && (itemStack.is(Items.HONEYCOMB) || itemStack.getItem().isFilamentItem() && itemStack.getItem().has(Behaviours.WAX))) {
-                CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(player, decorationBlockEntity.getBlockPos(), itemStack);
-                player.level().levelEvent(null, LevelEvent.PARTICLES_WAX_ON, decorationBlockEntity.getBlockPos(), 0);
-                player.level().playSound(player, decorationBlockEntity.getBlockPos(), SoundEvents.HONEYCOMB_WAX_ON, SoundSource.BLOCKS, 1.0F, 1.0F);
+                CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(player, decoration.getBlockPos(), itemStack);
+                player.level().levelEvent(null, LevelEvent.PARTICLES_WAX_ON, decoration.getBlockPos(), 0);
+                player.level().playSound(player, decoration.getBlockPos(), SoundEvents.HONEYCOMB_WAX_ON, SoundSource.BLOCKS, 1.0F, 1.0F);
 
                 if (!itemStack.isDamageableItem())
                     itemStack.consume(1, player);
                 else itemStack.hurtAndBreak(1, player, hand);
 
                 this.isWaxed = true;
-                decorationBlockEntity.setChanged();
+                decoration.setChanged();
 
                 return InteractionResult.CONSUME;
             }
 
             var empty = sd.isEmpty();
 
-            if (config.dyeable && !empty && itemStack.get(DataComponents.DYE) != null && apply(player.level(), decorationBlockEntity, e, itemStack.get(DataComponents.DYE), sd.glow)) {
+            if (config.dyeable && !empty && itemStack.get(DataComponents.DYE) != null && apply(player.level(), decoration, e, itemStack.get(DataComponents.DYE), sd.glow)) {
                 if (!itemStack.isDamageableItem())
                     itemStack.consume(1, player);
                 else itemStack.hurtAndBreak(1, player, hand);
@@ -107,8 +107,8 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
 
             if (!empty && itemStack.is(Items.GLOW_INK_SAC) && !sd.glow) {
                 sd.glow = true;
-                player.level().playSound(null, decorationBlockEntity.getBlockPos(), SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                changed(decorationBlockEntity, e);
+                player.level().playSound(null, decoration.getBlockPos(), SoundEvents.GLOW_INK_SAC_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                changed(decoration, e);
 
                 if (!itemStack.isDamageableItem())
                     itemStack.consume(1, player);
@@ -126,7 +126,7 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
                             for (int i = 0; i < e.lines; i++) {
                                 sd.text[i] = getLine(i);
                             }
-                            changed(decorationBlockEntity, e);
+                            changed(decoration, e);
                             editingPlayer = null;
                             super.onPlayerClose(s);
                         }
@@ -143,11 +143,11 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
             }
         }
 
-        if (executeClickCommandsIfPresent(player.level(), player, decorationBlockEntity.getBlockPos(), sd.text)) {
+        if (executeClickCommandsIfPresent(player.level(), player, decoration.getBlockPos(), sd.text)) {
             return InteractionResult.CONSUME;
         }
 
-        return DecorationBehaviour.super.interact(player, hand, location, decorationBlockEntity);
+        return DecorationBehaviour.super.interact(player, hand, location, decoration);
     }
 
 
@@ -182,19 +182,19 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
     }
 
     @Override
-    public void read(ValueInput output, DecorationBlockEntity blockEntity) {
+    public void read(ValueInput output, DecorationLike decoration) {
         this.isWaxed = output.getBooleanOr("IsWaxed", false);
         output.read("SignData", SignData.CODEC.listOf()).ifPresent(x -> {
             for (int i = 0; i < config.elements.size(); i++) {
                 ConfiguredSignElement signElement = config.elements.get(i);
                 this.signData.put(signElement, x.get(i));
-                changed(blockEntity, signElement);
+                changed(decoration, signElement);
             }
         });
     }
 
     @Override
-    public void write(ValueOutput input, DecorationBlockEntity blockEntity) {
+    public void write(ValueOutput input, DecorationLike decoration) {
         input.putBoolean("IsWaxed", this.isWaxed);
         List<SignData> data = new ObjectArrayList<>();
         for (int i = 0; i < this.config.elements.size(); i++) {
@@ -205,26 +205,26 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
     }
 
     @Override
-    public void applyImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentGetter dataComponentGetter) {
+    public void applyImplicitComponents(DecorationLike decoration, DataComponentGetter dataComponentGetter) {
         var data = dataComponentGetter.get(DataComponents.CUSTOM_DATA);
         if (data != null) {
             data.copyTag().read("SignData", SignData.CODEC.listOf()).ifPresent(res -> {
                 for (int i = 0; i < config.elements.size(); i++) {
                     ConfiguredSignElement signElement = config.elements.get(i);
                     this.signData.put(signElement, res.get(i));
-                    changed(decorationBlockEntity, signElement);
+                    changed(decoration, signElement);
                 }
             });
         } else {
             for (int i = 0; i < config.elements.size(); i++) {
                 ConfiguredSignElement signElement = config.elements.get(i);
-                changed(decorationBlockEntity, signElement);
+                changed(decoration, signElement);
             }
         }
     }
 
     @Override
-    public void collectImplicitComponents(DecorationBlockEntity decorationBlockEntity, DataComponentMap.Builder builder) {
+    public void collectImplicitComponents(DecorationLike decoration, DataComponentMap.Builder builder) {
         List<SignData> data = new ObjectArrayList<>();
         for (int i = 0; i < this.config.elements.size(); i++) {
             ConfiguredSignElement signElement = config.elements.get(i);
@@ -242,8 +242,8 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
         return this.signData.computeIfAbsent(element, x -> new SignData());
     }
 
-    private void changed(DecorationBlockEntity decorationBlockEntity, ConfiguredSignElement configuredSignElement) {
-        decorationBlockEntity.setChanged();
+    private void changed(DecorationLike decoration, ConfiguredSignElement configuredSignElement) {
+        decoration.setChanged();
         var sd = getSignData(configuredSignElement);
 
         MutableComponent c = Component.empty();
@@ -265,30 +265,30 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
             sd.display = new SignLikeTextDisplay();
         }
         var element = sd.display;
-        element.setOffset(new Vec3(configuredSignElement.offset.rotateY(Mth.DEG_TO_RAD * (-decorationBlockEntity.getVisualRotationYInDegrees()), new Vector3f())));
+        element.setOffset(new Vec3(configuredSignElement.offset.rotateY(Mth.DEG_TO_RAD * (-decoration.getVisualRotationYInDegrees()), new Vector3f())));
         element.setSeeThrough(configuredSignElement.seeThrough);
         element.setBackground(configuredSignElement.backgroundColor);
-        element.setYaw(decorationBlockEntity.getVisualRotationYInDegrees() + 180);
+        element.setYaw(decoration.getVisualRotationYInDegrees() + 180);
         element.setDisplaySize(3, 3);
         element.setTransformation(matrix4f);
         element.setBillboardMode(configuredSignElement.billboardMode);
         element.setTextAlignment(configuredSignElement.alignment);
 
         if (element.getHolder() == null)
-            decorationBlockEntity.getOrCreateHolder().addElement(element);
+            decoration.getOrCreateHolder().addElement(element);
 
         element.setText(c, sd.color, sd.glow);
-        decorationBlockEntity.getOrCreateHolder().tick();
+        decoration.getOrCreateHolder().tick();
     }
 
-    public Sign.ConfiguredSignElement getClosestTextElement(DecorationBlockEntity decorationBlockEntity, Vec3 location) {
+    public Sign.ConfiguredSignElement getClosestTextElement(DecorationLike decoration, Vec3 location) {
         if (config.elements.size() == 1) {
             return config.elements.getFirst();
         } else {
             double dist = Double.MAX_VALUE;
             ConfiguredSignElement nearest = null;
             for (var element : config.elements) {
-                Vec3 q = Vec3.atCenterOf(decorationBlockEntity.getBlockPos()).add(new Vec3(this.getTranslation(element).rotateY((-decorationBlockEntity.getVisualRotationYInDegrees() + 180) * Mth.DEG_TO_RAD)));
+                Vec3 q = decoration.getDecorationPosition().add(new Vec3(this.getTranslation(element).rotateY((-decoration.getVisualRotationYInDegrees() + 180) * Mth.DEG_TO_RAD)));
                 double distance = q.distanceTo(location);
 
                 if (distance < dist) {
@@ -305,18 +305,18 @@ public class Sign implements DecorationBehaviour<Sign.Config> {
         return new Vector3f(element.offset).sub(0, 0.475f, 0).rotate(element.rotation).rotateY(Mth.PI);
     }
 
-    public boolean apply(Level level, DecorationBlockEntity blockEntity, ConfiguredSignElement element, DyeColor color, boolean glow) {
+    public boolean apply(Level level, DecorationLike decoration, ConfiguredSignElement element, DyeColor color, boolean glow) {
         boolean changedColor = false;
         var sd = getSignData(element);
         if (color != null && sd.color != color) {
             sd.color = color;
             changedColor = true;
-            level.playSound(null, blockEntity.getBlockPos(), SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+            level.playSound(null, decoration.getBlockPos(), SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
 
         sd.glow = glow;
 
-        changed(blockEntity, element);
+        changed(decoration, element);
 
         return changedColor;
     }
