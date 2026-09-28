@@ -2,6 +2,7 @@ package de.tomalbrc.filament.entity;
 
 import de.tomalbrc.filament.api.behaviour.EntityBehaviour;
 import de.tomalbrc.filament.data.EntityData;
+import de.tomalbrc.filament.mixin.accessor.MobAccessor;
 import de.tomalbrc.filament.registry.EntityRegistry;
 import eu.pb4.polymer.core.api.entity.PolymerEntity;
 import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
@@ -115,7 +116,7 @@ public class FilamentMob extends Animal implements PolymerEntity {
         if (data.properties().category == MobCategory.MONSTER) this.updateNoActionTime();
 
         if (this.isAlive()) {
-            boolean burn = data.properties().isSunSensitive && this.isSunBurnTick();
+            boolean burn = data.properties().isSunSensitive && ((MobAccessor)this).invokeIsSunBurnTick();
             if (burn) {
                 ItemStack itemStack = this.getItemBySlot(EquipmentSlot.HEAD);
                 if (!itemStack.isEmpty()) {

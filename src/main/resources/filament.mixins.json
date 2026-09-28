@@ -26,6 +26,7 @@
     "accessor.ItemInvoker",
     "accessor.MaceItemAccessor",
     "accessor.MappedRegistryAccessor",
+    "accessor.MobAccessor",
     "accessor.PackAccessor",
     "accessor.PathPackResourcesAccessor",
     "accessor.PathResourcesSupplierAccessor",
