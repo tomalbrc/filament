@@ -47,7 +47,6 @@ import java.util.Map;
 
 public class DecorationBlockEntity extends AbstractDecorationBlockEntity implements DecorationLike, BlockEntityWithElementHolder, BehaviourHolder {
     private final BehaviourMap behaviours = new BehaviourMap();
-    private Boolean replaceable;
 
     @Nullable
     private FilamentDecorationHolder decorationHolder;
@@ -333,10 +332,6 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     }
 
     public boolean replaceable() {
-        if (replaceable == null) {
-            replaceable = has(Behaviours.OXIDIZABLE) || has(Behaviours.STRIPPABLE) || OxidizableRegistry.hasPrevious(getBlockState().getBlock());
-        }
-
-        return replaceable;
+        return has(Behaviours.OXIDIZABLE) || has(Behaviours.STRIPPABLE) || OxidizableRegistry.hasPrevious(getBlockState().getBlock());
     }
 }

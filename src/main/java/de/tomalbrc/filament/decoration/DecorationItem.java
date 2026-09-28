@@ -89,47 +89,98 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
         Player player = useOnContext.getPlayer();
         ItemStack itemStack = useOnContext.getItemInHand();
         Direction clickedFace = useOnContext.getClickedFace();
+        BlockPos clickedPos = useOnContext.getClickedPos();
 
         if (player == null) return InteractionResult.FAIL;
         if (!properties.placement.canPlace(clickedFace)) return InteractionResult.FAIL;
 
-        Vec3 hit = useOnContext.getClickLocation();
-        if (clickedFace != null) {
-            hit = hit.add(Vec3.atLowerCornerOf(clickedFace.getUnitVec3i()).scale(0.05));
-        }
-
-        BlockPos checkPos = BlockPos.containing(hit);
-        if (!player.mayUseItemAt(checkPos, clickedFace, itemStack)) return InteractionResult.FAIL;
-        if (player.level().isOutsideBuildHeight(checkPos)) return InteractionResult.FAIL;
+        if (!player.mayUseItemAt(clickedPos, clickedFace, itemStack)) return InteractionResult.FAIL;
+        if (player.level().isOutsideBuildHeight(clickedPos)) return InteractionResult.FAIL;
 
         if (level.isClientSide()) return InteractionResult.SUCCESS;
 
-        if (!CommonProtection.canPlaceBlock(level, checkPos, player.nameAndId(), player)) {
+        if (!CommonProtection.canPlaceBlock(level, clickedPos, player.nameAndId(), player)) {
             return InteractionResult.FAIL;
         }
 
-        DecorationEntity entity = EntityRegistry.FURNITURE_ENTITY.create((ServerLevel) level, EntitySpawnReason.SPAWN_ITEM_USE);
+        DecorationEntity entity = EntityRegistry.FURNITURE_ENTITY.create(level, EntitySpawnReason.SPAWN_ITEM_USE);
         if (entity == null) return InteractionResult.FAIL;
 
-        float yaw = this.resolvePlacementYaw(useOnContext);
+        Vec3 spawnPos = useOnContext.getClickLocation();
+        if (clickedFace != null) {
+            spawnPos = spawnPos.add(Vec3.atLowerCornerOf(clickedFace.getUnitVec3i()).scale(0.5));
+        }
 
-        entity.initFromItemStack(itemStack, hit, clickedFace == null ? Direction.UP : clickedFace, yaw);
+        float yaw = this.resolvePlacementYaw(useOnContext, clickedFace);
+
+        entity.initFromItemStack(itemStack, spawnPos, clickedFace, yaw);
         level.addFreshEntity(entity);
 
         player.swing(useOnContext.getHand(), SwingAnimation.DEFAULT, true);
         itemStack.consume(1, player);
 
         SoundEvent placeSound = properties.blockBase().defaultBlockState().getSoundType().getPlaceSound();
-        level.playSound(null, checkPos, placeSound, SoundSource.BLOCKS, 1.0F, 1.0F);
+        level.playSound(null, clickedPos, placeSound, SoundSource.BLOCKS, 1.0F, 1.0F);
 
         if (player instanceof ServerPlayer serverPlayer) {
-            CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, checkPos, itemStack);
+            CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, clickedPos, itemStack);
         }
 
         return InteractionResult.CONSUME;
     }
 
-    private float resolvePlacementYaw(UseOnContext useOnContext) {
+    private InteractionResult placeEntityx(@NonNull UseOnContext useOnContext, DecorationProperties properties) {
+        Level level = useOnContext.getLevel();
+        Player player = useOnContext.getPlayer();
+        ItemStack itemStack = useOnContext.getItemInHand();
+        Direction clickedFace = useOnContext.getClickedFace();
+        BlockPos clickedPos = useOnContext.getClickedPos();
+
+        if (player == null) return InteractionResult.FAIL;
+        if (!properties.placement.canPlace(clickedFace)) return InteractionResult.FAIL;
+
+        if (!player.mayUseItemAt(clickedPos, clickedFace, itemStack)) return InteractionResult.FAIL;
+        if (player.level().isOutsideBuildHeight(clickedPos)) return InteractionResult.FAIL;
+
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
+
+        if (!CommonProtection.canPlaceBlock(level, clickedPos, player.nameAndId(), player)) {
+            return InteractionResult.FAIL;
+        }
+
+        DecorationEntity entity = EntityRegistry.FURNITURE_ENTITY.create(level, EntitySpawnReason.SPAWN_ITEM_USE);
+        if (entity == null) return InteractionResult.FAIL;
+
+        Vec3 spawnPos = useOnContext.getClickLocation();
+        if (clickedFace != null) {
+            spawnPos = spawnPos.add(Vec3.atLowerCornerOf(clickedFace.getUnitVec3i()).scale(0.01));
+        }
+
+        spawnPos = spawnPos.add(0, 0.5, 0);
+
+        float yaw = this.resolvePlacementYaw(useOnContext, clickedFace);
+
+        entity.initFromItemStack(itemStack, spawnPos, clickedFace, yaw);
+        level.addFreshEntity(entity);
+
+        player.swing(useOnContext.getHand(), SwingAnimation.DEFAULT, true);
+        itemStack.consume(1, player);
+
+        SoundEvent placeSound = properties.blockBase().defaultBlockState().getSoundType().getPlaceSound();
+        level.playSound(null, clickedPos, placeSound, SoundSource.BLOCKS, 1.0F, 1.0F);
+
+        if (player instanceof ServerPlayer serverPlayer) {
+            CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, clickedPos, itemStack);
+        }
+
+        return InteractionResult.CONSUME;
+    }
+
+    private float resolvePlacementYaw(UseOnContext useOnContext, Direction clickedFace) {
+        if (clickedFace != null && clickedFace.getAxis().isHorizontal()) {
+            return clickedFace.getOpposite().toYRot();
+        }
+
         if (this.has(Behaviours.ROTATING)) {
             Rotating rotating = this.getOrThrow(Behaviours.ROTATING);
             return rotating.getPlacementYaw(new BlockPlaceContext(useOnContext), this.decorationData.properties().entity);
