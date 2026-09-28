@@ -65,6 +65,7 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
     private Direction direction = Direction.UP;
     private float visualRotation = 0.0f;
     private boolean destroyed = false;
+    private boolean pendingHolderRefresh = false;
 
     @Nullable
     private DataComponentMap components;
@@ -72,7 +73,6 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
     public DecorationEntity(EntityType<DecorationEntity> type, Level level) {
         super(type, level);
         this.noPhysics = true;
-        this.setPermanentlyInvulnerable(true);
         this.setNoGravity(true);
     }
 
@@ -150,12 +150,14 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
 
         float yawRad = this.visualRotation * Mth.DEG_TO_RAD;
 
-        if (data.blocks() != null && !data.blocks().isEmpty()) {
-            for (DecorationData.BlockConfig config : data.blocks()) {
+        var blocks = data.blocks();
+        var decoSize = data.size();
+        if (blocks != null && !blocks.isEmpty()) {
+            for (DecorationData.BlockConfig config : blocks) {
                 this.spawnShulkerVolume(holder, config, yawRad, serverLevel);
             }
-        } else if (data.size() != null) {
-            Vector3f size = new Vector3f(data.size().x(), data.size().y(), data.size().x());
+        } else if (decoSize != null) {
+            Vector3f size = new Vector3f(decoSize.x(), decoSize.y(), decoSize.x());
             Vector3f origin = new Vector3f(0, 0, 0);
             this.spawnShulkerVolume(holder, new DecorationData.BlockConfig(origin, size), yawRad, serverLevel);
         }
@@ -413,7 +415,15 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
     @Override
     public void tick() {
         super.tick();
-        if (!this.level().isClientSide() && this.decorationHolder != null && this.decorationHolder.getAttachment() != null) {
+
+        if (this.level().isClientSide()) return;
+
+        if (this.pendingHolderRefresh) {
+            this.pendingHolderRefresh = false;
+            this.refreshHolder();
+        }
+
+        if (this.decorationHolder != null && decorationHolder.isAnimated() && this.decorationHolder.getAttachment() != null) {
             this.decorationHolder.tick();
         }
     }
@@ -452,7 +462,7 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
         }
 
         if (this.level() instanceof ServerLevel) {
-            this.refreshHolder();
+            this.pendingHolderRefresh = true;
         }
     }
 

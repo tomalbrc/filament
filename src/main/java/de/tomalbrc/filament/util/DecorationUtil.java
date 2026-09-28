@@ -91,7 +91,8 @@ public class DecorationUtil {
         if (decorationData != null && decorationData.size() != null) {
             element.setSize(decorationData.size().x, decorationData.size().y);
         } else {
-            element.setSize(1.f, direction.equals(Direction.DOWN) ? 1.f : .5f); // default
+            // TODO: use 1.f for ceiling placement by default too?
+            element.setSize(1.f, direction == Direction.DOWN ? 1.f : .5f); // default
         }
 
         element.setInteractionHandler(new VirtualElement.InteractionHandler() {
