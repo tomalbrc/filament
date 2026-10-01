@@ -65,7 +65,6 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
     private Direction direction = Direction.UP;
     private float visualRotation = 0.0f;
     private boolean destroyed = false;
-    private boolean pendingHolderRefresh = false;
 
     @Nullable
     private DataComponentMap components;
@@ -357,7 +356,7 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
     @Override
     public void kill(@NonNull ServerLevel level) {
         this.destroyStructure(level, true, null);
-        super.kill(level);
+        this.remove(Entity.RemovalReason.KILLED);
     }
 
     public void destroyStructure(ServerLevel level, boolean dropItem, @Nullable Player breaker) {
@@ -379,12 +378,10 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
         level.playSound(null, this.blockPosition(), SoundEvents.ITEM_FRAME_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
 
         if (data.properties().showBreakParticles()) {
-            DecorationUtil.showBreakParticle(
+            DecorationUtil.showBreakParticles(
                     level,
-                    data.properties().useItemParticles
-                            ? this.itemStack
-                            : data.properties().blockBase().asItem().getDefaultInstance(),
-                    (float) this.getX(), (float) this.getY(), (float) this.getZ()
+                    this.itemStack,
+                    this.position()
             );
         }
 
@@ -418,11 +415,6 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
 
         if (this.level().isClientSide()) return;
 
-        if (this.pendingHolderRefresh) {
-            this.pendingHolderRefresh = false;
-            this.refreshHolder();
-        }
-
         if (this.decorationHolder != null && decorationHolder.isAnimated() && this.decorationHolder.getAttachment() != null) {
             this.decorationHolder.tick();
         }
@@ -444,7 +436,7 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
 
     @Override
     protected void readAdditionalSaveData(@NonNull ValueInput input) {
-        this.decorationId = input.read("DecorationId", Identifier.CODEC).orElse(null);
+        this.decorationId = DecorationRegistry.canonicalize(input.read("DecorationId", Identifier.CODEC).orElse(null));
         this.setupBehaviour(this.getDecorationData());
 
         input.read("Components", DataComponentMap.CODEC).ifPresent(map -> this.components = map);
@@ -462,7 +454,7 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
         }
 
         if (this.level() instanceof ServerLevel) {
-            this.pendingHolderRefresh = true;
+            this.refreshHolder();
         }
     }
 

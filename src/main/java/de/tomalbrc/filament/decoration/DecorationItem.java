@@ -93,13 +93,20 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
         if (player == null) return InteractionResult.FAIL;
         if (!properties.placement.canPlace(clickedFace)) return InteractionResult.FAIL;
 
+        Direction face = clickedFace == null ? Direction.UP : clickedFace;
         Vec3 hit = useOnContext.getClickLocation();
-        if (clickedFace != null) {
-            hit = hit.add(Vec3.atLowerCornerOf(clickedFace.getUnitVec3i()).scale(0.05));
+
+        float halfWidth = decorationData.size() != null ? decorationData.size().x() * 0.5f : 0.5f;
+        float halfHeight = decorationData.size() != null ? decorationData.size().y() * 0.5f : 0.5f;
+
+        switch (face) {
+            case UP -> hit = hit.add(0, halfHeight, 0);
+            case DOWN -> hit = hit.add(0, -halfHeight, 0);
+            default -> hit = hit.add(face.getStepX() * halfWidth, 0, face.getStepZ() * halfWidth);
         }
 
         BlockPos checkPos = BlockPos.containing(hit);
-        if (!player.mayUseItemAt(checkPos, clickedFace, itemStack)) return InteractionResult.FAIL;
+        if (!player.mayUseItemAt(checkPos, face, itemStack)) return InteractionResult.FAIL;
         if (player.level().isOutsideBuildHeight(checkPos)) return InteractionResult.FAIL;
 
         if (level.isClientSide()) return InteractionResult.SUCCESS;
@@ -108,12 +115,12 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
             return InteractionResult.FAIL;
         }
 
-        DecorationEntity entity = EntityRegistry.FURNITURE_ENTITY.create((ServerLevel) level, EntitySpawnReason.SPAWN_ITEM_USE);
+        DecorationEntity entity = EntityRegistry.FURNITURE_ENTITY.create(level, EntitySpawnReason.SPAWN_ITEM_USE);
         if (entity == null) return InteractionResult.FAIL;
 
-        float yaw = this.resolvePlacementYaw(useOnContext);
+        float yaw = this.resolvePlacementYaw(useOnContext, clickedFace);
 
-        entity.initFromItemStack(itemStack, hit, clickedFace == null ? Direction.UP : clickedFace, yaw);
+        entity.initFromItemStack(itemStack, hit, face, yaw);
         level.addFreshEntity(entity);
 
         player.swing(useOnContext.getHand(), SwingAnimation.DEFAULT, true);
@@ -129,7 +136,11 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
         return InteractionResult.CONSUME;
     }
 
-    private float resolvePlacementYaw(UseOnContext useOnContext) {
+    private float resolvePlacementYaw(UseOnContext useOnContext, Direction clickedFace) {
+        if (clickedFace != null && clickedFace.getAxis().isHorizontal()) {
+            return clickedFace.getOpposite().toYRot();
+        }
+
         if (this.has(Behaviours.ROTATING)) {
             Rotating rotating = this.getOrThrow(Behaviours.ROTATING);
             return rotating.getPlacementYaw(new BlockPlaceContext(useOnContext), this.decorationData.properties().entity);

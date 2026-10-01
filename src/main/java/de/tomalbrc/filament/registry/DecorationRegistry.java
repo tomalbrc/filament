@@ -31,6 +31,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -129,8 +130,26 @@ public class DecorationRegistry {
         return gen;
     }
 
-    public static DecorationData getDecorationData(Identifier Identifier) {
-        return decorations.get(Identifier);
+    @Nullable
+    public static DecorationData getDecorationData(Identifier id) {
+        return decorations.get(id);
+    }
+
+    @Nullable
+    public static DecorationData findDecorationData(Identifier id) {
+        return decorations.get(canonicalize(id));
+    }
+
+    @Nullable
+    public static Identifier canonicalize(@Nullable Identifier id) {
+        if (id == null) return null;
+        if (decorations.containsKey(id)) return id;
+
+        for (Identifier key : decorations.keySet()) {
+            if (key.equals(id)) return key;
+        }
+
+        return id;
     }
 
     public static boolean isDecoration(BlockState blockState) {

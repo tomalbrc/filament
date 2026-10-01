@@ -8,7 +8,9 @@ import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
 import de.tomalbrc.filament.decoration.util.DecorationItemDisplayElement;
 import de.tomalbrc.filament.decoration.util.ItemFrameElement;
+import de.tomalbrc.filament.mixin.accessor.PolymerEntityAttachmentAccessor;
 import eu.pb4.polymer.core.api.item.PolymerItem;
+import eu.pb4.polymer.virtualentity.api.attachment.EntityAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
@@ -52,22 +54,25 @@ public class DecorationUtil {
     public static final Int2ObjectOpenHashMap<Supplier<ItemStack>> VIRTUAL_ENTITY_PICK_MAP = new Int2ObjectOpenHashMap<>();
     public static final EmptyContextImpl EMPTY_CONTEXT = new EmptyContextImpl();
 
-    public static void forEachRotated(List<DecorationData.BlockConfig> blockConfigs, BlockPos originBlockPos, float rotation, Consumer<BlockPos> consumer) {
-        if (blockConfigs != null) {
-            for (DecorationData.BlockConfig blockConfig : blockConfigs) {
-                Vector3fc origin = blockConfig.origin();
-                Vector3fc size = blockConfig.size();
-                for (int x = 0; x < size.x(); x++) {
-                    for (int y = 0; y < size.y(); y++) {
-                        for (int z = 0; z < size.z(); z++) {
-                            Vector3f pos = new Vector3f(x, y, z).add(origin);
-                            var hMul = rotation % 90 != 0 ? Math.sqrt(2) : 1;
-                            Vector3f offset = pos.mul(hMul, 1, hMul);
-                            offset.rotateY(Mth.DEG_TO_RAD * (rotation + (FilamentConfig.getInstance().alternativeBlockPlacement ? 0 : 180)));
+    private static final double PARTICLE_DIV = 0.25;
+    private static final double PARTICLE_VIEW_DISTANCE = 512;
 
-                            BlockPos blockPos = originBlockPos.offset(-Math.round(offset.x), Math.round(offset.y), Math.round(offset.z));
-                            consumer.accept(blockPos);
-                        }
+    public static void forEachRotated(List<DecorationData.BlockConfig> blockConfigs, BlockPos originBlockPos, float rotation, Consumer<BlockPos> consumer) {
+        if (blockConfigs == null) return;
+
+        for (DecorationData.BlockConfig blockConfig : blockConfigs) {
+            Vector3fc origin = blockConfig.origin();
+            Vector3fc size = blockConfig.size();
+            for (int x = 0; x < size.x(); x++) {
+                for (int y = 0; y < size.y(); y++) {
+                    for (int z = 0; z < size.z(); z++) {
+                        Vector3f pos = new Vector3f(x, y, z).add(origin);
+                        float hMul = rotation % 90 != 0 ? (float) Math.sqrt(2) : 1;
+                        Vector3f offset = pos.mul(hMul, 1, hMul);
+                        offset.rotateY(Mth.DEG_TO_RAD * (rotation + (FilamentConfig.getInstance().alternativeBlockPlacement ? 0 : 180)));
+
+                        BlockPos blockPos = originBlockPos.offset(-Math.round(offset.x), Math.round(offset.y), Math.round(offset.z));
+                        consumer.accept(blockPos);
                     }
                 }
             }
@@ -80,7 +85,7 @@ public class DecorationUtil {
             DecorationUtil.forEachRotated(blockConfigs, BlockPos.ZERO, rotation, posList::add);
             Optional<BoundingBox> boundingBox = BoundingBox.encapsulatingPositions(posList);
             if (boundingBox.isPresent()) {
-                return new Vector2f(java.lang.Math.max(boundingBox.get().getXSpan(), boundingBox.get().getZSpan()), boundingBox.get().getYSpan());
+                return new Vector2f(Math.max(boundingBox.get().getXSpan(), boundingBox.get().getZSpan()), boundingBox.get().getYSpan());
             }
         }
         return new Vector2f();
@@ -108,7 +113,9 @@ public class DecorationUtil {
                     result = onInteract.interact(player, hand, Vec3.atCenterOf(blockPos).add(pos));
                 }
 
-                if (!result.consumesAction()) DecorationUtil.defaultVirtualInteraction(player, hand, blockPos, pos, element.getHeight());
+                if (!result.consumesAction()) {
+                    DecorationUtil.defaultVirtualInteraction(player, hand, blockPos, pos, element.getHeight());
+                }
             }
 
             @Override
@@ -118,15 +125,24 @@ public class DecorationUtil {
 
                 ServerLevel serverLevel = player.level();
                 BlockPos blockPos = BlockPos.containing(element.getHolder().getAttachment().getPos());
-                player.gameMode.handleBlockBreakAction(blockPos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, Direction.UP, serverLevel.getMaxY(), 0);
+
+                if (decorationData != null && decorationData.properties().entity && element.getHolder().getAttachment() instanceof EntityAttachment entityAttachment) {
+                    var entity = ((PolymerEntityAttachmentAccessor) entityAttachment).getEntity();
+                    entity.kill(serverLevel);
+                } else {
+                    player.gameMode.handleBlockBreakAction(blockPos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, Direction.UP, serverLevel.getMaxY(), 0);
+                }
             }
         });
 
         var dirUnitVec = direction.getUnitVec3i();
         if (direction != Direction.DOWN && direction != Direction.UP) {
-            element.setOffset(new Vec3(dirUnitVec.getX(), dirUnitVec.getY() + element.getHeight(), dirUnitVec.getZ()).multiply(1.f-element.getWidth(), 1, 1.f-element.getWidth()).scale(-0.5f));
+            element.setOffset(new Vec3(dirUnitVec.getX(), dirUnitVec.getY() + element.getHeight(), dirUnitVec.getZ())
+                    .multiply(1.f - element.getWidth(), 1, 1.f - element.getWidth())
+                    .scale(-0.5f));
         } else {
-            element.setOffset(new Vec3(dirUnitVec.getX(), dirUnitVec.getY(), dirUnitVec.getZ()).add(0,  direction == Direction.UP ? -1.5f : 0.5f + ((1.f-element.getHeight())), 0));
+            element.setOffset(new Vec3(dirUnitVec.getX(), dirUnitVec.getY(), dirUnitVec.getZ())
+                    .add(0, direction == Direction.UP ? -1.5f : 0.5f + (1.f - element.getHeight()), 0));
         }
 
         return element;
@@ -151,11 +167,9 @@ public class DecorationUtil {
         Matrix4f matrix4f = transform(data.properties().display, direction);
         if (data.properties().scale != null) matrix4f.scale(data.properties().scale);
 
-        element.setYaw(rotation - (180));
-
+        element.setYaw(rotation - 180);
         element.setDisplayWidth(size.x * 3.f);
         element.setDisplayHeight(size.y * 3.f);
-
         element.setTransformation(matrix4f);
         element.setItemDisplayContext(data.properties().display);
 
@@ -171,7 +185,6 @@ public class DecorationUtil {
 
                 if (direction == Direction.DOWN || direction == Direction.UP) {
                     matrix4f.setTranslation(0, direction == Direction.DOWN ? 0.5f : -0.5f, 0);
-
                     matrix4f.rotate(Axis.XP.rotationDegrees(-90));
                     if (direction == Direction.DOWN) {
                         matrix4f.rotate(Axis.XP.rotationDegrees(180));
@@ -191,49 +204,64 @@ public class DecorationUtil {
         };
     }
 
-    public static void showBreakParticle(ServerLevel level, ItemStack stack, float x, float y, float z) {
-        showBreakParticle(level, Shapes.block(), stack, BlockPos.containing(x, y, z));
+    public static void showBreakParticles(ServerLevel level, ItemStack stack, BlockPos blockPos) {
+        showBreakParticlesInternal(level, Shapes.block(), stack, blockPos.getX(), blockPos.getY(), blockPos.getZ());
     }
 
-    public static void showBreakParticleShaped(ServerLevel level, BlockPos blockPos, BlockState blockState, ItemStack stack) {
+    public static void showBreakParticles(ServerLevel level, ItemStack stack, Vec3 pos) {
+        showBreakParticlesInternal(level, Shapes.block(), stack, pos.x - 0.5, pos.y - 0.5, pos.z - 0.5);
+    }
+
+    public static void showBreakParticlesEntity(ServerLevel level, ItemStack stack, Vec3 pos) {
+        showBreakParticles(level, stack, pos);
+    }
+
+    public static void showBreakParticlesShaped(ServerLevel level, BlockPos blockPos, BlockState blockState, ItemStack stack) {
         if (blockState.isAir() || !blockState.shouldSpawnTerrainParticles()) {
             return;
         }
         VoxelShape voxelShape = blockState.getShape(level, blockPos);
-        showBreakParticle(level, voxelShape, stack, blockPos);
+        showBreakParticlesInternal(level, voxelShape, stack, blockPos.getX(), blockPos.getY(), blockPos.getZ());
     }
 
-    public static void showBreakParticle(ServerLevel level, VoxelShape voxelShape, ItemStack stack, BlockPos blockPos) {
-        double div = 0.25;
+    private static void showBreakParticlesInternal(ServerLevel level, VoxelShape shape, ItemStack stack, double originX, double originY, double originZ) {
         List<Packet<? super ClientGamePacketListener>> packets = new ObjectArrayList<>();
-        voxelShape.forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> {
+
+        shape.forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> {
             double dx = Math.min(1.0, maxX - minX);
             double dy = Math.min(1.0, maxY - minY);
             double dz = Math.min(1.0, maxZ - minZ);
-            int nx = Math.max(2, Mth.ceil(dx / div));
-            int ny = Math.max(2, Mth.ceil(dy / div));
-            int nz = Math.max(2, Mth.ceil(dz / div));
-            for (int iX = 0; iX < nx; ++iX) {
-                for (int iY = 0; iY < ny; ++iY) {
-                    for (int iZ = 0; iZ < nz; ++iZ) {
+            int nx = Math.max(2, Mth.ceil(dx / PARTICLE_DIV));
+            int ny = Math.max(2, Mth.ceil(dy / PARTICLE_DIV));
+            int nz = Math.max(2, Mth.ceil(dz / PARTICLE_DIV));
+
+            for (int iX = 0; iX < nx; iX++) {
+                for (int iY = 0; iY < ny; iY++) {
+                    for (int iZ = 0; iZ < nz; iZ++) {
                         double deltaX = (iX + 0.5) / nx;
                         double deltaY = (iY + 0.5) / ny;
                         double deltaZ = (iZ + 0.5) / nz;
-                        double xOffset = deltaX * dx + minX;
-                        double yOffset = deltaY * dy + minY;
-                        double zOffset = deltaZ * dz + minZ;
-                        packets.add(new ClientboundLevelParticlesPacket(new ItemParticleOption(ParticleTypes.ITEM, ItemStackTemplate.fromNonEmptyStack(stack)), true, false, blockPos.getX() + xOffset, blockPos.getY() + yOffset, blockPos.getZ() + zOffset, (float)deltaX - 0.5f, (float)deltaY - 0.5f, (float)deltaZ - 0.5f, 0.25f, 0));
+
+                        packets.add(new ClientboundLevelParticlesPacket(
+                                new ItemParticleOption(ParticleTypes.ITEM, ItemStackTemplate.fromNonEmptyStack(stack)),
+                                true, false,
+                                originX + deltaX * dx + minX,
+                                originY + deltaY * dy + minY,
+                                originZ + deltaZ * dz + minZ,
+                                (float) deltaX - 0.5f, (float) deltaY - 0.5f, (float) deltaZ - 0.5f,
+                                0.25f, 0));
                     }
                 }
             }
         });
 
-        if (!packets.isEmpty()) {
-            ClientboundBundlePacket bundlePacket = new ClientboundBundlePacket(packets);
-            for (ServerPlayer player : level.players()) {
-                if (player.position().distanceTo(Vec3.atCenterOf(blockPos)) < 512) {
-                    player.connection.send(bundlePacket);
-                }
+        if (packets.isEmpty()) return;
+
+        ClientboundBundlePacket bundlePacket = new ClientboundBundlePacket(packets);
+        Vec3 center = new Vec3(originX + 0.5, originY + 0.5, originZ + 0.5);
+        for (ServerPlayer player : level.players()) {
+            if (player.position().distanceTo(center) < PARTICLE_VIEW_DISTANCE) {
+                player.connection.send(bundlePacket);
             }
         }
     }
@@ -245,7 +273,6 @@ public class DecorationUtil {
         if (itemResource == null)
             return converted;
 
-        // TODO: this should be a behaviour
         if (wall && itemResource.getModels().containsKey("wall")) {
             converted.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(ImmutableList.of(), ImmutableList.of(), ImmutableList.of("wall"), ImmutableList.of()));
             return converted;
@@ -270,9 +297,8 @@ public class DecorationUtil {
 
         if (!(itemStack.getItem() instanceof PolymerItem polymerItem)) {
             return itemStack.copyWithCount(1);
-        } else {
-            return polymerItem.getPolymerItemStack(itemStack, TooltipFlag.NORMAL, EMPTY_CONTEXT, Filament.SERVER.registryAccess());
         }
+        return polymerItem.getPolymerItemStack(itemStack, TooltipFlag.NORMAL, EMPTY_CONTEXT, Filament.SERVER.registryAccess());
     }
 
     public static void setupElements(@NotNull FilamentDecorationHolder holder, @NotNull DecorationData data, @NotNull Direction direction, float rotation, @NotNull ItemStack itemStack, @Nullable OnInteract onInteract) {
@@ -281,16 +307,18 @@ public class DecorationUtil {
         if (data.hasBlocks() && addDisplay) {
             holder.addElement(DecorationUtil.decorationItemDisplay(data, direction, rotation, itemStack));
         } else if (data.size() != null) {
-            if (addDisplay)
+            if (addDisplay) {
                 holder.addElement(DecorationUtil.decorationItemDisplay(data, direction, rotation, itemStack));
+            }
             holder.addElement(DecorationUtil.decorationInteraction(data, direction, onInteract));
         } else {
             if (data.itemFrame() == Boolean.TRUE && addDisplay) {
                 ItemFrameElement itemFrameElement = new ItemFrameElement(data, direction, Util.SEGMENTED_ANGLE8.fromDegrees(rotation), itemStack, onInteract);
                 holder.addElement(itemFrameElement);
             } else if (!data.hasBlocks()) {
-                // Just using display+interaction again with 1.0 width, 0.5 height
-                if (addDisplay) holder.addElement(DecorationUtil.decorationItemDisplay(data, direction, rotation, itemStack));
+                if (addDisplay) {
+                    holder.addElement(DecorationUtil.decorationItemDisplay(data, direction, rotation, itemStack));
+                }
                 holder.addElement(DecorationUtil.decorationInteraction(data, direction, onInteract));
             }
         }

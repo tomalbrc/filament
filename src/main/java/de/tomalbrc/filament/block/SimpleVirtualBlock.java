@@ -115,7 +115,7 @@ public class SimpleVirtualBlock extends SimpleBlock implements BlockWithElementH
             var attachment = BlockBoundAttachment.get(level, blockPos);
             if (attachment != null && level instanceof ServerLevel serverLevel) {
                 var holder = (VirtualBlockHolder)attachment.holder();
-                DecorationUtil.showBreakParticleShaped(serverLevel, blockPos, blockState, holder.displayStack);
+                DecorationUtil.showBreakParticlesShaped(serverLevel, blockPos, blockState, holder.displayStack);
                 BlockUtil.playBreakSound(serverLevel, blockPos, blockState);
             }
         }

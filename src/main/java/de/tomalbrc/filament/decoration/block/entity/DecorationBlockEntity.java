@@ -216,7 +216,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
                     if (this.getLevel() != null && DecorationRegistry.isDecoration(this.getLevel().getBlockState(blockPos))) {
                         if (data.properties().showBreakParticles()) {
                             var center = Vec3.atCenterOf(blockPos);
-                            DecorationUtil.showBreakParticle((ServerLevel) this.level, data.properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase().asItem().getDefaultInstance(), (float) center.x(), (float) center.y(), (float) center.z());
+                            DecorationUtil.showBreakParticles((ServerLevel) this.level, data.properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase().asItem().getDefaultInstance(), BlockPos.containing(center));
                         }
                         this.getLevel().destroyBlock(blockPos, false);
                     }
@@ -228,7 +228,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
 
                 if (data.properties().showBreakParticles()) {
                     var center = Vec3.atCenterOf(blockPos);
-                    DecorationUtil.showBreakParticle((ServerLevel) this.level, this.getDecorationData().properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase().asItem().getDefaultInstance(), (float) center.x(), (float) center.y(), (float) center.z());
+                    DecorationUtil.showBreakParticles((ServerLevel) this.level, this.getDecorationData().properties().useItemParticles ? particleItem : this.getDecorationData().properties().blockBase().asItem().getDefaultInstance(), BlockPos.containing(center));
                 }
 
                 BlockUtil.playBreakSound(this.level, this.getBlockPos(), this.getBlockState());

@@ -93,7 +93,7 @@ public class SimpleDecorationBlock extends DecorationBlock implements BlockWithE
 
         if (data.properties().showBreakParticles()) {
             var center = Vec3.atCenterOf(blockPos);
-            DecorationUtil.showBreakParticle((ServerLevel) level, data.properties().useItemParticles ? BuiltInRegistries.ITEM.getValue(this.decorationId).getDefaultInstance() : this.getDecorationData().properties().blockBase().asItem().getDefaultInstance(), (float) center.x(), (float) center.y(), (float) center.z());
+            DecorationUtil.showBreakParticles((ServerLevel) level, data.properties().useItemParticles ? BuiltInRegistries.ITEM.getValue(this.decorationId).getDefaultInstance() : this.getDecorationData().properties().blockBase().asItem().getDefaultInstance(), BlockPos.containing(center));
         }
     }
 }
