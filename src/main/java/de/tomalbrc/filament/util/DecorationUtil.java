@@ -67,7 +67,7 @@ public class DecorationUtil {
                 for (int y = 0; y < size.y(); y++) {
                     for (int z = 0; z < size.z(); z++) {
                         Vector3f pos = new Vector3f(x, y, z).add(origin);
-                        float hMul = rotation % 90 != 0 ? (float) Math.sqrt(2) : 1;
+                        float hMul = rotation % 90 != 0 ? Math.sqrt(2) : 1;
                         Vector3f offset = pos.mul(hMul, 1, hMul);
                         offset.rotateY(Mth.DEG_TO_RAD * (rotation + (FilamentConfig.getInstance().alternativeBlockPlacement ? 0 : 180)));
 
@@ -307,6 +307,7 @@ public class DecorationUtil {
             if (addDisplay) {
                 holder.addElement(DecorationUtil.decorationItemDisplay(data, direction, rotation, itemStack));
             }
+
             holder.addElement(DecorationUtil.decorationInteraction(data, direction, onInteract));
         } else {
             if (data.itemFrame() == Boolean.TRUE && addDisplay) {
@@ -316,6 +317,7 @@ public class DecorationUtil {
                 if (addDisplay) {
                     holder.addElement(DecorationUtil.decorationItemDisplay(data, direction, rotation, itemStack));
                 }
+
                 holder.addElement(DecorationUtil.decorationInteraction(data, direction, onInteract));
             }
         }

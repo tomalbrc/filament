@@ -11,15 +11,12 @@ import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.decoration.DecorationItem;
 import de.tomalbrc.filament.decoration.holder.DecorationHolder;
 import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
-import de.tomalbrc.filament.decoration.util.ShulkerCollisionElement;
-import de.tomalbrc.filament.decoration.util.VirtualCollisionTracker;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.util.DecorationUtil;
 import de.tomalbrc.filament.util.Util;
 import eu.pb4.common.protection.api.CommonProtection;
 import eu.pb4.polymer.core.api.entity.PolymerEntity;
 import eu.pb4.polymer.virtualentity.api.attachment.EntityAttachment;
-import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
 import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,7 +29,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -47,7 +43,6 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 import org.jspecify.annotations.NonNull;
 
 import java.util.Map;
@@ -120,7 +115,6 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
         if (data == null) return;
 
         if (this.decorationHolder != null && this.decorationHolder.getAttachment() != null) {
-            this.teardownCollision(this.decorationHolder);
             this.decorationHolder.getAttachment().destroy();
         }
 
@@ -135,102 +129,9 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
                 this.decorationHolder.isAnimated()
         );
 
-        this.setupCollision(this.decorationHolder);
-
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : this.behaviours) {
             if (entry.getValue() instanceof DecorationBehaviour<?> behaviour) {
                 behaviour.onHolderAttach(this, this.decorationHolder);
-            }
-        }
-    }
-
-    private void setupCollision(FilamentDecorationHolder holder) {
-        DecorationData data = this.getDecorationData();
-        if (data == null) return;
-
-        if (!(this.level() instanceof ServerLevel serverLevel)) return;
-
-        float yawRad = this.visualRotation * Mth.DEG_TO_RAD;
-
-        var blocks = data.blocks();
-        var decoSize = data.size();
-
-        if (blocks != null && !blocks.isEmpty()) {
-            for (DecorationData.BlockConfig config : blocks) {
-                this.spawnShulkerVolume(holder, config, yawRad, serverLevel);
-            }
-        } else if (decoSize != null) {
-            Vector3f size = new Vector3f(decoSize.x(), decoSize.y(), decoSize.x());
-            Vector3f origin = new Vector3f(0, 0, 0);
-            this.spawnShulkerVolume(holder, new DecorationData.BlockConfig(origin, size), yawRad, serverLevel);
-        }
-    }
-
-    private void spawnShulkerVolume(FilamentDecorationHolder holder, DecorationData.BlockConfig config, float yawRad, ServerLevel level) {
-        Vector3f origin = config.origin();
-        Vector3f size = config.size();
-
-        int sx = Math.max(1, Math.round(size.x()));
-        int sy = Math.max(1, Math.round(size.y()));
-        int sz = Math.max(1, Math.round(size.z()));
-
-        Vec3 base = this.position();
-
-        for (int x = 0; x < sx; x++) {
-            for (int y = 0; y < sy; y++) {
-                for (int z = 0; z < sz; z++) {
-                    Vector3f local = new Vector3f(origin.x + x + 0.5f, origin.y + y, origin.z + z + 0.5f);
-                    local.rotateY(yawRad);
-
-                    Vec3 world = base.add(local.x, local.y, local.z);
-
-                    var element = new ShulkerCollisionElement();
-                    element.setOffset(world.subtract(base));
-                    element.setHandler(new VirtualElement.InteractionHandler() {
-                        @Override
-                        public void interact(ServerPlayer player, InteractionHand hand, Vec3 pos, boolean secondaryAction) {
-                            Vec3 origin = element.worldPosition();
-                            if (origin == null) return;
-
-                            Vec3 worldPos = origin.add(pos);
-                            BlockPos blockPos = BlockPos.containing(worldPos);
-
-                            InteractionResult result = DecorationEntity.this.interact(player, hand, worldPos);
-
-                            if (!result.consumesAction()) {
-                                DecorationUtil.defaultVirtualInteraction(player, hand, blockPos, worldPos, pos, 1.0f, 1.0f);
-                            }
-                        }
-
-                        @Override
-                        public void attack(ServerPlayer player) {
-                            DecorationEntity.this.destroyStructure(level, true, player);
-                        }
-                    });
-
-                    holder.addElement(element);
-
-                    VirtualCollisionTracker.register(element, level, world);
-                }
-            }
-        }
-    }
-
-    private void teardownCollision(@Nullable FilamentDecorationHolder holder) {
-        if (holder == null) return;
-
-        if (!(this.level() instanceof ServerLevel serverLevel)) {
-            return;
-        }
-
-        for (var element : holder.asPolymerHolder().getElements()) {
-            if (element instanceof ShulkerCollisionElement shulkerElement) {
-                Vec3 world = shulkerElement.worldPosition();
-
-                if (world != null) {
-                    // TODO: move to holder impl?
-                    VirtualCollisionTracker.unregister(shulkerElement, serverLevel, world);
-                }
             }
         }
     }
@@ -443,11 +344,8 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
             Util.spawnAtLocation(this.level(), this.position(), drop);
         }
 
-        if (this.decorationHolder != null) {
-            this.teardownCollision(this.decorationHolder);
-            if (this.decorationHolder.getAttachment() != null) {
-                this.decorationHolder.getAttachment().destroy();
-            }
+        if (this.decorationHolder != null && this.decorationHolder.getAttachment() != null) {
+            this.decorationHolder.getAttachment().destroy();
         }
 
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : this.behaviours) {
