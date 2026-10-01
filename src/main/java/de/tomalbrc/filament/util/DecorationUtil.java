@@ -97,6 +97,9 @@ public class DecorationUtil {
         element.setInteractionHandler(new VirtualElement.InteractionHandler() {
             @Override
             public void interact(ServerPlayer player, InteractionHand hand, Vec3 pos, boolean secondaryAction) {
+                var attachment = element.getHolder().getAttachment();
+                if (attachment == null) return;
+
                 ServerLevel serverLevel = player.level();
                 BlockPos blockPos = BlockPos.containing(element.getHolder().getAttachment().getPos());
                 InteractionResult result = InteractionResult.PASS;
@@ -109,6 +112,9 @@ public class DecorationUtil {
 
             @Override
             public void attack(ServerPlayer player) {
+                var attachment = element.getHolder().getAttachment();
+                if (attachment == null) return;
+
                 ServerLevel serverLevel = player.level();
                 BlockPos blockPos = BlockPos.containing(element.getHolder().getAttachment().getPos());
                 player.gameMode.handleBlockBreakAction(blockPos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, Direction.UP, serverLevel.getMaxY(), 0);

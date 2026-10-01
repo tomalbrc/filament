@@ -68,56 +68,57 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
         }
 
         DecorationProperties properties = decorationData.properties();
-
-        var clickedState = useOnContext.getLevel().getBlockState(useOnContext.getClickedPos());
-        var replaceable = clickedState.canBeReplaced();
-
-        BlockPos blockPos = useOnContext.getClickedPos();
-        Direction direction, actualDir = direction = replaceable ? Direction.UP : useOnContext.getClickedFace();
-        Player player = useOnContext.getPlayer();
-        ItemStack itemStack = useOnContext.getItemInHand();
         Level level = useOnContext.getLevel();
+        Player player = useOnContext.getPlayer();
 
-        boolean propertyPlaceCheck = properties.placement.canPlace(direction);
-        if (!propertyPlaceCheck && properties.placement.floor()) {
-            direction = Direction.UP;
-            propertyPlaceCheck = properties.placement.canPlace(direction);
+        if (player == null) return InteractionResult.FAIL;
+        if (!this.getBlock().isEnabled(level.enabledFeatures())) return InteractionResult.FAIL;
+
+        BlockPos clickedPos = useOnContext.getClickedPos();
+        Direction clickedFace = useOnContext.getClickedFace();
+        boolean replaceable = level.getBlockState(clickedPos).canBeReplaced();
+
+        if (replaceable) {
+            return this.tryPlace(useOnContext, clickedPos, Direction.UP, properties);
         }
 
-        if (!propertyPlaceCheck && properties.placement.ceiling()) {
-            direction = Direction.DOWN;
-            propertyPlaceCheck = properties.placement.canPlace(direction);
-        }
+        BlockPos adjacent = clickedPos.relative(clickedFace);
 
-        DecorationBlock block = DecorationRegistry.getDecorationBlock(decorationData.id());
-        BlockState blockState = block.getStateForPlacement(new BlockPlaceContext(useOnContext));
+        InteractionResult result = this.tryPlace(useOnContext, adjacent, clickedFace, properties);
+        if (result.consumesAction()) return result;
 
-        boolean forceReplace = replaceable || clickedState.canBeReplaced(new BlockPlaceContext(useOnContext));
-        BlockPos relativeBlockPos;
-        if (forceReplace) {
-            relativeBlockPos = blockPos;
-        } else {
-            relativeBlockPos = blockPos.relative(direction);
-        }
-
-        assert blockState != null;
-        float angle = block.getVisualRotationYInDegrees(blockState);
-
-        if (!this.getBlock().isEnabled(level.enabledFeatures()) || player == null || !this.mayPlace(player, direction, itemStack, relativeBlockPos) || !propertyPlaceCheck) {
-            return InteractionResult.FAIL;
-        } else if ((forceReplace || this.canPlaceAt(level, relativeBlockPos, angle))) {
-            DecorationItem.place(itemStack, level, blockState, relativeBlockPos, actualDir, direction, useOnContext);
-
-            player.swing(useOnContext.getHand(), SwingAnimation.DEFAULT, true);
-            itemStack.consume(1, player);
-
-            SoundEvent placeSound = properties.blockBase().defaultBlockState().getSoundType().getPlaceSound();
-            level.playSound(null, blockPos, placeSound, SoundSource.BLOCKS, 1.0F, 1.0F);
-
-            return InteractionResult.CONSUME;
+        if (clickedFace.getAxis().isHorizontal() && !level.getBlockState(adjacent.below()).canBeReplaced()) {
+            result = this.tryPlace(useOnContext, adjacent, Direction.UP, properties);
+            if (result.consumesAction()) return result;
         }
 
         return InteractionResult.FAIL;
+    }
+
+    private InteractionResult tryPlace(UseOnContext useOnContext, BlockPos targetPos, Direction direction, DecorationProperties properties) {
+        Level level = useOnContext.getLevel();
+        Player player = useOnContext.getPlayer();
+        ItemStack itemStack = useOnContext.getItemInHand();
+
+        if (!properties.placement.canPlace(direction)) return InteractionResult.FAIL;
+        if (!this.mayPlace(player, direction, itemStack, targetPos)) return InteractionResult.FAIL;
+
+        DecorationBlock block = DecorationRegistry.getDecorationBlock(decorationData.id());
+        BlockState blockState = block.getStateForPlacement(new BlockPlaceContext(useOnContext));
+        if (blockState == null) return InteractionResult.FAIL;
+
+        float angle = block.getVisualRotationYInDegrees(blockState);
+        if (!this.canPlaceAt(level, targetPos, angle)) return InteractionResult.FAIL;
+
+        DecorationItem.place(itemStack, level, blockState, targetPos, direction, direction, useOnContext);
+
+        player.swing(useOnContext.getHand(), SwingAnimation.DEFAULT, true);
+        itemStack.consume(1, player);
+
+        SoundEvent placeSound = properties.blockBase().defaultBlockState().getSoundType().getPlaceSound();
+        level.playSound(null, useOnContext.getClickedPos(), placeSound, SoundSource.BLOCKS, 1.0F, 1.0F);
+
+        return InteractionResult.CONSUME;
     }
 
     protected boolean mayPlace(Player player, Direction direction, ItemStack itemStack, BlockPos blockPos) {
