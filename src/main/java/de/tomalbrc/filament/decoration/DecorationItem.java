@@ -101,7 +101,7 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
         ItemStack itemStack = useOnContext.getItemInHand();
 
         if (!properties.placement.canPlace(direction)) return InteractionResult.FAIL;
-        if (!this.mayPlace(player, direction, itemStack, targetPos)) return InteractionResult.FAIL;
+        if (player == null || !this.mayPlace(player, direction, itemStack, targetPos)) return InteractionResult.FAIL;
 
         DecorationBlock block = DecorationRegistry.getDecorationBlock(decorationData.id());
         BlockState blockState = block.getStateForPlacement(new BlockPlaceContext(useOnContext));
