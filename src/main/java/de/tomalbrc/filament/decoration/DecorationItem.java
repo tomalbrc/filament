@@ -96,27 +96,50 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
         Direction face = clickedFace == null ? Direction.UP : clickedFace;
         Vec3 hit = useOnContext.getClickLocation();
 
-        float halfWidth = decorationData.size() != null ? decorationData.size().x() * 0.5f : 0.5f;
-        float halfHeight = decorationData.size() != null ? decorationData.size().y() * 0.5f : 0.5f;
+        float halfWidth = decorationData.size() != null
+                ? decorationData.size().x() * 0.5f
+                : 0.5f;
+
+        float halfHeight = decorationData.size() != null
+                ? decorationData.size().y() * 0.5f
+                : 0.5f;
 
         switch (face) {
             case UP -> hit = hit.add(0, halfHeight, 0);
             case DOWN -> hit = hit.add(0, -halfHeight, 0);
-            default -> hit = hit.add(face.getStepX() * halfWidth, 0, face.getStepZ() * halfWidth);
+            default -> hit = hit.add(
+                    face.getStepX() * halfWidth,
+                    0,
+                    face.getStepZ() * halfWidth
+            );
         }
 
         BlockPos checkPos = BlockPos.containing(hit);
-        if (!player.mayUseItemAt(checkPos, face, itemStack)) return InteractionResult.FAIL;
-        if (player.level().isOutsideBuildHeight(checkPos)) return InteractionResult.FAIL;
 
-        if (level.isClientSide()) return InteractionResult.SUCCESS;
+        if (!player.mayUseItemAt(checkPos, face, itemStack)) {
+            return InteractionResult.FAIL;
+        }
+
+        if (player.level().isOutsideBuildHeight(checkPos)) {
+            return InteractionResult.FAIL;
+        }
+
+        if (level.isClientSide()) {
+            return InteractionResult.SUCCESS;
+        }
 
         if (!CommonProtection.canPlaceBlock(level, checkPos, player.nameAndId(), player)) {
             return InteractionResult.FAIL;
         }
 
-        DecorationEntity entity = EntityRegistry.FURNITURE_ENTITY.create(level, EntitySpawnReason.SPAWN_ITEM_USE);
-        if (entity == null) return InteractionResult.FAIL;
+        DecorationEntity entity = EntityRegistry.FURNITURE_ENTITY.create(
+                level,
+                EntitySpawnReason.SPAWN_ITEM_USE
+        );
+
+        if (entity == null) {
+            return InteractionResult.FAIL;
+        }
 
         float yaw = this.resolvePlacementYaw(useOnContext, clickedFace);
 
@@ -126,8 +149,19 @@ public class DecorationItem extends SimpleBlockItem implements PolymerItem, Beha
         player.swing(useOnContext.getHand(), SwingAnimation.DEFAULT, true);
         itemStack.consume(1, player);
 
-        SoundEvent placeSound = properties.blockBase().defaultBlockState().getSoundType().getPlaceSound();
-        level.playSound(null, checkPos, placeSound, SoundSource.BLOCKS, 1.0F, 1.0F);
+        SoundEvent placeSound = properties.blockBase()
+                .defaultBlockState()
+                .getSoundType()
+                .getPlaceSound();
+
+        level.playSound(
+                null,
+                checkPos,
+                placeSound,
+                SoundSource.BLOCKS,
+                1.0F,
+                1.0F
+        );
 
         if (player instanceof ServerPlayer serverPlayer) {
             CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, checkPos, itemStack);

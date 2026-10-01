@@ -47,19 +47,26 @@ public class ItemFrameElement extends GenericEntityElement {
             @Override
             public void interact(ServerPlayer player, InteractionHand hand, Vec3 pos, boolean secondaryAction) {
                 ServerLevel serverLevel = player.level();
-                BlockPos blockPos = BlockPos.containing(getHolder().getAttachment().getPos());
+                Vec3 worldPos = Objects.requireNonNull(getHolder()).getPos().add(getOffset()).add(pos);
+                BlockPos blockPos = BlockPos.containing(worldPos);
+
                 InteractionResult result = InteractionResult.PASS;
+
                 if (onInteract != null && serverLevel.mayInteract(player, blockPos)) {
-                    result = onInteract.interact(player, hand, Vec3.atCenterOf(blockPos).add(pos));
+                    result = onInteract.interact(player, hand, worldPos);
                 }
 
-                if (!result.consumesAction()) DecorationUtil.defaultVirtualInteraction(player, hand, blockPos, pos, 1/16f);
+                if (!result.consumesAction()) {
+                    DecorationUtil.defaultVirtualInteraction(player, hand, blockPos, worldPos, pos, 1 / 16f, 1 / 16f);
+                }
             }
 
             @Override
             public void attack(ServerPlayer player) {
                 ServerLevel serverLevel = player.level();
-                BlockPos blockPos = BlockPos.containing(getHolder().getAttachment().getPos());
+                Vec3 worldPos = Objects.requireNonNull(getHolder()).getPos().add(getOffset());
+                BlockPos blockPos = BlockPos.containing(worldPos);
+
                 player.gameMode.handleBlockBreakAction(blockPos, ServerboundPlayerActionPacket.Action.START_DESTROY_BLOCK, Direction.UP, serverLevel.getMaxY(), 0);
             }
         });

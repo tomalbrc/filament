@@ -93,11 +93,12 @@ public class DecorationUtil {
 
     public static InteractionElement decorationInteraction(DecorationData decorationData, Direction direction, @Nullable OnInteract onInteract) {
         InteractionElement element = new InteractionElement();
+
         if (decorationData != null && decorationData.size() != null) {
             element.setSize(decorationData.size().x, decorationData.size().y);
         } else {
             // TODO: use 1.f for ceiling placement by default too?
-            element.setSize(1.f, direction == Direction.DOWN ? 1.f : .5f); // default
+            element.setSize(1.f, direction == Direction.DOWN ? 1.f : .5f);
         }
 
         element.setInteractionHandler(new VirtualElement.InteractionHandler() {
@@ -107,14 +108,17 @@ public class DecorationUtil {
                 if (attachment == null) return;
 
                 ServerLevel serverLevel = player.level();
-                BlockPos blockPos = BlockPos.containing(element.getHolder().getAttachment().getPos());
+                Vec3 worldPos = element.getCurrentPos().add(pos);
+                BlockPos blockPos = BlockPos.containing(attachment.getPos());
+
                 InteractionResult result = InteractionResult.PASS;
+
                 if (onInteract != null && serverLevel.mayInteract(player, blockPos)) {
-                    result = onInteract.interact(player, hand, Vec3.atCenterOf(blockPos).add(pos));
+                    result = onInteract.interact(player, hand, worldPos);
                 }
 
                 if (!result.consumesAction()) {
-                    DecorationUtil.defaultVirtualInteraction(player, hand, blockPos, pos, element.getHeight());
+                    DecorationUtil.defaultVirtualInteraction(player, hand, blockPos, worldPos, pos, element.getWidth(), element.getHeight());
                 }
             }
 
@@ -124,9 +128,9 @@ public class DecorationUtil {
                 if (attachment == null) return;
 
                 ServerLevel serverLevel = player.level();
-                BlockPos blockPos = BlockPos.containing(element.getHolder().getAttachment().getPos());
+                BlockPos blockPos = BlockPos.containing(attachment.getPos());
 
-                if (decorationData != null && decorationData.properties().entity && element.getHolder().getAttachment() instanceof EntityAttachment entityAttachment) {
+                if (decorationData != null && decorationData.properties().entity && attachment instanceof EntityAttachment entityAttachment) {
                     var entity = ((PolymerEntityAttachmentAccessor) entityAttachment).getEntity();
                     entity.kill(serverLevel);
                 } else {
@@ -137,12 +141,9 @@ public class DecorationUtil {
 
         var dirUnitVec = direction.getUnitVec3i();
         if (direction != Direction.DOWN && direction != Direction.UP) {
-            element.setOffset(new Vec3(dirUnitVec.getX(), dirUnitVec.getY() + element.getHeight(), dirUnitVec.getZ())
-                    .multiply(1.f - element.getWidth(), 1, 1.f - element.getWidth())
-                    .scale(-0.5f));
+            element.setOffset(new Vec3(dirUnitVec.getX(), dirUnitVec.getY() + element.getHeight(), dirUnitVec.getZ()).multiply(1.f - element.getWidth(), 1, 1.f - element.getWidth()).scale(-0.5f));
         } else {
-            element.setOffset(new Vec3(dirUnitVec.getX(), dirUnitVec.getY(), dirUnitVec.getZ())
-                    .add(0, direction == Direction.UP ? -1.5f : 0.5f + (1.f - element.getHeight()), 0));
+            element.setOffset(new Vec3(dirUnitVec).add(0, direction == Direction.UP ? -1.5f : 0.5f + (1.f - element.getHeight()), 0));
         }
 
         return element;
@@ -210,10 +211,6 @@ public class DecorationUtil {
 
     public static void showBreakParticles(ServerLevel level, ItemStack stack, Vec3 pos) {
         showBreakParticlesInternal(level, Shapes.block(), stack, pos.x - 0.5, pos.y - 0.5, pos.z - 0.5);
-    }
-
-    public static void showBreakParticlesEntity(ServerLevel level, ItemStack stack, Vec3 pos) {
-        showBreakParticles(level, stack, pos);
     }
 
     public static void showBreakParticlesShaped(ServerLevel level, BlockPos blockPos, BlockState blockState, ItemStack stack) {
@@ -324,8 +321,15 @@ public class DecorationUtil {
         }
     }
 
-    public static void defaultVirtualInteraction(ServerPlayer player, InteractionHand hand, BlockPos blockPos, Vec3 position, float height) {
-        player.connection.handleUseItemOn(new ServerboundUseItemOnPacket(hand, new BlockHitResult(Vec3.atCenterOf(blockPos).add(position), Direction.getApproximateNearest(position.multiply(1, 1.f/height * 0.5, 1)), blockPos, false), 0));
+    public static void defaultVirtualInteraction(ServerPlayer player, InteractionHand hand, BlockPos blockPos, Vec3 worldPos, Vec3 position, float width, float height) {
+        double halfWidth = width * 0.5;
+        double halfHeight = height * 0.5;
+
+        Vec3 centered = position.subtract(0, halfHeight, 0);
+        Vec3 normalized = new Vec3(centered.x / halfWidth, centered.y / halfHeight, centered.z / halfWidth);
+        Direction direction = Direction.getApproximateNearest(normalized);
+
+        player.connection.handleUseItemOn(new ServerboundUseItemOnPacket(hand, new BlockHitResult(worldPos, direction, blockPos, false), 0));
     }
 
     @FunctionalInterface

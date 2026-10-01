@@ -53,7 +53,6 @@ import java.util.Map;
 
 @ApiStatus.Experimental
 public class DecorationEntity extends Entity implements DecorationLike, PolymerEntity, BehaviourHolder {
-
     private final BehaviourMap behaviours = new BehaviourMap();
 
     @Nullable
@@ -220,7 +219,7 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
             }
         }
 
-        DecorationHolder holder = new DecorationHolder(this::getVisualItemStack);
+        DecorationHolder holder = new DecorationHolder(this::getItemStack);
         DecorationUtil.setupElements(
                 holder,
                 this.getDecorationData(),
