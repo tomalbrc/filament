@@ -19,6 +19,7 @@ import de.tomalbrc.filament.util.Util;
 import eu.pb4.common.protection.api.CommonProtection;
 import eu.pb4.polymer.core.api.entity.PolymerEntity;
 import eu.pb4.polymer.virtualentity.api.attachment.EntityAttachment;
+import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
 import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -57,6 +58,7 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
 
     @Nullable
     private FilamentDecorationHolder decorationHolder;
+
     @Nullable
     private Identifier decorationId;
 
@@ -103,6 +105,7 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
     @Override
     public void initBehaviours(BehaviourConfigMap configMap) {
         DecorationLike.super.initBehaviours(configMap);
+
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : this.behaviours) {
             if (entry.getValue() instanceof DecorationBehaviour<?> behaviour) {
                 behaviour.init(this);
@@ -144,12 +147,14 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
     private void setupCollision(FilamentDecorationHolder holder) {
         DecorationData data = this.getDecorationData();
         if (data == null) return;
+
         if (!(this.level() instanceof ServerLevel serverLevel)) return;
 
         float yawRad = this.visualRotation * Mth.DEG_TO_RAD;
 
         var blocks = data.blocks();
         var decoSize = data.size();
+
         if (blocks != null && !blocks.isEmpty()) {
             for (DecorationData.BlockConfig config : blocks) {
                 this.spawnShulkerVolume(holder, config, yawRad, serverLevel);
@@ -161,8 +166,7 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
         }
     }
 
-    private void spawnShulkerVolume(FilamentDecorationHolder holder, DecorationData.BlockConfig config,
-                                    float yawRad, ServerLevel level) {
+    private void spawnShulkerVolume(FilamentDecorationHolder holder, DecorationData.BlockConfig config, float yawRad, ServerLevel level) {
         Vector3f origin = config.origin();
         Vector3f size = config.size();
 
@@ -175,18 +179,37 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
         for (int x = 0; x < sx; x++) {
             for (int y = 0; y < sy; y++) {
                 for (int z = 0; z < sz; z++) {
-                    Vector3f local = new Vector3f(
-                            origin.x + x + 0.5f,
-                            origin.y + y,
-                            origin.z + z + 0.5f
-                    );
+                    Vector3f local = new Vector3f(origin.x + x + 0.5f, origin.y + y, origin.z + z + 0.5f);
                     local.rotateY(yawRad);
 
                     Vec3 world = base.add(local.x, local.y, local.z);
 
                     var element = new ShulkerCollisionElement();
                     element.setOffset(world.subtract(base));
+                    element.setHandler(new VirtualElement.InteractionHandler() {
+                        @Override
+                        public void interact(ServerPlayer player, InteractionHand hand, Vec3 pos, boolean secondaryAction) {
+                            Vec3 origin = element.worldPosition();
+                            if (origin == null) return;
+
+                            Vec3 worldPos = origin.add(pos);
+                            BlockPos blockPos = BlockPos.containing(worldPos);
+
+                            InteractionResult result = DecorationEntity.this.interact(player, hand, worldPos);
+
+                            if (!result.consumesAction()) {
+                                DecorationUtil.defaultVirtualInteraction(player, hand, blockPos, worldPos, pos, 1.0f, 1.0f);
+                            }
+                        }
+
+                        @Override
+                        public void attack(ServerPlayer player) {
+                            DecorationEntity.this.destroyStructure(level, true, player);
+                        }
+                    });
+
                     holder.addElement(element);
+
                     VirtualCollisionTracker.register(element, level, world);
                 }
             }
@@ -195,13 +218,18 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
 
     private void teardownCollision(@Nullable FilamentDecorationHolder holder) {
         if (holder == null) return;
-        if (!(this.level() instanceof ServerLevel serverLevel)) return;
+
+        if (!(this.level() instanceof ServerLevel serverLevel)) {
+            return;
+        }
 
         for (var element : holder.asPolymerHolder().getElements()) {
-            if (element instanceof ShulkerCollisionElement shulker) {
-                Vec3 world = shulker.worldPosition();
+            if (element instanceof ShulkerCollisionElement shulkerElement) {
+                Vec3 world = shulkerElement.worldPosition();
+
                 if (world != null) {
-                    VirtualCollisionTracker.unregister(shulker, serverLevel, world);
+                    // TODO: move to holder impl?
+                    VirtualCollisionTracker.unregister(shulkerElement, serverLevel, world);
                 }
             }
         }
@@ -215,11 +243,15 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : this.behaviours) {
             if (entry.getValue() instanceof DecorationBehaviour<?> behaviour) {
                 FilamentDecorationHolder holder = behaviour.createHolder(this);
-                if (holder != null) return holder;
+
+                if (holder != null) {
+                    return holder;
+                }
             }
         }
 
         DecorationHolder holder = new DecorationHolder(this::getItemStack);
+
         DecorationUtil.setupElements(
                 holder,
                 this.getDecorationData(),
@@ -228,6 +260,7 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
                 this.getVisualItemStack(),
                 this::interact
         );
+
         return holder;
     }
 
@@ -263,6 +296,7 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
 
     @Override
     public void setChanged() {
+        refreshHolder();
     }
 
     @Override
@@ -290,26 +324,36 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
                 adjusted = behaviour.visualItemStack(this, adjusted, null);
             }
         }
+
         return adjusted;
     }
 
     @Override
     public @NonNull InteractionResult interact(@NonNull Player player, @NonNull InteractionHand hand, @NonNull Vec3 location) {
-        if (!(player instanceof ServerPlayer serverPlayer)) return InteractionResult.PASS;
+        if (!(player instanceof ServerPlayer serverPlayer)) {
+            return InteractionResult.PASS;
+        }
 
         if (!CommonProtection.canInteractBlock(player.level(), BlockPos.containing(location), player.nameAndId(), player)) {
             return InteractionResult.FAIL;
         }
 
-        if (this.getDecorationData() == null) return InteractionResult.FAIL;
+        if (this.getDecorationData() == null) {
+            return InteractionResult.FAIL;
+        }
 
         InteractionResult result = InteractionResult.PASS;
+
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : this.behaviours) {
             if (entry.getValue() instanceof DecorationBehaviour<?> behaviour) {
                 result = behaviour.interact(serverPlayer, hand, location, this);
-                if (result.consumesAction()) break;
+
+                if (result.consumesAction()) {
+                    break;
+                }
             }
         }
+
         return result;
     }
 
@@ -320,11 +364,13 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
 
     private void rebuildComponents() {
         DataComponentMap.Builder builder = DataComponentMap.builder();
+
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : this.behaviours) {
             if (entry.getValue() instanceof DecorationBehaviour<?> behaviour) {
                 behaviour.collectImplicitComponents(this, builder);
             }
         }
+
         this.components = builder.build();
     }
 
@@ -344,22 +390,24 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
     }
 
     @Override
-    public boolean hurtServer(@NonNull ServerLevel level, DamageSource source, float amount) {
+    public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
         if (source.is(DamageTypeTags.IS_PLAYER_ATTACK)) {
             this.destroyStructure(level, true, source.getEntity() instanceof Player p ? p : null);
             return true;
         }
+
         return false;
     }
 
     @Override
-    public void kill(@NonNull ServerLevel level) {
+    public void kill(ServerLevel level) {
         this.destroyStructure(level, true, null);
         this.remove(Entity.RemovalReason.KILLED);
     }
 
     public void destroyStructure(ServerLevel level, boolean dropItem, @Nullable Player breaker) {
         if (this.destroyed) return;
+
         this.destroyed = true;
 
         DecorationData data = this.getDecorationData();
@@ -367,8 +415,9 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
 
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : this.behaviours) {
             if (entry.getValue() instanceof DecorationBehaviour<?> behaviour) {
-                if (dropItem)
+                if (dropItem) {
                     behaviour.modifyDrop(this, this.itemStack);
+                }
 
                 behaviour.destroy(this, dropItem);
             }
@@ -386,9 +435,11 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
 
         if (dropItem && data.properties().drops && !this.itemStack.isEmpty()) {
             ItemStack drop = this.itemStack.copy();
+
             if (this.components != null) {
                 drop.applyComponents(this.components);
             }
+
             Util.spawnAtLocation(this.level(), this.position(), drop);
         }
 
@@ -409,17 +460,6 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
     }
 
     @Override
-    public void tick() {
-        super.tick();
-
-        if (this.level().isClientSide()) return;
-
-        if (this.decorationHolder != null && decorationHolder.isAnimated() && this.decorationHolder.getAttachment() != null) {
-            this.decorationHolder.tick();
-        }
-    }
-
-    @Override
     public EntityType<?> getPolymerEntityType(PacketContext context) {
         return EntityTypes.BLOCK_DISPLAY;
     }
@@ -436,15 +476,14 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
     @Override
     protected void readAdditionalSaveData(@NonNull ValueInput input) {
         this.decorationId = DecorationRegistry.canonicalize(input.read("DecorationId", Identifier.CODEC).orElse(null));
-        this.setupBehaviour(this.getDecorationData());
-
         input.read("Components", DataComponentMap.CODEC).ifPresent(map -> this.components = map);
-
         input.read("Item", ItemStack.CODEC).ifPresent(this::applyComponentsFromItemStack);
 
         this.direction = input.read("Direction", Direction.CODEC).orElse(Direction.UP);
         this.visualRotation = input.getFloatOr("VisualRotation", this.getYRot());
         this.setYRot(this.visualRotation);
+
+        this.setupBehaviour(this.getDecorationData());
 
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : this.behaviours) {
             if (entry.getValue() instanceof DecorationBehaviour<?> behaviour) {
@@ -462,12 +501,15 @@ public class DecorationEntity extends Entity implements DecorationLike, PolymerE
         this.rebuildComponents();
 
         output.store("Item", ItemStack.CODEC, this.itemStack);
+
         if (this.decorationId != null) {
             output.store("DecorationId", Identifier.CODEC, this.decorationId);
         }
+
         if (this.components != null) {
             output.store("Components", DataComponentMap.CODEC, this.components);
         }
+
         output.store("Direction", Direction.CODEC, this.direction);
         output.putFloat("VisualRotation", this.getVisualRotationYInDegrees());
 
