@@ -546,25 +546,22 @@ public class Json {
 
     public static class DataComponentsDeserializer implements JsonDeserializer<DataComponentMap>, JsonSerializer<DataComponentMap> {
         @Override
-        public DataComponentMap deserialize(JsonElement jsonElement, Type type,
-                                            JsonDeserializationContext jsonDeserializationContext)
-                throws JsonParseException {
-
+        public DataComponentMap deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
             RegistryAccess registryAccess = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
             RegistryOps<JsonElement> ops = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
 
-            DataResult<DataComponentMap> result =
-                    DataComponentMap.CODEC.parse(ops, jsonElement);
+            DataResult<DataComponentMap> result = DataComponentMap.CODEC.parse(ops, jsonElement);
 
             if (result.result().isEmpty()) {
-                Filament.LOGGER.error("Skipping broken components; could not load: {}", jsonElement);
+                Filament.LOGGER.warn("Skipping broken components; could not load: {}", jsonElement);
                 result.error().ifPresent(e ->
-                        Filament.LOGGER.error("Minecraft error message: {}", e.message()));
+                        Filament.LOGGER.warn("Minecraft error message: {}", e.message()));
                 return null;
             }
 
-            result.error().ifPresent(e ->
-                    Filament.LOGGER.warn("Could not load some components: {}", jsonElement));
+            result.error().ifPresent(_ ->
+                    Filament.LOGGER.warn("Could not load some components: {}", jsonElement)
+            );
 
             return result.result().get();
         }
