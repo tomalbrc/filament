@@ -38,6 +38,9 @@ public class FilamentConfig {
     @SerializedName("resourcepack_required")
     public boolean resourcepackRequired = true;
 
+    @SerializedName("decoration_placement_previews")
+    public boolean decorationPlacementPreviews = false;
+
     @SerializedName("version")
     public Integer version;
 

@@ -84,6 +84,8 @@
     "datafix.ChunkStorageMixin",
     "decoration.FlowingFluidMixin",
     "decoration.LevelChunkMixin",
+    "decoration.ServerGamePacketListenerImplMixin",
+    "decoration.ServerPlayerMixin",
     "injection.BlockMixin",
     "injection.ItemMixin"
   ],

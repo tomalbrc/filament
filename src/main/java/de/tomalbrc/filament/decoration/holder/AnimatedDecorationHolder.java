@@ -25,15 +25,22 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.ChestType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.function.Consumer;
 
 public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements FilamentDecorationHolder {
-    private final DecorationBlockEntity parent;
+    private final @Nullable DecorationBlockEntity parent;
     private BlockStateMappedProperty<String> variantProperty;
 
-    public AnimatedDecorationHolder(DecorationBlockEntity blockEntity, Model model) {
+    public AnimatedDecorationHolder(Animation.Config animation, Model model) {
+        super(model);
+        this.parent = null;
+        this.setAnimationData(animation);
+    }
+
+    public AnimatedDecorationHolder(@NotNull DecorationBlockEntity blockEntity, Model model) {
         super(model);
         this.parent = blockEntity;
 
@@ -62,6 +69,8 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
 
     @Override
     public boolean canRunEffects(ServerPlayer serverPlayer, Frame frame) {
+        if (this.parent == null) return false;
+
         BlockState state = parent.getBlockState();
 
         // TODO: This should be done through decoration behaviours...
@@ -91,6 +100,9 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
     @Override
     protected void onDataLoaded() {
         super.onDataLoaded();
+
+        if (this.parent == null) return;
+
         if (this.bones != null && this.parent.getDecorationData() != null && this.parent.getDecorationData().size() != null) {
             for (Bone<?> bone : this.bones) {
                 bone.element().setDisplaySize(this.parent.getDecorationData().size().get(0) * 1.5f, this.parent.getDecorationData().size().get(1) * 1.5f);
@@ -109,7 +121,8 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
                     this.getAnimator().playAnimation(animationData.autoplay);
                 }
 
-                this.setYaw(this.parent.getVisualRotationYInDegrees());
+                if (this.parent != null)
+                    this.setYaw(this.parent.getVisualRotationYInDegrees());
             }
         }
     }
@@ -141,7 +154,7 @@ public class AnimatedDecorationHolder extends SimpleAnimatedHolder implements Fi
 
     @Override
     public ItemStack getPickResult() {
-        return parent.getItem().copy();
+        return this.parent == null ? ItemStack.EMPTY : parent.getItem().copy();
     }
 
     @Override
