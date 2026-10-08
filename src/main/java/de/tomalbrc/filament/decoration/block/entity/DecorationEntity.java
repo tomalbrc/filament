@@ -150,11 +150,7 @@ public class DecorationEntity extends Entity implements PolymerEntity, Behaviour
     private ItemStack getVisualItemStack() {
         DecorationData data = this.getDecorationData();
         if (data == null) return this.itemStack;
-        ItemStack adjusted = DecorationUtil.placementAdjustedItem(
-                this.itemStack, data.itemResource(),
-                this.direction != Direction.DOWN && this.direction != Direction.UP,
-                this.direction == Direction.DOWN
-        );
+        ItemStack adjusted = DecorationUtil.placementAdjustedItem(this.itemStack, data.itemResource(), this.direction);
 
         for (Map.Entry<BehaviourType<?, ?>, Behaviour<?>> entry : this.behaviours) {
             if (entry.getValue() instanceof DecorationEntityBehaviour<?> decorationBehaviour) {

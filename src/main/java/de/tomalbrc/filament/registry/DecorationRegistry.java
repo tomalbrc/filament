@@ -56,6 +56,7 @@ public class DecorationRegistry {
 
             register(data);
         } catch (Exception e) {
+            e.printStackTrace();
             Filament.LOGGER.error("Could not load file! Error: {}", String.valueOf(e.fillInStackTrace()));
             Filament.LOGGER.info("Path: {}", filepath);
             Filament.LOGGER.info("File: \n{}", element.toString());

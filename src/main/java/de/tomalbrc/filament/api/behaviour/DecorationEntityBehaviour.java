@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
@@ -35,7 +36,7 @@ public interface DecorationEntityBehaviour<T> extends Behaviour<T> {
 
     default void modifyDrop(DecorationEntity entity, ItemStack itemStack) {}
 
-    default ItemStack visualItemStack(DecorationEntity entity, ItemStack adjusted, @Nullable net.minecraft.world.level.block.state.BlockState blockState) {
+    default ItemStack visualItemStack(DecorationEntity entity, ItemStack adjusted, @Nullable BlockState blockState) {
         return adjusted;
     }
 

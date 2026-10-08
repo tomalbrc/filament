@@ -191,7 +191,7 @@ public class DecorationBlockEntity extends AbstractDecorationBlockEntity impleme
     }
 
     public ItemStack visualItemStack(BlockState blockState) {
-        var adjusted = DecorationUtil.placementAdjustedItem(this.getItem(), this.getDecorationData().itemResource(), this.direction != Direction.DOWN && this.direction != Direction.UP, this.direction == Direction.DOWN);
+        var adjusted = DecorationUtil.placementAdjustedItem(this.getItem(), this.getDecorationData().itemResource(), this.direction);
         for (Map.Entry<BehaviourType<? extends Behaviour<?>, ?>, Behaviour<?>> behaviour : this.behaviours) {
             if (behaviour.getValue() instanceof DecorationBehaviour<?> decorationBehaviour) {
                 adjusted = decorationBehaviour.visualItemStack(this, adjusted, blockState);

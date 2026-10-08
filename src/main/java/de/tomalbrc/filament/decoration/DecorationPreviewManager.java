@@ -1,5 +1,6 @@
 package de.tomalbrc.filament.decoration;
 
+import de.tomalbrc.filament.api.behaviour.DecorationBehaviour;
 import de.tomalbrc.filament.behaviour.Behaviours;
 import de.tomalbrc.filament.data.DecorationData;
 import de.tomalbrc.filament.data.properties.DecorationProperties;
@@ -7,9 +8,12 @@ import de.tomalbrc.filament.decoration.block.DecorationBlock;
 import de.tomalbrc.filament.decoration.holder.AnimatedDecorationHolder;
 import de.tomalbrc.filament.decoration.holder.DecorationHolder;
 import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
+import de.tomalbrc.filament.generator.PreviewModelGenerator;
+import de.tomalbrc.filament.injection.DecorationPreviewHolder;
 import de.tomalbrc.filament.registry.DecorationRegistry;
 import de.tomalbrc.filament.registry.ModelRegistry;
 import de.tomalbrc.filament.util.DecorationUtil;
+import de.tomalbrc.filament.util.FilamentConfig;
 import eu.pb4.polymer.virtualentity.api.attachment.BlockBoundAttachment;
 import eu.pb4.polymer.virtualentity.api.attachment.HolderAttachment;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
@@ -17,12 +21,15 @@ import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
 import eu.pb4.polymer.virtualentity.api.elements.VirtualElement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.state.BlockState;
@@ -32,48 +39,67 @@ import net.minecraft.world.phys.HitResult;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
-// good enough for an experimental test but at some point we should maybe streamline this implementation
 public final class DecorationPreviewManager {
     private DecorationPreviewManager() {}
 
-    private static final Map<UUID, PreviewState> ACTIVE = new ConcurrentHashMap<>();
-
     public static boolean toggle(ServerPlayer player) {
-        UUID id = player.getUUID();
-        PreviewState existing = ACTIVE.remove(id);
+        DecorationPreviewHolder holder = (DecorationPreviewHolder) player;
+        PreviewState existing = holder.filament$getPreviewState();
         if (existing != null) {
             existing.destroy();
+            holder.filament$setPreviewState(null);
             return false;
         }
 
         if (!(player.getMainHandItem().getItem() instanceof DecorationItem)) return false;
 
-        ACTIVE.put(id, new PreviewState(player));
+        holder.filament$setPreviewState(new PreviewState(player));
         return true;
     }
 
     public static void tick(ServerPlayer player) {
-        PreviewState state = ACTIVE.get(player.getUUID());
+        PreviewState state = ((DecorationPreviewHolder) player).filament$getPreviewState();
         if (state != null) state.tick();
     }
 
     public static void clear(ServerPlayer player) {
-        PreviewState state = ACTIVE.remove(player.getUUID());
-        if (state != null) state.destroy();
+        DecorationPreviewHolder holder = (DecorationPreviewHolder) player;
+        PreviewState state = holder.filament$getPreviewState();
+        if (state != null) {
+            state.destroy();
+            holder.filament$setPreviewState(null);
+        }
+    }
+
+    private static void applyPreviewSuffix(ItemStack stack) {
+        var cmd = stack.get(DataComponents.CUSTOM_MODEL_DATA);
+
+        List<String> strings;
+        if (cmd != null && !cmd.strings().isEmpty()) {
+            strings = new ArrayList<>(cmd.strings());
+            strings.set(0, strings.getFirst() + PreviewModelGenerator.PREVIEW_SUFFIX);
+        } else {
+            strings = List.of("default" + PreviewModelGenerator.PREVIEW_SUFFIX);
+        }
+
+        List<Float> floats = cmd != null ? cmd.floats() : List.of();
+        List<Boolean> flags = cmd != null ? cmd.flags() : List.of();
+        List<Integer> colors = cmd != null ? cmd.colors() : List.of();
+
+        stack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(floats, flags, strings, colors));
     }
 
     private record Target(BlockPos pos, Direction direction) {}
 
-    private static final class PreviewState {
+    public static final class PreviewState {
         private final ServerPlayer player;
 
         private FilamentDecorationHolder holder;
         private HolderAttachment attachment;
         private Identifier currentDecorationId;
         private Direction currentDirection;
+        private BlockState currentBlockState;
         private List<VirtualElement> elements = new ArrayList<>();
         private boolean elementsAdded;
 
@@ -124,10 +150,11 @@ public final class DecorationPreviewManager {
                 return;
             }
 
-            if (!data.id().equals(currentDecorationId) || target.direction() != currentDirection) {
-                rebuild(data, target.direction());
+            if (data.id() != currentDecorationId || target.direction() != currentDirection || !blockState.equals(currentBlockState)) {
+                rebuild(item, data, target.direction(), blockState);
                 currentDecorationId = data.id();
                 currentDirection = target.direction();
+                currentBlockState = blockState;
             }
 
             show();
@@ -135,7 +162,11 @@ public final class DecorationPreviewManager {
             if (!target.pos().equals(currentPos) || currentYaw != angle) {
                 if (attachment != null) attachment.destroy();
                 holder.setYaw(angle);
-                attachment = BlockBoundAttachment.ofTicking(holder.asPolymerHolder(), level, target.pos());
+                if (holder.isAnimated()) {
+                    attachment = BlockBoundAttachment.ofTicking(holder.asPolymerHolder(), level, target.pos());
+                } else {
+                    attachment = BlockBoundAttachment.of(holder.asPolymerHolder(), level, target.pos());
+                }
                 currentPos = target.pos().immutable();
                 currentYaw = angle;
             }
@@ -179,7 +210,7 @@ public final class DecorationPreviewManager {
             return ok[0];
         }
 
-        private void rebuild(DecorationData data, Direction direction) {
+        private void rebuild(DecorationItem item, DecorationData data, Direction direction, BlockState blockState) {
             if (attachment != null) {
                 attachment.destroy();
                 attachment = null;
@@ -187,28 +218,52 @@ public final class DecorationPreviewManager {
 
             if (data.behaviour().has(Behaviours.ANIMATION)) {
                 var anim = data.behaviour().get(Behaviours.ANIMATION);
-                this.holder = new AnimatedDecorationHolder(anim, ModelRegistry.getModel(anim.model));
+                this.holder = new AnimatedDecorationHolder(anim, ModelRegistry.getModel(anim.model)) {
+                    @Override
+                    public boolean startWatching(ServerGamePacketListenerImpl player) {
+                        return player.player == PreviewState.this.player && super.startWatching(player);
+                    }
+                };
             } else {
-                this.holder = new DecorationHolder(() -> player.getMainHandItem().copy());
+                this.holder = new DecorationHolder(() -> ItemStack.EMPTY) {
+                    @Override
+                    public boolean startWatching(ServerGamePacketListenerImpl player) {
+                        return player.player == PreviewState.this.player && super.startWatching(player);
+                    }
+                };
             }
+
+            ItemStack previewStack = DecorationUtil.placementAdjustedItem(
+                    player.getMainHandItem(),
+                    data.itemResource(),
+                    direction
+            );
+
+            if (item.getBehaviours() != null) {
+                for (Map.Entry<?, ?> entry : item.getBehaviours()) {
+                    if (entry.getValue() instanceof DecorationBehaviour<?> behaviour) {
+                        previewStack = behaviour.visualItemStack(null, previewStack, blockState);
+                    }
+                }
+            }
+
+            applyPreviewSuffix(previewStack);
 
             DecorationUtil.setupElements(
                     holder,
                     data,
                     direction,
                     player.getYRot(),
-                    player.getMainHandItem(),
-                    (serverPlayer, hand, pos) -> InteractionResult.PASS
+                    previewStack,
+                    (_, _, _) -> InteractionResult.PASS
             );
-
-
 
             this.elements = new ArrayList<>(holder.asPolymerHolder().getElements());
 
             for (VirtualElement element : elements) {
                 if (element instanceof ItemDisplayElement itemDisplayElement) {
-                    itemDisplayElement.setGlowing(true);
-                    itemDisplayElement.setGlowColorOverride(0x00FF00);
+                    itemDisplayElement.setGlowing(FilamentConfig.getInstance().previewGlow);
+                    itemDisplayElement.setGlowColorOverride(FilamentConfig.getInstance().previewGlowColor);
                 }
                 holder.removeElement(element);
             }

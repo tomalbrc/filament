@@ -2,6 +2,7 @@ package de.tomalbrc.filament.mixin.decoration;
 
 import de.tomalbrc.filament.decoration.DecorationItem;
 import de.tomalbrc.filament.decoration.DecorationPreviewManager;
+import de.tomalbrc.filament.util.FilamentConfig;
 import net.minecraft.network.DisconnectionDetails;
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,12 +21,12 @@ public abstract class ServerGamePacketListenerImplMixin {
     @Inject(method = "handlePlayerAction",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/server/level/ServerPlayer;setItemInHand(Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/ItemStack;)V",
-                    shift = At.Shift.AFTER
+                    target = "Lnet/minecraft/server/level/ServerPlayer;getItemInHand(Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack;",
+                    ordinal = 1
             ), cancellable = true
     )
     private void filament$afterOffhandSwap(ServerboundPlayerActionPacket packet, CallbackInfo ci) {
-        if (packet.getAction() != ServerboundPlayerActionPacket.Action.SWAP_ITEM_WITH_OFFHAND) return;
+        if (packet.getAction() != ServerboundPlayerActionPacket.Action.SWAP_ITEM_WITH_OFFHAND || !FilamentConfig.getInstance().decorationPlacementPreviews) return;
         if (!player.isShiftKeyDown()) return;
 
         if (!(player.getMainHandItem().getItem() instanceof DecorationItem)) return;

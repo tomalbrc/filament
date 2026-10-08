@@ -8,6 +8,7 @@ import de.tomalbrc.filament.data.resource.ItemResource;
 import de.tomalbrc.filament.decoration.holder.FilamentDecorationHolder;
 import de.tomalbrc.filament.decoration.util.DecorationItemDisplayElement;
 import de.tomalbrc.filament.decoration.util.ItemFrameElement;
+import de.tomalbrc.filament.generator.PreviewModelGenerator;
 import eu.pb4.polymer.core.api.item.PolymerItem;
 import eu.pb4.polymer.virtualentity.api.elements.InteractionElement;
 import eu.pb4.polymer.virtualentity.api.elements.ItemDisplayElement;
@@ -89,14 +90,18 @@ public class DecorationUtil {
     public static InteractionElement decorationInteraction(DecorationData decorationData, Direction direction, @Nullable OnInteract onInteract) {
         InteractionElement element = new InteractionElement();
         if (decorationData != null && decorationData.size() != null) {
-            element.setSize(decorationData.size().x, decorationData.size().y);
+            var size = decorationData.size();
+            assert size != null;
+            element.setSize(size.x, size.y);
         } else {
+            // TODO: change ceiling to the same default?
             element.setSize(1.f, direction.equals(Direction.DOWN) ? 1.f : .5f); // default
         }
 
         element.setInteractionHandler(new VirtualElement.InteractionHandler() {
             @Override
             public void interact(ServerPlayer player, InteractionHand hand, Vec3 pos, boolean secondaryAction) {
+                if (element.getHolder() == null) return;
                 var attachment = element.getHolder().getAttachment();
                 if (attachment == null) return;
 
@@ -112,6 +117,7 @@ public class DecorationUtil {
 
             @Override
             public void attack(ServerPlayer player) {
+                if (element.getHolder() == null) return;
                 var attachment = element.getHolder().getAttachment();
                 if (attachment == null) return;
 
@@ -142,9 +148,12 @@ public class DecorationUtil {
 
         Vector2f size = new Vector2f(1);
         if (data.hasBlocks()) {
-            size = DecorationUtil.barrierDimensions(data.blocks(), rotation);
+            var blocks = data.blocks();
+            assert blocks != null;
+            size = DecorationUtil.barrierDimensions(blocks, rotation);
         } else if (data.size() != null) {
             size = data.size();
+            assert size != null;
         }
 
         Matrix4f matrix4f = transform(data.properties().display, direction);
@@ -237,6 +246,10 @@ public class DecorationUtil {
         }
     }
 
+    public static ItemStack placementAdjustedItem(ItemStack itemStack, ItemResource itemResource, Direction placementDirection) {
+        return placementAdjustedItem(itemStack, itemResource, placementDirection.getAxis().isHorizontal(), placementDirection == Direction.DOWN);
+    }
+
     public static ItemStack placementAdjustedItem(ItemStack itemStack, ItemResource itemResource, boolean wall, boolean ceiling) {
         var converted = clientsideItem(itemStack);
         converted.remove(DataComponents.CUSTOM_NAME);
@@ -244,7 +257,6 @@ public class DecorationUtil {
         if (itemResource == null)
             return converted;
 
-        // TODO: this should be a behaviour
         if (wall && itemResource.getModels().containsKey("wall")) {
             converted.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(ImmutableList.of(), ImmutableList.of(), ImmutableList.of("wall"), ImmutableList.of()));
             return converted;

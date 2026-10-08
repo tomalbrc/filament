@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Defines the behavioral contract for a decoration block
@@ -149,8 +150,7 @@ public interface DecorationBehaviour<T> extends Behaviour<T> {
      * @param blockState            the block state of the decoration
      * @return the item stack to use for the client-side visual
      */
-    // Allows to change the visual item stack
-    default ItemStack visualItemStack(DecorationBlockEntity decorationBlockEntity, ItemStack adjusted, BlockState blockState) {
+    default ItemStack visualItemStack(@Nullable DecorationBlockEntity decorationBlockEntity, ItemStack adjusted, BlockState blockState) {
         return adjusted;
     }
 

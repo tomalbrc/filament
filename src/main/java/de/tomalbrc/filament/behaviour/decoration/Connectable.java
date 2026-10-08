@@ -50,7 +50,7 @@ public class Connectable implements BlockBehaviour<Connectable.Config>, Decorati
     }
 
     @Override
-    public ItemStack visualItemStack(DecorationBlockEntity decorationBlockEntity, ItemStack itemStack, BlockState blockState) {
+    public ItemStack visualItemStack(@Nullable DecorationBlockEntity decorationBlockEntity, ItemStack itemStack, BlockState blockState) {
         itemStack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(), List.of(), List.of(blockState.getValue(SHAPE).customModelData()), List.of()));
         return itemStack;
     }

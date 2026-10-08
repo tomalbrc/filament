@@ -20,7 +20,6 @@ import it.unimi.dsi.fastutil.objects.ReferenceSet;
 import it.unimi.dsi.fastutil.objects.ReferenceSortedSets;
 import net.fabricmc.fabric.api.networking.v1.context.PacketContext;
 import net.fabricmc.fabric.api.networking.v1.context.PacketContextProvider;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
@@ -33,6 +32,7 @@ import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.SegmentedAnglePrecision;
@@ -72,6 +72,7 @@ public class Util {
         }
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     public static void loadDatapackContents(ResourceManager resourceManager) {
         ((RegistryUnfreezer) BuiltInRegistries.BLOCK).filament$unfreeze();
         ((RegistryUnfreezer) BuiltInRegistries.ITEM).filament$unfreeze();
@@ -79,7 +80,7 @@ public class Util {
         ((RegistryUnfreezer) BuiltInRegistries.ENTITY_TYPE).filament$unfreeze();
         ((RegistryUnfreezer) BuiltInRegistries.CREATIVE_MODE_TAB).filament$unfreeze();
 
-        for (SimpleSynchronousResourceReloadListener listener : FilamentReloadUtil.getReloadListeners()) {
+        for (ResourceManagerReloadListener listener : FilamentReloadUtil.getReloadListeners()) {
             listener.onResourceManagerReload(resourceManager);
         }
 
@@ -138,6 +139,7 @@ public class Util {
     }
 
     // via polymer
+    @SuppressWarnings("UnstableApiUsage")
     public static ItemStack createItemStack(ItemStack itemStack, TooltipFlag tooltipContext, PacketContext context, HolderLookup.Provider lookup) {
         Item item = itemStack.getItem();
         Identifier model = null;
@@ -271,7 +273,9 @@ public class Util {
         }
         return PolymerItemUtils.ITEM_MODIFICATION_EVENT.invoker().modifyItem(itemStack, out, context);
     }
+    @SuppressWarnings("NonExtendableApiUsage")
     public static final PacketContextProvider NULL_CONTEXT_PROVIDER = new PacketContextProvider() {
+        @SuppressWarnings("NullableProblems")
         @Override
         public PacketContext getPacketContext() {
             return null;

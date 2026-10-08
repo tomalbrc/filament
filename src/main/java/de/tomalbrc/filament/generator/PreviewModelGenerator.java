@@ -8,6 +8,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import de.tomalbrc.filament.Filament;
 import de.tomalbrc.filament.data.resource.ResourceProvider;
+import de.tomalbrc.filament.util.FilamentConfig;
 import eu.pb4.polymer.resourcepack.api.AssetPaths;
 import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
 import eu.pb4.polymer.resourcepack.extras.api.format.item.ItemAsset;
@@ -32,25 +33,22 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-public final class TransparentModelGenerator {
-    private TransparentModelGenerator() {}
+public final class PreviewModelGenerator {
+    private PreviewModelGenerator() {}
 
-    public static final float PREVIEW_OPACITY = 0.5f;
     public static final String PREVIEW_SUFFIX = "_preview";
 
     private static final int MAX_PARENT_DEPTH = 32;
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder().create();
 
-    public static void createPreviewVariants(ResourcePackBuilder builder, Identifier id, ResourceProvider resourceProvider, boolean tint) {
+    public static void createWithPreviewVariants(ResourcePackBuilder builder, Identifier id, ResourceProvider resourceProvider, boolean tint) {
         Map<String, Identifier> models = resourceProvider.getModels();
         if (models.isEmpty()) {
             Filament.LOGGER.error("Cannot generate preview for {}: no models", id);
             return;
         }
 
-        String defaultKey = models.containsKey("default")
-                ? "default"
-                : models.keySet().iterator().next();
+        String defaultKey = models.containsKey("default") ? "default" : models.keySet().iterator().next();
 
         List<SelectItemModel.Case<String>> cases = new ObjectArrayList<>();
 
@@ -86,14 +84,11 @@ public final class TransparentModelGenerator {
         }
 
         if (previewModels.isEmpty()) {
-            Filament.LOGGER.error("No preview cases generated for {}", id);
+            Filament.LOGGER.warn("No preview cases generated for {}", id);
             return;
         }
 
-        Identifier fallbackId = previewModels.getOrDefault(
-                defaultKey,
-                previewModels.values().iterator().next()
-        );
+        Identifier fallbackId = models.get(defaultKey);
 
         ItemModel fallbackModel = new BasicItemModel(
                 fallbackId,
@@ -117,14 +112,6 @@ public final class TransparentModelGenerator {
         byte[] modelData = builder.getDataOrSource(AssetPaths.model(originalModelId) + ".json");
         if (modelData == null) {
             Filament.LOGGER.warn("Model not found in pack or source: {}", AssetPaths.model(originalModelId) + ".json");
-            return null;
-        }
-
-        JsonObject originalModel;
-        try {
-            originalModel = JsonParser.parseString(new String(modelData, StandardCharsets.UTF_8)).getAsJsonObject();
-        } catch (JsonSyntaxException e) {
-            Filament.LOGGER.warn("Invalid JSON in model {}: {}", originalModelId, e.getMessage());
             return null;
         }
 
@@ -171,9 +158,7 @@ public final class TransparentModelGenerator {
         }
 
         JsonObject newModel = new JsonObject();
-        newModel.addProperty("parent", originalModel.has("parent")
-                ? originalModel.get("parent").getAsString()
-                : "minecraft:item/generated");
+        newModel.addProperty("parent", originalModelId.toString());
 
         JsonObject texturesObj = new JsonObject();
         for (Map.Entry<String, String> entry : transparentTextures.entrySet()) {
@@ -186,8 +171,7 @@ public final class TransparentModelGenerator {
                 originalModelId.getPath() + PREVIEW_SUFFIX
         );
 
-        builder.addData(AssetPaths.model(newModelId),
-                GSON.toJson(newModel).getBytes(StandardCharsets.UTF_8));
+        builder.addData(AssetPaths.model(newModelId) + ".json", GSON.toJson(newModel).getBytes(StandardCharsets.UTF_8));
 
         return newModelId;
     }
@@ -198,7 +182,7 @@ public final class TransparentModelGenerator {
             return;
         }
 
-        byte[] data = builder.getDataOrSource(AssetPaths.model(modelId));
+        byte[] data = builder.getDataOrSource(AssetPaths.model(modelId) + ".json");
         if (data == null) return;
 
         JsonObject json;
@@ -217,12 +201,16 @@ public final class TransparentModelGenerator {
 
         if (json.has("textures")) {
             for (Map.Entry<String, JsonElement> e : json.getAsJsonObject("textures").entrySet()) {
-                out.textures.put(e.getKey(), e.getValue().getAsString());
+                JsonElement value = e.getValue();
+                if (value.isJsonObject()) {
+                    JsonObject obj = value.getAsJsonObject();
+                    if (obj.has("sprite")) {
+                        out.textures.put(e.getKey(), obj.get("sprite").getAsString());
+                    }
+                } else {
+                    out.textures.put(e.getKey(), value.getAsString());
+                }
             }
-        }
-
-        if (json.has("render_type") && out.renderType == null) {
-            out.renderType = json.get("render_type").getAsString();
         }
     }
 
@@ -249,7 +237,7 @@ public final class TransparentModelGenerator {
     }
 
     private static Identifier makeTransparentTexture(ResourcePackBuilder builder, Identifier textureId) {
-        byte[] pngBytes = builder.getDataOrSource(AssetPaths.texture(textureId));
+        byte[] pngBytes = builder.getDataOrSource(AssetPaths.texture(textureId) + ".png");
         if (pngBytes == null) {
             Filament.LOGGER.warn("Texture not found in pack or source: {}", textureId);
             return null;
@@ -262,14 +250,12 @@ public final class TransparentModelGenerator {
                 return null;
             }
 
-            BufferedImage transparent = new BufferedImage(
-                    image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-
+            BufferedImage transparent = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
             for (int y = 0; y < image.getHeight(); y++) {
                 for (int x = 0; x < image.getWidth(); x++) {
                     int argb = image.getRGB(x, y);
                     int alpha = (argb >>> 24) & 0xFF;
-                    int newAlpha = Math.round(alpha * PREVIEW_OPACITY);
+                    int newAlpha = Math.round(alpha * FilamentConfig.getInstance().previewTransparency);
                     transparent.setRGB(x, y, (newAlpha << 24) | (argb & 0x00FFFFFF));
                 }
             }
@@ -282,7 +268,7 @@ public final class TransparentModelGenerator {
                     textureId.getPath() + PREVIEW_SUFFIX
             );
 
-            builder.addData(AssetPaths.texture(newTextureId), out.toByteArray());
+            builder.addData(AssetPaths.texture(newTextureId) + ".png", out.toByteArray());
             return newTextureId;
 
         } catch (IOException e) {
@@ -293,6 +279,5 @@ public final class TransparentModelGenerator {
 
     private static final class ResolvedModel {
         final Map<String, String> textures = new LinkedHashMap<>(); // TODO: sprite object entry support
-        String renderType;
     }
 }

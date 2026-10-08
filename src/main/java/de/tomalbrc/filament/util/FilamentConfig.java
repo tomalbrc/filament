@@ -4,14 +4,18 @@ import com.google.gson.annotations.SerializedName;
 import de.tomalbrc.filament.datafixer.DataFix;
 
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class FilamentConfig {
-    static Path CONFIG_FILE_PATH = Constants.CONFIG_DIR.resolve("filament.json");
+    private FilamentConfig() {}
+
+    static final Path CONFIG_DIR = Constants.CONFIG_DIR.resolve("filament");
+    static final Path CONFIG_FILE_PATH = CONFIG_DIR.resolve("general.json");
+    static final Path LEGACY_CONFIG_FILE_PATH = Constants.CONFIG_DIR.resolve("filament.json");
     static FilamentConfig instance;
 
     @SerializedName("debug")
@@ -41,11 +45,21 @@ public class FilamentConfig {
     @SerializedName("decoration_placement_previews")
     public boolean decorationPlacementPreviews = false;
 
+    @SerializedName("preview_glow")
+    public boolean previewGlow = true;
+
+    @SerializedName("preview_glow_color")
+    public int previewGlowColor = 0x00FF00;
+
+    @SerializedName("preview_transparency")
+    public float previewTransparency = 0.5f;
+
     @SerializedName("version")
     public Integer version;
 
     public static FilamentConfig getInstance() {
         if (instance == null) {
+            migrateLegacyConfig();
             if (!load()) { // only save if file wasn't just created
                 save(); // save since newer versions may contain new options, also removes old options
                 if (instance.version == null) instance.version = 1;
@@ -55,23 +69,50 @@ public class FilamentConfig {
         }
         return instance;
     }
-    public static boolean load() {
-        if (!CONFIG_FILE_PATH.toFile().exists()) {
-            instance = new FilamentConfig();
-            try {
-                if (CONFIG_FILE_PATH.toFile().createNewFile()) {
-                    FileOutputStream stream = new FileOutputStream(CONFIG_FILE_PATH.toFile());
-                    stream.write(Json.GSON.toJson(instance).getBytes(StandardCharsets.UTF_8));
-                    stream.close();
+
+    private static void migrateLegacyConfig() {
+        if (!Files.exists(LEGACY_CONFIG_FILE_PATH) || Files.exists(CONFIG_FILE_PATH)) {
+            return;
+        }
+
+        try {
+            Files.createDirectories(CONFIG_DIR);
+
+            FilamentConfig legacy = Json.GSON.fromJson(
+                    new FileReader(LEGACY_CONFIG_FILE_PATH.toFile()),
+                    FilamentConfig.class
+            );
+
+            if (legacy != null) {
+                try (var stream = Files.newOutputStream(CONFIG_FILE_PATH)) {
+                    stream.write(Json.GSON.toJson(legacy).getBytes(StandardCharsets.UTF_8));
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
+
+            Files.deleteIfExists(LEGACY_CONFIG_FILE_PATH);
+        } catch (IOException e) {
+            // migration is best-effort; fall through to normal load path
+        }
+    }
+
+    public static boolean load() {
+        try {
+            Files.createDirectories(CONFIG_DIR);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (!Files.exists(CONFIG_FILE_PATH)) {
+            instance = new FilamentConfig();
+            save();
             return true;
         }
 
         try {
-            FilamentConfig.instance = Json.GSON.fromJson(new FileReader(FilamentConfig.CONFIG_FILE_PATH.toFile()), FilamentConfig.class);
+            FilamentConfig.instance = Json.GSON.fromJson(
+                    new FileReader(CONFIG_FILE_PATH.toFile()),
+                    FilamentConfig.class
+            );
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -80,7 +121,13 @@ public class FilamentConfig {
     }
 
     public static void save() {
-        try (FileOutputStream stream = new FileOutputStream(CONFIG_FILE_PATH.toFile())) {
+        try {
+            Files.createDirectories(CONFIG_DIR);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (var stream = Files.newOutputStream(CONFIG_FILE_PATH)) {
             stream.write(Json.GSON.toJson(instance).getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             throw new RuntimeException(e);

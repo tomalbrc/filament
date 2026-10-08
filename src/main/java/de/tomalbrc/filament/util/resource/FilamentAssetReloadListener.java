@@ -1,6 +1,8 @@
 package de.tomalbrc.filament.util.resource;
 
+import de.tomalbrc.filament.behaviour.block.Fire;
 import de.tomalbrc.filament.util.Constants;
+import de.tomalbrc.filament.util.RPUtil;
 import eu.pb4.polymer.resourcepack.api.PolymerResourcePackUtils;
 import eu.pb4.polymer.resourcepack.api.ResourcePackBuilder;
 import net.minecraft.resources.Identifier;
@@ -58,7 +60,12 @@ public class FilamentAssetReloadListener implements FilamentSynchronousResourceR
             });
 
             lastConsumer = consumer;
+
             PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(consumer);
+
+            // dynamically generated rp contents
+            PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(Fire::init);
+            PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(RPUtil::addExtraAssets);
         }
     }
 
