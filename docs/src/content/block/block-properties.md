@@ -189,8 +189,6 @@ Allows to specify a set of sounds and the volume/pitch for them.
 
 All sounds, including step sounds, will be played serverside! Even for some vanilla blocks, since filament sets the vanilla sounds to an empty list, as a lot of blocks share the same sounds (noteblocks and all wooden blocks use the same wood sounds for example)
 
-This might affect performance a bit, for this reason there is a config option in `config/filament.json` called "sound_module" to enable/disable the server-side block sounds.
-
 <!-- langtabs-start -->
 ```yml
 properties:
