@@ -162,11 +162,7 @@ public final class DecorationPreviewManager {
             if (!target.pos().equals(currentPos) || currentYaw != angle) {
                 if (attachment != null) attachment.destroy();
                 holder.setYaw(angle);
-                if (holder.isAnimated()) {
-                    attachment = BlockBoundAttachment.ofTicking(holder.asPolymerHolder(), level, target.pos());
-                } else {
-                    attachment = BlockBoundAttachment.of(holder.asPolymerHolder(), level, target.pos());
-                }
+                attachment = BlockBoundAttachment.ofTicking(holder.asPolymerHolder(), level, target.pos());
                 currentPos = target.pos().immutable();
                 currentYaw = angle;
             }
