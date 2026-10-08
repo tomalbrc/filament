@@ -65,7 +65,7 @@ public class FilamentAssetReloadListener implements FilamentSynchronousResourceR
 
             // dynamically generated rp contents
             PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(Fire::init);
-            PolymerResourcePackUtils.RESOURCE_PACK_CREATION_EVENT.register(RPUtil::addExtraAssets);
+            PolymerResourcePackUtils.RESOURCE_PACK_AFTER_INITIAL_CREATION_EVENT.register(RPUtil::addExtraAssets);
         }
     }
 
