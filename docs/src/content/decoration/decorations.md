@@ -2,13 +2,9 @@
 
 The misode based generator for decorations can be found [here!](https://misode.tomalbrc.de/filament/decoration)
 
-## File
-
 Decoration configuration files are to be placed in `MyDatapack/data/<namespace>/filament/decoration/my_decoration.json`.
 
-All item-behaviours such as `fuel` and `cosmetic` are supported by decorations.
-
-You can also set components to the configurations using the `components` field.
+All item-behaviours such as `fuel` and `cosmetic` are supported by decorations, as well as most block behaviours. You can also set components using the `components` field.
 
 ---
 
@@ -22,14 +18,13 @@ translations:
 itemResource:
   models:
     default: mynamespace:custom/furniture/displays/quartz_pedastal
-properties:
-  rotate: true
-  rotateSmooth: true
 behaviour:
   showcase:
     - offset: [0, 1.05, 0]
       scale: [0.45, 0.45, 0.45]
       type: dynamic
+  rotating:
+    smooth: true # set to true to allow 45° rotations, false for 90° rotations 
 blocks:
   - origin: [0, 0, 0]
     size: [1, 1, 1]
@@ -46,16 +41,17 @@ blocks:
       "default": "mynamespace:custom/furniture/displays/quartz_pedastal"
     }
   },
-  "properties": {
-    "rotate": true,
-    "rotateSmooth": true
-  },
   "behaviour": {
-    "showcase": [{
-      "offset": [0, 1.05, 0],
-      "scale": [0.45, 0.45, 0.45],
-      "type": "dynamic"
-    }]
+    "showcase": [
+      {
+        "offset": [0, 1.05, 0],
+        "scale": [0.45, 0.45, 0.45],
+        "type": "dynamic"
+      }
+    ],
+    "rotating": {
+      "smooth": true
+    }
   },
   "blocks": [
     {
@@ -67,12 +63,13 @@ blocks:
 ```
 <!-- langtabs-end -->
 
+The file contents are very similar to that of blocks, except for additional behaviours exclusive to decorations. Decorations support most of the block behaviours.
 
-The file contents are very similar to that of blocks, except for additional behaviours exclusive to decorations.
+---
 
-Decorations support most of the block behaviours.
+## Placement models
 
-You can specify different models for decorations when placed on walls, ceiling (underside of blocks) or on the floor.
+You can specify different models for decorations when placed on walls, on the ceiling (underside of blocks), or on the floor.
 
 <!-- langtabs-start -->
 ```yml
@@ -116,18 +113,70 @@ behaviour:
     }
   },
   "behaviour": {
-    "rotating": { // to allow 90° rotations
-      "smooth": true // to allow 45° rotations
+    "rotating": {
+      "smooth": true
     }
   }
 }
 ```
 <!-- langtabs-end -->
 
-This will result in a decoration with different models in the Inventory, when placed on the floor, when placed on a wall and when placed on ceilings.
+This will result in a decoration with different models in the Inventory, when placed on the floor, when placed on a wall, and when placed on ceilings.
 
-The field `block` can be used to specify a different block to use instead of barrier blocks (only used when the decoration has blocks specified using the `blocks` field)
+---
 
-The field `itemFrame` forces the decoration to use item-frames instead an item-display entity in combination with an interaction entity.
+## Fields
 
-Decorations are able to show a different item model based on the block state, similar to blocks, using a `block_resource`. 
+### `itemFrame`
+
+Forces the decoration to use a single item-frame entity instead of an item-display entity in combination with an interaction entity.
+
+> [!NOTE]
+> This will be ignored if the `size` field has been set!
+
+**Example**
+
+```json
+{
+  "itemFrame": true
+}
+```
+
+### `block`
+
+Specifies a different block to use instead of barrier blocks.
+A block identifier (e.g. `minecraft:barrier`).
+
+> [!NOTE]
+> Only used when the decoration has blocks specified using the `blocks` field.
+
+**Example**
+
+```json
+{
+  "block": "minecraft:barrier"
+}
+```
+
+### `size`
+
+Specifies the size of the interaction entity.
+A `[width, height]` list representing the interaction entity size.
+
+> [!NOTE]
+> This will be ignored if the `blocks` field has been set!
+
+**Example**
+
+```json
+{
+  "size": [1.0, 1.0]
+}
+```
+
+### `block_resource`
+
+Decorations are able to show a different item model based on the block state, similar to blocks, using a `block_resource`.
+
+> [!NOTE]
+> Different models for wall/floor/ceiling placements won't work when using this field!
