@@ -289,17 +289,18 @@ public class DecorationUtil {
     public static void setupElements(@NotNull FilamentDecorationHolder holder, @NotNull DecorationData data, @NotNull Direction direction, float rotation, @NotNull ItemStack itemStack, @Nullable OnInteract onInteract) {
         boolean addDisplay = !holder.isAnimated();
 
-        if (data.hasBlocks() && addDisplay) {
+        if (data.itemFrame() == Boolean.TRUE && data.size() == null && addDisplay) {
+            ItemFrameElement itemFrameElement = new ItemFrameElement(data, direction, Util.SEGMENTED_ANGLE8.fromDegrees(rotation), itemStack, onInteract);
+            holder.addElement(itemFrameElement);
+        } else if (data.hasBlocks() && addDisplay) {
             holder.addElement(DecorationUtil.decorationItemDisplay(data, direction, rotation, itemStack));
         } else if (data.size() != null) {
             if (addDisplay)
                 holder.addElement(DecorationUtil.decorationItemDisplay(data, direction, rotation, itemStack));
+
             holder.addElement(DecorationUtil.decorationInteraction(data, direction, onInteract));
         } else {
-            if (data.itemFrame() == Boolean.TRUE && addDisplay) {
-                ItemFrameElement itemFrameElement = new ItemFrameElement(data, direction, Util.SEGMENTED_ANGLE8.fromDegrees(rotation), itemStack, onInteract);
-                holder.addElement(itemFrameElement);
-            } else if (!data.hasBlocks()) {
+            if (!data.hasBlocks()) {
                 // Just using display+interaction again with 1.0 width, 0.5 height
                 if (addDisplay) holder.addElement(DecorationUtil.decorationItemDisplay(data, direction, rotation, itemStack));
                 holder.addElement(DecorationUtil.decorationInteraction(data, direction, onInteract));
