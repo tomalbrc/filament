@@ -83,7 +83,7 @@ public class ItemFrameElement extends GenericEntityElement {
 
     @Override
     public void setYaw(float yaw) {
-        this.syncedData.set(ItemFrameAccessor.getDATA_ROTATION(), Util.SEGMENTED_ANGLE8.fromDegrees(yaw-180));
+        this.syncedData.set(ItemFrameAccessor.getDATA_ROTATION(), Util.SEGMENTED_ANGLE8.fromDegrees(yaw));
     }
 
     public void setItem(ItemStack item) {
